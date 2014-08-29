@@ -100,6 +100,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="RIM.ReliabilityEngineering.ActiveDirectoryServices, Version=1.0.5352.14482, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\ActiveDirectory\RIM.ReliabilityEngineering.ActiveDirectoryServices.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -199,10 +203,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\SecureMaterialsTransport\RIM.ReliabilityEngineering.ActiveDirectoryServices\RIM.ReliabilityEngineering.ActiveDirectoryServices.csproj">
-      <Project>{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}</Project>
-      <Name>RIM.ReliabilityEngineering.ActiveDirectoryServices</Name>
-    </ProjectReference>
     <ProjectReference Include="..\REMI.BaseObjectModels\REMI.BaseObjectModels.csproj">
       <Project>{F376D451-04C7-40CB-939E-F6C11A1A6589}</Project>
       <Name>REMI.BaseObjectModels</Name>

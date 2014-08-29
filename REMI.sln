@@ -27,8 +27,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMI.Contracts", "REMI.Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMI.Bll.Tests", "REMI.Bll.Tests\REMI.Bll.Tests.csproj", "{5FF1574E-577D-4654-BC2A-59E174E4DFD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RIM.ReliabilityEngineering.ActiveDirectoryServices", "..\..\..\SecureMaterialsTransport\RIM.ReliabilityEngineering.ActiveDirectoryServices\RIM.ReliabilityEngineering.ActiveDirectoryServices.csproj", "{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}"
-EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "REMI DB Project", "REMI_DB\REMI DB Project.sqlproj", "{F88025D2-7814-4558-A51B-6079AD8155DA}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Remi", "Remi\Remi.vbproj", "{A7DB480A-F45B-4B36-AB55-5600F579C04F}"
@@ -161,18 +159,6 @@ Global
 		{5FF1574E-577D-4654-BC2A-59E174E4DFD5}.TestingLocal|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF1574E-577D-4654-BC2A-59E174E4DFD5}.TestingLocal|Any CPU.Build.0 = Release|Any CPU
 		{5FF1574E-577D-4654-BC2A-59E174E4DFD5}.TestingLocal|x86.ActiveCfg = Release|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.Release|x86.ActiveCfg = Release|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.test|Any CPU.ActiveCfg = test|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.test|Any CPU.Build.0 = test|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.test|x86.ActiveCfg = test|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.TestingLocal|Any CPU.ActiveCfg = TestingLocal|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.TestingLocal|Any CPU.Build.0 = TestingLocal|Any CPU
-		{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}.TestingLocal|x86.ActiveCfg = TestingLocal|Any CPU
 		{F88025D2-7814-4558-A51B-6079AD8155DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F88025D2-7814-4558-A51B-6079AD8155DA}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{F88025D2-7814-4558-A51B-6079AD8155DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
