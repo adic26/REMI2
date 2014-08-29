@@ -1,0 +1,2188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>REMI DB Project</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.0</ProjectVersion>
+    <ProjectGuid>{67cbc824-a49e-4e9b-a947-360f3dfe65c3}</ProjectGuid>
+    <DSP>Microsoft.Data.Schema.Sql.Sql100DatabaseSchemaProvider</DSP>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <ShowWizard>False</ShowWizard>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <IncludeSchemaNameInFileName>False</IncludeSchemaNameInFileName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchema</DefaultFileStructure>
+    <DeployToDatabaseAddToServerExplorer>True</DeployToDatabaseAddToServerExplorer>
+    <DeployToScript>True</DeployToScript>
+    <CatalogPropertiesFile>Properties\Database.sqlsettings</CatalogPropertiesFile>
+    <LoadSqlClrTypes>True</LoadSqlClrTypes>
+    <RootNamespace>Database1</RootNamespace>
+    <DefaultSchema>dbo</DefaultSchema>
+    <PreviousProjectVersion>4.0</PreviousProjectVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>.\sql\release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetConnectionString>
+    </TargetConnectionString>
+    <TargetDatabase>Database1</TargetDatabase>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <SuppressWarnings>
+    </SuppressWarnings>
+    <DeploymentConfigFile>Properties\Database.sqldeployment</DeploymentConfigFile>
+    <SqlCommandVariablesFile>Properties\Database.sqlcmdvars</SqlCommandVariablesFile>
+    <DeployToDatabase>False</DeployToDatabase>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>.\sql\debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetConnectionString>
+    </TargetConnectionString>
+    <TargetDatabase>Database1</TargetDatabase>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <SuppressWarnings>
+    </SuppressWarnings>
+    <DeploymentConfigFile>Properties\Database.sqldeployment</DeploymentConfigFile>
+    <SqlCommandVariablesFile>Properties\Database.sqlcmdvars</SqlCommandVariablesFile>
+    <DeployToDatabase>False</DeployToDatabase>
+  </PropertyGroup>
+  <!--Import the settings-->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\TeamData\Microsoft.Data.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Pre-Deployment" />
+    <Folder Include="Scripts\Post-Deployment" />
+    <Folder Include="Data Generation Plans" />
+    <Folder Include="Schema Comparisons" />
+    <Folder Include="Properties\" />
+    <Folder Include="Schema Objects\" />
+    <Folder Include="Schema Objects\Schemas\" />
+    <Folder Include="Schema Objects\Schemas\dbo\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Defaults\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Functions\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Rules\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Data Types\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Types CLR\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Table Types\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\XML Schema Collections\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Service Broker\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Service Broker\Queues\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Synonyms\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Constraints\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Indexes\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Keys\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Triggers\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Statistics\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Views\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Views\Indexes\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Views\Triggers\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Views\Statistics\" />
+    <Folder Include="Schema Objects\Database Level Objects\" />
+    <Folder Include="Schema Objects\Database Level Objects\Assemblies\" />
+    <Folder Include="Schema Objects\Database Level Objects\Database Triggers\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Schemas\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Users\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Certificates\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Asymmetric Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Master Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Signatures\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Symmetric Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Database Encryption Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Database Audit Specification\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Roles\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Roles\Application Roles\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Roles\Database Roles\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Broker Priorities\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Contracts\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Event Notifications\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Message Types\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Remote Service Binding\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Routes\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Services\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Full Text Stoplists\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Filegroups\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Files\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Full Text Catalogs\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Partition Functions\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Partition Schemes\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Utilities" />
+    <Folder Include="Scripts\Product_Table_Release" />
+    <Folder Include="Scripts\ProductType_AccessoryType_Release" />
+    <Folder Include="Scripts\April152013" />
+    <Folder Include="Scripts\April222013" />
+    <Folder Include="Scripts\May062013" />
+    <Folder Include="Scripts\June032013" />
+    <Folder Include="Scripts\June242013" />
+    <Folder Include="Scripts\June102013" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete" />
+    <Folder Include="Scripts\July022013" />
+    <Folder Include="Scripts\July082013" />
+    <Folder Include="Scripts\July152013" />
+    <Folder Include="Scripts\July092013" />
+    <Folder Include="Scripts\July222013" />
+    <Folder Include="Oracle" />
+    <Folder Include="Scripts\July292013" />
+    <Folder Include="Scripts\August062013" />
+    <Folder Include="Scripts\August122013" />
+    <Folder Include="Scripts\September092013" />
+    <Folder Include="Scripts\September042013" />
+    <Folder Include="Scripts\August152013" />
+    <Folder Include="Scripts\August262013" />
+    <Folder Include="Scripts\September162013" />
+    <Folder Include="Scripts\September172013" />
+    <Folder Include="Scripts\September262013" />
+    <Folder Include="Scripts\September232013" />
+    <Folder Include="Scripts\October032013" />
+    <Folder Include="Scripts\October102013" />
+    <Folder Include="Scripts\October282013" />
+    <Folder Include="Scripts\November042013" />
+    <Folder Include="Scripts\November112013" />
+    <Folder Include="Scripts\ImageShrink" />
+    <Folder Include="Scripts\November192013" />
+    <Folder Include="Scripts\November212013" />
+    <Folder Include="Scripts\November252013" />
+    <Folder Include="Scripts\December022013" />
+    <Folder Include="Scripts\December092013" />
+    <Folder Include="Scripts\December162013" />
+    <Folder Include="Scripts\January062014" />
+    <Folder Include="Scripts\January222014" />
+    <Folder Include="Scripts\February062014" />
+    <Folder Include="Scripts\February252014" />
+    <Folder Include="Scripts\May192014" />
+    <Folder Include="Scripts\June192014" />
+    <Folder Include="Scripts\June192014\RollBack" />
+    <Folder Include="Scripts\July142014" />
+  </ItemGroup>
+  <ItemGroup>
+    <PropertiesFile Include="Properties\Database.sqlsettings">
+    </PropertiesFile>
+    <PropertiesFile Include="Properties\Database.sqldeployment">
+    </PropertiesFile>
+    <PropertiesFile Include="Properties\Database.sqlcmdvars">
+    </PropertiesFile>
+    <Build Include="Properties\Database.sqlpermissions">
+      <ModelBuilderType>Permissions</ModelBuilderType>
+    </Build>
+    <PreDeploy Include="Scripts\Pre-Deployment\Script.PreDeployment.sql">
+      <SubType>Code</SubType>
+    </PreDeploy>
+    <PostDeploy Include="Scripts\Post-Deployment\Script.PostDeployment.sql">
+      <SubType>Code</SubType>
+    </PostDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <BuildContributorArgument Include="OutDir=$(OutDir)" />
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TestStagesAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_ProductSettingsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_BatchesAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TestUnitsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_ApplicationLog_Date.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_UsersAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TrackingLocationsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_JobsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TestsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_BatchSpecificTestDurationsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TestUnitTestExceptionsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TrackingLocationTypesAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TestRecordsAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_ProductManagersAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <Build Include="Schema Objects\Database Level Objects\Storage\Files\REMIDB_log.sqlfile.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Storage\Files\REMIDB.sqlfile.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchComments_Batches.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_DeviceTrackingLog_TestUnits.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_DeviceTrackingLog_TrackingLocations.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TaskAssignment_Batches.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TaskAssignment_TestStages.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TrackingLocationTypePermissions_TrackingLocationTypes.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchSpecificTestDurations_Batches.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchSpecificTestDurations_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TestUnits_Batches.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TestRecords_TestUnits.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TrackingLocationsForTests_TrackingLocationTypes.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TrackingLocationsForTests_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TestRecordsXTrackingLogs_DeviceTrackingLog.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TestRecordsXTrackingLogs_TestRecords.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TrackingLocations_TrackingLocationTypes.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TestStages_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_TestStages_Jobs.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_BatchComments_BatchID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\aspnet_Applications_Index.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_DeviceTrackingLog.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TLIDOutUser.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\InTimeOutUser.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\outuserintimeindex.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\aspnet_Users_Index.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\aspnet_Users_Index2.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\aspnet_Roles_index1.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_Batches_QRAIsUnique.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_TestStationTypes_NameIsUnique.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_Users_LDAPLoginIsUnique.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_UsersBadgeNumberIsUnique.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_BatchesAudit.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\actioninserttime.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_BatchesAudit_QRANumber.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_TestUnitsAudit.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\tuaActionInsertTime.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_TestUnits_BatchIDANDBatchUnitNumberIsUnique.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_TestUnitsBatchUnitNumberAndBSNIsUnique.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_TestRecords.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestRecordsStatusIndex.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_JobsNameIsUnique.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\aspnet_UsersInRoles_index.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_TestRecordsXTrackingLogsUniqueEntry.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_TestStagesNameIsUniqueForJob.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_BatchComments.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_DeviceTrackingLog.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TaskAssignment.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TrackingLocationTypePermissions.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_Tests.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestStagesAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_Batches.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductSettingsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestStationTypes.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_RFBandsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_RFBands.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_Users.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_BatchesAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_UnitsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ApplicationLog.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_Usersaudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TrackingLocationsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductSettings.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_JobsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_BatchSpecificTestDurationsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_BatchSpecificTestDurations.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_Units.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestStatus.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TrackingLocationsForTests.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestTypes.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestStationTypesAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestRecordAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestRecordsXTrackingLogs.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductManagers.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TrackingLocations.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestStages.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductManagersAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_GetProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_GetNumberOfInactiveProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsGetSpecificLocationForUsersTestCenter.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_RemoveUsersFromRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_IsUserInRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_GetUsersInRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_GetRolesForUser.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_FindUsersInRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_AddUsersToRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesSelectList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsSelectOne.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesSelectSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsSelectByStatus.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByTestRecordID.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsAddUnitToBatch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTaskAssignmentsAddUpdate.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByTestUnitIDDate.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTaskAssignmentGetListForBatch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSelectChamberBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Users_DeleteUser.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_DeleteRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTaskAssignmentsRemove.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsSelectForTest.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectSingleItemByBadgeNumber.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByTestUnitID.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByQRANumberUnitNumber.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestExceptionsGetBatchExceptions.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByQRANumberDate.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByProductDate.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectLastLogByTestUnitID.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectLastLogByBarcodeInformation.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypePermissionsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypePermissionsSelectListForUser.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSelectListAtTrackingLocation.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypePermissionsGetForUserAtLocation.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_DeleteInactiveProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispEnvironmentalReport.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UnRegisterSchemaVersion.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestExceptionsDelete.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_DeleteProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_RegisterSchemaVersion.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_CheckSchemaVersion.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Applications_CreateApplication.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectSingleItemByUserName.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductSettingsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductSettingsSelectListForProduct.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductSettingsSelectSingleValue.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductSettingsDeleteSetting.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsSelectSingleItemByName.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestStagesSelectListOfNames.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestExceptionsInsertTestUnitException.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestExceptionsDeleteTestUnitException.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestExceptionsGetTestUnitTable.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchSpecificTestDurationsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispJobsSelectSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispJobsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestStagesSelectSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestStagesSelectList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestStagesInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestStagesDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsSelectSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsSelectListByType.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchSpecificTestDurationsDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsSelectListByTestStageID.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchSpecificTestDurationsGetList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesGetActiveBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSelectByQRANumber.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsSelectListByLastUser.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Users_CreateUser.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_CreateRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_RoleExists.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsAddTrackingLocationForTest.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_GetAllRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsRemoveTrackingLocationForTest.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestSelectApplicableTrackingLocationTypes.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsSearchFor.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByLocationDate.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispInventoryReport.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispCountUnitsInLocation.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSelectRandomSampleQRANumbers.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsSearchFor.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesGetActiveBatchesByRequestor.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSelectBatchesNotInREMSTAR.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispScanGetData.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductManagersDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispScanSaveData.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductManagersAssignUser.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductManagersSelectList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchGetViewBatch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsSetBSN.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Setup_RestorePermissions.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Setup_RemoveAllRoleMembers.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsInsertNew.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsDeactivate.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsInsertUpdateSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsSelectForBatch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetFastScanData.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_AnyDataInTables.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveFastScanData.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_SetProperties.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_GetProperties.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsGetByQRANumber.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <Build Include="Schema Objects\Database Level Objects\Security\Roles\Database Roles\remi_web.role.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database1.rolememberships.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductManagersAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TestExceptionsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TestExceptionsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TestsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TestsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\BatchesAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\BatchesAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationTypesAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationTypesAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\RFBandsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\RFBandsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductSettingsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductSettingsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\BatchSpecificTestDurationsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\BatchSpecificTestDurationsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\testunitsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\testunitsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TestRecordsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TestRecordsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\JobsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\JobsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\testStagesAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\testStagesAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductManagersAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\RIMNET_doriordan.user.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\RIMNET_wfahmy.user.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\RIMNET_ogaudreault.user.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_aspnet_UsersInRoles.view.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_aspnet_Profiles.view.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\remivwLastLogs.view.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_aspnet_Applications.view.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_aspnet_Users.view.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_aspnet_Roles.view.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\BatchComments.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_Applications.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\DeviceTrackingLog.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TaskAssignments.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestExceptions.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationTypePermissions.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Tests.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_Users.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestStagesAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_Roles.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Batches.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductSettingsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationTypes.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\RFBandsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\RFBands.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Users.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\BatchesAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestUnitsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ApplicationLog.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\UsersAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductSettings.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\JobsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\BatchSpecificTestDurationsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\BatchSpecificTestDurations.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestUnits.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestExceptionsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestRecords.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsForTests.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Jobs.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_UsersInRoles.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationTypesAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestRecordsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestRecordsXTrackingLogs.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductManagers.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocations.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_Profile.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TestStages.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductManagersAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_SchemaVersions.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <Build Include="Schema Objects\Database Level Objects\Service Broker\Routes\AutoCreatedLocal.route.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_BatchesAudit_BatchID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TestExceptions.PK_TestExceptions.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TestExceptions.FK_TestExceptions_LookupID.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestExceptions.IX_TestExceptions_LookupID_Val.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Lookups.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Lookups.PK_Lookups.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsHosts.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TrackingLocationsHosts.FK_TrackingLocationsHosts_TrackingLocationID.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TrackingLocationsHosts.PK_TrackingLocationsHosts.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsHosts.TrackingLocationsHostsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsHosts.TrackingLocationsHostsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsHostsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\TrackingLocationHostsMigrationScript.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\BB10.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\1_Column_Rename.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\2_Column_Add.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\3_Trigger_columnFix.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\4_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\5_NewTable_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\6_Data_Modification.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\7_Column_Fix.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\Product_Table_Release\8_Insert_Exception_ProductID.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\ProductType_AccessoryType_Release\6_ProductType_AccessoryType_Migration.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\ProductType_AccessoryType_Release\1_Column_Rename.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\ProductType_AccessoryType_Release\2_Column_Add.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\ProductType_AccessoryType_Release\3_Trigger_Index_view.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\ProductType_AccessoryType_Release\4_New_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\ProductType_AccessoryType_Release\5_modified_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\1_Column_Rename.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\2_Column_Add.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\3_Index._Keys.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\4_Trigger.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\5_View.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\6_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\7_Exceptions.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\8_DataMove.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April152013\9_StationXML.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April222013\1_New.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April222013\2_TableModification.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April222013\3_Users.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\April222013\4_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\May062013\1_New_Column.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\May062013\2_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\May062013\3_DataUpdate.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June032013\1_Table_Modifications.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June032013\2_Table_Additions.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June032013\3_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June242013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June102013\1_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June242013\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July022013\1_DataFix.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July022013\2_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July082013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July152013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July092013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July222013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July222013\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Oracle\REMI_HELPER.txt">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July292013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\August062013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\August122013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\September092013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\September042013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\August152013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\August262013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\September162013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\September172013\1_Delete_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\September172013\2_Update_SP.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\September232013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\September262013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\October032013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\October102013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\October102013\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\October282013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\October282013\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\November042013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\November112013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\November112013\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\ImageShrink\ImageShrink.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\November192013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\November212013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\November252013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\December022013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\December092013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\December092013\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\December162013\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\January062014\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\January062014\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\January222014\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\February062014\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\February062014\2.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\February252014\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\May192014\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June192014\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\June192014\RollBack\1-ROLLBACK.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Scripts\July142014\1.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Scripts\5923699_DataMove.sql">
+      <SubType>NotInBuild</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Utilities\remispTestStagesRestoreSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Utilities\remispTestRestoreSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_ExceptionsPivoted.view.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispQRAEndOfYearClose.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_ExceptionsAuditPivoted.view.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Batches.IX_Batches_BatchStatus.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\BatchesAudit.IX_BatchesAudit_IT_BID_BS.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\TestExceptions.DF_TestExceptions_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\RemispGetTestCountByType.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispCheckVersion.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsDeleteHost.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsInsertHost.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductConfigValues.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductConfiguration.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductGroupConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetLookups.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProductConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveProductConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductConfiguration.FK_ProductConfiguration_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductConfigValues.FK_ProductConfigValue_Lookup.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductConfigValues.FK_ProductConfigValues_ProductConfiguration.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductConfigValue.ProductConfigValuesAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductConfigValues.ProductConfigValuesAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductConfiguration.ProductConfigurationAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductConfiguration.ProductConfigurationAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetSimilarTestConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProductConfigurationDetails.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveProductConfigurationDetails.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispCopyTestConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeleteProductConfigurationDetail.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeleteProductConfigurationHeader.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Batches.FK_Batches_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductManagers.FK_ProductManagers_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductSettings.FK_ProductSettings_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectListByTestCentre.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductConfigurationAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductConfigValuesAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductCOnfiguration.FK_ProductConfiguration_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProducts.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Products.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProductNameByID.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProductIDByName.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\Products.UIX_Products_ProductGroupName.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveLookup.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveProduct.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsHostID.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Scripts\Product_Table_Release\9_Exception_SP.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Products.IX_Products_PG_IsActive.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Batches.IX_Batches_ProductID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\DeviceTrackingLog.IX_DeviceTrackingLog_Loc_Out.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSearch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchGetTaskInfo.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_GetTaskInfo.view.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestRecords.TestRecordsJobTestStageUnit.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetEstimatedTSTime.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Batches.FK_Batches_TestCenterLocation.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Batches.FK_Batches_ProductType.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Batches.FK_Batches_AccessoryGroup.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Batches.FK_TrackingLocations_TestCenterLocation.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductConfigurationProcess.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductConfigurationUpload.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\ProductConfigurationUpload.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeleteStationConfigurationHeader.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispCopyStationConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeleteStationConfigurationDetail.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetSimilarStationConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveStationConfigurationDetails.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveStationConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetStationConfigurationDetails.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetStationConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispStationGroupConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispStationConfigurationProcess.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispStationConfigurationUpload.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\StationConfigurationUpload.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\StationConfigurationUpload.StationConfigurationUpload_isProcessed.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsHostsConfigValues.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsHostsConfiguration.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TrackingLocationsHostsConfiguration.FK_TrackingLocationsHostsConfiguration_TrackingLocationsHostsConfiguration.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TrackingLocationsHostsConfigValues.FK_TrackingLocationsHostsConfigValues_Lookups.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TrackingLocationsHostsConfigValues.FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\TrackingLocationsHostsConfigValues.DF_TrackingLocationsHostsConfigValues_IsAttribute.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsHostsConfigurationAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsHostsConfigValuesAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsHostsConfiguration.TrackingLocationsHostsConfigurationAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsHostsConfiguration.TrackingLocationsHostsConfigurationAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsHostsConfigValues.TrackingLocationsHostsConfigValuesAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationsHostsConfigValues.TrackingLocationsHostsConfigValuesAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\remifnUserCanDelete.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUserTraining.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\UserTraining.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\UserTraining.FK_UserTraining_Lookups.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductManagers.FK_ProductManagers_Users.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\UserTraining.FK_UserTraining_Users.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetLookup.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispExceptionSearch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchDNPParametric.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsFileUpload.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsFileProcessing.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsSummary.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\Relab.ResultsParametersComma.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsSummaryExport.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\UsersProducts.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\UsersProducts.FK_UsersProducts_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\UsersProducts.FK_UsersProducts_Users.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersProducts.UsersProductsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersProducts.UsersProductsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\UsersProductsAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispYourBatchesGetActiveBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultMeasurements.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_Permissions.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\aspnet_PermissionsInRoles.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\TargetAccess.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Lookups.UX_Lookups_TypeVal.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetRolesByPermission.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetPermissionsByRole.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispOverallResultsSummary.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSearch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetBatchDocuments.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispAddRemovePermissiontoRole.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispRolePermissions.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.ResultsParameters.IX_ParameterNameVal.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetUnitsByTestMeasurementParameters.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetMeasurementsByTest.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsGraph.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsAvailable.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remiPROCESSDetectBadAdditions.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispJobsDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispJobsSelectList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsGetTestUnitTableForAllTestStages.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestRecordsAddTLLink.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestRecordsDeleteOne.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestUnitsInChamberView.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestUnitsSelectListByTrackingLocation.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\TestRecordsAuditViewRecords.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\TestsUpdateName.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeleteProductConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeleteStationConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\Relab.ResultsXMLParametersComma.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultVersions.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetTestsByBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetParametersByMeasurementTest.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\Relab.ResultsParametersNameComma.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetMeasurementParameterCommaSeparated.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\remifnTestStageCanDelete.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingTypesTests.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispAddRemoveTypeToTest.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\remifnTestCanDelete.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\TestRecords.FK_TestRecords_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestRecords..IX_TestRecords_TestStage.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestRecords..IX_TestRecords_TestID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsMeasurementFileUpload.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\Split.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetAllResultsByQRAStage.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.FunctionalMatrixByTestRecord.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsXML.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Relab.Results.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsMeasurements.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsMeasurementsFiles.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsParameters.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsParameters.FK_ResultsParameters_ResultsMeasurements.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurementsFiles.FK_ResultsMeasurementsFiles_ResultsMeasurements.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_ResultsXML_XMLID.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\Relab.ResultsMeasurements.DF__ResultsMe__Archi__7F8BD5E2.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Results.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Lookups_UnitType.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Lookups_MeasurementType.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.Results.FK_Results_TestUnits.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.Results.FK_Results_TestStages.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.Results.FK_Results_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsXML.FK_ResultXML_Results.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\Relab.ResultsXML.DF__ResultsXM__isPro__7DA38D70.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\TestStages.DF_TestStages_IsArchived.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsSearch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsFailureAnalysis.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesByProductView.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSearchList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectBackToRequestorBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectInMechanicalTestBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispGetEnvironmentalStressSchedule.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispSetProductGroupRFBand.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestRecordsSearchFor.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Constraints\Jobs.DF_Jobs_IsActive.defconst.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestRecordsXTrackingLogs.IX_TestRecordsXTrackingLogs_TrackingLogID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestRecordsXTrackingLogs.IX_TestRecordsXTrackingLogs_TestRecordID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationPlugins.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUnitSearch.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_GetTaskInfoCompleted.view.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectBatchesForReport.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectHeldBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectTestingCompleteBatches.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesActiveSelectByJob.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectActiveBatchesForProductGroup.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetAllCalibrationXML.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveCalibrationConfiguration.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Calibration.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Calibration.PK_Calibration.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Calibration.FK_Calibration_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Calibration.FK_Calibration_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationsPlugin.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\TrackingLocationsPlugin.PK_TrackingLocationPlugin.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Functions\GetDateDiffInMinutes.function.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispKPIReports.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductLookups.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductLookups.FK_ProductLookups_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductLookups.FK_ProductLookups_Lookups.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_BatchAudit.view.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Views\vw_TestRecordAudit.view.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductTestReady.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\ProductTestReady.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_ProductTestReady_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_ProductTestReady_ProductSettings.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_ProductTestReady_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductTestReady.pkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.DBA_ResultsMeasurements_ResultID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.DBA_ResultsMeasurements_ResultID_PassFail_Archived.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.DBA_ResultsMeasurements_Archived.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\DBA_TestRecordsAudit_TestRecordId.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Indexes\DBA_TestStages_TestID.index.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.GetRequestSetupInfo.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetContacts.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsCopyExceptions.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsCopyExceptionsForProduct.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsGetBatchOnlyExceptions.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsDeleteProductGroupException.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsGetProductExceptions.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsGetProductGroupTable.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsInsertProductGroupException.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Req.RequestSetup.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_TestStages.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Jobs.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Batches.fkey.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectDailyList.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectDailyListQRAListOnly.proc.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\UserTrainingAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\Triggers\UserTrainingAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+    <NotInBuild Include="Schema Objects\Schemas\dbo\Tables\UserTrainingAudit.table.sql">
+      <SubType>Code</SubType>
+    </NotInBuild>
+  </ItemGroup>
+</Project>

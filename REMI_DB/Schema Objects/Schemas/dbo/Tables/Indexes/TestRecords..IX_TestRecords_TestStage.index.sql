@@ -1,0 +1,1 @@
+﻿CREATE NONCLUSTERED INDEX [IX_TestRecords_TestStage] ON [dbo].[TestRecords] ([TestStageID]) INCLUDE ([TestID], [TestUnitID])

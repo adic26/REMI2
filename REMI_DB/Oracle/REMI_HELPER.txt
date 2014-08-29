@@ -1,0 +1,647 @@
+create or replace 
+PACKAGE BODY "REMI_HELPER" IS
+
+    -------------------------------------------------------------------------------
+    FUNCTION get_unit_information (p_qra_num in job_header.description%type)
+    RETURN sys_refcursor
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        open o_cur for
+            -- given the QRA number, grab all the unit records
+            select u.*
+            from job_units u, job_header j
+            where  j.job_id = u.job_id
+            and j.description = p_qra_num
+            and sysdate between u.cre_date and nvl ( u.term_date, sysdate + 1 )
+            order by u.unit_number asc;
+
+        -- return the cursor to the dependent program.
+        return o_cur;
+
+    END;
+    -------------------------------------------------------------------------------
+
+
+    -------------------------------------------------------------------------------
+    FUNCTION get_latest_qra
+    RETURN varchar2
+    IS
+        v_req varchar2(100);
+    BEGIN
+
+        -- gets the largest reqnum from TRS.
+        SELECT NVL(MAX(reqnum), 'Not found.') into v_req
+        FROM trs.request_header rh,
+             trs.time_user_stamp t
+        WHERE rh.stamp_id = t.stamp_id
+        AND rh.rt_id = 1
+        AND (SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1));
+
+        -- return the cursor type.
+        return v_req;
+    END;
+    -------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------
+    FUNCTION get_request_information (p_reqnum in trs.request_header.reqnum%type)
+    RETURN sys_refcursor
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        -- Given the QRA number, grab metadata about that job from TRS & reliability systems.
+        open o_cur for
+
+            -- gets the request info data from TRS as a list of (name, value) pairs.
+            SELECT rf.NAME as field_name, ri.text as field_value, nvl(c_attachments, 0) as field_attachments
+            FROM trs.request_header rh,
+                 trs.request_info ri,
+                 trs.time_user_stamp t,
+                 trs.request_fields rf,
+                 (  SELECT rf.rf_id, count(rf.fl_id) c_attachments
+                    FROM trs.request_files rf, trs.request_header rh
+                    WHERE rh.reqnum = p_reqnum
+                    and rh.rq_id = rf.rq_id
+                    and rf.url is null
+                    and trs.stamp_valid(rh.stamp_id) = 1
+                    and trs.stamp_valid(rf.stamp_id) = 1
+                    group by rf.rf_id
+                ) rfiles
+            WHERE rh.rq_id = ri.rq_id
+            AND ri.stamp_id = t.stamp_id
+            AND ri.rf_id = rf.rf_id
+            and ri.rf_id = rfiles.rf_id(+)
+            AND (SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1))
+            AND (rh.reqnum = p_reqnum)
+            AND trs.stamp_valid(rh.stamp_id) = 1
+
+            union all
+
+            -- gets the requestor's name from TRS.
+            select 'Requestor', trs.summary_page_functions.get_data (rh.rq_id, 'REQUESTOR'), 0
+            from trs.request_header rh
+            where rh.reqnum = p_reqnum
+            AND trs.stamp_valid(rh.stamp_id) = 1
+
+            union all
+
+            -- gets the value of the RQ_ID from TRS
+            select 'RQ_ID', to_char(rh.rq_id), nvl(c, 0)
+            from trs.request_header rh, (
+                SELECT rh.rq_id, count(1) c
+                FROM trs.request_files rf, trs.request_header rh
+                WHERE trs.stamp_valid(rf.stamp_id) = 1
+                and rh.rq_id = rf.rq_id
+                and rh.reqnum = p_reqnum
+                and rf_id is null and url is null
+                group by rh.rq_id
+            ) rf
+            where rh.reqnum = p_reqnum
+            AND trs.stamp_valid(rh.stamp_id) = 1
+            and rh.rq_id = rf.rq_id(+)
+
+            union all
+
+            -- gets the value of the JOB_ID from RELIABILITY, where applicable
+            -- for different request types (i.e. FA), this would return N/A.
+            select 'JOB_ID', nvl(to_char(job_id), 'N/A'), 0
+            from relab_alpha.job_header
+            where description = p_reqnum
+
+            union all
+
+            -- get the value of the request status from the system
+            select 'Request Status', trs.summary_page_functions.get_data (rh.rq_id, 'STATUS'), 0
+            from trs.request_header rh
+            where rh.reqnum = p_reqnum
+            AND trs.stamp_valid(rh.stamp_id) = 1;
+
+        -- return the cursor type.
+        return o_cur;
+
+    END;
+    -------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------
+    FUNCTION get_product_groups
+    RETURN sys_refcursor
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        open o_cur for
+            select distinct text
+            from trs.selection_options
+            where trs.stamp_valid (stamp_id) = 1
+            and rf_id = 6
+            order by text asc;
+        return o_cur;
+
+    END;
+    -------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------
+    FUNCTION get_job_types
+    RETURN sys_refcursor
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        open o_cur for
+           select max(so_id), text
+            from trs.selection_options
+            where trs.stamp_valid (stamp_id) = 1
+            and rf_id = 542
+            group by text
+            order by  text;
+        return o_cur;
+
+    END;
+    -------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------
+
+
+
+    FUNCTION get_FAs_by_QRA (p_qra_num in trs.request_header.reqnum%type)
+    RETURN sys_refcursor
+
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        -- get all requests (TRS) related to the specified QRA
+        open o_cur for
+/*          SELECT distinct rh.reqnum, rh.rq_id
+             FROM trs.request_header rh,
+                   trs.request_info ri,
+                   trs.time_user_stamp t,
+                   trs.request_fields rf
+            WHERE rh.rq_id = ri.rq_id
+            AND ri.stamp_id = t.stamp_id
+            AND ri.rf_id = rf.rf_id
+            AND ri.rf_id = rf.rf_id
+            AND rh.rt_id = 40
+            AND SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1)
+            AND rf.rf_id = 590
+            AND ri.text = p_qra_num;*/
+
+            select rh2.reqnum
+            from trs.request_header rh, trs.related_items ri,  trs.request_header rh2
+            where rh.reqnum = p_qra_num
+            and ri.rq_id = rh.rq_id
+            and ri.rel_rq_id = rh2.rq_id
+            and trs.stamp_valid(rh.stamp_id) = 1
+            and trs.stamp_valid(ri.stamp_id) = 1
+            and trs.stamp_valid(rh2.stamp_id) = 1
+            group by rh2.reqnum, rh2.rq_id;
+
+
+        return o_cur;
+    END;
+    -------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------
+    FUNCTION get_active_RIT_by_product (p_product in trs.request_info.text%type)
+    RETURN sys_refcursor
+
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        open o_cur for
+            SELECT distinct rh.reqnum, rh.rq_id
+              FROM trs.request_header rh,
+                   trs.request_info ri,
+                   trs.time_user_stamp t,
+                   trs.time_user_stamp t2,
+                   trs.request_fields rf,
+                   trs.request_status rs,
+                   trs.status_fields sf
+             WHERE rs.sf_id = sf.sf_id
+               AND rs.rq_id = rh.rq_id
+               AND rh.rq_id = ri.rq_id
+               AND rs.stamp_id = t2.stamp_id
+               AND ri.stamp_id = t.stamp_id
+               AND ri.rf_id = rf.rf_id
+               AND (rh.rt_id = 96)
+               AND (SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1))
+               AND (SYSDATE BETWEEN t2.cre_date AND NVL (t2.term_date, SYSDATE + 1))
+               AND (rf.rf_id = 1630)
+               AND (ri.text = p_product)
+               AND sf.NAME != 'Resolved'
+               AND sf.NAME != 'Canceled';
+
+        return o_cur;
+
+    END;
+    -------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------
+    FUNCTION get_last_result (p_qra_num in job_header.description%type,
+                              p_unit_number in job_units.unit_number%type,
+                              p_stage in test_stages.description%type,
+                              p_test in test_type.description%type)
+    RETURN sys_refcursor
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        open o_cur for
+            SELECT RESULT, vernum
+              FROM (SELECT rs.status AS RESULT, t.vernum AS vernum
+                        FROM tests t,
+                             job_units ju,
+                             job_header jh,
+                             test_type tt,
+                             test_stages ts,
+                             result_status rs
+                       WHERE t.ju_id = ju.ju_id
+                         AND t.tt_id = tt.tt_id
+                         AND t.ts_id = ts.ts_id
+                         AND t.rs_id = rs.rs_id
+                         AND ju.job_id = jh.job_id
+                         AND jh.description = p_qra_num
+                         AND ju.unit_number = p_unit_number
+                         AND ts.description = p_stage
+                         AND tt.description = p_test
+                         AND SYSDATE BETWEEN ju.cre_date AND NVL (ju.term_date,SYSDATE + 1)
+                         AND SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1)
+                    ORDER BY t.vernum DESC)
+             WHERE (ROWNUM = 1);
+
+        return o_cur;
+
+    END;
+    -------------------------------------------------------------------------------
+/* Formatted on 2010/01/27 09:49 (Formatter Plus v4.8.7) */
+    FUNCTION get_TestCenterLocations
+    RETURN sys_refcursor
+    IS
+   o_cur   sys_refcursor;
+   BEGIN
+   OPEN o_cur FOR
+      SELECT DISTINCT text
+                 FROM trs.selection_options
+                 WHERE trs.stamp_valid (stamp_id) = 1
+                 AND rf_id = 5755
+             ORDER BY text ASC;
+
+   -- return the cursor to the dependent program.
+   RETURN o_cur;
+END;
+
+--------------------------------------------------------------------------------
+
+    FUNCTION get_last_results (p_qra_num in job_header.description%type)
+     RETURN sys_refcursor
+     IS
+
+           o_cur sys_refcursor;
+
+     BEGIN
+         open o_cur for
+         /*select s_vernum, unitnumber, teststage, testtype,
+         --get the correct result status
+         (select rs.status  from result_status rs, job_units ju, job_header jh, test_stages ts, test_type tt, tests t
+                                  WHERE rs.rs_id = t.rs_id and t.ju_id = ju.ju_id and ju.unit_number = unitnumber and t.vernum = s_vernum AND t.tt_id = tt.tt_id
+               and tt.description = testtype AND t.ts_id = ts.ts_id and ts.description = teststage AND ju.job_id  =jh.job_id
+               and jh.description = p_qra_num AND SYSDATE BETWEEN ju.cre_date AND NVL (ju.term_date,SYSDATE + 1)
+                AND SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1)
+                 AND SYSDATE BETWEEN rs.cre_date AND NVL (rs.term_date, SYSDATE + 1) and rownum=1)
+         as resultid
+         from
+           (SELECT  max(t.vernum) as s_vernum , ju.unit_number as unitnumber ,ts.description as teststage,tt.description as testtype
+                                    FROM tests t, job_units ju, job_header jh, test_stages ts, test_type tt
+                                  WHERE t.ju_id = ju.ju_id AND t.tt_id = tt.tt_id AND t.ts_id = ts.ts_id AND ju.job_id =jh.job_id
+                and jh.description = p_qra_num
+                AND SYSDATE BETWEEN ju.cre_date AND NVL (ju.term_date,SYSDATE + 1)
+                AND SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1)
+
+                group by ju.unit_number, ts.description, tt.description)
+         order by teststage, testtype, unitnumber;   */
+         select s_vernum, unitnumber, teststage, testtype,
+         OVERALL_PASS_FAIL(job_id, unitnumber, TS_ID,tt_id) as resultid
+         from
+           (SELECT  max(t.vernum) as s_vernum , ju.unit_number as unitnumber ,ts.description as teststage,tt.description as testtype,
+                        tt.tt_id,  ts.ts_id, ju.job_id
+                                  FROM tests t, job_units ju, job_header jh, test_stages ts, test_type tt
+                                  WHERE t.ju_id = ju.ju_id AND t.tt_id = tt.tt_id AND t.ts_id = ts.ts_id AND ju.job_id =jh.job_id
+                and jh.description = p_qra_num
+                AND SYSDATE BETWEEN ju.cre_date AND NVL (ju.term_date,SYSDATE + 1)
+                AND SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1)
+
+                group by ju.unit_number, ts.description, tt.description, tt.tt_id,ts.ts_id,ju.job_id)
+         order by teststage, testtype, unitnumber;
+
+
+
+        return o_cur;
+
+     END;
+
+FUNCTION  get_paramater_results (p_qra_num in job_header.description%type,p_stage in test_stages.description%type:=NULL, p_zero_for_fails_only in varchar:=0)
+     RETURN sys_refcursor
+     IS
+
+           o_cur sys_refcursor;
+
+     BEGIN
+
+           open o_cur for
+  SELECT  ts.description teststage,tt.description testname, measurement_types.name paramname, mp.param,
+                   measurements.lower, measurements.upper, measurements.result, result_status.status, measurements.units, ju.unit_number unitnumber
+            FROM   result_status, measurements, measurement_types, job_units ju, tests t, measurement_params mp, test_type tt, test_stages ts
+
+            WHERE  result_status.rs_id=measurements.rs_id
+            AND    measurements.mt_id=measurement_types.mt_id
+            AND    measurements.te_id IN (SELECT t.te_id
+            FROM
+              (
+              SELECT   max(t.vernum) AS s_vernum, ts.description as teststage, tt.description as testtype, ju.unit_number as unitnumber
+                                            FROM tests t,
+                                                  job_units ju,
+                                                  job_header jh,
+                                                  test_type tt,
+                                                  test_stages ts
+                                          WHERE t.ju_id = ju.ju_id
+                                             AND t.ts_id = ts.ts_id
+                                             and t.tt_id = tt.tt_id
+                                             AND ju.job_id = jh.job_id
+                                             AND jh.description = p_qra_num
+                                             AND (ts.description = p_stage or p_stage is null)
+                                             AND SYSDATE BETWEEN ju.cre_date AND NVL (ju.term_date,SYSDATE + 1)
+                                             AND SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1) group by ts.description,  tt.description, ju.unit_number),
+                          tests t,
+                          job_units ju,
+                          job_header jh,
+                          test_type tt,
+                          test_stages ts
+                                          WHERE t.ju_id = ju.ju_id
+                                             AND t.ts_id = ts.ts_id
+                         and t.tt_id = tt.tt_id
+
+                         and t.vernum = s_vernum
+                         and tt.description = testtype
+                         and ts.description = teststage
+
+                                             AND ju.job_id = jh.job_id
+                                             AND jh.description = p_qra_num
+                                             AND (ts.description = p_stage or p_stage is null)
+                                             )
+
+                AND upper(result_status.status) = decode(p_zero_for_fails_only, 0, 'FAIL', upper(result_status.status))
+                and ju.ju_id = t.ju_id
+               and ts.ts_id = t.ts_id
+                and tt.tt_id = t.tt_id
+                and t.te_id = measurements.te_id
+                and mp.mp_id = measurements.mp_id
+                ORDER BY measurements.m_id asc, measurements.cre_date DESC, unitnumber;
+
+                 return o_cur;
+    end;
+
+    -------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------
+FUNCTION   GET_OVERALL_STATUS(p_qra_num in job_header.description%type,
+                              p_unit_number in job_units.unit_number%type,
+                              p_stage in test_stages.description%type,
+                              p_test in test_type.description%type)
+     RETURN sys_refcursor
+     is
+
+  o_cur sys_refcursor;
+
+  v_job_id  job_header.job_id%type;
+  v_tt_id   test_type.tt_id%type;
+  v_ts_id   test_stages.ts_id%type;
+
+  begin
+
+        SELECT nvl(max(jh.job_id), -1), nvl(max(tt.tt_id), -1), nvl(max(ts.ts_id), -1) into v_job_id, v_tt_id, v_ts_id
+        FROM   tests t, job_units ju, job_header jh, test_stages ts, test_type tt
+        WHERE t.ju_id =ju.ju_id
+        AND   jh.job_id = ju.job_id
+        and   jh.description = p_qra_num
+        AND   t.tt_id= tt.tt_id
+        and   tt.name = p_test
+        AND   ju.unit_number= p_unit_number
+        AND    t.ts_id = ts.ts_id
+        AND   ts.name = p_stage;
+
+    if (v_job_id = -1 or v_tt_id = -1 or v_ts_id = -1)
+    then
+        open o_cur for
+        select 'NA' from dual;
+
+  return o_cur;
+
+    else
+
+
+    open o_cur for
+        select OVERALL_PASS_FAIL( v_job_id,
+            p_unit_number,
+            v_ts_id,
+            v_tt_id)status from dual;
+
+  return o_cur;
+  end if;
+  end;
+
+--------------------------------------------------------------------------------
+
+   PROCEDURE qra_percent_update (p_reqnum IN VARCHAR2, percent_complete IN NUMBER)
+   AS
+        -- this procedure is used by Reliability.
+        l_reqnum trs.request_header.reqnum%type := p_reqnum;
+        l_percent_complete number(10) := percent_complete;
+
+   BEGIN
+    /*
+    CREATE TABLE qra_percent_complete(
+        reqnum                  VARCHAR2 (300) NOT NULL PRIMARY KEY,
+        percent_complete_remi   NUMBER (10, 2) DEFAULT 0,
+        percent_complete_actual NUMBER (10, 2) AS (trs.get_qra_percent_complete(reqnum, percent_complete_remi)) VIRTUAL
+    );
+    */
+
+    MERGE INTO qra_percent_complete q USING dual ON (q.reqnum = l_reqnum)
+        WHEN MATCHED THEN UPDATE SET percent_complete_remi = l_percent_complete
+        WHEN NOT MATCHED THEN INSERT (reqnum, percent_complete_remi) VALUES ( l_reqnum, l_percent_complete );
+
+    END;
+
+--------------------------------------------------------------------------------
+
+FUNCTION get_product_types
+    RETURN sys_refcursor
+    IS
+        o_cur sys_refcursor;
+    BEGIN
+        open o_cur for
+            select distinct text
+            from trs.selection_options
+            where trs.stamp_valid (stamp_id) = 1
+            and rf_id = 15396
+            order by text asc;
+        return o_cur;
+    END;
+
+--------------------------------------------------------------------------------
+
+FUNCTION get_accessory_groups
+    RETURN sys_refcursor
+    IS
+        o_cur sys_refcursor;
+    BEGIN
+        open o_cur for
+            select distinct text
+            from trs.selection_options
+            where trs.stamp_valid (stamp_id) = 1
+            and rf_id = 24895
+            order by text asc;
+        return o_cur;
+    END;
+
+FUNCTION  get_result_By_Measurement (p_qra_num in job_header.description%type,p_stage in test_stages.description%type:=NULL,p_unit in job_units.unit_number%type, p_measurement in measurement_types.name%type)
+RETURN sys_refcursor
+IS
+    o_cur sys_refcursor;
+BEGIN
+    open o_cur for
+    SELECT  measurement_types.name paramname,measurements.result
+    FROM   result_status, measurements, measurement_types, job_units ju, tests t, measurement_params mp, test_type tt, test_stages ts
+    WHERE  result_status.rs_id=measurements.rs_id AND measurements.mt_id=measurement_types.mt_id
+        AND measurements.te_id IN
+            (SELECT t.te_id
+                FROM
+                (
+                    SELECT   max(t.vernum) AS s_vernum, ts.description as teststage, tt.description as testtype, ju.unit_number as unitnumber
+                    FROM tests t, job_units ju, job_header jh, test_type tt, test_stages ts
+                    WHERE t.ju_id = ju.ju_id AND t.ts_id = ts.ts_id and t.tt_id = tt.tt_id AND ju.job_id = jh.job_id AND jh.description =  p_qra_num
+                        AND (ts.description = p_stage or p_stage is null) AND ju.unit_number=p_unit
+                        AND SYSDATE BETWEEN ju.cre_date AND NVL (ju.term_date,SYSDATE + 1)
+                        AND SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1)
+                    group by ts.description,  tt.description, ju.unit_number
+                ), tests t, job_units ju, job_header jh, test_type tt, test_stages ts
+                WHERE t.ju_id = ju.ju_id AND t.ts_id = ts.ts_id and t.tt_id = tt.tt_id and t.vernum = s_vernum and tt.description = testtype
+                    and ts.description = teststage AND ju.unit_number=p_unit AND ju.job_id = jh.job_id AND jh.description = p_qra_num
+                    AND (ts.description = p_stage or p_stage is null)
+            )
+        and ju.ju_id = t.ju_id and ts.ts_id = t.ts_id and tt.tt_id = t.tt_id and t.te_id = measurements.te_id and mp.mp_id = measurements.mp_id
+        and measurement_types.name = p_measurement
+    ORDER BY measurements.m_id asc, measurements.cre_date DESC;
+
+    return o_cur;
+end;
+
+FUNCTION get_QRA_By_TestCenter (p_test_center in trs.request_info.Text%type)
+    RETURN sys_refcursor
+    IS
+        o_cur sys_refcursor;
+    BEGIN
+        open o_cur for
+        Select * from       
+		(select distinct rh.rq_id as RequestID, rh.reqnum as QRA, sf.description as Status,
+        max(case when rf_id = 6 then text else null end) as Product,
+        max(case when rf_id = 15396 then text else null end) as ProductType,
+        max(case when rf_id = 24895 then text else null end) as AccessoryGroupName,
+        max(case when rf_id = 5755 then text else null end) as TestCenter,
+        max(case when rf_id = 12 then text else null end) as SampleSize,
+        max(case when rf_id = 542 then text else null end) as "Job",
+        max(case when rf_id = 294 then text else null end) as Purpose,
+        max(case when rf_id = 706 then text else null end) as CPR,
+        max(case when rf_id = 589 then text else null end) as "Report Required By",
+        max(case when rf_id = 387 then text else null end) as Priority,
+        rh.req_by as Requestor, t.cre_date
+        from trs.request_header rh, trs.request_info ri, trs.time_user_stamp t1, trs.time_user_stamp t,
+          trs.request_status rs, trs.status_fields sf, trs.time_user_stamp ts
+        where rf_id in (6, 15396, 24895, 5755, 12, 542, 294, 706, 589, 387)
+          and rh.rq_id = ri.rq_id
+          and rs.rq_id = rh.rq_id
+          and rs.sf_id = sf.sf_id
+          and ri.stamp_id = t1.stamp_id
+          and rh.stamp_id = t.stamp_id
+          and rs.stamp_id = ts.stamp_id
+          and sysdate between t1.cre_date and nvl( t1.term_date, sysdate + 1 )
+          and sysdate between t.cre_date and nvl( t.term_date, sysdate + 1 )
+          and sysdate between ts.cre_date and nvl( ts.term_date, sysdate + 1 )
+          and rh.rt_id = 1 and rs.sf_id in (123, 131, 929, 930)
+        group by rh.reqnum, rh.rq_id, rh.req_by, sf.description, t.cre_date)
+        where TestCenter = p_test_center;
+
+      
+      --123 Submitted
+      --124 Assigned
+      --131 Received
+      --930 Verified
+      --929 PM Review
+      return o_cur;
+    END;
+--------------------------------------------------------------------------------
+
+END;
+
+FUNCTION   SET_STATUS(p_qra_num in job_header.description%type, p_status in status_fields.description%type, p_userName in USERINFO.user_data.UserName%type)
+	RETURN sys_refcursor
+	is
+	o_cur sys_refcursor;
+	v_uid  USERINFO.user_data.User_ID%type;
+	v_SF_ID trs.status_fields.SF_ID%type;
+	v_rq_id job_header.rq_id%type;
+	v_current_status trs.status_fields.description%type;
+	v_new_sf_id trs.status_fields.description%type;
+	v_current_stamp_id trs.time_user_stamp.stamp_id%type;
+	v_new_stamp_id trs.time_user_stamp.stamp_id%type;
+	begin
+		select rq_id into v_rq_id  from trs.request_header where reqnum= :p_qra_num;
+			select User_ID into v_uid from USERINFO.user_data where username = :p_userName;
+    
+		select rs.sf_id, tus.stamp_id into v_SF_ID, v_current_stamp_id
+			from trs.request_status rs, trs.time_user_stamp tus
+			where rs.rq_id=v_rq_id And rs.stamp_id=tus.stamp_id And tus.Term_User is null;
+    
+			select description into v_current_status from trs.status_fields where sf_id=v_SF_ID;
+    
+		if v_current_status = 'Submitted' Then
+		  v_new_sf_id := '131';
+		End If;
+        
+		if v_current_status = 'Received' Then
+		  v_new_sf_id := '124';
+		End If;
+		
+		select max(stamp_id)+1 into v_new_stamp_id from trs.time_user_stamp;
+        
+		update trs.time_user_stamp set term_date=sysdate, term_user=v_uid where stamp_id=v_current_stamp_id;
+    
+		insert into trs.time_user_stamp (stamp_id, cre_date,cre_user, upd_date, term_date, term_user)
+		values (v_new_stamp_id, sysdate, v_uid, sysdate, null, null)
+    
+		insert into trs.request_status (rq_id, sf_id, stamp_ID) values (v_rq_id, v_new_sf_id, v_new_stamp_id);
+    
+		--dbms_output.put_line('RQ_ID: ' || v_rq_id);
+		--dbms_output.put_line('v_uid: ' || v_uid);
+		--dbms_output.put_line('v_SF_ID: ' || v_SF_ID);
+		--dbms_output.put_line('v_current_stamp_id: ' || v_current_stamp_id);
+		--dbms_output.put_line('v_new_sf_id: ' || v_new_sf_id);
+		--dbms_output.put_line('v_new_stamp_id: ' || v_new_stamp_id);
+	end;

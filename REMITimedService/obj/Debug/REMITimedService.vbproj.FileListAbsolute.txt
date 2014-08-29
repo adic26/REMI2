@@ -1,0 +1,14 @@
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Debug\REMITimedService.exe.config
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Debug\ReInstall.bat
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Debug\UnInstall.bat
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Debug\REMITimedService.exe.manifest
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Debug\REMITimedService.application
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Debug\REMITimedService.exe
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Debug\REMITimedService.pdb
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Debug\REMITimedService.Resources.resources
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Debug\REMITimedService.ProjectInstaller.resources
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Debug\REMITimedService.exe.manifest
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Debug\REMITimedService.application
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Debug\REMITimedService.exe
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Debug\REMITimedService.pdb
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Debug\REMITimedService.vbproj.GenerateResource.Cache

@@ -1,0 +1,14 @@
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Release\REMITimedService.exe.config
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Release\ReInstall.bat
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Release\UnInstall.bat
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Release\REMITimedService.exe.manifest
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Release\REMITimedService.application
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Release\REMITimedService.exe
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\bin\Release\REMITimedService.XmlSerializers.dll
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Release\REMITimedService.Resources.resources
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Release\REMITimedService.ProjectInstaller.resources
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Release\REMITimedService.exe.manifest
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Release\REMITimedService.application
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Release\REMITimedService.exe
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Release\REMITimedService.XmlSerializers.dll
+D:\P4_QA\ogaudreault\qa\Reliability\REMI\Dev\Main\REMITimedService\obj\Release\REMITimedService.vbproj.GenerateResource.Cache

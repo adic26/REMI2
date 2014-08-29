@@ -1,0 +1,2 @@
+﻿CREATE USER [RIMNET\wfahmy] FOR LOGIN [RIMNET\wfahmy];
+

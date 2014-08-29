@@ -1,0 +1,86 @@
+﻿<%@ Master Language="VB" AutoEventWireup="false" Inherits="Remi.MasterPages_MasterPage" Codebehind="MasterPage.master.vb" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>
+        <asp:Literal ID="litPageTitle" runat="server" Text="REMI"></asp:Literal></title>
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="../Design/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div id="siteContainer">
+        <div id="header">
+            <h1><img src="/Design/bbLogo.png" alt="BlackBerry" />REMI</h1>            
+        </div>
+        <asp:Panel runat="server" ID="pnlHead">
+        <div id="mainMenu">
+            <ul>
+                <li><a id="A11" href="~/Overview.aspx" title="Overview" runat="server"><span>Overview</span></a></li>
+                <li id="SearchLink" runat="server"><a id="A16" href="~/Reports/Search.aspx" title="Search" runat="server"><span>Search</span></a></li>
+                <li><a id="A2" href="~/ScanForTest/Default.aspx" title="Scan a device for testing"
+                    runat="server"><span>Scan Device</span></a></li>
+                <li><a id="A4" href="~/ScanForInfo/Default.aspx" title="Get Information on a batch"
+                    runat="server"><span>Batch Info</span> </a></li>
+                <li><a id="A6" href="~/ScanForInfo/productgroup.aspx" title="Get Information on a product group"
+                    runat="server"><span>Product Info</span> </a></li>
+                <li><a id="A5" href="~/ManageTestStations/TrackingLocation.aspx" title="View information about a specific tracking location."
+                    runat="server"><span>Tracking Location</span></a></li>
+                <li><a id="A9" href="~/ManageTestStations/default.aspx" title="Lab Timeline."
+                    runat="server"><span>Timeline</span></a></li>
+                <li id="incomingLink" runat="server"><a id="A10" href="~/Incoming/default.aspx" title="Incoming Functions."
+                    runat="server"><span>Incoming</span></a></li>                
+                <li id="inventoryLink" runat="server"><a id="A8" href="~/Inventory/Default.aspx" title="Inventory Maangement"
+                    runat="server"><span>Inventory</span> </a></li>
+                <li><a id="A3" href="~/ManageUser/Default.aspx" title="View your profile." runat="server">
+                    <span>User</span></a></li>
+                <li id="RelabLink" runat="server"><a id="A17" href="~/Relab/Results.aspx" title="RQ Results"
+                    runat="server"><span>Results</span></a></li>
+                <li id="adminLink" runat="server"><a id="A7" href="~/Admin/Default.aspx" title="Administration Panel"
+                    runat="server"><span>Admin</span></a></li>
+                <li id="HelpLink" runat="server"><a id="A18" href="~/Help/Default.aspx" title="Help"
+                    runat="server"><span>Help</span></a></li>
+                <li id="logLink" runat="server"><a id="A15" href="~/Admin/Developer/Default.aspx" title="Developer"
+                    runat="server"><span>Developer</span></a></li>
+            </ul>
+        </div>
+        </asp:Panel>
+        <div id="pageContainer">
+            <asp:Panel runat="server" ID="pnlLogged">
+                <div id="leftSidebar">
+                    <asp:Panel ID="pnlLeftMenuActions" runat="server">
+                        <h3>Logged In As</h3>
+                        <ul>
+                            <li id="UserNameLI">
+                                <asp:Image ImageUrl="../Design/Icons/png/24x24/lock.png" ID="imgUserName" runat="server" />
+                                <asp:HyperLink ID="hlUser" runat="server" NavigateUrl="/Badgeaccess/EditmyUser.aspx" Target="_self"></asp:HyperLink>
+                                <asp:LinkButton runat="server" ID="lnkLogout">(Logout)</asp:LinkButton></li>
+                        </ul>
+                    </asp:Panel>
+                    <asp:ContentPlaceHolder ID="leftSidebarContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </asp:Panel>
+            <div id="content">
+                <div id="pageTitle">
+                    <asp:ContentPlaceHolder ID="pageTitleContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+                <asp:ContentPlaceHolder ID="Content" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+            <div id="rightSidebar">
+                <asp:ContentPlaceHolder ID="rightSidebarContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+        </div>
+        <div id="footer">
+            <p>BlackBerry | Contact <a href="mailto:reltsdsupport@blackberry.com">reltsdsupport@blackberry.com</a> for support.</p>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

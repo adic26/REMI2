@@ -1,0 +1,3 @@
+﻿ALTER TABLE [dbo].[TestStages]
+    ADD CONSTRAINT [FK_TestStages_Tests] FOREIGN KEY ([TestID]) REFERENCES [dbo].[Tests] ([ID]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+

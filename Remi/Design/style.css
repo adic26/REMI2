@@ -1,0 +1,1122 @@
+/*###################################################*/
+/**************** body and tag styles ****************/
+/*###################################################*/
+body
+{
+    font-family: Verdana,Arial, Helvetica, sans-serif;
+    margin: 0px 0px 0px 5px;
+}
+.hidden
+{
+    display: none;
+}
+
+.executiveSummaryQRALeft
+{
+    background: #050505;
+    text-align: left;
+    font-weight:bold;
+    color: #FFF;
+}
+
+.slantHeader div
+{ 
+    filter: flipH() flipV();
+	writing-mode: tb-rl;
+	padding: 0px 0px 0px 0px;
+	margin: 0px;
+	height: 99px;
+}
+
+.slantHeader
+{
+    padding: 0px 0px 0px 0px;
+	margin: 0px;
+	word-wrap:break-word;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.RemoveBorder TR TD
+{
+    border: none;    
+}
+
+.ChecboxList
+{
+    OVERFLOW-Y:scroll;
+    WIDTH:75px;
+}
+
+.ChecboxList2
+{
+    OVERFLOW-Y:scroll;
+    WIDTH:150px;
+}
+
+/* BEGIN SCROLLABLE */
+
+.ScrollTable table, .ScrollTable table tbody, .ScrollTable
+{
+    border-collapse: collapse;
+    color: #000;    
+    text-align: center;
+    margin: 0px 0px 0px 0px;
+}
+
+.ScrollTable thead th, .ScrollTable tbody tr th
+{
+    white-space: nowrap;
+    background: #050505;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px #362d2d solid;
+    margin: 0px 0px 0px 0px;
+}
+
+.ScrollTable thead th a, .ScrollTable tbody tr th a
+{
+    white-space: nowrap;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px 0px 0px 0px;
+}
+.ScrollTable thead th a
+{
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+}
+.ScrollTable thead th a:hover
+{
+    text-decoration: none;
+    border-bottom: dashed 1px;
+}
+
+.ScrollTable table tr td
+{
+    white-space: nowrap;
+    padding: 0.1em;
+    border: 1px #362d2d solid;
+    text-align: center;
+    margin: 0px;
+    vertical-align: middle;
+}
+.ScrollTable table ul
+{
+    text-align: left;
+    margin: 0px;
+}
+
+.ScrollTable table tr td input
+{
+    padding: 0px;
+    margin: 0px;
+}
+
+/* END SCROLLABLE */
+
+.Processing
+{
+    color:Red;
+    font-size: 36px;
+}
+
+.Notification
+{
+    color:Red;
+    font-size: 14px;
+}
+
+/* TAGS */
+
+h1
+{
+    font-family: "Trebuchet MS" , Sans-Serif;
+    font-weight: normal;
+    font-size: 36px;
+    color: #362d2d;
+    margin-bottom: 10px;
+}
+
+h2
+{
+    font-family: "Trebuchet MS" , Sans-Serif;
+    font-weight: normal;
+    color: #666666; /*grey*/
+    font-size: 22px;
+}
+
+a
+{
+    color: #362d2d;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+a img
+{
+    border: none;
+}
+
+img.left, img.center, img.right
+{
+    padding: 4px;
+    border: 1px solid #a0a0a0;
+}
+
+img.left
+{
+    float: left;
+    margin: 0px 12px 5px 0px;
+}
+
+img.center
+{
+    display: block;
+    margin: 0px auto 5px auto;
+}
+
+img.right
+{
+    float: right;
+    margin: 0px 0px 5px 12px;
+}
+#siteContainer
+{
+    width: 1500px;
+    margin: 0px auto;
+    font-size: 11px;
+    line-height: 1.6em;
+    background-color: #FFFFFF;
+    float:left;
+}
+
+#pageContainer
+{
+    padding-bottom: 3px; /*border-bottom: 2px solid #362d2d;*/
+    margin-bottom: 2px;
+}
+
+#pageTitle
+{
+    margin-bottom: 15px;
+}
+#pageTitle h1
+{
+    margin-top: 5px;
+    font-family: "Trebuchet MS" ,Verdana, Arial, Helvetica, sans-serif;
+}
+#content
+{
+    margin: 0px;
+    padding: 0px 10px 0px 10px;
+    float: left;
+    width: 1295px;
+}
+
+#content p
+{
+    padding-bottom: 10px; /*border-bottom: 1px solid #DDDDDD;*/
+}
+/* HEADER */
+#header
+{
+    width: 1500px;
+    border: 0px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    clear: both; /* ensures no elements can float next to the header title*/
+}
+#header h1 /*Reliability Engineering Maanagement Tool*/
+{
+    margin: 0px 0px 5px 0px;
+    padding: 0;
+    font-size: 16px;
+}
+
+#header p /*Research in motion*/
+{
+    margin: 0px 0px 0px 190px;
+    padding: 0;
+    font-size: 10px;
+    color: #999999; /* Grey */
+    width: 1500px;
+}
+/* FOOTER */
+
+#footer
+{
+    padding: 0px 2px 0px 2px;
+    clear: both;
+    width: 1496px;
+    background-color: #362d2d;
+}
+
+#footer p
+{
+    color: #FFF;
+    padding: 5px;
+    text-align: center;
+}
+
+
+#footer p a
+{
+    color: #FFF;
+    background-color: #362d2d;
+    font-weight: 100;
+    border-bottom: 1px dotted #FFFFFF;
+}
+
+#footer p a:hover
+{
+    color: #FFF;
+    text-decoration: none;
+    border-top: 1px dotted #FFFFFF;
+    border-bottom: 0px dotted #FFFFFF;
+}
+
+/***************************
+/******** MAIN MENU  *******
+****************************/
+#mainMenu
+{
+    /*float: left;*/
+    width: 1500px;
+    font-size: 93%;
+    padding-bottom: 1px;
+    margin-bottom: 15px;
+    border-bottom: 3px solid #362d2d;
+}
+#mainMenu ul
+{
+    margin: 0;
+    padding: 0px 10px 26px 50px;
+    list-style: none;
+}
+#mainMenu li
+{
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+#mainMenu a
+{
+    float: left;
+    /*background: url("tableft10.gif") no-repeat left top;*/
+    margin: 0;
+    padding: 0 0 0 2px;
+    text-decoration: none;
+}
+#mainMenu a span
+{
+    float: left;
+    display: block;
+    background: url("leftMenuHeader.gif") repeat right top;
+    /*background: url("tabright10.gif") no-repeat right top;*/
+    padding: 5px 15px 4px 6px;
+    color: #FFF;
+}
+#mainMenu a span
+{
+    float: none;
+}
+#mainMenu a:hover
+{
+    background-position: 0% -42px;
+}
+#mainMenu a:hover span
+{
+    background-position: 100% -42px;
+}
+/*###################################################*/
+/******************* Sidebar Styles ********************/
+/*###################################################*/
+#rightSidebar /*not used anymore*/
+{
+    display: none;
+    width: 300px;
+    padding-left: 21px;
+    padding-right: 0px;
+    padding-top: 10px;
+    float: left;
+}
+
+#rightSidebar h2
+{
+    font-size: 22px;
+    border: 8px soild #666;
+}
+#rightSidebar p
+{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #DDDDDD;
+    text-align: justify;
+}
+
+/*#leftSidebar.td, #leftSidebar.tr
+{
+    white-space: nowrap;
+    padding: 0.3em;
+    border-width: 0px;
+    text-align: left;
+    color: #362d2d;
+    font-size: 11px;
+}*/
+
+#leftSidebar
+{
+    width: 185px;
+    padding: 0px 0px 0px 0px;
+    margin: 00px 0px 0px 0px;
+    float: left;
+}
+
+#leftSidebar h3
+{
+    margin: 0px 0px 0px 5px;
+    padding: 2px 0px 2px 5px;
+    background: url("rightMenuHeader.gif") repeat-x left top;
+    background-color: #362d2d;
+    border: 1px solid #362d2d;
+    border-top: none;
+    color: #fff;
+    font-size: 10pt;
+    text-align: left;
+    width: 163px;
+}
+#leftSidebar ul
+{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 10px 10px 5px;
+    border-bottom: 1px solid #362d2d;
+    list-style: none;
+}
+#leftSidebar li
+{
+    margin: 0px;
+    padding: 0px 0px 5px 0px;
+    border: 1px solid #362d2d;
+    border-bottom: none;
+    border-top: none;
+    background-color: #eee;
+    color: #362d2d;
+    font-weight: bold;
+    text-decoration: none;
+}
+#leftSidebar li a
+{
+    padding: 5px 0px 5px 5px;
+    color: #362d2d;
+    font-weight: bold;
+    text-decoration: none;
+    width: 165px;
+}
+#leftSidebar ul li img
+{
+    margin-bottom: -4px;
+    padding-left: 2px;
+    padding-top: 2px;
+}
+
+#leftSidebar li a:hover
+{
+    text-decoration: underline;
+}
+
+/*###################################################*/
+/**************** scan pass fail styles **************/
+/*###################################################*/
+
+.ScanPass
+{
+    height: 40px;
+    width: 580px;
+    color: #006400;
+    font-weight: bold;
+    font-size: 30px;
+    background: #98FB98 url('icons/png/48x48/accept.png') no-repeat left;
+    padding: 20px 0px 8px 55px;
+    border: solid 2px #006400;
+}
+
+.ScanFail
+{
+    height: 40px;
+    width: 580px;
+    color: #9C0006;
+    font-weight: bold;
+    font-size: 30px;
+    background: #FFB6C1 url('icons/png/48x48/delete.png') no-repeat left;
+    padding: 20px 0px 8px 55px;
+    border: solid 2px #9C0006;
+}
+.ScanFailInfo
+{
+    height: 40px;
+    width: 580px;
+    color: #000;
+    font-weight: bold;
+    font-size: 30px;
+    background: #FFF url('icons/png/48x48/info.png') no-repeat left;
+    padding: 20px 0px 8px 55px;
+    border: solid 2px #000;
+}
+/*###################################################*/
+/************ Test Overview Result Table Cells *******/
+/*###################################################*/
+
+/*(Pale-Green Back)*/
+
+.Pass
+{
+    font-weight: bold;
+    background-color: #98FB98;
+    color: #006400;
+}
+.Pass a
+{
+    color: #006400;
+    background-color: #98FB98;
+}
+.Pass a:hover
+{
+    color: #006400;
+    background-color: #98FB98;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(Light Pink Back)*/
+.Fail
+{
+    font-weight: bold;
+    background-color: #FFB6C1;
+    color: #9C0006;
+}
+.Fail a
+{
+    color: #9C0006;
+    background-color: #FFB6C1;
+}
+.Fail a:hover
+{
+    color: #9C0006;
+    background-color: #FFB6C1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(Royal Blue Text on Light Blue Back*/
+.KnownIssue
+{
+    font-weight: bold;
+    background-color: #ADD8E6;
+    color: #000080;
+}
+
+.KnownIssue a
+{
+    color: #000080;
+    background-color: #ADD8E6;
+}
+.KnownIssue a:hover
+{
+    color: #000080;
+    background-color: #ADD8E6;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* (LightSlateGray on GhostWhite*/
+.WaitingForResult
+{
+    font-weight: bold;
+    color: #000;
+    background-color: #F8F8FF;
+}
+
+.WaitingForResult a
+{
+    color: #778899;
+    background-color: #F8F8FF;
+}
+
+.WaitingForResult a:hover
+{
+    color: #778899;
+    background-color: #F8F8FF;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(Sienna Text on Burly Wood Back*/
+.OnHold
+{
+    font-weight: bold;
+    background-color: #DEB887;
+    color: #A0522D;
+}
+.OnHold a
+{
+    color: #A0522D;
+    background-color: #DEB887;
+}
+.OnHold a:hover
+{
+    color: #A0522D;
+    background-color: #DEB887;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(black Text on Orange Back*/
+.Quarantined
+{
+    font-weight: bold;
+    background-color: #FFA500;
+    color: #000;
+}
+.Quarantined a
+{
+    color: #000;
+    background-color: #FFA500;
+}
+.Quarantined a:hover
+{
+    color: #000;
+    background-color: #FFA500;
+    font-weight: bold;
+    text-decoration: underline;
+}
+/*(Medium Violet Red Text on Hot Pink Back*/
+.SubmissionCancelled
+{
+    font-weight: bold;
+    background-color: #FF69B4;
+    color: #C71585;
+}
+.SubmissionCancelled a
+{
+    color: #C71585;
+    background-color: #FF69B4;
+}
+.SubmissionCancelled a:hover
+{
+    color: #C71585;
+    background-color: #FF69B4;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(Dark Magenta Text on Plum Back*/
+.FARaised
+{
+    font-weight: bold;
+    background-color: #DDA0DD;
+    color: #8B008B;
+}
+.FARaised a
+{
+    color: #8B008B;
+    background-color: #DDA0DD;
+}
+.FARaised a:hover
+{
+    color: #8B008B;
+    background-color: #DDA0DD;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(Sandy Brown Text on Moccassin Back*/
+.RequiresFA
+{
+    font-weight: bold;
+    background-color: #FFE4B5;
+    color: #CD853F;
+}
+.RequiresFA a
+{
+    color: #CD853F;
+    background-color: #FFE4B5;
+}
+.RequiresFA a:hover
+{
+    color: #CD853F;
+    background-color: #FFE4B5;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(Black Text on Gold Back*/
+.NeedsRetest
+{
+    font-weight: bold;
+    background-color: #FFD700;
+    color: #000;
+}
+.NeedsRetest a
+{
+    color: #000;
+    background-color: #FFD700;
+}
+.NeedsRetest a:hover
+{
+    color: #000;
+    background-color: #FFD700;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*(Dark Grey On Light Grey*/
+.DNP
+{
+    font-weight: bold;
+    background-color: #DCDCDC;
+    color: #696969;
+}
+.DNP a
+{
+    color: #696969;
+    background-color: #DCDCDC;
+}
+.DNP a:hover
+{
+    color: #696969;
+    background-color: #DCDCDC;
+    font-weight: bold;
+    text-decoration: underline;
+}
+/*###################################################*/
+/****************** Form Styles ********************/
+/*###################################################*/
+.inputform
+{
+    float: right;
+    font-size: 9px;
+}
+
+input
+{
+    background-color: #FFFFFF;
+    color: #000; /*margin-bottom: 10px;*/
+    font-size: 11px;
+    padding: 1px;
+    text-align: left;
+}
+.buttonSmall:hover
+{
+    background-color: #362d2d;
+}
+.buttonSmall
+{
+    border: 2px solid #362d2d;
+    margin: 5px 5px 0px 5px;
+    cursor: pointer;
+    cursor: hand;
+    font-weight: bold;
+    text-align: center;
+    background-color: #362d2d;
+    color: #FFFFFF;
+    border: 1px solid #362d2d;
+    font-size: 12px;
+    height: 20px;
+    min-width: 50px;
+}
+.button:hover
+{
+    background-color: #362d2d;
+}
+.button
+{
+    border: 2px solid #362d2d;
+    margin: 5px 5px 0px 5px;
+    cursor: pointer;
+    cursor: hand;
+    font-weight: bold;
+    text-align: center;
+    background-color: #362d2d;
+    color: #FFFFFF;
+    border: 1px solid #362d2d;
+    font-size: 16px;
+    height: 43px;
+    min-width: 129px;
+}
+.radio
+{
+    cursor: pointer;
+    cursor: hand;
+}
+
+.Order:hover
+{
+    background-color: #362d2d;
+}
+.Order
+{
+    border: 2px solid #362d2d;
+    cursor: pointer;
+    cursor: hand;
+    font-weight: bold;
+    text-align: center;
+    background-color: #362d2d;
+    color: #FFFFFF;
+    border: 1px solid #362d2d;
+    font-size: 12px;
+    height: 20px;
+}
+
+
+
+/*###################################################*/
+/************** Accordion Styles ********************/
+/*###################################################*/
+.Accordion
+{
+    width: 100%;
+    margin-top: 15px;
+}
+
+.AccordionHeader
+{
+    margin: 0px;
+    cursor: pointer;
+    cursor: hand;
+    width: 379px;
+}
+.AccordionHeader h2
+{
+    background: url("AccordionHeader.gif") repeat-x left top;
+    margin: 0px;
+    padding: 5px 10px 5px 10px;
+    border: 0px 0px 0px 0px solid #362d2d;
+    color: #fff;
+    font-size: 20px;
+    text-align: left;
+    background-color: #362d2d;
+}
+.AccordionHeader h2:hover
+{
+    margin: 0px;
+}
+.AccordionContent
+{
+    padding: 5px 0px 5px 10px;
+    margin: 0px;
+    border: 2px solid #362d2d;
+}
+
+/*###################################################*/
+/******************* Table Styles ********************/
+/*###################################################*/
+table
+{
+    border-collapse: collapse;
+    color: #000;
+    margin: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+thead th
+{
+    white-space: nowrap;
+    background: #050505;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px #362d2d solid;
+}
+thead th a
+{
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+}
+thead th a:hover
+{
+    text-decoration: none;
+    border-bottom: dashed 1px;
+}
+.faListItem
+{
+    white-space: normal;
+}
+table tr td
+{
+    white-space: nowrap;
+    padding: 0.1em;
+    border: 1px #362d2d solid;
+    text-align: center;
+    margin: 0px;
+    vertical-align: middle;
+}
+table ul
+{
+    text-align: left;
+    margin: 0px;
+}
+
+table tr td input
+{
+    padding: 0px;
+    margin: 0px;
+}
+
+.HorizTableFirstcolumn
+{
+    background: #050505;
+    color: #FFF;
+    font-weight: bold;
+    text-align: right;
+}
+.HorizTableSecondColumn
+{
+    padding-left: 10px;
+    text-align: left;
+}
+.FilterableTable /*Used to allow the jquery filter to pick up the table data for manipulation*/ /*Used to allow the jquery filter to pick up the table data for manipulation*/
+{
+}
+/*.FilterableTable input { width: 50px;}*/
+.filterColumns input
+{
+    width: 90%;
+    min-width: 15px;
+}
+
+.Datagrid tr td
+{
+    text-align: left;
+    border: none;
+}
+
+.selectedrow
+{
+    background-color: #362d2d;
+}
+
+.evenrow
+{
+    white-space: nowrap;
+    background-color: #eee;
+}
+.oddrow
+{
+    white-space: nowrap;
+    background-color: #fff;
+}
+
+.gridViewPager td
+{
+    white-space: nowrap;
+    background: #050505;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 14px;
+    border-width: 0px;
+    padding-right: 5px;
+    text-align: left;
+}
+
+.gridViewPager a
+{
+    color: #FFF;
+}
+.gridViewPager a:hover
+{
+    text-decoration: none;
+    border-bottom: dashed 1px;
+}
+
+
+
+/*###################################################*/
+/**************** Notification styles ****************/
+/*###################################################*/
+
+.ErrorMessage
+{
+    color: #9C0006;
+    list-style-image: url("Icons/png/16x16/delete.png");
+    background: #FFB6C1;
+    border: solid 2px #9C0006;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 90%;
+}
+.ErrorMessage li
+{
+    margin-left: 25px;
+}
+.ErrorMessage a
+{
+    border-bottom: dashed 1px;
+    color: #9C0006;
+}
+.ErrorMessage a:hover
+{
+    border-bottom: none;
+    text-decoration: underline;
+}
+
+.WarningMessage
+{
+    color: #FF8C00;
+    list-style-image: url("Icons/png/16x16/warning.png");
+    border: solid 2px #FF8C00;
+    background: #FFDEAD;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 90%;
+}
+.WarningMessage li
+{
+    margin-left: 25px;
+}
+.WarningMessage a
+{
+    border-bottom: dashed 1px;
+    color: #FF8C00;
+}
+.WarningMessage a:hover
+{
+    border-bottom: none;
+    text-decoration: underline;
+}
+.InformationMessage
+{
+    border: solid 2px #050505;
+    list-style-image: url("Icons/png/16x16/info.png");
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 90%;
+}
+.InformationMessage li
+{
+    margin-left: 25px;
+}
+
+.InformationMessage a
+{
+    border-bottom: dashed 1px;
+}
+.InformationMessage a:hover
+{
+    border-bottom: none;
+    text-decoration: underline;
+}
+.ScanDeviceImage
+{
+    float: left;
+    margin-top: 5px;
+}
+
+.ScanDeviceTextEntry
+{
+    font-size: 22px;
+    margin: 15px 0px 15px 0px;
+    width: 250px;
+    text-transform: uppercase;
+}
+
+.ScanDeviceTextEntryHint
+{
+    font-size: 22px;
+    margin: 15px 0px 15px 0px;
+    width: 250px;
+    color: Gray;
+}
+
+.ScanDeviceButton /*must be invisible but *displayed*, hence the distance*/
+{
+    width: 60px;
+    position: relative;
+    top: -9000px;
+}
+
+.inlineImage
+{
+    float: right;
+    margin: 0px;
+    padding: 0px;
+}
+
+.removeStyle
+{
+    text-align: left;
+    white-space:normal;
+    vertical-align:top;
+}
+
+.removeStyleWithCenter
+{
+    text-align: center;
+    white-space:normal;
+    vertical-align:top;
+}
+
+.removeStyleWithLeftSameLine
+{
+    display:inline;
+}
+
+.removeStyleWithLeftSameLine TR TD
+{
+    border: none;    
+    text-align: left;
+    vertical-align:top;
+}
+
+.removeStyleWithLeft
+{
+}
+
+.removeStyleWithLeft TR TD
+{
+    border: none;    
+    text-align: left;
+    vertical-align:top;
+}
+
+.LoadingModal
+{
+    position: fixed; 
+    top: 0px; 
+    bottom: 0px; 
+    left: 0px; 
+    right: 0px; 
+    overflow: hidden; 
+    padding: 0; 
+    margin: 0; 
+    background-color: #F0F0F0; 
+    filter: alpha(opacity=50); 
+    opacity: 0.5; 
+    z-index: 100000;
+}
+
+.LoadingGif
+{
+    position: fixed; 
+    top: 40%; 
+    left: 40%; 
+    height:20%; 
+    width:20%; 
+    z-index: 100001; 
+    background-color: #FFFFFF; 
+    border:2px solid #000000;
+    background-image: url('../Images/loading.gif'); 
+    background-repeat: no-repeat; 
+    background-position:center;
+}

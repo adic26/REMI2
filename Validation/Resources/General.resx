@@ -1,0 +1,447 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="e1" xml:space="preserve">
+    <value>Could not save the item. There was a database error. REMI administrators have been notified.</value>
+  </data>
+  <data name="e10" xml:space="preserve">
+    <value>The given credentials were not valid and REMI was unable to authenticate this user at LDAP server.</value>
+  </data>
+  <data name="e11" xml:space="preserve">
+    <value>This batch could not be found in REMI.</value>
+  </data>
+  <data name="e12" xml:space="preserve">
+    <value>The system could not find a valid user for this scan.</value>
+  </data>
+  <data name="e13" xml:space="preserve">
+    <value>The Test Unit could not be found in REMI.</value>
+  </data>
+  <data name="e14" xml:space="preserve">
+    <value>The given tracking location could not be found on REMI.</value>
+  </data>
+  <data name="e15" xml:space="preserve">
+    <value>The scan failed. Review the errors and correct the problem.</value>
+  </data>
+  <data name="e16" xml:space="preserve">
+    <value>this test is not valid at this location.</value>
+  </data>
+  <data name="e17" xml:space="preserve">
+    <value>The selected test is currently marked DNP. Please ensure you have selected the correct test and test stage for this unit.</value>
+  </data>
+  <data name="e18" xml:space="preserve">
+    <value>Could not change the status.</value>
+  </data>
+  <data name="e19" xml:space="preserve">
+    <value>Could not validate your username and password. Please try again.</value>
+  </data>
+  <data name="e2" xml:space="preserve">
+    <value>Could not delete the item. There was a database error.  REMI administrators have been notified.</value>
+  </data>
+  <data name="e20" xml:space="preserve">
+    <value>The test currently underway at this location does not match the test you have requested. Please unsure this is the correct test and location for this unit.</value>
+  </data>
+  <data name="e21" xml:space="preserve">
+    <value>Error saving link between Test record and Tracking Log.</value>
+  </data>
+  <data name="e22" xml:space="preserve">
+    <value>There was an error in the user manager. Unable to work with the given user id details.</value>
+  </data>
+  <data name="e23" xml:space="preserve">
+    <value>Could not change the RF Bands.</value>
+  </data>
+  <data name="e24" xml:space="preserve">
+    <value>Could not generate the random number list. Try again and if the problem persists contact support.</value>
+  </data>
+  <data name="e3" xml:space="preserve">
+    <value>Could not retrieve item. There was a database error.  REMI administrators have been notified.</value>
+  </data>
+  <data name="e4" xml:space="preserve">
+    <value>The test stage for this batch could not be changed. There was a database error.</value>
+  </data>
+  <data name="e5" xml:space="preserve">
+    <value>Could not save the item. An with the same parameters is already in the database. Please check the name of the item to confirm it is not already in use.</value>
+  </data>
+  <data name="e6" xml:space="preserve">
+    <value>There was an oracle database error. The remi administrators have been notified.</value>
+  </data>
+  <data name="e7" xml:space="preserve">
+    <value>Could not add exception.</value>
+  </data>
+  <data name="e8" xml:space="preserve">
+    <value>Could not add unit.</value>
+  </data>
+  <data name="e9" xml:space="preserve">
+    <value>Could not add the batch to REMI.</value>
+  </data>
+  <data name="f1" xml:space="preserve">
+    <value>URGENT: Fatal application error !!</value>
+  </data>
+  <data name="i1" xml:space="preserve">
+    <value>The item was deleted.</value>
+  </data>
+  <data name="i10" xml:space="preserve">
+    <value>Note: This test unit is currently in Quarantine!</value>
+  </data>
+  <data name="i11" xml:space="preserve">
+    <value>The batch Rf Bands were changed.</value>
+  </data>
+  <data name="i12" xml:space="preserve">
+    <value>The batch comments were updated.</value>
+  </data>
+  <data name="i13" xml:space="preserve">
+    <value>No Record(s).</value>
+  </data>
+  <data name="i2" xml:space="preserve">
+    <value>The item was saved OK.</value>
+  </data>
+  <data name="i3" xml:space="preserve">
+    <value>The current user was not verified with a badge number and does not exist in REMI.</value>
+  </data>
+  <data name="i4" xml:space="preserve">
+    <value>The capacity for this location  has been reached! Wait for tests to complete or check that devices have not been removed without having been scanned out.</value>
+  </data>
+  <data name="i5" xml:space="preserve">
+    <value>This batch is in quarantine.</value>
+  </data>
+  <data name="i6" xml:space="preserve">
+    <value>Note: This test unit is currently part of an FA.</value>
+  </data>
+  <data name="i7" xml:space="preserve">
+    <value>This unit has already completed testing here. Units should only be tested 3 times for a test.</value>
+  </data>
+  <data name="i8" xml:space="preserve">
+    <value>The batch status was changed.</value>
+  </data>
+  <data name="i9" xml:space="preserve">
+    <value>The status of this batch indicates it should not be tested.</value>
+  </data>
+  <data name="w1" xml:space="preserve">
+    <value>The tracking location type name must be less than 400 characters.</value>
+  </data>
+  <data name="w10" xml:space="preserve">
+    <value>The job name cannot be empty.</value>
+  </data>
+  <data name="w11" xml:space="preserve">
+    <value>The product group cannot be empty.</value>
+  </data>
+  <data name="w12" xml:space="preserve">
+    <value>The Priority for the batch must be set before saving.</value>
+  </data>
+  <data name="w13" xml:space="preserve">
+    <value>Missing batch status.</value>
+  </data>
+  <data name="w14" xml:space="preserve">
+    <value>The name of the tracking location cannot be empty.</value>
+  </data>
+  <data name="w15" xml:space="preserve">
+    <value>The tracking location name must be less than 400 characters.</value>
+  </data>
+  <data name="w16" xml:space="preserve">
+    <value>The geographical location must be set for the tracking location.</value>
+  </data>
+  <data name="w17" xml:space="preserve">
+    <value>The tracking location status must be set.</value>
+  </data>
+  <data name="w18" xml:space="preserve">
+    <value>A tracking location must have a type set.</value>
+  </data>
+  <data name="w19" xml:space="preserve">
+    <value>The name of the test must not be empty.</value>
+  </data>
+  <data name="w2" xml:space="preserve">
+    <value>The tracking location type name cannot be empty.</value>
+  </data>
+  <data name="w20" xml:space="preserve">
+    <value>The name of the test is too long, the name must be less than 400 characters.</value>
+  </data>
+  <data name="w21" xml:space="preserve">
+    <value>The duration must be between 0 and 99999 hours (1 or 1.8 for example).</value>
+  </data>
+  <data name="w22" xml:space="preserve">
+    <value>The test station type must not be empty.</value>
+  </data>
+  <data name="w23" xml:space="preserve">
+    <value>The WI location is too long, the location must be less than 400 characters.</value>
+  </data>
+  <data name="w25" xml:space="preserve">
+    <value>The test station type name is too long, the name must be less than 400 characters.</value>
+  </data>
+  <data name="w26" xml:space="preserve">
+    <value>The test type for a test must be set.</value>
+  </data>
+  <data name="w27" xml:space="preserve">
+    <value>The name of the test stage cannot be empty.</value>
+  </data>
+  <data name="w28" xml:space="preserve">
+    <value>The name of the test stage must be less than 400 characters.</value>
+  </data>
+  <data name="w29" xml:space="preserve">
+    <value>The test stage type must be set.</value>
+  </data>
+  <data name="w3" xml:space="preserve">
+    <value>The capacity for a tracking location type must be set and be greater than 0.</value>
+  </data>
+  <data name="w30" xml:space="preserve">
+    <value>A test stage must have at least one test.</value>
+  </data>
+  <data name="w31" xml:space="preserve">
+    <value>The name of the job cannot be empty.</value>
+  </data>
+  <data name="w32" xml:space="preserve">
+    <value>The name of the job must be less than 400 characters.</value>
+  </data>
+  <data name="w33" xml:space="preserve">
+    <value>The comments must be less than 1000 characters.</value>
+  </data>
+  <data name="w34" xml:space="preserve">
+    <value>The tracking location for this item could not be found in the tracking location list.</value>
+  </data>
+  <data name="w35" xml:space="preserve">
+    <value>The user name entered could not be found on the GAL. Check the name again.</value>
+  </data>
+  <data name="w36" xml:space="preserve">
+    <value>The job requested could not be found in the TRS or REMI.</value>
+  </data>
+  <data name="w37" xml:space="preserve">
+    <value>The given user has not been given access to scan yet.</value>
+  </data>
+  <data name="w38" xml:space="preserve">
+    <value>The tracking location type's function must be set.</value>
+  </data>
+  <data name="w39" xml:space="preserve">
+    <value>The scan direction could not be resolved for this unit.</value>
+  </data>
+  <data name="w4" xml:space="preserve">
+    <value>The last user of an object must be set.</value>
+  </data>
+  <data name="w40" xml:space="preserve">
+    <value>The test unit id must be set for a test record.</value>
+  </data>
+  <data name="w41" xml:space="preserve">
+    <value>The job name must be set for a test record.</value>
+  </data>
+  <data name="w42" xml:space="preserve">
+    <value>The job name for a test record must be less than 400 characters.</value>
+  </data>
+  <data name="w43" xml:space="preserve">
+    <value>The test stage name must be set for a test record.</value>
+  </data>
+  <data name="w44" xml:space="preserve">
+    <value>The test stage name for a test record must be less than 400 characters.</value>
+  </data>
+  <data name="w45" xml:space="preserve">
+    <value>The test name must be set for a test record.</value>
+  </data>
+  <data name="w46" xml:space="preserve">
+    <value>The test name for a test record must be less than 400 characters.</value>
+  </data>
+  <data name="w47" xml:space="preserve">
+    <value>The status of the test record must be set.</value>
+  </data>
+  <data name="w48" xml:space="preserve">
+    <value>The comments are limited to 1000 characters.</value>
+  </data>
+  <data name="w49" xml:space="preserve">
+    <value>Unit has already completed testing for this test - Overall Result PASS.</value>
+  </data>
+  <data name="w5" xml:space="preserve">
+    <value>The given Request, FA or RIT number is not valid. Please review the given number.</value>
+  </data>
+  <data name="w50" xml:space="preserve">
+    <value>Unit has already completed testing for this test - Overall Result FAIL but with Known Issue.</value>
+  </data>
+  <data name="w51" xml:space="preserve">
+    <value>The testing status of this test unit (Not in test) does not allow it to be scanned out of a test. There was a process error.</value>
+  </data>
+  <data name="w52" xml:space="preserve">
+    <value>The tracking log test id must be greater than 0.</value>
+  </data>
+  <data name="w53" xml:space="preserve">
+    <value>The tracking log tracking location id must be set.</value>
+  </data>
+  <data name="w54" xml:space="preserve">
+    <value>The test unit's tracking log cannot be null.</value>
+  </data>
+  <data name="w55" xml:space="preserve">
+    <value>Process error:This unit was last scanned in to a different location. It must be scanned out of this location before being scanned in to a new location.</value>
+  </data>
+  <data name="w56" xml:space="preserve">
+    <value>This unit is currently in FA.</value>
+  </data>
+  <data name="w57" xml:space="preserve">
+    <value>This unit is not ready to be scanned in for a test. It may not have been scanned out of the last location correctly. If you are scanning out a unit then this may be wrong test station. Check the unit information in REMI (scan for info) to check and contact remi@blackberry.com.</value>
+  </data>
+  <data name="w58" xml:space="preserve">
+    <value>This batch is currently on hold and should not be tested.</value>
+  </data>
+  <data name="w59" xml:space="preserve">
+    <value>This batch can not be tested due to its current status.</value>
+  </data>
+  <data name="w6" xml:space="preserve">
+    <value>The unit number portion of the barcode must be greater than 0.</value>
+  </data>
+  <data name="w60" xml:space="preserve">
+    <value>Could not assign the given test stage name, please select the required test stage.</value>
+  </data>
+  <data name="w61" xml:space="preserve">
+    <value>This job has no test stages that are applicable to this test station/chamber.</value>
+  </data>
+  <data name="w62" xml:space="preserve">
+    <value>The given test could not be set. The test is not part of the given test stage or the tracking location is not valid for this test.</value>
+  </data>
+  <data name="w63" xml:space="preserve">
+    <value>There are multiple tests available. Manual selection required.</value>
+  </data>
+  <data name="w64" xml:space="preserve">
+    <value>The given hostname returns multiple possible locations. You must provide a location ID to use this hostname.</value>
+  </data>
+  <data name="w65" xml:space="preserve">
+    <value>The start time must be set.</value>
+  </data>
+  <data name="w66" xml:space="preserve">
+    <value>The end time must be set.</value>
+  </data>
+  <data name="w67" xml:space="preserve">
+    <value>This hostname is not set to represent a location in remi. You must use a location ID at this hostname.</value>
+  </data>
+  <data name="w68" xml:space="preserve">
+    <value>The tracking location function is not set.</value>
+  </data>
+  <data name="w69" xml:space="preserve">
+    <value>The trackinglocation id is not set.</value>
+  </data>
+  <data name="w7" xml:space="preserve">
+    <value>The barcode is missing the unit number or the tracking location number. The three digit unit number and the 5 digit tracking location number must be present on the barcode for scanning a unit in to a test.</value>
+  </data>
+  <data name="w70" xml:space="preserve">
+    <value>REMI indicates that the user could not be resolved. Admin has been notified.</value>
+  </data>
+  <data name="w8" xml:space="preserve">
+    <value>The Request number cannot be empty.</value>
+  </data>
+  <data name="w9" xml:space="preserve">
+    <value>The Request Number must be valid for a batch.</value>
+  </data>
+  <data name="w80" xml:space="preserve">
+    <value>The Procedure location is too long, the location must be less than 400 characters.</value>
+  </data>
+  <data name="w81" xml:space="preserve">
+    <value>TRS Status Is Not Properly Set. This Batch Should not Be Started.</value>
+  </data>
+</root>

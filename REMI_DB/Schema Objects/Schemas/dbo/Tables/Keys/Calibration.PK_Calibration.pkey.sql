@@ -1,0 +1,1 @@
+﻿ALTER TABLE [dbo].[Calibration] ADD CONSTRAINT [PK_Calibration] PRIMARY KEY CLUSTERED  ([ID])

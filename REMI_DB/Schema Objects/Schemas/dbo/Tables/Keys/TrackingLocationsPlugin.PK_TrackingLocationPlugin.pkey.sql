@@ -1,0 +1,1 @@
+﻿ALTER TABLE [dbo].[TrackingLocationsPlugin] ADD CONSTRAINT [PK_TrackingLocationPlugin] PRIMARY KEY CLUSTERED  ([ID])

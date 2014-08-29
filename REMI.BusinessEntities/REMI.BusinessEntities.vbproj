@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C4D88C1D-513D-43E7-B3A9-0F436AE0F2DF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>REMI.BusinessEntities</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>On</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>None</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <NoWarn>
+    </NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bases\BusinessBase.vb" />
+    <Compile Include="Bases\LoggedItemBase.vb" />
+    <Compile Include="Bases\NonDatabaseBusinessBase.vb" />
+    <Compile Include="BusinessObjectCollections\SerializableDictionary.vb" />
+    <Compile Include="BusinessObjects\CalendarItem.vb" />
+    <Compile Include="BusinessObjects\ChamberTestUnit.vb" />
+    <Compile Include="BusinessObjects\ConfigurationReturnData.vb" />
+    <Compile Include="BusinessObjects\SimpleTestUnit.vb" />
+    <Compile Include="BusinessObjects\RequestNumber.vb" />
+    <Compile Include="DataEntityCollections\CalibrationCollection.vb" />
+    <Compile Include="DataEntityCollections\TrackingLocationTypePermissionCollection.vb" />
+    <Compile Include="DataEntityCollections\ParameterResultCollection.vb" />
+    <Compile Include="DataEntityCollections\TestResultCollection.vb" />
+    <Compile Include="DataEntityObjects\BatchBase.vb" />
+    <Compile Include="DataEntityObjects\BatchView.vb" />
+    <Compile Include="DataEntityObjects\Calibration.vb" />
+    <Compile Include="DataEntityObjects\LookupBase.vb" />
+    <Compile Include="DataEntityObjects\ProcessTask.vb" />
+    <Compile Include="DataEntityObjects\ProductSetting.vb" />
+    <Compile Include="DataEntityObjects\ParameterResult.vb" />
+    <Compile Include="DataEntityObjects\TrackingLocationTypePermission.vb" />
+    <Compile Include="Enumerations\TestCenter.vb" />
+    <Compile Include="Helpers\REMIAppCache.vb" />
+    <Compile Include="Enumerations\TestResultCriteria.vb" />
+    <Compile Include="BusinessObjects\FastScanData.vb" />
+    <Compile Include="BusinessObjects\remstarMaterial.vb" />
+    <Compile Include="DataEntityCollections\BatchTestStageScheduleCollection.vb" />
+    <Compile Include="DataEntityCollections\TestExceptionCollection.vb" />
+    <Compile Include="DataEntityObjects\BatchTestStageSchedule.vb" />
+    <Compile Include="DataEntityObjects\TestResult.vb" />
+    <Compile Include="DataEntityObjects\TestException.vb" />
+    <Compile Include="DataEntityObjects\TestRecord.vb" />
+    <Compile Include="Bases\RequestBase.vb" />
+    <Compile Include="Enumerations\TestCompletionCriteria.vb" />
+    <Compile Include="BusinessObjects\DeviceBarcodeNumber.vb" />
+    <Compile Include="DataEntityObjects\Batch.vb" />
+    <Compile Include="DataEntityCollections\BatchCollection.vb" />
+    <Compile Include="DataEntityCollections\DeviceTrackingLogCollection.vb" />
+    <Compile Include="DataEntityCollections\JobCollection.vb" />
+    <Compile Include="Bases\REMICollectionBase.vb" />
+    <Compile Include="DataEntityCollections\TestCollection.vb" />
+    <Compile Include="DataEntityCollections\TestRecordCollection.vb" />
+    <Compile Include="DataEntityCollections\TestStageCollection.vb" />
+    <Compile Include="DataEntityCollections\TrackingLocationTypeCollection.vb" />
+    <Compile Include="DataEntityCollections\TestUnitCollection.vb" />
+    <Compile Include="DataEntityCollections\TrackingLocationCollection.vb" />
+    <Compile Include="DataEntityCollections\UserCollection.vb" />
+    <Compile Include="DataEntityObjects\DeviceTrackingLog.vb" />
+    <Compile Include="Enumerations\QRANumberType.vb" />
+    <Compile Include="Enumerations\ScanDirection.vb" />
+    <Compile Include="Enumerations\FinalTestResult.vb" />
+    <Compile Include="Enumerations\TrackingLocationStatus.vb" />
+    <Compile Include="Enumerations\TrackingLocationFunction.vb" />
+    <Compile Include="Localization\General.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>General.resx</DependentUpon>
+    </Compile>
+    <Compile Include="DataEntityObjects\TrackingLocation.vb" />
+    <Compile Include="DataEntityObjects\Job.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="DataEntityObjects\Test.vb" />
+    <Compile Include="DataEntityObjects\TestStage.vb" />
+    <Compile Include="DataEntityObjects\TrackingLocationType.vb" />
+    <Compile Include="DataEntityObjects\TestUnit.vb" />
+    <Compile Include="DataEntityObjects\User.vb" />
+    <Compile Include="BusinessObjects\ScanReturnData.vb" />
+    <Compile Include="BusinessObjects\TrackingLocationBarcodeNumber.vb" />
+    <Compile Include="SearchCriteriaClasses\BatchCriteria.vb" />
+    <Compile Include="SearchCriteriaClasses\BatchSearch.vb" />
+    <Compile Include="SearchCriteriaClasses\ExceptionSearch.vb" />
+    <Compile Include="SearchCriteriaClasses\RelabResultCriteria.vb" />
+    <Compile Include="SearchCriteriaClasses\TestRecordCriteria.vb" />
+    <Compile Include="SearchCriteriaClasses\TestResultCriteria.vb" />
+    <Compile Include="SearchCriteriaClasses\TestUnitSearchCriteria.vb" />
+    <Compile Include="SearchCriteriaClasses\TrackingLocationCriteria.vb" />
+    <Compile Include="SearchCriteriaClasses\UserSearch.vb" />
+    <Compile Include="Views\InventoryReportData.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\General.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>General.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DataEntityObjects\DataEntities.cd" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\REMI.BaseObjectModels\REMI.BaseObjectModels.csproj">
+      <Project>{F376D451-04C7-40CB-939E-F6C11A1A6589}</Project>
+      <Name>REMI.BaseObjectModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.Contracts\REMI.Contracts.csproj">
+      <Project>{0CCBD28E-7CB5-418A-B666-DCA7623C024B}</Project>
+      <Name>REMI.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.Core\REMI.Core.vbproj">
+      <Project>{83DE2819-44E9-42B5-BAF5-91203E045778}</Project>
+      <Name>REMI.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Validation\REMI.Validation.vbproj">
+      <Project>{66FFB495-A6D7-47A8-A178-D89D408D3564}</Project>
+      <Name>REMI.Validation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

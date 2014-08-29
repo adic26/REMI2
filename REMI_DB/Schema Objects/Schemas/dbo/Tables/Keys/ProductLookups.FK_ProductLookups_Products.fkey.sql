@@ -1,0 +1,1 @@
+﻿ALTER TABLE [dbo].[ProductLookups] ADD CONSTRAINT [FK_ProductLookups_Products] FOREIGN KEY ([ProductID]) REFERENCES [dbo].[Products] ([ID])

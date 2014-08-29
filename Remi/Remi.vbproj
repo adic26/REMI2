@@ -1,0 +1,2946 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>
+    </SchemaVersion>
+    <ProjectGuid>{A7DB480A-F45B-4B36-AB55-5600F579C04F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Remi</RootNamespace>
+    <AssemblyName>Remi</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MyType>Custom</MyType>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>None</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=3.0.31106.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Ajax\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="DayPilot, Version=3.0.210.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\DayPilot\DayPilot.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Ajax, Version=3.0.31106.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\System.Web.Ajax.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DataVisualization" />
+    <Reference Include="System.Web.DataVisualization.Design" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Collections.Specialized" />
+    <Import Include="System.Configuration" />
+    <Import Include="System.Text" />
+    <Import Include="System.Text.RegularExpressions" />
+    <Import Include="System.Web" />
+    <Import Include="System.Web.Caching" />
+    <Import Include="System.Web.SessionState" />
+    <Import Include="System.Web.Security" />
+    <Import Include="System.Web.Profile" />
+    <Import Include="System.Web.UI" />
+    <Import Include="System.Web.UI.WebControls" />
+    <Import Include="System.Web.UI.WebControls.WebParts" />
+    <Import Include="System.Web.UI.HtmlControls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Developer\default.aspx.designer.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Developer\default.aspx.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Jobs.aspx.designer.vb">
+      <DependentUpon>Jobs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Jobs.aspx.vb">
+      <DependentUpon>Jobs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Developer\Logs.aspx.designer.vb">
+      <DependentUpon>Logs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Developer\Logs.aspx.vb">
+      <DependentUpon>Logs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Lookups.aspx.designer.vb">
+      <DependentUpon>Lookups.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Lookups.aspx.vb">
+      <DependentUpon>Lookups.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Results.aspx.designer.vb">
+      <DependentUpon>Results.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Results.aspx.vb">
+      <DependentUpon>Results.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Security.aspx.designer.vb">
+      <DependentUpon>Security.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Security.aspx.vb">
+      <DependentUpon>Security.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Tests.aspx.designer.vb">
+      <DependentUpon>Tests.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Tests.aspx.vb">
+      <DependentUpon>Tests.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Tests\EditDetail.aspx.designer.vb">
+      <DependentUpon>EditDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Tests\EditDetail.aspx.vb">
+      <DependentUpon>EditDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Tools\ClearCache.aspx.designer.vb">
+      <DependentUpon>ClearCache.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Tools\ClearCache.aspx.vb">
+      <DependentUpon>ClearCache.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TrackingLocations.aspx.designer.vb">
+      <DependentUpon>TrackingLocations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TrackingLocations.aspx.vb">
+      <DependentUpon>TrackingLocations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TrackingLocationTests.aspx.designer.vb">
+      <DependentUpon>TrackingLocationTests.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TrackingLocationTests.aspx.vb">
+      <DependentUpon>TrackingLocationTests.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TrackingLocationTypes.aspx.designer.vb">
+      <DependentUpon>TrackingLocationTypes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TrackingLocationTypes.aspx.vb">
+      <DependentUpon>TrackingLocationTypes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Users.aspx.designer.vb">
+      <DependentUpon>Users.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Users.aspx.vb">
+      <DependentUpon>Users.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_GlobalResources\Helpers.vb" />
+    <Compile Include="App_GlobalResources\HTTPModules\REMIAuthModule.vb" />
+    <Compile Include="BadgeAccess\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BadgeAccess\EditMyUser.aspx.designer.vb">
+      <DependentUpon>EditMyUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BadgeAccess\Error.aspx.designer.vb">
+      <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BatchSelectControl.ascx.designer.vb">
+      <DependentUpon>BatchSelectControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IBatchListControl.ascx.designer.vb">
+      <DependentUpon>IBatchListControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Notifications.ascx.designer.vb">
+      <DependentUpon>Notifications.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RequestSetup.ascx.designer.vb">
+      <DependentUpon>RequestSetup.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RequestSetup.ascx.vb">
+      <DependentUpon>RequestSetup.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ScanIndicator.ascx.designer.vb">
+      <DependentUpon>ScanIndicator.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TestStageProcessView.ascx.designer.vb">
+      <DependentUpon>TestStageProcessView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Help\default.aspx.designer.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Help\default.aspx.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Incoming\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Incoming\UpdateBatch.aspx.designer.vb">
+      <DependentUpon>UpdateBatch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Inventory\BatchesNotInREMIReport.aspx.designer.vb">
+      <DependentUpon>BatchesNotInREMIReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Inventory\CountOrders.aspx.designer.vb">
+      <DependentUpon>CountOrders.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Inventory\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Inventory\InventoryReport.aspx.designer.vb">
+      <DependentUpon>InventoryReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageBatches\EditExceptions.aspx.designer.vb">
+      <DependentUpon>EditExceptions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyComments.aspx.designer.vb">
+      <DependentUpon>ModifyComments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyPriority.aspx.designer.vb">
+      <DependentUpon>ModifyPriority.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyStatus.aspx.designer.vb">
+      <DependentUpon>ModifyStatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyTestDurations.aspx.designer.vb">
+      <DependentUpon>ModifyTestDurations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyTestStage.aspx.designer.vb">
+      <DependentUpon>ModifyTestStage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageProducts\EditProductConfig.aspx.designer.vb">
+      <DependentUpon>EditProductConfig.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageProducts\EditProductConfig.aspx.vb">
+      <DependentUpon>EditProductConfig.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="ManageProducts\EditProductSettings.aspx.designer.vb">
+      <DependentUpon>EditProductSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageProducts\EnvReport.aspx.designer.vb">
+      <DependentUpon>EnvReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageTestStations\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageTestStations\EditStationConfig.aspx.designer.vb">
+      <DependentUpon>EditStationConfig.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageTestStations\EditStationConfig.aspx.vb">
+      <DependentUpon>EditStationConfig.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageTestStations\ScannerCodes.aspx.designer.vb">
+      <DependentUpon>ScannerCodes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageTestStations\TrackingLocation.aspx.designer.vb">
+      <DependentUpon>TrackingLocation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageUser\BatchesByRequestor.aspx.designer.vb">
+      <DependentUpon>BatchesByRequestor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ManageUser\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPages\MasterPage.master.designer.vb">
+      <DependentUpon>MasterPage.master</DependentUpon>
+    </Compile>
+    <Compile Include="BadgeAccess\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BadgeAccess\EditMyUser.aspx.vb">
+      <DependentUpon>EditMyUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BadgeAccess\Error.aspx.vb">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\BatchSelectControl.ascx.vb">
+      <DependentUpon>BatchSelectControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\IBatchListControl.ascx.vb">
+      <DependentUpon>IBatchListControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\Notifications.ascx.vb">
+      <DependentUpon>Notifications.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ScanIndicator.ascx.vb">
+      <DependentUpon>ScanIndicator.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\TestStageProcessView.ascx.vb">
+      <DependentUpon>TestStageProcessView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Incoming\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Incoming\UpdateBatch.aspx.vb">
+      <DependentUpon>UpdateBatch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Inventory\BatchesNotInREMIReport.aspx.vb">
+      <DependentUpon>BatchesNotInREMIReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Inventory\CountOrders.aspx.vb">
+      <DependentUpon>CountOrders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Inventory\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Inventory\InventoryReport.aspx.vb">
+      <DependentUpon>InventoryReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageBatches\EditExceptions.aspx.vb">
+      <DependentUpon>EditExceptions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyComments.aspx.vb">
+      <DependentUpon>ModifyComments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyPriority.aspx.vb">
+      <DependentUpon>ModifyPriority.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyStatus.aspx.vb">
+      <DependentUpon>ModifyStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyTestDurations.aspx.vb">
+      <DependentUpon>ModifyTestDurations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageBatches\ModifyTestStage.aspx.vb">
+      <DependentUpon>ModifyTestStage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageProducts\EditProductSettings.aspx.vb">
+      <DependentUpon>EditProductSettings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageProducts\EnvReport.aspx.vb">
+      <DependentUpon>EnvReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageTestStations\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageTestStations\ScannerCodes.aspx.vb">
+      <DependentUpon>ScannerCodes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageTestStations\TrackingLocation.aspx.vb">
+      <DependentUpon>TrackingLocation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageUser\BatchesByRequestor.aspx.vb">
+      <DependentUpon>BatchesByRequestor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageUser\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterPages\MasterPage.master.vb">
+      <DependentUpon>MasterPage.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\MyExtensions\MyWebExtension.vb">
+      <VBMyExtensionTemplateID>Microsoft.VisualBasic.Web.MyExtension</VBMyExtensionTemplateID>
+      <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Overview.aspx.designer.vb">
+      <DependentUpon>Overview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Overview.aspx.vb">
+      <DependentUpon>Overview.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Relab\Measurements.aspx.designer.vb">
+      <DependentUpon>Measurements.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Relab\Measurements.aspx.vb">
+      <DependentUpon>Measurements.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Relab\ResultGraph.aspx.designer.vb">
+      <DependentUpon>ResultGraph.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Relab\ResultGraph.aspx.vb">
+      <DependentUpon>ResultGraph.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Relab\Results.aspx.designer.vb">
+      <DependentUpon>Results.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Relab\Results.aspx.vb">
+      <DependentUpon>Results.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Relab\Versions.aspx.designer.vb">
+      <DependentUpon>Versions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Relab\Versions.aspx.vb">
+      <DependentUpon>Versions.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Reports\ES\default.aspx.designer.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ES\default.aspx.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\Search.aspx.designer.vb">
+      <DependentUpon>Search.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Search.aspx.vb">
+      <DependentUpon>Search.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="ScanForInfo\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ScanForInfo\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ScanForInfo\ProductGroup.aspx.designer.vb">
+      <DependentUpon>ProductGroup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ScanForInfo\ProductGroup.aspx.vb">
+      <DependentUpon>ProductGroup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ScanForInfo\Unit.aspx.designer.vb">
+      <DependentUpon>Unit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ScanForInfo\Unit.aspx.vb">
+      <DependentUpon>Unit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ScanForTest\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ScanForTest\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestHarness\Default2.aspx.designer.vb">
+      <DependentUpon>Default2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestHarness\Default2.aspx.vb">
+      <DependentUpon>Default2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestHarness\time.aspx.designer.vb">
+      <DependentUpon>time.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestHarness\time.aspx.vb">
+      <DependentUpon>time.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestHarness\TRSInfo.aspx.designer.vb">
+      <DependentUpon>TRSInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestHarness\TRSInfo.aspx.vb">
+      <DependentUpon>TRSInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestHarness\Users.aspx.designer.vb">
+      <DependentUpon>Users.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestHarness\Users.aspx.vb">
+      <DependentUpon>Users.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestRecords\Add.aspx.designer.vb">
+      <DependentUpon>Add.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestRecords\Add.aspx.vb">
+      <DependentUpon>Add.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestRecords\Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestRecords\Default.aspx.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestRecords\EditDetail.aspx.designer.vb">
+      <DependentUpon>EditDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestRecords\EditDetail.aspx.vb">
+      <DependentUpon>EditDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebService\AutoCompleteService.vb">
+      <DependentUpon>AutoCompleteService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebService\Configuration.asmx.vb">
+      <DependentUpon>Configuration.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebService\DataPush.asmx.vb">
+      <DependentUpon>DataPush.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebService\RemiAPI.vb">
+      <DependentUpon>RemiAPI.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebService\Testing.vb">
+      <DependentUpon>Testing.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebService\VersionCheck.vb">
+      <DependentUpon>VersionCheck.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Admin\Developer\default.aspx" />
+    <Content Include="Admin\Lookups.aspx" />
+    <Content Include="Admin\Results.aspx" />
+    <Content Include="Admin\Security.aspx" />
+    <Content Include="Admin\Tools\ClearCache.aspx" />
+    <Content Include="Admin\TrackingLocationTests.aspx" />
+    <Content Include="Controls\RequestSetup.ascx" />
+    <Content Include="Default.aspx" />
+    <Content Include="Design\bbLogo.png" />
+    <Content Include="Design\beta.jpg" />
+    <Content Include="Design\scripts\gridviewScroll.min.js" />
+    <Content Include="Design\scripts\jquery-ui.min.js" />
+    <Content Include="Design\scripts\jquery.min.js" />
+    <Content Include="Global.asax" />
+    <Content Include="Help\default.aspx" />
+    <Content Include="Images\Help\StressingTestingSuspended.jpg" />
+    <Content Include="Images\Help\UnitsExempt.jpg" />
+    <Content Include="Images\loading.gif" />
+    <Content Include="Incoming\Default.aspx" />
+    <Content Include="Incoming\UpdateBatch.aspx" />
+    <Content Include="Inventory\BatchesNotInREMIReport.aspx" />
+    <Content Include="Inventory\CountOrders.aspx" />
+    <Content Include="Inventory\Default.aspx" />
+    <Content Include="Inventory\InventoryReport.aspx" />
+    <Content Include="ManageBatches\EditExceptions.aspx" />
+    <Content Include="ManageBatches\ModifyComments.aspx" />
+    <Content Include="ManageBatches\ModifyPriority.aspx" />
+    <Content Include="ManageBatches\ModifyStatus.aspx" />
+    <Content Include="ManageBatches\ModifyTestDurations.aspx" />
+    <Content Include="ManageBatches\ModifyTestStage.aspx" />
+    <Content Include="ManageProducts\EditProductConfig.aspx" />
+    <Content Include="ManageProducts\EditProductSettings.aspx" />
+    <Content Include="ManageProducts\EnvReport.aspx" />
+    <Content Include="ManageTestStations\Default.aspx" />
+    <Content Include="ManageTestStations\EditStationConfig.aspx" />
+    <Content Include="ManageTestStations\ScannerCodes.aspx" />
+    <Content Include="ManageTestStations\TrackingLocation.aspx" />
+    <Content Include="ManageUser\BatchesByRequestor.aspx" />
+    <Content Include="ManageUser\Default.aspx" />
+    <Content Include="Overview.aspx" />
+    <Content Include="Relab\Measurements.aspx" />
+    <Content Include="Relab\ResultGraph.aspx" />
+    <Content Include="Relab\Results.aspx" />
+    <Content Include="Relab\Versions.aspx" />
+    <Content Include="Reports\ES\default.aspx" />
+    <Content Include="Reports\Search.aspx" />
+    <Content Include="ResultFormattingProfiles\ResultFormattingProfiles.xml" />
+    <Content Include="ScanForInfo\Default.aspx" />
+    <Content Include="ScanForInfo\ProductGroup.aspx" />
+    <Content Include="ScanForInfo\Unit.aspx" />
+    <Content Include="ScanForTest\Default.aspx" />
+    <Content Include="TestHarness\Default2.aspx" />
+    <Content Include="TestHarness\time.aspx" />
+    <Content Include="TestHarness\TRSInfo.aspx" />
+    <Content Include="TestHarness\Users.aspx" />
+    <Content Include="TestRecords\Add.aspx" />
+    <Content Include="TestRecords\Default.aspx" />
+    <Content Include="TestRecords\EditDetail.aspx" />
+    <Content Include="WebService\AutoCompleteService.asmx" />
+    <Content Include="WebService\Configuration.asmx" />
+    <Content Include="WebService\DataPush.asmx" />
+    <Content Include="WebService\RemiAPI.asmx" />
+    <Content Include="WebService\Testing.asmx" />
+    <Content Include="WebService\VersionCheck.asmx" />
+    <EmbeddedResource Include="licenses.licx" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BadgeAccess\Default.aspx" />
+    <Content Include="BadgeAccess\EditMyUser.aspx" />
+    <Content Include="BadgeAccess\Error.aspx" />
+    <Content Include="Controls\BatchSelectControl.ascx" />
+    <Content Include="Controls\IBatchListControl.ascx" />
+    <Content Include="Controls\Notifications.ascx" />
+    <Content Include="Controls\ScanIndicator.ascx" />
+    <Content Include="Controls\TestStageProcessView.ascx" />
+    <Content Include="Design\AccordionHeader.gif" />
+    <Content Include="Design\AjaxControlToolkit.dll" />
+    <Content Include="Design\blue_arrow_down.gif" />
+    <Content Include="Design\Icons\png\128x128\10_percent_off.png" />
+    <Content Include="Design\Icons\png\128x128\30_percent_off.png" />
+    <Content Include="Design\Icons\png\128x128\50_percent_off.png" />
+    <Content Include="Design\Icons\png\128x128\accept.png" />
+    <Content Include="Design\Icons\png\128x128\accept_business_user.png" />
+    <Content Include="Design\Icons\png\128x128\accept_database.png" />
+    <Content Include="Design\Icons\png\128x128\accept_female_user.png" />
+    <Content Include="Design\Icons\png\128x128\accept_male_user.png" />
+    <Content Include="Design\Icons\png\128x128\accept_page.png" />
+    <Content Include="Design\Icons\png\128x128\add.png" />
+    <Content Include="Design\Icons\png\128x128\add_business_user.png" />
+    <Content Include="Design\Icons\png\128x128\add_comment.png" />
+    <Content Include="Design\Icons\png\128x128\add_female_user.png" />
+    <Content Include="Design\Icons\png\128x128\add_home.png" />
+    <Content Include="Design\Icons\png\128x128\add_image.png" />
+    <Content Include="Design\Icons\png\128x128\add_link.png" />
+    <Content Include="Design\Icons\png\128x128\add_male_user.png" />
+    <Content Include="Design\Icons\png\128x128\add_page.png" />
+    <Content Include="Design\Icons\png\128x128\add_pages.png" />
+    <Content Include="Design\Icons\png\128x128\add_printer.png" />
+    <Content Include="Design\Icons\png\128x128\add_to_database.png" />
+    <Content Include="Design\Icons\png\128x128\add_to_favorites.png" />
+    <Content Include="Design\Icons\png\128x128\add_to_folder.png" />
+    <Content Include="Design\Icons\png\128x128\add_to_open_folder.png" />
+    <Content Include="Design\Icons\png\128x128\add_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\128x128\add_user.png" />
+    <Content Include="Design\Icons\png\128x128\apple.png" />
+    <Content Include="Design\Icons\png\128x128\artwork.png" />
+    <Content Include="Design\Icons\png\128x128\attachment.png" />
+    <Content Include="Design\Icons\png\128x128\attach_image.png" />
+    <Content Include="Design\Icons\png\128x128\back.png" />
+    <Content Include="Design\Icons\png\128x128\barcode.png" />
+    <Content Include="Design\Icons\png\128x128\baseball.png" />
+    <Content Include="Design\Icons\png\128x128\basketball.png" />
+    <Content Include="Design\Icons\png\128x128\block.png" />
+    <Content Include="Design\Icons\png\128x128\blue_arrow_down.png" />
+    <Content Include="Design\Icons\png\128x128\blue_arrow_up.png" />
+    <Content Include="Design\Icons\png\128x128\blue_energy.png" />
+    <Content Include="Design\Icons\png\128x128\bmp_file.png" />
+    <Content Include="Design\Icons\png\128x128\book.png" />
+    <Content Include="Design\Icons\png\128x128\book_accept.png" />
+    <Content Include="Design\Icons\png\128x128\book_download.png" />
+    <Content Include="Design\Icons\png\128x128\book_search.png" />
+    <Content Include="Design\Icons\png\128x128\book_warning.png" />
+    <Content Include="Design\Icons\png\128x128\bowling.png" />
+    <Content Include="Design\Icons\png\128x128\business_female_male_users.png" />
+    <Content Include="Design\Icons\png\128x128\business_female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\business_male_female_users.png" />
+    <Content Include="Design\Icons\png\128x128\business_male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\business_user.png" />
+    <Content Include="Design\Icons\png\128x128\business_users.png" />
+    <Content Include="Design\Icons\png\128x128\business_users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\business_user_comment.png" />
+    <Content Include="Design\Icons\png\128x128\business_user_help.png" />
+    <Content Include="Design\Icons\png\128x128\business_user_info.png" />
+    <Content Include="Design\Icons\png\128x128\business_user_warning.png" />
+    <Content Include="Design\Icons\png\128x128\buy_now.png" />
+    <Content Include="Design\Icons\png\128x128\calculator.png" />
+    <Content Include="Design\Icons\png\128x128\calendar.png" />
+    <Content Include="Design\Icons\png\128x128\calendar_empty.png" />
+    <Content Include="Design\Icons\png\128x128\canvas_holder.png" />
+    <Content Include="Design\Icons\png\128x128\card.png" />
+    <Content Include="Design\Icons\png\128x128\cd.png" />
+    <Content Include="Design\Icons\png\128x128\chalk_board.png" />
+    <Content Include="Design\Icons\png\128x128\chart.png" />
+    <Content Include="Design\Icons\png\128x128\chart_down.png" />
+    <Content Include="Design\Icons\png\128x128\chart_pie.png" />
+    <Content Include="Design\Icons\png\128x128\chart_up.png" />
+    <Content Include="Design\Icons\png\128x128\chess.png" />
+    <Content Include="Design\Icons\png\128x128\clock.png" />
+    <Content Include="Design\Icons\png\128x128\cloud_comment.png" />
+    <Content Include="Design\Icons\png\128x128\coffee_cup.png" />
+    <Content Include="Design\Icons\png\128x128\comment.png" />
+    <Content Include="Design\Icons\png\128x128\comments.png" />
+    <Content Include="Design\Icons\png\128x128\computer.png" />
+    <Content Include="Design\Icons\png\128x128\computer_accept.png" />
+    <Content Include="Design\Icons\png\128x128\computer_add.png" />
+    <Content Include="Design\Icons\png\128x128\computer_help.png" />
+    <Content Include="Design\Icons\png\128x128\computer_info.png" />
+    <Content Include="Design\Icons\png\128x128\computer_process.png" />
+    <Content Include="Design\Icons\png\128x128\computer_warning.png" />
+    <Content Include="Design\Icons\png\128x128\copy_paste.png" />
+    <Content Include="Design\Icons\png\128x128\credit_cart.png" />
+    <Content Include="Design\Icons\png\128x128\credit_cart_cancelled.png" />
+    <Content Include="Design\Icons\png\128x128\css_file.png" />
+    <Content Include="Design\Icons\png\128x128\csv_file.png" />
+    <Content Include="Design\Icons\png\128x128\cut.png" />
+    <Content Include="Design\Icons\png\128x128\cut_from_page.png" />
+    <Content Include="Design\Icons\png\128x128\database.png" />
+    <Content Include="Design\Icons\png\128x128\database_upload.png" />
+    <Content Include="Design\Icons\png\128x128\delete.png" />
+    <Content Include="Design\Icons\png\128x128\delete_comment.png" />
+    <Content Include="Design\Icons\png\128x128\delete_computer.png" />
+    <Content Include="Design\Icons\png\128x128\delete_folder.png" />
+    <Content Include="Design\Icons\png\128x128\delete_home.png" />
+    <Content Include="Design\Icons\png\128x128\delete_image.png" />
+    <Content Include="Design\Icons\png\128x128\delete_open_folder.png" />
+    <Content Include="Design\Icons\png\128x128\delete_page.png" />
+    <Content Include="Design\Icons\png\128x128\delete_user.png" />
+    <Content Include="Design\Icons\png\128x128\doc_file.png" />
+    <Content Include="Design\Icons\png\128x128\dollar_currency_sign.png" />
+    <Content Include="Design\Icons\png\128x128\download.png" />
+    <Content Include="Design\Icons\png\128x128\download_database.png" />
+    <Content Include="Design\Icons\png\128x128\download_image.png" />
+    <Content Include="Design\Icons\png\128x128\download_link.png" />
+    <Content Include="Design\Icons\png\128x128\download_to_computer.png" />
+    <Content Include="Design\Icons\png\128x128\dvd.png" />
+    <Content Include="Design\Icons\png\128x128\edit.png" />
+    <Content Include="Design\Icons\png\128x128\edit_business_user.png" />
+    <Content Include="Design\Icons\png\128x128\edit_female_user.png" />
+    <Content Include="Design\Icons\png\128x128\edit_male_user.png" />
+    <Content Include="Design\Icons\png\128x128\edit_page.png" />
+    <Content Include="Design\Icons\png\128x128\edit_profile.png" />
+    <Content Include="Design\Icons\png\128x128\email.png" />
+    <Content Include="Design\Icons\png\128x128\eps_file.png" />
+    <Content Include="Design\Icons\png\128x128\equalizer.png" />
+    <Content Include="Design\Icons\png\128x128\euro_currency_sign.png" />
+    <Content Include="Design\Icons\png\128x128\favorite.png" />
+    <Content Include="Design\Icons\png\128x128\favorite_film.png" />
+    <Content Include="Design\Icons\png\128x128\female_male_users.png" />
+    <Content Include="Design\Icons\png\128x128\female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\female_user.png" />
+    <Content Include="Design\Icons\png\128x128\female_users.png" />
+    <Content Include="Design\Icons\png\128x128\female_users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\female_user_comment.png" />
+    <Content Include="Design\Icons\png\128x128\female_user_help.png" />
+    <Content Include="Design\Icons\png\128x128\female_user_info.png" />
+    <Content Include="Design\Icons\png\128x128\female_user_warning.png" />
+    <Content Include="Design\Icons\png\128x128\film.png" />
+    <Content Include="Design\Icons\png\128x128\filter.png" />
+    <Content Include="Design\Icons\png\128x128\firewall.png" />
+    <Content Include="Design\Icons\png\128x128\first.png" />
+    <Content Include="Design\Icons\png\128x128\folder.png" />
+    <Content Include="Design\Icons\png\128x128\folder_accept.png" />
+    <Content Include="Design\Icons\png\128x128\folder_conflicted.png" />
+    <Content Include="Design\Icons\png\128x128\folder_full.png" />
+    <Content Include="Design\Icons\png\128x128\folder_modified.png" />
+    <Content Include="Design\Icons\png\128x128\football.png" />
+    <Content Include="Design\Icons\png\128x128\full_page.png" />
+    <Content Include="Design\Icons\png\128x128\games.png" />
+    <Content Include="Design\Icons\png\128x128\gif_file.png" />
+    <Content Include="Design\Icons\png\128x128\globe.png" />
+    <Content Include="Design\Icons\png\128x128\globe_download.png" />
+    <Content Include="Design\Icons\png\128x128\globe_process.png" />
+    <Content Include="Design\Icons\png\128x128\globe_warning.png" />
+    <Content Include="Design\Icons\png\128x128\golf_ball.png" />
+    <Content Include="Design\Icons\png\128x128\green_arrow_down.png" />
+    <Content Include="Design\Icons\png\128x128\green_arrow_up.png" />
+    <Content Include="Design\Icons\png\128x128\green_button.png" />
+    <Content Include="Design\Icons\png\128x128\green_energy.png" />
+    <Content Include="Design\Icons\png\128x128\green_flag.png" />
+    <Content Include="Design\Icons\png\128x128\heart.png" />
+    <Content Include="Design\Icons\png\128x128\help.png" />
+    <Content Include="Design\Icons\png\128x128\help_balloon.png" />
+    <Content Include="Design\Icons\png\128x128\home.png" />
+    <Content Include="Design\Icons\png\128x128\home_accept.png" />
+    <Content Include="Design\Icons\png\128x128\html_file.png" />
+    <Content Include="Design\Icons\png\128x128\ico_file.png" />
+    <Content Include="Design\Icons\png\128x128\id_card.png" />
+    <Content Include="Design\Icons\png\128x128\image.png" />
+    <Content Include="Design\Icons\png\128x128\image_accept.png" />
+    <Content Include="Design\Icons\png\128x128\info.png" />
+    <Content Include="Design\Icons\png\128x128\insert_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\128x128\jpg_file.png" />
+    <Content Include="Design\Icons\png\128x128\json_file.png" />
+    <Content Include="Design\Icons\png\128x128\js_file.png" />
+    <Content Include="Design\Icons\png\128x128\key.png" />
+    <Content Include="Design\Icons\png\128x128\last.png" />
+    <Content Include="Design\Icons\png\128x128\light_bulb.png" />
+    <Content Include="Design\Icons\png\128x128\link.png" />
+    <Content Include="Design\Icons\png\128x128\lock.png" />
+    <Content Include="Design\Icons\png\128x128\magnet.png" />
+    <Content Include="Design\Icons\png\128x128\mail.png" />
+    <Content Include="Design\Icons\png\128x128\mail_lock.png" />
+    <Content Include="Design\Icons\png\128x128\mail_receive.png" />
+    <Content Include="Design\Icons\png\128x128\mail_search.png" />
+    <Content Include="Design\Icons\png\128x128\mail_send.png" />
+    <Content Include="Design\Icons\png\128x128\male_female_users.png" />
+    <Content Include="Design\Icons\png\128x128\male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\male_user.png" />
+    <Content Include="Design\Icons\png\128x128\male_users.png" />
+    <Content Include="Design\Icons\png\128x128\male_users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\male_user_comment.png" />
+    <Content Include="Design\Icons\png\128x128\male_user_help.png" />
+    <Content Include="Design\Icons\png\128x128\male_user_info.png" />
+    <Content Include="Design\Icons\png\128x128\male_user_warning.png" />
+    <Content Include="Design\Icons\png\128x128\megaphone.png" />
+    <Content Include="Design\Icons\png\128x128\mms.png" />
+    <Content Include="Design\Icons\png\128x128\mobile_phone.png" />
+    <Content Include="Design\Icons\png\128x128\mouse.png" />
+    <Content Include="Design\Icons\png\128x128\mp3_file.png" />
+    <Content Include="Design\Icons\png\128x128\music.png" />
+    <Content Include="Design\Icons\png\128x128\new.png" />
+    <Content Include="Design\Icons\png\128x128\news.png" />
+    <Content Include="Design\Icons\png\128x128\new_page.png" />
+    <Content Include="Design\Icons\png\128x128\next.png" />
+    <Content Include="Design\Icons\png\128x128\nextplayer.png" />
+    <Content Include="Design\Icons\png\128x128\note.png" />
+    <Content Include="Design\Icons\png\128x128\note_accept.png" />
+    <Content Include="Design\Icons\png\128x128\note_book.png" />
+    <Content Include="Design\Icons\png\128x128\office_folders.png" />
+    <Content Include="Design\Icons\png\128x128\old_clock.png" />
+    <Content Include="Design\Icons\png\128x128\open.png" />
+    <Content Include="Design\Icons\png\128x128\open_folder.png" />
+    <Content Include="Design\Icons\png\128x128\open_folder_accept.png" />
+    <Content Include="Design\Icons\png\128x128\open_folder_full.png" />
+    <Content Include="Design\Icons\png\128x128\open_folder_info.png" />
+    <Content Include="Design\Icons\png\128x128\open_folder_warning.png" />
+    <Content Include="Design\Icons\png\128x128\open_store.png" />
+    <Content Include="Design\Icons\png\128x128\orange_arrow_down.png" />
+    <Content Include="Design\Icons\png\128x128\orange_arrow_up.png" />
+    <Content Include="Design\Icons\png\128x128\orange_button.png" />
+    <Content Include="Design\Icons\png\128x128\package.png" />
+    <Content Include="Design\Icons\png\128x128\package_accept.png" />
+    <Content Include="Design\Icons\png\128x128\package_add.png" />
+    <Content Include="Design\Icons\png\128x128\package_download.png" />
+    <Content Include="Design\Icons\png\128x128\package_warning.png" />
+    <Content Include="Design\Icons\png\128x128\pages.png" />
+    <Content Include="Design\Icons\png\128x128\pages_warning.png" />
+    <Content Include="Design\Icons\png\128x128\page_down.png" />
+    <Content Include="Design\Icons\png\128x128\page_process.png" />
+    <Content Include="Design\Icons\png\128x128\page_up.png" />
+    <Content Include="Design\Icons\png\128x128\paint.png" />
+    <Content Include="Design\Icons\png\128x128\paint_brush.png" />
+    <Content Include="Design\Icons\png\128x128\palette.png" />
+    <Content Include="Design\Icons\png\128x128\palette_brush.png" />
+    <Content Include="Design\Icons\png\128x128\pastel_colors.png" />
+    <Content Include="Design\Icons\png\128x128\pause.png" />
+    <Content Include="Design\Icons\png\128x128\pdf_file.png" />
+    <Content Include="Design\Icons\png\128x128\phone_book.png" />
+    <Content Include="Design\Icons\png\128x128\phone_book_edit.png" />
+    <Content Include="Design\Icons\png\128x128\photo_camera.png" />
+    <Content Include="Design\Icons\png\128x128\photo_camera_accept.png" />
+    <Content Include="Design\Icons\png\128x128\php_file.png" />
+    <Content Include="Design\Icons\png\128x128\pin.png" />
+    <Content Include="Design\Icons\png\128x128\ping_pong.png" />
+    <Content Include="Design\Icons\png\128x128\play.png" />
+    <Content Include="Design\Icons\png\128x128\png_file.png" />
+    <Content Include="Design\Icons\png\128x128\ppt_file.png" />
+    <Content Include="Design\Icons\png\128x128\previous.png" />
+    <Content Include="Design\Icons\png\128x128\printer.png" />
+    <Content Include="Design\Icons\png\128x128\printer_accept.png" />
+    <Content Include="Design\Icons\png\128x128\printer_warning.png" />
+    <Content Include="Design\Icons\png\128x128\prize_winner.png" />
+    <Content Include="Design\Icons\png\128x128\process.png" />
+    <Content Include="Design\Icons\png\128x128\process_accept.png" />
+    <Content Include="Design\Icons\png\128x128\process_info.png" />
+    <Content Include="Design\Icons\png\128x128\process_warning.png" />
+    <Content Include="Design\Icons\png\128x128\promotion.png" />
+    <Content Include="Design\Icons\png\128x128\protection.png" />
+    <Content Include="Design\Icons\png\128x128\psd_file.png" />
+    <Content Include="Design\Icons\png\128x128\puzzle.png" />
+    <Content Include="Design\Icons\png\128x128\record.png" />
+    <Content Include="Design\Icons\png\128x128\recycle.png" />
+    <Content Include="Design\Icons\png\128x128\red_button.png" />
+    <Content Include="Design\Icons\png\128x128\red_flag.png" />
+    <Content Include="Design\Icons\png\128x128\red_heart.png" />
+    <Content Include="Design\Icons\png\128x128\refresh.png" />
+    <Content Include="Design\Icons\png\128x128\refresh_page.png" />
+    <Content Include="Design\Icons\png\128x128\remote_desktop.png" />
+    <Content Include="Design\Icons\png\128x128\remove_business_user.png" />
+    <Content Include="Design\Icons\png\128x128\remove_female_user.png" />
+    <Content Include="Design\Icons\png\128x128\remove_from_database.png" />
+    <Content Include="Design\Icons\png\128x128\remove_from_favorites.png" />
+    <Content Include="Design\Icons\png\128x128\remove_from_shopping_cart.png" />
+    <Content Include="Design\Icons\png\128x128\remove_link.png" />
+    <Content Include="Design\Icons\png\128x128\remove_male_user.png" />
+    <Content Include="Design\Icons\png\128x128\repeat.png" />
+    <Content Include="Design\Icons\png\128x128\report.png" />
+    <Content Include="Design\Icons\png\128x128\rss.png" />
+    <Content Include="Design\Icons\png\128x128\rugby_ball.png" />
+    <Content Include="Design\Icons\png\128x128\ruler.png" />
+    <Content Include="Design\Icons\png\128x128\ruler_pencil.png" />
+    <Content Include="Design\Icons\png\128x128\sale.png" />
+    <Content Include="Design\Icons\png\128x128\sale_promotion.png" />
+    <Content Include="Design\Icons\png\128x128\save.png" />
+    <Content Include="Design\Icons\png\128x128\search.png" />
+    <Content Include="Design\Icons\png\128x128\search_business_user.png" />
+    <Content Include="Design\Icons\png\128x128\search_computer.png" />
+    <Content Include="Design\Icons\png\128x128\search_database.png" />
+    <Content Include="Design\Icons\png\128x128\search_female_user.png" />
+    <Content Include="Design\Icons\png\128x128\search_globe.png" />
+    <Content Include="Design\Icons\png\128x128\search_home.png" />
+    <Content Include="Design\Icons\png\128x128\search_image.png" />
+    <Content Include="Design\Icons\png\128x128\search_male_user.png" />
+    <Content Include="Design\Icons\png\128x128\search_page.png" />
+    <Content Include="Design\Icons\png\128x128\search_printer.png" />
+    <Content Include="Design\Icons\png\128x128\search_user.png" />
+    <Content Include="Design\Icons\png\128x128\security.png" />
+    <Content Include="Design\Icons\png\128x128\send_mms.png" />
+    <Content Include="Design\Icons\png\128x128\send_sms.png" />
+    <Content Include="Design\Icons\png\128x128\shopping_cart.png" />
+    <Content Include="Design\Icons\png\128x128\shopping_cart_accept.png" />
+    <Content Include="Design\Icons\png\128x128\shut_down.png" />
+    <Content Include="Design\Icons\png\128x128\sms.png" />
+    <Content Include="Design\Icons\png\128x128\snooker_ball.png" />
+    <Content Include="Design\Icons\png\128x128\sound.png" />
+    <Content Include="Design\Icons\png\128x128\sound_muted.png" />
+    <Content Include="Design\Icons\png\128x128\star_empty.png" />
+    <Content Include="Design\Icons\png\128x128\star_full.png" />
+    <Content Include="Design\Icons\png\128x128\star_half_full.png" />
+    <Content Include="Design\Icons\png\128x128\sterling_pound_currency_sign.png" />
+    <Content Include="Design\Icons\png\128x128\stop.png" />
+    <Content Include="Design\Icons\png\128x128\support.png" />
+    <Content Include="Design\Icons\png\128x128\svg_file.png" />
+    <Content Include="Design\Icons\png\128x128\swf_file.png" />
+    <Content Include="Design\Icons\png\128x128\tablet.png" />
+    <Content Include="Design\Icons\png\128x128\tag_blue.png" />
+    <Content Include="Design\Icons\png\128x128\tag_green.png" />
+    <Content Include="Design\Icons\png\128x128\target.png" />
+    <Content Include="Design\Icons\png\128x128\telephone.png" />
+    <Content Include="Design\Icons\png\128x128\television.png" />
+    <Content Include="Design\Icons\png\128x128\tennis_ball.png" />
+    <Content Include="Design\Icons\png\128x128\text_page.png" />
+    <Content Include="Design\Icons\png\128x128\tiff_file.png" />
+    <Content Include="Design\Icons\png\128x128\toolbox.png" />
+    <Content Include="Design\Icons\png\128x128\tools.png" />
+    <Content Include="Design\Icons\png\128x128\trash_can.png" />
+    <Content Include="Design\Icons\png\128x128\ttf_file.png" />
+    <Content Include="Design\Icons\png\128x128\turquoise_button.png" />
+    <Content Include="Design\Icons\png\128x128\twitter.png" />
+    <Content Include="Design\Icons\png\128x128\txt_file.png" />
+    <Content Include="Design\Icons\png\128x128\unlock.png" />
+    <Content Include="Design\Icons\png\128x128\up.png" />
+    <Content Include="Design\Icons\png\128x128\user.png" />
+    <Content Include="Design\Icons\png\128x128\users.png" />
+    <Content Include="Design\Icons\png\128x128\users_comments.png" />
+    <Content Include="Design\Icons\png\128x128\user_accept.png" />
+    <Content Include="Design\Icons\png\128x128\user_comment.png" />
+    <Content Include="Design\Icons\png\128x128\violet_button.png" />
+    <Content Include="Design\Icons\png\128x128\warning.png" />
+    <Content Include="Design\Icons\png\128x128\wav_file.png" />
+    <Content Include="Design\Icons\png\128x128\white_flag.png" />
+    <Content Include="Design\Icons\png\128x128\windows_terminal.png" />
+    <Content Include="Design\Icons\png\128x128\xls_file.png" />
+    <Content Include="Design\Icons\png\128x128\xml_file.png" />
+    <Content Include="Design\Icons\png\128x128\yellow_mail.png" />
+    <Content Include="Design\Icons\png\128x128\yellow_mail_receive.png" />
+    <Content Include="Design\Icons\png\128x128\yellow_mail_send.png" />
+    <Content Include="Design\Icons\png\128x128\yen_currency_sign.png" />
+    <Content Include="Design\Icons\png\128x128\zip_file.png" />
+    <Content Include="Design\Icons\png\128x128\zip_file_accept.png" />
+    <Content Include="Design\Icons\png\128x128\zip_file_download.png" />
+    <Content Include="Design\Icons\png\128x128\zip_file_info.png" />
+    <Content Include="Design\Icons\png\128x128\zip_file_search.png" />
+    <Content Include="Design\Icons\png\128x128\zoom_in.png" />
+    <Content Include="Design\Icons\png\128x128\zoom_out.png" />
+    <Content Include="Design\Icons\png\16x16\10_percent_off.png" />
+    <Content Include="Design\Icons\png\16x16\30_percent_off.png" />
+    <Content Include="Design\Icons\png\16x16\50_percent_off.png" />
+    <Content Include="Design\Icons\png\16x16\accept.png" />
+    <Content Include="Design\Icons\png\16x16\accept_business_user.png" />
+    <Content Include="Design\Icons\png\16x16\accept_database.png" />
+    <Content Include="Design\Icons\png\16x16\accept_female_user.png" />
+    <Content Include="Design\Icons\png\16x16\accept_male_user.png" />
+    <Content Include="Design\Icons\png\16x16\accept_page.png" />
+    <Content Include="Design\Icons\png\16x16\add.png" />
+    <Content Include="Design\Icons\png\16x16\add_business_user.png" />
+    <Content Include="Design\Icons\png\16x16\add_comment.png" />
+    <Content Include="Design\Icons\png\16x16\add_female_user.png" />
+    <Content Include="Design\Icons\png\16x16\add_home.png" />
+    <Content Include="Design\Icons\png\16x16\add_image.png" />
+    <Content Include="Design\Icons\png\16x16\add_link.png" />
+    <Content Include="Design\Icons\png\16x16\add_male_user.png" />
+    <Content Include="Design\Icons\png\16x16\add_page.png" />
+    <Content Include="Design\Icons\png\16x16\add_pages.png" />
+    <Content Include="Design\Icons\png\16x16\add_printer.png" />
+    <Content Include="Design\Icons\png\16x16\add_to_database.png" />
+    <Content Include="Design\Icons\png\16x16\add_to_favorites.png" />
+    <Content Include="Design\Icons\png\16x16\add_to_folder.png" />
+    <Content Include="Design\Icons\png\16x16\add_to_open_folder.png" />
+    <Content Include="Design\Icons\png\16x16\add_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\16x16\add_user.png" />
+    <Content Include="Design\Icons\png\16x16\apple.png" />
+    <Content Include="Design\Icons\png\16x16\artwork.png" />
+    <Content Include="Design\Icons\png\16x16\attachment.png" />
+    <Content Include="Design\Icons\png\16x16\attach_image.png" />
+    <Content Include="Design\Icons\png\16x16\back.png" />
+    <Content Include="Design\Icons\png\16x16\barcode.png" />
+    <Content Include="Design\Icons\png\16x16\baseball.png" />
+    <Content Include="Design\Icons\png\16x16\basketball.png" />
+    <Content Include="Design\Icons\png\16x16\block.png" />
+    <Content Include="Design\Icons\png\16x16\blue_arrow_down.png" />
+    <Content Include="Design\Icons\png\16x16\blue_arrow_up.png" />
+    <Content Include="Design\Icons\png\16x16\blue_energy.png" />
+    <Content Include="Design\Icons\png\16x16\bmp_file.png" />
+    <Content Include="Design\Icons\png\16x16\book.png" />
+    <Content Include="Design\Icons\png\16x16\book_accept.png" />
+    <Content Include="Design\Icons\png\16x16\book_download.png" />
+    <Content Include="Design\Icons\png\16x16\book_search.png" />
+    <Content Include="Design\Icons\png\16x16\book_warning.png" />
+    <Content Include="Design\Icons\png\16x16\bowling.png" />
+    <Content Include="Design\Icons\png\16x16\business_female_male_users.png" />
+    <Content Include="Design\Icons\png\16x16\business_female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\business_male_female_users.png" />
+    <Content Include="Design\Icons\png\16x16\business_male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\business_user.png" />
+    <Content Include="Design\Icons\png\16x16\business_users.png" />
+    <Content Include="Design\Icons\png\16x16\business_users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\business_user_comment.png" />
+    <Content Include="Design\Icons\png\16x16\business_user_help.png" />
+    <Content Include="Design\Icons\png\16x16\business_user_info.png" />
+    <Content Include="Design\Icons\png\16x16\business_user_warning.png" />
+    <Content Include="Design\Icons\png\16x16\buy_now.png" />
+    <Content Include="Design\Icons\png\16x16\calculator.png" />
+    <Content Include="Design\Icons\png\16x16\calendar.png" />
+    <Content Include="Design\Icons\png\16x16\calendar_empty.png" />
+    <Content Include="Design\Icons\png\16x16\canvas_holder.png" />
+    <Content Include="Design\Icons\png\16x16\card.png" />
+    <Content Include="Design\Icons\png\16x16\cd.png" />
+    <Content Include="Design\Icons\png\16x16\chalk_board.png" />
+    <Content Include="Design\Icons\png\16x16\chart.png" />
+    <Content Include="Design\Icons\png\16x16\chart_down.png" />
+    <Content Include="Design\Icons\png\16x16\chart_pie.png" />
+    <Content Include="Design\Icons\png\16x16\chart_up.png" />
+    <Content Include="Design\Icons\png\16x16\chess.png" />
+    <Content Include="Design\Icons\png\16x16\clock.png" />
+    <Content Include="Design\Icons\png\16x16\cloud_comment.png" />
+    <Content Include="Design\Icons\png\16x16\coffee_cup.png" />
+    <Content Include="Design\Icons\png\16x16\comment.png" />
+    <Content Include="Design\Icons\png\16x16\comments.png" />
+    <Content Include="Design\Icons\png\16x16\computer.png" />
+    <Content Include="Design\Icons\png\16x16\computer_accept.png" />
+    <Content Include="Design\Icons\png\16x16\computer_add.png" />
+    <Content Include="Design\Icons\png\16x16\computer_help.png" />
+    <Content Include="Design\Icons\png\16x16\computer_info.png" />
+    <Content Include="Design\Icons\png\16x16\computer_process.png" />
+    <Content Include="Design\Icons\png\16x16\computer_warning.png" />
+    <Content Include="Design\Icons\png\16x16\copy_paste.png" />
+    <Content Include="Design\Icons\png\16x16\credit_cart.png" />
+    <Content Include="Design\Icons\png\16x16\credit_cart_cancelled.png" />
+    <Content Include="Design\Icons\png\16x16\css_file.png" />
+    <Content Include="Design\Icons\png\16x16\csv_file.png" />
+    <Content Include="Design\Icons\png\16x16\cut.png" />
+    <Content Include="Design\Icons\png\16x16\cut_from_page.png" />
+    <Content Include="Design\Icons\png\16x16\database.png" />
+    <Content Include="Design\Icons\png\16x16\database_upload.png" />
+    <Content Include="Design\Icons\png\16x16\delete.png" />
+    <Content Include="Design\Icons\png\16x16\delete_comment.png" />
+    <Content Include="Design\Icons\png\16x16\delete_computer.png" />
+    <Content Include="Design\Icons\png\16x16\delete_folder.png" />
+    <Content Include="Design\Icons\png\16x16\delete_home.png" />
+    <Content Include="Design\Icons\png\16x16\delete_image.png" />
+    <Content Include="Design\Icons\png\16x16\delete_open_folder.png" />
+    <Content Include="Design\Icons\png\16x16\delete_page.png" />
+    <Content Include="Design\Icons\png\16x16\delete_user.png" />
+    <Content Include="Design\Icons\png\16x16\doc_file.png" />
+    <Content Include="Design\Icons\png\16x16\dollar_currency_sign.png" />
+    <Content Include="Design\Icons\png\16x16\download.png" />
+    <Content Include="Design\Icons\png\16x16\download_database.png" />
+    <Content Include="Design\Icons\png\16x16\download_image.png" />
+    <Content Include="Design\Icons\png\16x16\download_link.png" />
+    <Content Include="Design\Icons\png\16x16\download_to_computer.png" />
+    <Content Include="Design\Icons\png\16x16\dvd.png" />
+    <Content Include="Design\Icons\png\16x16\edit.png" />
+    <Content Include="Design\Icons\png\16x16\edit_business_user.png" />
+    <Content Include="Design\Icons\png\16x16\edit_female_user.png" />
+    <Content Include="Design\Icons\png\16x16\edit_male_user.png" />
+    <Content Include="Design\Icons\png\16x16\edit_page.png" />
+    <Content Include="Design\Icons\png\16x16\edit_profile.png" />
+    <Content Include="Design\Icons\png\16x16\email.png" />
+    <Content Include="Design\Icons\png\16x16\eps_file.png" />
+    <Content Include="Design\Icons\png\16x16\equalizer.png" />
+    <Content Include="Design\Icons\png\16x16\euro_currency_sign.png" />
+    <Content Include="Design\Icons\png\16x16\favorite.png" />
+    <Content Include="Design\Icons\png\16x16\favorite_film.png" />
+    <Content Include="Design\Icons\png\16x16\female_male_users.png" />
+    <Content Include="Design\Icons\png\16x16\female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\female_user.png" />
+    <Content Include="Design\Icons\png\16x16\female_users.png" />
+    <Content Include="Design\Icons\png\16x16\female_users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\female_user_comment.png" />
+    <Content Include="Design\Icons\png\16x16\female_user_help.png" />
+    <Content Include="Design\Icons\png\16x16\female_user_info.png" />
+    <Content Include="Design\Icons\png\16x16\female_user_warning.png" />
+    <Content Include="Design\Icons\png\16x16\film.png" />
+    <Content Include="Design\Icons\png\16x16\filter.png" />
+    <Content Include="Design\Icons\png\16x16\firewall.png" />
+    <Content Include="Design\Icons\png\16x16\first.png" />
+    <Content Include="Design\Icons\png\16x16\folder.png" />
+    <Content Include="Design\Icons\png\16x16\folder_accept.png" />
+    <Content Include="Design\Icons\png\16x16\folder_conflicted.png" />
+    <Content Include="Design\Icons\png\16x16\folder_full.png" />
+    <Content Include="Design\Icons\png\16x16\folder_modified.png" />
+    <Content Include="Design\Icons\png\16x16\football.png" />
+    <Content Include="Design\Icons\png\16x16\full_page.png" />
+    <Content Include="Design\Icons\png\16x16\games.png" />
+    <Content Include="Design\Icons\png\16x16\gif_file.png" />
+    <Content Include="Design\Icons\png\16x16\globe.png" />
+    <Content Include="Design\Icons\png\16x16\globe_download.png" />
+    <Content Include="Design\Icons\png\16x16\globe_process.png" />
+    <Content Include="Design\Icons\png\16x16\globe_warning.png" />
+    <Content Include="Design\Icons\png\16x16\golf_ball.png" />
+    <Content Include="Design\Icons\png\16x16\green_arrow_down.png" />
+    <Content Include="Design\Icons\png\16x16\green_arrow_up.png" />
+    <Content Include="Design\Icons\png\16x16\green_button.png" />
+    <Content Include="Design\Icons\png\16x16\green_energy.png" />
+    <Content Include="Design\Icons\png\16x16\green_flag.png" />
+    <Content Include="Design\Icons\png\16x16\heart.png" />
+    <Content Include="Design\Icons\png\16x16\help.png" />
+    <Content Include="Design\Icons\png\16x16\help_balloon.png" />
+    <Content Include="Design\Icons\png\16x16\home.png" />
+    <Content Include="Design\Icons\png\16x16\home_accept.png" />
+    <Content Include="Design\Icons\png\16x16\html_file.png" />
+    <Content Include="Design\Icons\png\16x16\ico_file.png" />
+    <Content Include="Design\Icons\png\16x16\id_card.png" />
+    <Content Include="Design\Icons\png\16x16\image.png" />
+    <Content Include="Design\Icons\png\16x16\image_accept.png" />
+    <Content Include="Design\Icons\png\16x16\info.png" />
+    <Content Include="Design\Icons\png\16x16\insert_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\16x16\jpg_file.png" />
+    <Content Include="Design\Icons\png\16x16\json_file.png" />
+    <Content Include="Design\Icons\png\16x16\js_file.png" />
+    <Content Include="Design\Icons\png\16x16\key.png" />
+    <Content Include="Design\Icons\png\16x16\last.png" />
+    <Content Include="Design\Icons\png\16x16\light_bulb.png" />
+    <Content Include="Design\Icons\png\16x16\link.png" />
+    <Content Include="Design\Icons\png\16x16\lock.png" />
+    <Content Include="Design\Icons\png\16x16\magnet.png" />
+    <Content Include="Design\Icons\png\16x16\mail.png" />
+    <Content Include="Design\Icons\png\16x16\mail_lock.png" />
+    <Content Include="Design\Icons\png\16x16\mail_receive.png" />
+    <Content Include="Design\Icons\png\16x16\mail_search.png" />
+    <Content Include="Design\Icons\png\16x16\mail_send.png" />
+    <Content Include="Design\Icons\png\16x16\male_female_users.png" />
+    <Content Include="Design\Icons\png\16x16\male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\male_user.png" />
+    <Content Include="Design\Icons\png\16x16\male_users.png" />
+    <Content Include="Design\Icons\png\16x16\male_users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\male_user_comment.png" />
+    <Content Include="Design\Icons\png\16x16\male_user_help.png" />
+    <Content Include="Design\Icons\png\16x16\male_user_info.png" />
+    <Content Include="Design\Icons\png\16x16\male_user_warning.png" />
+    <Content Include="Design\Icons\png\16x16\megaphone.png" />
+    <Content Include="Design\Icons\png\16x16\mms.png" />
+    <Content Include="Design\Icons\png\16x16\mobile_phone.png" />
+    <Content Include="Design\Icons\png\16x16\mouse.png" />
+    <Content Include="Design\Icons\png\16x16\mp3_file.png" />
+    <Content Include="Design\Icons\png\16x16\music.png" />
+    <Content Include="Design\Icons\png\16x16\new.png" />
+    <Content Include="Design\Icons\png\16x16\news.png" />
+    <Content Include="Design\Icons\png\16x16\new_page.png" />
+    <Content Include="Design\Icons\png\16x16\next.png" />
+    <Content Include="Design\Icons\png\16x16\nextplayer.png" />
+    <Content Include="Design\Icons\png\16x16\note.png" />
+    <Content Include="Design\Icons\png\16x16\note_accept.png" />
+    <Content Include="Design\Icons\png\16x16\note_book.png" />
+    <Content Include="Design\Icons\png\16x16\office_folders.png" />
+    <Content Include="Design\Icons\png\16x16\old_clock.png" />
+    <Content Include="Design\Icons\png\16x16\open.png" />
+    <Content Include="Design\Icons\png\16x16\open_folder.png" />
+    <Content Include="Design\Icons\png\16x16\open_folder_accept.png" />
+    <Content Include="Design\Icons\png\16x16\open_folder_full.png" />
+    <Content Include="Design\Icons\png\16x16\open_folder_info.png" />
+    <Content Include="Design\Icons\png\16x16\open_folder_warning.png" />
+    <Content Include="Design\Icons\png\16x16\open_store.png" />
+    <Content Include="Design\Icons\png\16x16\orange_arrow_down.png" />
+    <Content Include="Design\Icons\png\16x16\orange_arrow_up.png" />
+    <Content Include="Design\Icons\png\16x16\orange_button.png" />
+    <Content Include="Design\Icons\png\16x16\package.png" />
+    <Content Include="Design\Icons\png\16x16\package_accept.png" />
+    <Content Include="Design\Icons\png\16x16\package_add.png" />
+    <Content Include="Design\Icons\png\16x16\package_download.png" />
+    <Content Include="Design\Icons\png\16x16\package_warning.png" />
+    <Content Include="Design\Icons\png\16x16\pages.png" />
+    <Content Include="Design\Icons\png\16x16\pages_warning.png" />
+    <Content Include="Design\Icons\png\16x16\page_down.png" />
+    <Content Include="Design\Icons\png\16x16\page_process.png" />
+    <Content Include="Design\Icons\png\16x16\page_up.png" />
+    <Content Include="Design\Icons\png\16x16\paint.png" />
+    <Content Include="Design\Icons\png\16x16\paint_brush.png" />
+    <Content Include="Design\Icons\png\16x16\palette.png" />
+    <Content Include="Design\Icons\png\16x16\palette_brush.png" />
+    <Content Include="Design\Icons\png\16x16\pastel_colors.png" />
+    <Content Include="Design\Icons\png\16x16\pause.png" />
+    <Content Include="Design\Icons\png\16x16\pdf_file.png" />
+    <Content Include="Design\Icons\png\16x16\phone_book.png" />
+    <Content Include="Design\Icons\png\16x16\phone_book_edit.png" />
+    <Content Include="Design\Icons\png\16x16\photo_camera.png" />
+    <Content Include="Design\Icons\png\16x16\photo_camera_accept.png" />
+    <Content Include="Design\Icons\png\16x16\php_file.png" />
+    <Content Include="Design\Icons\png\16x16\pin.png" />
+    <Content Include="Design\Icons\png\16x16\ping_pong.png" />
+    <Content Include="Design\Icons\png\16x16\play.png" />
+    <Content Include="Design\Icons\png\16x16\png_file.png" />
+    <Content Include="Design\Icons\png\16x16\ppt_file.png" />
+    <Content Include="Design\Icons\png\16x16\previous.png" />
+    <Content Include="Design\Icons\png\16x16\printer.png" />
+    <Content Include="Design\Icons\png\16x16\printer_accept.png" />
+    <Content Include="Design\Icons\png\16x16\printer_warning.png" />
+    <Content Include="Design\Icons\png\16x16\prize_winner.png" />
+    <Content Include="Design\Icons\png\16x16\process.png" />
+    <Content Include="Design\Icons\png\16x16\process_accept.png" />
+    <Content Include="Design\Icons\png\16x16\process_info.png" />
+    <Content Include="Design\Icons\png\16x16\process_warning.png" />
+    <Content Include="Design\Icons\png\16x16\promotion.png" />
+    <Content Include="Design\Icons\png\16x16\protection.png" />
+    <Content Include="Design\Icons\png\16x16\psd_file.png" />
+    <Content Include="Design\Icons\png\16x16\puzzle.png" />
+    <Content Include="Design\Icons\png\16x16\record.png" />
+    <Content Include="Design\Icons\png\16x16\recycle.png" />
+    <Content Include="Design\Icons\png\16x16\red_button.png" />
+    <Content Include="Design\Icons\png\16x16\red_flag.png" />
+    <Content Include="Design\Icons\png\16x16\red_heart.png" />
+    <Content Include="Design\Icons\png\16x16\refresh.png" />
+    <Content Include="Design\Icons\png\16x16\refresh_page.png" />
+    <Content Include="Design\Icons\png\16x16\remote_desktop.png" />
+    <Content Include="Design\Icons\png\16x16\remove_business_user.png" />
+    <Content Include="Design\Icons\png\16x16\remove_female_user.png" />
+    <Content Include="Design\Icons\png\16x16\remove_from_database.png" />
+    <Content Include="Design\Icons\png\16x16\remove_from_favorites.png" />
+    <Content Include="Design\Icons\png\16x16\remove_from_shopping_cart.png" />
+    <Content Include="Design\Icons\png\16x16\remove_link.png" />
+    <Content Include="Design\Icons\png\16x16\remove_male_user.png" />
+    <Content Include="Design\Icons\png\16x16\repeat.png" />
+    <Content Include="Design\Icons\png\16x16\report.png" />
+    <Content Include="Design\Icons\png\16x16\rss.png" />
+    <Content Include="Design\Icons\png\16x16\rugby_ball.png" />
+    <Content Include="Design\Icons\png\16x16\ruler.png" />
+    <Content Include="Design\Icons\png\16x16\ruler_pencil.png" />
+    <Content Include="Design\Icons\png\16x16\sale.png" />
+    <Content Include="Design\Icons\png\16x16\sale_promotion.png" />
+    <Content Include="Design\Icons\png\16x16\save.png" />
+    <Content Include="Design\Icons\png\16x16\search.png" />
+    <Content Include="Design\Icons\png\16x16\search_business_user.png" />
+    <Content Include="Design\Icons\png\16x16\search_computer.png" />
+    <Content Include="Design\Icons\png\16x16\search_database.png" />
+    <Content Include="Design\Icons\png\16x16\search_female_user.png" />
+    <Content Include="Design\Icons\png\16x16\search_globe.png" />
+    <Content Include="Design\Icons\png\16x16\search_home.png" />
+    <Content Include="Design\Icons\png\16x16\search_image.png" />
+    <Content Include="Design\Icons\png\16x16\search_male_user.png" />
+    <Content Include="Design\Icons\png\16x16\search_page.png" />
+    <Content Include="Design\Icons\png\16x16\search_printer.png" />
+    <Content Include="Design\Icons\png\16x16\search_user.png" />
+    <Content Include="Design\Icons\png\16x16\security.png" />
+    <Content Include="Design\Icons\png\16x16\send_mms.png" />
+    <Content Include="Design\Icons\png\16x16\send_sms.png" />
+    <Content Include="Design\Icons\png\16x16\shopping_cart.png" />
+    <Content Include="Design\Icons\png\16x16\shopping_cart_accept.png" />
+    <Content Include="Design\Icons\png\16x16\shut_down.png" />
+    <Content Include="Design\Icons\png\16x16\sms.png" />
+    <Content Include="Design\Icons\png\16x16\snooker_ball.png" />
+    <Content Include="Design\Icons\png\16x16\sound.png" />
+    <Content Include="Design\Icons\png\16x16\sound_muted.png" />
+    <Content Include="Design\Icons\png\16x16\star_empty.png" />
+    <Content Include="Design\Icons\png\16x16\star_full.png" />
+    <Content Include="Design\Icons\png\16x16\star_half_full.png" />
+    <Content Include="Design\Icons\png\16x16\sterling_pound_currency_sign.png" />
+    <Content Include="Design\Icons\png\16x16\stop.png" />
+    <Content Include="Design\Icons\png\16x16\support.png" />
+    <Content Include="Design\Icons\png\16x16\svg_file.png" />
+    <Content Include="Design\Icons\png\16x16\swf_file.png" />
+    <Content Include="Design\Icons\png\16x16\tablet.png" />
+    <Content Include="Design\Icons\png\16x16\tag_blue.png" />
+    <Content Include="Design\Icons\png\16x16\tag_green.png" />
+    <Content Include="Design\Icons\png\16x16\target.png" />
+    <Content Include="Design\Icons\png\16x16\telephone.png" />
+    <Content Include="Design\Icons\png\16x16\television.png" />
+    <Content Include="Design\Icons\png\16x16\tennis_ball.png" />
+    <Content Include="Design\Icons\png\16x16\text_page.png" />
+    <Content Include="Design\Icons\png\16x16\tiff_file.png" />
+    <Content Include="Design\Icons\png\16x16\toolbox.png" />
+    <Content Include="Design\Icons\png\16x16\tools.png" />
+    <Content Include="Design\Icons\png\16x16\trash_can.png" />
+    <Content Include="Design\Icons\png\16x16\ttf_file.png" />
+    <Content Include="Design\Icons\png\16x16\turquoise_button.png" />
+    <Content Include="Design\Icons\png\16x16\twitter.png" />
+    <Content Include="Design\Icons\png\16x16\txt_file.png" />
+    <Content Include="Design\Icons\png\16x16\unlock.png" />
+    <Content Include="Design\Icons\png\16x16\up.png" />
+    <Content Include="Design\Icons\png\16x16\user.png" />
+    <Content Include="Design\Icons\png\16x16\users.png" />
+    <Content Include="Design\Icons\png\16x16\users_comments.png" />
+    <Content Include="Design\Icons\png\16x16\user_accept.png" />
+    <Content Include="Design\Icons\png\16x16\user_comment.png" />
+    <Content Include="Design\Icons\png\16x16\violet_button.png" />
+    <Content Include="Design\Icons\png\16x16\warning.png" />
+    <Content Include="Design\Icons\png\16x16\wav_file.png" />
+    <Content Include="Design\Icons\png\16x16\white_flag.png" />
+    <Content Include="Design\Icons\png\16x16\windows_terminal.png" />
+    <Content Include="Design\Icons\png\16x16\xls_file.png" />
+    <Content Include="Design\Icons\png\16x16\xml_file.png" />
+    <Content Include="Design\Icons\png\16x16\yellow_mail.png" />
+    <Content Include="Design\Icons\png\16x16\yellow_mail_receive.png" />
+    <Content Include="Design\Icons\png\16x16\yellow_mail_send.png" />
+    <Content Include="Design\Icons\png\16x16\yen_currency_sign.png" />
+    <Content Include="Design\Icons\png\16x16\zip_file.png" />
+    <Content Include="Design\Icons\png\16x16\zip_file_accept.png" />
+    <Content Include="Design\Icons\png\16x16\zip_file_download.png" />
+    <Content Include="Design\Icons\png\16x16\zip_file_info.png" />
+    <Content Include="Design\Icons\png\16x16\zip_file_search.png" />
+    <Content Include="Design\Icons\png\16x16\zoom_in.png" />
+    <Content Include="Design\Icons\png\16x16\zoom_out.png" />
+    <Content Include="Design\Icons\png\24x24\10_percent_off.png" />
+    <Content Include="Design\Icons\png\24x24\30_percent_off.png" />
+    <Content Include="Design\Icons\png\24x24\50_percent_off.png" />
+    <Content Include="Design\Icons\png\24x24\accept.png" />
+    <Content Include="Design\Icons\png\24x24\accept_business_user.png" />
+    <Content Include="Design\Icons\png\24x24\accept_database.png" />
+    <Content Include="Design\Icons\png\24x24\accept_female_user.png" />
+    <Content Include="Design\Icons\png\24x24\accept_male_user.png" />
+    <Content Include="Design\Icons\png\24x24\accept_page.png" />
+    <Content Include="Design\Icons\png\24x24\add.png" />
+    <Content Include="Design\Icons\png\24x24\add_business_user.png" />
+    <Content Include="Design\Icons\png\24x24\add_comment.png" />
+    <Content Include="Design\Icons\png\24x24\add_female_user.png" />
+    <Content Include="Design\Icons\png\24x24\add_home.png" />
+    <Content Include="Design\Icons\png\24x24\add_image.png" />
+    <Content Include="Design\Icons\png\24x24\add_link.png" />
+    <Content Include="Design\Icons\png\24x24\add_male_user.png" />
+    <Content Include="Design\Icons\png\24x24\add_page.png" />
+    <Content Include="Design\Icons\png\24x24\add_pages.png" />
+    <Content Include="Design\Icons\png\24x24\add_printer.png" />
+    <Content Include="Design\Icons\png\24x24\add_to_database.png" />
+    <Content Include="Design\Icons\png\24x24\add_to_favorites.png" />
+    <Content Include="Design\Icons\png\24x24\add_to_folder.png" />
+    <Content Include="Design\Icons\png\24x24\add_to_open_folder.png" />
+    <Content Include="Design\Icons\png\24x24\add_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\24x24\add_user.png" />
+    <Content Include="Design\Icons\png\24x24\apple.png" />
+    <Content Include="Design\Icons\png\24x24\artwork.png" />
+    <Content Include="Design\Icons\png\24x24\attachment.png" />
+    <Content Include="Design\Icons\png\24x24\attach_image.png" />
+    <Content Include="Design\Icons\png\24x24\back.png" />
+    <Content Include="Design\Icons\png\24x24\barcode.png" />
+    <Content Include="Design\Icons\png\24x24\baseball.png" />
+    <Content Include="Design\Icons\png\24x24\basketball.png" />
+    <Content Include="Design\Icons\png\24x24\block.png" />
+    <Content Include="Design\Icons\png\24x24\blue_arrow_down.png" />
+    <Content Include="Design\Icons\png\24x24\blue_arrow_up.png" />
+    <Content Include="Design\Icons\png\24x24\blue_energy.png" />
+    <Content Include="Design\Icons\png\24x24\bmp_file.png" />
+    <Content Include="Design\Icons\png\24x24\book.png" />
+    <Content Include="Design\Icons\png\24x24\book_accept.png" />
+    <Content Include="Design\Icons\png\24x24\book_download.png" />
+    <Content Include="Design\Icons\png\24x24\book_search.png" />
+    <Content Include="Design\Icons\png\24x24\book_warning.png" />
+    <Content Include="Design\Icons\png\24x24\bowling.png" />
+    <Content Include="Design\Icons\png\24x24\business_female_male_users.png" />
+    <Content Include="Design\Icons\png\24x24\business_female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\business_male_female_users.png" />
+    <Content Include="Design\Icons\png\24x24\business_male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\business_user.png" />
+    <Content Include="Design\Icons\png\24x24\business_users.png" />
+    <Content Include="Design\Icons\png\24x24\business_users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\business_user_comment.png" />
+    <Content Include="Design\Icons\png\24x24\business_user_help.png" />
+    <Content Include="Design\Icons\png\24x24\business_user_info.png" />
+    <Content Include="Design\Icons\png\24x24\business_user_warning.png" />
+    <Content Include="Design\Icons\png\24x24\buy_now.png" />
+    <Content Include="Design\Icons\png\24x24\calculator.png" />
+    <Content Include="Design\Icons\png\24x24\calendar.png" />
+    <Content Include="Design\Icons\png\24x24\calendar_empty.png" />
+    <Content Include="Design\Icons\png\24x24\canvas_holder.png" />
+    <Content Include="Design\Icons\png\24x24\card.png" />
+    <Content Include="Design\Icons\png\24x24\cd.png" />
+    <Content Include="Design\Icons\png\24x24\chalk_board.png" />
+    <Content Include="Design\Icons\png\24x24\chart.png" />
+    <Content Include="Design\Icons\png\24x24\chart_down.png" />
+    <Content Include="Design\Icons\png\24x24\chart_pie.png" />
+    <Content Include="Design\Icons\png\24x24\chart_up.png" />
+    <Content Include="Design\Icons\png\24x24\chess.png" />
+    <Content Include="Design\Icons\png\24x24\clock.png" />
+    <Content Include="Design\Icons\png\24x24\cloud_comment.png" />
+    <Content Include="Design\Icons\png\24x24\coffee_cup.png" />
+    <Content Include="Design\Icons\png\24x24\comment.png" />
+    <Content Include="Design\Icons\png\24x24\comments.png" />
+    <Content Include="Design\Icons\png\24x24\computer.png" />
+    <Content Include="Design\Icons\png\24x24\computer_accept.png" />
+    <Content Include="Design\Icons\png\24x24\computer_add.png" />
+    <Content Include="Design\Icons\png\24x24\computer_help.png" />
+    <Content Include="Design\Icons\png\24x24\computer_info.png" />
+    <Content Include="Design\Icons\png\24x24\computer_process.png" />
+    <Content Include="Design\Icons\png\24x24\computer_warning.png" />
+    <Content Include="Design\Icons\png\24x24\copy_paste.png" />
+    <Content Include="Design\Icons\png\24x24\credit_cart.png" />
+    <Content Include="Design\Icons\png\24x24\credit_cart_cancelled.png" />
+    <Content Include="Design\Icons\png\24x24\css_file.png" />
+    <Content Include="Design\Icons\png\24x24\csv_file.png" />
+    <Content Include="Design\Icons\png\24x24\cut.png" />
+    <Content Include="Design\Icons\png\24x24\cut_from_page.png" />
+    <Content Include="Design\Icons\png\24x24\database.png" />
+    <Content Include="Design\Icons\png\24x24\database_upload.png" />
+    <Content Include="Design\Icons\png\24x24\delete.png" />
+    <Content Include="Design\Icons\png\24x24\delete_comment.png" />
+    <Content Include="Design\Icons\png\24x24\delete_computer.png" />
+    <Content Include="Design\Icons\png\24x24\delete_folder.png" />
+    <Content Include="Design\Icons\png\24x24\delete_home.png" />
+    <Content Include="Design\Icons\png\24x24\delete_image.png" />
+    <Content Include="Design\Icons\png\24x24\delete_open_folder.png" />
+    <Content Include="Design\Icons\png\24x24\delete_page.png" />
+    <Content Include="Design\Icons\png\24x24\delete_user.png" />
+    <Content Include="Design\Icons\png\24x24\doc_file.png" />
+    <Content Include="Design\Icons\png\24x24\dollar_currency_sign.png" />
+    <Content Include="Design\Icons\png\24x24\download.png" />
+    <Content Include="Design\Icons\png\24x24\download_database.png" />
+    <Content Include="Design\Icons\png\24x24\download_image.png" />
+    <Content Include="Design\Icons\png\24x24\download_link.png" />
+    <Content Include="Design\Icons\png\24x24\download_to_computer.png" />
+    <Content Include="Design\Icons\png\24x24\dvd.png" />
+    <Content Include="Design\Icons\png\24x24\edit.png" />
+    <Content Include="Design\Icons\png\24x24\edit_business_user.png" />
+    <Content Include="Design\Icons\png\24x24\edit_female_user.png" />
+    <Content Include="Design\Icons\png\24x24\edit_male_user.png" />
+    <Content Include="Design\Icons\png\24x24\edit_page.png" />
+    <Content Include="Design\Icons\png\24x24\edit_profile.png" />
+    <Content Include="Design\Icons\png\24x24\email.png" />
+    <Content Include="Design\Icons\png\24x24\eps_file.png" />
+    <Content Include="Design\Icons\png\24x24\equalizer.png" />
+    <Content Include="Design\Icons\png\24x24\euro_currency_sign.png" />
+    <Content Include="Design\Icons\png\24x24\favorite.png" />
+    <Content Include="Design\Icons\png\24x24\favorite_film.png" />
+    <Content Include="Design\Icons\png\24x24\female_male_users.png" />
+    <Content Include="Design\Icons\png\24x24\female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\female_user.png" />
+    <Content Include="Design\Icons\png\24x24\female_users.png" />
+    <Content Include="Design\Icons\png\24x24\female_users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\female_user_comment.png" />
+    <Content Include="Design\Icons\png\24x24\female_user_help.png" />
+    <Content Include="Design\Icons\png\24x24\female_user_info.png" />
+    <Content Include="Design\Icons\png\24x24\female_user_warning.png" />
+    <Content Include="Design\Icons\png\24x24\film.png" />
+    <Content Include="Design\Icons\png\24x24\filter.png" />
+    <Content Include="Design\Icons\png\24x24\firewall.png" />
+    <Content Include="Design\Icons\png\24x24\first.png" />
+    <Content Include="Design\Icons\png\24x24\folder.png" />
+    <Content Include="Design\Icons\png\24x24\folder_accept.png" />
+    <Content Include="Design\Icons\png\24x24\folder_conflicted.png" />
+    <Content Include="Design\Icons\png\24x24\folder_full.png" />
+    <Content Include="Design\Icons\png\24x24\folder_modified.png" />
+    <Content Include="Design\Icons\png\24x24\football.png" />
+    <Content Include="Design\Icons\png\24x24\full_page.png" />
+    <Content Include="Design\Icons\png\24x24\games.png" />
+    <Content Include="Design\Icons\png\24x24\gif_file.png" />
+    <Content Include="Design\Icons\png\24x24\globe.png" />
+    <Content Include="Design\Icons\png\24x24\globe_download.png" />
+    <Content Include="Design\Icons\png\24x24\globe_process.png" />
+    <Content Include="Design\Icons\png\24x24\globe_warning.png" />
+    <Content Include="Design\Icons\png\24x24\golf_ball.png" />
+    <Content Include="Design\Icons\png\24x24\green_arrow_down.png" />
+    <Content Include="Design\Icons\png\24x24\green_arrow_up.png" />
+    <Content Include="Design\Icons\png\24x24\green_button.png" />
+    <Content Include="Design\Icons\png\24x24\green_energy.png" />
+    <Content Include="Design\Icons\png\24x24\green_flag.png" />
+    <Content Include="Design\Icons\png\24x24\heart.png" />
+    <Content Include="Design\Icons\png\24x24\help.png" />
+    <Content Include="Design\Icons\png\24x24\help_balloon.png" />
+    <Content Include="Design\Icons\png\24x24\home.png" />
+    <Content Include="Design\Icons\png\24x24\home_accept.png" />
+    <Content Include="Design\Icons\png\24x24\html_file.png" />
+    <Content Include="Design\Icons\png\24x24\ico_file.png" />
+    <Content Include="Design\Icons\png\24x24\id_card.png" />
+    <Content Include="Design\Icons\png\24x24\image.png" />
+    <Content Include="Design\Icons\png\24x24\image_accept.png" />
+    <Content Include="Design\Icons\png\24x24\info.png" />
+    <Content Include="Design\Icons\png\24x24\insert_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\24x24\jpg_file.png" />
+    <Content Include="Design\Icons\png\24x24\json_file.png" />
+    <Content Include="Design\Icons\png\24x24\js_file.png" />
+    <Content Include="Design\Icons\png\24x24\key.png" />
+    <Content Include="Design\Icons\png\24x24\last.png" />
+    <Content Include="Design\Icons\png\24x24\light_bulb.png" />
+    <Content Include="Design\Icons\png\24x24\link.png" />
+    <Content Include="Design\Icons\png\24x24\lock.png" />
+    <Content Include="Design\Icons\png\24x24\magnet.png" />
+    <Content Include="Design\Icons\png\24x24\mail.png" />
+    <Content Include="Design\Icons\png\24x24\mail_lock.png" />
+    <Content Include="Design\Icons\png\24x24\mail_receive.png" />
+    <Content Include="Design\Icons\png\24x24\mail_search.png" />
+    <Content Include="Design\Icons\png\24x24\mail_send.png" />
+    <Content Include="Design\Icons\png\24x24\male_female_users.png" />
+    <Content Include="Design\Icons\png\24x24\male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\male_user.png" />
+    <Content Include="Design\Icons\png\24x24\male_users.png" />
+    <Content Include="Design\Icons\png\24x24\male_users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\male_user_comment.png" />
+    <Content Include="Design\Icons\png\24x24\male_user_help.png" />
+    <Content Include="Design\Icons\png\24x24\male_user_info.png" />
+    <Content Include="Design\Icons\png\24x24\male_user_warning.png" />
+    <Content Include="Design\Icons\png\24x24\megaphone.png" />
+    <Content Include="Design\Icons\png\24x24\mms.png" />
+    <Content Include="Design\Icons\png\24x24\mobile_phone.png" />
+    <Content Include="Design\Icons\png\24x24\mouse.png" />
+    <Content Include="Design\Icons\png\24x24\mp3_file.png" />
+    <Content Include="Design\Icons\png\24x24\music.png" />
+    <Content Include="Design\Icons\png\24x24\new.png" />
+    <Content Include="Design\Icons\png\24x24\news.png" />
+    <Content Include="Design\Icons\png\24x24\new_page.png" />
+    <Content Include="Design\Icons\png\24x24\next.png" />
+    <Content Include="Design\Icons\png\24x24\nextplayer.png" />
+    <Content Include="Design\Icons\png\24x24\note.png" />
+    <Content Include="Design\Icons\png\24x24\note_accept.png" />
+    <Content Include="Design\Icons\png\24x24\note_book.png" />
+    <Content Include="Design\Icons\png\24x24\office_folders.png" />
+    <Content Include="Design\Icons\png\24x24\old_clock.png" />
+    <Content Include="Design\Icons\png\24x24\open.png" />
+    <Content Include="Design\Icons\png\24x24\open_folder.png" />
+    <Content Include="Design\Icons\png\24x24\open_folder_accept.png" />
+    <Content Include="Design\Icons\png\24x24\open_folder_full.png" />
+    <Content Include="Design\Icons\png\24x24\open_folder_info.png" />
+    <Content Include="Design\Icons\png\24x24\open_folder_warning.png" />
+    <Content Include="Design\Icons\png\24x24\open_store.png" />
+    <Content Include="Design\Icons\png\24x24\orange_arrow_down.png" />
+    <Content Include="Design\Icons\png\24x24\orange_arrow_up.png" />
+    <Content Include="Design\Icons\png\24x24\orange_button.png" />
+    <Content Include="Design\Icons\png\24x24\package.png" />
+    <Content Include="Design\Icons\png\24x24\package_accept.png" />
+    <Content Include="Design\Icons\png\24x24\package_add.png" />
+    <Content Include="Design\Icons\png\24x24\package_download.png" />
+    <Content Include="Design\Icons\png\24x24\package_warning.png" />
+    <Content Include="Design\Icons\png\24x24\pages.png" />
+    <Content Include="Design\Icons\png\24x24\pages_warning.png" />
+    <Content Include="Design\Icons\png\24x24\page_down.png" />
+    <Content Include="Design\Icons\png\24x24\page_process.png" />
+    <Content Include="Design\Icons\png\24x24\page_up.png" />
+    <Content Include="Design\Icons\png\24x24\paint.png" />
+    <Content Include="Design\Icons\png\24x24\paint_brush.png" />
+    <Content Include="Design\Icons\png\24x24\palette.png" />
+    <Content Include="Design\Icons\png\24x24\palette_brush.png" />
+    <Content Include="Design\Icons\png\24x24\pastel_colors.png" />
+    <Content Include="Design\Icons\png\24x24\pause.png" />
+    <Content Include="Design\Icons\png\24x24\pdf_file.png" />
+    <Content Include="Design\Icons\png\24x24\phone_book.png" />
+    <Content Include="Design\Icons\png\24x24\phone_book_edit.png" />
+    <Content Include="Design\Icons\png\24x24\photo_camera.png" />
+    <Content Include="Design\Icons\png\24x24\photo_camera_accept.png" />
+    <Content Include="Design\Icons\png\24x24\php_file.png" />
+    <Content Include="Design\Icons\png\24x24\pin.png" />
+    <Content Include="Design\Icons\png\24x24\ping_pong.png" />
+    <Content Include="Design\Icons\png\24x24\play.png" />
+    <Content Include="Design\Icons\png\24x24\png_file.png" />
+    <Content Include="Design\Icons\png\24x24\ppt_file.png" />
+    <Content Include="Design\Icons\png\24x24\previous.png" />
+    <Content Include="Design\Icons\png\24x24\printer.png" />
+    <Content Include="Design\Icons\png\24x24\printer_accept.png" />
+    <Content Include="Design\Icons\png\24x24\printer_warning.png" />
+    <Content Include="Design\Icons\png\24x24\prize_winner.png" />
+    <Content Include="Design\Icons\png\24x24\process.png" />
+    <Content Include="Design\Icons\png\24x24\process_accept.png" />
+    <Content Include="Design\Icons\png\24x24\process_info.png" />
+    <Content Include="Design\Icons\png\24x24\process_warning.png" />
+    <Content Include="Design\Icons\png\24x24\promotion.png" />
+    <Content Include="Design\Icons\png\24x24\protection.png" />
+    <Content Include="Design\Icons\png\24x24\psd_file.png" />
+    <Content Include="Design\Icons\png\24x24\puzzle.png" />
+    <Content Include="Design\Icons\png\24x24\record.png" />
+    <Content Include="Design\Icons\png\24x24\recycle.png" />
+    <Content Include="Design\Icons\png\24x24\red_button.png" />
+    <Content Include="Design\Icons\png\24x24\red_flag.png" />
+    <Content Include="Design\Icons\png\24x24\red_heart.png" />
+    <Content Include="Design\Icons\png\24x24\refresh.png" />
+    <Content Include="Design\Icons\png\24x24\refresh_page.png" />
+    <Content Include="Design\Icons\png\24x24\remote_desktop.png" />
+    <Content Include="Design\Icons\png\24x24\remove_business_user.png" />
+    <Content Include="Design\Icons\png\24x24\remove_female_user.png" />
+    <Content Include="Design\Icons\png\24x24\remove_from_database.png" />
+    <Content Include="Design\Icons\png\24x24\remove_from_favorites.png" />
+    <Content Include="Design\Icons\png\24x24\remove_from_shopping_cart.png" />
+    <Content Include="Design\Icons\png\24x24\remove_link.png" />
+    <Content Include="Design\Icons\png\24x24\remove_male_user.png" />
+    <Content Include="Design\Icons\png\24x24\repeat.png" />
+    <Content Include="Design\Icons\png\24x24\report.png" />
+    <Content Include="Design\Icons\png\24x24\rss.png" />
+    <Content Include="Design\Icons\png\24x24\rugby_ball.png" />
+    <Content Include="Design\Icons\png\24x24\ruler.png" />
+    <Content Include="Design\Icons\png\24x24\ruler_pencil.png" />
+    <Content Include="Design\Icons\png\24x24\sale.png" />
+    <Content Include="Design\Icons\png\24x24\sale_promotion.png" />
+    <Content Include="Design\Icons\png\24x24\save.png" />
+    <Content Include="Design\Icons\png\24x24\search.png" />
+    <Content Include="Design\Icons\png\24x24\search_business_user.png" />
+    <Content Include="Design\Icons\png\24x24\search_computer.png" />
+    <Content Include="Design\Icons\png\24x24\search_database.png" />
+    <Content Include="Design\Icons\png\24x24\search_female_user.png" />
+    <Content Include="Design\Icons\png\24x24\search_globe.png" />
+    <Content Include="Design\Icons\png\24x24\search_home.png" />
+    <Content Include="Design\Icons\png\24x24\search_image.png" />
+    <Content Include="Design\Icons\png\24x24\search_male_user.png" />
+    <Content Include="Design\Icons\png\24x24\search_page.png" />
+    <Content Include="Design\Icons\png\24x24\search_printer.png" />
+    <Content Include="Design\Icons\png\24x24\search_user.png" />
+    <Content Include="Design\Icons\png\24x24\security.png" />
+    <Content Include="Design\Icons\png\24x24\send_mms.png" />
+    <Content Include="Design\Icons\png\24x24\send_sms.png" />
+    <Content Include="Design\Icons\png\24x24\shopping_cart.png" />
+    <Content Include="Design\Icons\png\24x24\shopping_cart_accept.png" />
+    <Content Include="Design\Icons\png\24x24\shut_down.png" />
+    <Content Include="Design\Icons\png\24x24\sms.png" />
+    <Content Include="Design\Icons\png\24x24\snooker_ball.png" />
+    <Content Include="Design\Icons\png\24x24\sound.png" />
+    <Content Include="Design\Icons\png\24x24\sound_muted.png" />
+    <Content Include="Design\Icons\png\24x24\star_empty.png" />
+    <Content Include="Design\Icons\png\24x24\star_full.png" />
+    <Content Include="Design\Icons\png\24x24\star_half_full.png" />
+    <Content Include="Design\Icons\png\24x24\sterling_pound_currency_sign.png" />
+    <Content Include="Design\Icons\png\24x24\stop.png" />
+    <Content Include="Design\Icons\png\24x24\support.png" />
+    <Content Include="Design\Icons\png\24x24\svg_file.png" />
+    <Content Include="Design\Icons\png\24x24\swf_file.png" />
+    <Content Include="Design\Icons\png\24x24\tablet.png" />
+    <Content Include="Design\Icons\png\24x24\tag_blue.png" />
+    <Content Include="Design\Icons\png\24x24\tag_green.png" />
+    <Content Include="Design\Icons\png\24x24\target.png" />
+    <Content Include="Design\Icons\png\24x24\telephone.png" />
+    <Content Include="Design\Icons\png\24x24\television.png" />
+    <Content Include="Design\Icons\png\24x24\tennis_ball.png" />
+    <Content Include="Design\Icons\png\24x24\text_page.png" />
+    <Content Include="Design\Icons\png\24x24\tiff_file.png" />
+    <Content Include="Design\Icons\png\24x24\toolbox.png" />
+    <Content Include="Design\Icons\png\24x24\tools.png" />
+    <Content Include="Design\Icons\png\24x24\trash_can.png" />
+    <Content Include="Design\Icons\png\24x24\ttf_file.png" />
+    <Content Include="Design\Icons\png\24x24\turquoise_button.png" />
+    <Content Include="Design\Icons\png\24x24\twitter.png" />
+    <Content Include="Design\Icons\png\24x24\txt_file.png" />
+    <Content Include="Design\Icons\png\24x24\unlock.png" />
+    <Content Include="Design\Icons\png\24x24\up.png" />
+    <Content Include="Design\Icons\png\24x24\user.png" />
+    <Content Include="Design\Icons\png\24x24\users.png" />
+    <Content Include="Design\Icons\png\24x24\users_comments.png" />
+    <Content Include="Design\Icons\png\24x24\user_accept.png" />
+    <Content Include="Design\Icons\png\24x24\user_comment.png" />
+    <Content Include="Design\Icons\png\24x24\violet_button.png" />
+    <Content Include="Design\Icons\png\24x24\warning.png" />
+    <Content Include="Design\Icons\png\24x24\wav_file.png" />
+    <Content Include="Design\Icons\png\24x24\white_flag.png" />
+    <Content Include="Design\Icons\png\24x24\windows_terminal.png" />
+    <Content Include="Design\Icons\png\24x24\xls_file.png" />
+    <Content Include="Design\Icons\png\24x24\xml_file.png" />
+    <Content Include="Design\Icons\png\24x24\yellow_mail.png" />
+    <Content Include="Design\Icons\png\24x24\yellow_mail_receive.png" />
+    <Content Include="Design\Icons\png\24x24\yellow_mail_send.png" />
+    <Content Include="Design\Icons\png\24x24\yen_currency_sign.png" />
+    <Content Include="Design\Icons\png\24x24\zip_file.png" />
+    <Content Include="Design\Icons\png\24x24\zip_file_accept.png" />
+    <Content Include="Design\Icons\png\24x24\zip_file_download.png" />
+    <Content Include="Design\Icons\png\24x24\zip_file_info.png" />
+    <Content Include="Design\Icons\png\24x24\zip_file_search.png" />
+    <Content Include="Design\Icons\png\24x24\zoom_in.png" />
+    <Content Include="Design\Icons\png\24x24\zoom_out.png" />
+    <Content Include="Design\Icons\png\32x32\10_percent_off.png" />
+    <Content Include="Design\Icons\png\32x32\30_percent_off.png" />
+    <Content Include="Design\Icons\png\32x32\50_percent_off.png" />
+    <Content Include="Design\Icons\png\32x32\accept.png" />
+    <Content Include="Design\Icons\png\32x32\accept_business_user.png" />
+    <Content Include="Design\Icons\png\32x32\accept_database.png" />
+    <Content Include="Design\Icons\png\32x32\accept_female_user.png" />
+    <Content Include="Design\Icons\png\32x32\accept_male_user.png" />
+    <Content Include="Design\Icons\png\32x32\accept_page.png" />
+    <Content Include="Design\Icons\png\32x32\add.png" />
+    <Content Include="Design\Icons\png\32x32\add_business_user.png" />
+    <Content Include="Design\Icons\png\32x32\add_comment.png" />
+    <Content Include="Design\Icons\png\32x32\add_female_user.png" />
+    <Content Include="Design\Icons\png\32x32\add_home.png" />
+    <Content Include="Design\Icons\png\32x32\add_image.png" />
+    <Content Include="Design\Icons\png\32x32\add_link.png" />
+    <Content Include="Design\Icons\png\32x32\add_male_user.png" />
+    <Content Include="Design\Icons\png\32x32\add_page.png" />
+    <Content Include="Design\Icons\png\32x32\add_pages.png" />
+    <Content Include="Design\Icons\png\32x32\add_printer.png" />
+    <Content Include="Design\Icons\png\32x32\add_to_database.png" />
+    <Content Include="Design\Icons\png\32x32\add_to_favorites.png" />
+    <Content Include="Design\Icons\png\32x32\add_to_folder.png" />
+    <Content Include="Design\Icons\png\32x32\add_to_open_folder.png" />
+    <Content Include="Design\Icons\png\32x32\add_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\32x32\add_user.png" />
+    <Content Include="Design\Icons\png\32x32\apple.png" />
+    <Content Include="Design\Icons\png\32x32\artwork.png" />
+    <Content Include="Design\Icons\png\32x32\attachment.png" />
+    <Content Include="Design\Icons\png\32x32\attach_image.png" />
+    <Content Include="Design\Icons\png\32x32\back.png" />
+    <Content Include="Design\Icons\png\32x32\barcode.png" />
+    <Content Include="Design\Icons\png\32x32\baseball.png" />
+    <Content Include="Design\Icons\png\32x32\basketball.png" />
+    <Content Include="Design\Icons\png\32x32\block.png" />
+    <Content Include="Design\Icons\png\32x32\blue_arrow_down.png" />
+    <Content Include="Design\Icons\png\32x32\blue_arrow_up.png" />
+    <Content Include="Design\Icons\png\32x32\blue_energy.png" />
+    <Content Include="Design\Icons\png\32x32\bmp_file.png" />
+    <Content Include="Design\Icons\png\32x32\book.png" />
+    <Content Include="Design\Icons\png\32x32\book_accept.png" />
+    <Content Include="Design\Icons\png\32x32\book_download.png" />
+    <Content Include="Design\Icons\png\32x32\book_search.png" />
+    <Content Include="Design\Icons\png\32x32\book_warning.png" />
+    <Content Include="Design\Icons\png\32x32\bowling.png" />
+    <Content Include="Design\Icons\png\32x32\business_female_male_users.png" />
+    <Content Include="Design\Icons\png\32x32\business_female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\business_male_female_users.png" />
+    <Content Include="Design\Icons\png\32x32\business_male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\business_user.png" />
+    <Content Include="Design\Icons\png\32x32\business_users.png" />
+    <Content Include="Design\Icons\png\32x32\business_users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\business_user_comment.png" />
+    <Content Include="Design\Icons\png\32x32\business_user_help.png" />
+    <Content Include="Design\Icons\png\32x32\business_user_info.png" />
+    <Content Include="Design\Icons\png\32x32\business_user_warning.png" />
+    <Content Include="Design\Icons\png\32x32\buy_now.png" />
+    <Content Include="Design\Icons\png\32x32\calculator.png" />
+    <Content Include="Design\Icons\png\32x32\calendar.png" />
+    <Content Include="Design\Icons\png\32x32\calendar_empty.png" />
+    <Content Include="Design\Icons\png\32x32\canvas_holder.png" />
+    <Content Include="Design\Icons\png\32x32\card.png" />
+    <Content Include="Design\Icons\png\32x32\cd.png" />
+    <Content Include="Design\Icons\png\32x32\chalk_board.png" />
+    <Content Include="Design\Icons\png\32x32\chart.png" />
+    <Content Include="Design\Icons\png\32x32\chart_down.png" />
+    <Content Include="Design\Icons\png\32x32\chart_pie.png" />
+    <Content Include="Design\Icons\png\32x32\chart_up.png" />
+    <Content Include="Design\Icons\png\32x32\chess.png" />
+    <Content Include="Design\Icons\png\32x32\clock.png" />
+    <Content Include="Design\Icons\png\32x32\cloud_comment.png" />
+    <Content Include="Design\Icons\png\32x32\coffee_cup.png" />
+    <Content Include="Design\Icons\png\32x32\comment.png" />
+    <Content Include="Design\Icons\png\32x32\comments.png" />
+    <Content Include="Design\Icons\png\32x32\computer.png" />
+    <Content Include="Design\Icons\png\32x32\computer_accept.png" />
+    <Content Include="Design\Icons\png\32x32\computer_add.png" />
+    <Content Include="Design\Icons\png\32x32\computer_help.png" />
+    <Content Include="Design\Icons\png\32x32\computer_info.png" />
+    <Content Include="Design\Icons\png\32x32\computer_process.png" />
+    <Content Include="Design\Icons\png\32x32\computer_warning.png" />
+    <Content Include="Design\Icons\png\32x32\copy_paste.png" />
+    <Content Include="Design\Icons\png\32x32\credit_cart.png" />
+    <Content Include="Design\Icons\png\32x32\credit_cart_cancelled.png" />
+    <Content Include="Design\Icons\png\32x32\css_file.png" />
+    <Content Include="Design\Icons\png\32x32\csv_file.png" />
+    <Content Include="Design\Icons\png\32x32\cut.png" />
+    <Content Include="Design\Icons\png\32x32\cut_from_page.png" />
+    <Content Include="Design\Icons\png\32x32\database.png" />
+    <Content Include="Design\Icons\png\32x32\database_upload.png" />
+    <Content Include="Design\Icons\png\32x32\delete.png" />
+    <Content Include="Design\Icons\png\32x32\delete_comment.png" />
+    <Content Include="Design\Icons\png\32x32\delete_computer.png" />
+    <Content Include="Design\Icons\png\32x32\delete_folder.png" />
+    <Content Include="Design\Icons\png\32x32\delete_home.png" />
+    <Content Include="Design\Icons\png\32x32\delete_image.png" />
+    <Content Include="Design\Icons\png\32x32\delete_open_folder.png" />
+    <Content Include="Design\Icons\png\32x32\delete_page.png" />
+    <Content Include="Design\Icons\png\32x32\delete_user.png" />
+    <Content Include="Design\Icons\png\32x32\doc_file.png" />
+    <Content Include="Design\Icons\png\32x32\dollar_currency_sign.png" />
+    <Content Include="Design\Icons\png\32x32\download.png" />
+    <Content Include="Design\Icons\png\32x32\download_database.png" />
+    <Content Include="Design\Icons\png\32x32\download_image.png" />
+    <Content Include="Design\Icons\png\32x32\download_link.png" />
+    <Content Include="Design\Icons\png\32x32\download_to_computer.png" />
+    <Content Include="Design\Icons\png\32x32\dvd.png" />
+    <Content Include="Design\Icons\png\32x32\edit.png" />
+    <Content Include="Design\Icons\png\32x32\edit_business_user.png" />
+    <Content Include="Design\Icons\png\32x32\edit_female_user.png" />
+    <Content Include="Design\Icons\png\32x32\edit_male_user.png" />
+    <Content Include="Design\Icons\png\32x32\edit_page.png" />
+    <Content Include="Design\Icons\png\32x32\edit_profile.png" />
+    <Content Include="Design\Icons\png\32x32\email.png" />
+    <Content Include="Design\Icons\png\32x32\eps_file.png" />
+    <Content Include="Design\Icons\png\32x32\equalizer.png" />
+    <Content Include="Design\Icons\png\32x32\euro_currency_sign.png" />
+    <Content Include="Design\Icons\png\32x32\favorite.png" />
+    <Content Include="Design\Icons\png\32x32\favorite_film.png" />
+    <Content Include="Design\Icons\png\32x32\female_male_users.png" />
+    <Content Include="Design\Icons\png\32x32\female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\female_user.png" />
+    <Content Include="Design\Icons\png\32x32\female_users.png" />
+    <Content Include="Design\Icons\png\32x32\female_users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\female_user_comment.png" />
+    <Content Include="Design\Icons\png\32x32\female_user_help.png" />
+    <Content Include="Design\Icons\png\32x32\female_user_info.png" />
+    <Content Include="Design\Icons\png\32x32\female_user_warning.png" />
+    <Content Include="Design\Icons\png\32x32\film.png" />
+    <Content Include="Design\Icons\png\32x32\filter.png" />
+    <Content Include="Design\Icons\png\32x32\firewall.png" />
+    <Content Include="Design\Icons\png\32x32\first.png" />
+    <Content Include="Design\Icons\png\32x32\folder.png" />
+    <Content Include="Design\Icons\png\32x32\folder_accept.png" />
+    <Content Include="Design\Icons\png\32x32\folder_conflicted.png" />
+    <Content Include="Design\Icons\png\32x32\folder_full.png" />
+    <Content Include="Design\Icons\png\32x32\folder_modified.png" />
+    <Content Include="Design\Icons\png\32x32\football.png" />
+    <Content Include="Design\Icons\png\32x32\full_page.png" />
+    <Content Include="Design\Icons\png\32x32\games.png" />
+    <Content Include="Design\Icons\png\32x32\gif_file.png" />
+    <Content Include="Design\Icons\png\32x32\globe.png" />
+    <Content Include="Design\Icons\png\32x32\globe_download.png" />
+    <Content Include="Design\Icons\png\32x32\globe_process.png" />
+    <Content Include="Design\Icons\png\32x32\globe_warning.png" />
+    <Content Include="Design\Icons\png\32x32\golf_ball.png" />
+    <Content Include="Design\Icons\png\32x32\green_arrow_down.png" />
+    <Content Include="Design\Icons\png\32x32\green_arrow_up.png" />
+    <Content Include="Design\Icons\png\32x32\green_button.png" />
+    <Content Include="Design\Icons\png\32x32\green_energy.png" />
+    <Content Include="Design\Icons\png\32x32\green_flag.png" />
+    <Content Include="Design\Icons\png\32x32\heart.png" />
+    <Content Include="Design\Icons\png\32x32\help.png" />
+    <Content Include="Design\Icons\png\32x32\help_balloon.png" />
+    <Content Include="Design\Icons\png\32x32\home.png" />
+    <Content Include="Design\Icons\png\32x32\home_accept.png" />
+    <Content Include="Design\Icons\png\32x32\html_file.png" />
+    <Content Include="Design\Icons\png\32x32\ico_file.png" />
+    <Content Include="Design\Icons\png\32x32\id_card.png" />
+    <Content Include="Design\Icons\png\32x32\image.png" />
+    <Content Include="Design\Icons\png\32x32\image_accept.png" />
+    <Content Include="Design\Icons\png\32x32\info.png" />
+    <Content Include="Design\Icons\png\32x32\insert_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\32x32\jpg_file.png" />
+    <Content Include="Design\Icons\png\32x32\json_file.png" />
+    <Content Include="Design\Icons\png\32x32\js_file.png" />
+    <Content Include="Design\Icons\png\32x32\key.png" />
+    <Content Include="Design\Icons\png\32x32\last.png" />
+    <Content Include="Design\Icons\png\32x32\light_bulb.png" />
+    <Content Include="Design\Icons\png\32x32\link.png" />
+    <Content Include="Design\Icons\png\32x32\lock.png" />
+    <Content Include="Design\Icons\png\32x32\magnet.png" />
+    <Content Include="Design\Icons\png\32x32\mail.png" />
+    <Content Include="Design\Icons\png\32x32\mail_lock.png" />
+    <Content Include="Design\Icons\png\32x32\mail_receive.png" />
+    <Content Include="Design\Icons\png\32x32\mail_search.png" />
+    <Content Include="Design\Icons\png\32x32\mail_send.png" />
+    <Content Include="Design\Icons\png\32x32\male_female_users.png" />
+    <Content Include="Design\Icons\png\32x32\male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\male_user.png" />
+    <Content Include="Design\Icons\png\32x32\male_users.png" />
+    <Content Include="Design\Icons\png\32x32\male_users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\male_user_comment.png" />
+    <Content Include="Design\Icons\png\32x32\male_user_help.png" />
+    <Content Include="Design\Icons\png\32x32\male_user_info.png" />
+    <Content Include="Design\Icons\png\32x32\male_user_warning.png" />
+    <Content Include="Design\Icons\png\32x32\megaphone.png" />
+    <Content Include="Design\Icons\png\32x32\mms.png" />
+    <Content Include="Design\Icons\png\32x32\mobile_phone.png" />
+    <Content Include="Design\Icons\png\32x32\mouse.png" />
+    <Content Include="Design\Icons\png\32x32\mp3_file.png" />
+    <Content Include="Design\Icons\png\32x32\music.png" />
+    <Content Include="Design\Icons\png\32x32\new.png" />
+    <Content Include="Design\Icons\png\32x32\news.png" />
+    <Content Include="Design\Icons\png\32x32\new_page.png" />
+    <Content Include="Design\Icons\png\32x32\next.png" />
+    <Content Include="Design\Icons\png\32x32\nextplayer.png" />
+    <Content Include="Design\Icons\png\32x32\note.png" />
+    <Content Include="Design\Icons\png\32x32\note_accept.png" />
+    <Content Include="Design\Icons\png\32x32\note_book.png" />
+    <Content Include="Design\Icons\png\32x32\office_folders.png" />
+    <Content Include="Design\Icons\png\32x32\old_clock.png" />
+    <Content Include="Design\Icons\png\32x32\open.png" />
+    <Content Include="Design\Icons\png\32x32\open_folder.png" />
+    <Content Include="Design\Icons\png\32x32\open_folder_accept.png" />
+    <Content Include="Design\Icons\png\32x32\open_folder_full.png" />
+    <Content Include="Design\Icons\png\32x32\open_folder_info.png" />
+    <Content Include="Design\Icons\png\32x32\open_folder_warning.png" />
+    <Content Include="Design\Icons\png\32x32\open_store.png" />
+    <Content Include="Design\Icons\png\32x32\orange_arrow_down.png" />
+    <Content Include="Design\Icons\png\32x32\orange_arrow_up.png" />
+    <Content Include="Design\Icons\png\32x32\orange_button.png" />
+    <Content Include="Design\Icons\png\32x32\package.png" />
+    <Content Include="Design\Icons\png\32x32\package_accept.png" />
+    <Content Include="Design\Icons\png\32x32\package_add.png" />
+    <Content Include="Design\Icons\png\32x32\package_download.png" />
+    <Content Include="Design\Icons\png\32x32\package_warning.png" />
+    <Content Include="Design\Icons\png\32x32\pages.png" />
+    <Content Include="Design\Icons\png\32x32\pages_warning.png" />
+    <Content Include="Design\Icons\png\32x32\page_down.png" />
+    <Content Include="Design\Icons\png\32x32\page_process.png" />
+    <Content Include="Design\Icons\png\32x32\page_up.png" />
+    <Content Include="Design\Icons\png\32x32\paint.png" />
+    <Content Include="Design\Icons\png\32x32\paint_brush.png" />
+    <Content Include="Design\Icons\png\32x32\palette.png" />
+    <Content Include="Design\Icons\png\32x32\palette_brush.png" />
+    <Content Include="Design\Icons\png\32x32\pastel_colors.png" />
+    <Content Include="Design\Icons\png\32x32\pause.png" />
+    <Content Include="Design\Icons\png\32x32\pdf_file.png" />
+    <Content Include="Design\Icons\png\32x32\phone_book.png" />
+    <Content Include="Design\Icons\png\32x32\phone_book_edit.png" />
+    <Content Include="Design\Icons\png\32x32\photo_camera.png" />
+    <Content Include="Design\Icons\png\32x32\photo_camera_accept.png" />
+    <Content Include="Design\Icons\png\32x32\php_file.png" />
+    <Content Include="Design\Icons\png\32x32\pin.png" />
+    <Content Include="Design\Icons\png\32x32\ping_pong.png" />
+    <Content Include="Design\Icons\png\32x32\play.png" />
+    <Content Include="Design\Icons\png\32x32\png_file.png" />
+    <Content Include="Design\Icons\png\32x32\ppt_file.png" />
+    <Content Include="Design\Icons\png\32x32\previous.png" />
+    <Content Include="Design\Icons\png\32x32\printer.png" />
+    <Content Include="Design\Icons\png\32x32\printer_accept.png" />
+    <Content Include="Design\Icons\png\32x32\printer_warning.png" />
+    <Content Include="Design\Icons\png\32x32\prize_winner.png" />
+    <Content Include="Design\Icons\png\32x32\process.png" />
+    <Content Include="Design\Icons\png\32x32\process_accept.png" />
+    <Content Include="Design\Icons\png\32x32\process_info.png" />
+    <Content Include="Design\Icons\png\32x32\process_warning.png" />
+    <Content Include="Design\Icons\png\32x32\promotion.png" />
+    <Content Include="Design\Icons\png\32x32\protection.png" />
+    <Content Include="Design\Icons\png\32x32\psd_file.png" />
+    <Content Include="Design\Icons\png\32x32\puzzle.png" />
+    <Content Include="Design\Icons\png\32x32\record.png" />
+    <Content Include="Design\Icons\png\32x32\recycle.png" />
+    <Content Include="Design\Icons\png\32x32\red_button.png" />
+    <Content Include="Design\Icons\png\32x32\red_flag.png" />
+    <Content Include="Design\Icons\png\32x32\red_heart.png" />
+    <Content Include="Design\Icons\png\32x32\refresh.png" />
+    <Content Include="Design\Icons\png\32x32\refresh_page.png" />
+    <Content Include="Design\Icons\png\32x32\remote_desktop.png" />
+    <Content Include="Design\Icons\png\32x32\remove_business_user.png" />
+    <Content Include="Design\Icons\png\32x32\remove_female_user.png" />
+    <Content Include="Design\Icons\png\32x32\remove_from_database.png" />
+    <Content Include="Design\Icons\png\32x32\remove_from_favorites.png" />
+    <Content Include="Design\Icons\png\32x32\remove_from_shopping_cart.png" />
+    <Content Include="Design\Icons\png\32x32\remove_link.png" />
+    <Content Include="Design\Icons\png\32x32\remove_male_user.png" />
+    <Content Include="Design\Icons\png\32x32\repeat.png" />
+    <Content Include="Design\Icons\png\32x32\report.png" />
+    <Content Include="Design\Icons\png\32x32\rss.png" />
+    <Content Include="Design\Icons\png\32x32\rugby_ball.png" />
+    <Content Include="Design\Icons\png\32x32\ruler.png" />
+    <Content Include="Design\Icons\png\32x32\ruler_pencil.png" />
+    <Content Include="Design\Icons\png\32x32\sale.png" />
+    <Content Include="Design\Icons\png\32x32\sale_promotion.png" />
+    <Content Include="Design\Icons\png\32x32\save.png" />
+    <Content Include="Design\Icons\png\32x32\search.png" />
+    <Content Include="Design\Icons\png\32x32\search_business_user.png" />
+    <Content Include="Design\Icons\png\32x32\search_computer.png" />
+    <Content Include="Design\Icons\png\32x32\search_database.png" />
+    <Content Include="Design\Icons\png\32x32\search_female_user.png" />
+    <Content Include="Design\Icons\png\32x32\search_globe.png" />
+    <Content Include="Design\Icons\png\32x32\search_home.png" />
+    <Content Include="Design\Icons\png\32x32\search_image.png" />
+    <Content Include="Design\Icons\png\32x32\search_male_user.png" />
+    <Content Include="Design\Icons\png\32x32\search_page.png" />
+    <Content Include="Design\Icons\png\32x32\search_printer.png" />
+    <Content Include="Design\Icons\png\32x32\search_user.png" />
+    <Content Include="Design\Icons\png\32x32\security.png" />
+    <Content Include="Design\Icons\png\32x32\send_mms.png" />
+    <Content Include="Design\Icons\png\32x32\send_sms.png" />
+    <Content Include="Design\Icons\png\32x32\shopping_cart.png" />
+    <Content Include="Design\Icons\png\32x32\shopping_cart_accept.png" />
+    <Content Include="Design\Icons\png\32x32\shut_down.png" />
+    <Content Include="Design\Icons\png\32x32\sms.png" />
+    <Content Include="Design\Icons\png\32x32\snooker_ball.png" />
+    <Content Include="Design\Icons\png\32x32\sound.png" />
+    <Content Include="Design\Icons\png\32x32\sound_muted.png" />
+    <Content Include="Design\Icons\png\32x32\star_empty.png" />
+    <Content Include="Design\Icons\png\32x32\star_full.png" />
+    <Content Include="Design\Icons\png\32x32\star_half_full.png" />
+    <Content Include="Design\Icons\png\32x32\sterling_pound_currency_sign.png" />
+    <Content Include="Design\Icons\png\32x32\stop.png" />
+    <Content Include="Design\Icons\png\32x32\support.png" />
+    <Content Include="Design\Icons\png\32x32\svg_file.png" />
+    <Content Include="Design\Icons\png\32x32\swf_file.png" />
+    <Content Include="Design\Icons\png\32x32\tablet.png" />
+    <Content Include="Design\Icons\png\32x32\tag_blue.png" />
+    <Content Include="Design\Icons\png\32x32\tag_green.png" />
+    <Content Include="Design\Icons\png\32x32\target.png" />
+    <Content Include="Design\Icons\png\32x32\telephone.png" />
+    <Content Include="Design\Icons\png\32x32\television.png" />
+    <Content Include="Design\Icons\png\32x32\tennis_ball.png" />
+    <Content Include="Design\Icons\png\32x32\text_page.png" />
+    <Content Include="Design\Icons\png\32x32\tiff_file.png" />
+    <Content Include="Design\Icons\png\32x32\toolbox.png" />
+    <Content Include="Design\Icons\png\32x32\tools.png" />
+    <Content Include="Design\Icons\png\32x32\trash_can.png" />
+    <Content Include="Design\Icons\png\32x32\ttf_file.png" />
+    <Content Include="Design\Icons\png\32x32\turquoise_button.png" />
+    <Content Include="Design\Icons\png\32x32\twitter.png" />
+    <Content Include="Design\Icons\png\32x32\txt_file.png" />
+    <Content Include="Design\Icons\png\32x32\unlock.png" />
+    <Content Include="Design\Icons\png\32x32\up.png" />
+    <Content Include="Design\Icons\png\32x32\user.png" />
+    <Content Include="Design\Icons\png\32x32\users.png" />
+    <Content Include="Design\Icons\png\32x32\users_comments.png" />
+    <Content Include="Design\Icons\png\32x32\user_accept.png" />
+    <Content Include="Design\Icons\png\32x32\user_comment.png" />
+    <Content Include="Design\Icons\png\32x32\violet_button.png" />
+    <Content Include="Design\Icons\png\32x32\warning.png" />
+    <Content Include="Design\Icons\png\32x32\wav_file.png" />
+    <Content Include="Design\Icons\png\32x32\white_flag.png" />
+    <Content Include="Design\Icons\png\32x32\windows_terminal.png" />
+    <Content Include="Design\Icons\png\32x32\xls_file.png" />
+    <Content Include="Design\Icons\png\32x32\xml_file.png" />
+    <Content Include="Design\Icons\png\32x32\yellow_mail.png" />
+    <Content Include="Design\Icons\png\32x32\yellow_mail_receive.png" />
+    <Content Include="Design\Icons\png\32x32\yellow_mail_send.png" />
+    <Content Include="Design\Icons\png\32x32\yen_currency_sign.png" />
+    <Content Include="Design\Icons\png\32x32\zip_file.png" />
+    <Content Include="Design\Icons\png\32x32\zip_file_accept.png" />
+    <Content Include="Design\Icons\png\32x32\zip_file_download.png" />
+    <Content Include="Design\Icons\png\32x32\zip_file_info.png" />
+    <Content Include="Design\Icons\png\32x32\zip_file_search.png" />
+    <Content Include="Design\Icons\png\32x32\zoom_in.png" />
+    <Content Include="Design\Icons\png\32x32\zoom_out.png" />
+    <Content Include="Design\Icons\png\48x48\10_percent_off.png" />
+    <Content Include="Design\Icons\png\48x48\30_percent_off.png" />
+    <Content Include="Design\Icons\png\48x48\50_percent_off.png" />
+    <Content Include="Design\Icons\png\48x48\accept.png" />
+    <Content Include="Design\Icons\png\48x48\accept_business_user.png" />
+    <Content Include="Design\Icons\png\48x48\accept_database.png" />
+    <Content Include="Design\Icons\png\48x48\accept_female_user.png" />
+    <Content Include="Design\Icons\png\48x48\accept_male_user.png" />
+    <Content Include="Design\Icons\png\48x48\accept_page.png" />
+    <Content Include="Design\Icons\png\48x48\add.png" />
+    <Content Include="Design\Icons\png\48x48\add_business_user.png" />
+    <Content Include="Design\Icons\png\48x48\add_comment.png" />
+    <Content Include="Design\Icons\png\48x48\add_female_user.png" />
+    <Content Include="Design\Icons\png\48x48\add_home.png" />
+    <Content Include="Design\Icons\png\48x48\add_image.png" />
+    <Content Include="Design\Icons\png\48x48\add_link.png" />
+    <Content Include="Design\Icons\png\48x48\add_male_user.png" />
+    <Content Include="Design\Icons\png\48x48\add_page.png" />
+    <Content Include="Design\Icons\png\48x48\add_pages.png" />
+    <Content Include="Design\Icons\png\48x48\add_printer.png" />
+    <Content Include="Design\Icons\png\48x48\add_to_database.png" />
+    <Content Include="Design\Icons\png\48x48\add_to_favorites.png" />
+    <Content Include="Design\Icons\png\48x48\add_to_folder.png" />
+    <Content Include="Design\Icons\png\48x48\add_to_open_folder.png" />
+    <Content Include="Design\Icons\png\48x48\add_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\48x48\add_user.png" />
+    <Content Include="Design\Icons\png\48x48\apple.png" />
+    <Content Include="Design\Icons\png\48x48\artwork.png" />
+    <Content Include="Design\Icons\png\48x48\attachment.png" />
+    <Content Include="Design\Icons\png\48x48\attach_image.png" />
+    <Content Include="Design\Icons\png\48x48\back.png" />
+    <Content Include="Design\Icons\png\48x48\barcode.png" />
+    <Content Include="Design\Icons\png\48x48\baseball.png" />
+    <Content Include="Design\Icons\png\48x48\basketball.png" />
+    <Content Include="Design\Icons\png\48x48\block.png" />
+    <Content Include="Design\Icons\png\48x48\blue_arrow_down.png" />
+    <Content Include="Design\Icons\png\48x48\blue_arrow_up.png" />
+    <Content Include="Design\Icons\png\48x48\blue_energy.png" />
+    <Content Include="Design\Icons\png\48x48\bmp_file.png" />
+    <Content Include="Design\Icons\png\48x48\book.png" />
+    <Content Include="Design\Icons\png\48x48\book_accept.png" />
+    <Content Include="Design\Icons\png\48x48\book_download.png" />
+    <Content Include="Design\Icons\png\48x48\book_search.png" />
+    <Content Include="Design\Icons\png\48x48\book_warning.png" />
+    <Content Include="Design\Icons\png\48x48\bowling.png" />
+    <Content Include="Design\Icons\png\48x48\business_female_male_users.png" />
+    <Content Include="Design\Icons\png\48x48\business_female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\business_male_female_users.png" />
+    <Content Include="Design\Icons\png\48x48\business_male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\business_user.png" />
+    <Content Include="Design\Icons\png\48x48\business_users.png" />
+    <Content Include="Design\Icons\png\48x48\business_users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\business_user_comment.png" />
+    <Content Include="Design\Icons\png\48x48\business_user_help.png" />
+    <Content Include="Design\Icons\png\48x48\business_user_info.png" />
+    <Content Include="Design\Icons\png\48x48\business_user_warning.png" />
+    <Content Include="Design\Icons\png\48x48\buy_now.png" />
+    <Content Include="Design\Icons\png\48x48\calculator.png" />
+    <Content Include="Design\Icons\png\48x48\calendar.png" />
+    <Content Include="Design\Icons\png\48x48\calendar_empty.png" />
+    <Content Include="Design\Icons\png\48x48\canvas_holder.png" />
+    <Content Include="Design\Icons\png\48x48\card.png" />
+    <Content Include="Design\Icons\png\48x48\cd.png" />
+    <Content Include="Design\Icons\png\48x48\chalk_board.png" />
+    <Content Include="Design\Icons\png\48x48\chart.png" />
+    <Content Include="Design\Icons\png\48x48\chart_down.png" />
+    <Content Include="Design\Icons\png\48x48\chart_pie.png" />
+    <Content Include="Design\Icons\png\48x48\chart_up.png" />
+    <Content Include="Design\Icons\png\48x48\chess.png" />
+    <Content Include="Design\Icons\png\48x48\clock.png" />
+    <Content Include="Design\Icons\png\48x48\cloud_comment.png" />
+    <Content Include="Design\Icons\png\48x48\coffee_cup.png" />
+    <Content Include="Design\Icons\png\48x48\comment.png" />
+    <Content Include="Design\Icons\png\48x48\comments.png" />
+    <Content Include="Design\Icons\png\48x48\computer.png" />
+    <Content Include="Design\Icons\png\48x48\computer_accept.png" />
+    <Content Include="Design\Icons\png\48x48\computer_add.png" />
+    <Content Include="Design\Icons\png\48x48\computer_help.png" />
+    <Content Include="Design\Icons\png\48x48\computer_info.png" />
+    <Content Include="Design\Icons\png\48x48\computer_process.png" />
+    <Content Include="Design\Icons\png\48x48\computer_warning.png" />
+    <Content Include="Design\Icons\png\48x48\copy_paste.png" />
+    <Content Include="Design\Icons\png\48x48\credit_cart.png" />
+    <Content Include="Design\Icons\png\48x48\credit_cart_cancelled.png" />
+    <Content Include="Design\Icons\png\48x48\css_file.png" />
+    <Content Include="Design\Icons\png\48x48\csv_file.png" />
+    <Content Include="Design\Icons\png\48x48\cut.png" />
+    <Content Include="Design\Icons\png\48x48\cut_from_page.png" />
+    <Content Include="Design\Icons\png\48x48\database.png" />
+    <Content Include="Design\Icons\png\48x48\database_upload.png" />
+    <Content Include="Design\Icons\png\48x48\delete.png" />
+    <Content Include="Design\Icons\png\48x48\delete_comment.png" />
+    <Content Include="Design\Icons\png\48x48\delete_computer.png" />
+    <Content Include="Design\Icons\png\48x48\delete_folder.png" />
+    <Content Include="Design\Icons\png\48x48\delete_home.png" />
+    <Content Include="Design\Icons\png\48x48\delete_image.png" />
+    <Content Include="Design\Icons\png\48x48\delete_open_folder.png" />
+    <Content Include="Design\Icons\png\48x48\delete_page.png" />
+    <Content Include="Design\Icons\png\48x48\delete_user.png" />
+    <Content Include="Design\Icons\png\48x48\doc_file.png" />
+    <Content Include="Design\Icons\png\48x48\dollar_currency_sign.png" />
+    <Content Include="Design\Icons\png\48x48\download.png" />
+    <Content Include="Design\Icons\png\48x48\download_database.png" />
+    <Content Include="Design\Icons\png\48x48\download_image.png" />
+    <Content Include="Design\Icons\png\48x48\download_link.png" />
+    <Content Include="Design\Icons\png\48x48\download_to_computer.png" />
+    <Content Include="Design\Icons\png\48x48\dvd.png" />
+    <Content Include="Design\Icons\png\48x48\edit.png" />
+    <Content Include="Design\Icons\png\48x48\edit_business_user.png" />
+    <Content Include="Design\Icons\png\48x48\edit_female_user.png" />
+    <Content Include="Design\Icons\png\48x48\edit_male_user.png" />
+    <Content Include="Design\Icons\png\48x48\edit_page.png" />
+    <Content Include="Design\Icons\png\48x48\edit_profile.png" />
+    <Content Include="Design\Icons\png\48x48\email.png" />
+    <Content Include="Design\Icons\png\48x48\eps_file.png" />
+    <Content Include="Design\Icons\png\48x48\equalizer.png" />
+    <Content Include="Design\Icons\png\48x48\euro_currency_sign.png" />
+    <Content Include="Design\Icons\png\48x48\favorite.png" />
+    <Content Include="Design\Icons\png\48x48\favorite_film.png" />
+    <Content Include="Design\Icons\png\48x48\female_male_users.png" />
+    <Content Include="Design\Icons\png\48x48\female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\female_user.png" />
+    <Content Include="Design\Icons\png\48x48\female_users.png" />
+    <Content Include="Design\Icons\png\48x48\female_users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\female_user_comment.png" />
+    <Content Include="Design\Icons\png\48x48\female_user_help.png" />
+    <Content Include="Design\Icons\png\48x48\female_user_info.png" />
+    <Content Include="Design\Icons\png\48x48\female_user_warning.png" />
+    <Content Include="Design\Icons\png\48x48\film.png" />
+    <Content Include="Design\Icons\png\48x48\filter.png" />
+    <Content Include="Design\Icons\png\48x48\firewall.png" />
+    <Content Include="Design\Icons\png\48x48\first.png" />
+    <Content Include="Design\Icons\png\48x48\folder.png" />
+    <Content Include="Design\Icons\png\48x48\folder_accept.png" />
+    <Content Include="Design\Icons\png\48x48\folder_conflicted.png" />
+    <Content Include="Design\Icons\png\48x48\folder_full.png" />
+    <Content Include="Design\Icons\png\48x48\folder_modified.png" />
+    <Content Include="Design\Icons\png\48x48\football.png" />
+    <Content Include="Design\Icons\png\48x48\full_page.png" />
+    <Content Include="Design\Icons\png\48x48\games.png" />
+    <Content Include="Design\Icons\png\48x48\gif_file.png" />
+    <Content Include="Design\Icons\png\48x48\globe.png" />
+    <Content Include="Design\Icons\png\48x48\globe_download.png" />
+    <Content Include="Design\Icons\png\48x48\globe_process.png" />
+    <Content Include="Design\Icons\png\48x48\globe_warning.png" />
+    <Content Include="Design\Icons\png\48x48\golf_ball.png" />
+    <Content Include="Design\Icons\png\48x48\green_arrow_down.png" />
+    <Content Include="Design\Icons\png\48x48\green_arrow_up.png" />
+    <Content Include="Design\Icons\png\48x48\green_button.png" />
+    <Content Include="Design\Icons\png\48x48\green_energy.png" />
+    <Content Include="Design\Icons\png\48x48\green_flag.png" />
+    <Content Include="Design\Icons\png\48x48\heart.png" />
+    <Content Include="Design\Icons\png\48x48\help.png" />
+    <Content Include="Design\Icons\png\48x48\help_balloon.png" />
+    <Content Include="Design\Icons\png\48x48\home.png" />
+    <Content Include="Design\Icons\png\48x48\home_accept.png" />
+    <Content Include="Design\Icons\png\48x48\html_file.png" />
+    <Content Include="Design\Icons\png\48x48\ico_file.png" />
+    <Content Include="Design\Icons\png\48x48\id_card.png" />
+    <Content Include="Design\Icons\png\48x48\image.png" />
+    <Content Include="Design\Icons\png\48x48\image_accept.png" />
+    <Content Include="Design\Icons\png\48x48\info.png" />
+    <Content Include="Design\Icons\png\48x48\insert_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\48x48\jpg_file.png" />
+    <Content Include="Design\Icons\png\48x48\json_file.png" />
+    <Content Include="Design\Icons\png\48x48\js_file.png" />
+    <Content Include="Design\Icons\png\48x48\key.png" />
+    <Content Include="Design\Icons\png\48x48\last.png" />
+    <Content Include="Design\Icons\png\48x48\light_bulb.png" />
+    <Content Include="Design\Icons\png\48x48\link.png" />
+    <Content Include="Design\Icons\png\48x48\lock.png" />
+    <Content Include="Design\Icons\png\48x48\magnet.png" />
+    <Content Include="Design\Icons\png\48x48\mail.png" />
+    <Content Include="Design\Icons\png\48x48\mail_lock.png" />
+    <Content Include="Design\Icons\png\48x48\mail_receive.png" />
+    <Content Include="Design\Icons\png\48x48\mail_search.png" />
+    <Content Include="Design\Icons\png\48x48\mail_send.png" />
+    <Content Include="Design\Icons\png\48x48\male_female_users.png" />
+    <Content Include="Design\Icons\png\48x48\male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\male_user.png" />
+    <Content Include="Design\Icons\png\48x48\male_users.png" />
+    <Content Include="Design\Icons\png\48x48\male_users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\male_user_comment.png" />
+    <Content Include="Design\Icons\png\48x48\male_user_help.png" />
+    <Content Include="Design\Icons\png\48x48\male_user_info.png" />
+    <Content Include="Design\Icons\png\48x48\male_user_warning.png" />
+    <Content Include="Design\Icons\png\48x48\megaphone.png" />
+    <Content Include="Design\Icons\png\48x48\mms.png" />
+    <Content Include="Design\Icons\png\48x48\mobile_phone.png" />
+    <Content Include="Design\Icons\png\48x48\mouse.png" />
+    <Content Include="Design\Icons\png\48x48\mp3_file.png" />
+    <Content Include="Design\Icons\png\48x48\music.png" />
+    <Content Include="Design\Icons\png\48x48\new.png" />
+    <Content Include="Design\Icons\png\48x48\news.png" />
+    <Content Include="Design\Icons\png\48x48\new_page.png" />
+    <Content Include="Design\Icons\png\48x48\next.png" />
+    <Content Include="Design\Icons\png\48x48\nextplayer.png" />
+    <Content Include="Design\Icons\png\48x48\note.png" />
+    <Content Include="Design\Icons\png\48x48\note_accept.png" />
+    <Content Include="Design\Icons\png\48x48\note_book.png" />
+    <Content Include="Design\Icons\png\48x48\office_folders.png" />
+    <Content Include="Design\Icons\png\48x48\old_clock.png" />
+    <Content Include="Design\Icons\png\48x48\open.png" />
+    <Content Include="Design\Icons\png\48x48\open_folder.png" />
+    <Content Include="Design\Icons\png\48x48\open_folder_accept.png" />
+    <Content Include="Design\Icons\png\48x48\open_folder_full.png" />
+    <Content Include="Design\Icons\png\48x48\open_folder_info.png" />
+    <Content Include="Design\Icons\png\48x48\open_folder_warning.png" />
+    <Content Include="Design\Icons\png\48x48\open_store.png" />
+    <Content Include="Design\Icons\png\48x48\orange_arrow_down.png" />
+    <Content Include="Design\Icons\png\48x48\orange_arrow_up.png" />
+    <Content Include="Design\Icons\png\48x48\orange_button.png" />
+    <Content Include="Design\Icons\png\48x48\package.png" />
+    <Content Include="Design\Icons\png\48x48\package_accept.png" />
+    <Content Include="Design\Icons\png\48x48\package_add.png" />
+    <Content Include="Design\Icons\png\48x48\package_download.png" />
+    <Content Include="Design\Icons\png\48x48\package_warning.png" />
+    <Content Include="Design\Icons\png\48x48\pages.png" />
+    <Content Include="Design\Icons\png\48x48\pages_warning.png" />
+    <Content Include="Design\Icons\png\48x48\page_down.png" />
+    <Content Include="Design\Icons\png\48x48\page_process.png" />
+    <Content Include="Design\Icons\png\48x48\page_up.png" />
+    <Content Include="Design\Icons\png\48x48\paint.png" />
+    <Content Include="Design\Icons\png\48x48\paint_brush.png" />
+    <Content Include="Design\Icons\png\48x48\palette.png" />
+    <Content Include="Design\Icons\png\48x48\palette_brush.png" />
+    <Content Include="Design\Icons\png\48x48\pastel_colors.png" />
+    <Content Include="Design\Icons\png\48x48\pause.png" />
+    <Content Include="Design\Icons\png\48x48\pdf_file.png" />
+    <Content Include="Design\Icons\png\48x48\phone_book.png" />
+    <Content Include="Design\Icons\png\48x48\phone_book_edit.png" />
+    <Content Include="Design\Icons\png\48x48\photo_camera.png" />
+    <Content Include="Design\Icons\png\48x48\photo_camera_accept.png" />
+    <Content Include="Design\Icons\png\48x48\php_file.png" />
+    <Content Include="Design\Icons\png\48x48\pin.png" />
+    <Content Include="Design\Icons\png\48x48\ping_pong.png" />
+    <Content Include="Design\Icons\png\48x48\play.png" />
+    <Content Include="Design\Icons\png\48x48\png_file.png" />
+    <Content Include="Design\Icons\png\48x48\ppt_file.png" />
+    <Content Include="Design\Icons\png\48x48\previous.png" />
+    <Content Include="Design\Icons\png\48x48\printer.png" />
+    <Content Include="Design\Icons\png\48x48\printer_accept.png" />
+    <Content Include="Design\Icons\png\48x48\printer_warning.png" />
+    <Content Include="Design\Icons\png\48x48\prize_winner.png" />
+    <Content Include="Design\Icons\png\48x48\process.png" />
+    <Content Include="Design\Icons\png\48x48\process_accept.png" />
+    <Content Include="Design\Icons\png\48x48\process_info.png" />
+    <Content Include="Design\Icons\png\48x48\process_warning.png" />
+    <Content Include="Design\Icons\png\48x48\promotion.png" />
+    <Content Include="Design\Icons\png\48x48\protection.png" />
+    <Content Include="Design\Icons\png\48x48\psd_file.png" />
+    <Content Include="Design\Icons\png\48x48\puzzle.png" />
+    <Content Include="Design\Icons\png\48x48\record.png" />
+    <Content Include="Design\Icons\png\48x48\recycle.png" />
+    <Content Include="Design\Icons\png\48x48\red_button.png" />
+    <Content Include="Design\Icons\png\48x48\red_flag.png" />
+    <Content Include="Design\Icons\png\48x48\red_heart.png" />
+    <Content Include="Design\Icons\png\48x48\refresh.png" />
+    <Content Include="Design\Icons\png\48x48\refresh_page.png" />
+    <Content Include="Design\Icons\png\48x48\remote_desktop.png" />
+    <Content Include="Design\Icons\png\48x48\remove_business_user.png" />
+    <Content Include="Design\Icons\png\48x48\remove_female_user.png" />
+    <Content Include="Design\Icons\png\48x48\remove_from_database.png" />
+    <Content Include="Design\Icons\png\48x48\remove_from_favorites.png" />
+    <Content Include="Design\Icons\png\48x48\remove_from_shopping_cart.png" />
+    <Content Include="Design\Icons\png\48x48\remove_link.png" />
+    <Content Include="Design\Icons\png\48x48\remove_male_user.png" />
+    <Content Include="Design\Icons\png\48x48\repeat.png" />
+    <Content Include="Design\Icons\png\48x48\report.png" />
+    <Content Include="Design\Icons\png\48x48\rss.png" />
+    <Content Include="Design\Icons\png\48x48\rugby_ball.png" />
+    <Content Include="Design\Icons\png\48x48\ruler.png" />
+    <Content Include="Design\Icons\png\48x48\ruler_pencil.png" />
+    <Content Include="Design\Icons\png\48x48\sale.png" />
+    <Content Include="Design\Icons\png\48x48\sale_promotion.png" />
+    <Content Include="Design\Icons\png\48x48\save.png" />
+    <Content Include="Design\Icons\png\48x48\search.png" />
+    <Content Include="Design\Icons\png\48x48\search_business_user.png" />
+    <Content Include="Design\Icons\png\48x48\search_computer.png" />
+    <Content Include="Design\Icons\png\48x48\search_database.png" />
+    <Content Include="Design\Icons\png\48x48\search_female_user.png" />
+    <Content Include="Design\Icons\png\48x48\search_globe.png" />
+    <Content Include="Design\Icons\png\48x48\search_home.png" />
+    <Content Include="Design\Icons\png\48x48\search_image.png" />
+    <Content Include="Design\Icons\png\48x48\search_male_user.png" />
+    <Content Include="Design\Icons\png\48x48\search_page.png" />
+    <Content Include="Design\Icons\png\48x48\search_printer.png" />
+    <Content Include="Design\Icons\png\48x48\search_user.png" />
+    <Content Include="Design\Icons\png\48x48\security.png" />
+    <Content Include="Design\Icons\png\48x48\send_mms.png" />
+    <Content Include="Design\Icons\png\48x48\send_sms.png" />
+    <Content Include="Design\Icons\png\48x48\shopping_cart.png" />
+    <Content Include="Design\Icons\png\48x48\shopping_cart_accept.png" />
+    <Content Include="Design\Icons\png\48x48\shut_down.png" />
+    <Content Include="Design\Icons\png\48x48\sms.png" />
+    <Content Include="Design\Icons\png\48x48\snooker_ball.png" />
+    <Content Include="Design\Icons\png\48x48\sound.png" />
+    <Content Include="Design\Icons\png\48x48\sound_muted.png" />
+    <Content Include="Design\Icons\png\48x48\star_empty.png" />
+    <Content Include="Design\Icons\png\48x48\star_full.png" />
+    <Content Include="Design\Icons\png\48x48\star_half_full.png" />
+    <Content Include="Design\Icons\png\48x48\sterling_pound_currency_sign.png" />
+    <Content Include="Design\Icons\png\48x48\stop.png" />
+    <Content Include="Design\Icons\png\48x48\support.png" />
+    <Content Include="Design\Icons\png\48x48\svg_file.png" />
+    <Content Include="Design\Icons\png\48x48\swf_file.png" />
+    <Content Include="Design\Icons\png\48x48\tablet.png" />
+    <Content Include="Design\Icons\png\48x48\tag_blue.png" />
+    <Content Include="Design\Icons\png\48x48\tag_green.png" />
+    <Content Include="Design\Icons\png\48x48\target.png" />
+    <Content Include="Design\Icons\png\48x48\telephone.png" />
+    <Content Include="Design\Icons\png\48x48\television.png" />
+    <Content Include="Design\Icons\png\48x48\tennis_ball.png" />
+    <Content Include="Design\Icons\png\48x48\text_page.png" />
+    <Content Include="Design\Icons\png\48x48\tiff_file.png" />
+    <Content Include="Design\Icons\png\48x48\toolbox.png" />
+    <Content Include="Design\Icons\png\48x48\tools.png" />
+    <Content Include="Design\Icons\png\48x48\trash_can.png" />
+    <Content Include="Design\Icons\png\48x48\ttf_file.png" />
+    <Content Include="Design\Icons\png\48x48\turquoise_button.png" />
+    <Content Include="Design\Icons\png\48x48\twitter.png" />
+    <Content Include="Design\Icons\png\48x48\txt_file.png" />
+    <Content Include="Design\Icons\png\48x48\unlock.png" />
+    <Content Include="Design\Icons\png\48x48\up.png" />
+    <Content Include="Design\Icons\png\48x48\user.png" />
+    <Content Include="Design\Icons\png\48x48\users.png" />
+    <Content Include="Design\Icons\png\48x48\users_comments.png" />
+    <Content Include="Design\Icons\png\48x48\user_accept.png" />
+    <Content Include="Design\Icons\png\48x48\user_comment.png" />
+    <Content Include="Design\Icons\png\48x48\violet_button.png" />
+    <Content Include="Design\Icons\png\48x48\warning.png" />
+    <Content Include="Design\Icons\png\48x48\wav_file.png" />
+    <Content Include="Design\Icons\png\48x48\white_flag.png" />
+    <Content Include="Design\Icons\png\48x48\windows_terminal.png" />
+    <Content Include="Design\Icons\png\48x48\xls_file.png" />
+    <Content Include="Design\Icons\png\48x48\xml_file.png" />
+    <Content Include="Design\Icons\png\48x48\yellow_mail.png" />
+    <Content Include="Design\Icons\png\48x48\yellow_mail_receive.png" />
+    <Content Include="Design\Icons\png\48x48\yellow_mail_send.png" />
+    <Content Include="Design\Icons\png\48x48\yen_currency_sign.png" />
+    <Content Include="Design\Icons\png\48x48\zip_file.png" />
+    <Content Include="Design\Icons\png\48x48\zip_file_accept.png" />
+    <Content Include="Design\Icons\png\48x48\zip_file_download.png" />
+    <Content Include="Design\Icons\png\48x48\zip_file_info.png" />
+    <Content Include="Design\Icons\png\48x48\zip_file_search.png" />
+    <Content Include="Design\Icons\png\48x48\zoom_in.png" />
+    <Content Include="Design\Icons\png\48x48\zoom_out.png" />
+    <Content Include="Design\Icons\png\64x64\10_percent_off.png" />
+    <Content Include="Design\Icons\png\64x64\30_percent_off.png" />
+    <Content Include="Design\Icons\png\64x64\50_percent_off.png" />
+    <Content Include="Design\Icons\png\64x64\accept.png" />
+    <Content Include="Design\Icons\png\64x64\accept_business_user.png" />
+    <Content Include="Design\Icons\png\64x64\accept_database.png" />
+    <Content Include="Design\Icons\png\64x64\accept_female_user.png" />
+    <Content Include="Design\Icons\png\64x64\accept_male_user.png" />
+    <Content Include="Design\Icons\png\64x64\accept_page.png" />
+    <Content Include="Design\Icons\png\64x64\add.png" />
+    <Content Include="Design\Icons\png\64x64\add_business_user.png" />
+    <Content Include="Design\Icons\png\64x64\add_comment.png" />
+    <Content Include="Design\Icons\png\64x64\add_female_user.png" />
+    <Content Include="Design\Icons\png\64x64\add_home.png" />
+    <Content Include="Design\Icons\png\64x64\add_image.png" />
+    <Content Include="Design\Icons\png\64x64\add_link.png" />
+    <Content Include="Design\Icons\png\64x64\add_male_user.png" />
+    <Content Include="Design\Icons\png\64x64\add_page.png" />
+    <Content Include="Design\Icons\png\64x64\add_pages.png" />
+    <Content Include="Design\Icons\png\64x64\add_printer.png" />
+    <Content Include="Design\Icons\png\64x64\add_to_database.png" />
+    <Content Include="Design\Icons\png\64x64\add_to_favorites.png" />
+    <Content Include="Design\Icons\png\64x64\add_to_folder.png" />
+    <Content Include="Design\Icons\png\64x64\add_to_open_folder.png" />
+    <Content Include="Design\Icons\png\64x64\add_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\64x64\add_user.png" />
+    <Content Include="Design\Icons\png\64x64\apple.png" />
+    <Content Include="Design\Icons\png\64x64\artwork.png" />
+    <Content Include="Design\Icons\png\64x64\attachment.png" />
+    <Content Include="Design\Icons\png\64x64\attach_image.png" />
+    <Content Include="Design\Icons\png\64x64\back.png" />
+    <Content Include="Design\Icons\png\64x64\barcode.png" />
+    <Content Include="Design\Icons\png\64x64\baseball.png" />
+    <Content Include="Design\Icons\png\64x64\basketball.png" />
+    <Content Include="Design\Icons\png\64x64\block.png" />
+    <Content Include="Design\Icons\png\64x64\blue_arrow_down.png" />
+    <Content Include="Design\Icons\png\64x64\blue_arrow_up.png" />
+    <Content Include="Design\Icons\png\64x64\blue_energy.png" />
+    <Content Include="Design\Icons\png\64x64\bmp_file.png" />
+    <Content Include="Design\Icons\png\64x64\book.png" />
+    <Content Include="Design\Icons\png\64x64\book_accept.png" />
+    <Content Include="Design\Icons\png\64x64\book_download.png" />
+    <Content Include="Design\Icons\png\64x64\book_search.png" />
+    <Content Include="Design\Icons\png\64x64\book_warning.png" />
+    <Content Include="Design\Icons\png\64x64\bowling.png" />
+    <Content Include="Design\Icons\png\64x64\business_female_male_users.png" />
+    <Content Include="Design\Icons\png\64x64\business_female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\business_male_female_users.png" />
+    <Content Include="Design\Icons\png\64x64\business_male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\business_user.png" />
+    <Content Include="Design\Icons\png\64x64\business_users.png" />
+    <Content Include="Design\Icons\png\64x64\business_users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\business_user_comment.png" />
+    <Content Include="Design\Icons\png\64x64\business_user_help.png" />
+    <Content Include="Design\Icons\png\64x64\business_user_info.png" />
+    <Content Include="Design\Icons\png\64x64\business_user_warning.png" />
+    <Content Include="Design\Icons\png\64x64\buy_now.png" />
+    <Content Include="Design\Icons\png\64x64\calculator.png" />
+    <Content Include="Design\Icons\png\64x64\calendar.png" />
+    <Content Include="Design\Icons\png\64x64\calendar_empty.png" />
+    <Content Include="Design\Icons\png\64x64\canvas_holder.png" />
+    <Content Include="Design\Icons\png\64x64\card.png" />
+    <Content Include="Design\Icons\png\64x64\cd.png" />
+    <Content Include="Design\Icons\png\64x64\chalk_board.png" />
+    <Content Include="Design\Icons\png\64x64\chart.png" />
+    <Content Include="Design\Icons\png\64x64\chart_down.png" />
+    <Content Include="Design\Icons\png\64x64\chart_pie.png" />
+    <Content Include="Design\Icons\png\64x64\chart_up.png" />
+    <Content Include="Design\Icons\png\64x64\chess.png" />
+    <Content Include="Design\Icons\png\64x64\clock.png" />
+    <Content Include="Design\Icons\png\64x64\cloud_comment.png" />
+    <Content Include="Design\Icons\png\64x64\coffee_cup.png" />
+    <Content Include="Design\Icons\png\64x64\comment.png" />
+    <Content Include="Design\Icons\png\64x64\comments.png" />
+    <Content Include="Design\Icons\png\64x64\computer.png" />
+    <Content Include="Design\Icons\png\64x64\computer_accept.png" />
+    <Content Include="Design\Icons\png\64x64\computer_add.png" />
+    <Content Include="Design\Icons\png\64x64\computer_help.png" />
+    <Content Include="Design\Icons\png\64x64\computer_info.png" />
+    <Content Include="Design\Icons\png\64x64\computer_process.png" />
+    <Content Include="Design\Icons\png\64x64\computer_warning.png" />
+    <Content Include="Design\Icons\png\64x64\copy_paste.png" />
+    <Content Include="Design\Icons\png\64x64\credit_cart.png" />
+    <Content Include="Design\Icons\png\64x64\credit_cart_cancelled.png" />
+    <Content Include="Design\Icons\png\64x64\css_file.png" />
+    <Content Include="Design\Icons\png\64x64\csv_file.png" />
+    <Content Include="Design\Icons\png\64x64\cut.png" />
+    <Content Include="Design\Icons\png\64x64\cut_from_page.png" />
+    <Content Include="Design\Icons\png\64x64\database.png" />
+    <Content Include="Design\Icons\png\64x64\database_upload.png" />
+    <Content Include="Design\Icons\png\64x64\delete.png" />
+    <Content Include="Design\Icons\png\64x64\delete_comment.png" />
+    <Content Include="Design\Icons\png\64x64\delete_computer.png" />
+    <Content Include="Design\Icons\png\64x64\delete_folder.png" />
+    <Content Include="Design\Icons\png\64x64\delete_home.png" />
+    <Content Include="Design\Icons\png\64x64\delete_image.png" />
+    <Content Include="Design\Icons\png\64x64\delete_open_folder.png" />
+    <Content Include="Design\Icons\png\64x64\delete_page.png" />
+    <Content Include="Design\Icons\png\64x64\delete_user.png" />
+    <Content Include="Design\Icons\png\64x64\doc_file.png" />
+    <Content Include="Design\Icons\png\64x64\dollar_currency_sign.png" />
+    <Content Include="Design\Icons\png\64x64\download.png" />
+    <Content Include="Design\Icons\png\64x64\download_database.png" />
+    <Content Include="Design\Icons\png\64x64\download_image.png" />
+    <Content Include="Design\Icons\png\64x64\download_link.png" />
+    <Content Include="Design\Icons\png\64x64\download_to_computer.png" />
+    <Content Include="Design\Icons\png\64x64\dvd.png" />
+    <Content Include="Design\Icons\png\64x64\edit.png" />
+    <Content Include="Design\Icons\png\64x64\edit_business_user.png" />
+    <Content Include="Design\Icons\png\64x64\edit_female_user.png" />
+    <Content Include="Design\Icons\png\64x64\edit_male_user.png" />
+    <Content Include="Design\Icons\png\64x64\edit_page.png" />
+    <Content Include="Design\Icons\png\64x64\edit_profile.png" />
+    <Content Include="Design\Icons\png\64x64\email.png" />
+    <Content Include="Design\Icons\png\64x64\eps_file.png" />
+    <Content Include="Design\Icons\png\64x64\equalizer.png" />
+    <Content Include="Design\Icons\png\64x64\euro_currency_sign.png" />
+    <Content Include="Design\Icons\png\64x64\favorite.png" />
+    <Content Include="Design\Icons\png\64x64\favorite_film.png" />
+    <Content Include="Design\Icons\png\64x64\female_male_users.png" />
+    <Content Include="Design\Icons\png\64x64\female_male_users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\female_user.png" />
+    <Content Include="Design\Icons\png\64x64\female_users.png" />
+    <Content Include="Design\Icons\png\64x64\female_users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\female_user_comment.png" />
+    <Content Include="Design\Icons\png\64x64\female_user_help.png" />
+    <Content Include="Design\Icons\png\64x64\female_user_info.png" />
+    <Content Include="Design\Icons\png\64x64\female_user_warning.png" />
+    <Content Include="Design\Icons\png\64x64\film.png" />
+    <Content Include="Design\Icons\png\64x64\filter.png" />
+    <Content Include="Design\Icons\png\64x64\firewall.png" />
+    <Content Include="Design\Icons\png\64x64\first.png" />
+    <Content Include="Design\Icons\png\64x64\folder.png" />
+    <Content Include="Design\Icons\png\64x64\folder_accept.png" />
+    <Content Include="Design\Icons\png\64x64\folder_conflicted.png" />
+    <Content Include="Design\Icons\png\64x64\folder_full.png" />
+    <Content Include="Design\Icons\png\64x64\folder_modified.png" />
+    <Content Include="Design\Icons\png\64x64\football.png" />
+    <Content Include="Design\Icons\png\64x64\full_page.png" />
+    <Content Include="Design\Icons\png\64x64\games.png" />
+    <Content Include="Design\Icons\png\64x64\gif_file.png" />
+    <Content Include="Design\Icons\png\64x64\globe.png" />
+    <Content Include="Design\Icons\png\64x64\globe_download.png" />
+    <Content Include="Design\Icons\png\64x64\globe_process.png" />
+    <Content Include="Design\Icons\png\64x64\globe_warning.png" />
+    <Content Include="Design\Icons\png\64x64\golf_ball.png" />
+    <Content Include="Design\Icons\png\64x64\green_arrow_down.png" />
+    <Content Include="Design\Icons\png\64x64\green_arrow_up.png" />
+    <Content Include="Design\Icons\png\64x64\green_button.png" />
+    <Content Include="Design\Icons\png\64x64\green_energy.png" />
+    <Content Include="Design\Icons\png\64x64\green_flag.png" />
+    <Content Include="Design\Icons\png\64x64\heart.png" />
+    <Content Include="Design\Icons\png\64x64\help.png" />
+    <Content Include="Design\Icons\png\64x64\help_balloon.png" />
+    <Content Include="Design\Icons\png\64x64\home.png" />
+    <Content Include="Design\Icons\png\64x64\home_accept.png" />
+    <Content Include="Design\Icons\png\64x64\html_file.png" />
+    <Content Include="Design\Icons\png\64x64\ico_file.png" />
+    <Content Include="Design\Icons\png\64x64\id_card.png" />
+    <Content Include="Design\Icons\png\64x64\image.png" />
+    <Content Include="Design\Icons\png\64x64\image_accept.png" />
+    <Content Include="Design\Icons\png\64x64\info.png" />
+    <Content Include="Design\Icons\png\64x64\insert_to_shopping_cart.png" />
+    <Content Include="Design\Icons\png\64x64\jpg_file.png" />
+    <Content Include="Design\Icons\png\64x64\json_file.png" />
+    <Content Include="Design\Icons\png\64x64\js_file.png" />
+    <Content Include="Design\Icons\png\64x64\key.png" />
+    <Content Include="Design\Icons\png\64x64\last.png" />
+    <Content Include="Design\Icons\png\64x64\light_bulb.png" />
+    <Content Include="Design\Icons\png\64x64\link.png" />
+    <Content Include="Design\Icons\png\64x64\lock.png" />
+    <Content Include="Design\Icons\png\64x64\magnet.png" />
+    <Content Include="Design\Icons\png\64x64\mail.png" />
+    <Content Include="Design\Icons\png\64x64\mail_lock.png" />
+    <Content Include="Design\Icons\png\64x64\mail_receive.png" />
+    <Content Include="Design\Icons\png\64x64\mail_search.png" />
+    <Content Include="Design\Icons\png\64x64\mail_send.png" />
+    <Content Include="Design\Icons\png\64x64\male_female_users.png" />
+    <Content Include="Design\Icons\png\64x64\male_female_users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\male_user.png" />
+    <Content Include="Design\Icons\png\64x64\male_users.png" />
+    <Content Include="Design\Icons\png\64x64\male_users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\male_user_comment.png" />
+    <Content Include="Design\Icons\png\64x64\male_user_help.png" />
+    <Content Include="Design\Icons\png\64x64\male_user_info.png" />
+    <Content Include="Design\Icons\png\64x64\male_user_warning.png" />
+    <Content Include="Design\Icons\png\64x64\megaphone.png" />
+    <Content Include="Design\Icons\png\64x64\mms.png" />
+    <Content Include="Design\Icons\png\64x64\mobile_phone.png" />
+    <Content Include="Design\Icons\png\64x64\mouse.png" />
+    <Content Include="Design\Icons\png\64x64\mp3_file.png" />
+    <Content Include="Design\Icons\png\64x64\music.png" />
+    <Content Include="Design\Icons\png\64x64\new.png" />
+    <Content Include="Design\Icons\png\64x64\news.png" />
+    <Content Include="Design\Icons\png\64x64\new_page.png" />
+    <Content Include="Design\Icons\png\64x64\next.png" />
+    <Content Include="Design\Icons\png\64x64\nextplayer.png" />
+    <Content Include="Design\Icons\png\64x64\note.png" />
+    <Content Include="Design\Icons\png\64x64\note_accept.png" />
+    <Content Include="Design\Icons\png\64x64\note_book.png" />
+    <Content Include="Design\Icons\png\64x64\office_folders.png" />
+    <Content Include="Design\Icons\png\64x64\old_clock.png" />
+    <Content Include="Design\Icons\png\64x64\open.png" />
+    <Content Include="Design\Icons\png\64x64\open_folder.png" />
+    <Content Include="Design\Icons\png\64x64\open_folder_accept.png" />
+    <Content Include="Design\Icons\png\64x64\open_folder_full.png" />
+    <Content Include="Design\Icons\png\64x64\open_folder_info.png" />
+    <Content Include="Design\Icons\png\64x64\open_folder_warning.png" />
+    <Content Include="Design\Icons\png\64x64\open_store.png" />
+    <Content Include="Design\Icons\png\64x64\orange_arrow_down.png" />
+    <Content Include="Design\Icons\png\64x64\orange_arrow_up.png" />
+    <Content Include="Design\Icons\png\64x64\orange_button.png" />
+    <Content Include="Design\Icons\png\64x64\package.png" />
+    <Content Include="Design\Icons\png\64x64\package_accept.png" />
+    <Content Include="Design\Icons\png\64x64\package_add.png" />
+    <Content Include="Design\Icons\png\64x64\package_download.png" />
+    <Content Include="Design\Icons\png\64x64\package_warning.png" />
+    <Content Include="Design\Icons\png\64x64\pages.png" />
+    <Content Include="Design\Icons\png\64x64\pages_warning.png" />
+    <Content Include="Design\Icons\png\64x64\page_down.png" />
+    <Content Include="Design\Icons\png\64x64\page_process.png" />
+    <Content Include="Design\Icons\png\64x64\page_up.png" />
+    <Content Include="Design\Icons\png\64x64\paint.png" />
+    <Content Include="Design\Icons\png\64x64\paint_brush.png" />
+    <Content Include="Design\Icons\png\64x64\palette.png" />
+    <Content Include="Design\Icons\png\64x64\palette_brush.png" />
+    <Content Include="Design\Icons\png\64x64\pastel_colors.png" />
+    <Content Include="Design\Icons\png\64x64\pause.png" />
+    <Content Include="Design\Icons\png\64x64\pdf_file.png" />
+    <Content Include="Design\Icons\png\64x64\phone_book.png" />
+    <Content Include="Design\Icons\png\64x64\phone_book_edit.png" />
+    <Content Include="Design\Icons\png\64x64\photo_camera.png" />
+    <Content Include="Design\Icons\png\64x64\photo_camera_accept.png" />
+    <Content Include="Design\Icons\png\64x64\php_file.png" />
+    <Content Include="Design\Icons\png\64x64\pin.png" />
+    <Content Include="Design\Icons\png\64x64\ping_pong.png" />
+    <Content Include="Design\Icons\png\64x64\play.png" />
+    <Content Include="Design\Icons\png\64x64\png_file.png" />
+    <Content Include="Design\Icons\png\64x64\ppt_file.png" />
+    <Content Include="Design\Icons\png\64x64\previous.png" />
+    <Content Include="Design\Icons\png\64x64\printer.png" />
+    <Content Include="Design\Icons\png\64x64\printer_accept.png" />
+    <Content Include="Design\Icons\png\64x64\printer_warning.png" />
+    <Content Include="Design\Icons\png\64x64\prize_winner.png" />
+    <Content Include="Design\Icons\png\64x64\process.png" />
+    <Content Include="Design\Icons\png\64x64\process_accept.png" />
+    <Content Include="Design\Icons\png\64x64\process_info.png" />
+    <Content Include="Design\Icons\png\64x64\process_warning.png" />
+    <Content Include="Design\Icons\png\64x64\promotion.png" />
+    <Content Include="Design\Icons\png\64x64\protection.png" />
+    <Content Include="Design\Icons\png\64x64\psd_file.png" />
+    <Content Include="Design\Icons\png\64x64\puzzle.png" />
+    <Content Include="Design\Icons\png\64x64\record.png" />
+    <Content Include="Design\Icons\png\64x64\recycle.png" />
+    <Content Include="Design\Icons\png\64x64\red_button.png" />
+    <Content Include="Design\Icons\png\64x64\red_flag.png" />
+    <Content Include="Design\Icons\png\64x64\red_heart.png" />
+    <Content Include="Design\Icons\png\64x64\refresh.png" />
+    <Content Include="Design\Icons\png\64x64\refresh_page.png" />
+    <Content Include="Design\Icons\png\64x64\remote_desktop.png" />
+    <Content Include="Design\Icons\png\64x64\remove_business_user.png" />
+    <Content Include="Design\Icons\png\64x64\remove_female_user.png" />
+    <Content Include="Design\Icons\png\64x64\remove_from_database.png" />
+    <Content Include="Design\Icons\png\64x64\remove_from_favorites.png" />
+    <Content Include="Design\Icons\png\64x64\remove_from_shopping_cart.png" />
+    <Content Include="Design\Icons\png\64x64\remove_link.png" />
+    <Content Include="Design\Icons\png\64x64\remove_male_user.png" />
+    <Content Include="Design\Icons\png\64x64\repeat.png" />
+    <Content Include="Design\Icons\png\64x64\report.png" />
+    <Content Include="Design\Icons\png\64x64\rss.png" />
+    <Content Include="Design\Icons\png\64x64\rugby_ball.png" />
+    <Content Include="Design\Icons\png\64x64\ruler.png" />
+    <Content Include="Design\Icons\png\64x64\ruler_pencil.png" />
+    <Content Include="Design\Icons\png\64x64\sale.png" />
+    <Content Include="Design\Icons\png\64x64\sale_promotion.png" />
+    <Content Include="Design\Icons\png\64x64\save.png" />
+    <Content Include="Design\Icons\png\64x64\search.png" />
+    <Content Include="Design\Icons\png\64x64\search_business_user.png" />
+    <Content Include="Design\Icons\png\64x64\search_computer.png" />
+    <Content Include="Design\Icons\png\64x64\search_database.png" />
+    <Content Include="Design\Icons\png\64x64\search_female_user.png" />
+    <Content Include="Design\Icons\png\64x64\search_globe.png" />
+    <Content Include="Design\Icons\png\64x64\search_home.png" />
+    <Content Include="Design\Icons\png\64x64\search_image.png" />
+    <Content Include="Design\Icons\png\64x64\search_male_user.png" />
+    <Content Include="Design\Icons\png\64x64\search_page.png" />
+    <Content Include="Design\Icons\png\64x64\search_printer.png" />
+    <Content Include="Design\Icons\png\64x64\search_user.png" />
+    <Content Include="Design\Icons\png\64x64\security.png" />
+    <Content Include="Design\Icons\png\64x64\send_mms.png" />
+    <Content Include="Design\Icons\png\64x64\send_sms.png" />
+    <Content Include="Design\Icons\png\64x64\shopping_cart.png" />
+    <Content Include="Design\Icons\png\64x64\shopping_cart_accept.png" />
+    <Content Include="Design\Icons\png\64x64\shut_down.png" />
+    <Content Include="Design\Icons\png\64x64\sms.png" />
+    <Content Include="Design\Icons\png\64x64\snooker_ball.png" />
+    <Content Include="Design\Icons\png\64x64\sound.png" />
+    <Content Include="Design\Icons\png\64x64\sound_muted.png" />
+    <Content Include="Design\Icons\png\64x64\star_empty.png" />
+    <Content Include="Design\Icons\png\64x64\star_full.png" />
+    <Content Include="Design\Icons\png\64x64\star_half_full.png" />
+    <Content Include="Design\Icons\png\64x64\sterling_pound_currency_sign.png" />
+    <Content Include="Design\Icons\png\64x64\stop.png" />
+    <Content Include="Design\Icons\png\64x64\support.png" />
+    <Content Include="Design\Icons\png\64x64\svg_file.png" />
+    <Content Include="Design\Icons\png\64x64\swf_file.png" />
+    <Content Include="Design\Icons\png\64x64\tablet.png" />
+    <Content Include="Design\Icons\png\64x64\tag_blue.png" />
+    <Content Include="Design\Icons\png\64x64\tag_green.png" />
+    <Content Include="Design\Icons\png\64x64\target.png" />
+    <Content Include="Design\Icons\png\64x64\telephone.png" />
+    <Content Include="Design\Icons\png\64x64\television.png" />
+    <Content Include="Design\Icons\png\64x64\tennis_ball.png" />
+    <Content Include="Design\Icons\png\64x64\text_page.png" />
+    <Content Include="Design\Icons\png\64x64\tiff_file.png" />
+    <Content Include="Design\Icons\png\64x64\toolbox.png" />
+    <Content Include="Design\Icons\png\64x64\tools.png" />
+    <Content Include="Design\Icons\png\64x64\trash_can.png" />
+    <Content Include="Design\Icons\png\64x64\ttf_file.png" />
+    <Content Include="Design\Icons\png\64x64\turquoise_button.png" />
+    <Content Include="Design\Icons\png\64x64\twitter.png" />
+    <Content Include="Design\Icons\png\64x64\txt_file.png" />
+    <Content Include="Design\Icons\png\64x64\unlock.png" />
+    <Content Include="Design\Icons\png\64x64\up.png" />
+    <Content Include="Design\Icons\png\64x64\user.png" />
+    <Content Include="Design\Icons\png\64x64\users.png" />
+    <Content Include="Design\Icons\png\64x64\users_comments.png" />
+    <Content Include="Design\Icons\png\64x64\user_accept.png" />
+    <Content Include="Design\Icons\png\64x64\user_comment.png" />
+    <Content Include="Design\Icons\png\64x64\violet_button.png" />
+    <Content Include="Design\Icons\png\64x64\warning.png" />
+    <Content Include="Design\Icons\png\64x64\wav_file.png" />
+    <Content Include="Design\Icons\png\64x64\white_flag.png" />
+    <Content Include="Design\Icons\png\64x64\windows_terminal.png" />
+    <Content Include="Design\Icons\png\64x64\xls_file.png" />
+    <Content Include="Design\Icons\png\64x64\xml_file.png" />
+    <Content Include="Design\Icons\png\64x64\yellow_mail.png" />
+    <Content Include="Design\Icons\png\64x64\yellow_mail_receive.png" />
+    <Content Include="Design\Icons\png\64x64\yellow_mail_send.png" />
+    <Content Include="Design\Icons\png\64x64\yen_currency_sign.png" />
+    <Content Include="Design\Icons\png\64x64\zip_file.png" />
+    <Content Include="Design\Icons\png\64x64\zip_file_accept.png" />
+    <Content Include="Design\Icons\png\64x64\zip_file_download.png" />
+    <Content Include="Design\Icons\png\64x64\zip_file_info.png" />
+    <Content Include="Design\Icons\png\64x64\zip_file_search.png" />
+    <Content Include="Design\Icons\png\64x64\zoom_in.png" />
+    <Content Include="Design\Icons\png\64x64\zoom_out.png" />
+    <Content Include="Design\jQueryCSS\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Design\jQueryCSS\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Design\jQueryCSS\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Design\jQueryCSS\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Design\jQueryCSS\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Design\jQueryCSS\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Design\jQueryCSS\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Design\jQueryCSS\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Design\jQueryCSS\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Design\jQueryCSS\jquery-ui-1.8.2.custom.css" />
+    <Content Include="Design\layout_grid.gif" />
+    <Content Include="Design\left.gif" />
+    <Content Include="Design\leftMenuHeader.gif" />
+    <Content Include="Design\RealWorld.Grids.dll" />
+    <Content Include="Design\rightMenuHeader.gif" />
+    <Content Include="Design\RIM_Exception.dll" />
+    <Content Include="Design\RIM_SECURITY.dll" />
+    <Content Include="Design\RIM_Tracer.dll" />
+    <Content Include="Design\ruler_add.png" />
+    <Content Include="Design\scripts\jquery-ui-1.8.2.custom.min.js" />
+    <Content Include="Design\scripts\jquery-vsdoc.js" />
+    <Content Include="Design\scripts\jquery.columnfilters.js" />
+    <Content Include="Design\scripts\jquery.js" />
+    <Content Include="Design\scripts\menuScript.js" />
+    <Content Include="Design\scripts\pngfix.js" />
+    <Content Include="Design\scripts\supersleight-min.js" />
+    <Content Include="Design\scripts\supersleight.js" />
+    <Content Include="Design\scripts\tip_centerwindow.js" />
+    <Content Include="Design\scripts\tip_followscroll.js" />
+    <Content Include="Design\scripts\wz_tooltip.js" />
+    <Content Include="Design\scripts\x.gif" />
+    <Content Include="Design\style.css" />
+    <Content Include="Design\System.Web.Ajax.dll" />
+    <Content Include="Design\tableft10.gif" />
+    <Content Include="Design\tabright10.gif" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\Barcodes\0.JPG" />
+    <Content Include="Images\Barcodes\1.JPG" />
+    <Content Include="Images\Barcodes\2.JPG" />
+    <Content Include="Images\Barcodes\3.JPG" />
+    <Content Include="Images\Barcodes\4.JPG" />
+    <Content Include="Images\Barcodes\5.JPG" />
+    <Content Include="Images\Barcodes\6.JPG" />
+    <Content Include="Images\Barcodes\7.JPG" />
+    <Content Include="Images\Barcodes\8.JPG" />
+    <Content Include="Images\Barcodes\9.JPG" />
+    <Content Include="Images\Barcodes\add_suffix.JPG" />
+    <Content Include="Images\Barcodes\beep_off.JPG" />
+    <Content Include="Images\Barcodes\clear_suffixes.JPG" />
+    <Content Include="Images\Barcodes\D.JPG" />
+    <Content Include="Images\Barcodes\low_volume.JPG" />
+    <Content Include="Images\Barcodes\save.JPG" />
+    <Content Include="Images\collapse_blue.jpg" />
+    <Content Include="Images\expand_blue.jpg" />
+    <Content Include="MasterPages\MasterPage.master" />
+    <None Include="Design\Graphic.psd" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="aspnet_client\system_web\4_0_30319\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\SecureMaterialsTransport\RIM.ReliabilityEngineering.ActiveDirectoryServices\RIM.ReliabilityEngineering.ActiveDirectoryServices.csproj">
+      <Project>{0B8AA3D8-767D-45CC-ACA3-AF72E6DB797A}</Project>
+      <Name>RIM.ReliabilityEngineering.ActiveDirectoryServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.BaseObjectModels\REMI.BaseObjectModels.csproj">
+      <Project>{F376D451-04C7-40CB-939E-F6C11A1A6589}</Project>
+      <Name>REMI.BaseObjectModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.Bll\REMI.Bll.vbproj">
+      <Project>{26E0F473-DA1E-43BF-8B53-5F6516D78F29}</Project>
+      <Name>REMI.Bll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.BusinessEntities\REMI.BusinessEntities.vbproj">
+      <Project>{c4d88c1d-513d-43e7-b3a9-0f436ae0f2df}</Project>
+      <Name>REMI.BusinessEntities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.Contracts\REMI.Contracts.csproj">
+      <Project>{0CCBD28E-7CB5-418A-B666-DCA7623C024B}</Project>
+      <Name>REMI.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.Core\REMI.Core.vbproj">
+      <Project>{83DE2819-44E9-42B5-BAF5-91203E045778}</Project>
+      <Name>REMI.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\REMI.Dal\REMI.Dal.vbproj">
+      <Project>{CE2A6577-4BC4-4272-929C-A105DD7EFF61}</Project>
+      <Name>REMI.Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Validation\REMI.Validation.vbproj">
+      <Project>{66FFB495-A6D7-47A8-A178-D89D408D3564}</Project>
+      <Name>REMI.Validation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Admin\Default.aspx" />
+    <Content Include="Admin\Jobs.aspx" />
+    <Content Include="Admin\Developer\Logs.aspx" />
+    <Content Include="Admin\Tests.aspx" />
+    <Content Include="Admin\Tests\EditDetail.aspx" />
+    <Content Include="Admin\TrackingLocations.aspx" />
+    <Content Include="Admin\TrackingLocationTypes.aspx" />
+    <Content Include="Admin\Users.aspx" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>81</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

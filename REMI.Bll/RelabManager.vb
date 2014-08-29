@@ -1,0 +1,184 @@
+﻿Imports System.Linq
+Imports System.Security
+Imports System.Security.Permissions
+Imports System.Transactions
+Imports REMI.BusinessEntities
+Imports REMI.Dal
+Imports REMI.Validation
+Imports System.ComponentModel
+Imports REMI.Contracts
+Imports REMI.Core
+
+Namespace REMI.Bll
+    <DataObjectAttribute()> _
+    Public Class RelabManager
+        Inherits REMIManagerBase
+
+        Public Shared Function ResultSummary(ByVal batchID As Integer) As DataTable
+            Try
+                Return RelabDB.ResultSummary(batchID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function FunctionalMatrixByTestRecord(ByVal trID As Int32, ByVal testStageID As Int32, ByVal testID As Int32, ByVal batchID As Int32, ByVal unitIDs As String, ByVal functionalType As Int32) As DataTable
+            Try
+                Return RelabDB.FunctionalMatrixByTestRecord(trID, testStageID, testID, batchID, unitIDs, functionalType)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function OverallResultSummary(ByVal batchID As Integer) As DataTable
+            Try
+                Return RelabDB.OverallResultSummary(batchID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function FailureAnalysis(ByVal testID As Int32, ByVal batchID As Int32) As DataTable
+            Try
+                Return RelabDB.FailureAnalysis(testID, batchID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function ResultSummaryExport(ByVal batchID As Integer, ByVal resultID As Int32) As DataTable
+            Try
+                Return RelabDB.ResultSummaryExport(batchID, resultID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function ResultMeasurements(ByVal resultID As Integer, ByVal onlyFails As Boolean, ByVal includeArchived As Boolean) As DataTable
+            Try
+                Return RelabDB.ResultMeasurements(resultID, onlyFails, includeArchived)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function ResultVersions(ByVal testID As Integer, ByVal batchID As Int32) As DataTable
+            Try
+                Return RelabDB.ResultVersions(testID, batchID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function UploadResults(ByVal xml As String, ByVal lossFile As String) As Boolean
+            Try
+                Return RelabDB.UploadResults(xml, lossFile)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return False
+        End Function
+
+        Public Shared Function UploadResultsMeasurementsFile(ByVal file() As Byte, ByVal contentType As String, ByVal fileName As String) As Boolean
+            Try
+                Return RelabDB.UploadResultsMeasurementsFile(file, contentType, fileName)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return False
+        End Function
+
+        Public Shared Function GetAvailableTestsByBatches(ByVal batchIDs As String) As DataTable
+            Try
+                Return RelabDB.GetAvailableTestsByBatches(batchIDs)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function GetMeasurementsByTest(ByVal batchIDs As String, ByVal testID As Int32, ByVal showOnlyFailValue As Boolean) As DataTable
+            Try
+                Return RelabDB.GetMeasurementsByTest(batchIDs, testID, showOnlyFailValue)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function GetParametersByMeasurementTest(ByVal batchIDs As String, ByVal testID As Int32, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal showOnlyFailValue As Boolean, ByVal testStageIDs As String) As DataTable
+            Try
+                Return RelabDB.GetParametersByMeasurementTest(batchIDs, testID, measurementTypeID, parameterName, showOnlyFailValue, testStageIDs)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function GetUnitsByTestMeasurementParameters(ByVal batchIDs As String, ByVal testID As Int32, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal getStages As Boolean, ByVal showOnlyFailValue As Boolean) As DataTable
+            Try
+                Return RelabDB.GetUnitsByTestMeasurementParameters(batchIDs, testID, measurementTypeID, parameterName, parameterValue, getStages, showOnlyFailValue)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function ResultGraph(ByVal batchIDs As String, ByVal unitIDs As String, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal showUpperLowerLimits As Boolean, ByVal testID As Int32, ByVal xaxis As Int32, ByVal plotValue As Int32, ByVal includeArchived As Boolean, ByVal stages As String) As DataSet
+            Try
+                Return RelabDB.ResultGraph(batchIDs, unitIDs, measurementTypeID, parameterName, parameterValue, showUpperLowerLimits, testID, xaxis, plotValue, includeArchived, stages)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataSet
+        End Function
+
+        Public Shared Function ResultSearch(ByVal measurementTypeID As Int32, ByVal testID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal productIDs As String, ByVal jobNameIDs As String, ByVal testStageIDs As String, ByVal testCenterID As Int32, ByVal showFailureOnly As Boolean) As DataSet
+            Try
+                Return RelabDB.ResultSearch(measurementTypeID, testID, parameterName, parameterValue, productIDs, jobNameIDs, testStageIDs, testCenterID, showFailureOnly)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataSet
+        End Function
+
+        Public Shared Function GetMeasurementParameterCommaSeparated(ByVal measurementID As Int32) As DataTable
+            Try
+                Return RelabDB.GetMeasurementParameterCommaSeparated(measurementID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable
+        End Function
+
+        Public Shared Function ReassignTestStage(ByVal batchID As Int32, ByVal testID As Int32, ByVal testStageID As Int32, ByVal unitID As Int32, ByVal newTestStageID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim result As IQueryable(Of REMI.Entities.Result)
+                If (unitID = 0) Then
+                    result = (From r In instance.Results Where r.TestUnit.Batch.ID = batchID And r.Test.ID = testID And r.TestStage.ID = testStageID)
+                Else
+                    result = (From r In instance.Results Where r.TestUnit.Batch.ID = batchID And r.Test.ID = testID And r.TestStage.ID = testStageID And r.TestUnit.ID = unitID)
+                End If
+
+                If (result IsNot Nothing) Then
+                    For Each r In result
+                        r.TestStage = (From ts In instance.TestStages Where ts.ID = newTestStageID Select ts).FirstOrDefault()
+                    Next
+
+                    instance.SaveChanges()
+                End If
+                Return True
+            Catch ex As Exception
+                Return False
+            End Try
+        End Function
+    End Class
+End Namespace

@@ -1,0 +1,510 @@
+﻿Imports REMI.BusinessEntities
+Imports REMI.Bll
+Imports REMI.Validation
+Imports Remi.Contracts
+
+Partial Class ScanForInfo_Default
+    Inherits System.Web.UI.Page
+
+    Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        Response.Redirect(String.Format("{0}?QRA={1}", Helpers.GetCurrentPageName, Helpers.CleanInputText(txtBarcodeReading.Text, 30)), True)
+    End Sub
+
+    Protected Sub grdTrackingLogGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdTrackingLog.PreRender
+        Helpers.MakeAccessable(grdTrackingLog)
+    End Sub
+
+    Protected Sub grdDetailGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdDetail.PreRender
+        Helpers.MakeAccessable(grdDetail)
+    End Sub
+
+    Protected Sub gvwTestExceptionsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwTestExceptions.PreRender
+        gvwTestExceptions.PagerSettings.Mode = PagerButtons.NumericFirstLast
+        Helpers.MakeAccessable(gvwTestExceptions)
+    End Sub
+
+    Protected Sub gvwTaskAssignmentsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwTaskAssignments.PreRender
+        Helpers.MakeAccessable(gvwTaskAssignments)
+    End Sub
+
+    Protected Sub gvwDocuemntsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwDocuemnts.PreRender
+        Helpers.MakeAccessable(gvwDocuemnts)
+    End Sub
+
+    Protected Sub grdAuditLogGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdAuditLog.PreRender
+        Helpers.MakeAccessable(grdAuditLog)
+    End Sub
+
+    Protected Sub SetGvwHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
+        lblNotificationHeader.Text = String.Format("Notifications ({0})", notMain.Notifications.Count)
+        lblAccordionCommentsSectionHeader.Text = String.Format("Comments ({0})", rptBatchComments.Items.Count)
+        lblUnitCount.Text = String.Format("Unit Info ({0})", grdDetail.Rows.Count)
+    End Sub
+
+    Protected Sub btnAddComment_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        If (txtNewCommentText.Text.Trim().Length > 0) Then
+            If (BatchManager.AddNewComment(hdnQRANumber.Value, txtNewCommentText.Text).Count <= 0) Then
+                rptBatchComments.DataSource = BatchManager.GetBatchComments(hdnQRANumber.Value)
+                rptBatchComments.DataBind()
+                lblAccordionCommentsSectionHeader.Text = String.Format("Comments ({0})", rptBatchComments.Items.Count)
+                UpdatePanel1.Update()
+                txtNewCommentText.Text = String.Empty
+            End If
+        End If
+    End Sub
+
+    Protected Sub lnkDeleteComment_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim lnkButtonClicked As LinkButton = DirectCast(sender, LinkButton)
+        BatchManager.DeactivateComment(CInt(lnkButtonClicked.CommandArgument))
+        rptBatchComments.DataSource = BatchManager.GetBatchComments(hdnQRANumber.Value)
+        rptBatchComments.DataBind()
+
+        lblAccordionCommentsSectionHeader.Text = String.Format("Comments ({0})", rptBatchComments.Items.Count)
+        UpdatePanel1.Update()
+    End Sub
+
+    Protected Sub grdDetail_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles grdDetail.RowCommand
+        Select Case e.CommandName.ToLower()
+            Case "deleteunit"
+                TestUnitManager.DeleteUnit(Convert.ToInt32(e.CommandArgument))
+        End Select
+
+        Dim b As BatchView = BatchManager.GetViewBatch(Request.QueryString.Get("QRA"))
+        grdDetail.DataSource = b.TestUnits
+        grdDetail.DataBind()
+    End Sub
+
+    Protected Sub grdAuditLog_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdAuditLog.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            e.Row.Cells(2).Text = System.Enum.Parse(GetType(BatchStatus), e.Row.Cells(2).Text).ToString()
+            e.Row.Cells(8).Text = e.Row.Cells(8).Text
+        End If
+    End Sub
+
+    Protected Sub grdDetail_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdDetail.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim lnkDelete As LinkButton = DirectCast(e.Row.FindControl("lnkDelete"), LinkButton)
+
+            If (UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin) And DirectCast(e.Row.DataItem, REMI.BusinessEntities.TestUnit).CanDelete Then
+                lnkDelete.Visible = True
+            Else
+                lnkDelete.Visible = False
+            End If
+        End If
+    End Sub
+
+    Protected Sub gvwTaskAssignment_Command(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvwTaskAssignments.RowCommand
+        Select Case e.CommandName.ToLower()
+            Case "removetaskassignment"
+                TestStageManager.RemoveTaskAssignment(hdnQRANumber.Value, CInt(e.CommandArgument))
+            Case "reassigntask"
+                Dim currentRow As GridViewRow = DirectCast(DirectCast(e.CommandSource, Button).NamingContainer, GridViewRow)
+                Dim currentTextInput As TextBox = currentRow.Cells(2).FindControl("txtAssignTaskToUser")
+                TestStageManager.AddUpdateTaskAssignment(hdnQRANumber.Value, CInt(e.CommandArgument), currentTextInput.Text)
+        End Select
+
+        gvwTaskAssignments.DataSource = LoadAssignments(hdnQRANumber.Value)
+        gvwTaskAssignments.DataBind()
+    End Sub
+
+    Protected Function LoadAssignments(ByVal qraNumber As String) As List(Of BaseObjectModels.TaskAssignment)
+        Return TestStageManager.GetListOfTaskAssignments(qraNumber)
+    End Function
+
+    Protected Sub ProcessQRA(ByVal tmpStr As String)
+        Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr))
+        Dim b As BatchView
+
+        If bc.Validate Then
+            b = BatchManager.GetViewBatch(bc.BatchNumber)
+            If b IsNot Nothing Then
+                btnAddComment.Enabled = True
+                txtNewCommentText.Enabled = True
+                lnkCheckForUpdates2.Enabled = True
+                lnkCheckForUpdates.Enabled = True
+                ddlTime.Enabled = True
+
+                If (b.ProductID = 0) Then
+                    b.ProductID = ProductGroupManager.GetProductIDByName(b.ProductGroup)
+                End If
+
+                If (UserManager.GetCurrentUser.ByPassProduct Or (From up In UserManager.GetCurrentUser.ProductGroups.Rows Where up("ID") = b.ProductID Select up("id")).FirstOrDefault() <> Nothing) Then
+                    Dim litTitle As Literal = Master.FindControl("litPageTitle")
+                    If litTitle IsNot Nothing Then
+                        litTitle.Text = "REMI - " + bc.BatchNumber
+                    End If
+
+                    Dim bColl As New BatchCollection
+                    bColl.Add(b)
+                    rptBatchComments.DataSource = b.Comments
+                    rptBatchComments.DataBind()
+                    bscMain.SetBatches(bColl)
+                    notMain.Notifications.Add(b.GetAllNotifications)
+                    grdDetail.DataSource = b.TestUnits
+                    grdDetail.DataBind()
+                    lblQRANumber.Text = bc.BatchNumber
+                    hdnQRANumber.Value = bc.ToString
+                    grdTrackingLog.DataBind()
+
+                    Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
+                                      Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
+                                      Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
+
+                    Dim rqResults As New DataTable
+                    rqResults.Columns.Add("RID", GetType(Int32))
+                    rqResults.Columns.Add("TestID", GetType(Int32))
+                    rqResults.Columns.Add("TestStageID", GetType(Int32))
+                    rqResults.Columns.Add("UN", GetType(Int32))
+
+                    For Each rec In records
+                        Dim row As DataRow = rqResults.NewRow
+                        row("RID") = rec.RID
+                        row("TestID") = rec.TestID
+                        row("TestStageID") = rec.TestStageID
+                        row("UN") = rec.UN
+                        rqResults.Rows.Add(row)
+                    Next
+
+                    gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority())
+                    gvwTestingSummary.DataBind()
+                    gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority())
+                    gvwStressingSummary.DataBind()
+
+                    setup.JobID = b.JobID
+                    setup.BatchID = b.ID
+                    setup.ProductID = b.ProductID
+                    setup.JobName = b.JobName
+                    setup.ProductName = b.ProductGroup
+                    setup.QRANumber = b.QRANumber
+                    setup.TestStageType = TestStageType.Parametric
+                    setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                    setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                    setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority()
+                    setup.DataBind()
+
+                    setupStressing.JobID = b.JobID
+                    setupStressing.BatchID = b.ID
+                    setupStressing.ProductID = b.ProductID
+                    setupStressing.JobName = b.JobName
+                    setupStressing.ProductName = b.ProductGroup
+                    setupStressing.QRANumber = b.QRANumber
+                    setupStressing.TestStageType = TestStageType.EnvironmentalStress
+                    setupStressing.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                    setupStressing.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                    setupStressing.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority()
+                    setupStressing.DataBind()
+
+                    If (setup.HasEditItemAuthority) Then
+                        btnEdit.Visible = True
+                        btnEditStressing.Visible = True
+                    Else
+                        btnEdit.Visible = False
+                        btnEditStressing.Visible = False
+                    End If
+
+                    hypEditExceptions.NavigateUrl = b.ExceptionManagerLink
+                    hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
+                    hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
+                    hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
+                    hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
+                    hypTRSLink.NavigateUrl = b.TRSLink()
+                    hypRefresh.NavigateUrl = b.BatchInfoLink
+                    txtExecutiveSummary.Text = b.ExecutiveSummary
+
+                    If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin) Then
+                        txtExecutiveSummary.Enabled = True
+                        btnExecutiveSummary.Visible = True
+                        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
+                    End If
+
+                    'You are a relab role or your role has permission to view relab
+                    If (UserManager.GetCurrentUser.HasRelabAuthority Or UserManager.GetCurrentUser.HasRelabAccess()) Then
+                        hypRelabLink.Visible = True
+                        imgRelabLink.Visible = True
+
+                        Dim record As Int32 = (From r In New REMI.Dal.Entities().Instance().Results _
+                                      Where r.TestUnit.Batch.ID = b.ID _
+                                      Take 1 _
+                                      Select r.ID).FirstOrDefault()
+                        If (record < 1) Then
+                            hypRelabLink.Enabled = False
+                        End If
+                    End If
+
+                    hypRelabLink.NavigateUrl = b.RelabResultLink
+                    hypProductGroupLink.NavigateUrl = b.ProductGroupLink
+                    hypTestRecords.NavigateUrl = b.TestRecordsLink
+                    hypDropTestWebApp.NavigateUrl = b.DropTestWebAppLink
+                    hypTumbleTestWebApp.NavigateUrl = b.TumbleTestWebAppLink
+
+                    If (b.JobName.ToLower.Contains("tumble")) Then
+                        hypTumbleTestWebApp.Visible = True
+                        imgTumbleTestWebAppLink.Visible = True
+                    ElseIf (b.JobName.ToLower.Contains("drop")) Then
+                        hypDropTestWebApp.Visible = True
+                        imgDropTestWebAppLink.Visible = True
+                    End If
+
+                    gvwTaskAssignments.DataSource = LoadAssignments(b.QRANumber)
+                    gvwTaskAssignments.DataBind()
+
+                    Dim es As New ExceptionSearch()
+                    es.QRANumber = b.QRANumber
+                    es.IncludeBatches = 1
+                    gvwTestExceptions.DataSource = Remi.Dal.TestExceptionDB.ExceptionSearch(es)
+                    gvwTestExceptions.DataBind()
+
+                    'sets the accordion open pane
+                    accMain.SelectedIndex = 5
+
+                    updComments.Update()
+                    SetupMenuItems(b.ProductGroup)
+                End If
+            Else
+                notMain.Notifications.AddWithMessage(String.Format("{0} could not be found in REMI.", bc.ToString), NotificationType.Errors)
+            End If
+        Else
+            notMain.Notifications = bc.Notifications
+            Exit Sub
+        End If
+    End Sub
+
+    <System.Web.Services.WebMethod()> _
+    Public Shared Function AddException(ByVal jobname As String, ByVal teststagename As String, ByVal testname As String, ByVal qraNumber As String, ByVal unitcount As String, ByVal unitnumber As String) As Boolean
+        Dim tex As New TestException()
+        Dim nc As Notification
+        Dim count As Integer = 1
+        Dim hasSuccess As Boolean = True
+
+        tex.TestStageName = teststagename
+        tex.TestName = testname
+        tex.JobName = jobname
+        tex.QRAnumber = qraNumber
+
+        If (unitcount = 0) Then
+            tex.UnitNumber = unitnumber
+            nc = ExceptionManager.AddException(tex)
+
+            If (nc.Message <> "Exception saved ok.") Then
+                hasSuccess = False
+            End If
+        Else
+            While count <= unitcount
+                tex.UnitNumber = count
+                nc = ExceptionManager.AddException(tex)
+                count += 1
+
+                If (nc.Message <> "Exception saved ok.") Then
+                    hasSuccess = False
+                End If
+            End While
+        End If
+
+        Return hasSuccess
+    End Function
+
+    Protected Sub Page_PreRender() Handles Me.PreRender
+        For Each r As GridViewRow In gvwTestingSummary.Rows
+            For Each c As TableCell In r.Cells
+                c.Text = System.Web.HttpUtility.HtmlDecode(c.Text)
+            Next
+        Next
+
+        For Each r As GridViewRow In gvwStressingSummary.Rows
+            For Each c As TableCell In r.Cells
+                c.Text = System.Web.HttpUtility.HtmlDecode(c.Text)
+            Next
+        Next
+    End Sub
+
+    Protected Sub btnExecutiveSummary_OnClick(ByVal sender As Object, ByVal e As System.EventArgs)
+        BatchManager.SaveExecutiveSummary(hdnQRANumber.Value, UserManager.GetCurrentUser.UserName, txtExecutiveSummary.Text)
+    End Sub
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            notMain.Clear()
+            Dim tmpStr As String = Request.QueryString.Get("QRA")
+            If Not String.IsNullOrEmpty(tmpStr) Then
+                ProcessQRA(tmpStr)
+            Else
+                Dim litTitle As Literal = Master.FindControl("litPageTitle")
+                If litTitle IsNot Nothing Then
+                    litTitle.Text = "REMI - Batch Information"
+                End If
+                accMain.SelectedIndex = -1
+            End If
+
+        End If
+
+        txtBarcodeReading.Focus()
+        acpDocuments.Visible = UserManager.GetCurrentUser.HasDocumentAuthority()
+    End Sub
+
+    Protected Sub SetupMenuItems(ByVal productGroup As String)
+
+        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority() Then
+            liEditExceptions.Visible = True
+        End If
+
+        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+            liModifyPriority.Visible = True
+            liModifyStage.Visible = True
+            liModifyStatus.Visible = True
+            liModifyTestDurations.Visible = True
+        End If
+    End Sub
+
+    Protected Sub ddlTime_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTime.SelectedIndexChanged
+        odsTrackingLog.DataBind()
+        grdTrackingLog.DataBind()
+    End Sub
+
+    Protected Sub btnEdit_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        If (setup.Visible) Then
+            gvwTestingSummary.Visible = True
+            lnkCheckForUpdates.Visible = True
+            setup.Visible = False
+            btnEdit.Text = "Edit Setup"
+
+            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
+                                      Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
+                                      Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
+
+            Dim rqResults As New DataTable
+            rqResults.Columns.Add("RID", GetType(Int32))
+            rqResults.Columns.Add("TestID", GetType(Int32))
+            rqResults.Columns.Add("TestStageID", GetType(Int32))
+            rqResults.Columns.Add("UN", GetType(Int32))
+
+            For Each rec In records
+                Dim row As DataRow = rqResults.NewRow
+                row("RID") = rec.RID
+                row("TestID") = rec.TestID
+                row("TestStageID") = rec.TestStageID
+                row("UN") = rec.UN
+                rqResults.Rows.Add(row)
+            Next
+
+            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwTestingSummary.DataBind()
+
+            ScriptManager.RegisterStartupScript(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll();ApplyTableFormatting();", True)
+        Else
+            btnEdit.Text = "View Summary"
+            gvwTestingSummary.Visible = False
+            lnkCheckForUpdates.Visible = False
+            setup.Visible = True
+            setup.DataBind()
+        End If
+    End Sub
+
+    Protected Sub btnEditStressing_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        If (setupStressing.Visible) Then
+            gvwStressingSummary.Visible = True
+            lnkCheckForUpdates2.Visible = True
+            setupStressing.Visible = False
+            btnEditStressing.Text = "Edit Setup"
+            lblNote.Visible = True
+
+            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwStressingSummary.DataBind()
+
+            ScriptManager.RegisterStartupScript(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
+        Else
+            btnEditStressing.Text = "View Summary"
+            gvwStressingSummary.Visible = False
+            lnkCheckForUpdates2.Visible = False
+            lblNote.Visible = False
+            setupStressing.Visible = True
+            setupStressing.DataBind()
+        End If
+    End Sub
+
+    Protected Sub lnkCheckForUpdates_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates.Click
+        If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
+            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
+
+            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
+                                      Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
+                                      Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
+
+            Dim rqResults As New DataTable
+            rqResults.Columns.Add("RID", GetType(Int32))
+            rqResults.Columns.Add("TestID", GetType(Int32))
+            rqResults.Columns.Add("TestStageID", GetType(Int32))
+            rqResults.Columns.Add("UN", GetType(Int32))
+
+            For Each rec In records
+                Dim row As DataRow = rqResults.NewRow
+                row("RID") = rec.RID
+                row("TestID") = rec.TestID
+                row("TestStageID") = rec.TestStageID
+                row("UN") = rec.UN
+                rqResults.Rows.Add(row)
+            Next
+
+            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwTestingSummary.DataBind()
+            ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll();ApplyTableFormatting();", True)
+        End If
+    End Sub
+
+    Protected Sub lnkCheckForUpdates2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates2.Click
+        If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
+            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
+
+            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwStressingSummary.DataBind()
+            ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
+        End If
+    End Sub
+
+    Protected Sub chkGetFails_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkGetFails.CheckedChanged
+        ProcessQRA(hdnQRANumber.Value)
+    End Sub
+
+    Protected Sub gvwTestExceptions_OnPageIndexChanging(ByVal sender As Object, ByVal e As GridViewPageEventArgs) Handles gvwTestExceptions.PageIndexChanging
+        gvwTestExceptions.PageIndex = e.NewPageIndex
+        Dim es As New ExceptionSearch()
+        es.QRANumber = hdnQRANumber.Value
+        es.IncludeBatches = 1
+        gvwTestExceptions.DataSource = Remi.Dal.TestExceptionDB.ExceptionSearch(es)
+
+        gvwTestExceptions.DataBind()
+    End Sub
+
+    Protected Sub gvwStressingSummary_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwStressingSummary.RowDataBound
+        If e.Row.RowType = DataControlRowType.Header Then
+            For i = 0 To e.Row.Cells.Count - 1
+                If (i > 0) Then
+                    Dim hyperlink As New HyperLink()
+                    hyperlink.Text = e.Row.Cells(i).Text
+                    hyperlink.Target = "_blank"
+                    hyperlink.NavigateUrl = Remi.Core.REMIWebLinks.GetTestRecordsLink(hdnQRANumber.Value, hyperlink.Text, Nothing, Nothing, 0)
+                    e.Row.Cells(i).Text = String.Empty
+                    e.Row.Cells(i).Controls.Add(hyperlink)
+                End If
+            Next
+        End If
+    End Sub
+
+    Protected Sub gvwTestingSummary_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwTestingSummary.RowDataBound
+        If e.Row.RowType = DataControlRowType.Header Then
+            For i = 0 To e.Row.Cells.Count - 1
+                If (i > 0) Then
+                    Dim hyperlink As New HyperLink()
+                    hyperlink.Text = e.Row.Cells(i).Text
+                    hyperlink.Target = "_blank"
+                    hyperlink.NavigateUrl = Remi.Core.REMIWebLinks.GetTestRecordsLink(hdnQRANumber.Value, hyperlink.Text, Nothing, Nothing, 0)
+                    e.Row.Cells(i).Text = String.Empty
+                    e.Row.Cells(i).Controls.Add(hyperlink)
+                End If
+            Next
+        End If
+    End Sub
+End Class

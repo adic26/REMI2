@@ -1,0 +1,462 @@
+﻿Imports REMI.Validation
+Imports System.Web.Security
+Imports System.DirectoryServices.ActiveDirectory
+
+
+Namespace REMI.BusinessEntities
+    ''' <summary>
+    ''' <para>The user class allows permanent user information to be stored such as the user's role </para>
+    ''' </summary>
+    ''' <remarks></remarks>
+    <Serializable()> _
+    Public Class User
+        Inherits LoggedItemBase
+
+#Region "Private Variables"
+        Private _testCentre As String
+        Private _testCentreID As Int32
+        Private _ldapName As String
+        Private _productGroups As DataTable
+        Private _productGroupsNames As List(Of String)
+        Private _roles As List(Of String)
+        Private _badgeNumber As Integer
+        Private _isActive As Int32
+        Private _byPassProduct As Int32
+        Private _jobTitle As String
+        Private _fullName As String
+        Private _emailAddress As String
+        Private _defaultPage As String
+        Private _extension As String
+        Private _existsInREMI As Boolean
+        Private _canDelete As Int32
+        Private _training As DataTable
+        Private _trainingNames As List(Of String)
+#End Region
+        Public Sub New()
+            _productGroups = New DataTable
+            _productGroupsNames = New List(Of String)
+            _training = New DataTable
+            _trainingNames = New List(Of String)
+            _testCentre = "Cambridge"
+            _testCentreID = 76
+            _roles = New List(Of String)
+            _ldapName = String.Empty
+            _jobTitle = String.Empty
+            _fullName = String.Empty
+            _emailAddress = String.Empty
+            _extension = String.Empty
+            _isActive = 1
+            _byPassProduct = 1
+            _defaultPage = "ScanForInfo/default.aspx"
+        End Sub
+#Region "Public Properties"
+
+        Public Property ExistsInREMI() As Boolean
+            Get
+                Return _existsInREMI
+            End Get
+            Set(ByVal value As Boolean)
+                _existsInREMI = value
+            End Set
+        End Property
+
+
+        Public ReadOnly Property RequiresSuppAuth() As Boolean
+            Get
+                Dim ex1 As Boolean
+                'check if the user is set up in remi and has been set to require a badge scan
+                If Not String.IsNullOrEmpty(_ldapName) Then
+                    ex1 = Roles.IsUserInRole(_ldapName, "SupplementaryAuthenticationRequired")
+                Else
+                    ex1 = True
+                End If
+
+                'or check if the user does not have permission to access remi. 
+                Return ex1 'Or Not HasREMIPageViewAuthority()
+
+            End Get
+        End Property
+        Public Property BadgeNumber() As Integer
+            Get
+                Return _badgeNumber
+            End Get
+            Set(ByVal value As Integer)
+                _badgeNumber = value
+            End Set
+        End Property
+
+        Public Property ByPassProduct() As Int32
+            Get
+                Return _byPassProduct
+            End Get
+            Set(value As Int32)
+                _byPassProduct = value
+            End Set
+        End Property
+
+        Public Property IsActive() As Int32
+            Get
+                Return _isActive
+            End Get
+            Set(ByVal value As Int32)
+                _isActive = value
+            End Set
+        End Property
+
+        Public Property CanDelete() As Int32
+            Get
+                Return _canDelete
+            End Get
+            Set(ByVal value As Int32)
+                _canDelete = value
+            End Set
+        End Property
+
+        Public Property DefaultPage() As String
+            Get
+                Return _defaultPage
+            End Get
+            Set(ByVal value As String)
+                _defaultPage = value
+            End Set
+        End Property
+
+        Public Property TestCentre() As String
+            Get
+                Return _testCentre
+            End Get
+            Set(ByVal value As String)
+                _testCentre = value
+            End Set
+        End Property
+
+        Public Property TestCentreID() As Int32
+            Get
+                Return _testCentreID
+            End Get
+            Set(value As Int32)
+                _testCentreID = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Gets or sets the LDAP username of the user.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        <NotNullOrEmpty(Message:="The LDAP Name must be set. ")> _
+        <ValidStringLength(Message:="The LDAP name must be less than 255 characters.", MaxLength:=255)> _
+        Public Property LDAPName() As String
+            Get
+                If _ldapName.StartsWith("RIMNET\") Then
+                    Return _ldapName.Remove(0, 7)
+                Else
+                    Return _ldapName
+                End If
+            End Get
+            Set(ByVal value As String)
+
+                _ldapName = value
+
+            End Set
+        End Property
+        Public ReadOnly Property UserName() As String
+            Get
+                If _ldapName.StartsWith("RIMNET\") Then
+                    Return _ldapName.Remove(0, 7)
+                Else
+                    Return _ldapName
+                End If
+            End Get
+        End Property
+        ''' <summary>
+        ''' Gets or sets the list of productgroups the user is managing.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property ProductGroups() As DataTable
+            Get
+                Return _productGroups
+            End Get
+            Set(ByVal value As DataTable)
+                If value IsNot Nothing Then
+                    _productGroups = value
+                End If
+            End Set
+        End Property
+
+        Public Property Training() As DataTable
+            Get
+                Return _training
+            End Get
+            Set(ByVal value As DataTable)
+                If value IsNot Nothing Then
+                    _training = value
+                End If
+            End Set
+        End Property
+
+        Public Property TrainingNames() As List(Of String)
+            Get
+                Return _trainingNames
+            End Get
+            Set(ByVal value As List(Of String))
+                If value IsNot Nothing Then
+                    _trainingNames = value
+                End If
+            End Set
+        End Property
+
+        Public Property ProductGroupsNames() As List(Of String)
+            Get
+                Return _productGroupsNames
+            End Get
+            Set(ByVal value As List(Of String))
+                If value IsNot Nothing Then
+                    _productGroupsNames = value
+                End If
+            End Set
+        End Property
+
+
+        ''' <summary>
+        ''' Gets or sets the list of roles that the user is a member of.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property RolesList() As List(Of String)
+            Get
+                Return _roles
+            End Get
+            Set(ByVal value As List(Of String))
+                _roles = value
+            End Set
+
+        End Property
+        Public Property EmailAddress() As String
+            Get
+                Return _emailAddress
+            End Get
+            Set(ByVal value As String)
+                _emailAddress = value
+            End Set
+        End Property
+        Public Property FullName() As String
+            Get
+                Return _fullName
+            End Get
+            Set(ByVal value As String)
+                _fullName = value
+            End Set
+        End Property
+        Public Property Extension() As String
+            Get
+                Return _extension
+            End Get
+            Set(ByVal value As String)
+                _extension = value
+            End Set
+        End Property
+        Public Property JobTitle() As String
+            Get
+                Return _jobTitle
+            End Get
+            Set(ByVal value As String)
+                _jobTitle = value
+            End Set
+        End Property
+#End Region
+
+#Region "Public Functions"
+        ''' <summary>
+        ''' Overrides the default tostring to return the LDAP name of the user.
+        ''' </summary>
+        ''' <returns>The LDAP name of the user</returns>
+        ''' <remarks></remarks>
+        Public Overrides Function ToString() As String
+            If String.IsNullOrEmpty(_ldapName) Then
+                Return String.Empty
+            Else
+                Return _ldapName
+            End If
+        End Function
+#End Region
+
+#Region "User Access"
+        ''' <summary>
+        ''' Checks if the user has the authority to perform certain actions in the system. mostly to do with setting result reviews and such.
+        ''' </summary>
+        ''' <param name="ProductGroupName">The product group of the batch (To check if the user is PM for that project.)</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function HasRetestAuthority(ByVal ProductGroupName As String) As Boolean
+            Return CheckPermission("HasRetestAuthority", ProductGroupName)
+        End Function
+
+        Public Function HasFALowTestingAuthority(ByVal productGroupName As String) As Boolean
+            Return CheckPermission("HasFALowTestingAuthority", productGroupName)
+        End Function
+
+        Public Function HasFAHighTestingAuthority(ByVal productGroupName As String) As Boolean
+            Return CheckPermission("HasFAHighTestingAuthority", productGroupName)
+        End Function
+
+        Public Function HasFATestingAuthority(ByVal ProductGroupName As String) As Boolean
+            Return HasFAHighTestingAuthority(ProductGroupName) Or HasFALowTestingAuthority(ProductGroupName)
+        End Function
+
+        Public Function HasLastScanLocationOverride() As Boolean
+            Return CheckPermission("HasLastScanLocationOverride", String.Empty)
+        End Function
+
+        Public Function HasAdjustPriorityAuthority() As Boolean
+            Return CheckPermission("HasAdjustPriorityAuthority", String.Empty)
+        End Function
+
+        Public Function HasEditBatchCommentsAuthority() As Boolean
+            Return CheckPermission("HasEditBatchCommentsAuthority", String.Empty)
+        End Function
+
+        Public Function HasTaskAssignmentAuthority() As Boolean
+            Return CheckPermission("HasTaskAssignmentAuthority", String.Empty)
+        End Function
+
+        Public Function HasFAAssignmentAuthority() As Boolean
+            Return CheckPermission("HasFAAssignmentAuthority", String.Empty)
+        End Function
+
+        Public Function HasOverrideCompletedTestAuthority() As Boolean
+            Return CheckPermission("HasOverrideCompletedTestAuthority", String.Empty)
+        End Function
+
+        Public Function HasScanForTestAuthority() As Boolean
+            If Roles.IsUserInRole(_ldapName, "SupplementaryAuthenticationRequired") Then
+                'when badge scanning is in place this can be reset back to false
+                Return True
+            Else
+                Return CheckPermission("HasScanForTestAuthority", String.Empty)
+            End If
+        End Function
+
+        Public Function HasEditItemAuthority(ByVal productGroup As String) As Boolean
+            Return CheckPermission("HasEditItemAuthority", productGroup)
+        End Function
+
+        Public Function HasUploadConfigXML() As Boolean
+            Return CheckPermission("HasUploadConfigXML", String.Empty)
+        End Function
+
+        Public Function HasDocumentAuthority() As Boolean
+            Return CheckPermission("HasDocumentAuthority", String.Empty)
+        End Function
+
+        Public Function HasAdminReadOnlyAuthority() As Boolean
+            Return CheckPermission("HasAdminReadOnlyAuthority", String.Empty)
+        End Function
+
+        Public Function HasRelabAuthority() As Boolean
+            Return CheckPermission("HasRelabAuthority", String.Empty)
+        End Function
+
+        Public Function HasBatchSetupAuthority() As Boolean
+            Return CheckPermission("HasBatchSetupAuthority", String.Empty)
+        End Function
+#End Region
+
+#Region "HAS ROLE"
+        Public ReadOnly Property IsAdmin() As Boolean
+            Get
+                Return RolesList.Contains("Administrator")
+            End Get
+        End Property
+        Public ReadOnly Property IsIncomingSpecialist() As Boolean
+            Get
+                Return RolesList.Contains("IncomingSpecialist")
+            End Get
+        End Property
+        Public ReadOnly Property IsMaterialsManagementSpecialist() As Boolean
+            Get
+                Return RolesList.Contains("MaterialsManagementSpecialist")
+            End Get
+        End Property
+        Public ReadOnly Property IsLabTestCoordinator() As Boolean
+            Get
+                Return RolesList.Contains("LabTestCoordinator")
+            End Get
+        End Property
+        Public ReadOnly Property IsLabTechOpsManager() As Boolean
+            Get
+                Return RolesList.Contains("LabTechOpsManager")
+            End Get
+        End Property
+        Public ReadOnly Property IsProjectManager() As Boolean
+            Get
+                Return RolesList.Contains("ProjectManager")
+            End Get
+        End Property
+        Public ReadOnly Property IsDeveloper() As Boolean
+            Get
+                Return RolesList.Contains("Developer")
+            End Get
+        End Property
+        Public ReadOnly Property HasRelabAccess() As Boolean
+            Get
+                Return RolesList.Contains("Relab")
+            End Get
+        End Property
+        Public ReadOnly Property IsTestCenterAdmin() As Boolean
+            Get
+                Return RolesList.Contains("TestCenterAdmin")
+            End Get
+        End Property
+#End Region
+
+        Private Function CheckPermission(ByVal Permission As String, ByVal productGroupName As String) As Boolean
+            Dim roles As DataTable = REMIAppCache.GetRolesByPermission(Permission)
+            If (roles Is Nothing) Then
+                roles = GetRolesByPermission(Permission)
+                REMIAppCache.SetRolesByPermission(Permission, roles)
+            End If
+
+            Dim hasPerm As Boolean = False
+            For Each role As DataRow In roles.Rows
+                hasPerm = RolesList.Contains(role.Item("RoleName").ToString())
+                Dim hasProductCheck As Boolean = False
+                Boolean.TryParse(role.Item("hasProductCheck").ToString(), hasProductCheck)
+
+                If (hasProductCheck And ByPassProduct = 0) Then
+                    Dim product = (From p In ProductGroups _
+                                    Where p.Item("ProductGroupName").ToString() = productGroupName _
+                                    Select productGroup = p.Item("ProductGroupName").ToString())
+                    If (Not (product.Contains(productGroupName))) Then
+                        hasPerm = False
+                    End If
+                End If
+                If (hasPerm) Then
+                    Exit For
+                End If
+            Next
+            Return hasPerm
+        End Function
+
+        Private Shared Function GetRolesByPermission(ByVal permissionName As String) As DataTable
+            Dim dt As New DataTable
+            Using myConnection As New SqlClient.SqlConnection(Core.REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlClient.SqlCommand("aspnet_GetRolesByPermission", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@ApplicationName", "/")
+                    myCommand.Parameters.AddWithValue("@PermissionName", permissionName)
+                    myConnection.Open()
+                    Dim da As SqlClient.SqlDataAdapter = New SqlClient.SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "Roles"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+    End Class
+End Namespace

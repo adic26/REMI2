@@ -1,0 +1,3 @@
+﻿ALTER TABLE [dbo].[TestUnits]
+    ADD CONSTRAINT [FK_TestUnits_Batches] FOREIGN KEY ([BatchID]) REFERENCES [dbo].[Batches] ([ID]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
