@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("15ec2e9c-8840-4066-ac1b-bba596cd6935")>
+<Assembly: EdmSchemaAttribute("d037509f-425c-4191-a483-0bf54a07f237")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnits", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_DeviceTrackingLog", "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.DeviceTrackingLog), "TestRecordsXTrackingLogs", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecordsXTrackingLog))>

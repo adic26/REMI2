@@ -179,9 +179,11 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge & Lab - Bochum. If you want a specific location id for a given user use ""Lab"" and their username with this method.")> _
-    Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String) As Integer
+    Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String, ByVal userIdentification As String) As Integer
         Try
-            Return TrackingLocationManager.GetSpecificLocationForCurrentUsersTestCenter(stationName)
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return TrackingLocationManager.GetSpecificLocationForCurrentUsersTestCenter(stationName, UserManager.GetCurrentValidUserLDAPName)
+            End If
         Catch ex As Exception
             TrackingLocationManager.LogIssue("Could not location specific location for the given details.", "e3", NotificationType.Errors, ex, "user: " + UserManager.GetCurrentValidUserLDAPName() + "test station: " + stationName)
         End Try

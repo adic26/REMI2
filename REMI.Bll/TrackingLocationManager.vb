@@ -90,8 +90,8 @@ Namespace REMI.Bll
             End Try
         End Function
 
-        Public Shared Function GetSpecificLocationForCurrentUsersTestCenter(ByVal StationName As String) As Integer
-            Return TrackingLocationDB.GetSpecificLocationForUsersTestCenter(StationName, UserManager.GetCurrentValidUserLDAPName)
+        Public Shared Function GetSpecificLocationForCurrentUsersTestCenter(ByVal StationName As String, ByVal lastUser As String) As Integer
+            Return TrackingLocationDB.GetSpecificLocationForUsersTestCenter(StationName, lastUser)
         End Function
 
         Public Shared Function GetTrackingLocationID(ByVal trackingLocationName As String, ByVal testCenterID As Int32) As Int32

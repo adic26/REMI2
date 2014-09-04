@@ -150,7 +150,12 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@locationname", stationName)
                     myCommand.Parameters.AddWithValue("@UserName", userName)
                     MyConnection.Open()
-                    Result = myCommand.ExecuteNonQuery()
+
+                    Dim returnValue As New SqlParameter("ReturnValue", SqlDbType.Int)
+                    returnValue.Direction = ParameterDirection.ReturnValue
+                    myCommand.Parameters.Add(returnValue)
+                    myCommand.ExecuteScalar()
+                    Result = Convert.ToInt32(returnValue.Value)
                 End Using
 
             End Using

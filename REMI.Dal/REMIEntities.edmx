@@ -5661,7 +5661,7 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_LookupsLevel" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="4" PointY="28.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="2.375" PointX="4" PointY="28.25" />
         <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="6.25" PointY="35.5" />
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TrackingLocations" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocations_TestCenterLocation" />

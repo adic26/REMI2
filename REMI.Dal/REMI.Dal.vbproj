@@ -201,7 +201,6 @@
     </None>
     <EntityDeploy Include="REMIEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>REMIEntities.Designer.vb</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
