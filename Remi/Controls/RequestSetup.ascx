@@ -7,6 +7,7 @@
     </Triggers>
     <ContentTemplate>
         <asp:HiddenField ID="hdnProductID" runat="server" />
+        <asp:HiddenField ID="hdnOrientationID" runat="server" />
         <asp:HiddenField ID="hdnBatchID" runat="server" />
         <asp:HiddenField ID="hdnJobID" runat="server" />
         <asp:HiddenField ID="hdnJobName" runat="server" />
@@ -18,6 +19,12 @@
         <asp:HiddenField ID="hdnHasEditItemAuthority" runat="server" />
 
         <uc1:NotificationList ID="notMain" runat="server" />
+
+        <asp:Panel runat="server" ID="Orientation" Visible="false">
+            Select Orientation: 
+            <asp:DropDownList runat="server" ID="ddlOrientations" DataTextField="Name" DataValueField="ID" AppendDataBoundItems="true">
+            </asp:DropDownList>
+        </asp:Panel>
 
         Load Setup:
         <asp:DropDownList runat="server" ID="ddlRequestSetupOptions" CausesValidation="true"

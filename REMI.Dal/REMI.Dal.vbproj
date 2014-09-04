@@ -160,7 +160,7 @@
     </Compile>
     <Compile Include="ProductGroupDB.vb" />
     <Compile Include="RelabDB.vb" />
-    <Compile Include="REMIEntities.Designer.vb">
+    <Compile Include="REMIEntities2.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>REMIEntities.edmx</DependentUpon>
@@ -201,7 +201,7 @@
     </None>
     <EntityDeploy Include="REMIEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>REMIEntities.Designer.vb</LastGenOutput>
+      <LastGenOutput>REMIEntities2.Designer.vb</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>

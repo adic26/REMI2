@@ -2,6 +2,7 @@
 Imports System.Net.Mail
 Imports System.Diagnostics
 Imports System.Threading
+Imports System.Configuration
 
 Public Class REMIBatchTasks
     Inherits System.ServiceProcess.ServiceBase
@@ -177,7 +178,7 @@ Public Class REMIBatchTasks
                             job.Name = str.Trim()
                             jobCount += 1
 
-                            remi.GetInstance().SaveJob(job)
+                            remi.GetInstance().SaveJob(job, ConfigurationManager.AppSettings("AdminName").ToString())
                         End If
                     Next
 

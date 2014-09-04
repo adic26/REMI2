@@ -56,16 +56,16 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTestsByBatchStage(ByVal batchID As Int32, ByVal testStage As String, ByVal removeParametrice As Boolean) As Object
+        Public Shared Function GetTestsByBatchStage(ByVal batchID As Int32, ByVal testStage As String, ByVal removeParametrice As Boolean) As Dictionary(Of String, String)
             Try
                 If (removeParametrice And Not (UserManager.GetCurrentUser.IsAdmin)) Then
-                    Return (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And (t.teststagetype = 2 Or t.teststagetype = 3 Or t.teststagetype = 4 Or t.teststagetype = 5 Or t.TestID = 1280 Or t.TestID = 1073) And t.tsname = testStage And t.processorder > -1 Select t.tname, t.TestID Distinct Order By tname).ToList()
+                    Return (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And (t.teststagetype = 2 Or t.teststagetype = 3 Or t.teststagetype = 4 Or t.teststagetype = 5 Or t.TestID = 1280 Or t.TestID = 1073) And t.tsname = testStage And t.processorder > -1 Select t).OrderBy(Function(o) o.tname).ToDictionary(Function(k) k.TestID.ToString(), Function(v) v.tname)
                 Else
-                    Return (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And t.tsname = testStage And t.processorder > -1 Select t.tname, t.TestID Distinct Order By tname).ToList()
+                    Return (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And t.tsname = testStage And t.processorder > -1 Select t).OrderBy(Function(o) o.tname).ToDictionary(Function(k) k.TestID.ToString(), Function(v) v.tname)
                 End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TestStage: {0} BatchID: {1}", testStage, batchID))
-                Return New List(Of String)
+                Return New Dictionary(Of String, String)
             End Try
         End Function
 
@@ -94,21 +94,26 @@ Namespace REMI.Bll
             Return 0
         End Function
 
-        Public Shared Function SaveApplicableTLTypes(ByVal newList As SerializableDictionary(Of Integer, String), ByVal testID As Integer) As NotificationCollection
-            Dim oldList As SerializableDictionary(Of Integer, String) = TestDB.GetApplicableTLTypes(testID)
+        Public Shared Function SaveApplicableTLTypes(ByVal newList As TrackingLocationTypeCollection, ByVal testID As Integer) As NotificationCollection
+            Dim oldList As TrackingLocationTypeCollection = TestDB.GetApplicableTLTypes(testID)
             Dim nc As New NotificationCollection
             Dim tmpName As String = String.Empty
 
             Try
                 If UserManager.GetCurrentUser.IsAdmin Then
-                    For Each tlTypeID As Integer In newList.Keys 'add new ones
-                        If Not oldList.ContainsKey(tlTypeID) Then
-                            TestDB.AddApplicableTrackingLocationType(testID, tlTypeID)
+                    For Each tlType As TrackingLocationType In newList 'add new ones
+                        Dim tlt As TrackingLocationType = (From otlt In oldList Where otlt.ID = tlType.ID And otlt.Name = tlType.Name Select otlt).FirstOrDefault()
+
+                        If (tlt Is Nothing) Then
+                            TestDB.AddApplicableTrackingLocationType(testID, tlType)
                         End If
                     Next
-                    For Each tltypeID As Integer In oldList.Keys
-                        If Not newList.TryGetValue(tltypeID, tmpName) Then 'delete old ones
-                            TestDB.DeleteApplicableTrackingLocationType(testID, tltypeID)
+
+                    For Each tltype As TrackingLocationType In oldList
+                        Dim tlt As TrackingLocationType = (From ntlt In newList Where ntlt.ID = tltype.ID And ntlt.Name = tltype.Name Select ntlt).FirstOrDefault()
+
+                        If (tlt Is Nothing) Then
+                            TestDB.DeleteApplicableTrackingLocationType(testID, tltype)
                         End If
                     Next
                 Else

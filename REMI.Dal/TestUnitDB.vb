@@ -383,6 +383,37 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetUnit(ByVal qraNumber As String, ByVal unitNumber As Int32) As TestUnit
+            Dim unit As TestUnit = Nothing
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispTestUnitsSearchFor", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+
+                    If Not String.IsNullOrEmpty(qraNumber) Then
+                        myCommand.Parameters.AddWithValue("@QRANumber", qraNumber)
+                    End If
+
+                    If unitNumber > 0 Then
+                        myCommand.Parameters.AddWithValue("@UnitNumber", unitNumber)
+                    End If
+
+                    If myConnection.State <> ConnectionState.Open Then
+                        myConnection.Open()
+                    End If
+
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            myReader.Read()
+                            unit = FillDataRecord(myReader)
+                        End If
+                    End Using
+                End Using
+            End Using
+
+            Return unit
+        End Function
+
         Public Shared Function GetBatchUnits(ByVal qraNumber As String, ByVal myconnection As SqlConnection) As TestUnitCollection
             Dim tempList As TestUnitCollection = Nothing
 
@@ -554,10 +585,6 @@ Namespace REMI.Dal
                 myTestUnit.BSN = myDataRecord.GetInt64(myDataRecord.GetOrdinal("BSN"))
             End If
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestStageName")) Then
-                myTestUnit.CurrentTestStage.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestStageName"))
-            End If
-
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestName")) Then
                 myTestUnit.CurrentTestName = myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestName"))
             End If
@@ -590,8 +617,12 @@ Namespace REMI.Dal
 
             If Helpers.HasColumn(myDataRecord, "CurrentTestStageID") Then
                 If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestStageID")) Then
-                    myTestUnit.CurrentTestStage.ID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("CurrentTestStageID"))
+                    myTestUnit.CurrentTestStage = TestStageDB.GetItem(myDataRecord.GetInt32(myDataRecord.GetOrdinal("CurrentTestStageID")), myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestStageName")), myDataRecord.GetString(myDataRecord.GetOrdinal("JobName")))
                 End If
+            End If
+
+            If (Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestStageName")) And myTestUnit.CurrentTestStage Is Nothing) Then
+                myTestUnit.CurrentTestStage.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestStageName"))
             End If
 
             If Helpers.HasColumn(myDataRecord, "NoBSN") Then

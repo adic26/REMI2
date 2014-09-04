@@ -112,7 +112,7 @@
                 <asp:TemplateField HeaderText="Required Test StationType" 
                     SortExpression="TestStationType">
                     <ItemTemplate>
-                        <asp:BulletedList  ID="bltTLTypes" runat="server" DataSource='<%# Eval("TrackingLocationTypes") %>'  DataTextField="Value" DataValueField="Key">
+                        <asp:BulletedList  ID="bltTLTypes" runat="server" DataSource='<%# Eval("TrackingLocationTypes") %>'  DataTextField="Name" DataValueField="ID">
                         </asp:BulletedList>
                     </ItemTemplate>                
                 </asp:TemplateField>
@@ -258,7 +258,7 @@
                                 <asp:Button ID="btnRemoveTLType" runat="server" Text="<- Remove" />
                             </td>
                             <td>
-                                <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="360px" Height="400px" DataTextField="Value" DataValueField="Key" ></asp:ListBox>
+                                <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="360px" Height="400px" DataTextField="Name" DataValueField="ID" ></asp:ListBox>
                             </td>
                         </tr>
                     </table>                       

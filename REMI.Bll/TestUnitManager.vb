@@ -54,6 +54,15 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
+        Public Shared Function GetUnit(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As TestUnit
+            Try
+                Return TestUnitDB.GetUnit(QRANumber, batchUnitNumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
+            End Try
+            Return Nothing
+        End Function
+
         Public Shared Function GetUnitID(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As Int32
             Try
                 Dim testUnit As REMI.Entities.TestUnit = TestUnitManager.GetRAWUnitInformation(QRANumber, batchUnitNumber)

@@ -43,15 +43,22 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -62,8 +69,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProductSettingsTests.cs" />
+    <Compile Include="BatchTest.cs" />
+    <Compile Include="FakeHttpContext.cs" />
+    <Compile Include="JobTest.cs" />
+    <Compile Include="LogTest.cs" />
+    <Compile Include="LookupTest.cs" />
+    <Compile Include="ProductTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelabTest.cs" />
+    <Compile Include="RequestTest.cs" />
+    <Compile Include="SecurityTest.cs" />
+    <Compile Include="StageTest.cs" />
+    <Compile Include="TargetAccessTest.cs" />
+    <Compile Include="TestRecordTest.cs" />
+    <Compile Include="Tests.cs" />
+    <Compile Include="TestUnitTest.cs" />
+    <Compile Include="TrackingLocationTest.cs" />
+    <Compile Include="UserTest.cs" />
+    <Compile Include="VersionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\REMI.Bll\REMI.Bll.vbproj">
@@ -78,10 +101,19 @@
       <Project>{0CCBD28E-7CB5-418A-B666-DCA7623C024B}</Project>
       <Name>REMI.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\REMI.Dal\REMI.Dal.vbproj">
+      <Project>{ce2a6577-4bc4-4272-929c-a105dd7eff61}</Project>
+      <Name>REMI.Dal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Validation\REMI.Validation.vbproj">
       <Project>{66FFB495-A6D7-47A8-A178-D89D408D3564}</Project>
       <Name>REMI.Validation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

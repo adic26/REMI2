@@ -382,8 +382,16 @@ Namespace REMI.Dal
 
         Public Shared Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String, ByVal tsdContact As String) As Boolean 'We are passing in productGroupName because the webservice will insert a missing one
             Dim Result As Integer = 0
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
+            If (QAP Is Nothing) Then
+                QAP = String.Empty
+            End If
+
+            If (tsdContact Is Nothing) Then
+                tsdContact = String.Empty
+            End If
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispSaveProduct", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@ProductGroupName", productGroupName)

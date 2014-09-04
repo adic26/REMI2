@@ -20,6 +20,7 @@
           <EntitySet Name="BatchSpecificTestDurations" EntityType="remiModel.Store.BatchSpecificTestDurations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Calibration" EntityType="remiModel.Store.Calibration" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DeviceTrackingLog" EntityType="remiModel.Store.DeviceTrackingLog" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="JobOrientation" EntityType="remiModel.Store.JobOrientation" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Jobs" EntityType="remiModel.Store.Jobs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Lookups" EntityType="remiModel.Store.Lookups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ProductConfiguration" EntityType="remiModel.Store.ProductConfiguration" store:Type="Tables" Schema="dbo" />
@@ -194,6 +195,10 @@
             <End Role="Lookups" EntitySet="Lookups" />
             <End Role="Batches" EntitySet="Batches" />
           </AssociationSet>
+          <AssociationSet Name="FK_Batches_JobOrientation" Association="remiModel.Store.FK_Batches_JobOrientation">
+            <End Role="JobOrientation" EntitySet="JobOrientation" />
+            <End Role="Batches" EntitySet="Batches" />
+          </AssociationSet>
           <AssociationSet Name="FK_Batches_Priority" Association="remiModel.Store.FK_Batches_Priority">
             <End Role="Lookups" EntitySet="Lookups" />
             <End Role="Batches" EntitySet="Batches" />
@@ -237,6 +242,14 @@
           <AssociationSet Name="FK_DeviceTrackingLog_TrackingLocations" Association="remiModel.Store.FK_DeviceTrackingLog_TrackingLocations">
             <End Role="TrackingLocations" EntitySet="TrackingLocations" />
             <End Role="DeviceTrackingLog" EntitySet="DeviceTrackingLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobOrientation_Jobs" Association="remiModel.Store.FK_JobOrientation_Jobs">
+            <End Role="Jobs" EntitySet="Jobs" />
+            <End Role="JobOrientation" EntitySet="JobOrientation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobOrientation_Lookups" Association="remiModel.Store.FK_JobOrientation_Lookups">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="JobOrientation" EntitySet="JobOrientation" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductConfigurationUpload_ID" Association="remiModel.Store.FK_ProductConfigurationUpload_ID">
             <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUpload" />
@@ -585,6 +598,7 @@
           <Property Name="ExecutiveSummary" Type="nvarchar" />
           <Property Name="MechanicalTools" Type="nvarchar" MaxLength="10" />
           <Property Name="Order" Type="int" />
+          <Property Name="OrientationID" Type="int" />
         </EntityType>
         <EntityType Name="BatchesAudit">
           <Key>
@@ -650,6 +664,21 @@
           <Property Name="OutTime" Type="datetime" />
           <Property Name="OutUser" Type="nvarchar" MaxLength="255" />
           <Property Name="ConcurrencyID" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="JobOrientation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="JobID" Type="int" Nullable="false" />
+          <Property Name="ProductTypeID" Type="int" Nullable="false" />
+          <Property Name="NumUnits" Type="int" Nullable="false" />
+          <Property Name="NumDrops" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" Nullable="false" MaxLength="250" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="Definition" Type="xml" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
         </EntityType>
         <EntityType Name="Jobs">
           <Key>
@@ -1415,6 +1444,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Batches_JobOrientation">
+          <End Role="JobOrientation" Type="remiModel.Store.JobOrientation" Multiplicity="0..1" />
+          <End Role="Batches" Type="remiModel.Store.Batches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobOrientation">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Batches">
+              <PropertyRef Name="OrientationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Batches_Priority">
           <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="Batches" Type="remiModel.Store.Batches" Multiplicity="*" />
@@ -1544,6 +1585,30 @@
             </Principal>
             <Dependent Role="DeviceTrackingLog">
               <PropertyRef Name="TrackingLocationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_JobOrientation_Jobs">
+          <End Role="Jobs" Type="remiModel.Store.Jobs" Multiplicity="1" />
+          <End Role="JobOrientation" Type="remiModel.Store.JobOrientation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jobs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="JobOrientation">
+              <PropertyRef Name="JobID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_JobOrientation_Lookups">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="JobOrientation" Type="remiModel.Store.JobOrientation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="JobOrientation">
+              <PropertyRef Name="ProductTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2584,6 +2649,19 @@
             <End Role="RequestType" EntitySet="RequestTypes" />
             <End Role="ReqFieldMapping" EntitySet="ReqFieldMappings" />
           </AssociationSet>
+          <EntitySet Name="JobOrientations" EntityType="REMI.Entities.JobOrientation" />
+          <AssociationSet Name="FK_Batches_JobOrientation" Association="REMI.Entities.FK_Batches_JobOrientation">
+            <End Role="JobOrientation" EntitySet="JobOrientations" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobOrientation_Jobs" Association="REMI.Entities.FK_JobOrientation_Jobs">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="JobOrientation" EntitySet="JobOrientations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_JobOrientation_Lookups" Association="REMI.Entities.FK_JobOrientation_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="JobOrientation" EntitySet="JobOrientations" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="DeviceTrackingLog">
           <Key>
@@ -3203,6 +3281,7 @@
           <Property Type="Boolean" Name="ContinueOnFailures" />
           <NavigationProperty Name="TestStages" Relationship="REMI.Entities.FK_TestStages_Jobs" FromRole="Job" ToRole="TestStage" />
           <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Jobs" FromRole="Job" ToRole="RequestSetup" />
+          <NavigationProperty Name="JobOrientations" Relationship="REMI.Entities.FK_JobOrientation_Jobs" FromRole="Job" ToRole="JobOrientation" />
         </EntityType>
         <Association Name="FK_TestStages_Jobs">
           <End Type="REMI.Entities.Job" Role="Job" Multiplicity="1" />
@@ -3417,6 +3496,7 @@
           <NavigationProperty Name="Batches3" Relationship="REMI.Entities.FK_Batches_RequestPurpose" FromRole="Lookup" ToRole="Batch" />
           <NavigationProperty Name="Batches4" Relationship="REMI.Entities.FK_Batches_TestCenterLocation" FromRole="Lookup" ToRole="Batch" />
           <NavigationProperty Name="RequestTypes" Relationship="REMI.Entities.FK_RequestType_Lookups" FromRole="Lookup" ToRole="RequestType" />
+          <NavigationProperty Name="JobOrientations" Relationship="REMI.Entities.FK_JobOrientation_Lookups" FromRole="Lookup" ToRole="JobOrientation" />
         </EntityType>
         <Association Name="FK_ProductLookups_Lookups">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -3724,6 +3804,7 @@
           <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Batches" FromRole="Batch" ToRole="RequestSetup" />
           <NavigationProperty Name="TaskAssignments" Relationship="REMI.Entities.FK_TaskAssignment_Batches" FromRole="Batch" ToRole="TaskAssignment" />
           <NavigationProperty Name="TestUnits" Relationship="REMI.Entities.FK_TestUnits_Batches" FromRole="Batch" ToRole="TestUnit" />
+          <NavigationProperty Name="JobOrientation" Relationship="REMI.Entities.FK_Batches_JobOrientation" FromRole="Batch" ToRole="JobOrientation" />
         </EntityType>
         <Association Name="FK_BatchComments_Batches">
           <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
@@ -3796,6 +3877,34 @@
         <Association Name="FK_ReqFieldMapping_RequestType">
           <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="1" />
           <End Type="REMI.Entities.ReqFieldMapping" Role="ReqFieldMapping" Multiplicity="*" />
+        </Association>
+        <EntityType Name="JobOrientation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="NumUnits" Nullable="false" />
+          <Property Type="Int32" Name="NumDrops" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="Definition" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Batches" Relationship="REMI.Entities.FK_Batches_JobOrientation" FromRole="JobOrientation" ToRole="Batch" />
+          <NavigationProperty Name="Job" Relationship="REMI.Entities.FK_JobOrientation_Jobs" FromRole="JobOrientation" ToRole="Job" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_JobOrientation_Lookups" FromRole="JobOrientation" ToRole="Lookup" />
+        </EntityType>
+        <Association Name="FK_Batches_JobOrientation">
+          <End Type="REMI.Entities.JobOrientation" Role="JobOrientation" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_JobOrientation_Jobs">
+          <End Type="REMI.Entities.Job" Role="Job" Multiplicity="1" />
+          <End Type="REMI.Entities.JobOrientation" Role="JobOrientation" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_JobOrientation_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.JobOrientation" Role="JobOrientation" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -5177,6 +5286,45 @@
               <ScalarProperty Name="ID" ColumnName="ReqTypeID" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="JobOrientations">
+            <EntityTypeMapping TypeName="REMI.Entities.JobOrientation">
+              <MappingFragment StoreEntitySet="JobOrientation">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Definition" ColumnName="Definition" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="NumDrops" ColumnName="NumDrops" />
+                <ScalarProperty Name="NumUnits" ColumnName="NumUnits" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FK_Batches_JobOrientation" TypeName="REMI.Entities.FK_Batches_JobOrientation" StoreEntitySet="Batches">
+            <EndProperty Name="Batch">
+              <ScalarProperty Name="ID" ColumnName="ID" />
+            </EndProperty>
+            <EndProperty Name="JobOrientation">
+              <ScalarProperty Name="ID" ColumnName="OrientationID" />
+            </EndProperty>
+            <Condition ColumnName="OrientationID" IsNull="false" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_JobOrientation_Jobs" TypeName="REMI.Entities.FK_JobOrientation_Jobs" StoreEntitySet="JobOrientation">
+            <EndProperty Name="JobOrientation">
+              <ScalarProperty Name="ID" ColumnName="ID" />
+            </EndProperty>
+            <EndProperty Name="Job">
+              <ScalarProperty Name="ID" ColumnName="JobID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_JobOrientation_Lookups" TypeName="REMI.Entities.FK_JobOrientation_Lookups" StoreEntitySet="JobOrientation">
+            <EndProperty Name="JobOrientation">
+              <ScalarProperty Name="ID" ColumnName="ID" />
+            </EndProperty>
+            <EndProperty Name="Lookup">
+              <ScalarProperty Name="LookupID" ColumnName="ProductTypeID" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -5661,7 +5809,7 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_LookupsLevel" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="4" PointY="28.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="2.375" PointX="4" PointY="28.25" />
         <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="6.25" PointY="35.5" />
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TrackingLocations" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocations_TestCenterLocation" />
@@ -5705,6 +5853,10 @@
         <AssociationConnector Association="REMI.Entities.FK_RequestType_Lookups" />
         <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="11.29456030358307" PointY="22.510329510322926" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
+        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="3.2818224631630919" PointY="0.8817474548154266" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_JobOrientation" />
+        <AssociationConnector Association="REMI.Entities.FK_JobOrientation_Jobs" />
+        <AssociationConnector Association="REMI.Entities.FK_JobOrientation_Lookups" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

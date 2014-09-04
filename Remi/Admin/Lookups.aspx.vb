@@ -89,7 +89,12 @@ Public Class Admin_Lookups
         gdvApplications.EditIndex = e.NewEditIndex
         ApplicationBindData()
 
+        Dim lblVersion As Label = gdvApplications.Rows(e.NewEditIndex).FindControl("lblVersion")
+        Dim txtVersion As TextBox = gdvApplications.Rows(e.NewEditIndex).FindControl("txtVersion")
         Dim chkATA As CheckBox = gdvApplications.Rows(e.NewEditIndex).FindControl("chkATA")
+
+        lblVersion.Visible = False
+        txtVersion.Visible = True
         chkATA.Enabled = True
     End Sub
 
@@ -105,6 +110,7 @@ Public Class Admin_Lookups
 
     Protected Sub gdvApplications_RowUpdating(ByVal sender As Object, ByVal e As GridViewUpdateEventArgs)
         Dim lblVersion As Label = gdvApplications.Rows(e.RowIndex).FindControl("lblVersion")
+        Dim txtVersion As TextBox = gdvApplications.Rows(e.RowIndex).FindControl("txtVersion")
         Dim chkATA As CheckBox = gdvApplications.Rows(e.RowIndex).FindControl("chkATA")
         Dim applicableToAll As Int32 = 0
 
@@ -112,7 +118,7 @@ Public Class Admin_Lookups
             applicableToAll = 1
         End If
 
-        VersionManager.SaveVersion(gdvApplications.DataKeys(e.RowIndex).Values(0), lblVersion.Text, applicableToAll)
+        VersionManager.SaveVersion(gdvApplications.DataKeys(e.RowIndex).Values(0), txtVersion.Text, applicableToAll)
         gdvApplications.EditIndex = -1
         ApplicationBindData()
     End Sub

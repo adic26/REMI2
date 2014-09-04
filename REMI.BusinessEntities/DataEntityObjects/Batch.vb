@@ -327,13 +327,15 @@ Namespace REMI.BusinessEntities
             Return False
         End Function
 
-        Public Function GetNextTestStage() As TestStage
-            If Me.TestStage IsNot Nothing Then
+        Public Function GetNextTestStage(ByVal testStage As TestStage, ByVal QRANumber As String, ByVal job As Job, ByVal testRecords As TestRecordCollection, ByVal testStageTypes() As TestStageType, ByVal tasks As List(Of ITaskModel)) As TestStage
+            If testStage IsNot Nothing Then
                 Dim stage As TestStage = Nothing
-                Dim processOrder As Int32 = Me.TestStage.ProcessOrder
+                Dim processOrder As Int32 = testStage.ProcessOrder
+
+                Dim stages As List(Of String) = (From t In tasks Where t.IsArchived <> True Select t.TestStageName).ToList
 
                 While stage Is Nothing
-                    Dim temp As TestStage = (From ts As TestStage In Me.Job.TestStages Where ts.ProcessOrder > processOrder AndAlso ts.ProcessOrder >= 0 And ts.IsArchived = False Select ts).OrderBy(Function(ts) ts.ProcessOrder).FirstOrDefault()
+                    Dim temp As TestStage = (From ts As TestStage In job.TestStages Where stages.Contains(ts.Name) And testStageTypes.Contains(ts.TestStageType) And ts.ProcessOrder > processOrder AndAlso ts.ProcessOrder >= 0 And ts.IsArchived = False Select ts).OrderBy(Function(ts) ts.ProcessOrder).FirstOrDefault()
 
                     If (temp Is Nothing) Then
                         Exit While
@@ -341,7 +343,7 @@ Namespace REMI.BusinessEntities
 
                     processOrder = temp.ProcessOrder
 
-                    Dim idVal As Int32 = (From t In Me.Job.TestStages Where t.ID = temp.ID Select t.ID).FirstOrDefault()
+                    Dim idVal As Int32 = (From t In job.TestStages Where t.ID = temp.ID Select t.ID).FirstOrDefault()
 
                     If (idVal > 0) Then
                         stage = temp
@@ -349,14 +351,34 @@ Namespace REMI.BusinessEntities
                 End While
 
                 If (stage IsNot Nothing) Then
-                    If (stage.TestStageType = TestStageType.FailureAnalysis And Me.TestRecords.UnitIsInFA(Me.QRANumber) = False) Then
-                        stage = (From ts As TestStage In Me.Job.TestStages Where ts.ProcessOrder > stage.ProcessOrder AndAlso ts.ProcessOrder >= 0 And ts.IsArchived = False Select ts).OrderBy(Function(ts) ts.ProcessOrder).FirstOrDefault()
+                    If (stage.TestStageType = TestStageType.FailureAnalysis And testRecords.UnitIsInFA(QRANumber) = False) Then
+                        stage = (From ts As TestStage In job.TestStages Where ts.ProcessOrder > stage.ProcessOrder AndAlso ts.ProcessOrder >= 0 And ts.IsArchived = False Select ts).OrderBy(Function(ts) ts.ProcessOrder).FirstOrDefault()
                     End If
+
+                    Dim tests As List(Of String) = (From t In tasks Where t.TestIsArchived <> True And t.TestStageName = stage.Name Select t.TestName).ToList
+
+                    For Each t In stage.Tests.ToList
+                        If (Not tests.Contains(t.Name)) Then
+                            stage.Tests.Remove(t)
+                        End If
+                    Next
                 End If
 
                 Return stage
             End If
             Return Nothing
+        End Function
+
+        Public Function GetNextTestStage() As TestStage
+            Dim testStageType(5) As TestStageType
+            testStageType(0) = Contracts.TestStageType.EnvironmentalStress
+            testStageType(1) = Contracts.TestStageType.Parametric
+            testStageType(2) = Contracts.TestStageType.FailureAnalysis
+            testStageType(3) = Contracts.TestStageType.IncomingEvaluation
+            testStageType(4) = Contracts.TestStageType.NonTestingTask
+            testStageType(5) = Contracts.TestStageType.NotSet
+
+            Return GetNextTestStage(Me.TestStage, Me.QRANumber, Me.Job, Me.TestRecords, testStageType, Me.Tasks)
         End Function
 
         ''' <summary>

@@ -83,6 +83,43 @@ Namespace REMI.Dal
             Return jobs
         End Function
 
+        Public Shared Function GetJobOrientationLists(ByVal jobID As Int32) As DataTable
+            Dim dt As New DataTable
+            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetJobOrientations", MyConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@JobID", jobID)
+
+                    MyConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "JobOrientation"
+                End Using
+            End Using
+            Return dt
+        End Function
+
+        Public Shared Function SaveOrientation(ByVal jobID As Int32, ByVal id As Int32, ByVal name As String, ByVal productTypeID As Int32, ByVal description As String, ByVal isActive As Boolean, ByVal xml As String) As Boolean
+            Dim Result As Integer = 0
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispJobOrientationSave", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@ID", id)
+                    myCommand.Parameters.AddWithValue("@Name", name)
+                    myCommand.Parameters.AddWithValue("@JobID", jobID)
+                    myCommand.Parameters.AddWithValue("@ProductTypeID", productTypeID)
+                    myCommand.Parameters.AddWithValue("@Description", description)
+                    myCommand.Parameters.AddWithValue("@IsActive", isActive)
+                    myCommand.Parameters.AddWithValue("@Definition", xml)
+                    myConnection.Open()
+                    myCommand.ExecuteNonQuery()
+                End Using
+            End Using
+
+            Return True
+        End Function
+
         Public Shared Function GetJobListDT() As JobCollection
             Dim tempList As New JobCollection
 

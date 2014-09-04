@@ -22,9 +22,6 @@
         Public Function FindByID(ByVal ID As Integer) As Test
             Return (From t In Me Select t Where t.ID.Equals(ID) Select t).FirstOrDefault
         End Function
-        Public Function GetTestsApplicableToLocation(ByVal testStationTypeID As Integer) As TestCollection
-            Return New TestCollection((From t In Me Select t Where t.TrackingLocationTypes.ContainsKey(testStationTypeID) Select t).ToList)
-        End Function
         Public Function ToDictionary() As SerializableDictionary(Of Integer, String)
             Dim sd As New SerializableDictionary(Of Integer, String)
             For Each t As Test In Me

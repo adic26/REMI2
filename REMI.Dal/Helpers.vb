@@ -88,7 +88,11 @@ Namespace REMI.Dal
         ''' <returns></returns>
         ''' <remarks></remarks>
         Friend Shared Function GetConcurrencyId(ByVal command As SqlCommand) As Byte()
-            Return DirectCast(command.Parameters(ConcurrencyParamName).Value, Byte())
+            If (command.Parameters(ConcurrencyParamName).Value Is DBNull.Value) Then
+                Return Nothing
+            Else
+                Return DirectCast(command.Parameters(ConcurrencyParamName).Value, Byte())
+            End If
         End Function
         ''' <summary>
         ''' Gets the business base id (ID - integer) from the data reader.
@@ -97,7 +101,11 @@ Namespace REMI.Dal
         ''' <returns></returns>
         ''' <remarks></remarks>
         Friend Shared Function GetBusinessBaseId(ByVal command As SqlCommand) As Integer
-            Return CInt(command.Parameters(IDParamName).Value)
+            If (command.Parameters(ConcurrencyParamName).Value Is DBNull.Value) Then
+                Return Nothing
+            Else
+                Return CInt(command.Parameters(IDParamName).Value)
+            End If
         End Function
 
         Public Shared Function HasColumn(dr As IDataRecord, columnName As String) As Boolean

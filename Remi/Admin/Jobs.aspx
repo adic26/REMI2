@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" Inherits="Remi.Admin_TestStages" Title="Jobs" Codebehind="Jobs.aspx.vb" %>
+﻿<%@ Page Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" Inherits="Remi.Admin_TestStages" Title="Jobs" Codebehind="Jobs.aspx.vb" ValidateRequest="false" %>
 <%@ Register Assembly="System.Web.Ajax" Namespace="System.Web.UI" TagPrefix="asp" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="Notifications" TagPrefix="uc1" %>
@@ -77,6 +77,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <uc1:Notifications ID="notMain" runat="server" EnableViewState="False" />
+    <asp:HiddenField ID="hdnJobID" runat="server" Value="" />
     <asp:Panel ID="pnlViewAllTestStages" runat="server" Wrap="False" Width="1000">
         <br />
         <table style="width: 65%;">
@@ -157,8 +158,16 @@
         <div style="float:left">
             <asp:Accordion ID="accTestStages" runat="server" CssClass="Accordion" HeaderCssClass="AccordionHeader"
                 ContentCssClass="AccordionContent" FadeTransitions="true" TransitionDuration="250"
-                FramesPerSecond="40" RequireOpenedPane="false" AutoSize="None" Width="470px">
+                FramesPerSecond="40" RequireOpenedPane="false" AutoSize="None" Width="800px" SelectedIndex="1">
                 <Panes>
+                    <asp:AccordionPane ID="acpBatches" runat="server">
+                        <Header>
+                            <h2>Batches</h2>
+                        </Header>
+                        <Content>
+                            <uc3:BatchSelectControl ID="bscJobs" runat="server" AllowPaging="False" AllowSorting="True" PageSize="50" EmptyDataText="There were no batches found for this selection." DisplayMode="JobDisplay" />
+                        </Content>
+                    </asp:AccordionPane>
                     <asp:AccordionPane ID="acpTestStages" runat="server">
                         <Header>
                             <h2><asp:Label ID="lblViewAllTitle" runat="server"></asp:Label></h2>
@@ -221,21 +230,73 @@
                             <rs:RequestSetup ID="JobEnvSetup" runat="server" Visible="true" />
                         </Content>
                     </asp:AccordionPane>
-                </Panes>
-            </asp:Accordion>
-        </div>
-
-        <div style="float:right">
-            <asp:Accordion ID="accJobBatches" runat="server" CssClass="Accordion" HeaderCssClass="AccordionHeader"
-                ContentCssClass="AccordionContent" FadeTransitions="true" TransitionDuration="250"
-                FramesPerSecond="40" RequireOpenedPane="false" AutoSize="None" Width="500px">
-                <Panes>
-                    <asp:AccordionPane ID="acpBatches" runat="server">
+                    <asp:AccordionPane runat="server" ID="acpOrientation">
                         <Header>
-                            <h2>Batches BY Job</h2>
+                            <h2><asp:Label runat="server" ID="lblOrientation" Text="Orientations"></asp:Label></h2>
                         </Header>
                         <Content>
-                            <uc3:BatchSelectControl ID="bscJobs" runat="server" AllowPaging="False" AllowSorting="True" PageSize="50" EmptyDataText="There were no batches found for this selection." DisplayMode="JobDisplay" />
+                            <asp:GridView runat="server" ShowFooter="true" ID="gdvOrientations" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="ID" AutoGenerateEditButton="true" OnRowEditing="gdvOrientations_OnRowEditing" OnRowCancelingEdit="gdvOrientations_OnRowCancelingEdit" OnRowUpdating="gdvOrientations_RowUpdating">
+                                <Columns>
+                                    <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="true" SortExpression="ID" />
+                                    <asp:TemplateField HeaderText="Name">
+                                        <ItemTemplate>
+                                            <asp:Label runat="server" ID="lblName" Text='<%# Eval("Name")%>' Visible="true" />
+                                            <asp:TextBox runat="server" ID="txtName" Text='<%# Eval("Name")%>' Visible="false" EnableViewState="true" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Product Type">
+                                        <ItemTemplate>
+                                            <asp:HiddenField runat="server" ID="hdnProductTypeID" Value='<%# Eval("ProductTypeID")%>' />
+                                            <asp:Label runat="server" ID="lblProductType" Text='<%# Eval("ProductType")%>' Visible="true" />
+                                            <asp:DropDownList runat="server" ID="ddlProductTypes" DataTextField="LookupType" DataValueField="LookupID" Visible="false"></asp:DropDownList>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="NumUnits" HeaderText="NumUnits" ReadOnly="true" SortExpression="NumUnits" />
+                                    <asp:BoundField DataField="NumDrops" HeaderText="NumDrops" ReadOnly="true" SortExpression="NumDrops" />
+                                    <asp:TemplateField HeaderText="Description">
+                                        <ItemTemplate>
+                                            <asp:Label runat="server" ID="lblDescription" Text='<%# Eval("Description")%>' Visible="true" />
+                                            <asp:TextBox runat="server" ID="txtDescription" Text='<%# Eval("Description")%>' Visible="false" EnableViewState="true" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="CreatedDate" HeaderText="CreatedDate" ReadOnly="true" SortExpression="CreatedDate" />
+                                    <asp:TemplateField HeaderText="Active" SortExpression="IsActive">
+                                        <ItemTemplate>
+                                            <asp:CheckBox runat="server" ID="chkActive" Checked='<%# Eval("IsActive")%>' Enabled="false" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Definition" SortExpression="">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="lbtnXML" runat="server" ToolTip="Orientation Defintion" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="XML" CommandArgument='<%# Eval("Definition") %>'></asp:LinkButton>
+                                        </ItemTemplate>
+                                        <FooterStyle HorizontalAlign="Right" />
+                                        <FooterTemplate>
+                                         <asp:Button ID="btnAddOrientation" CssClass="buttonSmall" runat="server" Text="Add Orientation" OnClick="btnAddOrientation_Click" CausesValidation="true" />
+                                        </FooterTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                            <br /><br />
+                            <asp:Panel runat="server" ID="pnlOrientationAdd" Visible="false">
+                                <table>
+                                    <tr>
+                                        <td class="HorizTableFirstcolumn">Name:</td>
+                                        <td class="HorizTableSecondColumn"><asp:TextBox runat="server" ID="txtOrientationName" MaxLength="150" Width="250px" Rows="3" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="HorizTableFirstcolumn">Product Type:</td>
+                                        <td class="HorizTableSecondColumn"><asp:DropDownList runat="server" ID="ddlPT" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="HorizTableFirstcolumn">Description</td>
+                                        <td class="HorizTableSecondColumn"><asp:TextBox runat="server" ID="txtOrientationDescription" MaxLength="250" Width="250px" Rows="3" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="HorizTableFirstcolumn">Definition</td>
+                                        <td class="HorizTableSecondColumn"><asp:TextBox runat="server" ID="txtDefinition" TextMode="MultiLine" Rows="40" Columns="60"></asp:TextBox></td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
                         </Content>
                     </asp:AccordionPane>
                 </Panes>
@@ -327,7 +388,7 @@
                                         <asp:Button ID="btnRemoveTLType" runat="server" Text="<- Remove" class="button"/>
                                     </td>
                                     <td>
-                                        <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="340px" Height="250px" DataTextField="Value" DataValueField="Key" ></asp:ListBox>
+                                        <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="340px" Height="250px" DataTextField="Name" DataValueField="ID" ></asp:ListBox>
                                     </td>
                                 </tr>
                             </table>

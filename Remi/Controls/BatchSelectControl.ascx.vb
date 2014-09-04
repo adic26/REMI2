@@ -4,6 +4,7 @@ Imports Remi.Contracts
 
 Partial Class Controls_BatchSelectControl
     Inherits System.Web.UI.UserControl
+
     Private _Datasource As IDataSource
     Private _DataSourceID As String
     Private _dt As DataTable
@@ -14,6 +15,7 @@ Partial Class Controls_BatchSelectControl
     Private _allowSorting As Boolean
     Private _autoGenerateEditButton As Boolean
     Private _pageSize As Int32
+    Private _isAdmin As Boolean
 
     Public Enum BatchSelectControlMode
         IncomingMode = 1
@@ -137,6 +139,7 @@ Partial Class Controls_BatchSelectControl
             Return _DataSourceID
         End Get
         Set(value As String)
+            _isAdmin = UserManager.GetCurrentUser.IsAdmin
             _DataSourceID = value
             grdBatches.EmptyDataText = EmptyDataText
             grdBatches.DataSourceID = _DataSourceID
@@ -169,6 +172,7 @@ Partial Class Controls_BatchSelectControl
         End Get
         Set(ByVal value As IDataSource)
             _Datasource = value
+            _isAdmin = UserManager.GetCurrentUser.IsAdmin
             grdBatches.EmptyDataText = EmptyDataText
             grdBatches.DataSource = Datasource
             grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
@@ -526,13 +530,14 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
         End Select
 
-        If (grdBatches.Columns(GridviewColumNames.Move).Visible And Not (UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsLabTechOpsManager Or UserManager.GetCurrentUser.IsLabTestCoordinator)) Then
+        If (grdBatches.Columns(GridviewColumNames.Move).Visible And Not (_isAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsLabTechOpsManager Or UserManager.GetCurrentUser.IsLabTestCoordinator)) Then
             grdBatches.Columns(GridviewColumNames.Move).Visible = False
         End If
     End Sub
 
     Public Sub SetBatches(ByVal dt As DataTable)
         _dt = dt
+        _isAdmin = UserManager.GetCurrentUser.IsAdmin
         grdBatches.EmptyDataText = EmptyDataText
         grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
         grdBatches.DataSource = dt
@@ -542,6 +547,7 @@ Partial Class Controls_BatchSelectControl
 
     Public Sub SetBatches(ByVal bColl As BatchCollection)
         _bColl = bColl
+        _isAdmin = UserManager.GetCurrentUser.IsAdmin
         grdBatches.EmptyDataText = EmptyDataText
         grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
         grdBatches.DataSource = bColl
@@ -551,6 +557,7 @@ Partial Class Controls_BatchSelectControl
 
     Public Sub SetBatches(ByVal bColl As List(Of IBatch))
         grdBatches.EmptyDataText = EmptyDataText
+        _isAdmin = UserManager.GetCurrentUser.IsAdmin
         grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
         grdBatches.DataSource = bColl
         grdBatches.DataBind()
@@ -683,7 +690,7 @@ Partial Class Controls_BatchSelectControl
             Dim lblJobName As Label = DirectCast(e.Row.FindControl("lblJobName"), Label)
             Dim hypBatchJobLink As HyperLink = DirectCast(e.Row.FindControl("hypBatchJobLink"), HyperLink)
 
-            If (UserManager.GetCurrentUser.IsAdmin) Then
+            If (_isAdmin) Then
                 lblJobName.Visible = False
                 hypBatchJobLink.Visible = True
             Else
@@ -696,58 +703,57 @@ Partial Class Controls_BatchSelectControl
     Protected Sub grdBatches_RowDataCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Dim index As Integer = 0
 
-        If e.CommandName = "Up" Then
-            index = Convert.ToInt32(e.CommandArgument)
+        Select Case e.CommandName
+            Case "Up"
+                index = Convert.ToInt32(e.CommandArgument)
 
-            If (index - 1 > -1 And grdBatches.DataSource.GetType.Name = "BatchCollection") Then
-                Dim list As List(Of IBatch) = DirectCast(grdBatches.DataSource, List(Of IBatch))
-                Dim item As IBatch = list(index)
-                Dim item2 As IBatch = list(index - 1)
+                If (index - 1 > -1 And grdBatches.DataSource.GetType.Name = "BatchCollection") Then
+                    Dim list As List(Of IBatch) = DirectCast(grdBatches.DataSource, List(Of IBatch))
+                    Dim item As IBatch = list(index)
+                    Dim item2 As IBatch = list(index - 1)
 
-                list.RemoveAt(index)
-                list.Insert(index - 1, item)
+                    list.RemoveAt(index)
+                    list.Insert(index - 1, item)
 
-                grdBatches.DataSource = list
-                grdBatches.DataBind()
+                    grdBatches.DataSource = list
+                    grdBatches.DataBind()
 
-                Dim instance = New Remi.Dal.Entities().Instance()
-                Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.QRANumber).FirstOrDefault()
-                batch.Order = list.IndexOf(item) + 1
-                batch.LastUser = UserManager.GetCurrentValidUserLDAPName
+                    Dim instance = New Remi.Dal.Entities().Instance()
+                    Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.QRANumber).FirstOrDefault()
+                    batch.Order = list.IndexOf(item) + 1
+                    batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.QRANumber).FirstOrDefault()
-                batch2.Order = list.IndexOf(item2) + 1
-                batch.LastUser = UserManager.GetCurrentValidUserLDAPName
+                    Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.QRANumber).FirstOrDefault()
+                    batch2.Order = list.IndexOf(item2) + 1
+                    batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                instance.SaveChanges()
-            End If
-        End If
+                    instance.SaveChanges()
+                End If
+            Case "Down"
+                index = Convert.ToInt32(e.CommandArgument)
 
-        If e.CommandName = "Down" Then
-            index = Convert.ToInt32(e.CommandArgument)
+                If (index + 1 < grdBatches.Rows.Count And grdBatches.DataSource.GetType.Name = "BatchCollection") Then
+                    Dim list As List(Of IBatch) = DirectCast(grdBatches.DataSource, List(Of IBatch))
+                    Dim item As IBatch = list(index)
+                    Dim item2 As IBatch = list(index + 1)
 
-            If (index + 1 < grdBatches.Rows.Count And grdBatches.DataSource.GetType.Name = "BatchCollection") Then
-                Dim list As List(Of IBatch) = DirectCast(grdBatches.DataSource, List(Of IBatch))
-                Dim item As IBatch = list(index)
-                Dim item2 As IBatch = list(index + 1)
+                    list.RemoveAt(index)
+                    list.Insert(index + 1, item)
 
-                list.RemoveAt(index)
-                list.Insert(index + 1, item)
+                    grdBatches.DataSource = list
+                    grdBatches.DataBind()
 
-                grdBatches.DataSource = list
-                grdBatches.DataBind()
+                    Dim instance = New Remi.Dal.Entities().Instance()
+                    Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.QRANumber).FirstOrDefault()
+                    batch.Order = list.IndexOf(item) + 1
+                    batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                Dim instance = New Remi.Dal.Entities().Instance()
-                Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.QRANumber).FirstOrDefault()
-                batch.Order = list.IndexOf(item) + 1
-                batch.LastUser = UserManager.GetCurrentValidUserLDAPName
+                    Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.QRANumber).FirstOrDefault()
+                    batch2.Order = list.IndexOf(item2) + 1
+                    batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.QRANumber).FirstOrDefault()
-                batch2.Order = list.IndexOf(item2) + 1
-                batch.LastUser = UserManager.GetCurrentValidUserLDAPName
-
-                instance.SaveChanges()
-            End If
-        End If
+                    instance.SaveChanges()
+                End If
+        End Select
     End Sub
 End Class

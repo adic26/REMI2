@@ -76,9 +76,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
@@ -243,10 +243,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://rem002cnc/webservice/RemiAPI.asmx">
+    <WebReferenceUrl Include="http://rem002ykf/webservice/RemiAPI.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\remiAPI\</RelPath>
-      <UpdateFromURL>http://rem002cnc/webservice/RemiAPI.asmx</UpdateFromURL>
+      <UpdateFromURL>http://rem002ykf/webservice/RemiAPI.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

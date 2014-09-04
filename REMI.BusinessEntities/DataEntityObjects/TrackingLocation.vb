@@ -7,6 +7,7 @@ Namespace REMI.BusinessEntities
     ''' <para>The tracking location class represents any location where a tracking gun is present.</para>
     ''' </summary>
     ''' <remarks></remarks>
+    <Serializable()> _
     Public Class TrackingLocation
         Inherits LoggedItemBase
 

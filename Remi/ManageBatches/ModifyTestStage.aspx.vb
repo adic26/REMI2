@@ -46,7 +46,7 @@ Partial Class ManageBatches_ModifyTestStage
     End Sub
 
     Protected Sub SetupTestStageDropDownList(ByVal b As Batch)
-        ddlSelection.DataSource = TestStageManager.GetTestStagesByBatch(b.ID)
+        ddlSelection.DataSource = TestStageManager.GetTestStagesNameByBatch(b.ID)
         ddlSelection.DataBind()
         lblCurrentTestStage.Text = b.TestStageName
     End Sub

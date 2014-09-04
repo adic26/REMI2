@@ -761,6 +761,15 @@ Partial Public Class ScanForInfo_Default
     Protected WithEvents btnEditStressing As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
+    '''lblOrientation control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblOrientation As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''setupStressing control.
     '''</summary>
     '''<remarks>

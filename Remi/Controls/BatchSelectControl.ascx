@@ -16,12 +16,12 @@
         <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="ID" Visible="True" />
         <asp:TemplateField HeaderText="Request" SortExpression="QRANumber">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="true" ID="hypQRANumber" runat="server" NavigateUrl='<%# Eval("BatchInfoLink") %>'
+                <asp:HyperLink EnableViewState="true" ID="hypQRANumber" runat="server" NavigateUrl='<%# Eval("BatchInfoLink") %>' Target="_blank" 
                     Text='<%# Eval("QRANumber") %>' ToolTip='<%# "Click to view the information page for this batch" %>'></asp:HyperLink></ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Product" SortExpression="ProductGroup">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="true" ID="hypBatchProductLink" runat="server" NavigateUrl='<%# Eval("ProductGroupLink") %>'
+                <asp:HyperLink EnableViewState="true" ID="hypBatchProductLink" runat="server" NavigateUrl='<%# Eval("ProductGroupLink") %>' Target="_blank" 
                     Text='<%# Eval("ProductGroup") %>' ToolTip='<%# "Click to view the information page for this product" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
@@ -45,7 +45,7 @@
         <asp:TemplateField HeaderText="Job" SortExpression="JobName">
             <ItemTemplate>
                 <asp:Label EnableViewState="true" ID="lblJobName" runat="server" Text='<%# Eval("JobName") %>' Visible="false"></asp:Label>
-                <asp:HyperLink EnableViewState="true" ID="hypBatchJobLink" runat="server" NavigateUrl='<%# Eval("JobLink") %>'
+                <asp:HyperLink EnableViewState="true" ID="hypBatchJobLink" runat="server" NavigateUrl='<%# Eval("JobLink") %>' Target="_blank" 
                     Text='<%# Eval("JobName") %>' ToolTip='<%# "Click to view the information for this job" %>' Visible="false"></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
@@ -98,25 +98,25 @@
         </asp:TemplateField>      
         <asp:TemplateField HeaderText="WI">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="true" ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("JobWILocation") %>'
+                <asp:HyperLink EnableViewState="true" ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("JobWILocation") %>' Target="_blank" 
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the WI for the job for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="TRS">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="true" ID="hypTRSLink" runat="server" NavigateUrl='<%# Eval("TRSLink") %>'
+                <asp:HyperLink EnableViewState="true" ID="hypTRSLink" runat="server" NavigateUrl='<%# Eval("TRSLink") %>' Target="_blank" 
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the request page for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="RQ Results">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="true" ID="hypRelabLink" runat="server" NavigateUrl='<%# Eval("RelabResultLink") %>'
+                <asp:HyperLink EnableViewState="true" ID="hypRelabLink" runat="server" NavigateUrl='<%# Eval("RelabResultLink") %>' Target="_blank" 
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the Results page for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Info">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="true" ID="hypBatchInfoLink" runat="server" NavigateUrl='<%# Eval("BatchInfoLink") %>'
+                <asp:HyperLink EnableViewState="true" ID="hypBatchInfoLink" runat="server" NavigateUrl='<%# Eval("BatchInfoLink") %>' Target="_blank" 
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the information page for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>

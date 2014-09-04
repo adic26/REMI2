@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master"  AutoEventWireup="false" Inherits="Remi.Admin_TrackingLocationTypes" Codebehind="TrackingLocationTypes.aspx.vb" %>
+<%@ Page Title="Tracking Location Types" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master"  AutoEventWireup="false" Inherits="Remi.Admin_TrackingLocationTypes" Codebehind="TrackingLocationTypes.aspx.vb" MaintainScrollPositionOnPostback="true" %>
 <%@ Register src="../Controls/Notifications.ascx" tagname="Notifications" tagprefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
@@ -54,7 +54,12 @@
         <ul>
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgViewTrackingLocations" runat="server" />
-                <asp:LinkButton ID="lnkViewTrackingLocations" runat="Server" Text="Refresh" /></li>
+                <asp:LinkButton ID="lnkViewTrackingLocations" runat="Server" Text="Refresh" />
+            </li>
+            <li>
+                <asp:Image ImageUrl="../Design/ruler_add.png" ID="imgAddTT" runat="server" />
+                <asp:LinkButton ID="lnkAddTT" runat="Server" Text="Add New Type" />
+            </li>
         </ul>
     </asp:Panel>
     <asp:Panel ID="pnlLeftMenuActions" Visible="True" runat="server">
@@ -70,7 +75,7 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" Runat="Server">
-  
+    <uc1:Notifications ID="notMain" runat="server" />
     <asp:Panel ID="pnlViewAll" runat="server">
         <asp:GridView ID="gvTestStationTypes" runat="server" AutoGenerateColumns="False" CssClass="FilterableTable" DataKeyNames="ID" onrowcommand="gvTestStationTypes_RowCommand" 
         DataSourceID="odsTrackingLocationTypes">
@@ -107,8 +112,9 @@
             </DeleteParameters>
         </asp:ObjectDataSource>
         
-    </asp:Panel><uc1:Notifications ID="notMain" runat="server" />
-    <asp:Panel ID="pnlAddEdit" runat="server">
+    </asp:Panel>
+    <asp:Panel ID="pnlAddEdit" runat="server" Visible="false">
+        <asp:HiddenField ID="hdnEditID" Value="" runat="server" />
             <h2><asp:Label ID="lblAddEditTitle" runat="server" Text="Add a new Tracking Location Type"></asp:Label></h2>
             <table style="width:73%;">
             <tr>

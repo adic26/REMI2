@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://go/remi/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://go/remi/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://go/remi/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://go/remi/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://go/remi/">
       <s:import namespace="http://www.w3.org/2001/XMLSchema" />
@@ -384,6 +384,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="TestStage" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="Owner" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Degradation" type="s:decimal" />
               <s:element minOccurs="0" maxOccurs="1" name="Trainee" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="TestType" type="tns:TestType" />
@@ -557,6 +558,7 @@
           <s:enumeration value="RequestPurpose" />
           <s:enumeration value="Observations" />
           <s:enumeration value="Priority" />
+          <s:enumeration value="RequestType" />
         </s:restriction>
       </s:simpleType>
       <s:element name="GetLookupIDResponse">
@@ -803,6 +805,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="job" type="tns:Job" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1098,6 +1101,50 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetTestingSummary">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestingSummaryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestingSummaryResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStressingSummary">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStressingSummaryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStressingSummaryResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="BatchStartedBeforeAssigned">
         <s:complexType>
           <s:sequence>
@@ -1306,6 +1353,41 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
+      <s:element name="GetBatchNotifications">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchNotificationsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBatchNotificationsResult" type="tns:ArrayOfNotification" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchComments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchCommentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBatchCommentsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetHardwareRevision">
         <s:complexType>
           <s:sequence>
@@ -1779,6 +1861,7 @@
         </s:complexType>
       </s:element>
       <s:element name="BatchView" nillable="true" type="tns:BatchView" />
+      <s:element name="ArrayOfNotification" nillable="true" type="tns:ArrayOfNotification" />
       <s:element name="ArrayOfTestStageResultOverview" nillable="true" type="tns:ArrayOfTestStageResultOverview" />
       <s:element name="ScanReturnData" nillable="true" type="tns:ScanReturnData" />
       <s:element name="IncomingAppBatchData" type="tns:IncomingAppBatchData" />
@@ -2096,6 +2179,18 @@
   <wsdl:message name="GetProductSettingByProductIDSoapOut">
     <wsdl:part name="parameters" element="tns:GetProductSettingByProductIDResponse" />
   </wsdl:message>
+  <wsdl:message name="GetTestingSummarySoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestingSummary" />
+  </wsdl:message>
+  <wsdl:message name="GetTestingSummarySoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestingSummaryResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStressingSummarySoapIn">
+    <wsdl:part name="parameters" element="tns:GetStressingSummary" />
+  </wsdl:message>
+  <wsdl:message name="GetStressingSummarySoapOut">
+    <wsdl:part name="parameters" element="tns:GetStressingSummaryResponse" />
+  </wsdl:message>
   <wsdl:message name="BatchStartedBeforeAssignedSoapIn">
     <wsdl:part name="parameters" element="tns:BatchStartedBeforeAssigned" />
   </wsdl:message>
@@ -2137,6 +2232,18 @@
   </wsdl:message>
   <wsdl:message name="GetBatchSoapOut">
     <wsdl:part name="parameters" element="tns:GetBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNotificationsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBatchNotifications" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNotificationsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBatchNotificationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchCommentsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBatchComments" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchCommentsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBatchCommentsResponse" />
   </wsdl:message>
   <wsdl:message name="GetHardwareRevisionSoapIn">
     <wsdl:part name="parameters" element="tns:GetHardwareRevision" />
@@ -2578,6 +2685,20 @@
   <wsdl:message name="GetProductSettingByProductIDHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
+  <wsdl:message name="GetTestingSummaryHttpGetIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestingSummaryHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetStressingSummaryHttpGetIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStressingSummaryHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
   <wsdl:message name="BatchStartedBeforeAssignedHttpGetIn">
     <wsdl:part name="qraNumber" type="s:string" />
   </wsdl:message>
@@ -2615,6 +2736,18 @@
   </wsdl:message>
   <wsdl:message name="GetBatchHttpGetOut">
     <wsdl:part name="Body" element="tns:BatchView" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNotificationsHttpGetIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNotificationsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfNotification" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchCommentsHttpGetIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchCommentsHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetHardwareRevisionHttpGetIn">
     <wsdl:part name="QRANumber" type="s:string" />
@@ -3078,6 +3211,20 @@
   <wsdl:message name="GetProductSettingByProductIDHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
+  <wsdl:message name="GetTestingSummaryHttpPostIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestingSummaryHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetStressingSummaryHttpPostIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStressingSummaryHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
   <wsdl:message name="BatchStartedBeforeAssignedHttpPostIn">
     <wsdl:part name="qraNumber" type="s:string" />
   </wsdl:message>
@@ -3115,6 +3262,18 @@
   </wsdl:message>
   <wsdl:message name="GetBatchHttpPostOut">
     <wsdl:part name="Body" element="tns:BatchView" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNotificationsHttpPostIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNotificationsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfNotification" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchCommentsHttpPostIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchCommentsHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetHardwareRevisionHttpPostIn">
     <wsdl:part name="QRANumber" type="s:string" />
@@ -3519,6 +3678,16 @@
       <wsdl:input message="tns:GetProductSettingByProductIDSoapIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTestingSummary">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestingSummarySoapIn" />
+      <wsdl:output message="tns:GetTestingSummarySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStressingSummary">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Stressing Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetStressingSummarySoapIn" />
+      <wsdl:output message="tns:GetStressingSummarySoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned in TRS.</wsdl:documentation>
       <wsdl:input message="tns:BatchStartedBeforeAssignedSoapIn" />
@@ -3553,6 +3722,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a qra number this method will return the batch information.</wsdl:documentation>
       <wsdl:input message="tns:GetBatchSoapIn" />
       <wsdl:output message="tns:GetBatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNotifications">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Request Notifications</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchNotificationsSoapIn" />
+      <wsdl:output message="tns:GetBatchNotificationsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchComments">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Request Comments</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchCommentsSoapIn" />
+      <wsdl:output message="tns:GetBatchCommentsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetHardwareRevision">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a qra number this method will return the Hardware Revision of a batch.</wsdl:documentation>
@@ -3911,6 +4090,16 @@
       <wsdl:input message="tns:GetProductSettingByProductIDHttpGetIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTestingSummary">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestingSummaryHttpGetIn" />
+      <wsdl:output message="tns:GetTestingSummaryHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStressingSummary">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Stressing Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetStressingSummaryHttpGetIn" />
+      <wsdl:output message="tns:GetStressingSummaryHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned in TRS.</wsdl:documentation>
       <wsdl:input message="tns:BatchStartedBeforeAssignedHttpGetIn" />
@@ -3945,6 +4134,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a qra number this method will return the batch information.</wsdl:documentation>
       <wsdl:input message="tns:GetBatchHttpGetIn" />
       <wsdl:output message="tns:GetBatchHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNotifications">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Request Notifications</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchNotificationsHttpGetIn" />
+      <wsdl:output message="tns:GetBatchNotificationsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchComments">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Request Comments</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchCommentsHttpGetIn" />
+      <wsdl:output message="tns:GetBatchCommentsHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetHardwareRevision">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a qra number this method will return the Hardware Revision of a batch.</wsdl:documentation>
@@ -4298,6 +4497,16 @@
       <wsdl:input message="tns:GetProductSettingByProductIDHttpPostIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDHttpPostOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTestingSummary">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestingSummaryHttpPostIn" />
+      <wsdl:output message="tns:GetTestingSummaryHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStressingSummary">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Stressing Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetStressingSummaryHttpPostIn" />
+      <wsdl:output message="tns:GetStressingSummaryHttpPostOut" />
+    </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned in TRS.</wsdl:documentation>
       <wsdl:input message="tns:BatchStartedBeforeAssignedHttpPostIn" />
@@ -4332,6 +4541,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a qra number this method will return the batch information.</wsdl:documentation>
       <wsdl:input message="tns:GetBatchHttpPostIn" />
       <wsdl:output message="tns:GetBatchHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNotifications">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Request Notifications</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchNotificationsHttpPostIn" />
+      <wsdl:output message="tns:GetBatchNotificationsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchComments">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Request Comments</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchCommentsHttpPostIn" />
+      <wsdl:output message="tns:GetBatchCommentsHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetHardwareRevision">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a qra number this method will return the Hardware Revision of a batch.</wsdl:documentation>
@@ -4899,6 +5118,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestingSummary">
+      <soap:operation soapAction="http://go/remi/GetTestingSummary" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStressingSummary">
+      <soap:operation soapAction="http://go/remi/GetStressingSummary" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
       <soap:operation soapAction="http://go/remi/BatchStartedBeforeAssigned" style="document" />
       <wsdl:input>
@@ -4955,6 +5192,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetBatch">
       <soap:operation soapAction="http://go/remi/GetBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNotifications">
+      <soap:operation soapAction="http://go/remi/GetBatchNotifications" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchComments">
+      <soap:operation soapAction="http://go/remi/GetBatchComments" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5613,6 +5868,24 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestingSummary">
+      <soap12:operation soapAction="http://go/remi/GetTestingSummary" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStressingSummary">
+      <soap12:operation soapAction="http://go/remi/GetStressingSummary" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
       <soap12:operation soapAction="http://go/remi/BatchStartedBeforeAssigned" style="document" />
       <wsdl:input>
@@ -5669,6 +5942,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetBatch">
       <soap12:operation soapAction="http://go/remi/GetBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNotifications">
+      <soap12:operation soapAction="http://go/remi/GetBatchNotifications" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchComments">
+      <soap12:operation soapAction="http://go/remi/GetBatchComments" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6318,6 +6609,24 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestingSummary">
+      <http:operation location="/GetTestingSummary" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStressingSummary">
+      <http:operation location="/GetStressingSummary" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
       <http:operation location="/BatchStartedBeforeAssigned" />
       <wsdl:input>
@@ -6374,6 +6683,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetBatch">
       <http:operation location="/GetBatch" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNotifications">
+      <http:operation location="/GetBatchNotifications" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchComments">
+      <http:operation location="/GetBatchComments" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -7012,6 +7339,24 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestingSummary">
+      <http:operation location="/GetTestingSummary" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStressingSummary">
+      <http:operation location="/GetStressingSummary" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
       <http:operation location="/BatchStartedBeforeAssigned" />
       <wsdl:input>
@@ -7068,6 +7413,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetBatch">
       <http:operation location="/GetBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNotifications">
+      <http:operation location="/GetBatchNotifications" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchComments">
+      <http:operation location="/GetBatchComments" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -7247,16 +7610,16 @@
   </wsdl:binding>
   <wsdl:service name="RemiAPI">
     <wsdl:port name="RemiAPISoap" binding="tns:RemiAPISoap">
-      <soap:address location="http://rem002cnc/webservice/RemiAPI.asmx" />
+      <soap:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
     </wsdl:port>
     <wsdl:port name="RemiAPISoap12" binding="tns:RemiAPISoap12">
-      <soap12:address location="http://rem002cnc/webservice/RemiAPI.asmx" />
+      <soap12:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
     </wsdl:port>
     <wsdl:port name="RemiAPIHttpGet" binding="tns:RemiAPIHttpGet">
-      <http:address location="http://rem002cnc/webservice/RemiAPI.asmx" />
+      <http:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
     </wsdl:port>
     <wsdl:port name="RemiAPIHttpPost" binding="tns:RemiAPIHttpPost">
-      <http:address location="http://rem002cnc/webservice/RemiAPI.asmx" />
+      <http:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

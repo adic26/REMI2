@@ -38,9 +38,10 @@ Namespace REMI.Dal
                         myReader.Close()
                     End Using
                 End Using
-                If myTest IsNot Nothing Then
-                    myTest.TrackingLocationTypes = GetApplicableTLTypes(myTest.ID, myConnection)
-                End If
+
+                'If myTest IsNot Nothing Then
+                '    myTest.TrackingLocationTypes = GetApplicableTLTypes(myTest.ID, myConnection)
+                'End If
             End Using
             Return myTest
         End Function
@@ -68,9 +69,9 @@ Namespace REMI.Dal
                         myReader.Close()
                     End Using
                 End Using
-                If myTest IsNot Nothing Then
-                    myTest.TrackingLocationTypes = GetApplicableTLTypes(myTest.ID, myConnection)
-                End If
+                'If myTest IsNot Nothing Then
+                '    myTest.TrackingLocationTypes = GetApplicableTLTypes(myTest.ID, myConnection)
+                'End If
             End Using
             Return myTest
         End Function
@@ -126,14 +127,20 @@ Namespace REMI.Dal
                         End If
                     End Using
                 End Using
-                Dim tlList As List(Of TLType) = GetApplicableTLTypesByTestType(TestType, myConnection)
-                For Each t As Test In tempList
-                    For Each tl As TLType In tlList
-                        If t.ID = tl.testId Then
-                            t.TrackingLocationTypes.Add(tl.TLTypeId, tl.TLName)
-                        End If
-                    Next
-                Next
+
+                '    Dim tlList As List(Of TLType) = GetApplicableTLTypesByTestType(TestType, myConnection)
+
+                '    For Each t As Test In tempList
+                '        For Each tl As TLType In tlList
+                '            If t.ID = tl.testId Then
+                '                Dim tlt As New TrackingLocationType
+                '                tlt.ID = tl.TLTypeId
+                '                tlt.Name = tl.TLName
+
+                '                t.TrackingLocationTypes.Add(tlt)
+                '            End If
+                '        Next
+                '    Next
             End Using
 
             Return tempList
@@ -163,14 +170,14 @@ Namespace REMI.Dal
                         myReader.Close()
                     End Using
                 End Using
-                For Each t As Test In tempList
-                    t.TrackingLocationTypes = GetApplicableTLTypes(t.ID, myConnection)
-                Next
+                'For Each t As Test In tempList
+                '    t.TrackingLocationTypes = GetApplicableTLTypes(t.ID, myConnection)
+                'Next
             End Using
             Return tempList
         End Function
 
-        Public Shared Function AddApplicableTrackingLocationType(ByVal testID As Integer, ByVal trackingLocationTypeID As Integer) As Boolean
+        Public Shared Function AddApplicableTrackingLocationType(ByVal testID As Integer, ByVal trackingLocationType As TrackingLocationType) As Boolean
             Dim Result As Integer = 0
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
@@ -178,7 +185,7 @@ Namespace REMI.Dal
                     myCommand.CommandType = CommandType.StoredProcedure
 
                     myCommand.Parameters.AddWithValue("@TestID", testID)
-                    myCommand.Parameters.AddWithValue("@TrackingLocationTypeID", trackingLocationTypeID)
+                    myCommand.Parameters.AddWithValue("@TrackingLocationTypeID", trackingLocationType.ID)
 
                     MyConnection.Open()
                     Result = myCommand.ExecuteNonQuery()
@@ -192,7 +199,7 @@ Namespace REMI.Dal
             End If
             Return Result > 0
         End Function
-        Public Shared Function DeleteApplicableTrackingLocationType(ByVal testID As Integer, ByVal trackingLocationTypeID As Integer) As Boolean
+        Public Shared Function DeleteApplicableTrackingLocationType(ByVal testID As Integer, ByVal trackingLocationType As TrackingLocationType) As Boolean
             Dim Result As Integer = 0
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
@@ -200,7 +207,7 @@ Namespace REMI.Dal
                     myCommand.CommandType = CommandType.StoredProcedure
 
                     myCommand.Parameters.AddWithValue("@TestID", testID)
-                    myCommand.Parameters.AddWithValue("@TrackingLocationTypeID", trackingLocationTypeID)
+                    myCommand.Parameters.AddWithValue("@TrackingLocationTypeID", trackingLocationType.ID)
 
                     MyConnection.Open()
                     Result = myCommand.ExecuteNonQuery()
@@ -214,79 +221,104 @@ Namespace REMI.Dal
             End If
             Return Result > 0
         End Function
-        Public Shared Function GetApplicableTLTypes(ByVal testId As Integer) As SerializableDictionary(Of Integer, String)
-            Dim tempList As New SerializableDictionary(Of Integer, String)
+        'Public Shared Function GetApplicableTLTypes(ByVal testId As Integer) As TrackingLocationTypeCollection
+        '    Dim tempList As New TrackingLocationTypeCollection
+        '    Using myconnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+        '        Using myCommand As New SqlCommand("remispTestSelectApplicableTrackingLocationTypes", myconnection)
+        '            myCommand.CommandType = CommandType.StoredProcedure
+        '            myCommand.Parameters.AddWithValue("@testid", testId)
+
+        '            myconnection.Open()
+        '            Using myReader As SqlDataReader = myCommand.ExecuteReader()
+        '                If myReader.HasRows Then
+        '                    While myReader.Read()
+        '                        Dim tlt As New TrackingLocationType
+        '                        tlt.ID = myReader.GetInt32(0)
+        '                        tlt.Name = myReader.GetString(1)
+
+        '                        tempList.Add(tlt)
+        '                    End While
+        '                End If
+
+        '            End Using
+        '        End Using
+        '    End Using
+
+        '    Return tempList
+        'End Function
+
+        Public Shared Function GetApplicableTLTypes(ByVal testID As Integer) As TrackingLocationTypeCollection
+            Dim tempList As New TrackingLocationTypeCollection
+
             Using myconnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestSelectApplicableTrackingLocationTypes", myconnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@testid", testId)
-
+                    myCommand.Parameters.AddWithValue("@testID", testID)
                     myconnection.Open()
+
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then
-
                             While myReader.Read()
-                                tempList.Add(myReader.GetInt32(0), myReader.GetString(1))
+                                Dim tlt As New TrackingLocationType
+                                tlt.ID = myReader.GetInt32(0)
+                                tlt.Name = myReader.GetString(1)
+                                tlt.TrackingLocationFunction = DirectCast(System.Enum.Parse(GetType(TrackingLocationFunction), myReader.GetInt32(2).ToString()), TrackingLocationFunction)
+                                
+                                If Not myReader.IsDBNull(3) Then
+                                    tlt.Comment = myReader.GetString(3)
+                                End If
+
+                                If Not myReader.IsDBNull(4) Then
+                                    tlt.WILocation = myReader.GetString(4)
+                                End If
+
+                                If Not myReader.IsDBNull(5) Then
+                                    tlt.UnitCapacity = myReader.GetInt32(5)
+                                End If
+
+                                tlt.LastUser = myReader.GetString(7)
+
+                                tempList.Add(tlt)
                             End While
                         End If
 
                     End Using
                 End Using
             End Using
-            Return tempList
-
-        End Function
-        Public Shared Function GetApplicableTLTypes(ByVal testID As Integer, ByVal myconnection As SqlConnection) As SerializableDictionary(Of Integer, String)
-            Dim tempList As New SerializableDictionary(Of Integer, String)
-
-            Using myCommand As New SqlCommand("remispTestSelectApplicableTrackingLocationTypes", myconnection)
-                myCommand.CommandType = CommandType.StoredProcedure
-                myCommand.Parameters.AddWithValue("@testID", testID)
-
-
-                Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                    If myReader.HasRows Then
-
-                        While myReader.Read()
-                            tempList.Add(myReader.GetInt32(0), myReader.GetString(1))
-                        End While
-                    End If
-
-                End Using
-            End Using
 
             Return tempList
-
         End Function
+
         Structure TLType
             Dim TLTypeId As Integer
             Dim testId As Integer
             Dim TLName As String
         End Structure
-        Public Shared Function GetApplicableTLTypesByTestType(ByVal testTypeID As Integer, ByVal myconnection As SqlConnection) As List(Of TLType)
-            Dim tempList As New List(Of TLType)
 
-            Using myCommand As New SqlCommand("SELECT t.id, tlt.id, tlt.TrackingLocationTypeName FROM trackinglocationtypes as tlt, TrackingLocationsForTests as tlfort, Tests as t where(tlfort.testid = t.id And tlt.ID = tlfort.TrackingLocationtypeID)	 and t.TestType = @TestType	 order by tlt.TrackingLocationTypeName asc", myconnection)
-                myCommand.CommandType = CommandType.Text
-                myCommand.Parameters.AddWithValue("@testType", testTypeID)
+        'Public Shared Function GetApplicableTLTypesByTestType(ByVal testTypeID As Integer, ByVal myconnection As SqlConnection) As TrackingLocationTypeCollection
+        'Dim tempList As New List(Of TLType)
 
-                Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                    If myReader.HasRows Then
-                        While myReader.Read()
-                            Dim tlt As New TLType
-                            tlt.testId = myReader.GetInt32(0)
-                            tlt.TLTypeId = myReader.GetInt32(1)
-                            tlt.TLName = myReader.GetString(2)
-                            tempList.Add(tlt)
-                        End While
-                    End If
+        'Using myCommand As New SqlCommand("SELECT t.id, tlt.id, tlt.TrackingLocationTypeName FROM trackinglocationtypes as tlt, TrackingLocationsForTests as tlfort, Tests as t where(tlfort.testid = t.id And tlt.ID = tlfort.TrackingLocationtypeID)	 and t.TestType = @TestType	 order by tlt.TrackingLocationTypeName asc", myconnection)
+        '    myCommand.CommandType = CommandType.Text
+        '    myCommand.Parameters.AddWithValue("@testType", testTypeID)
 
-                End Using
-            End Using
+        '    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+        '        If myReader.HasRows Then
+        '            While myReader.Read()
+        '                Dim tlt As New TLType
+        '                tlt.testId = myReader.GetInt32(0)
+        '                tlt.TLTypeId = myReader.GetInt32(1)
+        '                tlt.TLName = myReader.GetString(2)
+        '                tempList.Add(tlt)
+        '            End While
+        '        End If
 
-            Return tempList
+        '    End Using
+        'End Using
 
-        End Function
+        'Return tempList
+
+        'End Function
         ''' <summary>Saves an instance of the <see cref="Test" /> in the database.</summary> 
         ''' <param name="myTest">The Test instance to save.</param> 
         ''' <returns>Returns the id when the object was saved successfully, or 0 otherwise.</returns> 
@@ -424,6 +456,8 @@ Namespace REMI.Dal
                     myTest.Degradation = myDataRecord.GetDecimal(myDataRecord.GetOrdinal("DegradationVal"))
                 End If
             End If
+
+            myTest.TrackingLocationTypes = GetApplicableTLTypes(myTest.ID)
 
             Helpers.FillObjectParameters(myDataRecord, myTest)
 

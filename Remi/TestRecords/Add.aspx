@@ -56,7 +56,7 @@
                     Test Stage
                 </td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlTestStage" runat="server" Width="278px" AutoPostBack="True" DataTextField="tsName" DataValueField="TestStageID">
+                    <asp:DropDownList ID="ddlTestStage" runat="server" Width="278px" AutoPostBack="True" DataTextField="value" DataValueField="key">
                     </asp:DropDownList>
                 </td>
             </tr>
@@ -65,7 +65,7 @@
                     Test:
                 </td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlTest" runat="server" Width="277px" AutoPostBack="true" DataTextField="tName" DataValueField="TestID" AppendDataBoundItems="true">
+                    <asp:DropDownList ID="ddlTest" runat="server" Width="277px" AutoPostBack="true" DataTextField="value" DataValueField="key" AppendDataBoundItems="true">
                         <asp:ListItem Selected="True" Text="" Value="" />
                     </asp:DropDownList>
                 </td>

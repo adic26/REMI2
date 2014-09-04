@@ -22,7 +22,7 @@ Namespace REMI.BusinessEntities
         Private _wiLocation As String
         Private _comments As String
         Private _resultIsTimeBased As Boolean
-        Private _trackingLocationTypes As SerializableDictionary(Of Integer, String)
+        Private _trackingLocationTypes As TrackingLocationTypeCollection
         Private _canDelete As Boolean
         Private _isArchived As Boolean = False
         Private _jobName As String
@@ -40,12 +40,12 @@ Namespace REMI.BusinessEntities
         ''' <remarks></remarks>
         Public Sub New()
             TestType = TestType.NotSet
-            _trackingLocationTypes = New SerializableDictionary(Of Integer, String)
             _isArchived = False
+            _trackingLocationTypes = New TrackingLocationTypeCollection
         End Sub
 
         Public Sub New(ByVal Name As String, ByVal WILocation As String, _
-                        ByVal TestType As TestType, ByVal trackingLocationTypes As SerializableDictionary(Of Integer, String), ByVal totalHours As String)
+                        ByVal TestType As TestType, ByVal trackingLocationTypes As TrackingLocationTypeCollection, ByVal totalHours As String)
             Me.Name = Name
             Me.WorkInstructionLocation = WILocation
             Me.TestType = TestType
@@ -57,11 +57,11 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "Public Properties"
-        Public Property TrackingLocationTypes() As SerializableDictionary(Of Integer, String)
+        Public Property TrackingLocationTypes() As TrackingLocationTypeCollection
             Get
                 Return _trackingLocationTypes
             End Get
-            Set(ByVal value As SerializableDictionary(Of Integer, String))
+            Set(ByVal value As TrackingLocationTypeCollection)
                 _trackingLocationTypes = value
             End Set
         End Property

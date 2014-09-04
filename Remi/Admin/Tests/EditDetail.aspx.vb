@@ -50,8 +50,8 @@ Partial Class Admin_Tests_EditDetail
                 If t.TrackingLocationTypes.Count > 0 Then
                     'remove the ones in the test unit from the full list so they
                     'cannot be added twice.
-                    For Each tlID As Integer In t.TrackingLocationTypes.Keys
-                        Dim li As ListItem = lstAllTLTypes.Items.FindByValue(tlID)
+                    For Each tl As TrackingLocationType In t.TrackingLocationTypes
+                        Dim li As ListItem = lstAllTLTypes.Items.FindByValue(btnAddTLType.ID)
                         lstAllTLTypes.Items.Remove(li)
                     Next
 
@@ -111,12 +111,18 @@ Partial Class Admin_Tests_EditDetail
         tmpTest.WorkInstructionLocation = txtWorkInstructionLocation.Text
         tmpTest.Owner = txtOwner.Text
         tmpTest.Trainee = txtTrainee.Text
-        tmpTest.Degradation = txtDegradation.Text
+        Dim degradation As Decimal = 0.0
+        Decimal.TryParse(txtDegradation.Text, degradation)
+        tmpTest.Degradation = degradation
         tmpTest.TrackingLocationTypes.Clear()
 
         For Each li As ListItem In lstAddedTLTypes.Items
-            If Not tmpTest.TrackingLocationTypes.TryGetValue(CInt(li.Value), String.Empty) Then
-                tmpTest.TrackingLocationTypes.Add(CInt(li.Value), li.Text)
+            Dim tlt As New TrackingLocationType
+            tlt.ID = li.Value
+            tlt.Name = li.Text
+
+            If (Not tmpTest.TrackingLocationTypes.Contains(tlt)) Then
+                tmpTest.TrackingLocationTypes.Add(tlt)
             End If
         Next
 

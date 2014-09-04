@@ -406,6 +406,7 @@ Namespace REMI.Bll
 
         Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Integer
             Try
+                REMIAppCache.RemoveReqData(qraNumber)
                 Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=False)
                 Dim oldPercentageComplete As Integer = b.PercentageComplete
                 Dim batchChanged As Boolean = b.CheckForTRSUpdates
@@ -471,9 +472,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False) As BatchCollection
+        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True) As BatchCollection
             Try
-                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations)
+                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Empty)
                 Return New BatchCollection
@@ -659,6 +660,16 @@ Namespace REMI.Bll
             Return n
         End Function
 
+        Public Shared Function GetStagesNeedingCompletionByUnit(ByVal requestNumber As String, ByVal unitNumber As Int32) As DataSet
+            Try
+                Return BatchDB.GetStagesNeedingCompletionByUnit(requestNumber, unitNumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataSet
+        End Function
+
         Public Shared Function SetPriority(ByVal qraNumber As String, ByVal priority As Int32) As NotificationCollection
             Dim b As Batch
             Try
@@ -779,43 +790,43 @@ Namespace REMI.Bll
             Return b.Notifications
         End Function
 
-        Public Shared Function ChangeJob(ByVal qraNumber As String, ByVal jobName As String) As NotificationCollection
-            Dim b As Batch
-            Try
-                b = BatchManager.GetItem(qraNumber)
-                If b IsNot Nothing Then
-                    If b.Validate Then
-                        Dim j As Job = JobManager.GetJobByName(jobName)
-                        'validate that the teststageid is part of this job
-                        If j IsNot Nothing Then
-                            b.Notifications.Add(b.SetJob(j))
-                            If Not b.Notifications.HasErrors Then
-                                BatchManager.Save(b)
+        'Public Shared Function ChangeJob(ByVal qraNumber As String, ByVal jobName As String) As NotificationCollection
+        '    Dim b As Batch
+        '    Try
+        '        b = BatchManager.GetItem(qraNumber)
+        '        If b IsNot Nothing Then
+        '            If b.Validate Then
+        '                Dim j As Job = JobManager.GetJobByName(jobName)
+        '                'validate that the teststageid is part of this job
+        '                If j IsNot Nothing Then
+        '                    b.Notifications.Add(b.SetJob(j))
+        '                    If Not b.Notifications.HasErrors Then
+        '                        BatchManager.Save(b)
 
-                                For Each tu As TestUnit In b.TestUnits
-                                    If j.TestStages.Count > 0 Then
-                                        tu.CurrentTestStage = j.TestStages.Item(0)
-                                        TestUnitManager.Save(tu)
-                                    End If
-                                Next
-                                If (REMI.Core.REMIConfiguration.Debug) Then
-                                    b.Notifications.AddWithMessage("The job was changed ok.", NotificationType.Information)
-                                End If
-                            End If
-                        Else
-                            b.Notifications.AddWithMessage(String.Format("The given job (Name: {0}) cannot be found.", jobName), NotificationType.Warning)
-                        End If
-                    End If
-                Else
-                    b = New Batch
-                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", qraNumber), NotificationType.Warning)
-                End If
-            Catch ex As Exception
-                b = New Batch
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, String.Format("Request: {0} JobName: {1}", qraNumber, jobName)))
-            End Try
-            Return b.Notifications
-        End Function
+        '                        For Each tu As TestUnit In b.TestUnits
+        '                            If j.TestStages.Count > 0 Then
+        '                                tu.CurrentTestStage = j.TestStages.Item(0)
+        '                                TestUnitManager.Save(tu)
+        '                            End If
+        '                        Next
+        '                        If (REMI.Core.REMIConfiguration.Debug) Then
+        '                            b.Notifications.AddWithMessage("The job was changed ok.", NotificationType.Information)
+        '                        End If
+        '                    End If
+        '                Else
+        '                    b.Notifications.AddWithMessage(String.Format("The given job (Name: {0}) cannot be found.", jobName), NotificationType.Warning)
+        '                End If
+        '            End If
+        '        Else
+        '            b = New Batch
+        '            b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", qraNumber), NotificationType.Warning)
+        '        End If
+        '    Catch ex As Exception
+        '        b = New Batch
+        '        b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, String.Format("Request: {0} JobName: {1}", qraNumber, jobName)))
+        '    End Try
+        '    Return b.Notifications
+        'End Function
 #End Region
     End Class
 End Namespace

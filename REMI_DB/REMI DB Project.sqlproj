@@ -204,6 +204,7 @@
     <Folder Include="Scripts\July142014" />
     <Folder Include="Scripts\JUly232014" />
     <Folder Include="Scripts\August132014" />
+    <Folder Include="Scripts\September222014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2257,5 +2258,34 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldMapping.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispJobOrientationSave.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetJobOrientations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetOrientation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetStagesNeedingCompletionByUnit.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\JobOrientation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_JobOrientation_Jobs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_JobOrientation_Lookups.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\UX_JobOrientation_JID_PID_Name.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Scripts\September222014\1.sql" />
+    <Build Include="Scripts\September222014\2.sql" />
+    <Build Include="Scripts\September222014\3.sql" />
   </ItemGroup>
 </Project>

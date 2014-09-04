@@ -22,6 +22,7 @@ Namespace REMI.BusinessEntities
         Private _continueOnFailures As Boolean
         Private _qraNumber As String
         Private _isMQual As Boolean
+        Private _orientation As IOrientation
         Private _assemblyNumber As String
         Private _assemblyRevision As String
         Private _testCenterLocationID As Int32
@@ -55,6 +56,8 @@ Namespace REMI.BusinessEntities
         Private _testStageTimeLeftGrid As Dictionary(Of String, Double)
         Private _testStageIDTimeLeftGrid As Dictionary(Of String, Int32)
         Private _executiveSummary As String
+        Private _orientationID As Int32
+        Private _orientationXML As String
 #End Region
 
 #Region "Constructors"
@@ -190,8 +193,6 @@ Namespace REMI.BusinessEntities
 
         Public Property ExecutiveSummary() As String Implements IBatch.ExecutiveSummary
             Get
-                Return _executiveSummary
-
                 If Not String.IsNullOrEmpty(_executiveSummary) Then
                     Return _executiveSummary
                 Else
@@ -200,6 +201,24 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As String)
                 _executiveSummary = value
+            End Set
+        End Property
+
+        Public Property OrientationID() As Int32 Implements IBatch.OrientationID
+            Get
+                Return _orientationID
+            End Get
+            Set(ByVal value As Int32)
+                _orientationID = value
+            End Set
+        End Property
+
+        Public Property OrientationXML() As String Implements IBatch.OrientationXML
+            Get
+                Return _orientationXML
+            End Get
+            Set(ByVal value As String)
+                _orientationXML = value
             End Set
         End Property
 
@@ -804,6 +823,18 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
+        Public Property Orientation() As IOrientation Implements IBatch.Orientation
+            Get
+                Return _orientation
+            End Get
+            Set(ByVal value As IOrientation)
+                If value IsNot Nothing Then
+                    _orientation = value
+                End If
+            End Set
+        End Property
+
         ''' <summary>
         ''' The Job ID of this batch in the QA/Relab Databases.
         ''' </summary>
@@ -978,7 +1009,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        Public Overridable Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean) As String Implements IBatch.GetTestOverviewCellString
+        Public Overridable Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As String Implements IBatch.GetTestOverviewCellString
             Return String.Empty
         End Function
 #End Region

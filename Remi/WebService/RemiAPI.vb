@@ -95,7 +95,17 @@ Public Class RemiAPI
         Try
             Return TestUnitManager.GetUnitAssignedTo(QRANumber, batchUnitNumber)
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetUnitAssignedTo", "e8", NotificationType.Errors, ex, "Request: " + QRANumber)
+            TestUnitManager.LogIssue("REMI API GetUnitAssignedTo", "e8", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + QRANumber, batchUnitNumber))
+        End Try
+        Return Nothing
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Gets Unit.")> _
+    Public Function GetUnit(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As TestUnit
+        Try
+            Return TestUnitManager.GetUnit(QRANumber, batchUnitNumber)
+        Catch ex As Exception
+            TestUnitManager.LogIssue("REMI API GetUnit", "e8", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + QRANumber, batchUnitNumber))
         End Try
         Return Nothing
     End Function
@@ -179,9 +189,11 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge & Lab - Bochum. If you want a specific location id for a given user use ""Lab"" and their username with this method.")> _
-    Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String) As Integer
+    Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String, ByVal userIdentification As String) As Integer
         Try
-            Return TrackingLocationManager.GetSpecificLocationForCurrentUsersTestCenter(stationName)
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return TrackingLocationManager.GetSpecificLocationForCurrentUsersTestCenter(stationName, UserManager.GetCurrentValidUserLDAPName)
+            End If
         Catch ex As Exception
             TrackingLocationManager.LogIssue("Could not location specific location for the given details.", "e3", NotificationType.Errors, ex, "user: " + UserManager.GetCurrentValidUserLDAPName() + "test station: " + stationName)
         End Try
@@ -529,52 +541,52 @@ Public Class RemiAPI
         Return 0
     End Function
 
-    <Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    Public Function GetProductGroupExceptionsByProductID(ByVal productID As Int32) As List(Of ExceptionData)
-        'Try
-        '
-        '    Dim testExceptions As New List(Of ExceptionData)
-        '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
+    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
+    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
+    'Public Function GetProductGroupExceptionsByProductID(ByVal productID As Int32) As List(Of ExceptionData)
+    'Try
+    '
+    '    Dim testExceptions As New List(Of ExceptionData)
+    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
 
-        '    For Each k As String In d.Keys
-        '        Dim ex As ExceptionData
-        '        ex.TestName = k
-        '        ex.ExceptionExists = d.Item(k)
-        '        testExceptions.Add(ex)
-        '    Next
+    '    For Each k As String In d.Keys
+    '        Dim ex As ExceptionData
+    '        ex.TestName = k
+    '        ex.ExceptionExists = d.Item(k)
+    '        testExceptions.Add(ex)
+    '    Next
 
-        '    Return testExceptions
-        'End If
-        'Catch ex As Exception
-        '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptionsByProductID", "e3", NotificationType.Errors, ex, "Product Group ID: " + productID)
-        'End Try
-        Return New List(Of ExceptionData)
-    End Function
+    '    Return testExceptions
+    'End If
+    'Catch ex As Exception
+    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptionsByProductID", "e3", NotificationType.Errors, ex, "Product Group ID: " + productID)
+    'End Try
+    '    Return New List(Of ExceptionData)
+    'End Function
 
-    <Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    Public Function GetProductGroupExceptions(ByVal productGroupName As String) As List(Of ExceptionData)
-        'Try
-        'If UserManager.GetCurrentUser.HasREMIPageViewAuthority Then
-        '    Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
-        '    Dim testExceptions As New List(Of ExceptionData)
-        '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
+    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
+    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
+    'Public Function GetProductGroupExceptions(ByVal productGroupName As String) As List(Of ExceptionData)
+    'Try
+    'If UserManager.GetCurrentUser.HasREMIPageViewAuthority Then
+    '    Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
+    '    Dim testExceptions As New List(Of ExceptionData)
+    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
 
-        '    For Each k As String In d.Keys
-        '        Dim ex As ExceptionData
-        '        ex.TestName = k
-        '        ex.ExceptionExists = d.Item(k)
-        '        testExceptions.Add(ex)
-        '    Next
+    '    For Each k As String In d.Keys
+    '        Dim ex As ExceptionData
+    '        ex.TestName = k
+    '        ex.ExceptionExists = d.Item(k)
+    '        testExceptions.Add(ex)
+    '    Next
 
-        '    Return testExceptions
-        'End If
-        'Catch ex As Exception
-        '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptions", "e3", NotificationType.Errors, ex, "Product Group ID: " + productGroupName)
-        'End Try
-        Return New List(Of ExceptionData)
-    End Function
+    '    Return testExceptions
+    'End If
+    'Catch ex As Exception
+    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptions", "e3", NotificationType.Errors, ex, "Product Group ID: " + productGroupName)
+    'End Try
+    '    Return New List(Of ExceptionData)
+    'End Function
 
     <WebMethod(Description:="Returns a full list of the settings for a product.")> _
     Public Function GetProductSettingsByProductID(ByVal productID As Int32) As SerializableDictionary(Of String, String)
@@ -646,7 +658,7 @@ Public Class RemiAPI
                     rqResults.Rows.Add(row)
                 Next
 
-                Return b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+                Return b.GetParametricTestOverviewTable(False, False, rqResults, False, False)
             End If
         Catch ex As Exception
             TestUnitManager.LogIssue("REMI API GetTestingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
@@ -660,7 +672,7 @@ Public Class RemiAPI
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Dim b As BatchView = Me.GetBatch(qraNumber)
-                Return b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+                Return b.GetStressingOverviewTable(False, False, False, False, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             End If
         Catch ex As Exception
             TestUnitManager.LogIssue("REMI API GetStressingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
@@ -785,7 +797,7 @@ Public Class RemiAPI
         Try
             Dim b As BatchView = BatchManager.GetViewBatch(QRANumber)
 
-            Return b.GetAllNotifications
+            Return b.GetAllNotifications(False)
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatchNotifications", "e3", NotificationType.Errors, ex, "Request: " + QRANumber)
         End Try
@@ -850,6 +862,80 @@ Public Class RemiAPI
             BatchManager.LogIssue("REMI API Get CPR Number", "e3", NotificationType.Errors, ex, "Request: " + QRANumber)
         End Try
         Return String.Empty
+    End Function
+
+    <WebMethod(Description:="Get Next Stage By Batch.")> _
+    Public Function GetBatchNextStage(ByVal requestNumber As String) As TestStage
+        Try
+            Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
+
+            If (barcode.Validate()) Then
+                Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
+                Dim stage As TestStage = TestUnitManager.GetUnit(barcode.BatchNumber, barcode.UnitNumber).CurrentTestStage
+                Dim testStageType(1) As TestStageType
+                testStageType(0) = Contracts.TestStageType.EnvironmentalStress
+                testStageType(1) = Contracts.TestStageType.Parametric
+
+                Return b.GetNextTestStage(stage, barcode.BatchNumber, b.Job, b.TestRecords, testStageType, b.Tasks)
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return Nothing
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Stages Name.")> _
+    Public Function GetTestStagesNameByBatch(ByVal requestNumber As String) As List(Of String)
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+
+            If batch IsNot Nothing Then
+                Return (From s In TestStageManager.GetTestStagesNameByBatch(batch.ID) Select s.Value).ToList
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch stages name", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New List(Of String)
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Stages.")> _
+    Public Function GetTestStagesByBatch(ByVal requestNumber As String) As TestStageCollection
+        Try
+            Dim b As Batch = BatchManager.GetItem(requestNumber)
+
+            If b IsNot Nothing Then
+                Dim t As List(Of Int32) = (From stg In b.Tasks Select stg.TestStageID).ToList
+
+                Return b.Job.TestStages.FindByIDs(t)
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New TestStageCollection
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Stages needing completion.")> _
+    Public Function GetStagesNeedingCompletionByUnit(ByVal requestNumber As String, ByVal unitNumber As Int32) As DataSet
+        Try
+            Return BatchManager.GetStagesNeedingCompletionByUnit(requestNumber, unitNumber)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetBatchStagesNeedingCompletion", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New DataSet("NeedsTesting")
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Tests.")> _
+    Public Function GetTestsByBatchStage(ByVal requestNumber As String, ByVal testStageName As String) As List(Of String)
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+
+            If batch IsNot Nothing Then
+                Return (From s In TestManager.GetTestsByBatchStage(batch.ID, testStageName, False) Select s.Value).ToList
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch tests", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New List(Of String)
     End Function
 
     <WebMethod(Description:="Add's a comment to the batch.")> _
@@ -954,7 +1040,9 @@ Public Class RemiAPI
                                 ByVal userIdentification As String, ByVal locationIdenitifcation As String, ByVal trackingLocationName As String, ByVal jobName As String, ByVal productGroup As String) As ScanReturnData
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Return ScanManager.Scan(Helpers.CleanInputText(qraNumber, 21), Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
+                Dim sd As ScanReturnData = ScanManager.Scan(Helpers.CleanInputText(qraNumber, 21), Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
+
+                Return sd
             End If
         Catch ex As Exception
             ScanManager.LogIssue("REMI API - Scan", "NA", NotificationType.Errors, ex, "Request: " + qraNumber + " TS: " + testStageName + " Test: " + testName + " Result: " + overallTestResult + " UID: " + userIdentification + " Location ID: " + locationIdenitifcation)
@@ -1170,6 +1258,22 @@ Public Class RemiAPI
 #End Region
 
 #Region "Test Records"
+    <WebMethod(EnableSession:=True, Description:="GetTestRecords.")> _
+    Public Function GetTestRecords(ByVal QRANumber As String, ByVal userIdentification As String) As TestRecordCollection
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim b As BatchView = Me.GetBatch(QRANumber)
+
+                If (b IsNot Nothing) Then
+                    Return b.TestRecords
+                End If
+            End If
+        Catch ex As Exception
+            TestRecordManager.LogIssue("REMI API GetTestRecords", "e8", NotificationType.Errors, ex, String.Format("Request: {0}" + QRANumber))
+        End Try
+        Return Nothing
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Adds a new test record for non parametric tests.")> _
     Public Function TestRecordAdd(ByVal qranumber As String, ByVal unitNumber As Int32, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String) As Boolean
         Try
@@ -1209,12 +1313,13 @@ Public Class RemiAPI
         Dim hostID As Int32 = GetHostID(machineName, srd.TrackingLocationID)
 
         configReturnData.HostID = hostID
-        configReturnData.StationXML = config.GetStationConfigurationXML(hostID)
+        configReturnData.StationXML = TrackingLocationManager.GetStationConfigurationXML(hostID, String.Empty).ToString() 'config.GetStationConfigurationXML(hostID)
         configReturnData.TestXML = config.GetProductConfigurationXML(srd.ProductID, srd.TestID)
-        configReturnData.HasProductXML = config.HasProductConfigurationXML(srd.ProductID, srd.TestID)
-        configReturnData.HasCalibrationXML = config.HasCalibrationConfigurationXML(srd.ProductID, srd.TestID, hostID)
+        configReturnData.HasProductXML = ProductGroupManager.HasProductConfigurationXML(srd.ProductID, srd.TestID, String.Empty).ToString() 'config.HasProductConfigurationXML(srd.ProductID, srd.TestID)
+        configReturnData.HasCalibrationXML = CalibrationManager.HasCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.HasCalibrationConfigurationXML(srd.ProductID, srd.TestID, hostID)
         configReturnData.HasStationXML = If(configReturnData.StationXML = "<StationConfiguration />", False, True)
-        configReturnData.Calibrations = config.GetAllCalibrationConfigurationXML(hostID, srd.ProductID, srd.TestID)
+        configReturnData.Calibrations = CalibrationManager.GetAllCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.GetAllCalibrationConfigurationXML(hostID, srd.ProductID, srd.TestID)
+        configReturnData.ProductConfigs = ProductGroupManager.GetAllProductConfigurationXMLs(srd.ProductID, srd.TestID, True)
 
         Return configReturnData
     End Function

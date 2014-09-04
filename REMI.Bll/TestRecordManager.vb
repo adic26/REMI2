@@ -414,17 +414,5 @@ Namespace REMI.Bll
 
             Return 0
         End Function
-
-        '<Obsolete("CheckBatchForRelabUpdates Is Old Relab")> _
-        'Public Shared Function CheckBatchForRelabUpdates(ByVal b As Batch, ByVal ignoreCurrentBatchStatus As Boolean) As Integer
-        '    If b IsNot Nothing Then
-        '        If ((b.Status = BatchStatus.InProgress OrElse b.Status = BatchStatus.Received) Or ignoreCurrentBatchStatus) AndAlso (b.TestStage IsNot Nothing) AndAlso b.Job IsNot Nothing Then
-        '            Dim bcoll As New BatchCollection
-        '            bcoll.Add(b)
-        '            Return TestRecordDB.SetRelabResultsForBatchCollection(bcoll, UserManager.GetCurrentValidUserLDAPName)
-        '        End If
-        '    End If
-        '    Return 0
-        'End Function
     End Class
 End Namespace

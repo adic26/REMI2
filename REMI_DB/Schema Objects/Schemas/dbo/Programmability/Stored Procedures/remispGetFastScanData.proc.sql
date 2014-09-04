@@ -183,15 +183,35 @@ set @numberoftests = (select COUNT (*) from Testrecordsxtrackinglogs as trXtl, D
 set @TestIsValidForLocation = case when (select 1 from Tests as t, TrackingLocations as tl, trackinglocationtypes as tlt, TrackingLocationsForTests as tltfort 
 where tlt.ID = tltfort.TrackingLocationtypeID and t.ID = tltfort.TestID and t.ID = @testID and tlt.ID = tl.TrackingLocationTypeID and tl.ID = @TLID) IS not null then 1 else 0 end
 --get applicable test stages
-select @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName from TestStages where ISNULL(TestStages.IsArchived, 0)=0 AND TestStages.JobID = (select ID from Jobs where jobname = @jobname) order by ProcessOrder
-set @ApplicableTestStages = SUBSTRING(@ApplicableTestStages,2,Len(@ApplicableTestStages))
+select @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName from TestStages where ISNULL(TestStages.IsArchived, 0)=0 AND testStages.TestStageType NOT IN (4,5, 0) AND TestStages.JobID = @jobID order by ProcessOrder
+
 --get applicable tests
-select @ApplicableTests = @ApplicableTests + ','  +  testname from Tests as t, TrackingLocationsForTests as tlft, TrackingLocationTypes as tlt , TrackingLocations as tl
-where ISNULL(t.IsArchived, 0)=0 AND t.ID = tlft.TestID
-and tlft.TrackingLocationtypeID = tlt.ID
-and tlt.ID = tl.TrackingLocationTypeID
-and tl.ID = @tlid
+--select @ApplicableTests = @ApplicableTests + ','  +  testname from Tests as t, TrackingLocationsForTests as tlft, TrackingLocationTypes as tlt , TrackingLocations as tl
+--where ISNULL(t.IsArchived, 0)=0 AND t.ID = tlft.TestID
+--and tlft.TrackingLocationtypeID = tlt.ID
+--and tlt.ID = tl.TrackingLocationTypeID
+--and tl.ID = @tlid
+
+SELECT @ApplicableTests = @ApplicableTests + ','  + t.TestName
+FROM (
+SELECT t.TestName
+FROM Tests t
+INNER JOIN TrackingLocationsForTests tlft ON t.ID = tlft.TestID
+INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
+INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+INNER JOIN TestStages ts ON ts.TestID = t.ID AND ts.JobID=@jobID
+WHERE ISNULL(t.IsArchived, 0)=0 AND tl.ID = @tlid
+UNION
+SELECT t.TestName
+FROM Tests t
+INNER JOIN TrackingLocationsForTests tlft ON t.ID = tlft.TestID
+INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
+INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+WHERE ISNULL(t.IsArchived, 0)=0 AND tl.ID = @tlid AND t.TestType IN (1, 3)
+) t
+
 set @ApplicableTests = SUBSTRING(@ApplicableTests,2,Len(@ApplicableTests))
+set @ApplicableTestStages = SUBSTRING(@ApplicableTestStages,2,Len(@ApplicableTestStages))
 
 ----------------------------
 ---  Tracking Log Params ---

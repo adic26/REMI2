@@ -16,6 +16,7 @@ Namespace REMI.BusinessEntities
         Public Sub New(ByVal tsList As List(Of TestStage))
             MyBase.New(tsList)
         End Sub
+
         Public Function Duration() As TimeSpan
             Dim totalTime As New TimeSpan
             For Each ts As TestStage In Me
@@ -23,15 +24,27 @@ Namespace REMI.BusinessEntities
             Next
             Return totalTime
         End Function
+
         Public Function FindByName(ByVal tsName As String) As TestStage
             Return (From ts In Me Where ts.Name.Equals(tsName) Select ts).SingleOrDefault
         End Function
+
         Public Function FindByID(ByVal id As Int32) As TestStage
             Return (From ts In Me Where ts.ID.Equals(id) Select ts).SingleOrDefault
         End Function
+
+        Public Function FindByIDs(ByVal ids As List(Of Int32)) As TestStageCollection
+            Return New TestStageCollection((From ts In Me Where ids.Contains(ts.ID) And ts.IsArchived = False Select ts Order By (ts.ProcessOrder) Ascending).ToList)
+        End Function
+
+        Public Function FindByIDs(ByVal ids As List(Of Int32), ByVal tsTypes() As TestStageType) As TestStageCollection
+            Return New TestStageCollection((From ts In Me Where ids.Contains(ts.ID) And tsTypes.Contains(ts.TestStageType) And ts.IsArchived = False Select ts Order By (ts.ProcessOrder) Ascending).ToList)
+        End Function
+
         Public Function FindByType(ByVal tsType As TestStageType) As TestStageCollection
             Return New TestStageCollection((From ts In Me Where ts.TestStageType.Equals(tsType) And ts.IsArchived = False Select ts Order By (ts.ProcessOrder) Ascending).ToList)
         End Function
+
         Public Function ToDictionary() As SerializableDictionary(Of Integer, String)
             Dim sd As New SerializableDictionary(Of Integer, String)
             For Each ts As TestStage In Me

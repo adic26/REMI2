@@ -266,6 +266,15 @@ Partial Public Class Admin_TestStages
     Protected WithEvents notMain As Global.Remi.Controls_Notifications
 
     '''<summary>
+    '''hdnJobID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnJobID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''pnlViewAllTestStages control.
     '''</summary>
     '''<remarks>
@@ -374,6 +383,24 @@ Partial Public Class Admin_TestStages
     Protected WithEvents accTestStages As Global.AjaxControlToolkit.Accordion
 
     '''<summary>
+    '''acpBatches control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents acpBatches As Global.AjaxControlToolkit.AccordionPane
+
+    '''<summary>
+    '''bscJobs control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents bscJobs As Global.Remi.Controls_BatchSelectControl
+
+    '''<summary>
     '''acpTestStages control.
     '''</summary>
     '''<remarks>
@@ -464,31 +491,76 @@ Partial Public Class Admin_TestStages
     Protected WithEvents JobEnvSetup As Global.Remi.RequestSetup
 
     '''<summary>
-    '''accJobBatches control.
+    '''acpOrientation control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents accJobBatches As Global.AjaxControlToolkit.Accordion
+    Protected WithEvents acpOrientation As Global.AjaxControlToolkit.AccordionPane
 
     '''<summary>
-    '''acpBatches control.
+    '''lblOrientation control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents acpBatches As Global.AjaxControlToolkit.AccordionPane
+    Protected WithEvents lblOrientation As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''bscJobs control.
+    '''gdvOrientations control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents bscJobs As Global.Remi.Controls_BatchSelectControl
+    Protected WithEvents gdvOrientations As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''pnlOrientationAdd control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlOrientationAdd As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''txtOrientationName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtOrientationName As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''ddlPT control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlPT As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''txtOrientationDescription control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtOrientationDescription As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtDefinition control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtDefinition As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''pnlAddEditTestStage control.

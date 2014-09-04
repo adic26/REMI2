@@ -137,6 +137,10 @@ Namespace remiAPI
         
         Private GetProductSettingByProductIDOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetTestingSummaryOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetStressingSummaryOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private BatchStartedBeforeAssignedOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetDefaultReqNumOperationCompleted As System.Threading.SendOrPostCallback
@@ -150,6 +154,10 @@ Namespace remiAPI
         Private GetAccessoryTypeIDOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetBatchOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetBatchNotificationsOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetBatchCommentsOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetHardwareRevisionOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -386,6 +394,12 @@ Namespace remiAPI
         Public Event GetProductSettingByProductIDCompleted As GetProductSettingByProductIDCompletedEventHandler
         
         '''<remarks/>
+        Public Event GetTestingSummaryCompleted As GetTestingSummaryCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetStressingSummaryCompleted As GetStressingSummaryCompletedEventHandler
+        
+        '''<remarks/>
         Public Event BatchStartedBeforeAssignedCompleted As BatchStartedBeforeAssignedCompletedEventHandler
         
         '''<remarks/>
@@ -405,6 +419,12 @@ Namespace remiAPI
         
         '''<remarks/>
         Public Event GetBatchCompleted As GetBatchCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetBatchNotificationsCompleted As GetBatchNotificationsCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetBatchCommentsCompleted As GetBatchCommentsCompletedEventHandler
         
         '''<remarks/>
         Public Event GetHardwareRevisionCompleted As GetHardwareRevisionCompletedEventHandler
@@ -1440,22 +1460,22 @@ Namespace remiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SaveJob", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function SaveJob(ByVal job As Job) As Boolean
-            Dim results() As Object = Me.Invoke("SaveJob", New Object() {job})
+        Public Function SaveJob(ByVal job As Job, ByVal userIdentification As String) As Boolean
+            Dim results() As Object = Me.Invoke("SaveJob", New Object() {job, userIdentification})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub SaveJobAsync(ByVal job As Job)
-            Me.SaveJobAsync(job, Nothing)
+        Public Overloads Sub SaveJobAsync(ByVal job As Job, ByVal userIdentification As String)
+            Me.SaveJobAsync(job, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub SaveJobAsync(ByVal job As Job, ByVal userState As Object)
+        Public Overloads Sub SaveJobAsync(ByVal job As Job, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.SaveJobOperationCompleted Is Nothing) Then
                 Me.SaveJobOperationCompleted = AddressOf Me.OnSaveJobOperationCompleted
             End If
-            Me.InvokeAsync("SaveJob", New Object() {job}, Me.SaveJobOperationCompleted, userState)
+            Me.InvokeAsync("SaveJob", New Object() {job, userIdentification}, Me.SaveJobOperationCompleted, userState)
         End Sub
         
         Private Sub OnSaveJobOperationCompleted(ByVal arg As Object)
@@ -1871,6 +1891,60 @@ Namespace remiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTestingSummary", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetTestingSummary(ByVal qraNumber As String, ByVal userIdentification As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetTestingSummary", New Object() {qraNumber, userIdentification})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String)
+            Me.GetTestingSummaryAsync(qraNumber, userIdentification, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal userState As Object)
+            If (Me.GetTestingSummaryOperationCompleted Is Nothing) Then
+                Me.GetTestingSummaryOperationCompleted = AddressOf Me.OnGetTestingSummaryOperationCompleted
+            End If
+            Me.InvokeAsync("GetTestingSummary", New Object() {qraNumber, userIdentification}, Me.GetTestingSummaryOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetTestingSummaryOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetTestingSummaryCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetTestingSummaryCompleted(Me, New GetTestingSummaryCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetStressingSummary", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetStressingSummary(ByVal qraNumber As String, ByVal userIdentification As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetStressingSummary", New Object() {qraNumber, userIdentification})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetStressingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String)
+            Me.GetStressingSummaryAsync(qraNumber, userIdentification, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetStressingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal userState As Object)
+            If (Me.GetStressingSummaryOperationCompleted Is Nothing) Then
+                Me.GetStressingSummaryOperationCompleted = AddressOf Me.OnGetStressingSummaryOperationCompleted
+            End If
+            Me.InvokeAsync("GetStressingSummary", New Object() {qraNumber, userIdentification}, Me.GetStressingSummaryOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetStressingSummaryOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetStressingSummaryCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetStressingSummaryCompleted(Me, New GetStressingSummaryCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/BatchStartedBeforeAssigned", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function BatchStartedBeforeAssigned(ByVal qraNumber As String) As Boolean
             Dim results() As Object = Me.Invoke("BatchStartedBeforeAssigned", New Object() {qraNumber})
@@ -2056,6 +2130,60 @@ Namespace remiAPI
             If (Not (Me.GetBatchCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetBatchCompleted(Me, New GetBatchCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchNotifications", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetBatchNotifications(ByVal QRANumber As String) As Notification()
+            Dim results() As Object = Me.Invoke("GetBatchNotifications", New Object() {QRANumber})
+            Return CType(results(0),Notification())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchNotificationsAsync(ByVal QRANumber As String)
+            Me.GetBatchNotificationsAsync(QRANumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchNotificationsAsync(ByVal QRANumber As String, ByVal userState As Object)
+            If (Me.GetBatchNotificationsOperationCompleted Is Nothing) Then
+                Me.GetBatchNotificationsOperationCompleted = AddressOf Me.OnGetBatchNotificationsOperationCompleted
+            End If
+            Me.InvokeAsync("GetBatchNotifications", New Object() {QRANumber}, Me.GetBatchNotificationsOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetBatchNotificationsOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetBatchNotificationsCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetBatchNotificationsCompleted(Me, New GetBatchNotificationsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchComments", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetBatchComments(ByVal QRANumber As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetBatchComments", New Object() {QRANumber})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchCommentsAsync(ByVal QRANumber As String)
+            Me.GetBatchCommentsAsync(QRANumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchCommentsAsync(ByVal QRANumber As String, ByVal userState As Object)
+            If (Me.GetBatchCommentsOperationCompleted Is Nothing) Then
+                Me.GetBatchCommentsOperationCompleted = AddressOf Me.OnGetBatchCommentsOperationCompleted
+            End If
+            Me.InvokeAsync("GetBatchComments", New Object() {QRANumber}, Me.GetBatchCommentsOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetBatchCommentsOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetBatchCommentsCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetBatchCommentsCompleted(Me, New GetBatchCommentsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -3796,6 +3924,8 @@ Namespace remiAPI
         
         Private ownerField As String
         
+        Private degradationField As Decimal
+        
         Private traineeField As String
         
         Private isArchivedField As Boolean
@@ -3893,6 +4023,16 @@ Namespace remiAPI
             End Get
             Set
                 Me.ownerField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Degradation() As Decimal
+            Get
+                Return Me.degradationField
+            End Get
+            Set
+                Me.degradationField = value
             End Set
         End Property
         
@@ -5654,6 +5794,9 @@ Namespace remiAPI
         
         '''<remarks/>
         Priority
+        
+        '''<remarks/>
+        RequestType
     End Enum
     
     '''<remarks/>
@@ -7108,6 +7251,60 @@ Namespace remiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetTestingSummaryCompletedEventHandler(ByVal sender As Object, ByVal e As GetTestingSummaryCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetTestingSummaryCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetStressingSummaryCompletedEventHandler(ByVal sender As Object, ByVal e As GetStressingSummaryCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetStressingSummaryCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub BatchStartedBeforeAssignedCompletedEventHandler(ByVal sender As Object, ByVal e As BatchStartedBeforeAssignedCompletedEventArgs)
     
     '''<remarks/>
@@ -7291,6 +7488,60 @@ Namespace remiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),BatchView)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetBatchNotificationsCompletedEventHandler(ByVal sender As Object, ByVal e As GetBatchNotificationsCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetBatchNotificationsCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Notification()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Notification())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetBatchCommentsCompletedEventHandler(ByVal sender As Object, ByVal e As GetBatchCommentsCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetBatchCommentsCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
             End Get
         End Property
     End Class
