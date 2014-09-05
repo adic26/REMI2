@@ -17,6 +17,7 @@ namespace REMI.Bll.Tests
         public void SetUp()
         {
             instance = new REMI.Dal.Entities().Instance;
+            FakeHttpContext fcontext = new FakeHttpContext();
         }
 
         [TearDown]
@@ -46,7 +47,16 @@ namespace REMI.Bll.Tests
             ta = (from t in instance.TargetAccesses where t.WorkstationName != null && t.DenyAccess == true orderby t.ID descending select t).FirstOrDefault();
             
             Assert.False(TargetAccessManager.HasAccess(ta.TargetName, ta.WorkstationName));
+        }
 
+        [Test]
+        public void AddRemoveTargetAccess()
+        {
+            Assert.True(TargetAccessManager.AddTargetAccess("Test", String.Empty, false));
+            
+            var ta = new REMI.Entities.TargetAccess();
+            ta = (from t in instance.TargetAccesses where t.TargetName == "Test" orderby t.ID descending select t).FirstOrDefault();
+            Assert.True(TargetAccessManager.DeleteTargetAccess(ta.ID));
         }
     }
 }

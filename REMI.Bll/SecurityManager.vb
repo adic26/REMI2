@@ -16,7 +16,9 @@ Namespace REMI.Bll
 
         Public Shared Function AddRemovePermission(ByVal permission As String, ByVal role As String) As Boolean
             Try
-                Return SecurityDB.AddRemovePermission(permission, role)
+                If (UserManager.GetCurrentUser.IsAdmin) Then
+                    Return SecurityDB.AddRemovePermission(permission, role)
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -32,17 +34,36 @@ Namespace REMI.Bll
             Return New DataTable
         End Function
 
+        Public Shared Function RemoveRole(ByVal roleName As String) As Boolean
+            Try
+                If (UserManager.GetCurrentUser.IsAdmin) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim role = (From r In instance.aspnet_Roles Where r.RoleName = roleName Select r).FirstOrDefault()
+                    instance.DeleteObject(role)
+                    instance.SaveChanges()
+
+                    Return True
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
         Public Shared Function AddNewRole(ByVal roleName As String) As Boolean
             Try
-                Dim instance = New REMI.Dal.Entities().Instance()
-                Dim role As New REMI.Entities.aspnet_Roles()
-                role.aspnet_Applications = (From app In instance.aspnet_Applications Select app).FirstOrDefault()
-                role.LoweredRoleName = roleName.ToLower()
-                role.RoleName = roleName
-                role.RoleId = Guid.NewGuid()
-                instance.AddToaspnet_Roles(role)
-                instance.SaveChanges()
-                Return True
+                If (UserManager.GetCurrentUser.IsAdmin) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim role As New REMI.Entities.aspnet_Roles()
+                    role.aspnet_Applications = (From app In instance.aspnet_Applications Select app).FirstOrDefault()
+                    role.LoweredRoleName = roleName.ToLower()
+                    role.RoleName = roleName
+                    role.RoleId = Guid.NewGuid()
+                    instance.AddToaspnet_Roles(role)
+                    instance.SaveChanges()
+                    Return True
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

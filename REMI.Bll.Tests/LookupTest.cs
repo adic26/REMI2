@@ -54,5 +54,14 @@ namespace REMI.Bll.Tests
         {
             Assert.That(LookupsManager.GetOracleTestCentersList().Count > 0);
         }
+
+        [Test]
+        public void SaveLookup()
+        {
+            var e = new REMI.Entities.Lookup();
+            e = (from l in instance.Lookups where l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
+
+            Assert.True(LookupsManager.SaveLookup(e.Type, e.Values, e.IsActive, e.Description, (e.ParentID == null ? 0 : (int)e.ParentID)));
+        }
     }
 }

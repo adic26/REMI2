@@ -52,11 +52,13 @@
       <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -68,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BatchTest.cs" />
+    <Compile Include="FakeHttpContext.cs" />
     <Compile Include="JobTest.cs" />
     <Compile Include="LogTest.cs" />
     <Compile Include="LookupTest.cs" />
@@ -82,6 +85,7 @@
     <Compile Include="Tests.cs" />
     <Compile Include="TestUnitTest.cs" />
     <Compile Include="TrackingLocationTest.cs" />
+    <Compile Include="UserTest.cs" />
     <Compile Include="VersionTest.cs" />
   </ItemGroup>
   <ItemGroup>

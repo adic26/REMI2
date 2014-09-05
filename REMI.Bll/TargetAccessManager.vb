@@ -39,57 +39,61 @@ Namespace REMI.Bll
 
         Public Shared Function ChangeAccess(ByVal targetAccessID As Int32, ByVal hasAccess As Boolean) As Boolean
             Try
-                Dim instance = New REMI.Dal.Entities().Instance()
-                Dim t = (From ta In instance.TargetAccesses Where ta.ID = targetAccessID Select ta).FirstOrDefault()
+                If (UserManager.GetCurrentUser.IsAdmin) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim t = (From ta In instance.TargetAccesses Where ta.ID = targetAccessID Select ta).FirstOrDefault()
 
-                t.DenyAccess = hasAccess
+                    t.DenyAccess = hasAccess
+                    instance.SaveChanges()
 
-                instance.SaveChanges()
-
-                Return True
+                    Return True
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
-                Return False
             End Try
+            Return False
         End Function
 
         Public Shared Function DeleteTargetAccess(ByVal targetAccessID As Int32) As Boolean
             Try
-                Dim instance = New REMI.Dal.Entities().Instance()
-                Dim t = (From ta In instance.TargetAccesses Where ta.ID = targetAccessID Select ta).FirstOrDefault()
-                instance.DeleteObject(t)
-                instance.SaveChanges()
+                If (UserManager.GetCurrentUser.IsAdmin) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim t = (From ta In instance.TargetAccesses Where ta.ID = targetAccessID Select ta).FirstOrDefault()
+                    instance.DeleteObject(t)
+                    instance.SaveChanges()
 
-                Return True
+                    Return True
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
-                Return False
             End Try
+            Return False
         End Function
 
         Public Shared Function AddTargetAccess(ByVal targetName As String, ByVal workstationName As String, ByVal denyAccess As Boolean) As Boolean
             Try
-                Dim instance = New REMI.Dal.Entities().Instance()
+                If (UserManager.GetCurrentUser.IsAdmin) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
 
-                Dim t = (From ta In instance.TargetAccesses Where ta.WorkstationName = workstationName And ta.TargetName = targetName Select ta).FirstOrDefault()
+                    Dim t = (From ta In instance.TargetAccesses Where ta.WorkstationName = workstationName And ta.TargetName = targetName Select ta).FirstOrDefault()
 
-                If (t Is Nothing) Then
-                    Dim ta As New REMI.Entities.TargetAccess()
-                    ta.DenyAccess = denyAccess
-                    ta.TargetName = targetName
-                    ta.WorkstationName = workstationName
-                    instance.AddToTargetAccesses(ta)
-                Else
-                    t.DenyAccess = denyAccess
+                    If (t Is Nothing) Then
+                        Dim ta As New REMI.Entities.TargetAccess()
+                        ta.DenyAccess = denyAccess
+                        ta.TargetName = targetName
+                        ta.WorkstationName = workstationName
+                        instance.AddToTargetAccesses(ta)
+                    Else
+                        t.DenyAccess = denyAccess
+                    End If
+
+                    instance.SaveChanges()
+                    Return True
                 End If
-
-                instance.SaveChanges()
-
-                Return True
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
-                Return False
             End Try
+            Return False
         End Function
     End Class
 End Namespace

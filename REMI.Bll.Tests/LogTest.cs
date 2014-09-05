@@ -11,7 +11,6 @@ namespace REMI.Bll.Tests
 {
     public class LogTest : REMIManagerBase
     {
-        String username = "ogaudreault";
         REMI.Entities.Entities instance;
 
         [SetUp]
@@ -27,6 +26,15 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
+        public void GetCurrentLog()
+        {
+            var tu = new REMI.Entities.TestUnit();
+            tu = (from u in instance.TestUnits.Include("Batch") where u.Batch.QRANumber.StartsWith("QRA-14") orderby u.Batch.QRANumber ascending, u.ID ascending select u).FirstOrDefault();
+
+            Assert.That(TrackingLogManager.GetCurrentLog(tu.ID).ID > 0);
+        }
+
+        [Test]
         public void GetLastTrackingLog()
         {
             var tu = new REMI.Entities.TestUnit();
@@ -37,8 +45,6 @@ namespace REMI.Bll.Tests
             Assert.That(TrackingLogManager.GetLastTrackingLog(bc).ID > 0);
 
             Assert.That(TrackingLogManager.GetLastTrackingLog(tu.ID).ID > 0);
-
-            Assert.That(TrackingLogManager.GetCurrentLog(tu.ID).ID > 0);
 
             Assert.That(TrackingLogManager.GetTrackingLogsForUnitByBarcode(bc.Number).Count > 0);
 

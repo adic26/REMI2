@@ -17,6 +17,7 @@ namespace REMI.Bll.Tests
         public void SetUp()
         {
             instance = new REMI.Dal.Entities().Instance;
+            FakeHttpContext fcontext = new FakeHttpContext();
         }
 
         [TearDown]
@@ -24,7 +25,7 @@ namespace REMI.Bll.Tests
         {
             instance = null;
         }
-
+        
         [Test]
         public void GetTRSQRAByTestCenter()
         {
@@ -118,6 +119,81 @@ namespace REMI.Bll.Tests
             batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
 
             Assert.IsNotNull(BatchManager.GetBatchComments(batch.QRANumber));
+        }
+
+        [Test]
+        public void SaveBatchComment()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+
+            Assert.IsTrue(BatchManager.SaveBatchComment(batch.QRANumber, "remi", "Testing..."));
+        }
+
+        [Test]
+        public void SaveExecutiveSummary()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+
+            Assert.IsTrue(BatchManager.SaveExecutiveSummary(batch.QRANumber, "remi", "Testing..."));
+        }
+
+        [Test]
+        public void CheckSingleBatchForStatusUpdate()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+
+            Assert.That(BatchManager.CheckSingleBatchForStatusUpdate(batch.QRANumber) > -1);
+        }
+
+        [Test]
+        public void Save()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+            Batch bt = BatchManager.GetItem(batch.QRANumber);
+            
+            Assert.That(BatchManager.Save(bt) > 0);
+        }
+
+        [Test]
+        public void UpdateBatchFromTRS()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+
+            Assert.That(BatchManager.UpdateBatchFromTRS(batch.QRANumber) > 0);
+        }
+
+        [Test]
+        public void SetPriority()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+            var p = new REMI.Entities.Lookup();
+            p = (from l in instance.Lookups where l.Type=="Priority" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
+
+            Assert.That(BatchManager.SetPriority(batch.QRANumber, p.LookupID).Count > 0);
+        }
+
+        [Test]
+        public void SetStatus()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+
+            Assert.That(BatchManager.SetStatus(batch.QRANumber, BatchStatus.InProgress).Count > 0);
+        }
+
+        [Test]
+        public void ChangeTestStage()
+        {
+            var batch = new REMI.Entities.Batch();
+            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
+
+            Assert.That(BatchManager.ChangeTestStage(batch.QRANumber, "Baseline").Count > 0);
         }
     }
 }

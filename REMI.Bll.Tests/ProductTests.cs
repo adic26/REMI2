@@ -18,6 +18,7 @@ namespace REMI.Bll.Tests
         public void SetUp()
         {
             instance = new REMI.Dal.Entities().Instance;
+            FakeHttpContext fcontext = new FakeHttpContext();
         }
 
         [TearDown]
@@ -136,6 +137,28 @@ namespace REMI.Bll.Tests
         public void GetProductContacts()
         {
             Assert.That(ProductGroupManager.GetProductContacts(526).Rows.Count > 0);
+        }
+
+        [Test]
+        public void UpdateProduct()
+        {
+            var product = new REMI.Entities.Product();
+            product = (from p in instance.Products orderby p.ID descending select p).FirstOrDefault();
+
+            Assert.True(ProductGroupManager.UpdateProduct(product.ProductGroupName, (product.IsActive ? 1 : 0), product.ID, product.QAPLocation, product.TSDContact));
+        }
+
+        [Test]
+        public void SaveDeleteSetting()
+        {
+            var product = new REMI.Entities.Product();
+            product = (from p in instance.Products orderby p.ID descending select p).FirstOrDefault();
+
+            Assert.True(ProductGroupManager.SaveSetting(product.ID, "ProductTest", "test", "test"));
+            Assert.True(ProductGroupManager.DeleteSetting(product.ID, "ProductTest"));
+            
+            Assert.True(ProductGroupManager.CreateSetting(product.ID, "ProductTest", "test", "test"));
+            Assert.True(ProductGroupManager.DeleteSetting(product.ID, "ProductTest"));
         }
     }
 }

@@ -17,6 +17,7 @@ namespace REMI.Bll.Tests
         public void SetUp()
         {
             instance = new REMI.Dal.Entities().Instance;
+            FakeHttpContext fcontext = new FakeHttpContext();
         }
 
         [TearDown]
@@ -64,6 +65,19 @@ namespace REMI.Bll.Tests
             batch = (from b in instance.Batches where b.TestStageName == "Baseline" && b.BatchStatus == 2 orderby b.ID descending select b).FirstOrDefault();
 
             Assert.IsNotNull(TestManager.GetTestsByBatchStage(batch.ID, batch.TestStageName, false));
+        }
+
+        [Test]
+        public void SaveTestAndTypes()
+        {
+            var test = new REMI.Entities.Test();
+            test = (from t in instance.Tests where t.TestType==1 orderby t.ID descending select t).FirstOrDefault();
+
+            Test tests = TestManager.GetTest(test.ID);
+
+            Assert.That(TestManager.SaveTest(tests) > 0);
+
+            Assert.IsNotNull(TestManager.SaveApplicableTLTypes(tests.TrackingLocationTypes, tests.ID));
         }
     }
 }

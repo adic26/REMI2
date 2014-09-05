@@ -18,6 +18,7 @@ namespace REMI.Bll.Tests
         public void SetUp()
         {
             instance = new REMI.Dal.Entities().Instance;
+            FakeHttpContext fcontext = new FakeHttpContext();
         }
 
         [TearDown]
@@ -27,7 +28,7 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetProductList()
+        public void GetJobByName()
         {
             Assert.That(JobManager.GetJobByName("T101 Internal Use Only").ID > 0);
         }
@@ -54,6 +55,14 @@ namespace REMI.Bll.Tests
         public void GetJobListDT()
         {
             Assert.That(JobManager.GetJobListDT().Count > 0);
+        }
+
+        [Test]
+        public void SaveJob()
+        {
+            Job j = JobManager.GetJobByName("T101 Internal Use Only");
+
+            Assert.That(JobManager.SaveJob(j) > 0);
         }
     }
 }

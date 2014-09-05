@@ -6,6 +6,7 @@ using NUnit.Framework;
 using REMI.BusinessEntities;
 using REMI.Contracts;
 using REMI.Dal;
+using System.Configuration;
 
 namespace REMI.Bll.Tests
 {
@@ -18,6 +19,7 @@ namespace REMI.Bll.Tests
         public void SetUp()
         {
             instance = new REMI.Dal.Entities().Instance;
+            FakeHttpContext fcontext = new FakeHttpContext();
         }
 
         [TearDown]
@@ -87,6 +89,30 @@ namespace REMI.Bll.Tests
 
             Assert.IsNotNull(TestUnitManager.GetRAWUnitInformation(unit.Batch.QRANumber, unit.BatchUnitNumber));
             Assert.IsNull(TestUnitManager.GetRAWUnitInformation("QRA-14", 1));
+        }
+
+        [Test]
+        public void SetUnitBSN()
+        {
+            var unit = new REMI.Entities.TestUnit();
+            unit = (from u in instance.TestUnits.Include("Batch") where u.BSN > 0 orderby u.Batch.ID descending select u).FirstOrDefault();
+            DeviceBarcodeNumber bc = new DeviceBarcodeNumber(unit.Batch.QRANumber, unit.BatchUnitNumber.ToString());
+
+            Assert.True(TestUnitManager.SetUnitBSN(bc.Number, (long)unit.BSN, ConfigurationManager.AppSettings["userName"].ToString()));
+        }
+
+        [Test]
+        public void Save()
+        {
+            var unit = new REMI.Entities.TestUnit();
+            unit = (from u in instance.TestUnits.Include("Batch") where u.BSN > 0 orderby u.Batch.ID descending select u).FirstOrDefault();
+            DeviceBarcodeNumber bc = new DeviceBarcodeNumber(unit.Batch.QRANumber, unit.BatchUnitNumber.ToString());
+
+            Batch b = BatchManager.GetItem(unit.Batch.QRANumber);
+
+            TestUnit tu = b.TestUnits[0];
+
+            Assert.That(TestUnitManager.Save(tu) > 0);
         }
     }
 }

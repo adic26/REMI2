@@ -5,16 +5,16 @@ Imports REMI.Validation
 Namespace REMI.Bll
     Public Class TrackingLogManager
         Inherits REMIManagerBase
-        Public Shared Function SaveTrackingLog(ByVal dtl As DeviceTrackingLog) As Integer
-            Try
-                If dtl.Validate Then
-                    Return DeviceTrackingLogDB.Save(dtl)
-                End If
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
-            End Try
-            Return 0
-        End Function
+        'Public Shared Function SaveTrackingLog(ByVal dtl As DeviceTrackingLog) As Integer
+        '    Try
+        '        If dtl.Validate Then
+        '            Return DeviceTrackingLogDB.Save(dtl)
+        '        End If
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+        '    End Try
+        '    Return 0
+        'End Function
         Public Shared Function GetLastTrackingLog(ByVal Barcode As DeviceBarcodeNumber) As DeviceTrackingLog
             Try
                 Return DeviceTrackingLogDB.GetLastLog(Barcode)

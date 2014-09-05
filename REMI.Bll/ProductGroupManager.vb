@@ -185,6 +185,7 @@ Namespace REMI.Bll
                 ps.Product = (From p In instance.Products Where p.ID = productID Select p).FirstOrDefault()
                 instance.AddToProductSettings(ps)
                 instance.SaveChanges()
+                Return True
             Catch ex As Exception
                 nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("productID: {0} keyName: {1} valueText: {2} defaultValue: {3}", productID, keyName, valueText, defaultValue)))
             End Try

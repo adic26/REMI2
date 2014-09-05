@@ -6,6 +6,7 @@ using NUnit.Framework;
 using REMI.BusinessEntities;
 using REMI.Contracts;
 using REMI.Dal;
+using System.Configuration;
 
 namespace REMI.Bll.Tests
 {
@@ -19,6 +20,7 @@ namespace REMI.Bll.Tests
         public void SetUp()
         {
             instance = new REMI.Dal.Entities().Instance;
+            FakeHttpContext fcontext = new FakeHttpContext();
         }
 
         [TearDown]
@@ -171,5 +173,36 @@ namespace REMI.Bll.Tests
             Assert.That(TrackingLocationManager.GetSingleItem(tlc).ID > 0);
         }
 
+        [Test]
+        public void SaveHostStatus()
+        {
+            var tln = new REMI.Entities.TrackingLocation();
+            tln = (from tl in instance.TrackingLocations.Include("TrackingLocationsHosts") where tl.Decommissioned != true select tl).FirstOrDefault();
+
+            Assert.True(TrackingLocationManager.SaveHostStatus(tln.TrackingLocationsHosts.ElementAt(0).HostName, ConfigurationManager.AppSettings["userName"].ToString(), TrackingLocationStatus.Available));
+        }
+
+        [Test]
+        public void SaveTrackingLocationHost()
+        {
+            var tln = new REMI.Entities.TrackingLocation();
+            tln = (from tl in instance.TrackingLocations.Include("TrackingLocationsHosts") where tl.Decommissioned != true select tl).FirstOrDefault();
+
+            Assert.That(TrackingLocationManager.SaveTrackingLocationHost(tln.ID, tln.TrackingLocationsHosts.ElementAt(0).HostName).Count > 0);
+        }
+
+        [Test]
+        public void SaveDeleteTrackingLocationPlugin()
+        {
+            var tln = new REMI.Entities.TrackingLocation();
+            tln = (from tl in instance.TrackingLocations.Include("TrackingLocationsHosts") where tl.Decommissioned != true select tl).FirstOrDefault();
+
+            Assert.That(TrackingLocationManager.SaveTrackingLocationPlugin(tln.ID, "test").Count > 0);
+
+            var tp = new REMI.Entities.TrackingLocationsPlugin();
+            tp = (from tlp in instance.TrackingLocationsPlugins.Include("TrackingLocation") where tlp.PluginName == "test" && tlp.TrackingLocation.ID == tln.ID select tlp).FirstOrDefault();
+
+            Assert.That(TrackingLocationManager.DeletePlugin(tp.ID).Count > 0);
+        }
     }
 }
