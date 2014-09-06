@@ -406,6 +406,7 @@ Namespace REMI.Bll
 
         Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Integer
             Try
+                REMIAppCache.RemoveReqData(qraNumber)
                 Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=False)
                 Dim oldPercentageComplete As Integer = b.PercentageComplete
                 Dim batchChanged As Boolean = b.CheckForTRSUpdates
