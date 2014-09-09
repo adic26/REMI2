@@ -83,6 +83,10 @@ Partial Class Admin_Users
             hdnUserID.Value = -1
             chkIsActive.Checked = True
             chkByPassProduct.Checked = False
+
+            ddlGeoLoc.Items.Clear()
+            ddlGeoLoc.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 1)
+            ddlGeoLoc.DataBind()
         Else
             lblHeaderText.Text = String.Format("Editing {0}", CurrentUser.LDAPName)
             txtName.Visible = False
