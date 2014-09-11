@@ -95,7 +95,17 @@ Public Class RemiAPI
         Try
             Return TestUnitManager.GetUnitAssignedTo(QRANumber, batchUnitNumber)
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetUnitAssignedTo", "e8", NotificationType.Errors, ex, "Request: " + QRANumber)
+            TestUnitManager.LogIssue("REMI API GetUnitAssignedTo", "e8", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + QRANumber, batchUnitNumber))
+        End Try
+        Return Nothing
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Gets Unit.")> _
+    Public Function GetUnit(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As TestUnit
+        Try
+            Return TestUnitManager.GetUnit(QRANumber, batchUnitNumber)
+        Catch ex As Exception
+            TestUnitManager.LogIssue("REMI API GetUnit", "e8", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + QRANumber, batchUnitNumber))
         End Try
         Return Nothing
     End Function
@@ -648,7 +658,7 @@ Public Class RemiAPI
                     rqResults.Rows.Add(row)
                 Next
 
-                Return b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+                Return b.GetParametricTestOverviewTable(False, False, rqResults, False, False)
             End If
         Catch ex As Exception
             TestUnitManager.LogIssue("REMI API GetTestingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
@@ -662,7 +672,7 @@ Public Class RemiAPI
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Dim b As BatchView = Me.GetBatch(qraNumber)
-                Return b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+                Return b.GetStressingOverviewTable(False, False, False, False)
             End If
         Catch ex As Exception
             TestUnitManager.LogIssue("REMI API GetStressingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
@@ -787,7 +797,7 @@ Public Class RemiAPI
         Try
             Dim b As BatchView = BatchManager.GetViewBatch(QRANumber)
 
-            Return b.GetAllNotifications
+            Return b.GetAllNotifications(False)
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatchNotifications", "e3", NotificationType.Errors, ex, "Request: " + QRANumber)
         End Try
@@ -852,6 +862,54 @@ Public Class RemiAPI
             BatchManager.LogIssue("REMI API Get CPR Number", "e3", NotificationType.Errors, ex, "Request: " + QRANumber)
         End Try
         Return String.Empty
+    End Function
+
+    <WebMethod(Description:="Get Next Stage By Batch.")> _
+    Public Function GetBatchNextStage(ByVal requestNumber As String) As TestStage
+        Try
+            Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
+
+            If (barcode.Validate()) Then
+                Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
+                Dim stage As TestStage = TestUnitManager.GetUnit(barcode.BatchNumber, barcode.UnitNumber).CurrentTestStage
+                Dim testStageType(1) As TestStageType
+                testStageType(0) = Contracts.TestStageType.EnvironmentalStress
+                testStageType(1) = Contracts.TestStageType.Parametric
+
+                Return b.GetNextTestStage(stage, barcode.BatchNumber, b.Job, b.TestRecords, testStageType, b.Tasks)
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return Nothing
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Stages.")> _
+    Public Function GetTestStagesByBatch(ByVal requestNumber As String) As List(Of String)
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+
+            If batch IsNot Nothing Then
+                Return (From s In TestStageManager.GetTestStagesByBatch(batch.ID) Select s.Value).ToList
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New List(Of String)
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Tests.")> _
+    Public Function GetTestsByBatchStage(ByVal requestNumber As String, ByVal testStageName As String) As List(Of String)
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+
+            If batch IsNot Nothing Then
+                Return (From s In TestManager.GetTestsByBatchStage(batch.ID, testStageName, False) Select s.Value).ToList
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch tests", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New List(Of String)
     End Function
 
     <WebMethod(Description:="Add's a comment to the batch.")> _
@@ -956,7 +1014,9 @@ Public Class RemiAPI
                                 ByVal userIdentification As String, ByVal locationIdenitifcation As String, ByVal trackingLocationName As String, ByVal jobName As String, ByVal productGroup As String) As ScanReturnData
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Return ScanManager.Scan(Helpers.CleanInputText(qraNumber, 21), Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
+                Dim sd As ScanReturnData = ScanManager.Scan(Helpers.CleanInputText(qraNumber, 21), Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
+
+                Return sd
             End If
         Catch ex As Exception
             ScanManager.LogIssue("REMI API - Scan", "NA", NotificationType.Errors, ex, "Request: " + qraNumber + " TS: " + testStageName + " Test: " + testName + " Result: " + overallTestResult + " UID: " + userIdentification + " Location ID: " + locationIdenitifcation)

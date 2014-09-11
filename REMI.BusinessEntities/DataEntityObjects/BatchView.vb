@@ -236,7 +236,7 @@ Namespace REMI.BusinessEntities
             Return retStr.ToString
         End Function
 
-        Public Overrides Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean) As String
+        Public Overrides Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As String
             If TestUnits.Count <= 0 Then
                 Return "0 Units"
             Else
@@ -256,7 +256,12 @@ Namespace REMI.BusinessEntities
                         Dim baseLinkAll As String = String.Format("<a href=""{0}"" onmouseover=""Tip('{1}',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'-600',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()"">{{0}}</a>", REMIWebLinks.GetTestRecordsLink(System.Web.HttpContext.Current.Server.UrlEncode(Me.QRANumber), TestName, testStageName, Me.JobName, 0), popUpString)
                         'finally get the actual text displayed in the cell and format it in.
 
-                        Return String.Format(baseLinkAll, overallStatus)
+                        If (showHyperlinks) Then
+                            Return String.Format(baseLinkAll, overallStatus)
+                        Else
+                            Return overallStatus.ToString()
+                        End If
+
                     Else
                         Dim exceptionedUnits As Integer = Me.NumberOfUnits - numTestableUnits
                         If (hasEditAuthority Or isTestCenterAdmin Or hasBatchSetupAuthority) Then
@@ -327,7 +332,7 @@ Namespace REMI.BusinessEntities
             Return String.Empty
         End Function
 
-        Public Function GetParametricTestOverviewTable(ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean) As DataTable
+        Public Function GetParametricTestOverviewTable(ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As DataTable
             Dim dt As New DataTable("TestingSummary")
             dt.Columns.Add("Test Stage")
 
@@ -343,9 +348,15 @@ Namespace REMI.BusinessEntities
 
             For Each ts In (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder).Distinct
                 r = dt.NewRow
-                r.Item("Test Stage") = String.Format("<A href=""{0}"" target=""_blank"">{1}</A>", REMI.Core.REMIWebLinks.GetTestRecordsLink(Me.QRANumber, Nothing, ts.TestStageName, Nothing, 0), ts.TestStageName)
+
+                If (showHyperlinks) Then
+                    r.Item("Test Stage") = String.Format("<A href=""{0}"" target=""_blank"">{1}</A>", REMI.Core.REMIWebLinks.GetTestRecordsLink(Me.QRANumber, Nothing, ts.TestStageName, Nothing, 0), ts.TestStageName)
+                Else
+                    r.Item("Test Stage") = ts.TestStageName
+                End If
+
                 For Each t As String In applicableParamtericTests
-                    Dim text As String = GetTestOverviewCellString(Me.JobName, ts.TestStageName, t, hasEditItemAuthority, isTestCenterAdmin, rqResults, hasBatchSetupAuthority)
+                    Dim text As String = GetTestOverviewCellString(Me.JobName, ts.TestStageName, t, hasEditItemAuthority, isTestCenterAdmin, rqResults, hasBatchSetupAuthority, showHyperlinks)
                     r.Item(t) = text
                 Next
                 dt.Rows.Add(r)
@@ -368,7 +379,7 @@ Namespace REMI.BusinessEntities
             Return dt
         End Function
 
-        Public Function GetStressingOverviewTable(ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal hasBatchSetupAuthority As Boolean) As DataTable
+        Public Function GetStressingOverviewTable(ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As DataTable
             Dim dt As New DataTable("StressingSummary")
             dt.Columns.Add("Test Unit")
             Dim applicableTestStages = (From task In Tasks Where task.TestStageType = TestType.EnvironmentalStress AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName).Distinct
@@ -381,7 +392,12 @@ Namespace REMI.BusinessEntities
             'add the data
             For Each tu As TestUnit In Me.TestUnits
                 Dim r As DataRow = dt.NewRow
-                r.Item("Test Unit") = String.Format("<A href=""{0}"" target=""_blank"">{1}</A>", REMI.Core.REMIWebLinks.GetTestRecordsLink(Me.QRANumber, Nothing, Nothing, Nothing, tu.ID), tu.BatchUnitNumber)
+
+                If (showHyperlinks) Then
+                    r.Item("Test Unit") = String.Format("<A href=""{0}"" target=""_blank"">{1}</A>", REMI.Core.REMIWebLinks.GetTestRecordsLink(Me.QRANumber, Nothing, Nothing, Nothing, tu.ID), tu.BatchUnitNumber)
+                Else
+                    r.Item("Test Unit") = tu.BatchUnitNumber
+                End If
                 For Each ts In applicableTestStages
                     r.Item(ts) = GetEnvTestOverviewCellString(tu.BatchUnitNumber, ts, hasEditItemAuthority, isTestCenterAdmin, hasBatchSetupAuthority)
                 Next
@@ -465,14 +481,58 @@ Namespace REMI.BusinessEntities
             Else
                 tuNotifications.AddWithMessage(String.Format("Unit {0} not found or units Expected do not match the number of units added!", testUnitNumber), NotificationType.Warning)
             End If
+
             Return tuNotifications
         End Function
 
-        Public Function GetAllNotifications() As NotificationCollection
+        Public Function GetAllTestUnitNotificationsWithoutLinks(ByVal testUnitNumber As Integer) As NotificationCollection
+            Dim tuNotifications As New NotificationCollection
+            Dim tu As TestUnit = (From testUnit In TestUnits Where testUnit.BatchUnitNumber = testUnitNumber Select testUnit).FirstOrDefault()
+            If tu IsNot Nothing Then
+                For Each tr As TestRecord In TestRecords.FindByTestUnit(testUnitNumber)
+                    Select Case tr.Status
+                        Case TestRecordStatus.NeedsRetest
+                            tuNotifications.AddWithMessage(String.Format("{0} has units requiring retest for {1}", tu.FullQRANumber, tr.TestName), _
+                                                       NotificationType.Information)
+                        Case TestRecordStatus.FARequired
+                            tuNotifications.AddWithMessage(String.Format("{0} requires an FA number to be assigned for {1}", tu.FullQRANumber, tr.TestName), _
+                                                       NotificationType.Information)
+                        Case TestRecordStatus.WaitingForResult
+                            tuNotifications.AddWithMessage(String.Format("{0} requires results to be assigned for {1}", tu.FullQRANumber, tr.TestName), _
+                                                       NotificationType.Information)
+                        Case TestRecordStatus.Quarantined
+                            tuNotifications.AddWithMessage(String.Format("{0} has been quarantined for {1}", tu.FullQRANumber, tr.TestName), _
+                                             NotificationType.Information)
+                        Case TestRecordStatus.CompleteFail
+                            If tr.TestStageName.ToLower <> "sample evaluation" OrElse (tr.TestStageName.ToLower = "sample evaluation" AndAlso Me.TestStageName.ToLower = "sample evaluation") Then 'we dont care about sample eval fails  once the test has moved past sample eval.
+                                tuNotifications.AddWithMessage(String.Format("{0} has failed {1} and requires a review.", tu.FullQRANumber, tr.TestName), _
+                                                 NotificationType.Warning)
+                            End If
+                    End Select
+                Next
+                If TestRecords.UnitIsInFA(testUnitNumber) Then
+                    tuNotifications.AddWithMessage(String.Format("{0} {1}", tu.FullQRANumber, "is in FA"), NotificationType.Information)
+                End If
+                If Me.TestStageName <> tu.CurrentTestStageName Then
+                    tuNotifications.AddWithMessage(String.Format("{0} is currently at a different test stage ({1}) to the rest of the batch.", tu.FullQRANumber, tu.CurrentTestStage.Name), NotificationType.Information)
+                End If
+            Else
+                tuNotifications.AddWithMessage(String.Format("Unit {0} not found or units Expected do not match the number of units added!", testUnitNumber), NotificationType.Warning)
+            End If
+
+            Return tuNotifications
+        End Function
+
+        Public Function GetAllNotifications(ByVal showHyperlinks As Boolean) As NotificationCollection
             If TestUnits IsNot Nothing Then
                 Dim FACount As Integer
                 For Each tu As TestUnit In TestUnits
-                    Me.Notifications.Add(GetAllTestUnitNotifications(tu.BatchUnitNumber))
+                    If (showHyperlinks) Then
+                        Me.Notifications.Add(GetAllTestUnitNotifications(tu.BatchUnitNumber))
+                    Else
+                        Me.Notifications.Add(GetAllTestUnitNotificationsWithoutLinks(tu.BatchUnitNumber))
+                    End If
+
                     If TestRecords.UnitIsInFA(tu.BatchUnitNumber) Then
                         FACount += 1
                     End If

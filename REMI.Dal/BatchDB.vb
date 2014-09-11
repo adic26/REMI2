@@ -1115,7 +1115,9 @@ Namespace REMI.Dal
             batchData.TestUnits = TestUnitDB.GetBatchUnits(batchData.QRANumber, sqlConnection)
 
             For Each tu As TestUnit In batchData.TestUnits
-                tu.CurrentTestStage = batchData.Job.TestStages.FindByName(tu.CurrentTestStage.Name)
+                If (tu.CurrentTestStage.ID = 0) Then
+                    tu.CurrentTestStage = batchData.Job.TestStages.FindByName(tu.CurrentTestStage.Name)
+                End If
             Next
         End Sub
 #End Region

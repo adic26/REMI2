@@ -139,7 +139,7 @@ Partial Class ScanForInfo_Default
                     rptBatchComments.DataSource = b.Comments
                     rptBatchComments.DataBind()
                     bscMain.SetBatches(bColl)
-                    notMain.Notifications.Add(b.GetAllNotifications)
+                    notMain.Notifications.Add(b.GetAllNotifications(True))
                     grdDetail.DataSource = b.TestUnits
                     grdDetail.DataBind()
                     lblQRANumber.Text = bc.BatchNumber
@@ -165,9 +165,9 @@ Partial Class ScanForInfo_Default
                         rqResults.Rows.Add(row)
                     Next
 
-                    gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority())
+                    gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority(), True)
                     gvwTestingSummary.DataBind()
-                    gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority())
+                    gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(), True)
                     gvwStressingSummary.DataBind()
 
                     setup.JobID = b.JobID
@@ -387,7 +387,7 @@ Partial Class ScanForInfo_Default
                 rqResults.Rows.Add(row)
             Next
 
-            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
             gvwTestingSummary.DataBind()
 
             ScriptManager.RegisterStartupScript(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll();ApplyTableFormatting();", True)
@@ -409,7 +409,7 @@ Partial Class ScanForInfo_Default
             lblNote.Visible = True
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
-            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
             gvwStressingSummary.DataBind()
 
             ScriptManager.RegisterStartupScript(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
@@ -448,7 +448,7 @@ Partial Class ScanForInfo_Default
                 rqResults.Rows.Add(row)
             Next
 
-            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
             gvwTestingSummary.DataBind()
             ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll();ApplyTableFormatting();", True)
         End If
@@ -460,7 +460,7 @@ Partial Class ScanForInfo_Default
             TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
-            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority)
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
             gvwStressingSummary.DataBind()
             ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
         End If

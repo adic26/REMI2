@@ -57,7 +57,7 @@ namespace REMI.Contracts
         int ReqID { get; set; }
         int JobID { get; set; }
         string MechanicalTools { get; set; }
-        string GetTestOverviewCellString(string jobName, string testStageName, string TestName, bool hasEditAuthority, bool isTestCenterAdmin, System.Data.DataTable rqResults, bool hasBatchSetupAuthority);
+        string GetTestOverviewCellString(string jobName, string testStageName, string TestName, bool hasEditAuthority, bool isTestCenterAdmin, System.Data.DataTable rqResults, bool hasBatchSetupAuthority, bool showHyperlinks);
         bool hasBatchSpecificExceptions { get; set; }
 
         Dictionary<string, double> TestStageTimeLeftGrid { get; set; }

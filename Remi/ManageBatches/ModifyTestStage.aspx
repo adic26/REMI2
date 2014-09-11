@@ -53,7 +53,7 @@
         <br />
         <br />
         New Test Stage:
-        <asp:DropDownList Style="font-weight: bold;" ID="ddlSelection" runat="server" DataTextField="tsName" DataValueField="TestStageID" Width="157px">
+        <asp:DropDownList Style="font-weight: bold;" ID="ddlSelection" runat="server" DataTextField="value" DataValueField="key" Width="157px">
         </asp:DropDownList>
         &nbsp;<br />
         <br />

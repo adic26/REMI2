@@ -978,7 +978,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        Public Overridable Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean) As String Implements IBatch.GetTestOverviewCellString
+        Public Overridable Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As String Implements IBatch.GetTestOverviewCellString
             Return String.Empty
         End Function
 #End Region
