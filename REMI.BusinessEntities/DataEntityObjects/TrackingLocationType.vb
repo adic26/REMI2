@@ -5,6 +5,7 @@ Namespace REMI.BusinessEntities
     ''' This class represents a tracking location type. 
     ''' </summary>
     ''' <remarks></remarks>
+    <Serializable()> _
     Public Class TrackingLocationType
         Inherits LoggedItemBase
 

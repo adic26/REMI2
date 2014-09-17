@@ -139,6 +139,7 @@ Partial Class Controls_BatchSelectControl
             Return _DataSourceID
         End Get
         Set(value As String)
+            _isAdmin = UserManager.GetCurrentUser.IsAdmin
             _DataSourceID = value
             grdBatches.EmptyDataText = EmptyDataText
             grdBatches.DataSourceID = _DataSourceID
@@ -171,6 +172,7 @@ Partial Class Controls_BatchSelectControl
         End Get
         Set(ByVal value As IDataSource)
             _Datasource = value
+            _isAdmin = UserManager.GetCurrentUser.IsAdmin
             grdBatches.EmptyDataText = EmptyDataText
             grdBatches.DataSource = Datasource
             grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
@@ -180,8 +182,6 @@ Partial Class Controls_BatchSelectControl
     End Property
 
     Protected Sub SetColumns()
-        _isAdmin = UserManager.GetCurrentUser.IsAdmin
-
         Select Case DisplayMode
             Case BatchSelectControlMode.BasicDisplay
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
@@ -537,6 +537,7 @@ Partial Class Controls_BatchSelectControl
 
     Public Sub SetBatches(ByVal dt As DataTable)
         _dt = dt
+        _isAdmin = UserManager.GetCurrentUser.IsAdmin
         grdBatches.EmptyDataText = EmptyDataText
         grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
         grdBatches.DataSource = dt
@@ -546,6 +547,7 @@ Partial Class Controls_BatchSelectControl
 
     Public Sub SetBatches(ByVal bColl As BatchCollection)
         _bColl = bColl
+        _isAdmin = UserManager.GetCurrentUser.IsAdmin
         grdBatches.EmptyDataText = EmptyDataText
         grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
         grdBatches.DataSource = bColl
@@ -555,6 +557,7 @@ Partial Class Controls_BatchSelectControl
 
     Public Sub SetBatches(ByVal bColl As List(Of IBatch))
         grdBatches.EmptyDataText = EmptyDataText
+        _isAdmin = UserManager.GetCurrentUser.IsAdmin
         grdBatches.AutoGenerateEditButton = _autoGenerateEditButton
         grdBatches.DataSource = bColl
         grdBatches.DataBind()
