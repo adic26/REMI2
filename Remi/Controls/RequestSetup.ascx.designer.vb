@@ -32,6 +32,15 @@ Partial Public Class RequestSetup
     Protected WithEvents hdnProductID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''hdnOrientationID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnOrientationID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''hdnBatchID control.
     '''</summary>
     '''<remarks>
@@ -120,6 +129,24 @@ Partial Public Class RequestSetup
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents notMain As Global.Remi.Controls_Notifications
+
+    '''<summary>
+    '''Orientation control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Orientation As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''ddlOrientations control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlOrientations As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''ddlRequestSetupOptions control.

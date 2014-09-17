@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("d037509f-425c-4191-a483-0bf54a07f237")>
+<Assembly: EdmSchemaAttribute("727210bb-0811-4076-ac4a-aadad548e8b2")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnits", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_DeviceTrackingLog", "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.DeviceTrackingLog), "TestRecordsXTrackingLogs", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecordsXTrackingLog))>
@@ -95,6 +95,9 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestUnit))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestType_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestType))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldMapping_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "ReqFieldMapping", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldMapping))>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_JobOrientation", "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.JobOrientation), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch))>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobOrientation_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Job), "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobOrientation))>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobOrientation_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobOrientation))>
 
 #End Region
 
@@ -984,6 +987,20 @@ Namespace REMI.Entities
         End Property
     
         Private _ReqFieldMappings As ObjectSet(Of ReqFieldMapping)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property JobOrientations() As ObjectSet(Of JobOrientation)
+            Get
+                If (_JobOrientations Is Nothing) Then
+                    _JobOrientations = MyBase.CreateObjectSet(Of JobOrientation)("JobOrientations")
+                End If
+                Return _JobOrientations
+            End Get
+        End Property
+    
+        Private _JobOrientations As ObjectSet(Of JobOrientation)
 
         #End Region
 
@@ -1407,6 +1424,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToReqFieldMappings(ByVal reqFieldMapping As ReqFieldMapping)
             MyBase.AddObject("ReqFieldMappings", reqFieldMapping)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the JobOrientations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToJobOrientations(ByVal jobOrientation As JobOrientation)
+            MyBase.AddObject("JobOrientations", jobOrientation)
         End Sub
 
         #End Region
@@ -3578,6 +3602,37 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_JobOrientation", "JobOrientation")>
+        Public Property JobOrientation() As JobOrientation
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property JobOrientationReference() As EntityReference(Of JobOrientation)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -5530,6 +5585,352 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobOrientation_Jobs", "JobOrientation")>
+         Public Property JobOrientations() As EntityCollection(Of JobOrientation)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of JobOrientation)("REMI.Entities.FK_JobOrientation_Jobs", "JobOrientation")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of JobOrientation)("REMI.Entities.FK_JobOrientation_Jobs", "JobOrientation", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="JobOrientation")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class JobOrientation
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new JobOrientation object.
+        ''' </summary>
+        ''' <param name="id">Initial value of the ID property.</param>
+        ''' <param name="numUnits">Initial value of the NumUnits property.</param>
+        ''' <param name="numDrops">Initial value of the NumDrops property.</param>
+        ''' <param name="createdDate">Initial value of the CreatedDate property.</param>
+        ''' <param name="description">Initial value of the Description property.</param>
+        ''' <param name="isActive">Initial value of the IsActive property.</param>
+        ''' <param name="definition">Initial value of the Definition property.</param>
+        ''' <param name="name">Initial value of the Name property.</param>
+        Public Shared Function CreateJobOrientation(id As Global.System.Int32, numUnits As Global.System.Int32, numDrops As Global.System.Int32, createdDate As Global.System.DateTime, description As Global.System.String, isActive As Global.System.Boolean, definition As Global.System.String, name As Global.System.String) As JobOrientation
+            Dim jobOrientation as JobOrientation = New JobOrientation
+            jobOrientation.ID = id
+            jobOrientation.NumUnits = numUnits
+            jobOrientation.NumDrops = numDrops
+            jobOrientation.CreatedDate = createdDate
+            jobOrientation.Description = description
+            jobOrientation.IsActive = isActive
+            jobOrientation.Definition = definition
+            jobOrientation.Name = name
+            Return jobOrientation
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ID() As Global.System.Int32
+            Get
+                Return _ID
+            End Get
+            Set
+                If (_ID <> Value) Then
+                    OnIDChanging(value)
+                    ReportPropertyChanging("ID")
+                    _ID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ID")
+                    OnIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ID As Global.System.Int32
+        Private Partial Sub OnIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property NumUnits() As Global.System.Int32
+            Get
+                Return _NumUnits
+            End Get
+            Set
+                OnNumUnitsChanging(value)
+                ReportPropertyChanging("NumUnits")
+                _NumUnits = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("NumUnits")
+                OnNumUnitsChanged()
+            End Set
+        End Property
+    
+        Private _NumUnits As Global.System.Int32
+        Private Partial Sub OnNumUnitsChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnNumUnitsChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property NumDrops() As Global.System.Int32
+            Get
+                Return _NumDrops
+            End Get
+            Set
+                OnNumDropsChanging(value)
+                ReportPropertyChanging("NumDrops")
+                _NumDrops = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("NumDrops")
+                OnNumDropsChanged()
+            End Set
+        End Property
+    
+        Private _NumDrops As Global.System.Int32
+        Private Partial Sub OnNumDropsChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnNumDropsChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property CreatedDate() As Global.System.DateTime
+            Get
+                Return _CreatedDate
+            End Get
+            Set
+                OnCreatedDateChanging(value)
+                ReportPropertyChanging("CreatedDate")
+                _CreatedDate = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("CreatedDate")
+                OnCreatedDateChanged()
+            End Set
+        End Property
+    
+        Private _CreatedDate As Global.System.DateTime
+        Private Partial Sub OnCreatedDateChanging(value As Global.System.DateTime)
+        End Sub
+    
+        Private Partial Sub OnCreatedDateChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Description() As Global.System.String
+            Get
+                Return _Description
+            End Get
+            Set
+                OnDescriptionChanging(value)
+                ReportPropertyChanging("Description")
+                _Description = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Description")
+                OnDescriptionChanged()
+            End Set
+        End Property
+    
+        Private _Description As Global.System.String
+        Private Partial Sub OnDescriptionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnDescriptionChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property IsActive() As Global.System.Boolean
+            Get
+                Return _IsActive
+            End Get
+            Set
+                OnIsActiveChanging(value)
+                ReportPropertyChanging("IsActive")
+                _IsActive = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsActive")
+                OnIsActiveChanged()
+            End Set
+        End Property
+    
+        Private _IsActive As Global.System.Boolean
+        Private Partial Sub OnIsActiveChanging(value As Global.System.Boolean)
+        End Sub
+    
+        Private Partial Sub OnIsActiveChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Definition() As Global.System.String
+            Get
+                Return _Definition
+            End Get
+            Set
+                OnDefinitionChanging(value)
+                ReportPropertyChanging("Definition")
+                _Definition = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Definition")
+                OnDefinitionChanged()
+            End Set
+        End Property
+    
+        Private _Definition As Global.System.String
+        Private Partial Sub OnDefinitionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnDefinitionChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Name() As Global.System.String
+            Get
+                Return _Name
+            End Get
+            Set
+                OnNameChanging(value)
+                ReportPropertyChanging("Name")
+                _Name = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Name")
+                OnNameChanged()
+            End Set
+        End Property
+    
+        Private _Name As Global.System.String
+        Private Partial Sub OnNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnNameChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_JobOrientation", "Batch")>
+         Public Property Batches() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_JobOrientation", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_JobOrientation", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobOrientation_Jobs", "Job")>
+        Public Property Job() As Job
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Job)("REMI.Entities.FK_JobOrientation_Jobs", "Job").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Job)("REMI.Entities.FK_JobOrientation_Jobs", "Job").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property JobReference() As EntityReference(Of Job)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Job)("REMI.Entities.FK_JobOrientation_Jobs", "Job")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Job)("REMI.Entities.FK_JobOrientation_Jobs", "Job", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobOrientation_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_JobOrientation_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_JobOrientation_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_JobOrientation_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_JobOrientation_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -5987,6 +6388,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestType)("REMI.Entities.FK_RequestType_Lookups", "RequestType", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobOrientation_Lookups", "JobOrientation")>
+         Public Property JobOrientations() As EntityCollection(Of JobOrientation)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of JobOrientation)("REMI.Entities.FK_JobOrientation_Lookups", "JobOrientation")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of JobOrientation)("REMI.Entities.FK_JobOrientation_Lookups", "JobOrientation", value)
                 End If
             End Set
         End Property

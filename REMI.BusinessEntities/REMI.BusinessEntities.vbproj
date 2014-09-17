@@ -126,6 +126,7 @@
     <Compile Include="DataEntityObjects\BatchView.vb" />
     <Compile Include="DataEntityObjects\Calibration.vb" />
     <Compile Include="DataEntityObjects\LookupBase.vb" />
+    <Compile Include="DataEntityObjects\Orientation.vb" />
     <Compile Include="DataEntityObjects\ProcessTask.vb" />
     <Compile Include="DataEntityObjects\ProductSetting.vb" />
     <Compile Include="DataEntityObjects\ParameterResult.vb" />

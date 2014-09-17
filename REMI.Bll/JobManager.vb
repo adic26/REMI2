@@ -86,6 +86,25 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetJobOrientationLists(ByVal jobID As Int32) As DataTable
+            Try
+                Return JobDB.GetJobOrientationLists(jobID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                Return Nothing
+            End Try
+        End Function
+
+        Public Shared Function SaveOrientation(ByVal jobID As Int32, ByVal id As Int32, ByVal name As String, ByVal productTypeID As Int32, ByVal description As String, ByVal isActive As Boolean, ByVal xml As String) As Boolean
+            Try
+                Return JobDB.SaveOrientation(jobID, id, name, productTypeID, description, isActive, xml)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                Return False
+            End Try
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetJobListDT() As JobCollection
             Try
                 Return JobDB.GetJobListDT()

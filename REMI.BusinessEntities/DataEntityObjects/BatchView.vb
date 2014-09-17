@@ -2,6 +2,7 @@
 Imports REMI.Contracts
 Imports REMI.Core
 Imports System.Xml.Serialization
+Imports System.Xml.XPath.Extensions
 
 Namespace REMI.BusinessEntities
     <Serializable()> _
@@ -379,7 +380,12 @@ Namespace REMI.BusinessEntities
             Return dt
         End Function
 
-        Public Function GetStressingOverviewTable(ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As DataTable
+        Public Function GetStressingOverviewTable(ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean, ByVal orientation As String) As DataTable
+            If (orientation = String.Empty) Then
+                orientation = "<Orientations />"
+            End If
+
+            Dim orientationXML As XDocument = XDocument.Parse(orientation)
             Dim dt As New DataTable("StressingSummary")
             dt.Columns.Add("Test Unit")
             Dim applicableTestStages = (From task In Tasks Where task.TestStageType = TestType.EnvironmentalStress AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName).Distinct
@@ -398,55 +404,29 @@ Namespace REMI.BusinessEntities
                 Else
                     r.Item("Test Unit") = tu.BatchUnitNumber
                 End If
+
                 For Each ts In applicableTestStages
+                    Dim drop As String = ts.ToLower.Replace("drops", String.Empty).Replace("drop", String.Empty).Replace("tumbles", String.Empty).Replace("tumble", String.Empty).Trim()
                     r.Item(ts) = GetEnvTestOverviewCellString(tu.BatchUnitNumber, ts, hasEditItemAuthority, isTestCenterAdmin, hasBatchSetupAuthority)
+
+                    Dim orientationDesc As String = GetOrientationSetting(drop, tu.BatchUnitNumber.ToString(), orientationXML)
+
+                    If (Not String.IsNullOrEmpty(orientationDesc)) Then
+                        r.Item(ts) = String.Format("{0} {1}{2}{3}", r.Item(ts).ToString(), If(showHyperlinks, "<b>", String.Empty), orientationDesc, If(showHyperlinks, "</b>", String.Empty))
+                    End If
                 Next
                 dt.Rows.Add(r)
             Next
+
             Return dt
+        End Function
+
+        Public Function GetOrientationSetting(ByVal drop As String, ByVal unit As String, ByVal doc As XDocument) As String
+            Return (From el In doc.Root.Elements("Orientation") Where el.Attribute("Drop").Value = drop And el.Attribute("Unit").Value = unit Select el.Attribute("Description").Value).FirstOrDefault()
         End Function
 #End Region
 
 #Region "Batch Notifications"
-        'Public Function GetChangeJobNotifications() As NotificationCollection
-        '    Dim nc As New NotificationCollection
-        '    For Each tu As TestUnit In TestUnits
-        '        If tu.IsInTest Then
-        '            Me.Notifications.AddWithMessage(String.Format("{0} is currently in a Test and cannot be changed.", tu.QRANumber), NotificationType.Errors)
-        '        End If
-        '        'if not check if there are any tests remaining
-        '        Dim unfinishedTests As Integer = CountUnTestedOrReviewed(tu.BatchUnitNumber, tu.CurrentTestStage.Name)
-        '        If unfinishedTests > 0 Then
-        '            nc.AddWithMessage(String.Format("Warning: Unit <a href=""{0}"" Title=""Click to view unit information"">{1}</a> has <a href=""{2}"" Title=""Click to view test records"">{3} tests</a> that are unaccounted for at the {4} test stage. All tests and fails should be accounted for before moving to a new job.", tu.UnitInfoLink.Remove(0, 1), tu.QRANumber, String.Format("{0}/TestRecords/ViewRecords.aspx?QRA={1}&TestStageID={2}&TestUnitID={3}", System.Web.HttpContext.Current.Request.ApplicationPath, tu.QRANumber, tu.CurrentTestStage.ID, tu.ID), unfinishedTests, tu.CurrentTestStage.Name), NotificationType.Warning)
-        '        End If
-        '    Next
-        '    Return nc
-        'End Function
-
-        'Public Function GetChangeTestStageNotifications() As NotificationCollection
-        '    Dim nc As New NotificationCollection
-        '    For Each tu As TestUnit In TestUnits
-        '        If TestStageName <> tu.CurrentTestStageName Then
-        '            nc.AddWithMessage(String.Format("Unit {0} is currently at {1} and will not be included in this move.", tu.QRANumber, tu.CurrentTestStage.Name), NotificationType.Warning)
-        '        Else
-        '            'check if the unit is in Fa for another test
-        '            If TestRecords.UnitIsInFA(tu.BatchUnitNumber) Then
-        '                nc.AddWithMessage(String.Format("Note: Unit {0} is currently in FA at {1} and will not be included in this move.", tu.QRANumber, tu.CurrentTestStage.Name), NotificationType.Warning)
-        '            Else
-        '                If tu.IsInTest Then
-        '                    Me.Notifications.AddWithMessage(String.Format("{0} is currently in a Test and will not get updated.", tu.QRANumber), NotificationType.Information)
-        '                End If
-        '                'if not check if there are any tests remaining
-        '                Dim unfinishedTests As Integer = CountUnTestedOrReviewed(tu.BatchUnitNumber, tu.CurrentTestStage.Name)
-        '                If unfinishedTests > 0 Then
-        '                    nc.AddWithMessage(String.Format("Warning: Unit <a href=""{0}"" Title=""Click to view unit information"">{1}</a> has <a href=""{2}"" Title=""Click to view test records"">{3} tests</a> that are unaccounted for at the {4} test stage. All tests should be accounted for before moving to a new test stage.", tu.UnitInfoLink.Remove(0, 1), tu.QRANumber, String.Format("{0}/TestRecords/ViewRecords.aspx?QRA={1}&TestStageID={2}&TestUnitID={3}", System.Web.HttpContext.Current.Request.ApplicationPath, tu.QRANumber, tu.CurrentTestStage.ID, tu.ID), unfinishedTests, tu.CurrentTestStage.Name), NotificationType.Warning)
-        '                End If
-        '            End If
-        '        End If
-        '    Next
-        '    Return nc
-        'End Function
-
         Public Function GetAllTestUnitNotifications(ByVal testUnitNumber As Integer) As NotificationCollection
             Dim tuNotifications As New NotificationCollection
             Dim tu As TestUnit = (From testUnit In TestUnits Where testUnit.BatchUnitNumber = testUnitNumber Select testUnit).FirstOrDefault()

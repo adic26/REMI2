@@ -472,9 +472,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False) As BatchCollection
+        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True) As BatchCollection
             Try
-                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations)
+                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Empty)
                 Return New BatchCollection
@@ -658,6 +658,16 @@ Namespace REMI.Bll
                 n.Type = NotificationType.Errors
             End If
             Return n
+        End Function
+
+        Public Shared Function GetStagesNeedingCompletionByUnit(ByVal requestNumber As String, ByVal unitNumber As Int32) As DataSet
+            Try
+                Return BatchDB.GetStagesNeedingCompletionByUnit(requestNumber, unitNumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataSet
         End Function
 
         Public Shared Function SetPriority(ByVal qraNumber As String, ByVal priority As Int32) As NotificationCollection

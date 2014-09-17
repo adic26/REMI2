@@ -1,7 +1,7 @@
 ﻿ALTER PROCEDURE [dbo].[remispTestSelectApplicableTrackingLocationTypes] @TestID int
 AS
 BEGIN
-	SELECT tlt.id, tlt.TrackingLocationTypeName    
+	SELECT tlt.*   
 	FROM trackinglocationtypes as tlt, TrackingLocationsForTests as tlfort
 	WHERE tlfort.testid = @testid and tlt.ID = tlfort.TrackingLocationtypeID
 	ORDER BY tlt.TrackingLocationTypeName asc

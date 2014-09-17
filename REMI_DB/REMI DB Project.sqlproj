@@ -2258,4 +2258,16 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldMapping.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispJobOrientationSave.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetJobOrientations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetOrientation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetStagesNeedingCompletionByUnit.sql" />
+  </ItemGroup>
 </Project>

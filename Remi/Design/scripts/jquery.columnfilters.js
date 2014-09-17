@@ -37,18 +37,24 @@
  * @version 1.1.0
  */
 
+var ua = navigator.userAgent.toLowerCase();
+var check = function (r) {
+    return r.test(ua);
+};
+
 (function($){
 
-	$.fn.columnFilters = function(settings) {
-		var defaults = {  
-			wildCard: "*",  
-			notCharacter: "!",
-			caseSensitive: false,
-			minSearchCharacters: 1,
-			excludeColumns: [],
-			alternateRowClassNames: [],
-			underline: false
-			};  
+    $.fn.columnFilters = function (settings) {
+        var defaults = {
+            wildCard: "*",
+            notCharacter: "!",
+            caseSensitive: false,
+            minSearchCharacters: 1,
+            excludeColumns: [],
+            alternateRowClassNames: [],
+            underline: false
+        };
+
 		settings = $.extend(defaults, settings);  
 	
 		return this.each(function() {
@@ -70,8 +76,9 @@
 			var obj = $(this),
 				filterRow = document.createElement('tr'),
 				wildCardPatt = new RegExp(regexEscape(settings.wildCard || ''),'g'),
-				filter;
-		
+				filter,
+				IsChrome = check(/chrome/);
+
 			function addClassToColumn(iColNum, sClassName) {
 				$('tbody:first tr', obj).each(
 					function() {
@@ -85,15 +92,23 @@
 				);
 			}
 		
-			function runFilters(event) {			
-				$('input._filterText', obj).each(
-					function(iColCount) {
+			function runFilters(event) {
+			    $('input._filterText', obj).each(
+					function (iColCount) {
+					    if (IsChrome) {
+					        settings.wildCard = "";
+					    }
+
 						var sFilterTxt = (!settings.wildCard) ? regexEscape(this.value) : regexEscape(this.value, settings.wildCard).replace(wildCardPatt, '.*'),
 							bMatch = true, 
 							sFirst = settings.alternateRowClassNames[0] || '',
 							sSecound = settings.alternateRowClassNames[1] || '',
 							bOddRow = true;
-						
+
+						if (IsChrome) {
+						    sFilterTxt = sFilterTxt.replace("*", "");
+						}
+
 						if (settings.notCharacter && sFilterTxt.indexOf(settings.notCharacter) === 0) {
 							sFilterTxt = sFilterTxt.substr(settings.notCharacter.length,sFilterTxt.length);
 							if (sFilterTxt.length > 0) { bMatch = false; }

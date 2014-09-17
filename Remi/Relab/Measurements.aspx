@@ -11,7 +11,7 @@
                 underline: true,
                 wildCard: '*',
                 excludeColumns: [0],
-                alternateRowClassNames: ['evenrow', 'oddrow'] 
+                alternateRowClassNames: ['evenrow', 'oddrow']
             });
         });
 

@@ -20,9 +20,18 @@ Namespace REMI.Bll
             Return New DataTable
         End Function
 
-        Public Shared Function SaveRequestSetup(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal saveOptions As List(Of Int32), ByRef tnc As Web.UI.WebControls.TreeNodeCollection, ByVal TestStageType As Int32) As NotificationCollection
+        Public Shared Function SaveRequestSetup(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal saveOptions As List(Of Int32), ByRef tnc As Web.UI.WebControls.TreeNodeCollection, ByVal TestStageType As Int32, ByVal orientationID As Int32) As NotificationCollection
             Dim instance = New REMI.Dal.Entities().Instance()
             Dim nc As New NotificationCollection
+
+            If (batchID > 0 And TestStageType = Contracts.TestStageType.EnvironmentalStress) Then
+                Dim batch As New REMI.Entities.Batch()
+                batch = (From b In instance.Batches Where b.ID = batchID Select b).FirstOrDefault()
+
+                If (batch IsNot Nothing) Then
+                    batch.JobOrientation = (From o In instance.JobOrientations Where o.ID = orientationID Select o).FirstOrDefault()
+                End If
+            End If
 
             For Each chk In saveOptions 'Loop through the save options
                 Dim currentSetupList As New List(Of REMI.Entities.RequestSetup)

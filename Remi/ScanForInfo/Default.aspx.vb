@@ -146,6 +146,12 @@ Partial Class ScanForInfo_Default
                     hdnQRANumber.Value = bc.ToString
                     grdTrackingLog.DataBind()
 
+                    If (b.Orientation IsNot Nothing) Then
+                        lblOrientation.Text = String.Format("Orientation: {0}", b.Orientation.Name)
+                    Else
+                        lblOrientation.Text = String.Empty
+                    End If
+
                     Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
                                       Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                       Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
@@ -167,7 +173,7 @@ Partial Class ScanForInfo_Default
 
                     gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority(), True)
                     gvwTestingSummary.DataBind()
-                    gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(), True)
+                    gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
                     gvwStressingSummary.DataBind()
 
                     setup.JobID = b.JobID
@@ -180,6 +186,7 @@ Partial Class ScanForInfo_Default
                     setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
                     setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                     setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority()
+                    setup.OrientationID = 0
                     setup.DataBind()
 
                     setupStressing.JobID = b.JobID
@@ -192,6 +199,7 @@ Partial Class ScanForInfo_Default
                     setupStressing.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
                     setupStressing.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                     setupStressing.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority()
+                    setupStressing.OrientationID = If(b.Orientation Is Nothing, 0, b.Orientation.ID)
                     setupStressing.DataBind()
 
                     If (setup.HasEditItemAuthority) Then
@@ -409,11 +417,19 @@ Partial Class ScanForInfo_Default
             lblNote.Visible = True
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
-            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             gvwStressingSummary.DataBind()
+
+            If (b.Orientation IsNot Nothing) Then
+                lblOrientation.Text = String.Format("Orientation: {0}", b.Orientation.Name)
+            Else
+                lblOrientation.Text = String.Empty
+            End If
 
             ScriptManager.RegisterStartupScript(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
         Else
+            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            setupStressing.OrientationID = If(b.Orientation Is Nothing, 0, b.Orientation.ID)
             btnEditStressing.Text = "View Summary"
             gvwStressingSummary.Visible = False
             lnkCheckForUpdates2.Visible = False
@@ -460,7 +476,7 @@ Partial Class ScanForInfo_Default
             TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
-            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             gvwStressingSummary.DataBind()
             ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
         End If

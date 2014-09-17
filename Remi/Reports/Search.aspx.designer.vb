@@ -842,6 +842,15 @@ Partial Public Class Search
     Protected WithEvents gvwTestExceptions As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
+    '''lblTopInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblTopInfo As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''bscMain control.
     '''</summary>
     '''<remarks>

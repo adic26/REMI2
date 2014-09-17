@@ -8,6 +8,17 @@ Partial Class RequestSetup
     Public Sub New()
     End Sub
 
+    Public Property OrientationID() As Int32
+        Get
+            Dim id As Int32
+            Int32.TryParse(hdnOrientationID.Value, id)
+            Return id
+        End Get
+        Set(value As Int32)
+            hdnOrientationID.Value = value
+        End Set
+    End Property
+
     Public Property TestStageType() As Int32
         Get
             Dim id As Int32
@@ -161,6 +172,22 @@ Partial Class RequestSetup
         AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0))
 
         MyBase.DataBind()
+
+        If (TestStageType = Contracts.TestStageType.EnvironmentalStress) Then
+            ddlOrientations.Items.Clear()
+            ddlOrientations.Items.Add(New ListItem("Select...", "0"))
+            Orientation.Visible = True
+            ddlOrientations.DataSource = (From o In New REMI.Dal.Entities().Instance().JobOrientations Where o.Job.ID = JobID _
+                             Select New With {.Name = String.Concat(o.Name, " - ", o.Lookup.Values), .ID = o.ID}).ToList
+            ddlOrientations.DataBind()
+
+            Dim orientationID As Int32
+            Int32.TryParse(hdnOrientationID.Value, orientationID)
+
+            ddlOrientations.SelectedValue = orientationID
+        Else
+            Orientation.Visible = False
+        End If
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -229,8 +256,10 @@ Partial Class RequestSetup
         If (HasEditItemAuthority Or IsAdmin Or IsProjectManager) Then
             If (tvRequest.Nodes.Count > 0) Then
                 Dim saveOptions As List(Of Int32) = (From item In chklSaveOptions.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
+                Dim oID As Int32 = 0
+                Int32.TryParse(ddlOrientations.SelectedValue, oID)
 
-                notMain.Notifications.Add(RequestManager.SaveRequestSetup(hdnProductID.Value, hdnJobID.Value, hdnBatchID.Value, saveOptions, tvRequest.CheckedNodes, TestStageType))
+                notMain.Notifications.Add(RequestManager.SaveRequestSetup(hdnProductID.Value, hdnJobID.Value, hdnBatchID.Value, saveOptions, tvRequest.CheckedNodes, TestStageType, oID))
                 AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0))
             End If
         End If

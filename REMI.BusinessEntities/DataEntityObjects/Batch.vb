@@ -354,6 +354,14 @@ Namespace REMI.BusinessEntities
                     If (stage.TestStageType = TestStageType.FailureAnalysis And testRecords.UnitIsInFA(QRANumber) = False) Then
                         stage = (From ts As TestStage In job.TestStages Where ts.ProcessOrder > stage.ProcessOrder AndAlso ts.ProcessOrder >= 0 And ts.IsArchived = False Select ts).OrderBy(Function(ts) ts.ProcessOrder).FirstOrDefault()
                     End If
+
+                    Dim tests As List(Of String) = (From t In tasks Where t.TestIsArchived <> True And t.TestStageName = stage.Name Select t.TestName).ToList
+
+                    For Each t In stage.Tests.ToList
+                        If (Not tests.Contains(t.Name)) Then
+                            stage.Tests.Remove(t)
+                        End If
+                    Next
                 End If
 
                 Return stage

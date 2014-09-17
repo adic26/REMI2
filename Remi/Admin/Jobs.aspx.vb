@@ -71,6 +71,8 @@ Partial Class Admin_TestStages
 
         bscJobs.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
 
+        hdnJobID.Value = j.ID
+
         JobSetup.JobID = j.ID
         JobSetup.BatchID = 0
         JobSetup.ProductID = 0
@@ -94,6 +96,8 @@ Partial Class Admin_TestStages
         JobEnvSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
         JobEnvSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
         JobEnvSetup.DataBind()
+
+        BindOrientations()
     End Sub
 
     Protected Sub FillFormFieldsforTestStage(ByVal tmpTestStage As TestStage)
@@ -101,8 +105,10 @@ Partial Class Admin_TestStages
             If (Not (String.IsNullOrEmpty(tmpTestStage.Name))) Then
                 txtName.Enabled = False
             End If
+
             txtName.Text = tmpTestStage.Name
             ddlTestStageType.ClearSelection()
+
             If tmpTestStage.TestStageType <> TestStageType.NotSet Then
                 ddlTestStageType.Items.FindByValue(tmpTestStage.TestStageType.ToString()).Selected = True
             End If
@@ -122,14 +128,17 @@ Partial Class Admin_TestStages
 
             If t IsNot Nothing Then
                 hdnTestID.Value = t.ID
+
                 If t.TrackingLocationTypes.Count > 0 Then
-                    For Each tlID As Integer In t.TrackingLocationTypes.Keys
-                        Dim li As ListItem = lstAllTLTypes.Items.FindByValue(tlID)
+                    For Each tlt As TrackingLocationType In t.TrackingLocationTypes
+                        Dim li As ListItem = lstAllTLTypes.Items.FindByValue(tlt.ID)
                         lstAllTLTypes.Items.Remove(li)
                     Next
+
                     lstAddedTLTypes.DataSource = t.TrackingLocationTypes
                     lstAddedTLTypes.DataBind()
                 End If
+
                 chkResultIsTimeBased.Checked = t.ResultIsTimeBased
                 txtHours.Text = t.TotalHours
                 txtWorkInstructionLocation.Text = t.WorkInstructionLocation
@@ -143,17 +152,30 @@ Partial Class Admin_TestStages
     End Sub
 
     Protected Sub ShowAddEditTestStagePanel(ByVal tmpTestStage As TestStage)
-        hdnTestStageID.Value = tmpTestStage.ID
-        If tmpTestStage.ID > 0 Then
-            lblAddEditTitle.Text = "Editing the " & tmpTestStage.Name & " Test Stage"
-        Else
+        If (tmpTestStage Is Nothing) Then
+            hdnTestID.Value = 0
+            hdnTestStageID.Value = 0
             lblAddEditTitle.Text = "Add a new Test Stage"
+            txtProcessOrder.Text = String.Empty
+            chkArchived.Checked = False
+            txtName.Enabled = True
+            txtName.Text = String.Empty
+            txtProcessOrder.Text = String.Empty
+            lstAddedTLTypes.Items.Clear()
+            pnlAddEditTestStage.Visible = True
+            pnlViewAllTestStages.Visible = False
+        Else
+            hdnTestStageID.Value = tmpTestStage.ID
+            lblAddEditTitle.Text = "Editing the " & tmpTestStage.Name & " Test Stage"
+
+            If tmpTestStage.TestStageType = TestStageType.EnvironmentalStress Then 'set up the test fields for edit also
+                pnlAddEditTest.Visible = True
+                hdnTestID.Value = tmpTestStage.Tests(0).ID
+            End If
+
+            pnlAddEditTestStage.Visible = True
+            pnlViewAllTestStages.Visible = False
         End If
-        If tmpTestStage.TestStageType = TestStageType.EnvironmentalStress Then 'set up the test fields for edit also
-            pnlAddEditTest.Visible = True
-        End If
-        pnlAddEditTestStage.Visible = True
-        pnlViewAllTestStages.Visible = False
     End Sub
 
     Protected Sub HideEditTestStagePanel()
@@ -195,10 +217,6 @@ Partial Class Admin_TestStages
         'set test stage params
         SetTestStageParametersForSave(tmpTestStage)
 
-        If tmpTestStage.TestStageType = TestStageType.EnvironmentalStress Then ' if env test stage then set test for it
-            SetParametersForTest(tmpTestStage)
-        End If
-
         tmpTestStage.ID = TestStageManager.SaveTestStage(tmpTestStage) 'save
 
         notMain.Notifications = tmpTestStage.Notifications
@@ -218,55 +236,91 @@ Partial Class Admin_TestStages
         JobManager.SaveJob(j)
         notMain.Notifications.Add(j.Notifications)
     End Sub
+
     Protected Sub SetTestStageParametersForSave(ByVal tmpTestStage As TestStage)
         tmpTestStage.Name = txtName.Text
         tmpTestStage.JobName = ddlJobs.SelectedItem.Text
+
         If ddlTestStageType.Visible Then
             tmpTestStage.TestStageType = DirectCast([Enum].Parse(GetType(TestStageType), ddlTestStageType.SelectedItem.Text), TestStageType)
         End If
+
         tmpTestStage.ProcessOrder = txtProcessOrder.Text
         tmpTestStage.IsArchived = chkArchived.Checked
-    End Sub
-    Protected Sub SetParametersForTest(ByVal tmpTestStage As TestStage)
-        If Not tmpTestStage.Tests.Count > 0 Then
-            Dim d As New SerializableDictionary(Of Integer, String)
-            For Each li As ListItem In lstAddedTLTypes.Items
-                If Not d.TryGetValue(CInt(li.Value), String.Empty) Then
-                    d.Add(CInt(li.Value), li.Text)
+        tmpTestStage.LastUser = UserManager.GetCurrentUser.UserName
+
+        If tmpTestStage.TestStageType = TestStageType.EnvironmentalStress Then
+            Dim test As Test = (From t As Test In tmpTestStage.Tests Select t).FirstOrDefault()
+
+            If (test Is Nothing) Then
+                test = New Test()
+            End If
+
+            test.Name = Helpers.CleanInputText(txtName.Text, 255)
+            test.TotalHours = txtHours.Text
+            test.IsArchived = tmpTestStage.IsArchived
+            test.ResultIsTimeBased = chkResultIsTimeBased.Checked
+            test.TestType = TestType.EnvironmentalStress
+            test.WorkInstructionLocation = Helpers.CleanInputText(txtWorkInstructionLocation.Text, 255)
+            test.LastUser = UserManager.GetCurrentUser.UserName
+
+            For Each t As TrackingLocationType In test.TrackingLocationTypes.ToList
+                Dim item As ListItem = (From types As ListItem In lstAddedTLTypes.Items Where types.Text = t.Name Select types).FirstOrDefault()
+
+                If (item Is Nothing) Then
+                    test.TrackingLocationTypes.Remove(t)
                 End If
             Next
-            tmpTestStage.Tests.Add(New Test(Helpers.CleanInputText(txtName.Text, 255), Helpers.CleanInputText(txtWorkInstructionLocation.Text, 255), TestType.EnvironmentalStress, d, Helpers.CleanInputText(txtHours.Text, 100)))
-            tmpTestStage.Tests.Item(0).ResultIsTimeBased = chkResultIsTimeBased.Checked
-            tmpTestStage.Tests.Item(0).IsArchived = tmpTestStage.IsArchived
-        Else
-            tmpTestStage.Tests.Item(0).Name = txtName.Text
-            tmpTestStage.Tests.Item(0).TotalHours = txtHours.Text
-            tmpTestStage.Tests.Item(0).TrackingLocationTypes.Clear()
+
             For Each li As ListItem In lstAddedTLTypes.Items
-                If Not tmpTestStage.Tests.Item(0).TrackingLocationTypes.TryGetValue(CInt(li.Value), String.Empty) Then
-                    tmpTestStage.Tests.Item(0).TrackingLocationTypes.Add(CInt(li.Value), li.Text)
+                Dim tlt As New TrackingLocationType
+                tlt.ID = li.Value
+                tlt.Name = li.Text
+
+                Dim existtlt As TrackingLocationType = (From types In test.TrackingLocationTypes Where types.ID = tlt.ID And types.Name = tlt.Name Select types).FirstOrDefault()
+
+                If (existtlt Is Nothing) Then
+                    test.TrackingLocationTypes.Add(tlt)
                 End If
             Next
-            tmpTestStage.Tests.Item(0).IsArchived = tmpTestStage.IsArchived
-            tmpTestStage.Tests.Item(0).ResultIsTimeBased = chkResultIsTimeBased.Checked
-            tmpTestStage.Tests.Item(0).TestType = TestType.EnvironmentalStress
-            tmpTestStage.Tests.Item(0).WorkInstructionLocation = txtWorkInstructionLocation.Text
-            tmpTestStage.Tests.Item(0).LastUser = Helpers.GetCurrentUserLDAPName
+
+            If ((From t As Test In tmpTestStage.Tests Where t.Name = test.Name Select t).FirstOrDefault() Is Nothing) Then
+                tmpTestStage.Tests.Add(test)
+            End If
         End If
     End Sub
 #End Region
 
 #Region "Page User Interaction Event Handling"
-
     Protected Sub lnkAddTestStage_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddTestStage.Click
-        ShowAddEditTestStagePanel(New TestStage)
+        ShowAddEditTestStagePanel(Nothing)
     End Sub
+
     Protected Sub lnkAddTestStageAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddTestStageAction.Click
         If pnlAddEditTestStage.Visible Then
             SaveTestStage()
         Else
             SaveJob()
         End If
+
+        If (pnlOrientationAdd.Visible) Then
+            Dim productTypeID As Int32
+            Int32.TryParse(ddlPT.SelectedValue, productTypeID)
+
+            Dim success As Boolean = JobManager.SaveOrientation(hdnJobID.Value, 0, txtOrientationName.Text, productTypeID, txtOrientationDescription.Text, True, txtDefinition.Text)
+
+            If (success) Then
+                txtOrientationName.Text = String.Empty
+                txtOrientationDescription.Text = String.Empty
+                txtDefinition.Text = String.Empty
+                ddlPT.SelectedValue = ""
+
+                notMain.Add("Successfully Created New Orientation", NotificationType.Information)
+            Else
+                notMain.Add("Failed To Create New Orientation", NotificationType.Errors)
+            End If
+        End If
+
         If Not notMain.HasErrors Then
             HideEditTestStagePanel()
             LoadJob(ddlJobs.SelectedItem.Text)
@@ -321,6 +375,102 @@ Partial Class Admin_TestStages
             End If
 
             If (archived) Then
+                e.Row.BackColor = Drawing.Color.Yellow
+            End If
+        End If
+    End Sub
+
+    Protected Sub gdvOrientationsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gdvOrientations.PreRender
+        Helpers.MakeAccessable(gdvOrientations)
+    End Sub
+
+    Protected Sub gdvOrientations_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs) Handles gdvOrientations.RowCommand
+        Dim xmlstr As String = e.CommandArgument
+
+        Select Case e.CommandName.ToLower()
+            Case "xml"
+                Dim xml As XDocument = XDocument.Parse(xmlstr)
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("XMLFile", "xml"), xml)
+                Exit Select
+        End Select
+    End Sub
+
+    Protected Sub gdvOrientations_OnRowEditing(ByVal sender As Object, ByVal e As GridViewEditEventArgs)
+        gdvOrientations.EditIndex = e.NewEditIndex
+        BindOrientations()
+
+        Dim lblName As Label = gdvOrientations.Rows(e.NewEditIndex).FindControl("lblName")
+        Dim txtName As TextBox = gdvOrientations.Rows(e.NewEditIndex).FindControl("txtName")
+        Dim lblDescription As Label = gdvOrientations.Rows(e.NewEditIndex).FindControl("lblDescription")
+        Dim txtDescription As TextBox = gdvOrientations.Rows(e.NewEditIndex).FindControl("txtDescription")
+        Dim hdnProductTypeID As HiddenField = gdvOrientations.Rows(e.NewEditIndex).FindControl("hdnProductTypeID")
+        Dim lblProductType As Label = gdvOrientations.Rows(e.NewEditIndex).FindControl("lblProductType")
+        Dim ddlProductTypes As DropDownList = gdvOrientations.Rows(e.NewEditIndex).FindControl("ddlProductTypes")
+        Dim chkActive As CheckBox = gdvOrientations.Rows(e.NewEditIndex).FindControl("chkActive")
+
+        ddlProductTypes.DataSource = LookupsManager.GetLookups(LookupType.ProductType, 0, 0, 0)
+        ddlProductTypes.DataBind()
+
+        chkActive.Enabled = True
+        lblDescription.Visible = False
+        txtDescription.Visible = True
+        lblName.Visible = False
+        txtName.Visible = True
+        lblProductType.Visible = False
+        ddlProductTypes.Visible = True
+        ddlProductTypes.SelectedValue = hdnProductTypeID.Value
+    End Sub
+
+    Protected Sub gdvOrientations_OnRowCancelingEdit(ByVal sender As Object, ByVal e As GridViewCancelEditEventArgs)
+        gdvOrientations.EditIndex = -1
+        BindOrientations()
+    End Sub
+
+    Protected Sub gdvOrientations_RowUpdating(ByVal sender As Object, ByVal e As GridViewUpdateEventArgs)
+        Dim txtName As TextBox = gdvOrientations.Rows(e.RowIndex).FindControl("txtName")
+        Dim txtDescription As TextBox = gdvOrientations.Rows(e.RowIndex).FindControl("txtDescription")
+        Dim hdnProductTypeID As HiddenField = gdvOrientations.Rows(e.RowIndex).FindControl("hdnProductTypeID")
+        Dim ddlProductTypes As DropDownList = gdvOrientations.Rows(e.RowIndex).FindControl("ddlProductTypes")
+        Dim chkActive As CheckBox = gdvOrientations.Rows(e.RowIndex).FindControl("chkActive")
+        Dim active As Int32 = 1
+        Dim productTypeID As Int32 = 0
+
+        If (Not Request.Form(chkActive.UniqueID) = "on") Then
+            active = 0
+        End If
+
+        Int32.TryParse(Request.Form(ddlProductTypes.UniqueID), productTypeID)
+
+        JobManager.SaveOrientation(hdnJobID.Value, gdvOrientations.DataKeys(e.RowIndex).Values(0), txtName.Text, productTypeID, txtDescription.Text, active, String.Empty)
+
+        gdvOrientations.EditIndex = -1
+        BindOrientations()
+    End Sub
+
+    Sub BindOrientations()
+        gdvOrientations.DataSource = JobManager.GetJobOrientationLists(hdnJobID.Value)
+        gdvOrientations.DataBind()
+
+        If (gdvOrientations.Rows.Count = 0) Then
+            btnAddOrientation_Click(Me, Nothing)
+        End If
+    End Sub
+
+    Protected Sub btnAddOrientation_Click(ByVal sender As Object, ByVal e As EventArgs)
+        pnlOrientationAdd.Visible = True
+        ddlPT.DataSource = LookupsManager.GetLookups(LookupType.ProductType, 0, 0, 0)
+        ddlPT.DataBind()
+    End Sub
+
+    Protected Sub gdvOrientations_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gdvOrientations.RowCreated
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim active As Boolean = True
+
+            If (DataBinder.Eval(e.Row.DataItem, "IsActive") IsNot Nothing) Then
+                Boolean.TryParse(DataBinder.Eval(e.Row.DataItem, "IsActive").ToString(), active)
+            End If
+
+            If (Not active) Then
                 e.Row.BackColor = Drawing.Color.Yellow
             End If
         End If

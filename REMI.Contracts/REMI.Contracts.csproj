@@ -75,6 +75,7 @@
     <Compile Include="ICommentedItem.cs" />
     <Compile Include="ILoggedItem.cs" />
     <Compile Include="ILookups.cs" />
+    <Compile Include="IOrientation.cs" />
     <Compile Include="IQRARequest.cs" />
     <Compile Include="ITaskList.cs" />
     <Compile Include="ITaskModel.cs" />

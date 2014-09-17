@@ -187,7 +187,11 @@ Public Class Testing
                         newTest.Name = ts.Tests(0).Name
                         newTest.TotalHours = ts.Tests(0).TotalHours
                         For Each tltype In ts.Tests(0).TrackingLocationTypes
-                            newTest.TrackingLocationTypes.Add(tltype.Key, tltype.Value)
+                            Dim tlt As New TrackingLocationType
+                            tlt.ID = tltype.ID
+                            tlt.Name = tltype.Name
+
+                            newTest.TrackingLocationTypes.Add(tlt)
                         Next
                         newTest.ResultIsTimeBased = ts.Tests(0).ResultIsTimeBased
                         newTest.TestType = ts.Tests(0).TestType

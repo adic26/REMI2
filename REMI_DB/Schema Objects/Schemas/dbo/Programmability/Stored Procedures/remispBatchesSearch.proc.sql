@@ -27,6 +27,8 @@
 AS
 	DECLARE @TestName NVARCHAR(400)
 	DECLARE @TestStageName NVARCHAR(400)
+	DECLARE @HasBatchSpecificExceptions BIT
+	SET @HasBatchSpecificExceptions = CONVERT(BIT, 0)
 	
 	SELECT @TestName = TestName FROM Tests WITH(NOLOCK) WHERE ID=@TestID 
 	SELECT @TestStageName = TestStageName FROM TestStages WITH(NOLOCK) WHERE ID=@TestStageID
@@ -112,7 +114,7 @@ AS
 			FROM TaskAssignments ta WITH(NOLOCK)
 			WHERE ta.Active=1 AND ISNULL(ta.taskID,0) = 0 AND ta.BatchID = BatchesRows.ID)
 		) as ActiveTaskAssignee,
-		CONVERT(BIT,0) AS HasBatchSpecificExceptions, batchesrows.ProductTypeID,batchesrows.AccessoryGroupID, BatchesRows.CurrentTest, BatchesRows.CPRNumber, BatchesRows.RelabJobID, 
+		@HasBatchSpecificExceptions AS HasBatchSpecificExceptions, batchesrows.ProductTypeID,batchesrows.AccessoryGroupID, BatchesRows.CPRNumber, BatchesRows.RelabJobID, 
 		BatchesRows.TestCenterLocation, AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate, IsMQual, JobID, DateCreated, ContinueOnFailures,
 		MechanicalTools, BatchesRows.RequestPurpose, BatchesRows.PriorityID
 	FROM     
@@ -121,13 +123,7 @@ AS
 				b.AccessoryGroupID,p.ID As ProductID,p.ProductGroupName As ProductGroup,b.QRANumber,b.RequestPurpose As RequestPurposeID,b.TestCenterLocationID,b.TestStageName,
 				j.WILocation,(select count(*) from testunits where testunits.batchid = b.id) as testUnitCount,
 				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, l3.[Values] As TestCenterLocation,
-				(
-					SELECT top(1) tu.CurrentTestName as CurrentTestName 
-					FROM TestUnits AS tu, DeviceTrackingLog AS dtl 
-					where tu.ID = dtl.TestUnitID 
-					and tu.CurrentTestName is not null
-					and (dtl.OutUser IS NULL) AND tu.BatchID=b.ID
-				) As CurrentTest, b.CPRNumber,b.RelabJobID, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
+				b.CPRNumber,b.RelabJobID, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
 				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, ISNULL(b.[Order], 100) As PriorityOrder
 			FROM Batches as b WITH(NOLOCK)
 				inner join Products p WITH(NOLOCK) on b.ProductID=p.id 
@@ -219,7 +215,7 @@ AS
 				(
 					(@BatchStart IS NULL AND @BatchEnd IS NULL)
 					OR
-					(b.ID IN (Select distinct batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime BETWEEN @BatchStart AND @BatchEnd))
+					(@BatchStart IS NOT NULL AND @BatchEnd IS NOT NULL AND b.ID IN (Select distinct batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime BETWEEN @BatchStart AND @BatchEnd))
 				)
 				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@ExecutingUserID)))
 		)AS BatchesRows		

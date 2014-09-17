@@ -444,6 +444,7 @@
                             </Triggers>
                             <ContentTemplate>
                                 <asp:Button runat="server" ID="btnEditStressing" Text="Edit Setup" CssClass="buttonSmall" CausesValidation="true" OnClick="btnEditStressing_Click" />
+                                <h2><asp:Label runat="server" ID="lblOrientation"></asp:Label></h2>
                                 
                                 <rs:RequestSetup runat="server" Visible="false" ID="setupStressing" />
         

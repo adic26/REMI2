@@ -451,6 +451,7 @@
                 </Columns>
             </asp:GridView>
 
+            <asp:Label runat="server" ID="lblTopInfo" CssClass="InformationMessage" Visible="false" Text="<br/><br/>Displays Top 100 Batches Only!" />
             <uc3:BatchSelectControl ID="bscMain" Visible="false" runat="server" DisplayMode="SearchInfoDisplay" EnableViewState="false" EmptyDataText="No Batches Found. Please refine your search." />
                         
             <asp:GridView runat="server" Visible="false" ID="gvwUnits" AutoGenerateColumns="false" EnableViewState="true" EmptyDataText="No Units Match">

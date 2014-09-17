@@ -672,7 +672,7 @@ Public Class RemiAPI
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Dim b As BatchView = Me.GetBatch(qraNumber)
-                Return b.GetStressingOverviewTable(False, False, False, False)
+                Return b.GetStressingOverviewTable(False, False, False, False, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             End If
         Catch ex As Exception
             TestUnitManager.LogIssue("REMI API GetStressingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
@@ -884,18 +884,44 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    <WebMethod(Description:="Get's All Batch Stages.")> _
-    Public Function GetTestStagesByBatch(ByVal requestNumber As String) As List(Of String)
+    <WebMethod(Description:="Get's All Batch Stages Name.")> _
+    Public Function GetTestStagesNameByBatch(ByVal requestNumber As String) As List(Of String)
         Try
             Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
 
             If batch IsNot Nothing Then
-                Return (From s In TestStageManager.GetTestStagesByBatch(batch.ID) Select s.Value).ToList
+                Return (From s In TestStageManager.GetTestStagesNameByBatch(batch.ID) Select s.Value).ToList
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch stages name", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New List(Of String)
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Stages.")> _
+    Public Function GetTestStagesByBatch(ByVal requestNumber As String) As TestStageCollection
+        Try
+            Dim b As Batch = BatchManager.GetItem(requestNumber)
+
+            If b IsNot Nothing Then
+                Dim t As List(Of Int32) = (From stg In b.Tasks Select stg.TestStageID).ToList
+
+                Return b.Job.TestStages.FindByIDs(t)
             End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
         End Try
-        Return New List(Of String)
+        Return New TestStageCollection
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Stages needing completion.")> _
+    Public Function GetStagesNeedingCompletionByUnit(ByVal requestNumber As String, ByVal unitNumber As Int32) As DataSet
+        Try
+            Return BatchManager.GetStagesNeedingCompletionByUnit(requestNumber, unitNumber)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetBatchStagesNeedingCompletion", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New DataSet("NeedsTesting")
     End Function
 
     <WebMethod(Description:="Get's All Batch Tests.")> _
@@ -1232,6 +1258,22 @@ Public Class RemiAPI
 #End Region
 
 #Region "Test Records"
+    <WebMethod(EnableSession:=True, Description:="GetTestRecords.")> _
+    Public Function GetTestRecords(ByVal QRANumber As String, ByVal userIdentification As String) As TestRecordCollection
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim b As BatchView = Me.GetBatch(QRANumber)
+
+                If (b IsNot Nothing) Then
+                    Return b.TestRecords
+                End If
+            End If
+        Catch ex As Exception
+            TestRecordManager.LogIssue("REMI API GetTestRecords", "e8", NotificationType.Errors, ex, String.Format("Request: {0}" + QRANumber))
+        End Try
+        Return Nothing
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Adds a new test record for non parametric tests.")> _
     Public Function TestRecordAdd(ByVal qranumber As String, ByVal unitNumber As Int32, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String) As Boolean
         Try

@@ -109,7 +109,8 @@ Public Class Measurements
         grdResultMeasurements.HeaderRow.Cells(15).Visible = False
         grdResultMeasurements.HeaderRow.Cells(16).Visible = False
         grdResultMeasurements.HeaderRow.Cells(17).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(19).Visible = False
+        grdResultMeasurements.HeaderRow.Cells(19).Visible = UserManager.GetCurrentUser.IsDeveloper() ' XML Version
+        grdResultMeasurements.HeaderRow.Cells(20).Visible = False
         grdResultMeasurements.HeaderRow.Cells(4).Width = 10
         grdResultMeasurements.HeaderRow.Cells(5).Width = 10
         grdResultMeasurements.HeaderRow.Cells(6).Width = 10
@@ -135,7 +136,8 @@ Public Class Measurements
                 grdResultMeasurements.Rows(i).Cells(15).Visible = False 'Image
                 grdResultMeasurements.Rows(i).Cells(16).Visible = False 'ContentType
                 grdResultMeasurements.Rows(i).Cells(17).Visible = False 'Description
-                grdResultMeasurements.Rows(i).Cells(19).Visible = False 'WasChanged
+                grdResultMeasurements.Rows(i).Cells(19).Visible = UserManager.GetCurrentUser.IsDeveloper() ' XML Version
+                grdResultMeasurements.Rows(i).Cells(20).Visible = False 'WasChanged
                 grdResultMeasurements.Rows(i).Cells(6).ControlStyle.CssClass = "removeStyleWithCenter" 'Result
                 grdResultMeasurements.Rows(i).Cells(6).Wrap = True 'Result
                 grdResultMeasurements.Rows(i).Cells(6).HorizontalAlign = HorizontalAlign.Center 'Result
@@ -146,7 +148,7 @@ Public Class Measurements
                 grdResultMeasurements.Rows(i).Cells(8).ControlStyle.Width = 50 'Pass/Fail
                 grdResultMeasurements.Rows(i).Cells(10).ControlStyle.Width = 50 'Test Num
 
-                For j As Int32 = 19 To grdResultMeasurements.Rows(i).Cells.Count - 1 'The Parameter columns
+                For j As Int32 = 21 To grdResultMeasurements.Rows(i).Cells.Count - 1 'The Parameter columns
                     grdResultMeasurements.Rows(i).Cells(j).Wrap = True
                     grdResultMeasurements.Rows(i).Cells(j).ControlStyle.CssClass = "removeStyleWithCenter"
                     grdResultMeasurements.Rows(i).Cells(j).ControlStyle.Width = 70

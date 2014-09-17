@@ -57,12 +57,12 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetTestStagesByBatch()
+        public void GetTestStagesNameByBatch()
         {
             var batch = new REMI.Entities.Batch();
             batch = (from b in instance.Batches.Include("TestUnits") where b.TestUnits.Count > 2 orderby b.ID descending select b).FirstOrDefault();
 
-            Assert.IsNotNull(TestStageManager.GetTestStagesByBatch(batch.ID));
+            Assert.IsNotNull(TestStageManager.GetTestStagesNameByBatch(batch.ID));
         }
 
         [Test]

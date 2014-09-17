@@ -207,9 +207,6 @@ Namespace REMI.BusinessEntities
             End If
             Return 0
         End Function
-        Public Function GetTestsApplicableToTestStationType(ByVal fixtureTypeID As Integer) As TestCollection
-            Return Tests.GetTestsApplicableToLocation(fixtureTypeID)
-        End Function
         Public Overrides Function Validate() As Boolean
             Dim baseValid As Boolean = MyBase.Validate()
             Dim localValid As Boolean = True

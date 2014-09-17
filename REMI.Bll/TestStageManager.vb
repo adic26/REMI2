@@ -44,7 +44,7 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTestStagesByBatch(ByVal batchID As Int32) As Dictionary(Of String, String)
+        Public Shared Function GetTestStagesNameByBatch(ByVal batchID As Int32) As Dictionary(Of String, String)
             Try
                 Return (From ts In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where ts.BatchID = batchID And ts.IsArchived = False And ts.TestIsArchived = False And ts.processorder > -1 Select ts).OrderBy(Function(o) o.processorder).ToDictionary(Function(k) k.TestStageID.ToString(), Function(v) v.tsname)
             Catch ex As Exception
@@ -128,6 +128,7 @@ Namespace REMI.Bll
                         'save the test if nessecary
                         If testStage.TestStageType = TestStageType.EnvironmentalStress Then 'does this yts need an environmental test
                             testStage.Tests.Item(0).LastUser = currentUser 'set the user for logging
+
                             If testStage.Tests.Item(0).Validate Then
                                 testStage.Tests.Item(0).ID = TestManager.SaveTest(testStage.Tests.Item(0))
                                 testStage.TestID = testStage.Tests.Item(0).ID 'set the id to the test stage for saving

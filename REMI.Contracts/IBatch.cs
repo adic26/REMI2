@@ -56,9 +56,12 @@ namespace REMI.Contracts
         string JobLink { get; }
         int ReqID { get; set; }
         int JobID { get; set; }
+        int OrientationID { get; set; }
         string MechanicalTools { get; set; }
         string GetTestOverviewCellString(string jobName, string testStageName, string TestName, bool hasEditAuthority, bool isTestCenterAdmin, System.Data.DataTable rqResults, bool hasBatchSetupAuthority, bool showHyperlinks);
         bool hasBatchSpecificExceptions { get; set; }
+        IOrientation Orientation { get; set; }
+        string OrientationXML { get; set; }
 
         Dictionary<string, double> TestStageTimeLeftGrid { get; set; }
         Dictionary<string, int> TestStageIDTimeLeftGrid { get; set; }
