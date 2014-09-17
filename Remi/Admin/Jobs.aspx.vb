@@ -303,21 +303,24 @@ Partial Class Admin_TestStages
             SaveJob()
         End If
 
-        If (pnlOrientationAdd.Visible) Then
+        If (pnlOrientationAdd.Visible And Not String.IsNullOrEmpty(txtOrientationName.Text)) Then
             Dim productTypeID As Int32
             Int32.TryParse(ddlPT.SelectedValue, productTypeID)
 
-            Dim success As Boolean = JobManager.SaveOrientation(hdnJobID.Value, 0, txtOrientationName.Text, productTypeID, txtOrientationDescription.Text, True, txtDefinition.Text)
+            If (productTypeID > 0 And Not String.IsNullOrEmpty(txtDefinition.Text)) Then
+                Dim success As Boolean = JobManager.SaveOrientation(hdnJobID.Value, 0, txtOrientationName.Text, productTypeID, txtOrientationDescription.Text, True, txtDefinition.Text)
 
-            If (success) Then
-                txtOrientationName.Text = String.Empty
-                txtOrientationDescription.Text = String.Empty
-                txtDefinition.Text = String.Empty
-                ddlPT.SelectedValue = ""
+                If (success) Then
+                    txtOrientationName.Text = String.Empty
+                    txtOrientationDescription.Text = String.Empty
+                    txtDefinition.Text = String.Empty
 
-                notMain.Add("Successfully Created New Orientation", NotificationType.Information)
+                    notMain.Add("Successfully Created New Orientation", NotificationType.Information)
+                Else
+                    notMain.Add("Failed To Create New Orientation", NotificationType.Errors)
+                End If
             Else
-                notMain.Add("Failed To Create New Orientation", NotificationType.Errors)
+                notMain.Add("Orientation Can't Be Created. Please ensure you have entered product type and definition!", NotificationType.Warning)
             End If
         End If
 

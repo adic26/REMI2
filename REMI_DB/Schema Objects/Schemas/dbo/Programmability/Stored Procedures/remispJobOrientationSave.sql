@@ -10,6 +10,16 @@ BEGIN
 		
 		SELECT @NumUnits=MAX(T.c.value('(@Unit)[1]', 'int')), @NumDrops =MAX(T.c.value('(@Drop)[1]', 'int'))
 		FROM @XML.nodes('/Orientations/Orientation') as T(c)
+
+		IF (@NumUnits IS NULL)
+		BEGIN
+			SET @NumUnits = 0
+		END
+		
+		IF (@NumDrops IS NULL)
+		BEGIN
+			SET @NumDrops = 0
+		END
 				
 		INSERT INTO JobOrientation (JobID, ProductTypeID, NumUnits, NumDrops, Description, IsActive, Definition, Name)
 		VALUES (@JobID, @ProductTypeID, @NumUnits, @NumDrops, @Description, @IsActive, @XML, @Name)
