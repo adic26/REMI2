@@ -32,10 +32,22 @@ Namespace REMI.Bll
                 Dim instance = New REMI.Dal.Entities().Instance()
                 Dim app = (From a In instance.ApplicationVersions Where a.Application.ID = id And a.VerNum = versionNumber).FirstOrDefault()
 
-                If (applicableToAll = 1) Then
-                    app.ApplicableToAll = True
+                If (app IsNot Nothing) Then
+                    If (applicableToAll = 1) Then
+                        app.ApplicableToAll = True
+                    Else
+                        app.ApplicableToAll = False
+                    End If
                 Else
-                    app.ApplicableToAll = False
+                    Dim apv As New REMI.Entities.ApplicationVersion()
+                    apv.VerNum = versionNumber
+                    apv.Application = (From a In instance.Applications Where a.ID = id).FirstOrDefault()
+
+                    If (applicableToAll = 1) Then
+                        apv.ApplicableToAll = True
+                    Else
+                        apv.ApplicableToAll = False
+                    End If
                 End If
 
                 instance.SaveChanges()

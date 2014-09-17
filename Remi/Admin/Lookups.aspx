@@ -125,7 +125,8 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Version" SortExpression="VersionNumber">
                 <ItemTemplate>
-                    <asp:Label runat="server" ID="lblVersion" Text='<%# Eval("VersionNumber") %>' />
+                    <asp:Label runat="server" ID="lblVersion" Text='<%# Eval("VersionNumber") %>' Visible="true" />
+                    <asp:TextBox runat="server" ID="txtVersion" Text='<%# Eval("VersionNumber") %>' Visible="false" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Applicable To All" SortExpression="ApplicableToAll">
