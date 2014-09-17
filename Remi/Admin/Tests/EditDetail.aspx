@@ -106,7 +106,7 @@
                             <asp:Button ID="btnRemoveTLType" runat="server" Text="<- Remove" cssclass="button"/>
                         </td>
                         <td style="border-width: 0px;">
-                            <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="360px" Height="400px" DataTextField="Value" DataValueField="Key"></asp:ListBox>
+                            <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="360px" Height="400px" DataTextField="Name" DataValueField="ID"></asp:ListBox>
                         </td>
                     </tr>
                 </table>
