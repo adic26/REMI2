@@ -111,7 +111,9 @@ Partial Class Admin_Tests_EditDetail
         tmpTest.WorkInstructionLocation = txtWorkInstructionLocation.Text
         tmpTest.Owner = txtOwner.Text
         tmpTest.Trainee = txtTrainee.Text
-        tmpTest.Degradation = txtDegradation.Text
+        Dim degradation As Decimal = 0.0
+        Decimal.TryParse(txtDegradation.Text, degradation)
+        tmpTest.Degradation = degradation
         tmpTest.TrackingLocationTypes.Clear()
 
         For Each li As ListItem In lstAddedTLTypes.Items

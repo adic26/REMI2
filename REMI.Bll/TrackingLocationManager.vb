@@ -434,6 +434,7 @@ Namespace REMI.Bll
                 Try
                     If UserManager.GetCurrentUser.IsAdmin Then
                         tlType.ID = TrackingLocationTypeDB.Save(tlType)
+                        tlType.Notifications.Clear()
                         tlType.Notifications.Add("i2", NotificationType.Information)
                         Return tlType.ID
                     Else

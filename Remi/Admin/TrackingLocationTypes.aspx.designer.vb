@@ -185,6 +185,24 @@ Partial Public Class Admin_TrackingLocationTypes
     Protected WithEvents lnkViewTrackingLocations As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
+    '''imgAddTT control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgAddTT As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''lnkAddTT control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lnkAddTT As Global.System.Web.UI.WebControls.LinkButton
+
+    '''<summary>
     '''pnlLeftMenuActions control.
     '''</summary>
     '''<remarks>
@@ -230,6 +248,15 @@ Partial Public Class Admin_TrackingLocationTypes
     Protected WithEvents lnkCancelAction As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
+    '''notMain control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents notMain As Global.Remi.Controls_Notifications
+
+    '''<summary>
     '''pnlViewAll control.
     '''</summary>
     '''<remarks>
@@ -257,15 +284,6 @@ Partial Public Class Admin_TrackingLocationTypes
     Protected WithEvents odsTrackingLocationTypes As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''notMain control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents notMain As Global.Remi.Controls_Notifications
-
-    '''<summary>
     '''pnlAddEdit control.
     '''</summary>
     '''<remarks>
@@ -273,6 +291,15 @@ Partial Public Class Admin_TrackingLocationTypes
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents pnlAddEdit As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''hdnEditID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnEditID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''lblAddEditTitle control.
