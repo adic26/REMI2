@@ -104,6 +104,7 @@ Partial Class Admin_TestStages
         If tmpTestStage IsNot Nothing Then
             If (Not (String.IsNullOrEmpty(tmpTestStage.Name))) Then
                 txtName.Enabled = False
+                ddlTestStageType.Enabled = False
             End If
 
             txtName.Text = tmpTestStage.Name
@@ -159,6 +160,7 @@ Partial Class Admin_TestStages
             txtProcessOrder.Text = String.Empty
             chkArchived.Checked = False
             txtName.Enabled = True
+            ddlTestStageType.Enabled = True
             txtName.Text = String.Empty
             txtProcessOrder.Text = String.Empty
             lstAddedTLTypes.Items.Clear()

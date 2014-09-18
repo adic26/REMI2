@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master"  AutoEventWireup="false" Inherits="Remi.Admin_TrackingLocationTypes" Codebehind="TrackingLocationTypes.aspx.vb" %>
+<%@ Page Title="Tracking Location Types" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master"  AutoEventWireup="false" Inherits="Remi.Admin_TrackingLocationTypes" Codebehind="TrackingLocationTypes.aspx.vb" MaintainScrollPositionOnPostback="true" %>
 <%@ Register src="../Controls/Notifications.ascx" tagname="Notifications" tagprefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
