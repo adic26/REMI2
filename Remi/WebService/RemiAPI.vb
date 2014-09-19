@@ -541,52 +541,52 @@ Public Class RemiAPI
         Return 0
     End Function
 
-    <Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    Public Function GetProductGroupExceptionsByProductID(ByVal productID As Int32) As List(Of ExceptionData)
-        'Try
-        '
-        '    Dim testExceptions As New List(Of ExceptionData)
-        '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
+    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
+    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
+    'Public Function GetProductGroupExceptionsByProductID(ByVal productID As Int32) As List(Of ExceptionData)
+    'Try
+    '
+    '    Dim testExceptions As New List(Of ExceptionData)
+    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
 
-        '    For Each k As String In d.Keys
-        '        Dim ex As ExceptionData
-        '        ex.TestName = k
-        '        ex.ExceptionExists = d.Item(k)
-        '        testExceptions.Add(ex)
-        '    Next
+    '    For Each k As String In d.Keys
+    '        Dim ex As ExceptionData
+    '        ex.TestName = k
+    '        ex.ExceptionExists = d.Item(k)
+    '        testExceptions.Add(ex)
+    '    Next
 
-        '    Return testExceptions
-        'End If
-        'Catch ex As Exception
-        '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptionsByProductID", "e3", NotificationType.Errors, ex, "Product Group ID: " + productID)
-        'End Try
-        Return New List(Of ExceptionData)
-    End Function
+    '    Return testExceptions
+    'End If
+    'Catch ex As Exception
+    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptionsByProductID", "e3", NotificationType.Errors, ex, "Product Group ID: " + productID)
+    'End Try
+    '    Return New List(Of ExceptionData)
+    'End Function
 
-    <Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    Public Function GetProductGroupExceptions(ByVal productGroupName As String) As List(Of ExceptionData)
-        'Try
-        'If UserManager.GetCurrentUser.HasREMIPageViewAuthority Then
-        '    Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
-        '    Dim testExceptions As New List(Of ExceptionData)
-        '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
+    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
+    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
+    'Public Function GetProductGroupExceptions(ByVal productGroupName As String) As List(Of ExceptionData)
+    'Try
+    'If UserManager.GetCurrentUser.HasREMIPageViewAuthority Then
+    '    Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
+    '    Dim testExceptions As New List(Of ExceptionData)
+    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
 
-        '    For Each k As String In d.Keys
-        '        Dim ex As ExceptionData
-        '        ex.TestName = k
-        '        ex.ExceptionExists = d.Item(k)
-        '        testExceptions.Add(ex)
-        '    Next
+    '    For Each k As String In d.Keys
+    '        Dim ex As ExceptionData
+    '        ex.TestName = k
+    '        ex.ExceptionExists = d.Item(k)
+    '        testExceptions.Add(ex)
+    '    Next
 
-        '    Return testExceptions
-        'End If
-        'Catch ex As Exception
-        '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptions", "e3", NotificationType.Errors, ex, "Product Group ID: " + productGroupName)
-        'End Try
-        Return New List(Of ExceptionData)
-    End Function
+    '    Return testExceptions
+    'End If
+    'Catch ex As Exception
+    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptions", "e3", NotificationType.Errors, ex, "Product Group ID: " + productGroupName)
+    'End Try
+    '    Return New List(Of ExceptionData)
+    'End Function
 
     <WebMethod(Description:="Returns a full list of the settings for a product.")> _
     Public Function GetProductSettingsByProductID(ByVal productID As Int32) As SerializableDictionary(Of String, String)
@@ -1313,12 +1313,13 @@ Public Class RemiAPI
         Dim hostID As Int32 = GetHostID(machineName, srd.TrackingLocationID)
 
         configReturnData.HostID = hostID
-        configReturnData.StationXML = config.GetStationConfigurationXML(hostID)
+        configReturnData.StationXML = TrackingLocationManager.GetStationConfigurationXML(hostID, String.Empty).ToString() 'config.GetStationConfigurationXML(hostID)
         configReturnData.TestXML = config.GetProductConfigurationXML(srd.ProductID, srd.TestID)
-        configReturnData.HasProductXML = config.HasProductConfigurationXML(srd.ProductID, srd.TestID)
-        configReturnData.HasCalibrationXML = config.HasCalibrationConfigurationXML(srd.ProductID, srd.TestID, hostID)
+        configReturnData.HasProductXML = ProductGroupManager.HasProductConfigurationXML(srd.ProductID, srd.TestID, String.Empty).ToString() 'config.HasProductConfigurationXML(srd.ProductID, srd.TestID)
+        configReturnData.HasCalibrationXML = CalibrationManager.HasCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.HasCalibrationConfigurationXML(srd.ProductID, srd.TestID, hostID)
         configReturnData.HasStationXML = If(configReturnData.StationXML = "<StationConfiguration />", False, True)
-        configReturnData.Calibrations = config.GetAllCalibrationConfigurationXML(hostID, srd.ProductID, srd.TestID)
+        configReturnData.Calibrations = CalibrationManager.GetAllCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.GetAllCalibrationConfigurationXML(hostID, srd.ProductID, srd.TestID)
+        configReturnData.ProductConfigs = ProductGroupManager.GetAllProductConfigurationXMLs(srd.ProductID, srd.TestID, True)
 
         Return configReturnData
     End Function

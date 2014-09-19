@@ -39,7 +39,7 @@ Public Class ProductConfiguration
     Public Function HasProductConfigurationXML(ByVal productID As Int32, ByVal testID As Int32) As Boolean
         Dim hasXML As Boolean = False
         Try
-            hasXML = ProductGroupManager.HasProductConfigurationXML(productID, testID, String.Empty).ToString()
+            hasXML = ProductGroupManager.HasProductConfigurationXML(productID, testID, String.Empty)
         Catch ex As Exception
             ProductGroupManager.LogIssue("Product Group Manager HasProductConfigurationXML", "e3", NotificationType.Errors, ex)
         End Try
@@ -67,22 +67,33 @@ Public Class ProductConfiguration
     Public Function HasProductConfigurationXMLByName(ByVal productID As Int32, ByVal testID As Int32, ByVal name As String) As Boolean
         Dim hasXML As Boolean = False
         Try
-            hasXML = ProductGroupManager.HasProductConfigurationXML(productID, testID, name).ToString()
+            hasXML = ProductGroupManager.HasProductConfigurationXML(productID, testID, name)
         Catch ex As Exception
             ProductGroupManager.LogIssue("Product Group Manager HasProductConfigurationXMLByName", "e3", NotificationType.Errors, ex)
         End Try
         Return hasXML
     End Function
 
-    <WebMethod(Description:="Returns whether this product and test has any product configuration.")> _
+    <WebMethod(Description:="Returns all product/test config seperated by the name of the configuration")> _
     Public Function GetProductConfigurationXMLCombined(ByVal productID As Int32, ByVal testID As Int32) As String
         Dim xml As String = String.Empty
         Try
             xml = ProductGroupManager.GetProductConfigurationXMLCombined(productID, testID).ToString()
         Catch ex As Exception
-            ProductGroupManager.LogIssue("Product Group Manager HasProductConfigurationXMLByName", "e3", NotificationType.Errors, ex)
+            ProductGroupManager.LogIssue("Product Group Manager GetProductConfigurationXMLCombined", "e3", NotificationType.Errors, ex)
         End Try
         Return xml
+    End Function
+
+    <WebMethod(Description:="Returns whether this product and test has any product configurations.")> _
+    Public Function GetAllProductConfigurationXMLs(ByVal productID As Int32, ByVal testID As Int32, ByVal loadVersions As Boolean) As ProductConfigCollection
+        Try
+            Return ProductGroupManager.GetAllProductConfigurationXMLs(productID, testID, loadVersions)
+        Catch ex As Exception
+            ProductGroupManager.LogIssue("Product Group Manager GetAllProductConfigurationXMLs", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return New ProductConfigCollection
     End Function
 #End Region
 

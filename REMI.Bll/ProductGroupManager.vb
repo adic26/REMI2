@@ -294,16 +294,65 @@ Namespace REMI.Bll
             Return New XDocument()
         End Function
 
-        Public Shared Function GetProductConfigurationXMLCombined(ByVal productID As Int32, ByVal testID As Int32) As XDocument
+        Public Shared Function GetAllProductConfigurationXMLs(ByVal productID As Int32, ByVal testID As Int32, ByVal loadVersions As Boolean) As ProductConfigCollection
+            Dim xmls As New ProductConfigCollection()
+
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
-                Dim record As List(Of Int32) = (From xml In instance.ProductConfigurationUploads Where xml.Test.ID = testID And xml.Product.ID = productID Select xml.ID).ToList
+                Dim record = (From xml In instance.ProductConfigurationUploads.Include("Test").Include("Product") Where xml.Test.ID = testID And xml.Product.ID = productID Select xml)
+
+                For Each rec In record
+                    Dim xmlFrag As XDocument = ProductGroupDB.GetProductConfigurationXML(rec.ID)
+                    Dim versions As New ProductConfigCollection
+                    Dim currentCodeVersions As New List(Of String)
+
+                    If (loadVersions) Then
+                        Dim ver = (From v In instance.ProductConfigurationVersions Where v.ProductConfigurationUpload.ID = rec.ID Order By v.VersionNum Select v.ID, v.VersionNum, v.PCXML).ToList
+
+                        For Each vs In ver 'Get all XML Versions
+                            Dim a = (From av In instance.ApplicationProductVersions.Include("ProductConfigurationVersion").Include("ApplicationVersion").Include("ApplicationVersion.Application") Where av.ProductConfigurationVersion.ID = vs.ID Select av.ApplicationVersion.Application.ApplicationName, av.ApplicationVersion.VerNum, av.ProductConfigurationVersion.VersionNum).ToList
+                            Dim codeVersions As New List(Of String)
+
+                            For Each appVer In a
+                                If (appVer IsNot Nothing) Then
+                                    codeVersions.Add(New Version(appVer.VerNum.ToString()).ToString())
+
+                                    If (vs.VersionNum = ver.Count) Then
+                                        currentCodeVersions.Add(New Version(appVer.VerNum.ToString()).ToString())
+                                    End If
+                                End If
+                            Next
+
+                            If (vs.VersionNum < ver.Count) Then
+                                versions.Add(New ProductConfiguration(vs.ID, vs.PCXML, vs.VersionNum, codeVersions))
+                            End If
+                        Next
+                    End If
+
+                    xmls.Add(New ProductConfiguration(rec.ID, True, rec.PCName, xmlFrag.Root.ToString(), rec.Test.TestName, rec.Product.ProductGroupName, testID, productID, versions, versions.Count + 1, currentCodeVersions))
+                Next
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return xmls
+        End Function
+
+        Public Shared Function GetProductConfigurationXMLCombined(ByVal productID As Int32, ByVal testID As Int32) As XDocument
+            Try
+                Dim xmls As ProductConfigCollection = ProductGroupManager.GetAllProductConfigurationXMLs(productID, testID, False)
                 Dim xmlCombined As XDocument
                 xmlCombined = XDocument.Parse("<XML/>")
 
-                For Each id As Int32 In record
-                    Dim xmlFrag As XDocument = ProductGroupDB.GetProductConfigurationXML(id)
-                    xmlCombined.Root.Add(xmlFrag.Root)
+                For Each rec As ProductConfiguration In xmls
+                    If (rec.HasConfig) Then
+                        Dim xd As XDocument = XDocument.Parse(rec.XML)
+                        Dim val As XDocument = New XDocument()
+                        val.Add(New XElement(rec.Name))
+                        val.Root.Add(xd.Root)
+
+                        xmlCombined.Root.Add(val.Root)
+                    End If
                 Next
 
                 Return xmlCombined

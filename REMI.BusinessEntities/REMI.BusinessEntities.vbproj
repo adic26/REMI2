@@ -119,6 +119,7 @@
     <Compile Include="BusinessObjects\SimpleTestUnit.vb" />
     <Compile Include="BusinessObjects\RequestNumber.vb" />
     <Compile Include="DataEntityCollections\CalibrationCollection.vb" />
+    <Compile Include="DataEntityCollections\ProductConfigCollection.vb" />
     <Compile Include="DataEntityCollections\TrackingLocationTypePermissionCollection.vb" />
     <Compile Include="DataEntityCollections\ParameterResultCollection.vb" />
     <Compile Include="DataEntityCollections\TestResultCollection.vb" />
@@ -128,6 +129,7 @@
     <Compile Include="DataEntityObjects\LookupBase.vb" />
     <Compile Include="DataEntityObjects\Orientation.vb" />
     <Compile Include="DataEntityObjects\ProcessTask.vb" />
+    <Compile Include="DataEntityObjects\ProductConfiguration.vb" />
     <Compile Include="DataEntityObjects\ProductSetting.vb" />
     <Compile Include="DataEntityObjects\ParameterResult.vb" />
     <Compile Include="DataEntityObjects\TrackingLocationTypePermission.vb" />
