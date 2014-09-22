@@ -1,4 +1,5 @@
-﻿ALTER PROCEDURE [Relab].[remispResultsFailureAnalysis] @TestID INT, @BatchID INT
+﻿
+ALTER PROCEDURE [Relab].[remispResultsFailureAnalysis] @TestID INT, @BatchID INT
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -45,8 +46,8 @@ BEGIN
 					AND (ISNUMERIC(MeasurementValue) > 0 OR MeasurementValue IN ('Fail', 'False', 'Pass', 'True'))
 				)
 
-	INSERT INTO #FailureAnalysis (MeasurementID, Measurement, [Parameters], TestStageID, TestStageName)
-	SELECT 0, 'Total', '', 0, ''	
+	--INSERT INTO #FailureAnalysis (MeasurementID, Measurement, [Parameters], TestStageID, TestStageName)
+	--SELECT 0, 'Total', '', 0, ''	
 
 	SELECT @RowID = MIN(RowID) FROM #units WITH(NOLOCK)
 
@@ -57,30 +58,35 @@ BEGIN
 	
 		EXECUTE ('ALTER TABLE #FailureAnalysis ADD [' + @BatchUnitNumber + '] INT NULL ')
 	
-		SELECT @RecordID = MIN(RowID) FROM #FailureAnalysis WITH(NOLOCK) WHERE Measurement <> 'Total'
+		SELECT @RecordID = MIN(RowID) FROM #FailureAnalysis WITH(NOLOCK)-- WHERE Measurement <> 'Total'
 	
 		WHILE (@RecordID IS NOT NULL)
 		BEGIN
+			DECLARE @val INT
 			SET @ResultMeasurementID = 0
 			SET @SQL = '' 
 			SET @SQL2 = ''
+			SET @val = 0
 			SELECT @MeasurementID = MeasurementID, @TestStageID = TestStageID, @Parameters= [Parameters] FROM #FailureAnalysis WITH(NOLOCK) WHERE RowID=@RecordID
-	
-			SELECT @COUNT = COUNT(DISTINCT r.ID)
+
+			--SELECT @COUNT = COUNT(DISTINCT r.ID)
+			SELECT @val = rm.ResultID
 			FROM Relab.Results r WITH(NOLOCK)
 				INNER JOIN Relab.ResultsMeasurements rm WITH(NOLOCK) ON rm.ResultID=r.ID AND rm.PassFail=@FalseBit AND rm.Archived=@FalseBit
 			WHERE r.TestID=@TestID AND r.TestUnitID=@TestUnitID AND r.PassFail=@FalseBit
-				AND r.TestStageID=@TestStageID AND rm.MeasurementTypeID=@MeasurementID AND ISNULL(Relab.ResultsParametersComma(rm.ID), '') = @Parameters
-				
-			SET @SQL = 'UPDATE #FailureAnalysis SET [' + CONVERT(VARCHAR, @BatchUnitNumber) + '] = ' + CONVERT(VARCHAR, ISNULL(@Count, 0)) + ' WHERE TestStageID = ' + CONVERT(VARCHAR, @TestStageID) + ' AND MeasurementID = ' + CONVERT(VARCHAR, @MeasurementID) + ' AND LTRIM(RTRIM(Parameters)) = '
-			SET @SQL2 = ' LTRIM(RTRIM(''' + CONVERT(NVARCHAR(MAX), @Parameters) + '''))'
+				AND r.TestStageID=@TestStageID AND rm.MeasurementTypeID=@MeasurementID AND ISNULL(Relab.ResultsParametersComma(rm.ID), '') = ISNULL(@Parameters, '')
+
+			SET @SQL = 'UPDATE #FailureAnalysis SET [' + CONVERT(VARCHAR, @BatchUnitNumber) + '] = ' + CONVERT(VARCHAR, ISNULL(@val, 0)) + ' 
+			WHERE TestStageID = ' + CONVERT(VARCHAR, @TestStageID) + ' AND MeasurementID = ' + CONVERT(VARCHAR, @MeasurementID) + ' AND LTRIM(RTRIM(ISNULL(Parameters, ''''))) = '
+			SET @SQL2 = ' LTRIM(RTRIM(ISNULL(''' + CONVERT(NVARCHAR(MAX), @Parameters) + ''','''')))'
+			
 			EXECUTE (@SQL + @SQL2)			
 			
-			SELECT @RecordID = MIN(RowID) FROM #FailureAnalysis WITH(NOLOCK) WHERE RowID > @RecordID AND Measurement <> 'Total'
+			SELECT @RecordID = MIN(RowID) FROM #FailureAnalysis WITH(NOLOCK) WHERE RowID > @RecordID --AND Measurement <> 'Total'
 		END
 	
-		EXECUTE('UPDATE #FailureAnalysis SET [' + @BatchUnitNumber + '] = result.summary 
-				FROM (SELECT SUM([' + @BatchUnitNumber + ']) AS Summary FROM #FailureAnalysis WHERE Measurement <> ''Total'' ) result WHERE Measurement=''Total''')
+		--EXECUTE('UPDATE #FailureAnalysis SET [' + @BatchUnitNumber + '] = result.summary 
+		--		FROM (SELECT SUM([' + @BatchUnitNumber + ']) AS Summary FROM #FailureAnalysis WHERE Measurement <> ''Total'' ) result WHERE Measurement=''Total''')
 		
 		SELECT @RowID = MIN(RowID) FROM #units WHERE RowID > @RowID
 	END
@@ -88,8 +94,9 @@ BEGIN
 	SET @Row = (SELECT '[' + Cast(BatchUnitNumber AS VARCHAR(MAX)) + '] + ' FROM #units FOR XML PATH(''))
 	SET @Row = SUBSTRING(@Row, 0, LEN(@Row)-1)
 
-	SET @SQL = 'SELECT Measurement, [Parameters], TestStageName, ResultMeasurementID, TestStageID, ' + REPLACE(@Row, '+',',') + ', SUM(' + @Row + ') AS Total FROM #FailureAnalysis GROUP BY Measurement, [Parameters], TestStageName, ResultMeasurementID, TestStageID, ' + REPLACE(@Row, '+',',') + ' ORDER BY Measurement, [Parameters], TestStageName '
-
+	--SET @SQL = 'SELECT Measurement, [Parameters], TestStageName, ResultMeasurementID, TestStageID, ' + REPLACE(@Row, '+',',') + ', SUM(' + @Row + ') AS Total FROM #FailureAnalysis GROUP BY Measurement, [Parameters], TestStageName, ResultMeasurementID, TestStageID, ' + REPLACE(@Row, '+',',') + ' ORDER BY Measurement, [Parameters], TestStageName '
+	SET @SQL = 'SELECT Measurement, [Parameters], TestStageName, ResultMeasurementID, TestStageID, ' + REPLACE(@Row, '+',',') + ' FROM #FailureAnalysis GROUP BY Measurement, [Parameters], TestStageName, ResultMeasurementID, TestStageID, ' + REPLACE(@Row, '+',',') + ' ORDER BY Measurement, [Parameters], TestStageName '
+	
 	EXECUTE (@SQL)
 
 	DROP TABLE #FailureAnalysis
