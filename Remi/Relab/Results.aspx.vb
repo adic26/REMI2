@@ -178,8 +178,15 @@ Public Class Results
                 Int32.TryParse(dc.Text, num)
 
                 If (num > 0) Then
-                    dc.ForeColor = Drawing.Color.Red
-                    dc.Font.Bold = True
+                    Dim link As New HyperLink()
+                    link.ID = "hplBatch"
+                    link.Text = "1"
+                    link.Target = "_blank"
+                    link.NavigateUrl = String.Format("/Relab/Measurements.aspx?ID={0}&Batch={1}", num, ddlBatches.SelectedValue)
+                    link.ForeColor = Drawing.Color.Red
+                    link.Font.Bold = True
+
+                    dc.Controls.Add(link)
                 End If
             Next
         End If
