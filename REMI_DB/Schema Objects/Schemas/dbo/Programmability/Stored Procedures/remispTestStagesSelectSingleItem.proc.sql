@@ -4,7 +4,8 @@ BEGIN
 	SELECT ts.Comment,ts.ConcurrencyID,ts.ID,ts.processorder,ts.JobID,ts.LastUser,ts.TestID,ts.TestStageName,ts.TestStageType,  j.jobname, ISNULL(ts.IsArchived,0) AS IsArchived
 	FROM TestStages ts
 		INNER JOIN Jobs j ON ts.JobID=j.ID
-	WHERE (ts.ID = @ID OR @ID IS NULL)
+	WHERE 
+		(ts.ID > 0 AND ts.ID = @ID)
 		OR
 		(ts.TestStageName = @Name AND j.JobName = @JobName)
 END

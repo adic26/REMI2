@@ -101,35 +101,40 @@ Namespace REMI.Dal
         Public Shared Function GetItem(ByVal ID As Integer, ByVal name As String, ByVal jobName As String) As TestStage
             Dim myTestStage As TestStage = Nothing
 
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispTestStagesSelectSingleItem", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
+            If (ID = 0 And String.IsNullOrEmpty(name) And String.IsNullOrEmpty(jobName)) Then
+                Return myTestStage
+            Else
+                Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                    Using myCommand As New SqlCommand("remispTestStagesSelectSingleItem", myConnection)
+                        myCommand.CommandType = CommandType.StoredProcedure
 
-                    If ID > 0 Then
-                        myCommand.Parameters.AddWithValue("@ID", ID)
-                    End If
-
-                    If Not String.IsNullOrEmpty(name) Then
-                        myCommand.Parameters.AddWithValue("@Name", name)
-                    End If
-
-                    If Not String.IsNullOrEmpty(jobName) Then
-                        myCommand.Parameters.AddWithValue("@JobName", jobName)
-                    End If
-
-                    myConnection.Open()
-
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.Read() Then
-                            myTestStage = FillDataRecord(myReader)
+                        If ID > 0 Then
+                            myCommand.Parameters.AddWithValue("@ID", ID)
                         End If
+
+                        If Not String.IsNullOrEmpty(name) Then
+                            myCommand.Parameters.AddWithValue("@Name", name)
+                        End If
+
+                        If Not String.IsNullOrEmpty(jobName) Then
+                            myCommand.Parameters.AddWithValue("@JobName", jobName)
+                        End If
+
+                        myConnection.Open()
+
+                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                            If myReader.Read() Then
+                                myTestStage = FillDataRecord(myReader)
+                            End If
+                        End Using
                     End Using
                 End Using
-            End Using
 
-            If (myTestStage IsNot Nothing) Then
-                SetTestsForSingleTestStage(myTestStage)
+                If (myTestStage IsNot Nothing) Then
+                    SetTestsForSingleTestStage(myTestStage)
+                End If
             End If
+
             Return myTestStage
         End Function
 

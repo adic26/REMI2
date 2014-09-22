@@ -42,7 +42,15 @@ namespace REMI.Bll.Tests
             var test = new REMI.Entities.Test();
             test = (from t in instance.Tests orderby t.ID descending select t).FirstOrDefault();
 
-            Assert.IsNotNull(TestManager.GetTestByName(test.TestName, true));
+            if (test.TestType == 1)
+            {
+                Assert.IsNotNull(TestManager.GetTestByName(test.TestName, true));
+            }
+            else if (test.TestType == 2)
+            {
+                Assert.IsNotNull(TestManager.GetTestByName(test.TestName, false));
+            }
+
             Assert.IsNull(TestManager.GetTestByName(String.Empty, true));
         }
 

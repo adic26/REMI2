@@ -96,7 +96,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property ID() As Int32 Implements IOrientation.ID
+        Public Overrides Property ID() As Int32 Implements IOrientation.ID
             Get
                 Return _ID
             End Get
