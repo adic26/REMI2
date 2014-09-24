@@ -2284,8 +2284,8 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\UX_JobOrientation_JID_PID_Name.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Scripts\September222014\1.sql" />
-    <Build Include="Scripts\September222014\2.sql" />
-    <Build Include="Scripts\September222014\3.sql" />
+    <None Include="Scripts\September222014\1.sql" />
+    <None Include="Scripts\September222014\2.sql" />
+    <None Include="Scripts\September222014\3.sql" />
   </ItemGroup>
 </Project>
