@@ -210,6 +210,7 @@ Partial Class Admin_TestStages
                 gvwMain.DataBind()
         End Select
     End Sub
+
     Protected Sub SaveTestStage()
         Dim tmpTestStage As TestStage
         notMain.Clear()
@@ -219,14 +220,13 @@ Partial Class Admin_TestStages
         Else
             tmpTestStage = New TestStage
         End If
+
         'set test stage params
         SetTestStageParametersForSave(tmpTestStage)
-
         tmpTestStage.ID = TestStageManager.SaveTestStage(tmpTestStage) 'save
-
         notMain.Notifications = tmpTestStage.Notifications
-
     End Sub
+
     Protected Sub SaveJob()
         Dim j As Job = New Job
         j.Name = ddlJobs.SelectedItem.Text
@@ -250,8 +250,13 @@ Partial Class Admin_TestStages
             tmpTestStage.TestStageType = DirectCast([Enum].Parse(GetType(TestStageType), ddlTestStageType.SelectedItem.Text), TestStageType)
         End If
 
-        tmpTestStage.ProcessOrder = txtProcessOrder.Text
-        tmpTestStage.IsArchived = chkArchived.Checked
+        Dim processOrder As Int32 = 0
+        Dim isArchived As Boolean = False
+        Int32.TryParse(txtProcessOrder.Text, processOrder)
+        Boolean.TryParse(chkArchived.Checked, isArchived)
+
+        tmpTestStage.ProcessOrder = processOrder
+        tmpTestStage.IsArchived = isArchived
         tmpTestStage.LastUser = UserManager.GetCurrentUser.UserName
 
         If tmpTestStage.TestStageType = TestStageType.EnvironmentalStress Then
