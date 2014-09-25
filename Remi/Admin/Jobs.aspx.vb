@@ -172,12 +172,15 @@ Partial Class Admin_TestStages
 
             If tmpTestStage.TestStageType = TestStageType.EnvironmentalStress Then 'set up the test fields for edit also
                 pnlAddEditTest.Visible = True
-                hdnTestID.Value = tmpTestStage.Tests(0).ID
+
+                If (tmpTestStage.Tests.Count > 0) Then
+                    hdnTestID.Value = tmpTestStage.Tests(0).ID
+                End If
             End If
 
             pnlAddEditTestStage.Visible = True
             pnlViewAllTestStages.Visible = False
-        End If
+            End If
     End Sub
 
     Protected Sub HideEditTestStagePanel()
@@ -340,6 +343,10 @@ Partial Class Admin_TestStages
     Protected Sub ddlTestStageType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTestStageType.SelectedIndexChanged
         If DirectCast([Enum].Parse(GetType(TestStageType), ddlTestStageType.SelectedItem.Text), TestStageType) = TestStageType.EnvironmentalStress Then
             pnlAddEditTest.Visible = True
+
+            lstAllTLTypes.DataBind()
+
+
         Else
             pnlAddEditTest.Visible = False
         End If
