@@ -66,7 +66,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetProductSettingsDictionary()
         {
-            Assert.That(ProductGroupManager.GetProductSettingsDictionary((from p in instance.Products orderby p.ID descending select p.ID).FirstOrDefault()).Count > 0);
+            Assert.That(ProductGroupManager.GetProductSettingsDictionary((from p in instance.Products where p.ID != 0 orderby p.ID descending select p.ID).FirstOrDefault()).Count > 0);
             Assert.That(ProductGroupManager.GetProductSettings((from p in instance.Products orderby p.ID descending select p.ID).FirstOrDefault()).Count > 0);
         }
 
@@ -127,10 +127,9 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetSimilarTestConfigurations()
         {
-            var pc = new REMI.Entities.ProductConfigurationUpload();
-            pc = (from c in instance.ProductConfigurationUploads.Include("Product").Include("Test") orderby c.ID descending select c).FirstOrDefault();
+            var pc = (from c in instance.ProductConfigurationUploads.Include("Product").Include("Test") group c by new { TestID = c.Test.ID } into grp where grp.Count() > 1 select new { grp.Key.TestID}).FirstOrDefault();
 
-            Assert.That(ProductGroupManager.GetSimilarTestConfigurations(pc.Product.ID, pc.Test.ID).Rows.Count > 0);
+            Assert.That(ProductGroupManager.GetSimilarTestConfigurations(0, pc.TestID).Rows.Count > 0);
         }
 
         [Test]
