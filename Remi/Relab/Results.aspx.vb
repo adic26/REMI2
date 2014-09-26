@@ -102,6 +102,8 @@ Public Class Results
             hypGraph.NavigateUrl = String.Format("/Relab/ResultGraph.aspx?BatchID={0}", ddlBatches.SelectedItem.Value)
             imgGraph.Visible = True
             hypGraph.Visible = True
+
+            hypReports.NavigateUrl = String.Format("/Relab/Reports.aspx?BatchID={0}", ddlBatches.SelectedItem.Value)
         End If
     End Sub
 

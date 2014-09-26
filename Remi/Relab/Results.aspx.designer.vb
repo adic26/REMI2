@@ -86,6 +86,24 @@ Partial Public Class Results
     Protected WithEvents hypGraph As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''imgReports control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgReports As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''hypReports control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypReports As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''imgExportAction control.
     '''</summary>
     '''<remarks>
