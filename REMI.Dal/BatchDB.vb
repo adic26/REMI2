@@ -475,7 +475,9 @@ Namespace REMI.Dal
                     da.Fill(ds)
 
                     For i = 0 To ds.Tables.Count - 1
-                        ds.Tables(i).TableName = ds.Tables(i).Rows(0).Item("BatchUnitNumber").ToString()
+                        If (ds.Tables(i).Rows.Count > 0) Then
+                            ds.Tables(i).TableName = ds.Tables(i).Rows(0).Item("BatchUnitNumber").ToString()
+                        End If
                     Next
                 End Using
             End Using

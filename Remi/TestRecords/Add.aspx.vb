@@ -303,7 +303,7 @@ Partial Class TestRecords_Add
                                             type = LookupType.SFIFunctionalMatrix
                                     End Select
 
-                                    TestRecordManager.InsertRelabRecordMeasurement(testID, testStageID, (From tu In b.TestUnits Where tu.BatchUnitNumber = testUnitNum Select tu.ID).FirstOrDefault(), LookupsManager.GetLookupID(type, lookup), IIf(passFail = 0, False, True), rblMFISFIAcc.Enabled)
+                                    TestRecordManager.InsertRelabRecordMeasurement(testID, testStageID, (From tu In b.TestUnits Where tu.BatchUnitNumber = testUnitNum Select tu.ID).FirstOrDefault(), LookupsManager.GetLookupID(type, lookup, 0), IIf(passFail = 0, False, True), rblMFISFIAcc.Enabled)
                                 End If
                             Next
                         Next

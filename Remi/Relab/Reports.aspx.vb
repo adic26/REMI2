@@ -1,0 +1,12 @@
+﻿Imports Remi.Bll
+Imports Remi.Validation
+Imports Remi.Contracts
+
+Public Class Reports
+    Inherits System.Web.UI.Page
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+    End Sub
+
+End Class

@@ -205,6 +205,7 @@
     <Folder Include="Scripts\JUly232014" />
     <Folder Include="Scripts\August132014" />
     <Folder Include="Scripts\September222014" />
+    <Folder Include="Scripts\September302014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2287,5 +2288,11 @@
     <None Include="Scripts\September222014\1.sql" />
     <None Include="Scripts\September222014\2.sql" />
     <None Include="Scripts\September222014\3.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispMeasurementsByReq_Test.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\September302014\1.sql" />
   </ItemGroup>
 </Project>

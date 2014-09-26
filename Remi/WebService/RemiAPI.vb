@@ -277,9 +277,9 @@ Public Class RemiAPI
 
 #Region "Lookups"
     <WebMethod(Description:="Returns an ID of Lookup based on type.")> _
-    Public Function GetLookupIDByTypeString(ByVal type As String, ByVal lookup As String) As Int32
+    Public Function GetLookupIDByTypeString(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32
         Try
-            Return GetLookupID([Enum].Parse(GetType(Remi.Contracts.LookupType), type), lookup)
+            Return GetLookupID([Enum].Parse(GetType(REMI.Contracts.LookupType), type), lookup, parentID)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupIDByTypeString", "e3", NotificationType.Errors, ex)
         End Try
@@ -287,9 +287,9 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(Description:="Returns an ID of Lookup based on type.")> _
-    Public Function GetLookupID(ByVal type As Remi.Contracts.LookupType, ByVal lookup As String) As Int32
+    Public Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
         Try
-            Return LookupsManager.GetLookupID(type, lookup)
+            Return LookupsManager.GetLookupID(type, lookup, parentID)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupID", "e3", NotificationType.Errors, ex)
         End Try

@@ -489,6 +489,13 @@
       <DependentUpon>Measurements.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
+    <Compile Include="Relab\Reports.aspx.designer.vb">
+      <DependentUpon>Reports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Relab\Reports.aspx.vb">
+      <DependentUpon>Reports.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
     <Compile Include="Relab\ResultGraph.aspx.designer.vb">
       <DependentUpon>ResultGraph.aspx</DependentUpon>
     </Compile>
@@ -668,6 +675,7 @@
     <Content Include="ManageUser\Default.aspx" />
     <Content Include="Overview.aspx" />
     <Content Include="Relab\Measurements.aspx" />
+    <Content Include="Relab\Reports.aspx" />
     <Content Include="Relab\ResultGraph.aspx" />
     <Content Include="Relab\Results.aspx" />
     <Content Include="Relab\Versions.aspx" />

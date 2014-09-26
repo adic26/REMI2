@@ -333,6 +333,7 @@ Namespace REMI.BusinessEntities
                 Dim processOrder As Int32 = testStage.ProcessOrder
 
                 Dim stages As List(Of String) = (From t In tasks Where t.IsArchived <> True Select t.TestStageName).ToList
+                stages.AddRange((From s In job.TestStages Where s.TestStageType = 3 Or s.TestStageType = 4 Or s.TestStageType = 5 Select s.Name))
 
                 While stage Is Nothing
                     Dim temp As TestStage = (From ts As TestStage In job.TestStages Where stages.Contains(ts.Name) And testStageTypes.Contains(ts.TestStageType) And ts.ProcessOrder > processOrder AndAlso ts.ProcessOrder >= 0 And ts.IsArchived = False Select ts).OrderBy(Function(ts) ts.ProcessOrder).FirstOrDefault()

@@ -20,7 +20,16 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultsSummary")
+        End Function
+
+        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testName As String) As DataTable
+            Try
+                Return RelabDB.GetResults(requestNumber, testName)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("Results")
         End Function
 
         Public Shared Function FunctionalMatrixByTestRecord(ByVal trID As Int32, ByVal testStageID As Int32, ByVal testID As Int32, ByVal batchID As Int32, ByVal unitIDs As String, ByVal functionalType As Int32) As DataTable
@@ -29,7 +38,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("FunctionalMatrixByTestRecord")
         End Function
 
         Public Shared Function OverallResultSummary(ByVal batchID As Integer) As DataTable
@@ -38,7 +47,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("OverallResultSummary")
         End Function
 
         Public Shared Function FailureAnalysis(ByVal testID As Int32, ByVal batchID As Int32) As DataTable
@@ -47,7 +56,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultsFailureAnalysis")
         End Function
 
         Public Shared Function ResultSummaryExport(ByVal batchID As Integer, ByVal resultID As Int32) As DataTable
@@ -56,7 +65,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultsSummaryExport")
         End Function
 
         Public Shared Function ResultMeasurements(ByVal resultID As Integer, ByVal onlyFails As Boolean, ByVal includeArchived As Boolean) As DataTable
@@ -65,7 +74,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultMeasurements")
         End Function
 
         Public Shared Function ResultVersions(ByVal testID As Integer, ByVal batchID As Int32) As DataTable
@@ -74,7 +83,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultVersions")
         End Function
 
         Public Shared Function UploadResults(ByVal xml As String, ByVal lossFile As String) As Boolean
@@ -101,7 +110,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultUnits")
         End Function
 
         Public Shared Function GetMeasurementsByTest(ByVal batchIDs As String, ByVal testID As Int32, ByVal showOnlyFailValue As Boolean) As DataTable
@@ -110,7 +119,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultMeasurements")
         End Function
 
         Public Shared Function GetParametersByMeasurementTest(ByVal batchIDs As String, ByVal testID As Int32, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal showOnlyFailValue As Boolean, ByVal testStageIDs As String) As DataTable

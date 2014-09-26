@@ -30,6 +30,23 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testName As String) As DataTable
+            Dim dt As New DataTable()
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("Relab.remispMeasurementsByReq_Test", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myCommand.Parameters.AddWithValue("@TestName", testName)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "Results"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
         Public Shared Function FunctionalMatrixByTestRecord(ByVal trID As Int32, ByVal testStageID As Int32, ByVal testID As Int32, ByVal batchID As Int32, ByVal unitIDs As String, ByVal functionalType As Int32) As DataTable
             Dim dt As New DataTable()
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)

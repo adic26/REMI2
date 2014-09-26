@@ -42,6 +42,10 @@
                             <asp:Image ImageUrl="../Design/Icons/png/24x24/chart_down.png" ID="imgGraph" runat="server" Visible="false" />
                             <asp:HyperLink ID="hypGraph" runat="server" Visible="false">Graph Result</asp:HyperLink>
                         </li>
+                        <li>
+                            <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgReports" runat="server" Visible="false" />
+                            <asp:HyperLink ID="hypReports" runat="server" Visible="false">Reports</asp:HyperLink>
+                        </li>
                 </ContentTemplate>
             </asp:UpdatePanel>
             <li>

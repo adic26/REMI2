@@ -52,4 +52,14 @@ Public Class DataPush
             UserManager.LogIssue("Email could not be sent via API.", "e3", NotificationType.Errors, ex, "Dest: " + destinations + "Sender: " + sender)
         End Try
     End Sub
+
+    <WebMethod(Description:="Get All Results For A Request Based On A Test")> _
+    Public Function GetResults(ByVal requestNumber As String, ByVal testName As String) As DataTable
+        Try
+            Return RelabManager.GetResults(requestNumber, testName)
+        Catch ex As Exception
+            RelabManager.LogIssue("GetResults", "e3", NotificationType.Errors, ex)
+        End Try
+        Return New DataTable("Results")
+    End Function
 End Class
