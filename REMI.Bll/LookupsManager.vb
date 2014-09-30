@@ -39,9 +39,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String) As Int32
+        Public Shared Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
             Try
-                Return LookupsDB.GetLookupID(type, lookup)
+                Return LookupsDB.GetLookupID(type, lookup, parentID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
                 Return -1

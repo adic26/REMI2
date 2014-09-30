@@ -87,7 +87,7 @@ Partial Class BadgeAccess_EditMyUser
             UserManager.SetUserToSession(UserManager.GetUser(UserManager.GetCurrentUser.LDAPName, UserManager.GetCurrentUser.ID))
 
             UserManager.GetCurrentUser.TestCentre = ddlGeoLoc.SelectedItem.Text
-            UserManager.GetCurrentUser.TestCentreID = LookupsManager.GetLookupID(Contracts.LookupType.TestCenter, ddlGeoLoc.SelectedItem.Text)
+            UserManager.GetCurrentUser.TestCentreID = LookupsManager.GetLookupID(Contracts.LookupType.TestCenter, ddlGeoLoc.SelectedItem.Text, 0)
             UserManager.GetCurrentUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
 
             Dim training As GridView = DirectCast(Me.FindControl(gvwTraining.UniqueID), GridView)

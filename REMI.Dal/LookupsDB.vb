@@ -47,13 +47,14 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String) As Int32
+        Public Shared Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
             Dim lookupID As Int32
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetLookup", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@Type", type.ToString())
                     myCommand.Parameters.AddWithValue("@Lookup", lookup)
+                    myCommand.Parameters.AddWithValue("@ParentID", parentID)
                     MyConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader
                         If myReader.HasRows Then

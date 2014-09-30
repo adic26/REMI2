@@ -74,7 +74,7 @@ Partial Class TestRecords_EditDetail
                                 type = LookupType.SFIFunctionalMatrix
                         End Select
 
-                        TestRecordManager.InsertRelabRecordMeasurement(testID, testStageID, hdnUnitID.Value, LookupsManager.GetLookupID(type, lookup), IIf(passFail = 0, False, True), rblMFISFIAcc.Enabled)
+                        TestRecordManager.InsertRelabRecordMeasurement(testID, testStageID, hdnUnitID.Value, LookupsManager.GetLookupID(type, lookup, 0), IIf(passFail = 0, False, True), rblMFISFIAcc.Enabled)
                     End If
                 Next
             Next

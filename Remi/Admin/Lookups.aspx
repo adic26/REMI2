@@ -73,7 +73,7 @@
                 <ItemTemplate>
                     <asp:HiddenField runat="server" ID="hdnParentID" Value='<%# Eval("ParentID")%>' />
                     <asp:Label runat="server" ID="lblParent" Text='<%# Eval("Parent")%>' Visible="true" />
-                    <asp:DropDownList runat="server" ID="ddlParentID" DataTextField="LookupType" DataValueField="LookupID" Visible="false"></asp:DropDownList>
+                    <asp:DropDownList runat="server" ID="ddlParentID" DataTextField="DisplayText" DataValueField="LookupID" Visible="false"></asp:DropDownList>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Active" SortExpression="Active">
@@ -83,7 +83,6 @@
             </asp:TemplateField>
         </Columns>
     </asp:GridView>
-
 
     <h1>Target Access</h1>
 

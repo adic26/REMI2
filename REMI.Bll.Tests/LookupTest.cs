@@ -34,7 +34,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetLookupID()
         {
-            Assert.That(LookupsManager.GetLookupID(Contracts.LookupType.Priority, "low") > 0);
+            Assert.That(LookupsManager.GetLookupID(Contracts.LookupType.Priority, "low", 0) > 0);
         }
 
         [Test]
