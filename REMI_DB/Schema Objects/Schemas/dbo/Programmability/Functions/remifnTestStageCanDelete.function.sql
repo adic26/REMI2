@@ -14,6 +14,10 @@ BEGIN
 		UNION
 		SELECT DISTINCT 0
 		FROM Relab.Results
+		WHERE TestStageID=@TestStageID
+		UNION
+		SELECT DISTINCT 0
+		FROM Req.RequestSetup
 		WHERE TestStageID=@TestStageID)
 	
 	RETURN ISNULL(@Exists, 1)
