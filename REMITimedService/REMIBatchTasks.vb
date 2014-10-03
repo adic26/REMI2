@@ -9,6 +9,7 @@ Public Class REMIBatchTasks
 
     Private Shared _runTimedThreadFlag As Boolean ' used to control the thread spawned by the service to run tasks
     Private Shared _sync As Boolean
+    Private Shared _runNotAssigned As Boolean = True
     Private Shared _dontRun As Boolean = True
     Private Shared _syncCount As Int32 = 0
     Private _sendSuccessEmails As Boolean
@@ -29,6 +30,9 @@ Public Class REMIBatchTasks
 
     Private Sub TimedLoop()
         _sync = True
+        _runNotAssigned = True
+        Dim dayOfWeek As DayOfWeek = DateTime.Now.DayOfWeek
+
         While _runTimedThreadFlag
             Dim dateValue As Date = DateTime.Now
 
@@ -44,10 +48,15 @@ Public Class REMIBatchTasks
                 _dontRun = False
             End If
 
-            If (Not (_dontRun)) Then
-                RunTasks()
+            If (dayOfWeek <> dateValue.DayOfWeek) Then
+                _runNotAssigned = True
             End If
 
+            If (Not (_dontRun)) Then
+                RunTasks(_runNotAssigned)
+            End If
+
+            _runNotAssigned = False
             'Don't set the time here. Use the config interval above!
             Thread.Sleep(_configIntervalMinutes * 60000)
         End While
@@ -81,7 +90,7 @@ Public Class REMIBatchTasks
     ''' This is a list of the tasks that are run
     ''' </summary>
     ''' <remarks></remarks>
-    Private Sub RunTasks()
+    Private Sub RunTasks(ByVal runNotAssigned As Boolean)
         Dim sb As New System.Text.StringBuilder
         Dim currentQRA As String = String.Empty
         Try
@@ -242,12 +251,15 @@ Public Class REMIBatchTasks
                             sb.Append(Environment.NewLine)
                         End Try
 
-                        Try
-                            remi.GetInstance.BatchStartedBeforeAssigned(s)
-                        Catch ex As Exception
-                            sb.Append(Environment.NewLine)
-                            sb.Append(String.Format("{0} - BatchStartedBeforeAssigned Failed For {1} with Error {2}{3}Stack Trace: {4}", DateTime.Now, currentQRA, ex.Message.ToString(), Environment.NewLine, ex.StackTrace))
-                        End Try
+                        If (runNotAssigned) Then
+                            Try
+                                remi.GetInstance.BatchStartedBeforeAssigned(s)
+                                SendMail(String.Format("BatchStartedBeforeAssigned For {0}...", currentQRA), currentQRA)
+                            Catch ex As Exception
+                                sb.Append(Environment.NewLine)
+                                sb.Append(String.Format("{0} - BatchStartedBeforeAssigned Failed For {1} with Error {2}{3}Stack Trace: {4}", DateTime.Now, currentQRA, ex.Message.ToString(), Environment.NewLine, ex.StackTrace))
+                            End Try
+                        End If
                     Loop While (retry < 5 And succeeded = False) 'The batch check failed. So retry while failed for 4 attempts
                 Next
             Else

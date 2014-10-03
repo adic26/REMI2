@@ -174,7 +174,17 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, testCenter)
             End Try
-            Return New DataTable
+            Return New DataTable("TRSData")
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetBatchUnitsInStage(ByVal QRANumber As String) As DataTable
+            Try
+                Return BatchDB.GetBatchUnitsInStage(QRANumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, QRANumber.ToString())
+            End Try
+            Return New DataTable("BatchUnitsInStage")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
@@ -184,7 +194,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, QRANumber.ToString())
             End Try
-            Return New DataTable
+            Return New DataTable("BatchDocuments")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _

@@ -206,6 +206,7 @@
     <Folder Include="Scripts\August132014" />
     <Folder Include="Scripts\September222014" />
     <Folder Include="Scripts\September302014" />
+    <Folder Include="Scripts\October032014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2294,5 +2295,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\September302014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetBatchUnitsInStage.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\October032014\1.sql" />
+    <None Include="Scripts\October032014\ObservationsInsert.sql" />
   </ItemGroup>
 </Project>

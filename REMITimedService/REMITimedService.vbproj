@@ -79,6 +79,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
@@ -172,9 +173,6 @@
     <None Include="Web References\remiAPI\ConfigurationReturnData1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\ExceptionData1.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
     <None Include="Web References\remiAPI\IncomingAppBatchData1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -191,10 +189,16 @@
     <None Include="Web References\remiAPI\Test1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
+    <None Include="Web References\remiAPI\TestRecord.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\remiAPI\TestStage1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\remiAPI\TestStageResultOverview1.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\remiAPI\TestUnit.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\remiAPI\TrackingLocation1.datasource">
