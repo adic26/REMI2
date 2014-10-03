@@ -413,6 +413,24 @@ Namespace REMI.Dal
             End If
         End Function
 
+        Public Shared Function GetBatchUnitsInStage(ByVal QRANumber As String) As DataTable
+            Dim dt As New DataTable()
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetBatchUnitsInStage", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@QRANumber", QRANumber)
+                    myConnection.Open()
+
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "BatchUnitsInStage"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
         Public Shared Function GetBatchDocuments(ByVal QRANumber As String) As DataTable
             Dim dt As New DataTable()
 

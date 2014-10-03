@@ -2295,4 +2295,7 @@
   <ItemGroup>
     <None Include="Scripts\September302014\1.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetBatchUnitsInStage.sql" />
+  </ItemGroup>
 </Project>

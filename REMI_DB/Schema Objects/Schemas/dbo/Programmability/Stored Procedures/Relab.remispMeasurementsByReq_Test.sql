@@ -38,7 +38,7 @@ BEGIN
 				INNER JOIN Batches b ON b.ID=tu.BatchID
 				INNER JOIN Tests t ON t.ID=r.TestID
 				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
-			WHERE b.QRANumber=' + @RequestNumber + ' AND rm.Archived=' + @FalseBit + ' AND t.TestName=' + @TestName + '
+			WHERE b.QRANumber=''' + @RequestNumber + ''' AND rm.Archived=' + @FalseBit + ' AND t.TestName=''' + @TestName + '''
 			) te PIVOT (MAX(Value) FOR ParameterName IN (' + @rows + ')) AS pvt')
 	END
 	ELSE
@@ -65,7 +65,8 @@ BEGIN
 		LEFT OUTER JOIN #parameters p WITH(NOLOCK) ON p.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN Relab.ResultsXML x ON x.ID = rm.XMLID
 	WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND t.TestName=@TestName
-	ORDER BY tu.BatchUnitNumber, rm.ReTestNum
+		AND (ISNULL(ISNULL(ISNULL(lt.[Values], ltsf.[Values]), ltmf.[Values]), ltacc.[Values]) NOT IN ('start', 'Start utc', 'end'))
+	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder, rm.ReTestNum
 
 	DROP TABLE #parameters
 	SET NOCOUNT OFF

@@ -635,6 +635,17 @@ Public Class RemiAPI
 
 #Region "Batch"
     <WebMethod(EnableSession:=True, Description:="Returns The Parametric Testing Summary By QRANumber.")> _
+    Public Function GetBatchUnitsInStage(ByVal qraNumber As String) As DataTable
+        Try
+            Return BatchManager.GetBatchUnitsInStage(qraNumber)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetBatchUnitsInStage", "e7", NotificationType.Errors, ex, "Request: " + qraNumber)
+        End Try
+
+        Return New DataTable("TestingSummary")
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Returns The Parametric Testing Summary By QRANumber.")> _
     Public Function GetTestingSummary(ByVal qraNumber As String, ByVal userIdentification As String) As DataTable
         Try
             If UserManager.SetUserToSession(userIdentification) Then
@@ -661,7 +672,7 @@ Public Class RemiAPI
                 Return b.GetParametricTestOverviewTable(False, False, rqResults, False, False)
             End If
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetTestingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
+            BatchManager.LogIssue("REMI API GetTestingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
         End Try
 
         Return New DataTable("TestingSummary")
@@ -675,7 +686,7 @@ Public Class RemiAPI
                 Return b.GetStressingOverviewTable(False, False, False, False, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             End If
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetStressingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
+            BatchManager.LogIssue("REMI API GetStressingSummary", "e7", NotificationType.Errors, ex, "User: " + userIdentification + " Request: " + qraNumber)
         End Try
 
         Return New DataTable("StressingSummary")
@@ -1325,4 +1336,47 @@ Public Class RemiAPI
     End Function
 #End Region
 
+#Region "Exceptions"
+    <WebMethod(EnableSession:=True, Description:="Delete Ex.")> _
+    Public Function DeleteException(ByVal qraNumber As String, ByVal testName As String, ByVal testStageName As String, ByVal testUnitID As Int32, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim notification As Notification = ExceptionManager.DeleteException(qraNumber, testName, testStageName, testUnitID)
+
+                If (notification.Type = NotificationType.Errors Or notification.Type = NotificationType.Fatal Or notification.Type = NotificationType.Warning) Then
+                    Return False
+                Else
+                    Return True
+                End If
+            End If
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API SaveJob", "e3", NotificationType.Errors, ex)
+        End Try
+        Return False
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Update Job.")> _
+    Public Function AddException(ByVal qraNumber As String, ByVal testName As String, ByVal testStageName As String, ByVal testUnitID As Int32, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim exc As New TestException()
+                exc.TestUnitID = testUnitID
+                exc.TestStageName = testStageName
+                exc.TestName = testName
+                exc.QRAnumber = qraNumber
+
+                Dim notification As Notification = ExceptionManager.AddException(exc)
+
+                If (notification.Type = NotificationType.Errors Or notification.Type = NotificationType.Fatal Or notification.Type = NotificationType.Warning) Then
+                    Return False
+                Else
+                    Return True
+                End If
+            End If
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API SaveJob", "e3", NotificationType.Errors, ex)
+        End Try
+        Return False
+    End Function
+#End Region
 End Class
