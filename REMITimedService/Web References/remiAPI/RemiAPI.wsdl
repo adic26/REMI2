@@ -132,6 +132,186 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetUnit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="batchUnitNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUnitResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUnitResult" type="tns:TestUnit" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TestUnit">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LoggedItemBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="AssignedTo" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="NoBSN" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="CurrentLog" type="tns:DeviceTrackingLog" />
+              <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="BSN" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="BatchUnitNumber" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestCenterID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="CurrentTestName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CurrentTestStage" type="tns:TestStage" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="LoggedItemBase" abstract="true">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BusinessBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="LastUser" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BusinessBase" abstract="true">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ValidationBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="ConcurrencyID" type="s:base64Binary" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ValidationBase">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ResourceManager" type="tns:ResourceManager" />
+          <s:element minOccurs="0" maxOccurs="1" name="Notifications" type="tns:ArrayOfNotification" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ResourceManager">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="IgnoreCase" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfNotification">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Notification" nillable="true" type="tns:Notification" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="DeviceTrackingLog">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BusinessBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="TestUnitID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="TrackingLocationID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="TrackingLocationName" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="InTime" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="OutTime" type="s:dateTime" />
+              <s:element minOccurs="0" maxOccurs="1" name="InUser" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="OutUser" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestUnitBatchUnitNumber" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="TestUnitQRANumber" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="TrackingLocationType">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LoggedItemBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="WILocation" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="UnitCapacity" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="TrackingLocationFunction" type="tns:TrackingLocationFunction" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="TrackingLocationFunction">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet" />
+          <s:enumeration value="NonTesting" />
+          <s:enumeration value="Testing" />
+          <s:enumeration value="ExternalLocation" />
+          <s:enumeration value="EnvironmentalStressing" />
+          <s:enumeration value="IncomingLabeling" />
+          <s:enumeration value="REMSTAR" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="Test">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LoggedItemBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="TrackingLocationTypes" type="tns:ArrayOfTrackingLocationType" />
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Duration" type="tns:TimeSpan" />
+              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="WorkInstructionLocation" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="TestStage" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Owner" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Degradation" type="s:decimal" />
+              <s:element minOccurs="0" maxOccurs="1" name="Trainee" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestType" type="tns:TestType" />
+              <s:element minOccurs="0" maxOccurs="1" name="TotalHours" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="ResultIsTimeBased" type="s:boolean" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfTrackingLocationType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TrackingLocationType" nillable="true" type="tns:TrackingLocationType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TimeSpan" />
+      <s:simpleType name="TestType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet" />
+          <s:enumeration value="Parametric" />
+          <s:enumeration value="EnvironmentalStress" />
+          <s:enumeration value="IncomingEvaluation" />
+          <s:enumeration value="NonTestingTask" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="TestStage">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LoggedItemBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="ProcessOrder" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestStageType" type="tns:TestStageType" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="Tests" type="tns:ArrayOfTest" />
+              <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="TestStageType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet" />
+          <s:enumeration value="Parametric" />
+          <s:enumeration value="EnvironmentalStress" />
+          <s:enumeration value="IncomingEvaluation" />
+          <s:enumeration value="NonTestingTask" />
+          <s:enumeration value="FailureAnalysis" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfTest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Test" nillable="true" type="tns:Test" />
+        </s:sequence>
+      </s:complexType>
       <s:element name="DTATTAAddRemoveUnit">
         <s:complexType>
           <s:sequence>
@@ -258,66 +438,6 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="LoggedItemBase" abstract="true">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:BusinessBase">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="LastUser" type="s:string" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="BusinessBase" abstract="true">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:ValidationBase">
-            <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="ConcurrencyID" type="s:base64Binary" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="ValidationBase">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="ResourceManager" type="tns:ResourceManager" />
-          <s:element minOccurs="0" maxOccurs="1" name="Notifications" type="tns:ArrayOfNotification" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ResourceManager">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="IgnoreCase" type="s:boolean" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ArrayOfNotification">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="Notification" nillable="true" type="tns:Notification" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="TrackingLocationType">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:LoggedItemBase">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="WILocation" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="UnitCapacity" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="TrackingLocationFunction" type="tns:TrackingLocationFunction" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:simpleType name="TrackingLocationFunction">
-        <s:restriction base="s:string">
-          <s:enumeration value="NotSet" />
-          <s:enumeration value="NonTesting" />
-          <s:enumeration value="Testing" />
-          <s:enumeration value="ExternalLocation" />
-          <s:enumeration value="EnvironmentalStressing" />
-          <s:enumeration value="IncomingLabeling" />
-          <s:enumeration value="REMSTAR" />
-        </s:restriction>
-      </s:simpleType>
       <s:simpleType name="TrackingLocationStatus">
         <s:restriction base="s:string">
           <s:enumeration value="NotSet" />
@@ -340,6 +460,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="stationName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -364,46 +485,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:complexType name="Test">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:LoggedItemBase">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="TrackingLocationTypes">
-                <s:complexType>
-                  <s:sequence>
-                    <s:element ref="s:schema" />
-                    <s:any />
-                  </s:sequence>
-                </s:complexType>
-              </s:element>
-              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="Duration" type="tns:TimeSpan" />
-              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:boolean" />
-              <s:element minOccurs="0" maxOccurs="1" name="WorkInstructionLocation" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="TestStage" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="Owner" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="Degradation" type="s:decimal" />
-              <s:element minOccurs="0" maxOccurs="1" name="Trainee" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
-              <s:element minOccurs="1" maxOccurs="1" name="TestType" type="tns:TestType" />
-              <s:element minOccurs="0" maxOccurs="1" name="TotalHours" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="ResultIsTimeBased" type="s:boolean" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="TimeSpan" />
-      <s:simpleType name="TestType">
-        <s:restriction base="s:string">
-          <s:enumeration value="NotSet" />
-          <s:enumeration value="Parametric" />
-          <s:enumeration value="EnvironmentalStress" />
-          <s:enumeration value="IncomingEvaluation" />
-          <s:enumeration value="NonTestingTask" />
-        </s:restriction>
-      </s:simpleType>
       <s:element name="GetTestByID">
         <s:complexType>
           <s:sequence>
@@ -467,38 +548,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:complexType name="TestStage">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:LoggedItemBase">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="ProcessOrder" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:boolean" />
-              <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
-              <s:element minOccurs="1" maxOccurs="1" name="TestStageType" type="tns:TestStageType" />
-              <s:element minOccurs="1" maxOccurs="1" name="TestID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="Tests" type="tns:ArrayOfTest" />
-              <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:simpleType name="TestStageType">
-        <s:restriction base="s:string">
-          <s:enumeration value="NotSet" />
-          <s:enumeration value="Parametric" />
-          <s:enumeration value="EnvironmentalStress" />
-          <s:enumeration value="IncomingEvaluation" />
-          <s:enumeration value="NonTestingTask" />
-          <s:enumeration value="FailureAnalysis" />
-        </s:restriction>
-      </s:simpleType>
-      <s:complexType name="ArrayOfTest">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="Test" nillable="true" type="tns:Test" />
-        </s:sequence>
-      </s:complexType>
       <s:element name="GetJobStages">
         <s:complexType>
           <s:sequence>
@@ -523,6 +572,7 @@
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="lookup" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentID" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -538,6 +588,7 @@
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="type" type="tns:LookupType" />
             <s:element minOccurs="0" maxOccurs="1" name="lookup" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentID" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -990,45 +1041,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetProductGroupExceptionsByProductID">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="productID" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetProductGroupExceptionsByProductIDResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetProductGroupExceptionsByProductIDResult" type="tns:ArrayOfExceptionData" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfExceptionData">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="ExceptionData" type="tns:ExceptionData" />
-        </s:sequence>
-      </s:complexType>
-      <s:complexType name="ExceptionData">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="TestName" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="ExceptionExists" type="s:boolean" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="GetProductGroupExceptions">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="productGroupName" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetProductGroupExceptionsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetProductGroupExceptionsResult" type="tns:ArrayOfExceptionData" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="GetProductSettingsByProductID">
         <s:complexType>
           <s:sequence>
@@ -1098,6 +1110,27 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetProductSettingByProductIDResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchUnitsInStage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchUnitsInStageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBatchUnitsInStageResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1255,6 +1288,8 @@
               <s:element minOccurs="0" maxOccurs="1" name="PartName" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="CPRNumber" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="ExecutiveSummary" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="OrientationID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="OrientationXML" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="EstTSCompletionTime" type="s:double" />
               <s:element minOccurs="1" maxOccurs="1" name="ReqID" type="s:int" />
               <s:element minOccurs="1" maxOccurs="1" name="ProductID" type="s:int" />
@@ -1318,41 +1353,6 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="TestUnit" nillable="true" type="tns:TestUnit" />
         </s:sequence>
       </s:complexType>
-      <s:complexType name="TestUnit">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:LoggedItemBase">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="AssignedTo" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="NoBSN" type="s:boolean" />
-              <s:element minOccurs="0" maxOccurs="1" name="CurrentLog" type="tns:DeviceTrackingLog" />
-              <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="BSN" type="s:long" />
-              <s:element minOccurs="1" maxOccurs="1" name="BatchUnitNumber" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="TestCenterID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="CurrentTestName" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="CurrentTestStage" type="tns:TestStage" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="DeviceTrackingLog">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:BusinessBase">
-            <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="TestUnitID" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="TrackingLocationID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="TrackingLocationName" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="InTime" type="s:dateTime" />
-              <s:element minOccurs="1" maxOccurs="1" name="OutTime" type="s:dateTime" />
-              <s:element minOccurs="0" maxOccurs="1" name="InUser" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="OutUser" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="TestUnitBatchUnitNumber" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="TestUnitQRANumber" type="s:string" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
       <s:element name="GetBatchNotifications">
         <s:complexType>
           <s:sequence>
@@ -1413,6 +1413,85 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetCPRNumberResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchNextStage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchNextStageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBatchNextStageResult" type="tns:TestStage" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestStagesNameByBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestStagesNameByBatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestStagesNameByBatchResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestStagesByBatch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestStagesByBatchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestStagesByBatchResult" type="tns:ArrayOfTestStage" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStagesNeedingCompletionByUnit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="unitNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStagesNeedingCompletionByUnitResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStagesNeedingCompletionByUnitResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestsByBatchStage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testStageName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestsByBatchStageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestsByBatchStageResult" type="tns:ArrayOfString" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1742,19 +1821,57 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="TestRecordAdd">
+      <s:element name="GetTestRecords">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qranumber" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="unitNumber" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="testRecordStatus" type="tns:TestRecordStatus" />
-            <s:element minOccurs="0" maxOccurs="1" name="jobName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="testStageName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="testName" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetTestRecordsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestRecordsResult" type="tns:ArrayOfTestRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfTestRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TestRecord" nillable="true" type="tns:TestRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TestRecord">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LoggedItemBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="TestUnitID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="FunctionalType" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestStageID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="ResultSource" type="tns:TestResultSource" />
+              <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="TestStageName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="TestName" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Status" type="tns:TestRecordStatus" />
+              <s:element minOccurs="1" maxOccurs="1" name="CurrentRelabResultVersion" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="Comments" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="NumberOfTests" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="BatchUnitNumber" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="TotalTestTimeInMinutes" type="s:double" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="TestResultSource">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet" />
+          <s:enumeration value="Relab" />
+          <s:enumeration value="WebService" />
+          <s:enumeration value="Manual" />
+        </s:restriction>
+      </s:simpleType>
       <s:simpleType name="TestRecordStatus">
         <s:restriction base="s:string">
           <s:enumeration value="NotSet" />
@@ -1772,6 +1889,19 @@
           <s:enumeration value="TestingSuspended" />
         </s:restriction>
       </s:simpleType>
+      <s:element name="TestRecordAdd">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="qranumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="unitNumber" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="testRecordStatus" type="tns:TestRecordStatus" />
+            <s:element minOccurs="0" maxOccurs="1" name="jobName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testStageName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="TestRecordAddResponse">
         <s:complexType>
           <s:sequence>
@@ -1799,6 +1929,7 @@
           <s:extension base="tns:ValidationBase">
             <s:sequence>
               <s:element minOccurs="0" maxOccurs="1" name="Calibrations" type="tns:ArrayOfCalibration" />
+              <s:element minOccurs="0" maxOccurs="1" name="ProductConfigs" type="tns:ArrayOfProductConfiguration" />
               <s:element minOccurs="0" maxOccurs="1" name="StationXML" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="TestXML" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="HostID" type="s:int" />
@@ -1831,11 +1962,71 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
+      <s:complexType name="ArrayOfProductConfiguration">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ProductConfiguration" nillable="true" type="tns:ProductConfiguration" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ProductConfiguration">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LoggedItemBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="PrevVersions" type="tns:ArrayOfProductConfiguration" />
+              <s:element minOccurs="0" maxOccurs="1" name="CodeVersions" type="tns:ArrayOfString" />
+              <s:element minOccurs="1" maxOccurs="1" name="HasConfig" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="XML" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="TestName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ProductName" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="TestID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="ProductID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="VersionNum" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="DeleteException">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testStageName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="testUnitID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteExceptionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DeleteExceptionResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddException">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testStageName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="testUnitID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddExceptionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddExceptionResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="Notification" nillable="true" type="tns:Notification" />
       <s:element name="boolean" type="s:boolean" />
       <s:element name="ArrayOfString" nillable="true" type="tns:ArrayOfString" />
       <s:element name="int" type="s:int" />
       <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="TestUnit" nillable="true" type="tns:TestUnit" />
       <s:element name="ArrayOfTrackingLocation" nillable="true" type="tns:ArrayOfTrackingLocation" />
       <s:element name="Test" nillable="true" type="tns:Test" />
       <s:element name="TestStage" nillable="true" type="tns:TestStage" />
@@ -1851,7 +2042,6 @@
       <s:element name="Job" nillable="true" type="tns:Job" />
       <s:element name="UserDetails" type="tns:UserDetails" />
       <s:element name="User" nillable="true" type="tns:User" />
-      <s:element name="ArrayOfExceptionData" nillable="true" type="tns:ArrayOfExceptionData" />
       <s:element name="dictionary" nillable="true">
         <s:complexType>
           <s:sequence>
@@ -1862,9 +2052,18 @@
       </s:element>
       <s:element name="BatchView" nillable="true" type="tns:BatchView" />
       <s:element name="ArrayOfNotification" nillable="true" type="tns:ArrayOfNotification" />
+      <s:element name="DataSet" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:element ref="s:schema" />
+            <s:any />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="ArrayOfTestStageResultOverview" nillable="true" type="tns:ArrayOfTestStageResultOverview" />
       <s:element name="ScanReturnData" nillable="true" type="tns:ScanReturnData" />
       <s:element name="IncomingAppBatchData" type="tns:IncomingAppBatchData" />
+      <s:element name="ArrayOfTestRecord" nillable="true" type="tns:ArrayOfTestRecord" />
     </s:schema>
   </wsdl:types>
   <wsdl:message name="AddUnitExceptionSoapIn">
@@ -1908,6 +2107,12 @@
   </wsdl:message>
   <wsdl:message name="GetUnitAssignedToSoapOut">
     <wsdl:part name="parameters" element="tns:GetUnitAssignedToResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUnit" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUnitResponse" />
   </wsdl:message>
   <wsdl:message name="DTATTAAddRemoveUnitSoapIn">
     <wsdl:part name="parameters" element="tns:DTATTAAddRemoveUnit" />
@@ -2143,18 +2348,6 @@
   <wsdl:message name="GetProductIDByNameSoapOut">
     <wsdl:part name="parameters" element="tns:GetProductIDByNameResponse" />
   </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsByProductIDSoapIn">
-    <wsdl:part name="parameters" element="tns:GetProductGroupExceptionsByProductID" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsByProductIDSoapOut">
-    <wsdl:part name="parameters" element="tns:GetProductGroupExceptionsByProductIDResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsSoapIn">
-    <wsdl:part name="parameters" element="tns:GetProductGroupExceptions" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsSoapOut">
-    <wsdl:part name="parameters" element="tns:GetProductGroupExceptionsResponse" />
-  </wsdl:message>
   <wsdl:message name="GetProductSettingsByProductIDSoapIn">
     <wsdl:part name="parameters" element="tns:GetProductSettingsByProductID" />
   </wsdl:message>
@@ -2178,6 +2371,12 @@
   </wsdl:message>
   <wsdl:message name="GetProductSettingByProductIDSoapOut">
     <wsdl:part name="parameters" element="tns:GetProductSettingByProductIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchUnitsInStageSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBatchUnitsInStage" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchUnitsInStageSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBatchUnitsInStageResponse" />
   </wsdl:message>
   <wsdl:message name="GetTestingSummarySoapIn">
     <wsdl:part name="parameters" element="tns:GetTestingSummary" />
@@ -2256,6 +2455,36 @@
   </wsdl:message>
   <wsdl:message name="GetCPRNumberSoapOut">
     <wsdl:part name="parameters" element="tns:GetCPRNumberResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNextStageSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBatchNextStage" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNextStageSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBatchNextStageResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesNameByBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestStagesNameByBatch" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesNameByBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestStagesNameByBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesByBatchSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestStagesByBatch" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesByBatchSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestStagesByBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStagesNeedingCompletionByUnitSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStagesNeedingCompletionByUnit" />
+  </wsdl:message>
+  <wsdl:message name="GetStagesNeedingCompletionByUnitSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStagesNeedingCompletionByUnitResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTestsByBatchStageSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestsByBatchStage" />
+  </wsdl:message>
+  <wsdl:message name="GetTestsByBatchStageSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestsByBatchStageResponse" />
   </wsdl:message>
   <wsdl:message name="SaveBatchCommentSoapIn">
     <wsdl:part name="parameters" element="tns:SaveBatchComment" />
@@ -2353,6 +2582,12 @@
   <wsdl:message name="HasAccessByWorkstationSoapOut">
     <wsdl:part name="parameters" element="tns:HasAccessByWorkstationResponse" />
   </wsdl:message>
+  <wsdl:message name="GetTestRecordsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestRecords" />
+  </wsdl:message>
+  <wsdl:message name="GetTestRecordsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestRecordsResponse" />
+  </wsdl:message>
   <wsdl:message name="TestRecordAddSoapIn">
     <wsdl:part name="parameters" element="tns:TestRecordAdd" />
   </wsdl:message>
@@ -2364,6 +2599,18 @@
   </wsdl:message>
   <wsdl:message name="BuildConfigurationObjectSoapOut">
     <wsdl:part name="parameters" element="tns:BuildConfigurationObjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExceptionSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteException" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExceptionSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteExceptionResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddExceptionSoapIn">
+    <wsdl:part name="parameters" element="tns:AddException" />
+  </wsdl:message>
+  <wsdl:message name="AddExceptionSoapOut">
+    <wsdl:part name="parameters" element="tns:AddExceptionResponse" />
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpGetIn">
     <wsdl:part name="qraNumber" type="s:string" />
@@ -2414,6 +2661,13 @@
   <wsdl:message name="GetUnitAssignedToHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
+  <wsdl:message name="GetUnitHttpGetIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="batchUnitNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitHttpGetOut">
+    <wsdl:part name="Body" element="tns:TestUnit" />
+  </wsdl:message>
   <wsdl:message name="DTATTAAddRemoveUnitHttpGetIn">
     <wsdl:part name="qranumber" type="s:string" />
     <wsdl:part name="testStage" type="s:string" />
@@ -2459,6 +2713,7 @@
   </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpGetIn">
     <wsdl:part name="stationName" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -2505,6 +2760,7 @@
   <wsdl:message name="GetLookupIDByTypeStringHttpGetIn">
     <wsdl:part name="type" type="s:string" />
     <wsdl:part name="lookup" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetLookupIDByTypeStringHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -2512,6 +2768,7 @@
   <wsdl:message name="GetLookupIDHttpGetIn">
     <wsdl:part name="type" type="s:string" />
     <wsdl:part name="lookup" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetLookupIDHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -2647,18 +2904,6 @@
   <wsdl:message name="GetProductIDByNameHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsByProductIDHttpGetIn">
-    <wsdl:part name="productID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsByProductIDHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfExceptionData" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsHttpGetIn">
-    <wsdl:part name="productGroupName" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfExceptionData" />
-  </wsdl:message>
   <wsdl:message name="GetProductSettingsByProductIDHttpGetIn">
     <wsdl:part name="productID" type="s:string" />
   </wsdl:message>
@@ -2684,6 +2929,12 @@
   </wsdl:message>
   <wsdl:message name="GetProductSettingByProductIDHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchUnitsInStageHttpGetIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchUnitsInStageHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetTestingSummaryHttpGetIn">
     <wsdl:part name="qraNumber" type="s:string" />
@@ -2760,6 +3011,38 @@
   </wsdl:message>
   <wsdl:message name="GetCPRNumberHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNextStageHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNextStageHttpGetOut">
+    <wsdl:part name="Body" element="tns:TestStage" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesNameByBatchHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesNameByBatchHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesByBatchHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesByBatchHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfTestStage" />
+  </wsdl:message>
+  <wsdl:message name="GetStagesNeedingCompletionByUnitHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="unitNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStagesNeedingCompletionByUnitHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="GetTestsByBatchStageHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="testStageName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestsByBatchStageHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="SaveBatchCommentHttpGetIn">
     <wsdl:part name="qraNumber" type="s:string" />
@@ -2879,6 +3162,13 @@
   <wsdl:message name="HasAccessByWorkstationHttpGetOut">
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
+  <wsdl:message name="GetTestRecordsHttpGetIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestRecordsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfTestRecord" />
+  </wsdl:message>
   <wsdl:message name="TestRecordAddHttpGetIn">
     <wsdl:part name="qranumber" type="s:string" />
     <wsdl:part name="unitNumber" type="s:string" />
@@ -2889,6 +3179,26 @@
     <wsdl:part name="testName" type="s:string" />
   </wsdl:message>
   <wsdl:message name="TestRecordAddHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExceptionHttpGetIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="testName" type="s:string" />
+    <wsdl:part name="testStageName" type="s:string" />
+    <wsdl:part name="testUnitID" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExceptionHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="AddExceptionHttpGetIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="testName" type="s:string" />
+    <wsdl:part name="testStageName" type="s:string" />
+    <wsdl:part name="testUnitID" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddExceptionHttpGetOut">
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpPostIn">
@@ -2940,6 +3250,13 @@
   <wsdl:message name="GetUnitAssignedToHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
+  <wsdl:message name="GetUnitHttpPostIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="batchUnitNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitHttpPostOut">
+    <wsdl:part name="Body" element="tns:TestUnit" />
+  </wsdl:message>
   <wsdl:message name="DTATTAAddRemoveUnitHttpPostIn">
     <wsdl:part name="qranumber" type="s:string" />
     <wsdl:part name="testStage" type="s:string" />
@@ -2985,6 +3302,7 @@
   </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpPostIn">
     <wsdl:part name="stationName" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -3031,6 +3349,7 @@
   <wsdl:message name="GetLookupIDByTypeStringHttpPostIn">
     <wsdl:part name="type" type="s:string" />
     <wsdl:part name="lookup" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetLookupIDByTypeStringHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -3038,6 +3357,7 @@
   <wsdl:message name="GetLookupIDHttpPostIn">
     <wsdl:part name="type" type="s:string" />
     <wsdl:part name="lookup" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetLookupIDHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -3173,18 +3493,6 @@
   <wsdl:message name="GetProductIDByNameHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsByProductIDHttpPostIn">
-    <wsdl:part name="productID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsByProductIDHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfExceptionData" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsHttpPostIn">
-    <wsdl:part name="productGroupName" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetProductGroupExceptionsHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfExceptionData" />
-  </wsdl:message>
   <wsdl:message name="GetProductSettingsByProductIDHttpPostIn">
     <wsdl:part name="productID" type="s:string" />
   </wsdl:message>
@@ -3210,6 +3518,12 @@
   </wsdl:message>
   <wsdl:message name="GetProductSettingByProductIDHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchUnitsInStageHttpPostIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchUnitsInStageHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetTestingSummaryHttpPostIn">
     <wsdl:part name="qraNumber" type="s:string" />
@@ -3286,6 +3600,38 @@
   </wsdl:message>
   <wsdl:message name="GetCPRNumberHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNextStageHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchNextStageHttpPostOut">
+    <wsdl:part name="Body" element="tns:TestStage" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesNameByBatchHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesNameByBatchHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesByBatchHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestStagesByBatchHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfTestStage" />
+  </wsdl:message>
+  <wsdl:message name="GetStagesNeedingCompletionByUnitHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="unitNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStagesNeedingCompletionByUnitHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="GetTestsByBatchStageHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="testStageName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestsByBatchStageHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="SaveBatchCommentHttpPostIn">
     <wsdl:part name="qraNumber" type="s:string" />
@@ -3405,6 +3751,13 @@
   <wsdl:message name="HasAccessByWorkstationHttpPostOut">
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
+  <wsdl:message name="GetTestRecordsHttpPostIn">
+    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestRecordsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfTestRecord" />
+  </wsdl:message>
   <wsdl:message name="TestRecordAddHttpPostIn">
     <wsdl:part name="qranumber" type="s:string" />
     <wsdl:part name="unitNumber" type="s:string" />
@@ -3415,6 +3768,26 @@
     <wsdl:part name="testName" type="s:string" />
   </wsdl:message>
   <wsdl:message name="TestRecordAddHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExceptionHttpPostIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="testName" type="s:string" />
+    <wsdl:part name="testStageName" type="s:string" />
+    <wsdl:part name="testUnitID" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExceptionHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="AddExceptionHttpPostIn">
+    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="testName" type="s:string" />
+    <wsdl:part name="testStageName" type="s:string" />
+    <wsdl:part name="testUnitID" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddExceptionHttpPostOut">
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:portType name="RemiAPISoap">
@@ -3452,6 +3825,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit Assigned To.</wsdl:documentation>
       <wsdl:input message="tns:GetUnitAssignedToSoapIn" />
       <wsdl:output message="tns:GetUnitAssignedToSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit.</wsdl:documentation>
+      <wsdl:input message="tns:GetUnitSoapIn" />
+      <wsdl:output message="tns:GetUnitSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="DTATTAAddRemoveUnit">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Attempts to mark a unit as fail for functional test or SFI Functional in remi for the given set of drops.</wsdl:documentation>
@@ -3648,16 +4026,6 @@
       <wsdl:input message="tns:GetProductIDByNameSoapIn" />
       <wsdl:output message="tns:GetProductIDByNameSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptionsByProductID">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the test exceptions for a given product group.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductGroupExceptionsByProductIDSoapIn" />
-      <wsdl:output message="tns:GetProductGroupExceptionsByProductIDSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptions">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the test exceptions for a given product group.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductGroupExceptionsSoapIn" />
-      <wsdl:output message="tns:GetProductGroupExceptionsSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetProductSettingsByProductID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the settings for a product.</wsdl:documentation>
       <wsdl:input message="tns:GetProductSettingsByProductIDSoapIn" />
@@ -3677,6 +4045,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a specific setting for a product.</wsdl:documentation>
       <wsdl:input message="tns:GetProductSettingByProductIDSoapIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchUnitsInStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchUnitsInStageSoapIn" />
+      <wsdl:output message="tns:GetBatchUnitsInStageSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestingSummary">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
@@ -3742,6 +4115,31 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a QRA Number this method returns the CPR Number.</wsdl:documentation>
       <wsdl:input message="tns:GetCPRNumberSoapIn" />
       <wsdl:output message="tns:GetCPRNumberSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNextStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get Next Stage By Batch.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchNextStageSoapIn" />
+      <wsdl:output message="tns:GetBatchNextStageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesNameByBatch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages Name.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestStagesNameByBatchSoapIn" />
+      <wsdl:output message="tns:GetTestStagesNameByBatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesByBatch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestStagesByBatchSoapIn" />
+      <wsdl:output message="tns:GetTestStagesByBatchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStagesNeedingCompletionByUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages needing completion.</wsdl:documentation>
+      <wsdl:input message="tns:GetStagesNeedingCompletionByUnitSoapIn" />
+      <wsdl:output message="tns:GetStagesNeedingCompletionByUnitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestsByBatchStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Tests.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestsByBatchStageSoapIn" />
+      <wsdl:output message="tns:GetTestsByBatchStageSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SaveBatchComment">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add's a comment to the batch.</wsdl:documentation>
@@ -3823,6 +4221,11 @@
       <wsdl:input message="tns:HasAccessByWorkstationSoapIn" />
       <wsdl:output message="tns:HasAccessByWorkstationSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTestRecords">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetTestRecords.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestRecordsSoapIn" />
+      <wsdl:output message="tns:GetTestRecordsSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="TestRecordAdd">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds a new test record for non parametric tests.</wsdl:documentation>
       <wsdl:input message="tns:TestRecordAddSoapIn" />
@@ -3832,6 +4235,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns configuration object.</wsdl:documentation>
       <wsdl:input message="tns:BuildConfigurationObjectSoapIn" />
       <wsdl:output message="tns:BuildConfigurationObjectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteException">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete Ex.</wsdl:documentation>
+      <wsdl:input message="tns:DeleteExceptionSoapIn" />
+      <wsdl:output message="tns:DeleteExceptionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddException">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Job.</wsdl:documentation>
+      <wsdl:input message="tns:AddExceptionSoapIn" />
+      <wsdl:output message="tns:AddExceptionSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="RemiAPIHttpGet">
@@ -3869,6 +4282,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit Assigned To.</wsdl:documentation>
       <wsdl:input message="tns:GetUnitAssignedToHttpGetIn" />
       <wsdl:output message="tns:GetUnitAssignedToHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit.</wsdl:documentation>
+      <wsdl:input message="tns:GetUnitHttpGetIn" />
+      <wsdl:output message="tns:GetUnitHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="DTATTAAddRemoveUnit">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Attempts to mark a unit as fail for functional test or SFI Functional in remi for the given set of drops.</wsdl:documentation>
@@ -4060,16 +4478,6 @@
       <wsdl:input message="tns:GetProductIDByNameHttpGetIn" />
       <wsdl:output message="tns:GetProductIDByNameHttpGetOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptionsByProductID">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the test exceptions for a given product group.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductGroupExceptionsByProductIDHttpGetIn" />
-      <wsdl:output message="tns:GetProductGroupExceptionsByProductIDHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptions">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the test exceptions for a given product group.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductGroupExceptionsHttpGetIn" />
-      <wsdl:output message="tns:GetProductGroupExceptionsHttpGetOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetProductSettingsByProductID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the settings for a product.</wsdl:documentation>
       <wsdl:input message="tns:GetProductSettingsByProductIDHttpGetIn" />
@@ -4089,6 +4497,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a specific setting for a product.</wsdl:documentation>
       <wsdl:input message="tns:GetProductSettingByProductIDHttpGetIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchUnitsInStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchUnitsInStageHttpGetIn" />
+      <wsdl:output message="tns:GetBatchUnitsInStageHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestingSummary">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
@@ -4154,6 +4567,31 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a QRA Number this method returns the CPR Number.</wsdl:documentation>
       <wsdl:input message="tns:GetCPRNumberHttpGetIn" />
       <wsdl:output message="tns:GetCPRNumberHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNextStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get Next Stage By Batch.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchNextStageHttpGetIn" />
+      <wsdl:output message="tns:GetBatchNextStageHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesNameByBatch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages Name.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestStagesNameByBatchHttpGetIn" />
+      <wsdl:output message="tns:GetTestStagesNameByBatchHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesByBatch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestStagesByBatchHttpGetIn" />
+      <wsdl:output message="tns:GetTestStagesByBatchHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStagesNeedingCompletionByUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages needing completion.</wsdl:documentation>
+      <wsdl:input message="tns:GetStagesNeedingCompletionByUnitHttpGetIn" />
+      <wsdl:output message="tns:GetStagesNeedingCompletionByUnitHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestsByBatchStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Tests.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestsByBatchStageHttpGetIn" />
+      <wsdl:output message="tns:GetTestsByBatchStageHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="SaveBatchComment">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add's a comment to the batch.</wsdl:documentation>
@@ -4235,10 +4673,25 @@
       <wsdl:input message="tns:HasAccessByWorkstationHttpGetIn" />
       <wsdl:output message="tns:HasAccessByWorkstationHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTestRecords">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetTestRecords.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestRecordsHttpGetIn" />
+      <wsdl:output message="tns:GetTestRecordsHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="TestRecordAdd">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds a new test record for non parametric tests.</wsdl:documentation>
       <wsdl:input message="tns:TestRecordAddHttpGetIn" />
       <wsdl:output message="tns:TestRecordAddHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteException">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete Ex.</wsdl:documentation>
+      <wsdl:input message="tns:DeleteExceptionHttpGetIn" />
+      <wsdl:output message="tns:DeleteExceptionHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddException">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Job.</wsdl:documentation>
+      <wsdl:input message="tns:AddExceptionHttpGetIn" />
+      <wsdl:output message="tns:AddExceptionHttpGetOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="RemiAPIHttpPost">
@@ -4276,6 +4729,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit Assigned To.</wsdl:documentation>
       <wsdl:input message="tns:GetUnitAssignedToHttpPostIn" />
       <wsdl:output message="tns:GetUnitAssignedToHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit.</wsdl:documentation>
+      <wsdl:input message="tns:GetUnitHttpPostIn" />
+      <wsdl:output message="tns:GetUnitHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="DTATTAAddRemoveUnit">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Attempts to mark a unit as fail for functional test or SFI Functional in remi for the given set of drops.</wsdl:documentation>
@@ -4467,16 +4925,6 @@
       <wsdl:input message="tns:GetProductIDByNameHttpPostIn" />
       <wsdl:output message="tns:GetProductIDByNameHttpPostOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptionsByProductID">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the test exceptions for a given product group.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductGroupExceptionsByProductIDHttpPostIn" />
-      <wsdl:output message="tns:GetProductGroupExceptionsByProductIDHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptions">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the test exceptions for a given product group.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductGroupExceptionsHttpPostIn" />
-      <wsdl:output message="tns:GetProductGroupExceptionsHttpPostOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetProductSettingsByProductID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the settings for a product.</wsdl:documentation>
       <wsdl:input message="tns:GetProductSettingsByProductIDHttpPostIn" />
@@ -4496,6 +4944,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a specific setting for a product.</wsdl:documentation>
       <wsdl:input message="tns:GetProductSettingByProductIDHttpPostIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchUnitsInStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchUnitsInStageHttpPostIn" />
+      <wsdl:output message="tns:GetBatchUnitsInStageHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestingSummary">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
@@ -4561,6 +5014,31 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a QRA Number this method returns the CPR Number.</wsdl:documentation>
       <wsdl:input message="tns:GetCPRNumberHttpPostIn" />
       <wsdl:output message="tns:GetCPRNumberHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNextStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get Next Stage By Batch.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchNextStageHttpPostIn" />
+      <wsdl:output message="tns:GetBatchNextStageHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesNameByBatch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages Name.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestStagesNameByBatchHttpPostIn" />
+      <wsdl:output message="tns:GetTestStagesNameByBatchHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesByBatch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestStagesByBatchHttpPostIn" />
+      <wsdl:output message="tns:GetTestStagesByBatchHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStagesNeedingCompletionByUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Stages needing completion.</wsdl:documentation>
+      <wsdl:input message="tns:GetStagesNeedingCompletionByUnitHttpPostIn" />
+      <wsdl:output message="tns:GetStagesNeedingCompletionByUnitHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestsByBatchStage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get's All Batch Tests.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestsByBatchStageHttpPostIn" />
+      <wsdl:output message="tns:GetTestsByBatchStageHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="SaveBatchComment">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add's a comment to the batch.</wsdl:documentation>
@@ -4642,10 +5120,25 @@
       <wsdl:input message="tns:HasAccessByWorkstationHttpPostIn" />
       <wsdl:output message="tns:HasAccessByWorkstationHttpPostOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTestRecords">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetTestRecords.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestRecordsHttpPostIn" />
+      <wsdl:output message="tns:GetTestRecordsHttpPostOut" />
+    </wsdl:operation>
     <wsdl:operation name="TestRecordAdd">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds a new test record for non parametric tests.</wsdl:documentation>
       <wsdl:input message="tns:TestRecordAddHttpPostIn" />
       <wsdl:output message="tns:TestRecordAddHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteException">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete Ex.</wsdl:documentation>
+      <wsdl:input message="tns:DeleteExceptionHttpPostIn" />
+      <wsdl:output message="tns:DeleteExceptionHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddException">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Job.</wsdl:documentation>
+      <wsdl:input message="tns:AddExceptionHttpPostIn" />
+      <wsdl:output message="tns:AddExceptionHttpPostOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="RemiAPISoap" type="tns:RemiAPISoap">
@@ -4706,6 +5199,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetUnitAssignedTo">
       <soap:operation soapAction="http://go/remi/GetUnitAssignedTo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUnit">
+      <soap:operation soapAction="http://go/remi/GetUnit" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5064,24 +5566,6 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptionsByProductID">
-      <soap:operation soapAction="http://go/remi/GetProductGroupExceptionsByProductID" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptions">
-      <soap:operation soapAction="http://go/remi/GetProductGroupExceptions" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetProductSettingsByProductID">
       <soap:operation soapAction="http://go/remi/GetProductSettingsByProductID" style="document" />
       <wsdl:input>
@@ -5111,6 +5595,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetProductSettingByProductID">
       <soap:operation soapAction="http://go/remi/GetProductSettingByProductID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchUnitsInStage">
+      <soap:operation soapAction="http://go/remi/GetBatchUnitsInStage" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5228,6 +5721,51 @@
     </wsdl:operation>
     <wsdl:operation name="GetCPRNumber">
       <soap:operation soapAction="http://go/remi/GetCPRNumber" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNextStage">
+      <soap:operation soapAction="http://go/remi/GetBatchNextStage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesNameByBatch">
+      <soap:operation soapAction="http://go/remi/GetTestStagesNameByBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesByBatch">
+      <soap:operation soapAction="http://go/remi/GetTestStagesByBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStagesNeedingCompletionByUnit">
+      <soap:operation soapAction="http://go/remi/GetStagesNeedingCompletionByUnit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestsByBatchStage">
+      <soap:operation soapAction="http://go/remi/GetTestsByBatchStage" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5379,6 +5917,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestRecords">
+      <soap:operation soapAction="http://go/remi/GetTestRecords" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="TestRecordAdd">
       <soap:operation soapAction="http://go/remi/TestRecordAdd" style="document" />
       <wsdl:input>
@@ -5390,6 +5937,24 @@
     </wsdl:operation>
     <wsdl:operation name="BuildConfigurationObject">
       <soap:operation soapAction="http://go/remi/BuildConfigurationObject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteException">
+      <soap:operation soapAction="http://go/remi/DeleteException" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddException">
+      <soap:operation soapAction="http://go/remi/AddException" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5456,6 +6021,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetUnitAssignedTo">
       <soap12:operation soapAction="http://go/remi/GetUnitAssignedTo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUnit">
+      <soap12:operation soapAction="http://go/remi/GetUnit" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -5814,24 +6388,6 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptionsByProductID">
-      <soap12:operation soapAction="http://go/remi/GetProductGroupExceptionsByProductID" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptions">
-      <soap12:operation soapAction="http://go/remi/GetProductGroupExceptions" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetProductSettingsByProductID">
       <soap12:operation soapAction="http://go/remi/GetProductSettingsByProductID" style="document" />
       <wsdl:input>
@@ -5861,6 +6417,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetProductSettingByProductID">
       <soap12:operation soapAction="http://go/remi/GetProductSettingByProductID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchUnitsInStage">
+      <soap12:operation soapAction="http://go/remi/GetBatchUnitsInStage" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -5978,6 +6543,51 @@
     </wsdl:operation>
     <wsdl:operation name="GetCPRNumber">
       <soap12:operation soapAction="http://go/remi/GetCPRNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNextStage">
+      <soap12:operation soapAction="http://go/remi/GetBatchNextStage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesNameByBatch">
+      <soap12:operation soapAction="http://go/remi/GetTestStagesNameByBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesByBatch">
+      <soap12:operation soapAction="http://go/remi/GetTestStagesByBatch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStagesNeedingCompletionByUnit">
+      <soap12:operation soapAction="http://go/remi/GetStagesNeedingCompletionByUnit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestsByBatchStage">
+      <soap12:operation soapAction="http://go/remi/GetTestsByBatchStage" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6129,6 +6739,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestRecords">
+      <soap12:operation soapAction="http://go/remi/GetTestRecords" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="TestRecordAdd">
       <soap12:operation soapAction="http://go/remi/TestRecordAdd" style="document" />
       <wsdl:input>
@@ -6140,6 +6759,24 @@
     </wsdl:operation>
     <wsdl:operation name="BuildConfigurationObject">
       <soap12:operation soapAction="http://go/remi/BuildConfigurationObject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteException">
+      <soap12:operation soapAction="http://go/remi/DeleteException" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddException">
+      <soap12:operation soapAction="http://go/remi/AddException" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6213,6 +6850,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetUnit">
+      <http:operation location="/GetUnit" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="DTATTAAddRemoveUnit">
       <http:operation location="/DTATTAAddRemoveUnit" />
       <wsdl:input>
@@ -6555,24 +7201,6 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptionsByProductID">
-      <http:operation location="/GetProductGroupExceptionsByProductID" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptions">
-      <http:operation location="/GetProductGroupExceptions" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetProductSettingsByProductID">
       <http:operation location="/GetProductSettingsByProductID" />
       <wsdl:input>
@@ -6602,6 +7230,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetProductSettingByProductID">
       <http:operation location="/GetProductSettingByProductID" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchUnitsInStage">
+      <http:operation location="/GetBatchUnitsInStage" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -6719,6 +7356,51 @@
     </wsdl:operation>
     <wsdl:operation name="GetCPRNumber">
       <http:operation location="/GetCPRNumber" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNextStage">
+      <http:operation location="/GetBatchNextStage" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesNameByBatch">
+      <http:operation location="/GetTestStagesNameByBatch" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesByBatch">
+      <http:operation location="/GetTestStagesByBatch" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStagesNeedingCompletionByUnit">
+      <http:operation location="/GetStagesNeedingCompletionByUnit" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestsByBatchStage">
+      <http:operation location="/GetTestsByBatchStage" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -6868,8 +7550,35 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestRecords">
+      <http:operation location="/GetTestRecords" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="TestRecordAdd">
       <http:operation location="/TestRecordAdd" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteException">
+      <http:operation location="/DeleteException" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddException">
+      <http:operation location="/AddException" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -6943,6 +7652,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetUnit">
+      <http:operation location="/GetUnit" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="DTATTAAddRemoveUnit">
       <http:operation location="/DTATTAAddRemoveUnit" />
       <wsdl:input>
@@ -7285,24 +8003,6 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptionsByProductID">
-      <http:operation location="/GetProductGroupExceptionsByProductID" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductGroupExceptions">
-      <http:operation location="/GetProductGroupExceptions" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetProductSettingsByProductID">
       <http:operation location="/GetProductSettingsByProductID" />
       <wsdl:input>
@@ -7332,6 +8032,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetProductSettingByProductID">
       <http:operation location="/GetProductSettingByProductID" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchUnitsInStage">
+      <http:operation location="/GetBatchUnitsInStage" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -7449,6 +8158,51 @@
     </wsdl:operation>
     <wsdl:operation name="GetCPRNumber">
       <http:operation location="/GetCPRNumber" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchNextStage">
+      <http:operation location="/GetBatchNextStage" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesNameByBatch">
+      <http:operation location="/GetTestStagesNameByBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestStagesByBatch">
+      <http:operation location="/GetTestStagesByBatch" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStagesNeedingCompletionByUnit">
+      <http:operation location="/GetStagesNeedingCompletionByUnit" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestsByBatchStage">
+      <http:operation location="/GetTestsByBatchStage" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -7598,8 +8352,35 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTestRecords">
+      <http:operation location="/GetTestRecords" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="TestRecordAdd">
       <http:operation location="/TestRecordAdd" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteException">
+      <http:operation location="/DeleteException" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddException">
+      <http:operation location="/AddException" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
