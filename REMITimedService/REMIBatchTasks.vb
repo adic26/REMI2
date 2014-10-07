@@ -50,6 +50,7 @@ Public Class REMIBatchTasks
 
             If (dayOfWeek <> dateValue.DayOfWeek) Then
                 _runNotAssigned = True
+                dayOfWeek = dateValue.DayOfWeek
             End If
 
             If (Not (_dontRun)) Then
