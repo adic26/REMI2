@@ -705,14 +705,10 @@ Public Class RemiAPI
                         Dim emails As List(Of String) = (From u In UserManager.GetListByLocation(batch.TestCenterLocationID, 0, 0, 0, True) Where u.IsProjectManager = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
 
                         Remi.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", qraNumber), String.Format("Please assign this batch as soon as possible in the TRS <a href=""{0}"">{1}</a>", batch.TRSLink, qraNumber), True)
+
+                        Return True
                     End If
-
-                    Return True
                 End If
-
-                Return False
-            Else
-                Return False
             End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API BatchStartedBeforeAssigned", "e3", NotificationType.Errors, ex)

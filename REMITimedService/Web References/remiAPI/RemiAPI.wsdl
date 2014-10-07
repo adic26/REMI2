@@ -8391,16 +8391,16 @@
   </wsdl:binding>
   <wsdl:service name="RemiAPI">
     <wsdl:port name="RemiAPISoap" binding="tns:RemiAPISoap">
-      <soap:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
+      <soap:address location="http://rem002ykf/webservice/remiapi.asmx" />
     </wsdl:port>
     <wsdl:port name="RemiAPISoap12" binding="tns:RemiAPISoap12">
-      <soap12:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
+      <soap12:address location="http://rem002ykf/webservice/remiapi.asmx" />
     </wsdl:port>
     <wsdl:port name="RemiAPIHttpGet" binding="tns:RemiAPIHttpGet">
-      <http:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
+      <http:address location="http://rem002ykf/webservice/remiapi.asmx" />
     </wsdl:port>
     <wsdl:port name="RemiAPIHttpPost" binding="tns:RemiAPIHttpPost">
-      <http:address location="http://rem002ykf/webservice/RemiAPI.asmx" />
+      <http:address location="http://rem002ykf/webservice/remiapi.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

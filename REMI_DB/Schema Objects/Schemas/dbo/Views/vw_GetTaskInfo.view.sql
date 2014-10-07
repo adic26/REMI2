@@ -8,7 +8,7 @@ SELECT qranumber, processorder, BatchID,
 	   resultbasedontime, 
 	   testunitsfortest, 
 	   (SELECT CASE WHEN specifictestduration IS NULL THEN generictestduration ELSE specifictestduration END) AS expectedDuration,
-	   TestStageID, TestWI, TestID, IsArchived, RecordExists, TestIsArchived, TestRecordExists
+	   TestStageID, TestWI, TestID, IsArchived, ISNULL(RecordExists, 0) AS RecordExists, TestIsArchived, ISNULL(TestRecordExists, 0) AS TestRecordExists
 FROM   
 	(
 		SELECT b.qranumber,b.ID AS BatchID,

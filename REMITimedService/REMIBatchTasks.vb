@@ -13,8 +13,9 @@ Public Class REMIBatchTasks
     Private Shared _dontRun As Boolean = True
     Private Shared _syncCount As Int32 = 0
     Private _sendSuccessEmails As Boolean
+    Private _sendNotAssignedEmails As Boolean
     Private Shared _configIntervalMinutes As Integer = My.MySettings.Default.IntervalMinutes
-    Private Shared _webServiceURL As String = My.MySettings.Default.REMITimedService_remiAPI1_RemiAPI
+    Private Shared _webServiceURL As String = My.MySettings.Default.REMITimedService_RemiAPI_RemiAPI
     Private Shared _sendEmailTo As String = "remi@blackberry.com"
     Private Shared _sendHighPriorityEmailTo As String = "reliabilityinfrastructure@blackberry.com"
 
@@ -50,6 +51,7 @@ Public Class REMIBatchTasks
 
             If (dayOfWeek <> dateValue.DayOfWeek) Then
                 _runNotAssigned = True
+                dayOfWeek = dateValue.DayOfWeek
             End If
 
             If (Not (_dontRun)) Then
@@ -223,6 +225,7 @@ Public Class REMIBatchTasks
             Dim succeeded As Boolean = True
             Dim retry As Int32 = 1
             _sendSuccessEmails = remi.GetInstance().HasAccess("RemiTimedServiceSendSuccessEmails")
+            _sendNotAssignedEmails = remi.GetInstance().HasAccess("RemiTimedServiceSendNotAssignedEmails")
 
             If batches IsNot Nothing Then
                 sb.AppendLine(DateTime.Now.ToString + " - Done. " + batches.Length.ToString + " batches retreived.")
@@ -234,11 +237,11 @@ Public Class REMIBatchTasks
 
                     Do
                         Try
-                            remi.GetInstance.CheckBatchForStatusUpdates(s, "remi@blackberry.com")
+                            remi.GetInstance.CheckBatchForStatusUpdates(currentQRA, "remi@blackberry.com")
 
                             counter += 1
                             If counter Mod 50 = 0 Then
-                                sb.AppendFormat("{0} - Last batch checked ({1}) : {2}", DateTime.Now, counter, s)
+                                sb.AppendFormat("{0} - Last batch checked ({1}) : {2}", DateTime.Now, counter, currentQRA)
                                 sb.Append(Environment.NewLine)
                             End If
                             retry = 5
@@ -251,10 +254,11 @@ Public Class REMIBatchTasks
                             sb.Append(Environment.NewLine)
                         End Try
 
-                        If (runNotAssigned) Then
+                        If (runNotAssigned And _sendNotAssignedEmails) Then
                             Try
-                                remi.GetInstance.BatchStartedBeforeAssigned(s)
-                                SendMail(String.Format("BatchStartedBeforeAssigned For {0}...", currentQRA), currentQRA)
+                                If (remi.GetInstance.BatchStartedBeforeAssigned(currentQRA)) Then
+                                    SendMail(String.Format("BatchStartedBeforeAssigned For {0}...", currentQRA), currentQRA)
+                                End If
                             Catch ex As Exception
                                 sb.Append(Environment.NewLine)
                                 sb.Append(String.Format("{0} - BatchStartedBeforeAssigned Failed For {1} with Error {2}{3}Stack Trace: {4}", DateTime.Now, currentQRA, ex.Message.ToString(), Environment.NewLine, ex.StackTrace))
