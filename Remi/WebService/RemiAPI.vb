@@ -1363,7 +1363,11 @@ Public Class RemiAPI
                 exc.TestUnitID = testUnitID
                 exc.TestStageName = testStageName
                 exc.TestName = testName
-                exc.QRAnumber = qraNumber
+
+                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
+
+                exc.QRAnumber = barcode.BatchNumber
+                exc.UnitNumber = barcode.UnitNumber
 
                 Dim notification As Notification = ExceptionManager.AddException(exc)
 
