@@ -1,5 +1,5 @@
 ﻿Public Class remi
-    Private Shared _remiInstance As remiAPI.RemiAPI
+    Private Shared _remiInstance As RemiAPI.RemiAPI
 
     Private Sub New()
 

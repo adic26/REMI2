@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="IntervalMinutes" Type="System.String" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">30</Value>
     </Setting>
-    <Setting Name="REMITimedService_remiAPI1_RemiAPI" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://rem002ykf/webservice/RemiAPI.asmx</Value>
+    <Setting Name="REMITimedService_RemiAPI_RemiAPI" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://rem002ykf/webservice/remiapi.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

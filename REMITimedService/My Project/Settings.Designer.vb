@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("10")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("30")>  _
         Public Property IntervalMinutes() As String
             Get
                 Return CType(Me("IntervalMinutes"),String)
@@ -69,10 +69,10 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.WebServiceUrl),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("http://rem002ykf/webservice/RemiAPI.asmx")>  _
-        Public ReadOnly Property REMITimedService_remiAPI1_RemiAPI() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("http://rem002ykf/webservice/remiapi.asmx")>  _
+        Public ReadOnly Property REMITimedService_RemiAPI_RemiAPI() As String
             Get
-                Return CType(Me("REMITimedService_remiAPI1_RemiAPI"),String)
+                Return CType(Me("REMITimedService_RemiAPI_RemiAPI"),String)
             End Get
         End Property
     End Class

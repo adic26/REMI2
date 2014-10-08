@@ -132,7 +132,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Web References\remiAPI\Reference.vb">
+    <Compile Include="Web References\RemiAPI\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -167,47 +167,51 @@
     <None Include="UnInstall.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Web References\remiAPI\BatchView.datasource">
+    <None Include="Web References\RemiAPI\BatchView.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\ConfigurationReturnData1.datasource">
+    <None Include="Web References\RemiAPI\ConfigurationReturnData.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\IncomingAppBatchData1.datasource">
+    <None Include="Web References\RemiAPI\IncomingAppBatchData.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\Job1.datasource">
+    <None Include="Web References\RemiAPI\Job.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\Notification1.datasource">
+    <None Include="Web References\RemiAPI\Notification.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\RemiAPI.wsdl" />
-    <None Include="Web References\remiAPI\ScanReturnData1.datasource">
+    <None Include="Web References\RemiAPI\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\RemiAPI\remiapi.wsdl" />
+    <None Include="Web References\RemiAPI\ScanReturnData.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\Test1.datasource">
+    <None Include="Web References\RemiAPI\Test.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\TestRecord.datasource">
+    <None Include="Web References\RemiAPI\TestRecord.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\TestStage1.datasource">
+    <None Include="Web References\RemiAPI\TestStage.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\TestStageResultOverview1.datasource">
+    <None Include="Web References\RemiAPI\TestStageResultOverview.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\TestUnit.datasource">
+    <None Include="Web References\RemiAPI\TestUnit.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\TrackingLocation1.datasource">
+    <None Include="Web References\RemiAPI\TrackingLocation.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\User1.datasource">
+    <None Include="Web References\RemiAPI\User.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\remiAPI\UserDetails1.datasource">
+    <None Include="Web References\RemiAPI\UserDetails.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
   </ItemGroup>
@@ -247,26 +251,24 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://rem002ykf/webservice/RemiAPI.asmx">
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://rem002ykf/webservice/remiapi.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\remiAPI\</RelPath>
-      <UpdateFromURL>http://rem002ykf/webservice/RemiAPI.asmx</UpdateFromURL>
+      <RelPath>Web References\RemiAPI\</RelPath>
+      <UpdateFromURL>http://rem002ykf/webservice/remiapi.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>REMITimedService_remiAPI1_RemiAPI</CachedSettingsPropName>
+      <CachedSettingsPropName>REMITimedService_RemiAPI_RemiAPI</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Web References\remiAPI\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.vb</LastGenOutput>
-    </None>
-    <None Include="Web References\remiAPI\RemiAPI.disco" />
+    <None Include="Web References\RemiAPI\remiapi.disco" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
