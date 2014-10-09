@@ -1190,6 +1190,15 @@ Public Class RemiAPI
             UserManager.LogIssue("Email could not be sent via API.", "e3", NotificationType.Errors, ex, "Dest: " + destinations + "Sender: " + sender)
         End Try
     End Sub
+
+    <WebMethod(EnableSession:=True, Description:="Sends an email via smtp. Comma delimit destinations.")> _
+    Public Sub SendMailAdvanced(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean)
+        Try
+            Remi.Core.Emailer.SendMail(destinations, sender, subject, messageBody, isHTML)
+        Catch ex As Exception
+            UserManager.LogIssue("Email could not be sent via API.", "e3", NotificationType.Errors, ex, "Dest: " + destinations + "Sender: " + sender)
+        End Try
+    End Sub
 #End Region
 
 #Region "Return data models"
