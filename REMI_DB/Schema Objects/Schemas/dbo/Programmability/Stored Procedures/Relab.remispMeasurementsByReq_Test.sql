@@ -20,7 +20,7 @@ BEGIN
 			INNER JOIN Batches b ON b.ID=tu.BatchID
 			INNER JOIN Tests t ON t.ID=r.TestID
 			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
-		WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND t.TestName=@TestName
+		WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND t.TestName=@TestName AND rp.ParameterName <> 'Command'
 		ORDER BY '],[' +  rp.ParameterName
 		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
@@ -38,7 +38,7 @@ BEGIN
 				INNER JOIN Batches b ON b.ID=tu.BatchID
 				INNER JOIN Tests t ON t.ID=r.TestID
 				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
-			WHERE b.QRANumber=''' + @RequestNumber + ''' AND rm.Archived=' + @FalseBit + ' AND t.TestName=''' + @TestName + '''
+			WHERE b.QRANumber=''' + @RequestNumber + ''' AND rm.Archived=' + @FalseBit + ' AND t.TestName=''' + @TestName + ''' AND rp.ParameterName <> ''Command'' 
 			) te PIVOT (MAX(Value) FOR ParameterName IN (' + @rows + ')) AS pvt')
 	END
 	ELSE
