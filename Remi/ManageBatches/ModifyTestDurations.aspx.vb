@@ -62,6 +62,11 @@ Partial Class ManageBatches_ModifyTestDurations
             hypRefresh.NavigateUrl = b.SetTestDurationsManagerLink
             ddlSelectTestStage.Items.Clear()
             Dim tsIList As New List(Of DurationItem)
+
+            hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
+            hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
+            hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
+
             For Each ts As TestStage In b.Job.TestStages.FindByType(TestStageType.EnvironmentalStress)
                 If (ts.IsArchived = False) Then
                     Dim i As New ListItem(ts.Name, ts.ID)
@@ -73,6 +78,7 @@ Partial Class ManageBatches_ModifyTestDurations
                     tsIList.Add(tsI)
                 End If
             Next
+
             If tsIList.Count > 0 Then
                 grdOverview.DataSource = tsIList
                 grdOverview.DataBind()
@@ -81,6 +87,13 @@ Partial Class ManageBatches_ModifyTestDurations
             If ddlSelectTestStage.Items.Count > 0 Then
                 ddlSelectTestStage.SelectedIndex = 0
             End If
+
+            If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+                liModifyPriority.Visible = True
+                liModifyStage.Visible = True
+                liModifyStatus.Visible = True
+            End If
+
             pnlEdit.Visible = True
             pnlLeftMenuActions.Visible = True
         Else

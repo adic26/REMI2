@@ -16,6 +16,20 @@
                     runat="server" />
                 <asp:HyperLink ID="hypBatchInfo" runat="server" ToolTip="Click to go back to the batch information page">Batch Info</asp:HyperLink>
             </li>
+            <li id="liModifyStatus" runat="server" visible="false">
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgChangeStatus" runat="server" />
+                <asp:HyperLink ID="hypChangeStatus" runat="server" Target="_blank" ToolTip="Click to change the status for this batch">Modify Status</asp:HyperLink>
+            </li>
+            <li id="liModifyStage" runat="server" visible="false">
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgChangeTestStage"
+                    runat="server" />
+                <asp:HyperLink ID="hypChangeTestStage" runat="server" Target="_blank" ToolTip="Click to change the test stage for this batch">Modify Stage</asp:HyperLink>
+            </li>
+            <li id="liModifyTestDurations" runat="server" visible="false">
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgModifyTestDurations"
+                    runat="server" />
+                <asp:HyperLink ID="hypModifyTestDurations" runat="server" Target="_blank" ToolTip="Click to change the test durations for this batch">Modify Durations</asp:HyperLink>
+            </li>
         </ul>
     </asp:Panel>
     <asp:Panel ID="pnlLeftMenuActions" Visible="False" runat="server">
