@@ -1,9 +1,6 @@
 ﻿ALTER PROCEDURE Relab.remispResultsSearch @MeasurementTypeID INT, @TestID INT, @ParameterName NVARCHAR(255)=NULL, @ParameterValue NVARCHAR(250)=NULL, @ProductIDs NVARCHAR(MAX) = NULL, @JobNameIDs NVARCHAR(MAX) = NULL, @TestStageIDs NVARCHAR(MAX) = NULL, @TestCenterID INT = 0, @ShowFailureOnly INT = 0
 AS
-BEGIN
-	CREATE TABLE #products (id INT)
-	CREATE TABLE #jobs (id INT)
-	CREATE TABLE #stages (id INT)
+BEGIN		
 	DECLARE @LoopValue NVARCHAR(500)
 	DECLARE @ID INT
 	DECLARE @query VARCHAR(MAX)
@@ -12,10 +9,14 @@ BEGIN
 	SET @FalseBit = CONVERT(BIT, 0)
 	SET @query = ''	
 	SET @query2 = ''
-	EXEC (@ProductIDs)
-	EXEC (@JobNameIDs)
-	EXEC (@TestStageIDs)
 	
+	CREATE TABLE #products (ID INT)
+	CREATE TABLE #jobs (ID INT)
+	CREATE TABLE #stageIDs (ID INT)
+	INSERT INTO #stageIDs SELECT s FROM dbo.Split(',', @TestStageIDs)
+	INSERT INTO #jobs SELECT s FROM dbo.Split(',',  @JobNameIDs)
+	INSERT INTO #products SELECT s FROM dbo.Split(',', @ProductIDs)
+		
 	SET @query = 'SELECT b.QRANumber, tu.BatchUnitNumber, ts.TestStageName AS TestStageName, rm.MeasurementValue AS MeasurementValue, rm.LowerLimit, rm.UpperLimit, 
 		r.ID AS ResultID, b.ID AS BatchID, pd.ProductGroupName, pd.ID AS ProductID, j.JobName, l.[values] AS TestCenter, CASE WHEN rm.PassFail=1 THEN ''Pass'' ELSE ''Fail'' END AS PassFail,
 		Relab.ResultsParametersComma(rm.ID) As Params, lm.[Values] AS MeasurementName, ISNULL(CONVERT(NVARCHAR, rm.DegradationVal), ''N/A'') AS DegradationVal 
@@ -30,7 +31,7 @@ BEGIN
 		INNER JOIN #products products WITH(NOLOCK) ON products.ID = pd.ID
 		INNER JOIN Lookups lm ON lm.LookupID = rm.MeasurementTypeID AND lm.Type=''MeasurementType''
 		INNER JOIN #jobs job WITH(NOLOCK) ON job.id=j.ID
-		INNER JOIN #stages stage WITH(NOLOCK) ON stage.id=ts.ID
+		INNER JOIN #stageIDs stage WITH(NOLOCK) ON stage.id=ts.ID
 	WHERE r.TestID='+CONVERT(VARCHAR,@TestID)+' AND MeasurementValue IS NOT NULL 
 		AND
 		(
@@ -64,8 +65,9 @@ BEGIN
 	print @query2
 
 	EXEC(@query + @query2)
+	
+	DROP TABLE #stageIDs
 	DROP TABLE #products
-	DROP TABLE #stages
 	DROP TABLE #jobs
 END
 GO

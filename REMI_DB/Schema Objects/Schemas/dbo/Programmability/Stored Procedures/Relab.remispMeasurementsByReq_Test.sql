@@ -1,8 +1,10 @@
-﻿ALTER PROCEDURE [Relab].[remispMeasurementsByReq_Test] @RequestNumber NVARCHAR(11), @TestName NVARCHAR(400)
+﻿ALTER PROCEDURE [Relab].[remispMeasurementsByReq_Test] @RequestNumber NVARCHAR(11), @TestIDs NVARCHAR(MAX)
 AS
 BEGIN
 	SET NOCOUNT ON
-
+	
+	DECLARE @tests TABLE(ID INT)
+	INSERT INTO @tests SELECT s FROM dbo.Split(',',@TestIDs)
 	DECLARE @FalseBit BIT
 	DECLARE @TrueBit BIT
 	CREATE TABLE #parameters (ResultMeasurementID INT)
@@ -19,8 +21,13 @@ BEGIN
 			INNER JOIN TestUnits tu ON tu.ID = r.TestUnitID
 			INNER JOIN Batches b ON b.ID=tu.BatchID
 			INNER JOIN Tests t ON t.ID=r.TestID
+			INNER JOIN @tests tst ON t.ID=tst.ID
 			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
+<<<<<<< HEAD
 		WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND t.TestName=@TestName
+=======
+		WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND rp.ParameterName <> 'Command'
+>>>>>>> 129ca9c... v2.1.5401.17948
 		ORDER BY '],[' +  rp.ParameterName
 		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
@@ -37,8 +44,13 @@ BEGIN
 				INNER JOIN TestUnits tu ON tu.ID = r.TestUnitID
 				INNER JOIN Batches b ON b.ID=tu.BatchID
 				INNER JOIN Tests t ON t.ID=r.TestID
+				INNER JOIN @tests tst ON t.ID=tst.ID
 				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
+<<<<<<< HEAD
 			WHERE b.QRANumber=''' + @RequestNumber + ''' AND rm.Archived=' + @FalseBit + ' AND t.TestName=''' + @TestName + '''
+=======
+			WHERE b.QRANumber=''' + @RequestNumber + ''' AND rm.Archived=' + @FalseBit + ' AND rp.ParameterName <> ''Command'' 
+>>>>>>> 129ca9c... v2.1.5401.17948
 			) te PIVOT (MAX(Value) FOR ParameterName IN (' + @rows + ')) AS pvt')
 	END
 	ELSE
@@ -55,6 +67,7 @@ BEGIN
 		INNER JOIN TestUnits tu ON tu.ID = r.TestUnitID
 		INNER JOIN Batches b ON b.ID=tu.BatchID
 		INNER JOIN Tests t ON t.ID=r.TestID
+		INNER JOIN @tests tst ON t.ID=tst.ID
 		INNER JOIN TestStages ts ON ts.ID=r.TestStageID
 		LEFT OUTER JOIN Lookups lu WITH(NOLOCK) ON lu.Type='UnitType' AND lu.LookupID=rm.MeasurementUnitTypeID
 		LEFT OUTER JOIN Lookups lt WITH(NOLOCK) ON lt.Type='MeasurementType' AND lt.LookupID=rm.MeasurementTypeID
@@ -64,7 +77,7 @@ BEGIN
 		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) ON rmf.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN #parameters p WITH(NOLOCK) ON p.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN Relab.ResultsXML x ON x.ID = rm.XMLID
-	WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND t.TestName=@TestName
+	WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit
 		AND (ISNULL(ISNULL(ISNULL(lt.[Values], ltsf.[Values]), ltmf.[Values]), ltacc.[Values]) NOT IN ('start', 'Start utc', 'end'))
 	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder, rm.ReTestNum
 

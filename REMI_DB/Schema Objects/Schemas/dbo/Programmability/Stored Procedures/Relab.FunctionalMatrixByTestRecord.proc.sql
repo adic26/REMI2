@@ -3,11 +3,12 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @TestUnitID INT
 	DECLARE @rows VARCHAR(8000)
 	DECLARE @sql VARCHAR(8000)
 	DECLARE @LookupType NVARCHAR(20)
+	DECLARE @TestUnitID INT
 	CREATE Table #units(id int) 
+	INSERT INTO #units SELECT s FROM dbo.Split(',',@UnitIDs)
 	
 	IF (@TRID IS NOT NULL)
 	BEGIN
@@ -54,7 +55,7 @@ BEGIN
 					OR
 					(' + CONVERT(VARCHAR, ISNULL(CONVERT(VARCHAR,@TestUnitID), 'NULL')) + ' IS NOT NULL AND tu.ID=' + CONVERT(VARCHAR, ISNULL(CONVERT(VARCHAR,@TestUnitID), 'NULL')) + ')
 				)
-			INNER JOIN #units ON tu.ID=#units.ID
+			INNER JOIN #units ON tu.ID=@units.ID
 			LEFT OUTER JOIN Relab.Results r ON r.TestID = ' + CONVERT(VARCHAR, @TestID) + ' AND r.TestStageID = ' + CONVERT(VARCHAR, @TestStageID) + ' 
 				AND r.TestUnitID = tu.ID
 			WHERE l.Type=''' + CONVERT(VARCHAR, @LookupType) + '''
@@ -64,6 +65,7 @@ BEGIN
 
 	PRINT @sql
 	EXEC(@sql)
+	DROP TABLE #units
 	
 	SET NOCOUNT OFF
 END

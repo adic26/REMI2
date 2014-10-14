@@ -931,7 +931,7 @@ Public Class RemiAPI
         Return New DataSet("NeedsTesting")
     End Function
 
-    <WebMethod(Description:="Get's All Batch Tests.")> _
+    <WebMethod(Description:="Get's All Batch Tests By Stage.")> _
     Public Function GetTestsByBatchStage(ByVal requestNumber As String, ByVal testStageName As String) As List(Of String)
         Try
             Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
@@ -940,9 +940,23 @@ Public Class RemiAPI
                 Return (From s In TestManager.GetTestsByBatchStage(batch.ID, testStageName, False) Select s.Value).ToList
             End If
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API Get batch tests", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+            BatchManager.LogIssue("REMI API Get batch tests by stage", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
         End Try
         Return New List(Of String)
+    End Function
+
+    <WebMethod(Description:="Get's All Batch Tests.")> _
+    Public Function GetTestsByBatch(ByVal requestNumber As String) As DataTable
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+
+            If batch IsNot Nothing Then
+                Return TestManager.GetTestsByBatch(batch.ID)
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get batch tests", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+        Return New DataTable("TestsByBatch")
     End Function
 
     <WebMethod(Description:="Add's a comment to the batch.")> _
