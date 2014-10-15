@@ -64,14 +64,7 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@FunctionalType", functionalType)
 
                     If (unitIDs IsNot Nothing) Then
-                        Dim insertUnits As String() = unitIDs.Split(New Char() {","c})
-                        Dim sqlStatement As String = String.Empty
-
-                        For Each str As String In insertUnits
-                            sqlStatement += "insert into #units values(" + str + ") "
-                        Next
-
-                        myCommand.Parameters.AddWithValue("@UnitIDs", sqlStatement)
+                        myCommand.Parameters.AddWithValue("@UnitIDs", unitIDs)
                     End If
 
                     myConnection.Open()
@@ -259,19 +252,11 @@ Namespace REMI.Dal
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Relab.remispGetTestsByBatches", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-
-                    Dim insert As String() = batchIDs.Split(New Char() {","c})
-                    Dim sqlStatement As String = String.Empty
-
-                    For Each str As String In insert
-                        sqlStatement += "insert into #batches values(" + str + ") "
-                    Next
-
-                    myCommand.Parameters.AddWithValue("@BatchIDs", sqlStatement)
+                    myCommand.Parameters.AddWithValue("@BatchIDs", batchIDs)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
-                    dt.TableName = "ResultUnits"
+                    dt.TableName = "ResulTests"
                 End Using
             End Using
 
@@ -284,14 +269,7 @@ Namespace REMI.Dal
                 Using myCommand As New SqlCommand("Relab.remispGetMeasurementsByTest", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TestID", testID)
-
-                    Dim insert As String() = batchIDs.Split(New Char() {","c})
-                    Dim sqlStatement As String = String.Empty
-                    For Each str As String In insert
-                        sqlStatement += "insert into #batches values(" + str + ") "
-                    Next
-
-                    myCommand.Parameters.AddWithValue("@BatchIDs", sqlStatement)
+                    myCommand.Parameters.AddWithValue("@BatchIDs", batchIDs)
 
                     If (showOnlyFailValue) Then
                         myCommand.Parameters.AddWithValue("@ShowOnlyFailValue", 1)
@@ -320,17 +298,8 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@ParameterName", parameterName)
                     End If
 
-                    Dim insert As String() = batchIDs.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
-                    Dim insertStages As String() = testStageIDs.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
-                    Dim sqlStatement As String = String.Empty
-                    Dim sqlStatement2 As String = String.Empty
-
-                    For Each str As String In insert
-                        sqlStatement += "insert into #batches values(" + str + ") "
-                    Next
-
                     If (Not (batchIDs = String.Empty)) Then
-                        myCommand.Parameters.AddWithValue("@BatchIDs", sqlStatement)
+                        myCommand.Parameters.AddWithValue("@BatchIDs", batchIDs)
                     Else
                         myCommand.Parameters.AddWithValue("@BatchIDs", String.Empty)
                     End If
@@ -341,12 +310,8 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@ShowOnlyFailValue", 0)
                     End If
 
-                    If (insertStages.Count > 0) Then
-                        For Each str As String In insertStages
-                            sqlStatement2 += "insert into #stages values(" + str + ") "
-                        Next
-
-                        myCommand.Parameters.AddWithValue("@TestStageIDs", sqlStatement2)
+                    If (testStageIDs <> String.Empty) Then
+                        myCommand.Parameters.AddWithValue("@TestStageIDs", testStageIDs)
                     End If
 
                     myConnection.Open()
@@ -373,14 +338,7 @@ Namespace REMI.Dal
                         End If
                     End If
                     myCommand.Parameters.AddWithValue("@TestID", testID)
-
-                    Dim insert As String() = batchIDs.Split(New Char() {","c})
-                    Dim sqlStatement As String = String.Empty
-                    For Each str As String In insert
-                        sqlStatement += "insert into #batches values(" + str + ") "
-                    Next
-
-                    myCommand.Parameters.AddWithValue("@BatchIDs", sqlStatement)
+                    myCommand.Parameters.AddWithValue("@BatchIDs", batchIDs)
                     myCommand.Parameters.AddWithValue("@GetStages", getStages)
 
                     If (showOnlyFailValue) Then
@@ -417,27 +375,8 @@ Namespace REMI.Dal
                         End If
                     End If
 
-                    Dim insertBatches As String() = batchIDs.Split(New Char() {","c})
-                    Dim insertUnits As String() = unitIDs.Split(New Char() {","c})
-                    Dim insertStages As String() = stages.Split(New Char() {","c})
-                    Dim sqlStatement As String = String.Empty
-                    Dim sqlStatement2 As String = String.Empty
-                    Dim sqlStatement3 As String = String.Empty
-
-                    For Each str As String In insertBatches
-                        sqlStatement += "insert into #batches values(" + str + ") "
-                    Next
-
-                    For Each str As String In insertUnits
-                        sqlStatement2 += "insert into #units values(" + str + ") "
-                    Next
-
-                    For Each str As String In insertStages
-                        sqlStatement3 += "insert into #stages values(" + str + ") "
-                    Next
-
-                    myCommand.Parameters.AddWithValue("@BatchIDs", sqlStatement)
-                    myCommand.Parameters.AddWithValue("@UnitIDs", sqlStatement2)
+                    myCommand.Parameters.AddWithValue("@BatchIDs", batchIDs)
+                    myCommand.Parameters.AddWithValue("@UnitIDs", unitIDs)
 
                     If (showUpperLowerLimits) Then
                         myCommand.Parameters.AddWithValue("@ShowUpperLowerLimits", 1)
@@ -453,7 +392,7 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@IncludeArchived", 0)
                     End If
 
-                    myCommand.Parameters.AddWithValue("@Stages", sqlStatement3)
+                    myCommand.Parameters.AddWithValue("@Stages", stages)
 
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
@@ -480,28 +419,9 @@ Namespace REMI.Dal
                         End If
                     End If
 
-                    Dim sqlStatement As String = String.Empty
-                    Dim sqlStatement2 As String = String.Empty
-                    Dim sqlStatement3 As String = String.Empty
-                    Dim insert As String() = productIDs.Split(New Char() {","c})
-                    Dim insertJobs As String() = jobNameIDs.Split(New Char() {","c})
-                    Dim insertStages As String() = testStageIDs.Split(New Char() {","c})
-
-                    For Each str As String In insert
-                        sqlStatement += "insert into #products values(" + str + ") "
-                    Next
-
-                    For Each str As String In insertJobs
-                        sqlStatement2 += "insert into #jobs values(" + str + ") "
-                    Next
-
-                    For Each str As String In insertStages
-                        sqlStatement3 += "insert into #stages values(" + str + ") "
-                    Next
-
-                    myCommand.Parameters.AddWithValue("@ProductIDs", sqlStatement)
-                    myCommand.Parameters.AddWithValue("@JobNameIDs", sqlStatement2)
-                    myCommand.Parameters.AddWithValue("@TestStageIDs", sqlStatement3)
+                    myCommand.Parameters.AddWithValue("@ProductIDs", productIDs)
+                    myCommand.Parameters.AddWithValue("@JobNameIDs", jobNameIDs)
+                    myCommand.Parameters.AddWithValue("@TestStageIDs", testStageIDs)
                     myCommand.Parameters.AddWithValue("@TestCenterID", testCenterID)
                     myCommand.Parameters.AddWithValue("@ShowFailureOnly", showFailureOnly)
 

@@ -1,16 +1,28 @@
-﻿ALTER FUNCTION [dbo].[Split] (@sep char(1), @s varchar(512))
-RETURNS table
+﻿ALTER FUNCTION dbo.Split(@sep nvarchar(5) = ',', @s nvarchar(MAX))
+RETURNS @RtnValue table
+(
+    RowID INT NOT NULL IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+    s nvarchar(100) NOT NULL
+)
 AS
-RETURN (
-    WITH Pieces(pn, start, stop) AS (
-      SELECT 1, 1, CHARINDEX(@sep, @s)
-      UNION ALL
-      SELECT pn + 1, stop + 1, CHARINDEX(@sep, @s, stop + 1)
-      FROM Pieces
-      WHERE stop > 0
-    )
-    SELECT ROW_NUMBER() OVER (ORDER BY start) as RowID,
-    SUBSTRING(@s, start, CASE WHEN stop > 0 THEN stop-start ELSE 512 END) AS s
-    FROM Pieces
-  )
-  GO
+BEGIN
+    IF @s IS NULL RETURN
+    IF @s = '' RETURN
+
+    DECLARE @split_on_len INT = LEN(@sep)
+    DECLARE @start_at INT = 1
+    DECLARE @end_at INT
+    DECLARE @data_len INT
+
+    WHILE 1=1
+    BEGIN
+        SET @end_at = CHARINDEX(@sep,@s,@start_at)
+        SET @data_len = CASE @end_at WHEN 0 THEN LEN(@s) ELSE @end_at-@start_at END
+        INSERT INTO @RtnValue (s) VALUES( SUBSTRING(@s,@start_at,@data_len) );
+        IF @end_at = 0 BREAK;
+        SET @start_at = @end_at + @split_on_len
+    END
+
+    RETURN
+END
+go
