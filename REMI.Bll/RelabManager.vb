@@ -23,9 +23,9 @@ Namespace REMI.Bll
             Return New DataTable("ResultsSummary")
         End Function
 
-        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testName As String) As DataTable
+        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String) As DataTable
             Try
-                Return RelabDB.GetResults(requestNumber, testName)
+                Return RelabDB.GetResults(requestNumber, testIDs)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

@@ -69,6 +69,24 @@ Namespace REMI.Bll
             End Try
         End Function
 
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetTestsByBatch(ByVal batchID As Int32) As DataTable
+            Try
+                Dim var = (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And t.processorder > -1 Select t.TestID, t.tname, t.testtype).Distinct().ToList()
+                Dim dt As New DataTable("TestsByBatch")    
+                dt.Columns.Add("TestID", System.Type.GetType("System.Int32"))
+                dt.Columns.Add("tname", System.Type.GetType("System.String"))
+                dt.Columns.Add("testtype", System.Type.GetType("System.Int32"))
+
+                var.ForEach(Function(p) dt.Rows.Add(p.TestID, p.tname, p.testtype))
+
+                Return dt
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("BatchID: {0}", batchID))
+                Return New DataTable("TestsByBatch")
+            End Try
+        End Function
+
         <DataObjectMethod(DataObjectMethodType.[Insert], True)> _
         Public Shared Function SaveTest(ByVal test As Test) As Integer
             Try
