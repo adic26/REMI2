@@ -208,6 +208,7 @@
     <Folder Include="Scripts\September302014" />
     <Folder Include="Scripts\October032014" />
     <Folder Include="Scripts\October162014" />
+    <Folder Include="Scripts\October172014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2306,5 +2307,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\October162014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\October172014\1.sql" />
   </ItemGroup>
 </Project>

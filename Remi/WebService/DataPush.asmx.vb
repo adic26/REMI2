@@ -62,4 +62,16 @@ Public Class DataPush
         End Try
         Return New DataTable("Results")
     End Function
+
+    <WebMethod(Description:="Modify a result")> _
+    Public Function ModifyResult(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, userIdentification)
+            End If
+        Catch ex As Exception
+            RelabManager.LogIssue("ModifyResult", "e3", NotificationType.Errors, ex)
+        End Try
+        Return False
+    End Function
 End Class
