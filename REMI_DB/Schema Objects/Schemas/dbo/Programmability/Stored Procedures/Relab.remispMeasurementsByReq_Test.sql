@@ -23,11 +23,7 @@ BEGIN
 			INNER JOIN Tests t ON t.ID=r.TestID
 			INNER JOIN @tests tst ON t.ID=tst.ID
 			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
-<<<<<<< HEAD
-		WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND t.TestName=@TestName
-=======
 		WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND rp.ParameterName <> 'Command'
->>>>>>> 129ca9c... v2.1.5401.17948
 		ORDER BY '],[' +  rp.ParameterName
 		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
