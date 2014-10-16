@@ -55,7 +55,7 @@ BEGIN
 					OR
 					(' + CONVERT(VARCHAR, ISNULL(CONVERT(VARCHAR,@TestUnitID), 'NULL')) + ' IS NOT NULL AND tu.ID=' + CONVERT(VARCHAR, ISNULL(CONVERT(VARCHAR,@TestUnitID), 'NULL')) + ')
 				)
-			INNER JOIN #units ON tu.ID=@units.ID
+			INNER JOIN #units ON tu.ID=#units.ID
 			LEFT OUTER JOIN Relab.Results r ON r.TestID = ' + CONVERT(VARCHAR, @TestID) + ' AND r.TestStageID = ' + CONVERT(VARCHAR, @TestStageID) + ' 
 				AND r.TestUnitID = tu.ID
 			WHERE l.Type=''' + CONVERT(VARCHAR, @LookupType) + '''
