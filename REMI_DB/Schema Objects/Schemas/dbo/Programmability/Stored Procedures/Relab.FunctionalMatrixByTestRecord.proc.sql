@@ -17,7 +17,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		EXEC(@UnitIDs)
+		INSERT INTO #units SELECT s FROM dbo.Split(',',@UnitIDs)
 	END
 	
 	IF (@FunctionalType = 1)
