@@ -95,6 +95,54 @@ Namespace REMI.Bll
             Return False
         End Function
 
+        Public Shared Function ModifyResult(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String, ByVal userName As String) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+
+                Dim passFail As Boolean = currentPassFail
+                Dim resultID As Int32
+                Dim result As Entities.Result
+
+                If (passFailOverride = True) Then
+                    If (passFailText.ToLower() = "pass") Then
+                        passFail = True
+                    Else
+                        passFail = False
+                    End If
+                End If
+
+                Dim measurement = (From m In instance.ResultsMeasurements.Include("Result") Where m.ID = ID Select m).FirstOrDefault()
+
+                If (measurement IsNot Nothing) Then
+                    measurement.Comment = value.Replace(Chr(34), "&#34;")
+                    measurement.PassFail = passFail
+                    measurement.LastUser = userName
+
+                    resultID = measurement.Result.ID
+                    result = measurement.Result
+
+                    instance.SaveChanges()
+
+                    If (passFailOverride = True) Then
+                        Dim failureCount As Int32 = (From m In instance.ResultsMeasurements Where m.Result.ID = resultID And m.Archived = False And m.PassFail = False Select m).Count()
+
+                        If (result IsNot Nothing) Then
+                            result.PassFail = If(failureCount > 0, False, True)
+
+                            instance.SaveChanges()
+                        End If
+                    End If
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
         Public Shared Function UploadResultsMeasurementsFile(ByVal file() As Byte, ByVal contentType As String, ByVal fileName As String) As Boolean
             Try
                 Return RelabDB.UploadResultsMeasurementsFile(file, contentType, fileName)

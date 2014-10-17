@@ -227,43 +227,6 @@ Public Class Measurements
 
     <System.Web.Services.WebMethod()> _
     Public Shared Function UpdateComment(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String) As Boolean
-        Dim instance = New REMI.Dal.Entities().Instance()
-
-        Dim passFail As Boolean = currentPassFail
-        Dim resultID As Int32
-        Dim result As Entities.Result
-
-        If (passFailOverride = True) Then
-            If (passFailText.ToLower() = "pass") Then
-                passFail = True
-            Else
-                passFail = False
-            End If
-        End If
-
-        Dim measurement = (From m In instance.ResultsMeasurements.Include("Result") Where m.ID = ID Select m).FirstOrDefault()
-
-        If (measurement IsNot Nothing) Then
-            measurement.Comment = value.Replace(Chr(34), "&#34;")
-            measurement.PassFail = passFail
-            measurement.LastUser = UserManager.GetCurrentUser.UserName
-
-            resultID = measurement.Result.ID
-            result = measurement.Result
-
-            instance.SaveChanges()
-
-            If (passFailOverride = True) Then
-                Dim failureCount As Int32 = (From m In instance.ResultsMeasurements Where m.Result.ID = resultID And m.Archived = False And m.PassFail = False Select m).Count()
-
-                If (result IsNot Nothing) Then
-                    result.PassFail = If(failureCount > 0, False, True)
-
-                    instance.SaveChanges()
-                End If
-            End If
-        End If
-
-        Return True
+        Return RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, UserManager.GetCurrentUser.UserName)
     End Function
 End Class
