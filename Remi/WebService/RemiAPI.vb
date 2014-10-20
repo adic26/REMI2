@@ -876,14 +876,16 @@ Public Class RemiAPI
         Try
             Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
 
-            If (barcode.Validate()) Then
-                Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
-                Dim stage As TestStage = TestUnitManager.GetUnit(barcode.BatchNumber, barcode.UnitNumber).CurrentTestStage
-                Dim testStageType(1) As TestStageType
-                testStageType(0) = Contracts.TestStageType.EnvironmentalStress
-                testStageType(1) = Contracts.TestStageType.Parametric
+            If (barcode.Validate() And barcode.HasTestUnitNumber) Then
+                Return TestStageManager.GetNextTestStage(barcode.BatchNumber, barcode.UnitNumber)
 
-                Return b.GetNextTestStage(stage, barcode.BatchNumber, b.Job, b.TestRecords, testStageType, b.Tasks)
+                'Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
+                'Dim stage As TestStage = TestUnitManager.GetUnit(barcode.BatchNumber, barcode.UnitNumber).CurrentTestStage
+                'Dim testStageType(1) As TestStageType
+                'testStageType(0) = Contracts.TestStageType.EnvironmentalStress
+                'testStageType(1) = Contracts.TestStageType.Parametric
+
+                'Return b.GetNextTestStage(stage, barcode.BatchNumber, b.Job, b.TestRecords, testStageType, b.Tasks)
             End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)

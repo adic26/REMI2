@@ -127,20 +127,6 @@ Namespace REMI.Dal
                         End If
                     End Using
                 End Using
-
-                '    Dim tlList As List(Of TLType) = GetApplicableTLTypesByTestType(TestType, myConnection)
-
-                '    For Each t As Test In tempList
-                '        For Each tl As TLType In tlList
-                '            If t.ID = tl.testId Then
-                '                Dim tlt As New TrackingLocationType
-                '                tlt.ID = tl.TLTypeId
-                '                tlt.Name = tl.TLName
-
-                '                t.TrackingLocationTypes.Add(tlt)
-                '            End If
-                '        Next
-                '    Next
             End Using
 
             Return tempList
@@ -170,9 +156,29 @@ Namespace REMI.Dal
                         myReader.Close()
                     End Using
                 End Using
-                'For Each t As Test In tempList
-                '    t.TrackingLocationTypes = GetApplicableTLTypes(t.ID, myConnection)
-                'Next
+            End Using
+            Return tempList
+        End Function
+
+        Public Shared Function GetTestsByBatchUnitStage(ByVal requestNumber As String, ByVal unitNumber As Int32, ByVal TestStageID As Integer) As TestCollection
+            Dim tempList As New TestCollection
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+
+                Using myCommand As New SqlCommand("remispTestsSelectByBatchUnitStage", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myCommand.Parameters.AddWithValue("@BatchUnitNumber", unitNumber)
+                    myCommand.Parameters.AddWithValue("@TestStageID", TestStageID)
+                    myConnection.Open()
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            While myReader.Read()
+                                tempList.Add(FillDataRecord(myReader))
+                            End While
+                        End If
+                        myReader.Close()
+                    End Using
+                End Using
             End Using
             Return tempList
         End Function
