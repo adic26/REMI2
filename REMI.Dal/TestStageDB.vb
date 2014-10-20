@@ -138,6 +138,32 @@ Namespace REMI.Dal
             Return myTestStage
         End Function
 
+        Public Shared Function GetNextTestStage(ByVal requestNumber As String, ByVal unitNumber As Int32) As TestStage
+            Dim myTestStage As TestStage = Nothing
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetBatchUnitNextTestStage", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myCommand.Parameters.AddWithValue("@BatchUnitNumber", unitNumber)
+                    myConnection.Open()
+
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.Read() Then
+                            myTestStage = FillDataRecord(myReader)
+                        End If
+                    End Using
+                End Using
+            End Using
+
+            If (myTestStage IsNot Nothing) Then
+                myTestStage.Tests = TestDB.GetTestsByBatchUnitStage(requestNumber, unitNumber, myTestStage.ID)
+            End If
+
+            Return myTestStage
+        End Function
+
         ''' <summary> 
         ''' Returns a list with TestStage objects. 
         ''' </summary> 

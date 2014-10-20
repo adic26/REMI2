@@ -23,6 +23,18 @@ Namespace REMI.Bll
             End Try
         End Function
 
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
+        Public Shared Function GetNextTestStage(ByVal requestNumber As String, ByVal unitNumber As Int32) As TestStage
+            Try
+                Dim ts As TestStage = TestStageDB.GetNextTestStage(requestNumber, unitNumber)
+
+                Return ts
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
+                Return Nothing
+            End Try
+        End Function
+
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetListOfNamesForChambers(ByVal jobName As String) As List(Of String)
             Try
