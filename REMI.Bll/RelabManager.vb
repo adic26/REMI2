@@ -23,6 +23,15 @@ Namespace REMI.Bll
             Return New DataTable("ResultsSummary")
         End Function
 
+        Public Shared Function ResultInformation(ByVal resultID As Int32, ByVal includeArchived As Boolean) As DataTable
+            Try
+                Return RelabDB.ResultInformation(resultID, includeArchived)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("ResultsInformation")
+        End Function
+
         Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String) As DataTable
             Try
                 Return RelabDB.GetResults(requestNumber, testIDs)
@@ -176,7 +185,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultMeasurements")
         End Function
 
         Public Shared Function GetUnitsByTestMeasurementParameters(ByVal batchIDs As String, ByVal testID As Int32, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal getStages As Boolean, ByVal showOnlyFailValue As Boolean) As DataTable
@@ -185,7 +194,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultUnits")
         End Function
 
         Public Shared Function ResultGraph(ByVal batchIDs As String, ByVal unitIDs As String, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal showUpperLowerLimits As Boolean, ByVal testID As Int32, ByVal xaxis As Int32, ByVal plotValue As Int32, ByVal includeArchived As Boolean, ByVal stages As String) As DataSet
@@ -212,7 +221,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultParamas")
         End Function
 
         Public Shared Function ReassignTestStage(ByVal batchID As Int32, ByVal testID As Int32, ByVal testStageID As Int32, ByVal unitID As Int32, ByVal newTestStageID As Int32) As Boolean

@@ -6,6 +6,7 @@ BEGIN
 	DECLARE @ID INT
 	DECLARE @idoc INT
 	DECLARE @RowID INT
+	DECLARE @InfoRowID INT
 	DECLARE @MaxID INT
 	DECLARE @VerNum INT
 	DECLARE @ResultID INT
@@ -147,6 +148,35 @@ BEGIN
 			DROP TABLE #LookupsMeasurementType
 		END
 		
+		PRINT 'Load Information into temp table'
+		SELECT  ROW_NUMBER() OVER (ORDER BY T.c) AS RowID, T.c.query('.') AS value 
+		INTO #temp3
+		FROM @xml.nodes('/TestResults/Information/Info') T(c)
+		
+		SELECT @InfoRowID = MIN(RowID) FROM #temp3
+		
+		WHILE (@InfoRowID IS NOT NULL)
+		BEGIN
+			SELECT @xmlPart  = value FROM #temp3 WHERE RowID=@InfoRowID	
+			
+			SELECT T.c.query('Name').value('.', 'nvarchar(max)') AS Name, T.c.query('Value').value('.', 'nvarchar(max)') AS Value
+			INTO #information
+			FROM @xmlPart.nodes('/Info') T(c)
+			
+			UPDATE ri
+			SET IsArchived=1
+			FROM Relab.ResultsInformation ri
+				INNER JOIN Relab.ResultsXML rxml ON ri.XMLID=rxml.ID
+			WHERE rxml.VerNum < @VerNum AND ISNULL(ri.IsArchived,0)=0 AND rxml.ResultID=@ResultID
+				
+			PRINT 'INSERT Version ' + CONVERT(NVARCHAR, @VerNum) + ' Information'
+			INSERT INTO Relab.ResultsInformation(XMLID, Name, Value, IsArchived)
+			SELECT @ID AS XMLID, Name, Value, 0
+			FROM #information
+
+			SELECT @InfoRowID = MIN(RowID) FROM #temp3 WHERE RowID > @InfoRowID
+		END
+		
 		PRINT 'Load Measurements into temp table'
 		SELECT  ROW_NUMBER() OVER (ORDER BY T.c) AS RowID, T.c.query('.') AS value 
 		INTO #temp2
@@ -162,7 +192,7 @@ BEGIN
 
 			SELECT @xmlPart  = value FROM #temp2 WHERE RowID=@RowID	
 
-			select CASE WHEN l2.LookupID IS NULL THEN l3.LookupID ELSE l2.LookupID END AS MeasurementTypeID,
+			SELECT CASE WHEN l2.LookupID IS NULL THEN l3.LookupID ELSE l2.LookupID END AS MeasurementTypeID,
 				T.c.query('LowerLimit').value('.', 'nvarchar(max)') AS LowerLimit,
 				T.c.query('UpperLimit').value('.', 'nvarchar(max)') AS UpperLimit,
 				T.c.query('MeasuredValue').value('.', 'nvarchar(max)') AS MeasurementValue,
