@@ -23,9 +23,18 @@ Namespace REMI.Bll
             Return New DataTable("ResultsSummary")
         End Function
 
-        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String) As DataTable
+        Public Shared Function ResultInformation(ByVal resultID As Int32, ByVal includeArchived As Boolean) As DataTable
             Try
-                Return RelabDB.GetResults(requestNumber, testIDs)
+                Return RelabDB.ResultInformation(resultID, includeArchived)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("ResultsInformation")
+        End Function
+
+        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String, ByVal testStageName As String, ByVal unitNumber As Int32) As DataTable
+            Try
+                Return RelabDB.GetResults(requestNumber, testIDs, testStageName, unitNumber)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -143,6 +152,25 @@ Namespace REMI.Bll
             Return False
         End Function
 
+        Public Shared Function PollUnProcessedResults(ByVal requestNumber As String, ByVal unit As Int32, ByVal testStageName As String, ByVal testName As String) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim countUnProcessed As Int32 = (From x In New REMI.Dal.Entities().Instance().ResultsXMLs _
+                                     Where x.Result.Test.TestName = testName _
+                                      And x.Result.TestStage.TestStageName = testStageName _
+                                      And x.Result.TestUnit.Batch.QRANumber = requestNumber _
+                                      And x.Result.TestUnit.BatchUnitNumber = unit _
+                                      And x.isProcessed = 0 _
+                                     Select x).Count()
+
+                Return (countUnProcessed > 0)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
         Public Shared Function UploadResultsMeasurementsFile(ByVal file() As Byte, ByVal contentType As String, ByVal fileName As String) As Boolean
             Try
                 Return RelabDB.UploadResultsMeasurementsFile(file, contentType, fileName)
@@ -176,7 +204,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultMeasurements")
         End Function
 
         Public Shared Function GetUnitsByTestMeasurementParameters(ByVal batchIDs As String, ByVal testID As Int32, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal getStages As Boolean, ByVal showOnlyFailValue As Boolean) As DataTable
@@ -185,7 +213,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultUnits")
         End Function
 
         Public Shared Function ResultGraph(ByVal batchIDs As String, ByVal unitIDs As String, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal showUpperLowerLimits As Boolean, ByVal testID As Int32, ByVal xaxis As Int32, ByVal plotValue As Int32, ByVal includeArchived As Boolean, ByVal stages As String) As DataSet
@@ -212,7 +240,7 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("ResultParamas")
         End Function
 
         Public Shared Function ReassignTestStage(ByVal batchID As Int32, ByVal testID As Int32, ByVal testStageID As Int32, ByVal unitID As Int32, ByVal newTestStageID As Int32) As Boolean

@@ -54,9 +54,13 @@ Public Class Measurements
             ddlUnits.SelectedValue = dt.FirstOrDefault().TestUnitID
 
             Dim dtmeasurements As DataTable = RelabManager.ResultMeasurements(resultID, chkOnlyFails.Checked, chkIncludeArchived.Checked)
+
             If (dtmeasurements.Rows.Count > 0) Then
                 grdResultMeasurements.DataSource = dtmeasurements
                 grdResultMeasurements.DataBind()
+
+                grdResultInformation.DataSource = RelabManager.ResultInformation(resultID, chkIncludeArchived.Checked)
+                grdResultInformation.DataBind()
             Else
                 chkIncludeArchived.Visible = False
                 chkOnlyFails.Visible = False
@@ -77,6 +81,10 @@ Public Class Measurements
         Helpers.MakeAccessable(grdResultMeasurements)
     End Sub
 
+    Protected Sub SetGvwInformatinoHeader() Handles grdResultInformation.PreRender
+        Helpers.MakeAccessable(grdResultInformation)
+    End Sub
+
     Protected Sub btnSubmit_OnClick(ByVal sender As Object, ByVal e As EventArgs) Handles btnSubmit.Click
         Dim testID As Int32
         Dim TestStageID As Int32
@@ -95,6 +103,14 @@ Public Class Measurements
         Else
             pnlMeasurements.Visible = False
             lblNoResults.Visible = True
+        End If
+    End Sub
+
+    Protected Sub grdResultInformation_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdResultInformation.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            If (e.Row.Cells(3).Text.ToLower().Contains("true")) Then
+                e.Row.BackColor = Drawing.Color.LightBlue
+            End If
         End If
     End Sub
 

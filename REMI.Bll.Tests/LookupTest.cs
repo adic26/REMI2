@@ -44,6 +44,12 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
+        public void GetOracleDepartmentList()
+        {
+            Assert.That(LookupsManager.GetOracleDepartmentList().Count > 0);
+        }
+
+        [Test]
         public void GetOracleAccessoryGroupList()
         {
             Assert.That(LookupsManager.GetOracleAccessoryGroupList().Count > 0);

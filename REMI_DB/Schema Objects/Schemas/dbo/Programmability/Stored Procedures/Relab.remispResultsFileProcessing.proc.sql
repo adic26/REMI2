@@ -6,6 +6,7 @@ BEGIN
 	DECLARE @ID INT
 	DECLARE @idoc INT
 	DECLARE @RowID INT
+	DECLARE @InfoRowID INT
 	DECLARE @MaxID INT
 	DECLARE @VerNum INT
 	DECLARE @ResultID INT
@@ -18,7 +19,6 @@ BEGIN
 	DECLARE @TestID INT
 	DECLARE @xml XML
 	DECLARE @xmlPart XML
-	DECLARE @FinalResult BIT
 	DECLARE @StartDate DATETIME
 	DECLARE @EndDate NVARCHAR(MAX)
 	DECLARE @Duration NVARCHAR(MAX)
@@ -28,6 +28,7 @@ BEGIN
 	DECLARE @StationName NVARCHAR(400)
 	DECLARE @DegradationVal DECIMAL(10,3)
 	SET @ID = NULL
+	CREATE TABLE #files ([FileName] NVARCHAR(MAX))
 
 	BEGIN TRY
 		IF ((SELECT COUNT(*) FROM Relab.ResultsXML x WHERE ISNULL(IsProcessed,0)=0)=0)
@@ -147,6 +148,36 @@ BEGIN
 			DROP TABLE #LookupsMeasurementType
 		END
 		
+		PRINT 'Load Information into temp table'
+		SELECT  ROW_NUMBER() OVER (ORDER BY T.c) AS RowID, T.c.query('.') AS value 
+		INTO #temp3
+		FROM @xml.nodes('/TestResults/Information/Info') T(c)
+		
+		SELECT @InfoRowID = MIN(RowID) FROM #temp3
+		
+		WHILE (@InfoRowID IS NOT NULL)
+		BEGIN
+			SELECT @xmlPart  = value FROM #temp3 WHERE RowID=@InfoRowID	
+			
+			SELECT T.c.query('Name').value('.', 'nvarchar(max)') AS Name, T.c.query('Value').value('.', 'nvarchar(max)') AS Value
+			INTO #information
+			FROM @xmlPart.nodes('/Info') T(c)
+			
+			UPDATE ri
+			SET IsArchived=1
+			FROM Relab.ResultsInformation ri
+				INNER JOIN Relab.ResultsXML rxml ON ri.XMLID=rxml.ID
+				INNER JOIN #information i ON i.Name = ri.Name
+			WHERE rxml.VerNum < @VerNum AND ISNULL(ri.IsArchived,0)=0 AND rxml.ResultID=@ResultID
+				
+			PRINT 'INSERT Version ' + CONVERT(NVARCHAR, @VerNum) + ' Information'
+			INSERT INTO Relab.ResultsInformation(XMLID, Name, Value, IsArchived)
+			SELECT @ID AS XMLID, Name, Value, 0
+			FROM #information
+
+			SELECT @InfoRowID = MIN(RowID) FROM #temp3 WHERE RowID > @InfoRowID
+		END
+		
 		PRINT 'Load Measurements into temp table'
 		SELECT  ROW_NUMBER() OVER (ORDER BY T.c) AS RowID, T.c.query('.') AS value 
 		INTO #temp2
@@ -162,7 +193,7 @@ BEGIN
 
 			SELECT @xmlPart  = value FROM #temp2 WHERE RowID=@RowID	
 
-			select CASE WHEN l2.LookupID IS NULL THEN l3.LookupID ELSE l2.LookupID END AS MeasurementTypeID,
+			SELECT CASE WHEN l2.LookupID IS NULL THEN l3.LookupID ELSE l2.LookupID END AS MeasurementTypeID,
 				T.c.query('LowerLimit').value('.', 'nvarchar(max)') AS LowerLimit,
 				T.c.query('UpperLimit').value('.', 'nvarchar(max)') AS UpperLimit,
 				T.c.query('MeasuredValue').value('.', 'nvarchar(max)') AS MeasurementValue,
@@ -186,6 +217,8 @@ BEGIN
 			UPDATE #measurement
 			SET Description=null
 			WHERE Description='N/A' or Description='NA'
+			
+			DELETE FROM #files
 
 			IF (LTRIM(RTRIM(LOWER(@TestStageName))) NOT IN ('baseline', 'analysis') AND LTRIM(RTRIM(LOWER(@TestStageName))) NOT LIKE '%Calibra%' AND EXISTS(SELECT 1 FROM #measurement WHERE PassFail = -1))
 			BEGIN
@@ -271,8 +304,18 @@ BEGIN
 					BEGIN
 						UPDATE Relab.ResultsMeasurementsFiles 
 						SET ResultMeasurementID=@ResultMeasurementID 
-						WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(@FileName) AND ResultMeasurementID IS NULL
+						WHERE LOWER(LTRIM(RTRIM([FileName])))=LOWER(LTRIM(RTRIM(@FileName))) AND ResultMeasurementID IS NULL
 					END
+				
+				INSERT INTO #files ([FileName])
+				SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
+				FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+			
+				UPDATE Relab.ResultsMeasurementsFiles 
+				SET ResultMeasurementID=@ResultMeasurementID
+				FROM Relab.ResultsMeasurementsFiles 
+					INNER JOIN #files f ON f.[FileName] = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+				WHERE ResultMeasurementID IS NULL
 			END
 			ELSE
 			BEGIN
@@ -312,9 +355,19 @@ BEGIN
 						BEGIN
 							UPDATE Relab.ResultsMeasurementsFiles 
 							SET ResultMeasurementID=@ResultMeasurementID2 
-							WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(@FileName) AND ResultMeasurementID IS NULL
+							WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(LTRIM(RTRIM(@FileName))) AND ResultMeasurementID IS NULL
 						END
-
+				
+					INSERT INTO #files ([FileName])
+					SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
+					FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+				
+					UPDATE Relab.ResultsMeasurementsFiles 
+					SET ResultMeasurementID=@ResultMeasurementID2
+					FROM Relab.ResultsMeasurementsFiles 
+						INNER JOIN #files f ON f.[FileName] = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+					WHERE ResultMeasurementID IS NULL
+					
 					IF (@Parameters <> '')
 					BEGIN
 						PRINT 'INSERT ReTest Parameters'
@@ -348,6 +401,16 @@ BEGIN
 							WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(@FileName) AND ResultMeasurementID IS NULL
 						END
 					
+					INSERT INTO #files ([FileName])
+					SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
+					FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+				
+					UPDATE Relab.ResultsMeasurementsFiles 
+					SET ResultMeasurementID=@ResultMeasurementID2
+					FROM Relab.ResultsMeasurementsFiles 
+						INNER JOIN #files f ON f.[FileName] = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+					WHERE ResultMeasurementID IS NULL
+				
 					IF (@Parameters <> '')
 					BEGIN								
 						PRINT 'INSERT New Parameters'
@@ -362,6 +425,8 @@ BEGIN
 		
 			SELECT @RowID = MIN(RowID) FROM #temp2 WHERE RowID > @RowID
 		END
+		
+		DROP TABLE #files
 		
 		PRINT 'Update Result'
 		UPDATE Relab.ResultsXML 

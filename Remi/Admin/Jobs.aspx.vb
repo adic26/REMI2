@@ -453,7 +453,7 @@ Partial Class Admin_TestStages
     End Sub
 
     Sub BindOrientations()
-        gdvOrientations.DataSource = JobManager.GetJobOrientationLists(hdnJobID.Value)
+        gdvOrientations.DataSource = JobManager.GetJobOrientationLists(hdnJobID.Value, String.Empty)
         gdvOrientations.DataBind()
 
         If (gdvOrientations.Rows.Count = 0) Then

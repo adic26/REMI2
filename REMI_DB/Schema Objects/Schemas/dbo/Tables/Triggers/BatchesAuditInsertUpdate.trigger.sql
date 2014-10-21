@@ -29,17 +29,17 @@ BEGIN
 	--Only inserts records into the Audit table if the row was either updated or inserted and values actually changed.
 	select @count= count(*) from
 	(
-	   select QRAnumber, Priority, BatchStatus, JobName, ProductTypeID, AccessoryGroupID, TeststageName, TestCenterLocationID, RequestPurpose, TestStagecompletionStatus, Comment, RFBands, ProductID, IsMQual, ExecutiveSummary, MechanicalTools, [Order] from Inserted
+	   select QRAnumber, Priority, BatchStatus, JobName, ProductTypeID, AccessoryGroupID, TeststageName, TestCenterLocationID, RequestPurpose, TestStagecompletionStatus, Comment, RFBands, ProductID, IsMQual, ExecutiveSummary, MechanicalTools, [Order], DepartmentID from Inserted
 	   except
-	   select QRAnumber, Priority, BatchStatus, JobName, ProductTypeID, AccessoryGroupID, TeststageName, TestCenterLocationID, RequestPurpose, TestStagecompletionStatus, Comment, RFBands, ProductID, IsMQual, ExecutiveSummary, MechanicalTools, [Order] from Deleted
+	   select QRAnumber, Priority, BatchStatus, JobName, ProductTypeID, AccessoryGroupID, TeststageName, TestCenterLocationID, RequestPurpose, TestStagecompletionStatus, Comment, RFBands, ProductID, IsMQual, ExecutiveSummary, MechanicalTools, [Order], DepartmentID from Deleted
 	) a
 
 	if ((@count) >0)
 	begin
 		insert into batchesaudit (BatchId, QRAnumber, Priority, BatchStatus, JobName, ProductTypeID,AccessoryGroupID,TeststageName, TestCenterLocationID,
-			RequestPurpose, TestStagecompletionStatus, Comment, UserName, RFBands, ProductID, batchesaudit.Action, IsMQual, ExecutiveSummary, MechanicalTools, [Order])
+			RequestPurpose, TestStagecompletionStatus, Comment, UserName, RFBands, ProductID, batchesaudit.Action, IsMQual, ExecutiveSummary, MechanicalTools, [Order], DepartmentID)
 		Select ID, QRAnumber, Priority, BatchStatus, JobName, ProductTypeID, AccessoryGroupID, TeststageName, TestCenterLocationID, RequestPurpose, 
-			TestStagecompletionStatus, Comment, LastUser, RFBands, productID, @Action, IsMQual, ExecutiveSummary, MechanicalTools, [Order] 
+			TestStagecompletionStatus, Comment, LastUser, RFBands, productID, @Action, IsMQual, ExecutiveSummary, MechanicalTools, [Order], DepartmentID 
 		from inserted
 	END
 END

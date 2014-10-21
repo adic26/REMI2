@@ -28,7 +28,8 @@
         <asp:BoundField DataField="MechanicalTools" HeaderText="Revision" SortExpression="MechanicalTools" ReadOnly="true" />
         <asp:BoundField DataField="ProductType" HeaderText="Product Type" SortExpression="ProductType" ReadOnly="true" />
         <asp:BoundField DataField="AccessoryGroup" HeaderText="Accessory Group" SortExpression="AccessoryGroup" ReadOnly="true" />
-        <asp:BoundField DataField="TestCenterLocation" HeaderText="Test Center" SortExpression="TestCenterLocation" ReadOnly="true" />        
+        <asp:BoundField DataField="TestCenterLocation" HeaderText="Test Center" SortExpression="TestCenterLocation" ReadOnly="true" />
+        <asp:BoundField DataField="Department" HeaderText="Department" SortExpression="Department" ReadOnly="true" />
         <asp:TemplateField HeaderText="Assignee" SortExpression="ActiveTaskAssignee">
             <ItemTemplate>
                 <asp:Label EnableViewState="true" ID="lblActiveTaskAssignee" runat="server" Text='<%# Eval("ActiveTaskAssignee") %>' Visible="true"></asp:Label>

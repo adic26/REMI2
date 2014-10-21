@@ -93,7 +93,7 @@
             <Columns>
                 <asp:TemplateField HeaderText="Image" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
                     <ItemTemplate>
-                        <asp:Image Visible="false" runat="server" ImageUrl='' ID="img" />
+                        <asp:Image Visible="false" runat="server" ImageUrl="" ID="img" />
                         <asp:HiddenField runat="server" ID="hdnImgStr" Value='<%# "data:image/" + Eval("ContentType") + ";base64," + Convert.ToBase64String(Eval("Image")) %>' />
                     </ItemTemplate>
                 </asp:TemplateField>
@@ -106,7 +106,6 @@
             </Columns>
             <AlternatingRowStyle CssClass="oddrow" />
         </asp:GridView>
-
         <font size="1">
             <ul>
                 <li>Measurement link graphs that particular measurement.</li>
@@ -114,6 +113,16 @@
                 <li>Hover over image thumbnail to see full image for that measurement.</li>
             </ul>
         </font>
+        <h2>Additional Information:</h2>
+        <asp:GridView ID="grdResultInformation" runat="server" Width="100%" EmptyDataText="There is no information found for this result." AllowPaging="False" AllowSorting="False" EnableViewState="True" AutoGenerateColumns="false" CssClass="FilterableTable">
+            <RowStyle CssClass="evenrow" />
+            <Columns>
+                <asp:BoundField DataField="Name" HeaderText="Name" InsertVisible="False" ReadOnly="True"  Visible="true" />
+                <asp:BoundField DataField="Value" HeaderText="Info" InsertVisible="False" ReadOnly="True"  Visible="true" />
+                <asp:BoundField DataField="VerNum" HeaderText="Version" InsertVisible="False" ReadOnly="True"  Visible="true" />
+                <asp:BoundField DataField="IsArchived" HeaderText="Archived" InsertVisible="False" ReadOnly="True"  Visible="true" ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden" />
+            </Columns>
+        </asp:GridView>
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>

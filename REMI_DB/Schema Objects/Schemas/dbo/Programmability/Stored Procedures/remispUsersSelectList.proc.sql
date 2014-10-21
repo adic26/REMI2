@@ -12,12 +12,14 @@ AS
 
 	SELECT UsersRows.BadgeNumber,UsersRows.ConcurrencyID,UsersRows.ID,usersrows.TestCentre, UsersRows.LastUser,UsersRows.LDAPLogin,UsersRows.Row, UsersRows.IsActive, 
 		CASE WHEN @determineDelete = 1 THEN dbo.remifnUserCanDelete(UsersRows.LDAPLogin) ELSE 0 END AS CanDelete, UsersRows.DefaultPage, UsersRows.TestCentreID,
-		ByPassProduct
+		ByPassProduct, UsersRows.DepartmentID, UsersRows.Department
 	FROM     
 		(SELECT ROW_NUMBER() OVER (ORDER BY ID) AS Row, Users.BadgeNumber,Users.ConcurrencyID,Users.ID,Users.LastUser,Users.LDAPLogin, 
-			Lookups.[Values] AS TestCentre, ISNULL(Users.IsActive,1) AS IsActive, Users.DefaultPage, Users.TestCentreID, Users.ByPassProduct
+			Lookups.[Values] AS TestCentre, ISNULL(Users.IsActive,1) AS IsActive, Users.DefaultPage, Users.TestCentreID, Users.ByPassProduct,
+			Users.DepartmentID, ld.[Values] AS Department
 		FROM Users
 			LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
+			LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
 		) AS UsersRows
 	WHERE ((Row between (@startRowIndex) AND @startRowIndex + @maximumRows - 1) 
 			OR @startRowIndex = -1 OR @maximumRows = -1) 

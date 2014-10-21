@@ -20,6 +20,7 @@
         RequestPurpose = 12,
         Observations = 13,
         Priority = 14,
-        RequestType = 15
+        RequestType = 15,
+        Department = 16
     }
 }

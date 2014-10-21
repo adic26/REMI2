@@ -174,4 +174,13 @@ Partial Public Class Measurements
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents grdResultMeasurements As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''grdResultInformation control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdResultInformation As Global.System.Web.UI.WebControls.GridView
 End Class

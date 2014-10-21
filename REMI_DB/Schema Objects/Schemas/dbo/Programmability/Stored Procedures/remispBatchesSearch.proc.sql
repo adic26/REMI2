@@ -23,7 +23,8 @@
 	@ExcludedStatus INT = NULL,
     @TrackingLocationFunction INT = NULL,
 	@NotInTrackingLocationFunction INT  = NULL,
-	@Revision NVARCHAR(10) = NULL
+	@Revision NVARCHAR(10) = NULL,
+	@DepartmentID INT = NULL
 AS
 	DECLARE @TestName NVARCHAR(400)
 	DECLARE @TestStageName NVARCHAR(400)
@@ -116,7 +117,7 @@ AS
 		) as ActiveTaskAssignee,
 		@HasBatchSpecificExceptions AS HasBatchSpecificExceptions, batchesrows.ProductTypeID,batchesrows.AccessoryGroupID, BatchesRows.CPRNumber, BatchesRows.RelabJobID, 
 		BatchesRows.TestCenterLocation, AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate, IsMQual, JobID, DateCreated, ContinueOnFailures,
-		MechanicalTools, BatchesRows.RequestPurpose, BatchesRows.PriorityID
+		MechanicalTools, BatchesRows.RequestPurpose, BatchesRows.PriorityID, DepartmentID, Department
 	FROM     
 		(
 			SELECT DISTINCT b.BatchStatus,b.Comment, b.teststagecompletionstatus,b.ConcurrencyID,b.ID,b.JobName,b.LastUser,b.Priority AS PriorityID,b.ProductTypeID,
@@ -124,7 +125,8 @@ AS
 				j.WILocation,(select count(*) from testunits where testunits.batchid = b.id) as testUnitCount,
 				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, l3.[Values] As TestCenterLocation,
 				b.CPRNumber,b.RelabJobID, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
-				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, ISNULL(b.[Order], 100) As PriorityOrder
+				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, 
+				ISNULL(b.[Order], 100) As PriorityOrder, b.DepartmentID, l6.[Values] AS Department
 			FROM Batches as b WITH(NOLOCK)
 				inner join Products p WITH(NOLOCK) on b.ProductID=p.id 
 				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
@@ -134,12 +136,14 @@ AS
 				INNER JOIN TestStages ts WITH(NOLOCK) ON ts.TestStageName=b.TestStageName
 				LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND b.RequestPurpose=l4.LookupID
 				LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON l5.Type='Priority' AND b.Priority=l5.LookupID
+				LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON l6.Type='Department' AND b.DepartmentID=l6.LookupID
 			WHERE ((BatchStatus NOT IN (SELECT ID FROM #ExBatchStatus) OR @ExcludedStatus IS NULL) AND (BatchStatus = @Status OR @Status IS NULL))
 				AND (p.ID = @ProductID OR @ProductID IS NULL)
 				AND (b.Priority = @Priority OR @Priority IS NULL)
 				AND (b.ProductTypeID = @ProductTypeID OR @ProductTypeID IS NULL)
 				AND (b.AccessoryGroupID = @AccessoryGroupID OR @AccessoryGroupID IS NULL)
 				AND (b.TestCenterLocationID = @GeoLocationID OR @GeoLocationID IS NULL)
+				AND (b.DepartmentID = @DepartmentID OR @DepartmentID IS NULL)
 				AND (b.JobName = @JobName OR @JobName IS NULL)
 				AND (b.RequestPurpose = @RequestReason OR @RequestReason IS NULL)
 				AND (b.MechanicalTools = @Revision OR @Revision IS NULL)

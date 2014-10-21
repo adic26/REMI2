@@ -83,12 +83,17 @@ Namespace REMI.Dal
             Return jobs
         End Function
 
-        Public Shared Function GetJobOrientationLists(ByVal jobID As Int32) As DataTable
+        Public Shared Function GetJobOrientationLists(ByVal jobID As Int32, ByVal jobName As String) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetJobOrientations", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@JobID", jobID)
+
+                    If (jobID > 0) Then
+                        myCommand.Parameters.AddWithValue("@JobID", jobID)
+                    Else
+                        myCommand.Parameters.AddWithValue("@JobName", jobName)
+                    End If
 
                     MyConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)

@@ -31,7 +31,9 @@
 	@IsMQual bit = 0,
 	@MechanicalTools NVARCHAR(10),
 	@RequestPurposeID int = 0,
-	@PriorityID INT = 0
+	@PriorityID INT = 0,
+	@DepartmentID INT = 0,
+	@Department NVARCHAR(150) = NULL
 	AS
 	DECLARE @ProductID INT
 	DECLARE @ProductTypeID INT
@@ -73,10 +75,17 @@
 		SELECT @PriorityID = LookupID FROM Lookups WHERE Type='Priority' AND [Values] = @Priority
 	END
 
+	IF LTRIM(RTRIM(@Department)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE Type='Department' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Department)))
+	BEGIN
+		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
+		INSERT INTO Lookups (LookupID, Type, [Values]) Values (@maxid, 'Department', LTRIM(RTRIM(@Department)))
+	END
+
 	SELECT @ProductID = ID FROM Products WITH(NOLOCK) WHERE LTRIM(RTRIM(ProductGroupName))= LTRIM(RTRIM(@ProductGroupName))
 	SELECT @ProductTypeID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='ProductType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@ProductType))
 	SELECT @AccessoryGroupID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='AccessoryType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@AccessoryGroupName))
 	SELECT @TestCenterLocationID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='TestCenter' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@TestCenterLocation))
+	SELECT @DepartmentID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='Department' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@Department))
 		
 	IF (@ID IS NULL)
 	BEGIN
@@ -107,7 +116,7 @@
 		cprNumber,
 		hwRevision,
 		pmNotes,
-		ProductID, IsMQual, MechanicalTools ) 
+		ProductID, IsMQual, MechanicalTools, DepartmentID ) 
 		VALUES 
 		(@QRANumber, 
 		@PriorityID, 
@@ -135,7 +144,7 @@
 		@cprNumber,
 		@hwRevision,
 		@pmNotes,
-		@ProductID, @IsMQual, @MechanicalTools )
+		@ProductID, @IsMQual, @MechanicalTools, @DepartmentID)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
@@ -170,7 +179,7 @@
 		pmNotes=@pmNotes ,
 		ProductID=@ProductID,
 		IsMQual = @IsMQual,
-		MechanicalTools = @MechanicalTools
+		MechanicalTools = @MechanicalTools, DepartmentID = @DepartmentID
 		WHERE (ID = @ID) AND (ConcurrencyID = @ConcurrencyID)
 
 		SELECT @ReturnValue = @ID

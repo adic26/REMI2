@@ -38,8 +38,9 @@ Namespace REMI.Bll
                 Return tmpjob
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("JobName: {0}", jobName))
-                Return Nothing
             End Try
+
+            Return Nothing
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
@@ -51,8 +52,9 @@ Namespace REMI.Bll
                 Return name
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("JobID: {0}", jobID))
-                Return String.Empty
             End Try
+
+            Return String.Empty
         End Function
 
         ''' <summary>
@@ -86,9 +88,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobOrientationLists(ByVal jobID As Int32) As DataTable
+        Public Shared Function GetJobOrientationLists(ByVal jobID As Int32, ByVal jobName As String) As DataTable
             Try
-                Return JobDB.GetJobOrientationLists(jobID)
+                Return JobDB.GetJobOrientationLists(jobID, jobName)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return Nothing

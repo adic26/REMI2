@@ -395,6 +395,16 @@ Public Class RemiAPI
         End Try
         Return Nothing
     End Function
+
+    <WebMethod(Description:="Returns a full list of the oracle departments.")> _
+    Public Function GetOracleDepartmentList() As String()
+        Try
+            Return LookupsManager.GetOracleDepartmentList.ToArray
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API Get oracle departments", "e3", NotificationType.Errors, ex)
+        End Try
+        Return Nothing
+    End Function
 #End Region
 
 #Region "Job"
@@ -416,6 +426,17 @@ Public Class RemiAPI
             JobManager.LogIssue("REMI API Get job", "e3", NotificationType.Errors, ex, "Name: " + Name)
         End Try
         Return Nothing
+    End Function
+
+    <WebMethod(Description:="Given a job name this function returns all orientations for this job.")> _
+    Public Function GetOrientationsByJob(ByVal JobName As String) As DataTable
+        Try
+            Return JobManager.GetJobOrientationLists(0, JobName)
+        Catch ex As Exception
+            JobManager.LogIssue("REMI API GetOrientationsByJob", "e3", NotificationType.Errors, ex, "JobName: " + JobName)
+        End Try
+
+        Return New DataTable("JobOrientation")
     End Function
 
     <WebMethod(Description:="Get all TRS jobs.")> _
@@ -541,53 +562,6 @@ Public Class RemiAPI
         Return 0
     End Function
 
-    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    'Public Function GetProductGroupExceptionsByProductID(ByVal productID As Int32) As List(Of ExceptionData)
-    'Try
-    '
-    '    Dim testExceptions As New List(Of ExceptionData)
-    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
-
-    '    For Each k As String In d.Keys
-    '        Dim ex As ExceptionData
-    '        ex.TestName = k
-    '        ex.ExceptionExists = d.Item(k)
-    '        testExceptions.Add(ex)
-    '    Next
-
-    '    Return testExceptions
-    'End If
-    'Catch ex As Exception
-    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptionsByProductID", "e3", NotificationType.Errors, ex, "Product Group ID: " + productID)
-    'End Try
-    '    Return New List(Of ExceptionData)
-    'End Function
-
-    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    'Public Function GetProductGroupExceptions(ByVal productGroupName As String) As List(Of ExceptionData)
-    'Try
-    'If UserManager.GetCurrentUser.HasREMIPageViewAuthority Then
-    '    Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
-    '    Dim testExceptions As New List(Of ExceptionData)
-    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
-
-    '    For Each k As String In d.Keys
-    '        Dim ex As ExceptionData
-    '        ex.TestName = k
-    '        ex.ExceptionExists = d.Item(k)
-    '        testExceptions.Add(ex)
-    '    Next
-
-    '    Return testExceptions
-    'End If
-    'Catch ex As Exception
-    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptions", "e3", NotificationType.Errors, ex, "Product Group ID: " + productGroupName)
-    'End Try
-    '    Return New List(Of ExceptionData)
-    'End Function
-
     <WebMethod(Description:="Returns a full list of the settings for a product.")> _
     Public Function GetProductSettingsByProductID(ByVal productID As Int32) As SerializableDictionary(Of String, String)
         Try
@@ -643,6 +617,17 @@ Public Class RemiAPI
         End Try
 
         Return New DataTable("TestingSummary")
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Returns The Parametric Testing Summary By QRANumber.")> _
+    Public Function BatchUpdateOrientation(ByVal requestNumber As String, ByVal orientationID As Int32) As Boolean
+        Try
+            Return BatchManager.BatchUpdateOrientation(requestNumber, orientationID)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API BatchUpdateOrientation", "e7", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+
+        Return False
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Returns The Parametric Testing Summary By QRANumber.")> _
@@ -782,16 +767,6 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a qra number this method will return the batch information.")> _
     Public Function GetBatch(ByVal QRANumber As String) As BatchView
         Try
-
-            'Dim ms As New System.IO.MemoryStream()
-            'Dim batch As BatchBase = BatchManager.GetViewBatch(QRANumber)
-            'Dim x As New System.Xml.Serialization.XmlSerializer(batch.GetType())
-            'Dim xtw As New System.Xml.XmlTextWriter(ms, System.Text.Encoding.UTF8)
-            'x.Serialize(xtw, batch)
-
-            'ms = DirectCast(xtw.BaseStream, System.IO.MemoryStream)
-
-            'Return New UTF8Encoding().GetString(ms.ToArray())
             Return BatchManager.GetViewBatch(QRANumber)
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatch", "e3", NotificationType.Errors, ex, "Request: " + QRANumber)
@@ -878,14 +853,6 @@ Public Class RemiAPI
 
             If (barcode.Validate() And barcode.HasTestUnitNumber) Then
                 Return TestStageManager.GetNextTestStage(barcode.BatchNumber, barcode.UnitNumber)
-
-                'Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
-                'Dim stage As TestStage = TestUnitManager.GetUnit(barcode.BatchNumber, barcode.UnitNumber).CurrentTestStage
-                'Dim testStageType(1) As TestStageType
-                'testStageType(0) = Contracts.TestStageType.EnvironmentalStress
-                'testStageType(1) = Contracts.TestStageType.Parametric
-
-                'Return b.GetNextTestStage(stage, barcode.BatchNumber, b.Job, b.TestRecords, testStageType, b.Tasks)
             End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
@@ -1302,14 +1269,33 @@ Public Class RemiAPI
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Dim testStage As TestStage = TestStageManager.GetTestStage(testStageName, jobName)
-                Dim test As Test = TestManager.GetTestByName(testName, False)
+                Dim test As Test = Nothing
+
+                If (testStage.TestID > 0) Then
+                    test = TestManager.GetTest(testStage.TestID)
+                Else
+                    test = TestManager.GetTestByName(testName, False)
+                End If
 
                 If (test.TestType <> TestType.Parametric) Then
                     Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qranumber), unitNumber)
 
                     If (barcode.Validate()) Then
                         Dim testUnitID As Int32 = TestUnitManager.GetUnitID(qranumber, unitNumber)
-                        Dim tr As New TestRecord(barcode.BatchNumber, barcode.UnitNumber, jobName, testStageName, testName, testUnitID, userIdentification, test.ID, testStage.ID)
+                        Dim tr As New TestRecord
+
+                        Dim b As BatchView = Me.GetBatch(qranumber)
+
+                        If (b IsNot Nothing) Then
+                            If (b.TestRecords.FindByTestStageTest(b.JobName, testStageName, testName).Count() > 0) Then
+                                tr = b.TestRecords.FindByTestStageTest(b.JobName, testStageName, testName)(0)
+                            End If
+                        End If
+
+                        If (tr Is Nothing Or tr.ID = 0) Then
+                            tr = New TestRecord(barcode.BatchNumber, barcode.UnitNumber, jobName, testStageName, testName, testUnitID, userIdentification, test.ID, testStage.ID)
+                        End If
+
                         tr.Status = testRecordStatus
                         tr.ResultSource = TestResultSource.WebService
 
@@ -1391,4 +1377,5 @@ Public Class RemiAPI
         Return False
     End Function
 #End Region
+
 End Class

@@ -14,6 +14,8 @@ Namespace REMI.Bll
 
                 If (type = Contracts.LookupType.TestCenter) Then
                     dt.Rows(0).Item("LookupType") = "All Test Centers"
+                ElseIf (type = Contracts.LookupType.Department) Then
+                    dt.Rows(0).Item("LookupType") = "All Departments"
                 End If
 
                 If RemoveFirst = 1 Then
@@ -57,6 +59,16 @@ Namespace REMI.Bll
         Public Shared Function GetOracleProductTypeList() As List(Of String)
             Try
                 Return LookupsDB.GetOracleProductTypeList()
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+                Return New List(Of String)
+            End Try
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetOracleDepartmentList() As List(Of String)
+            Try
+                Return LookupsDB.GetOracleDepartmentList()
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
                 Return New List(Of String)

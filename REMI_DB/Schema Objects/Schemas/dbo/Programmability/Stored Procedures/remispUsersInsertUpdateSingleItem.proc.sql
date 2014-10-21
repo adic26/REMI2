@@ -7,14 +7,15 @@
 	@ConcurrencyID rowversion OUTPUT,
 	@IsActive INT = 1,
 	@ByPassProduct INT = 0,
-	@DefaultPage NVARCHAR(255)
+	@DefaultPage NVARCHAR(255),
+	@DepartmentID INT = 0
 AS
 	DECLARE @ReturnValue int
 
 	IF (@ID IS NULL AND NOT EXISTS (SELECT 1 FROM Users WHERE LDAPLogin=@LDAPLogin)) -- New Item
 	BEGIN
-		INSERT INTO Users (LDAPLogin, BadgeNumber, TestCentreID, LastUser, IsActive, DefaultPage, ByPassProduct)
-		VALUES (@LDAPLogin, @BadgeNumber, @TestCentreID, @LastUser, @IsActive, @DefaultPage, @ByPassProduct)
+		INSERT INTO Users (LDAPLogin, BadgeNumber, TestCentreID, LastUser, IsActive, DefaultPage, ByPassProduct, DepartmentID)
+		VALUES (@LDAPLogin, @BadgeNumber, @TestCentreID, @LastUser, @IsActive, @DefaultPage, @ByPassProduct, @DepartmentID)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
@@ -27,7 +28,8 @@ AS
 			lastuser=@LastUser,
 			IsActive=@IsActive,
 			DefaultPage = @DefaultPage,
-			ByPassProduct = @ByPassProduct
+			ByPassProduct = @ByPassProduct,
+			DepartmentID = @DepartmentID
 		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
 
 		SELECT @ReturnValue = @ID

@@ -17,6 +17,7 @@ Namespace REMI.BusinessEntities
         Private _priority As Int32
         Private _status As BatchStatus
         Private _excludedStatus As Int32
+        Private _departmentID As Int32
         Private _batchStart As DateTime = Nothing
         Private _batchEnd As DateTime = Nothing
         Private _testStageType As TestStageType
@@ -84,6 +85,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(value As Int32)
                 _geoLocationID = value
+            End Set
+        End Property
+
+        Public Property DepartmentID() As Int32
+            Get
+                Return _departmentID
+            End Get
+            Set(value As Int32)
+                _departmentID = value
             End Set
         End Property
 

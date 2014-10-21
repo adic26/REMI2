@@ -19,9 +19,11 @@ AS
 
 	SELECT Users.BadgeNumber, Users.ConcurrencyID, Users.ID, Users.LastUser, Users.LDAPLogin, 
 		Lookups.[Values] AS TestCentre, ISNULL(Users.IsActive,1) AS IsActive, Users.DefaultPage, Users.TestCentreID, Users.ByPassProduct, 
-		CASE WHEN @determineDelete = 1 THEN dbo.remifnUserCanDelete(Users.LDAPLogin) ELSE 0 END AS CanDelete
+		CASE WHEN @determineDelete = 1 THEN dbo.remifnUserCanDelete(Users.LDAPLogin) ELSE 0 END AS CanDelete,
+		Users.DepartmentID, ld.[Values] AS Department
 	FROM Users
 		LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
+		LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
 	WHERE (TestCentreID=@TestLocation OR @TestLocation = 0)
 		AND 
 		(

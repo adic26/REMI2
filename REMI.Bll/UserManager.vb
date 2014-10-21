@@ -296,7 +296,7 @@ Namespace REMI.Bll
         ''' <param name="badgenumber"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ConfirmUserCredentialsAndSave(ByVal username As String, ByVal password As String, ByVal badgenumber As Integer, ByVal testCenterID As Int32, ByVal hasPasswordRequirement As Boolean) As NotificationCollection
+        Public Shared Function ConfirmUserCredentialsAndSave(ByVal username As String, ByVal password As String, ByVal badgenumber As Integer, ByVal testCenterID As Int32, ByVal hasPasswordRequirement As Boolean, ByVal departmentID As Int32) As NotificationCollection
             Dim returnNotifications As New NotificationCollection
 
             If (hasPasswordRequirement) Then
@@ -310,6 +310,7 @@ Namespace REMI.Bll
                 u.BadgeNumber = badgenumber
                 u.ByPassProduct = 1
                 u.TestCentreID = testCenterID
+                u.DepartmentID = departmentID
 
                 If (Not u.RolesList.Contains("Relab")) Then
                     u.RolesList.Add("Relab")

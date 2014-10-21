@@ -177,8 +177,7 @@ Partial Class RequestSetup
             ddlOrientations.Items.Clear()
             ddlOrientations.Items.Add(New ListItem("Select...", "0"))
             Orientation.Visible = True
-            ddlOrientations.DataSource = (From o In New REMI.Dal.Entities().Instance().JobOrientations Where o.Job.ID = JobID _
-                             Select New With {.Name = String.Concat(o.Name, " - ", o.Lookup.Values), .ID = o.ID}).ToList
+            ddlOrientations.DataSource = JobManager.GetJobOrientationLists(JobID, String.Empty)
             ddlOrientations.DataBind()
 
             Dim orientationID As Int32

@@ -49,7 +49,8 @@ AS
 	(
 		SELECT TOP 1 CONVERT(BIT, 1) FROM TestExceptions WITH(NOLOCK) WHERE LookupID=3 AND Value IN (SELECT ID FROM TestUnits WITH(NOLOCK) WHERE BatchID=BatchesRows.ID)
     ) AS HasBatchSpecificExceptions,BatchesRows.RQID As ReqID, AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate,
-	IsMQual, j.ID AS JobID, ExecutiveSummary, MechanicalTools, l4.[Values] AS RequestPurpose, l5.[Values] AS Priority, BatchesRows.OrientationID
+	IsMQual, j.ID AS JobID, ExecutiveSummary, MechanicalTools, l4.[Values] AS RequestPurpose, l5.[Values] AS Priority, BatchesRows.OrientationID,
+	BatchesRows.DepartmentID, l6.[Values] AS Department
 	from Batches as BatchesRows WITH(NOLOCK)
 		LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = BatchesRows.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
 		INNER JOIN Products p WITH(NOLOCK) ON BatchesRows.productID=p.ID
@@ -58,6 +59,7 @@ AS
 		LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND BatchesRows.TestCenterLocationID=l3.LookupID  
 		LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND BatchesRows.RequestPurpose=l4.LookupID  
 		LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON l5.Type='Priority' AND BatchesRows.Priority=l5.LookupID
+		LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON l6.Type='Department' AND BatchesRows.DepartmentID=l6.LookupID
 	WHERE QRANumber = @QRANumber
 
 select bc.DateAdded, bc.ID, bc.[Text], bc.LastUser from BatchComments as bc WITH(NOLOCK) where BatchID = @batchid and Active = 1 order by DateAdded desc;

@@ -72,6 +72,7 @@ namespace REMI.Contracts
         string SecondLevel { get; }
         string ThirdLevel { get; }
         string QRAPriority { get; }
+        string Department { get; }
         List<int> AffectsUnits { get; set; }
     }
 }

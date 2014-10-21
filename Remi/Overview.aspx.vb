@@ -24,11 +24,12 @@ Public Class Overview
                 End If
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.IncomingEvaluation
                 bs.Status = BatchStatus.Received
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                bs.DepartmentID = ddlDepartment.SelectedValue
 
                 bscMainIncoming.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
                 ViewState("incoming") = bscMainIncoming.GetGridView.DataSource
@@ -37,11 +38,12 @@ Public Class Overview
                 bscMainIncoming.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.Status = BatchStatus.TestingComplete
                 bs.ExcludedTestStageType = BatchSearchTestStageType.NonTestingTask + BatchSearchTestStageType.FailureAnalysis
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                bs.DepartmentID = ddlDepartment.SelectedValue
                 Dim bctc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
 
                 bscMainTestingComplete.SetBatches(bctc)
@@ -51,10 +53,11 @@ Public Class Overview
                 bscMainTestingComplete.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.Status = BatchStatus.Held
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                bs.DepartmentID = ddlDepartment.SelectedValue
 
                 Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
 
@@ -70,12 +73,13 @@ Public Class Overview
                 bscMainHR.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.Parametric
                 bs.ExcludedTestStageType = BatchSearchTestStageType.EnvironmentalStress
                 bs.Status = BatchStatus.InProgress
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                bs.DepartmentID = ddlDepartment.SelectedValue
 
                 bscMainInProgress.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
                 ViewState("inprogress") = bscMainInProgress.GetGridView.DataSource
@@ -84,13 +88,14 @@ Public Class Overview
                 bscMainInProgress.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.EnvironmentalStress
                 bs.ExcludedTestStageType = BatchSearchTestStageType.Parametric
                 bs.Status = BatchStatus.InProgress
                 bs.TrackingLocationFunction = TrackingLocationFunction.EnvironmentalStressing
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                bs.DepartmentID = ddlDepartment.SelectedValue
 
                 bscChamber.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
                 ViewState("chamber") = bscChamber.GetGridView.DataSource
@@ -99,10 +104,11 @@ Public Class Overview
                 bscChamber.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.FailureAnalysis
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                bs.DepartmentID = ddlDepartment.SelectedValue
                 bs.ExcludedStatus = BatchSearchBatchStatus.Complete + BatchSearchBatchStatus.Held + BatchSearchBatchStatus.Received + BatchSearchBatchStatus.Quarantined
 
                 bscMainFA.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
@@ -112,13 +118,14 @@ Public Class Overview
                 bscMainFA.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.EnvironmentalStress
                 bs.ExcludedTestStageType = BatchSearchTestStageType.Parametric
                 bs.Status = BatchStatus.InProgress
+                bs.DepartmentID = ddlDepartment.SelectedValue
                 bs.NotInTrackingLocationFunction = TrackingLocationFunction.EnvironmentalStressing
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
 
                 bscMainReadyForStressing.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
                 ViewState("stress") = bscMainReadyForStressing.GetGridView.DataSource
@@ -127,10 +134,10 @@ Public Class Overview
                 bscMainReadyForStressing.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlTestCenter") Or asyncPostBackID.Contains("gvwTRS") Or postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("gvwTRS") Or postBackID.Contains("chkShowTRS"))) Then
                 If (chkShowTRS.Checked) Then
                     pnlShowTRS.Visible = True
-                    gvwTRS.DataSource = BatchManager.GetTRSQRAByTestCenter(ddlTestCenters.SelectedItem.Text)
+                    gvwTRS.DataSource = BatchManager.GetTRSQRAByTestCenter(UserManager.GetCurrentUser.TestCentre)
                     gvwTRS.DataBind()
                 Else
                     pnlShowTRS.Visible = False
@@ -141,9 +148,10 @@ Public Class Overview
 
     Protected Sub Page_PreRender() Handles Me.PreLoad
         If Not Page.IsPostBack Then
-            ddlTestCenters.DataSource = LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 0)
-            ddlTestCenters.DataBind()
-            ddlTestCenters.SelectedValue = UserManager.GetCurrentUser.TestCentreID
+            ddlDepartment.DataSource = LookupsManager.GetLookups(LookupType.Department, 0, 0, 0)
+            ddlDepartment.DataBind()
+
+            ddlDepartment.SelectedValue = UserManager.GetCurrentUser.DepartmentID
         End If
     End Sub
 

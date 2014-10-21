@@ -41,7 +41,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 		) as ActiveTaskAssignee,
 	CONVERT(BIT,0) AS HasBatchSpecificExceptions,
 	batchesrows.AccessoryGroupID,batchesrows.ProductTypeID,BatchesRows.RQID As ReqID, AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, 
-	ReportApprovedDate, IsMQual, JobID, ExecutiveSummary, MechanicalTools, batchesrows.RequestPurposeID, batchesrows.PriorityID
+	ReportApprovedDate, IsMQual, JobID, ExecutiveSummary, MechanicalTools, batchesrows.RequestPurposeID, batchesrows.PriorityID, DepartmentID, Department
 	FROM     
 		(SELECT ROW_NUMBER() OVER (ORDER BY 
 case when @sortExpression='qra' and @direction='asc' then qranumber end,
@@ -81,7 +81,7 @@ case when @sortExpression is null then Priority end desc
                       b.TestStageCompletionStatus,
 					 (select count(*) from testunits WITH(NOLOCK) where testunits.batchid = b.id) as testUnitCount,
 					 b.WILocation, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, JobID,
-					 ExecutiveSummary, MechanicalTools, RequestPurposeID, PriorityID
+					 ExecutiveSummary, MechanicalTools, RequestPurposeID, PriorityID, DepartmentID, Department
                       from
 				(SELECT DISTINCT 
                       b.ID, 
@@ -105,7 +105,7 @@ case when @sortExpression is null then Priority end desc
                       b.TestStageCompletionStatus,
                       j.WILocation,
 					  b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, j.ID As JobID,
-					  ExecutiveSummary, MechanicalTools, l4.[Values] AS RequestPurpose, l5.[Values] AS Priority
+					  ExecutiveSummary, MechanicalTools, l4.[Values] AS RequestPurpose, l5.[Values] AS Priority, b.DepartmentID, l6.[Values] AS Department
 				FROM Batches AS b 
 					INNER JOIN DeviceTrackingLog AS dtl WITH(NOLOCK) 
 					INNER JOIN TrackingLocations AS tl WITH(NOLOCK) ON dtl.TrackingLocationID = tl.ID 
@@ -117,6 +117,7 @@ case when @sortExpression is null then Priority end desc
 					LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID 
 					LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND b.RequestPurpose=l4.LookupID   
 					LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON l5.Type='Priority' AND b.Priority=l5.LookupID
+					LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON l6.Type='Department' AND b.DepartmentID=l6.LookupID
 WHERE     tl.id = @TrackingLocationId AND dtl.OutTime IS NULL AND dtl.OutUser IS NULL)as b) as batchesrows
 	WHERE
 	 ((Row between (@startRowIndex) AND @startRowIndex + @maximumRows - 1) 

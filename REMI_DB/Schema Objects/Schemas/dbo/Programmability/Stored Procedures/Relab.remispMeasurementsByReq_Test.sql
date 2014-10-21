@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [Relab].[remispMeasurementsByReq_Test] @RequestNumber NVARCHAR(11), @TestIDs NVARCHAR(MAX)
+﻿ALTER PROCEDURE [Relab].[remispMeasurementsByReq_Test] @RequestNumber NVARCHAR(11), @TestIDs NVARCHAR(MAX), @TestStageName NVARCHAR(400) = NULL, @UnitNumber INT = 0
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -10,6 +10,9 @@ BEGIN
 	CREATE TABLE #parameters (ResultMeasurementID INT)
 	SET @FalseBit = CONVERT(BIT, 0)
 	SET @TrueBit = CONVERT(BIT, 1)
+	
+	IF (@UnitNumber IS NULL)
+		SET @UnitNumber = 0
 
 	DECLARE @rows VARCHAR(8000)
 	DECLARE @sql VARCHAR(8000)
@@ -76,6 +79,18 @@ BEGIN
 		LEFT OUTER JOIN Relab.ResultsXML x ON x.ID = rm.XMLID
 	WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit
 		AND (ISNULL(ISNULL(ISNULL(lt.[Values], ltsf.[Values]), ltmf.[Values]), ltacc.[Values]) NOT IN ('start', 'Start utc', 'end'))
+		AND
+		(
+			(@TestStageName IS NULL)
+			OR
+			(@TestStageName IS NOT NULL AND ts.TestStageName = @TestStageName)
+		)
+		AND
+		(
+			(@UnitNumber = 0)
+			OR
+			(@UnitNumber > 0 AND tu.BatchUnitNumber = @UnitNumber)
+		)
 	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder, rm.ReTestNum
 
 	DROP TABLE #parameters

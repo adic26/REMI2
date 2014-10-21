@@ -77,6 +77,8 @@
         Test Center: <asp:DropDownList ID="ddlTestCentersUser" runat="server" AppendDataBoundItems="True" AutoPostBack="False" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID">
         </asp:DropDownList>
         <br />
+        Department: <asp:DropDownList ID="ddlDepartmentUser" runat="server" AppendDataBoundItems="True" AutoPostBack="False" Width="140px" ForeColor="#0033CC"  DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+        <br />
         Training: <asp:DropDownList ID="ddlTraining" runat="server" AutoPostBack="False" DataSourceID="odsTraining" DataTextField="LookupType" DataValueField="LookupID" Width="238px" AppendDataBoundItems="True" CausesValidation="true">
         </asp:DropDownList>
         <br />
@@ -99,6 +101,8 @@
         Test Center: <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True" AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID">
         </asp:DropDownList>
         <br />
+        Department: <asp:DropDownList ID="ddlDepartment" runat="server" AppendDataBoundItems="true" AutoPostBack="false" Width="140px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+        <br /> 
         Product: <asp:DropDownList ID="ddlProductFilter" runat="server" Width="189px" AppendDataBoundItems="True"  AutoPostBack="False" DataTextField="ProductGroupName" DataValueField="ID">
         </asp:DropDownList>&nbsp;<asp:CheckBox runat="server" ID="chkShowArchived" TextAlign="Right" Text="Show Archived" AutoPostBack="true" CausesValidation="true" />
         &nbsp; Revision: <asp:TextBox runat="server" ID="txtRevision" MaxLength="10"></asp:TextBox>

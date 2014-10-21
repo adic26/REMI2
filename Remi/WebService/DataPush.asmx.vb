@@ -1,15 +1,14 @@
 ﻿Imports System.Web.Services
 Imports System.Web.Services.Protocols
 Imports System.ComponentModel
-Imports Remi.Bll
-Imports Remi.Validation
-Imports System.Xml.XPath
-Imports System.IO
-Imports System.Xml
-Imports System.Configuration
+Imports REMI.Validation
+Imports REMI.BusinessEntities
+Imports REMI.Bll
+Imports log4net
+Imports REMI.Contracts
+Imports System.Data
+Imports System.Web.Script.Services
 
-' To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line.
-' <System.Web.Script.Services.ScriptService()> _
 <System.Web.Services.WebService(Name:="DataPush", Namespace:="http://go/remi/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
 <ToolboxItem(False)> _
@@ -54,24 +53,35 @@ Public Class DataPush
     End Sub
 
     <WebMethod(Description:="Get All Results For A Request Based On A Test")> _
-    Public Function GetResults(ByVal requestNumber As String, ByVal testName As String) As DataTable
+    Public Function GetResults(ByVal requestNumber As String, ByVal testIDs As String, ByVal testStageName As String, ByVal unitNumber As Int32) As DataTable
         Try
-            Return RelabManager.GetResults(requestNumber, testName)
+            Return RelabManager.GetResults(requestNumber, testIDs, testStageName, unitNumber)
         Catch ex As Exception
             RelabManager.LogIssue("GetResults", "e3", NotificationType.Errors, ex)
         End Try
         Return New DataTable("Results")
     End Function
 
-    <WebMethod(Description:="Modify a result")> _
+    <WebMethod(EnableSession:=True, Description:="Modify a result")> _
     Public Function ModifyResult(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String, ByVal userIdentification As String) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, userIdentification)
+                Return RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, userIdentification)
             End If
         Catch ex As Exception
             RelabManager.LogIssue("ModifyResult", "e3", NotificationType.Errors, ex)
         End Try
+        Return False
+    End Function
+
+    <WebMethod(Description:="Poll Unprocessed Results")> _
+    Public Function PollUnProcessedResults(ByVal requestNumber As String, ByVal unit As Int32, ByVal testStageName As String, ByVal testName As String) As Boolean
+        Try
+            Return RelabManager.PollUnProcessedResults(requestNumber, unit, testStageName, testName)
+        Catch ex As Exception
+            RelabManager.LogIssue("PollUnProcessedResults", "e3", NotificationType.Errors, ex)
+        End Try
+
         Return False
     End Function
 End Class
