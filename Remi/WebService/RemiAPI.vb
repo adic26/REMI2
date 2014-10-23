@@ -418,6 +418,17 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(Description:="Given a job name this function returns all orientations for this job.")> _
+    Public Function GetOrientationsByJob(ByVal JobName As String) As DataTable
+        Try
+            Return JobManager.GetJobOrientationLists(0, JobName)
+        Catch ex As Exception
+            JobManager.LogIssue("REMI API GetOrientationsByJob", "e3", NotificationType.Errors, ex, "JobName: " + JobName)
+        End Try
+
+        Return New DataTable("JobOrientation")
+    End Function
+
     <WebMethod(Description:="Get all TRS jobs.")> _
     Public Function GetTRSJobs() As String()
         Try
@@ -643,6 +654,17 @@ Public Class RemiAPI
         End Try
 
         Return New DataTable("TestingSummary")
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Returns The Parametric Testing Summary By QRANumber.")> _
+    Public Function BatchUpdateOrientation(ByVal requestNumber As String, ByVal orientationID As Int32) As Boolean
+        Try
+            Return BatchManager.BatchUpdateOrientation(requestNumber, orientationID)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API BatchUpdateOrientation", "e7", NotificationType.Errors, ex, "Request: " + requestNumber)
+        End Try
+
+        Return False
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Returns The Parametric Testing Summary By QRANumber.")> _
@@ -1423,4 +1445,5 @@ Public Class RemiAPI
         Return False
     End Function
 #End Region
+
 End Class

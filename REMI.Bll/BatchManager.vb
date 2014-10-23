@@ -168,6 +168,33 @@ Namespace REMI.Bll
         End Sub
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function BatchUpdateOrientation(ByVal requestNumber As String, ByVal orientationID As Int32) As Boolean
+            Try
+                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
+
+                If barcode.Validate() And orientationID > 0 Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+
+                    Dim bjo = (From b In instance.Batches Where b.QRANumber = barcode.BatchNumber Select b).FirstOrDefault()
+
+                    If (bjo IsNot Nothing) Then
+                        bjo.JobOrientation = (From jo In instance.JobOrientations Where jo.ID = orientationID Select jo).FirstOrDefault()
+                    End If
+
+                    instance.SaveChanges()
+
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetTRSQRAByTestCenter(ByVal testCenter As String) As DataTable
             Try
                 Return RequestDB.GetTRSQRAByTestCenter(testCenter)
