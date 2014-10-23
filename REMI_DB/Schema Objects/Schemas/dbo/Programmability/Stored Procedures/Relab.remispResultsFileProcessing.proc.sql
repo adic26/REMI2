@@ -167,6 +167,7 @@ BEGIN
 			SET IsArchived=1
 			FROM Relab.ResultsInformation ri
 				INNER JOIN Relab.ResultsXML rxml ON ri.XMLID=rxml.ID
+				INNER JOIN #information i ON i.Name = ri.Name
 			WHERE rxml.VerNum < @VerNum AND ISNULL(ri.IsArchived,0)=0 AND rxml.ResultID=@ResultID
 				
 			PRINT 'INSERT Version ' + CONVERT(NVARCHAR, @VerNum) + ' Information'
