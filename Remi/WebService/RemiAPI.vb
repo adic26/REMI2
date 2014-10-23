@@ -1311,14 +1311,33 @@ Public Class RemiAPI
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Dim testStage As TestStage = TestStageManager.GetTestStage(testStageName, jobName)
-                Dim test As Test = TestManager.GetTestByName(testName, False)
+                Dim test As Test = Nothing
+
+                If (testStage.TestID > 0) Then
+                    test = TestManager.GetTest(testStage.TestID)
+                Else
+                    test = TestManager.GetTestByName(testName, False)
+                End If
 
                 If (test.TestType <> TestType.Parametric) Then
                     Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qranumber), unitNumber)
 
                     If (barcode.Validate()) Then
                         Dim testUnitID As Int32 = TestUnitManager.GetUnitID(qranumber, unitNumber)
-                        Dim tr As New TestRecord(barcode.BatchNumber, barcode.UnitNumber, jobName, testStageName, testName, testUnitID, userIdentification, test.ID, testStage.ID)
+                        Dim tr As New TestRecord
+
+                        Dim b As BatchView = Me.GetBatch(qranumber)
+
+                        If (b IsNot Nothing) Then
+                            If (b.TestRecords.FindByTestStageTest(b.JobName, testStageName, testName).Count() > 0) Then
+                                tr = b.TestRecords.FindByTestStageTest(b.JobName, testStageName, testName)(0)
+                            End If
+                        End If
+
+                        If (tr Is Nothing Or tr.ID = 0) Then
+                            tr = New TestRecord(barcode.BatchNumber, barcode.UnitNumber, jobName, testStageName, testName, testUnitID, userIdentification, test.ID, testStage.ID)
+                        End If
+
                         tr.Status = testRecordStatus
                         tr.ResultSource = TestResultSource.WebService
 
