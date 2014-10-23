@@ -12,7 +12,7 @@
         function pageLoad(sender, args) {
             if (_isInitialLoad) {
                 _isInitialLoad = false;
-                __doPostBack('<%= ddlTestCenters.ClientID %>', '');
+                __doPostBack('<%= ddlDepartment.ClientID %>', '');
             }
         }
     </script>
@@ -25,7 +25,7 @@
     
     <asp:UpdatePanel ID="updOverview" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
         <Triggers>
-            <asp:AsyncPostBackTrigger ControlID="ddlTestCenters" />
+            <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
             <asp:AsyncPostBackTrigger ControlID="chkShowTRS" />
         </Triggers>
         <ContentTemplate>
@@ -39,9 +39,7 @@
             <ul>
                 <li>
                     <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgTestCenterView" runat="server" />
-                    <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="False" DataTextField="LookupType" DataValueField="LookupID"
-                        AutoPostBack="true" Width="120px" ForeColor="#0033CC" EnableViewState="true">
-                    </asp:DropDownList>
+                    <asp:DropDownList ID="ddlDepartment" runat="server" AppendDataBoundItems="false" DataTextField="LookupType" DataValueField="LookupID" AutoPostBack="true" Width="120px" ForeColor="#0033CC" EnableViewState="true"></asp:DropDownList>
                 </li>
                 <li>
                     <asp:Image ImageUrl="../Design/Icons/png/24x24/process.png" ID="imgShowTRS" runat="server" />

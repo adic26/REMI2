@@ -46,7 +46,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 		) as ActiveTaskAssignee, CONVERT(BIT,0) AS HasBatchSpecificExceptions,
 	batchesrows.ProductTypeID,batchesrows.AccessoryGroupID,batchesrows.RQID As ReqID, batchesrows.TestCenterLocationID,
 	AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate, IsMQual, JobID, MechanicalTools, BatchesRows.RequestPurposeID,
-	BatchesRows.PriorityID
+	BatchesRows.PriorityID, DepartmentID, Department
 	FROM     
 	(
 		SELECT ROW_NUMBER() OVER 
@@ -88,7 +88,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 			b.TestStageCompletionStatus,
 			(select count(*) from testunits WITH(NOLOCK) where testunits.batchid = b.id) as testUnitCount,
 			b.WILocation,b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, JobID, MechanicalTools,
-			RequestPurposeID, PriorityID
+			RequestPurposeID, PriorityID, DepartmentID, Department
 		FROM 
 		(
 			SELECT DISTINCT b.ID, 
@@ -110,7 +110,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 				l3.[Values] As TestCenterLocation,
 				b.ConcurrencyID,
 				b.TestStageCompletionStatus, j.WILocation,b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
-				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority
+				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, b.DepartmentID, l6.[Values] AS Department
 			FROM Batches AS b WITH(NOLOCK)
 				LEFT OUTER JOIN Jobs as j WITH(NOLOCK) on b.jobname = j.JobName 
 				inner join TestStages as ts WITH(NOLOCK) on j.ID = ts.JobID
@@ -125,6 +125,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 				LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID  
 				LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND b.RequestPurpose=l4.LookupID   
 				LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON l5.Type='Priority' AND b.Priority=l5.LookupID
+				LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON l6.Type='Department' AND b.DepartmentID=l6.LookupID
 			WHERE (b.TestCenterLocationID = @TestCentreLocation or @TestCentreLocation is null) and j.TechnicalOperationsTest = 1 and j.MechanicalTest=0 and  tlt.TrackingLocationFunction= 4  and t.ResultBasedOntime = 1 AND dtl.OutTime IS NULL AND dtl.OutUser IS NULL
 			AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
 		)as b

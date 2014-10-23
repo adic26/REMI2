@@ -19,15 +19,9 @@ Partial Class ManageTestStations_Default
         End If
     End Sub
 
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            ddlTestCenters.DataBind()
-
-            Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
-            If (ddlTestCenters.Items.Contains(l)) Then
-                ddlTestCenters.SelectedValue = UserManager.GetCurrentUser.TestCentreID
-            End If
+            ddlDepartments.DataBind()
         Else
             Bind()
         End If
@@ -44,13 +38,15 @@ Partial Class ManageTestStations_Default
             bs.ExcludedTestStageType = BatchSearchTestStageType.Parametric
             bs.Status = BatchStatus.InProgress
             bs.TrackingLocationFunction = TrackingLocationFunction.EnvironmentalStressing
-            bs.GeoLocationID = ddlTestCenters.SelectedValue
+            bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+            bs.DepartmentID = ddlDepartments.SelectedValue
             chkShowGrid.Enabled = True
         Else
             chkShowGrid.Checked = False
             chkShowGrid.Enabled = False
             bs.Status = BatchStatus.InProgress
-            bs.GeoLocationID = ddlTestCenters.SelectedValue
+            bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+            bs.DepartmentID = ddlDepartments.SelectedValue
         End If
 
         Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, True, True)

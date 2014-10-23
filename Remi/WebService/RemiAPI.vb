@@ -395,6 +395,16 @@ Public Class RemiAPI
         End Try
         Return Nothing
     End Function
+
+    <WebMethod(Description:="Returns a full list of the oracle departments.")> _
+    Public Function GetOracleDepartmentList() As String()
+        Try
+            Return LookupsManager.GetOracleDepartmentList.ToArray
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API Get oracle departments", "e3", NotificationType.Errors, ex)
+        End Try
+        Return Nothing
+    End Function
 #End Region
 
 #Region "Job"

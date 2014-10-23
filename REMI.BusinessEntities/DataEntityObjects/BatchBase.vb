@@ -42,7 +42,9 @@ Namespace REMI.BusinessEntities
         Private _activeTaskAssignee As String
         Private _cprNumber As String
         Private _mechanicalTools As String
+        Private _department As String
         Private _hwRevision As String
+        Private _departmentID As Int32
         Private _productID As Int32
         Private _testStageID As Int32
         Private _productTypeID As Int32
@@ -623,6 +625,28 @@ Namespace REMI.BusinessEntities
             End Get
             Set(value As String)
                 _mechanicalTools = value
+            End Set
+        End Property
+
+        Public Property DepartmentID() As Int32 Implements IBatch.DepartmentID
+            Get
+                Return _departmentID
+            End Get
+            Set(ByVal value As Int32)
+                _departmentID = value
+            End Set
+        End Property
+
+        Public Property Department() As String Implements IBatch.Department
+            Get
+                If Not String.IsNullOrEmpty(_department) Then
+                    Return _department
+                Else
+                    Return _trsData.Department
+                End If
+            End Get
+            Set(value As String)
+                _department = value
             End Set
         End Property
 

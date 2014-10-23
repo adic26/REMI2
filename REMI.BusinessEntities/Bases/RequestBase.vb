@@ -369,6 +369,12 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        Public ReadOnly Property Department() As String Implements IQRARequest.Department
+            Get
+                Return GetProperty("Department")
+            End Get
+        End Property
+
         Public ReadOnly Property MQual() As Boolean Implements IQRARequest.MQual
             Get
                 Dim isMQualString As String = GetProperty("MQual").ToString()

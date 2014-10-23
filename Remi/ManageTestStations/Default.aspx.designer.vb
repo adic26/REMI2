@@ -41,22 +41,22 @@ Partial Public Class ManageTestStations_Default
     Protected WithEvents imgTestCenterView As Global.System.Web.UI.WebControls.Image
 
     '''<summary>
-    '''ddlTestCenters control.
+    '''ddlDepartments control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlTestCenters As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''odsTestCenters control.
+    '''odsDepartments control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents odsTestCenters As Global.System.Web.UI.WebControls.ObjectDataSource
+    Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''imgDisplayBy control.

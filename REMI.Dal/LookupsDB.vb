@@ -104,6 +104,38 @@ Namespace REMI.Dal
         End Function
 
         ''' <summary> 
+        ''' Returns a list with departments objects. 
+        ''' </summary> 
+        ''' <returns> 
+        ''' </returns> 
+        Public Shared Function GetOracleDepartmentList() As List(Of String)
+            Dim tempList As New List(Of String)
+            Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
+
+                Using myCommand As New OracleCommand("REMI_HELPER.get_departments", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    Dim pOut As New OracleParameter
+                    pOut.Direction = ParameterDirection.ReturnValue
+                    pOut.OracleType = OracleType.Cursor
+                    pOut.ParameterName = "C_REF_RET"
+                    myCommand.Parameters.Add(pOut)
+                    myConnection.Open()
+                    Using myReader As OracleDataReader = myCommand.ExecuteReader
+                        If myReader.HasRows Then
+                            While myReader.Read()
+                                If Not tempList.Contains(myReader.GetValue(0).ToString) Then
+                                    tempList.Add(myReader.GetValue(0).ToString)
+                                End If
+                            End While
+                        End If
+
+                    End Using
+                End Using
+            End Using
+            Return tempList
+        End Function
+
+        ''' <summary> 
         ''' Returns a list with AccessoryGroup objects. 
         ''' </summary> 
         ''' <returns> 

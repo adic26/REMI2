@@ -119,6 +119,7 @@ Partial Class Search
                 Dim bs As New BatchSearch()
                 bs.Status = BatchStatus.TestingComplete
                 bs.ExcludedTestStageType = BatchSearchTestStageType.NonTestingTask + BatchSearchTestStageType.FailureAnalysis
+                bs.GeoLocationID = ddlTestCenters.SelectedValue
 
                 ClearBatchValues()
 
@@ -356,6 +357,7 @@ Partial Class Search
                     Dim testID As Int32
                     Dim testStageID As Int32
                     Dim userID As Int32
+                    Dim departmentID As Int32
                     Dim trackingLocationID As Int32
                     Dim geoLocationID As Int32 = ddlTestCenters.SelectedValue
                     Dim _start As DateTime
@@ -367,8 +369,11 @@ Partial Class Search
                         geoLocationID = Nothing
                     End If
 
+                    Int32.TryParse(ddlDepartment.SelectedValue, departmentID)
+
                     bs.GeoLocationID = geoLocationID
                     bs.JobName = ddlJobs.SelectedValue
+                    bs.DepartmentID = departmentID
 
                     If (Not (String.IsNullOrEmpty(testStage))) Then
                         bs.TestStage = testStage
@@ -1004,6 +1009,10 @@ Partial Class Search
                 ddlPriority.DataSource = LookupsManager.GetLookups(LookupType.Priority, Nothing, Nothing, 0)
                 ddlPriority.DataBind()
 
+                ddlDepartment.Items.Clear()
+                ddlDepartment.DataSource = LookupsManager.GetLookups(LookupType.Department, Nothing, Nothing, 0)
+                ddlDepartment.DataBind()
+
                 ddlBatchStatus.Items.Clear()
                 ddlBatchStatus.Items.Add("ALL")
                 ddlBatchStatus.DataSource = REMI.Helpers.GetBatchStatus()
@@ -1377,4 +1386,9 @@ Partial Class Search
         End If
     End Sub
 #End Region
+
+    Private Sub ddlTestCenters_SelectedIndexChanged(sender As Object, e As System.EventArgs) Handles ddlTestCenters.SelectedIndexChanged
+        ddlDepartment.DataSource = LookupsManager.GetLookups(LookupType.Department, Nothing, Nothing, 0)
+        ddlDepartment.DataBind()
+    End Sub
 End Class

@@ -655,6 +655,7 @@ Namespace REMI.Bll
                 End If
 
                 b.MechanicalTools = q.MechanicalTools
+                b.Department = q.Department
 
                 Dim j As Job = JobManager.GetJobByName(q.RequestedTest)
 

@@ -761,6 +761,8 @@ Namespace REMI.Dal
                     End If
                     myCommand.Parameters.AddWithValue("@IsMQual", MyBatch.TRSData.MQual)
                     myCommand.Parameters.AddWithValue("@MechanicalTools", MyBatch.TRSData.MechanicalTools)
+                    myCommand.Parameters.AddWithValue("@DepartmentID", MyBatch.DepartmentID)
+                    myCommand.Parameters.AddWithValue("@Department", MyBatch.TRSData.Department)
 
                     Helpers.SetSaveParameters(myCommand, MyBatch)
                     myConnection.Open()
@@ -1032,6 +1034,15 @@ Namespace REMI.Dal
             If Helpers.HasColumn(dataRecord, "MechanicalTools") Then
                 If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("MechanicalTools")) Then
                     batchData.MechanicalTools = dataRecord.GetString(dataRecord.GetOrdinal("MechanicalTools"))
+                End If
+            End If
+
+            If Helpers.HasColumn(dataRecord, "Department") Then
+                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("Department")) Then
+                    batchData.Department = dataRecord.GetString(dataRecord.GetOrdinal("Department"))
+                End If
+                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("DepartmentID")) Then
+                    batchData.DepartmentID = dataRecord.GetInt32(dataRecord.GetOrdinal("DepartmentID"))
                 End If
             End If
 

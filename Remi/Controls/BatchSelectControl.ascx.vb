@@ -41,27 +41,28 @@ Partial Class Controls_BatchSelectControl
         ProductType = 5
         AccessoryGroup = 6
         TestCenter = 7
-        ActiveTaskAssignee = 8
-        NumberofUnits = 9
-        NumberOfUnitsExpected = 10
-        RequestPurpose = 11
-        Job = 12
-        Teststage = 13
-        CPR = 14
-        IsMQual = 15
-        Priority = 16
-        EstJobCompleletion = 17
-        EstTSCompleletion = 18
-        TSDue = 19
-        ReportDue = 20
-        Status = 21
-        ReqID = 22
-        HasUnitsRequireingReturnToRequestor = 23
-        Comments = 24
-        WILocation = 25
-        TRSLink = 26
-        RelabResultLink = 27
-        BatchInfoLink = 28
+        Department = 8
+        ActiveTaskAssignee = 9
+        NumberofUnits = 10
+        NumberOfUnitsExpected = 11
+        RequestPurpose = 12
+        Job = 13
+        Teststage = 14
+        CPR = 15
+        IsMQual = 16
+        Priority = 17
+        EstJobCompleletion = 18
+        EstTSCompleletion = 19
+        TSDue = 20
+        ReportDue = 21
+        Status = 22
+        ReqID = 23
+        HasUnitsRequireingReturnToRequestor = 24
+        Comments = 25
+        WILocation = 26
+        TRSLink = 27
+        RelabResultLink = 28
+        BatchInfoLink = 29
         Move = 29
     End Enum
 
@@ -211,6 +212,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.ManageMode
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -239,6 +241,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.IncomingMode
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -267,6 +270,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.All
                 grdBatches.Columns(GridviewColumNames.Id).Visible = True
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -295,6 +299,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.BatchInfoDisplay
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -323,6 +328,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.ProductInfoDisplay
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -351,6 +357,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.TestingCompleteDisplay
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -383,6 +390,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = True
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.HeldInfoDisplay
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -411,6 +419,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.SearchInfoDisplay
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
@@ -439,6 +448,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.OverviewDisplay
                 grdBatches.Columns(GridviewColumNames.Job).Visible = True
                 grdBatches.Columns(GridviewColumNames.NumberofUnits).Visible = True
@@ -467,6 +477,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = True
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.JobDisplay
                 grdBatches.Columns(GridviewColumNames.Job).Visible = False
                 grdBatches.Columns(GridviewColumNames.NumberofUnits).Visible = True
@@ -497,6 +508,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
             Case BatchSelectControlMode.TrackingLocationDisplay
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = True
                 grdBatches.Columns(GridviewColumNames.Product).Visible = True
@@ -520,6 +532,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
                 grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = False
+                grdBatches.Columns(GridviewColumNames.Department).Visible = True
                 grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False

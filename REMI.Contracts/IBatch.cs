@@ -58,6 +58,8 @@ namespace REMI.Contracts
         int JobID { get; set; }
         int OrientationID { get; set; }
         string MechanicalTools { get; set; }
+        string Department { get; set; }
+        int DepartmentID { get; set; }
         string GetTestOverviewCellString(string jobName, string testStageName, string TestName, bool hasEditAuthority, bool isTestCenterAdmin, System.Data.DataTable rqResults, bool hasBatchSetupAuthority, bool showHyperlinks);
         bool hasBatchSpecificExceptions { get; set; }
         IOrientation Orientation { get; set; }

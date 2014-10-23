@@ -7,14 +7,11 @@ BEGIN
 	INSERT INTO @stages SELECT s FROM dbo.Split(',',@TestStageIDs)
 	
 	DECLARE @Count INT
-
-	select * from @batches
 	
 	SELECT @Count = COUNT(*) FROM @batches
 
 	IF (@Count = 0)
 	BEGIN
-	PRINT 'in'
 		SELECT DISTINCT Relab.ResultsParametersNameComma(m.ID, CASE WHEN @ParameterName IS NOT NULL THEN 'V' ELSE 'N' END) AS ParameterName
 			FROM TestUnits tu WITH(NOLOCK)
 				INNER JOIN Relab.Results r WITH(NOLOCK) ON r.TestUnitID=tu.ID

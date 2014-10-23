@@ -12,8 +12,8 @@ BEGIN
 		return	 --No delete action, get out of here
 	
 	insert into batchesaudit (BatchId, QRAnumber, Priority, BatchStatus, JobName, ProductTypeID, AccessoryGroupID, TeststageName, Comment, TestCenterLocationID, 
-		RequestPurpose, TestStagecompletionStatus, UserName, RFBands, productid, Action, IsMQual, ExecutiveSummary, MechanicalTools, [Order])
+		RequestPurpose, TestStagecompletionStatus, UserName, RFBands, productid, Action, IsMQual, ExecutiveSummary, MechanicalTools, [Order], DepartmentID)
 	Select ID, QRAnumber, Priority, BatchStatus, JobName, ProductTypeID, AccessoryGroupID, TeststageName, Comment, TestCenterLocationID, RequestPurpose,
-		TestStagecompletionStatus, LastUser, RFBands,productid, 'D',IsMQual,ExecutiveSummary, MechanicalTools, [Order] 
+		TestStagecompletionStatus, LastUser, RFBands,productid, 'D',IsMQual,ExecutiveSummary, MechanicalTools, [Order], DepartmentID
 	from deleted
 END

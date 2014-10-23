@@ -47,7 +47,7 @@ AS
 		) as ActiveTaskAssignee,
 		CONVERT(BIT,0) AS HasBatchSpecificExceptions, BatchesRows.AccessoryGroupID,BatchesRows.ProductTypeID,
 		AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate, IsMQual, JobID, ExecutiveSummary, MechanicalTools,
-		BatchesRows.RequestPurposeID, BatchesRows.PriorityID
+		BatchesRows.RequestPurposeID, BatchesRows.PriorityID, DepartmentID, Department
 	FROM     
 		(
 			SELECT ROW_NUMBER() OVER (ORDER BY b.ID) AS Row, 
@@ -57,7 +57,7 @@ AS
 				(select count(*) from testunits where testunits.batchid = b.id) as testUnitCount,
 				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, b.RQID, l3.[Values] As TestCenterLocation,
 				b.AssemblyNumber, b.AssemblyRevision, b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, 
-				ExecutiveSummary, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority
+				ExecutiveSummary, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, b.DepartmentID, l6.[Values] AS Department
 			FROM Batches as b
 				inner join Products p WITH(NOLOCK) on p.ID=b.ProductID
 				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
@@ -66,6 +66,7 @@ AS
 				LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID    
 				LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND b.RequestPurpose=l4.LookupID 
 				LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON l5.Type='Priority' AND b.Priority=l5.LookupID
+				LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON l6.Type='Department' AND b.DepartmentID=l6.LookupID
 			WHERE BatchStatus NOT IN(5,7) and Requestor = @Requestor
 		) AS BatchesRows
 WHERE (Row between (@startRowIndex) AND @startRowIndex + @maximumRows - 1) OR @startRowIndex is null OR @maximumRows is null

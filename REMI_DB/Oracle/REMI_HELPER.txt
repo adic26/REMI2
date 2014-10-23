@@ -126,6 +126,24 @@ PACKAGE BODY "REMI_HELPER" IS
         return o_cur;
 
     END;
+
+	FUNCTION get_departments
+    RETURN sys_refcursor
+    IS
+
+        o_cur sys_refcursor;
+
+    BEGIN
+
+        open o_cur for
+            select distinct text
+            from trs.selection_options
+            where trs.stamp_valid (stamp_id) = 1
+            and rf_id = 2
+            order by text asc;
+        return o_cur;
+
+    END;
     -------------------------------------------------------------------------------
 
     -------------------------------------------------------------------------------

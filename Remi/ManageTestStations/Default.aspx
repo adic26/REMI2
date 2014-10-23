@@ -47,14 +47,14 @@
         function pageLoad(sender, args) {
             if (_isInitialLoad) {
                 _isInitialLoad = false;
-                __doPostBack('<%= ddlTestCenters.ClientID %>', '');
+                __doPostBack('<%= ddlDepartments.ClientID%>', '');
             }
         }
     </script>
     
     <asp:UpdatePanel ID="updTimeline" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
         <Triggers>
-            <asp:AsyncPostBackTrigger ControlID="ddlTestCenters" />
+            <asp:AsyncPostBackTrigger ControlID="ddlDepartments" />
             <asp:AsyncPostBackTrigger ControlID="ddlDisplayBy" />
             <asp:AsyncPostBackTrigger ControlID="ddlTimeFrame" />
             <asp:AsyncPostBackTrigger ControlID="chkShowGrid" />
@@ -63,12 +63,11 @@
             <ul>
                 <li>
                     <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgTestCenterView" runat="server" />
-                    <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True" DataTextField="LookupType" DataValueField="LookupID"
-                        AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsTestCenters">
-                    </asp:DropDownList>
-                    <asp:ObjectDataSource ID="odsTestCenters" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
+                    <asp:DropDownList ID="ddlDepartments" runat="server" AppendDataBoundItems="True" DataTextField="LookupType" DataValueField="LookupID"
+                        AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsDepartments"></asp:DropDownList>
+                    <asp:ObjectDataSource ID="odsDepartments" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                         <SelectParameters>
-                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="4" />
+                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
                             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />

@@ -21,4 +21,5 @@
 	ExecutiveSummary NVARCHAR(4000) NULL,
 	MechanicalTools NVARCHAR(10) NULL,
 	[Order] INT NULL,
+	[DepartmentID] INT NULL,
 );
