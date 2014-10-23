@@ -1,15 +1,14 @@
 ﻿Imports System.Web.Services
 Imports System.Web.Services.Protocols
 Imports System.ComponentModel
-Imports Remi.Bll
-Imports Remi.Validation
-Imports System.Xml.XPath
-Imports System.IO
-Imports System.Xml
-Imports System.Configuration
+Imports REMI.Validation
+Imports REMI.BusinessEntities
+Imports REMI.Bll
+Imports log4net
+Imports REMI.Contracts
+Imports System.Data
+Imports System.Web.Script.Services
 
-' To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line.
-' <System.Web.Script.Services.ScriptService()> _
 <System.Web.Services.WebService(Name:="DataPush", Namespace:="http://go/remi/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
 <ToolboxItem(False)> _
@@ -61,7 +60,7 @@ Public Class DataPush
         Return New DataTable("Results")
     End Function
 
-    <WebMethod(Description:="Modify a result")> _
+    <WebMethod(EnableSession:=True, Description:="Modify a result")> _
     Public Function ModifyResult(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String, ByVal userIdentification As String) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
