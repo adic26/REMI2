@@ -13,7 +13,7 @@ BEGIN
 	DECLARE @TestStageName NVARCHAR(400)
 	DECLARE @QRANumber NVARCHAR(11)
 	DECLARE @JobName NVARCHAR(400)
-	DECLARE @FinalResult NVARCHAR(4)
+	DECLARE @FinalResult NVARCHAR(15)
 	DECLARE @PassFail BIT
 	DECLARE @TestUnitNumber INT
 	DECLARE @Insert INT
@@ -30,13 +30,27 @@ BEGIN
 		@FinalResult = T.c.query('FinalResult').value('.', 'nvarchar(max)')
 	FROM @ResultsXML.nodes('/TestResults/Header') T(c)
 	
-	IF (@FinalResult = 'Pass')
+	if (@FinalResult IS NOT NULL AND LTRIM(RTRIM(@FinalResult)) <> '')
 	BEGIN
-		SET @PassFail = 1
+		IF (@FinalResult = 'Pass')
+		BEGIN
+			SET @PassFail = 1
+		END
+		ELSE
+		BEGIN
+			SET @PassFail = 0
+		END
 	END
 	ELSE
 	BEGIN
-		SET @PassFail = 0
+		IF (EXISTS (SELECT T.c.query('.').value('.', 'nvarchar(max)') FROM @ResultsXML.nodes('/TestResults/Measurements/Measurement/PassFail') T(c) WHERE LTRIM(RTRIM(T.c.query('.').value('.', 'nvarchar(max)'))) = 'fail'))
+		BEGIN
+			SET @PassFail = 0
+		END
+		ELSE
+		BEGIN
+			SET @PassFail = 1
+		END
 	END
 
 	SELECT @TestUnitID = tu.ID
