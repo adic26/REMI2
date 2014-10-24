@@ -152,6 +152,24 @@ Namespace REMI.Bll
             Return False
         End Function
 
+        Public Shared Function PollUnProcessedResults(ByVal requestNumber As String, ByVal unit As Int32, ByVal testStageName As String, ByVal testName As String) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim countUnProcessed As Int32 = (From x In New REMI.Dal.Entities().Instance().ResultsXMLs _
+                                     Where x.Result.Test.TestName = testName _
+                                      And x.Result.TestStage.TestStageName = testStageName _
+                                      And x.Result.TestUnit.Batch.QRANumber = requestNumber _
+                                      And x.Result.TestUnit.BatchUnitNumber = unit _
+                                     Select x).Count()
+
+                Return (countUnProcessed > 0)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
         Public Shared Function UploadResultsMeasurementsFile(ByVal file() As Byte, ByVal contentType As String, ByVal fileName As String) As Boolean
             Try
                 Return RelabDB.UploadResultsMeasurementsFile(file, contentType, fileName)

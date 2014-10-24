@@ -71,4 +71,15 @@ Public Class DataPush
         End Try
         Return False
     End Function
+
+    <WebMethod(Description:="Poll Unprocessed Results")> _
+    Public Function PollUnProcessedResults(ByVal requestNumber As String, ByVal unit As Int32, ByVal testStageName As String, ByVal testName As String) As Boolean
+        Try
+            Return RelabManager.PollUnProcessedResults(requestNumber, unit, testStageName, testName)
+        Catch ex As Exception
+            RelabManager.LogIssue("PollUnProcessedResults", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return False
+    End Function
 End Class
