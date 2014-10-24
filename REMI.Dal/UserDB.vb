@@ -159,6 +159,11 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@IsActive", MyUser.IsActive)
                     myCommand.Parameters.AddWithValue("@ByPassProduct", MyUser.ByPassProduct)
                     myCommand.Parameters.AddWithValue("@DefaultPage", MyUser.DefaultPage)
+
+                    If MyUser.DepartmentID > 0 Then
+                        myCommand.Parameters.AddWithValue("@DepartmentID", MyUser.DepartmentID)
+                    End If
+
                     Helpers.SetSaveParameters(myCommand, MyUser)
                     myConnection.Open()
                     Dim NumberOfRecordsAffected As Integer = myCommand.ExecuteNonQuery()
@@ -280,6 +285,15 @@ Namespace REMI.Dal
                         myUser.TrainingNames.Add(row.Item("TrainingOption").ToString())
                     End If
                 Next row
+            End If
+
+            If (Helpers.HasColumn(myDataRecord, "DepartmentID")) Then
+                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("DepartmentID")) Then
+                    myUser.DepartmentID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("DepartmentID"))
+                End If
+                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Department")) Then
+                    myUser.Department = myDataRecord.GetString(myDataRecord.GetOrdinal("Department"))
+                End If
             End If
 
             Helpers.FillObjectParameters(myDataRecord, myUser)

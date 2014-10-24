@@ -66,6 +66,21 @@
                     </asp:ObjectDataSource>
                  </td>
              </tr>
+            <tr>
+                 <td class="HorizTableFirstcolumn">
+                     Select Department: </td>
+                 <td style="text-align:left;">
+                     <asp:DropDownList ID="ddlDepartments" runat="server" DataSourceID="odsDepartments" Width="195px" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+                     <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
+                         <SelectParameters>
+                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
+                            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
+                        </SelectParameters>
+                     </asp:ObjectDataSource>
+                 </td>
+            </tr>
              <tr>
                  <td class="HorizTableFirstcolumn">Select Default Page: </td>
                  <td style="text-align:left;">

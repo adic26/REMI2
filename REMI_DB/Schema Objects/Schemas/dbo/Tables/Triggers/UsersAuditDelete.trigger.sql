@@ -20,7 +20,7 @@ insert into Usersaudit (
 	TestCentreID,
 	Username,	
 	Action,
-	IsActive, DefaultPage, ByPassProduct)
+	IsActive, DefaultPage, ByPassProduct, DepartmentID)
 	Select 
 	Id, 
 	LDAPLogin, 
@@ -28,7 +28,7 @@ insert into Usersaudit (
 	TestCentreID,
 	lastuser,
 	'D',
-	IsActive, DefaultPage, ByPassProduct
+	IsActive, DefaultPage, ByPassProduct, DepartmentID
 	from deleted
 END
 GO

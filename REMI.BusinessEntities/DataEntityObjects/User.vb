@@ -15,6 +15,8 @@ Namespace REMI.BusinessEntities
 #Region "Private Variables"
         Private _testCentre As String
         Private _testCentreID As Int32
+        Private _departmentID As Int32
+        Private _department As String
         Private _ldapName As String
         Private _productGroups As DataTable
         Private _productGroupsNames As List(Of String)
@@ -136,6 +138,24 @@ Namespace REMI.BusinessEntities
             End Get
             Set(value As Int32)
                 _testCentreID = value
+            End Set
+        End Property
+
+        Public Property Department() As String
+            Get
+                Return _department
+            End Get
+            Set(ByVal value As String)
+                _department = value
+            End Set
+        End Property
+
+        Public Property DepartmentID() As Int32
+            Get
+                Return _departmentID
+            End Get
+            Set(value As Int32)
+                _departmentID = value
             End Set
         End Property
 

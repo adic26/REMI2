@@ -1,4 +1,4 @@
-﻿ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @ByPass INT = 0, @showAllGrid BIT = 0, @UserID INT = 0
+﻿ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @ByPass INT = 0, @showAllGrid BIT = 0, @UserID INT = 0, @DepartmentID INT = 0
 AS
 BEGIN
 	IF (@showAllGrid = 0)
@@ -35,6 +35,12 @@ BEGIN
 				(up.ProductID=@ProductID) 
 				OR
 				(@ProductID = 0)
+			  )
+			  AND 
+			  (
+				(u.DepartmentID=@DepartmentID) 
+				OR
+				(@DepartmentID = 0)
 			  )
 		ORDER BY u.LDAPLogin
 	END

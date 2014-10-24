@@ -33,9 +33,9 @@ else
 --Only inserts records into the Audit table if the row was either updated or inserted and values actually changed.
 select @count= count(*) from
 (
-   select LDAPLogin, BadgeNumber, TestCentreID, IsActive, DefaultPage, ByPassProduct from Inserted
+   select LDAPLogin, BadgeNumber, TestCentreID, IsActive, DefaultPage, ByPassProduct, DepartmentID from Inserted
    except
-   select LDAPLogin, BadgeNumber, TestCentreID, IsActive, DefaultPage, ByPassProduct from Deleted
+   select LDAPLogin, BadgeNumber, TestCentreID, IsActive, DefaultPage, ByPassProduct, DepartmentID from Deleted
 ) a
 
 if ((@count) >0)
@@ -47,7 +47,7 @@ if ((@count) >0)
 		TestCentreID,
 		Username,
 		Action,
-		IsActive, DefaultPage, ByPassProduct)
+		IsActive, DefaultPage, ByPassProduct, DepartmentID)
 		Select 
 		Id, 
 		LDAPLogin, 
@@ -55,7 +55,7 @@ if ((@count) >0)
 		TestCentreID,
 		lastuser,
 		@action, 
-		IsActive, DefaultPage, ByPassProduct
+		IsActive, DefaultPage, ByPassProduct, DepartmentID
 		from inserted
 	END
 END

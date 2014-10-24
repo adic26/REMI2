@@ -3,8 +3,12 @@ Imports REMI.BusinessEntities
 Partial Class BadgeAccess_EditMyUser
     Inherits System.Web.UI.Page
 
-    Protected Sub ddlDatabound(ByVal sender As Object, ByVal e As EventArgs) Handles ddlGeoLoc.DataBound
+    Protected Sub ddlGeoLoc_Databound(ByVal sender As Object, ByVal e As EventArgs) Handles ddlGeoLoc.DataBound
         ddlGeoLoc.SelectedValue = UserManager.GetCurrentUser.TestCentreID
+    End Sub
+
+    Protected Sub ddlDepartments_Databound(ByVal sender As Object, ByVal e As EventArgs) Handles ddlDepartments.DataBound
+        ddlDepartments.SelectedValue = UserManager.GetCurrentUser.DepartmentID
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -89,6 +93,8 @@ Partial Class BadgeAccess_EditMyUser
             UserManager.GetCurrentUser.TestCentre = ddlGeoLoc.SelectedItem.Text
             UserManager.GetCurrentUser.TestCentreID = LookupsManager.GetLookupID(Contracts.LookupType.TestCenter, ddlGeoLoc.SelectedItem.Text, 0)
             UserManager.GetCurrentUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
+            UserManager.GetCurrentUser.Department = ddlDepartments.SelectedItem.Text
+            UserManager.GetCurrentUser.DepartmentID = LookupsManager.GetLookupID(Contracts.LookupType.Department, ddlDepartments.SelectedItem.Text, 0)
 
             Dim training As GridView = DirectCast(Me.FindControl(gvwTraining.UniqueID), GridView)
             For Each gvr As GridViewRow In training.Rows

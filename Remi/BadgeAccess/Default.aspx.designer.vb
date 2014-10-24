@@ -104,6 +104,24 @@ Partial Public Class BadgeAccess_Default
     Protected WithEvents odsTestCentres As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
+    '''ddlDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''odsDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
     '''txtBadge control.
     '''</summary>
     '''<remarks>

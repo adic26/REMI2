@@ -150,6 +150,8 @@ Public Class Overview
         If Not Page.IsPostBack Then
             ddlDepartment.DataSource = LookupsManager.GetLookups(LookupType.Department, 0, 0, 0)
             ddlDepartment.DataBind()
+
+            ddlDepartment.SelectedValue = UserManager.GetCurrentUser.DepartmentID
         End If
     End Sub
 

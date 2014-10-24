@@ -7,7 +7,8 @@
     [TestCentreID]  INT NULL,
 	[IsActive] [int] NOT NULL,
 	DefaultPage nvarchar(255) NULL,
-	ByPassProduct INT NULL
+	ByPassProduct INT NULL,
+	DepartmentID INT NULL
 );
 GO
 ALTER TABLE [dbo].[Users] ADD  DEFAULT ((1)) FOR [IsActive]

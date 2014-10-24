@@ -19,7 +19,7 @@ Partial Class BadgeAccess_Default
             If UserManager.SetUserToSession(i) Then
                 Response.Redirect(GetRedirectPage) 'if the user was found by their badge number and added then everything is ok, send them to where they want
             ElseIf Not UserManager.GetCurrentUser.RequiresSuppAuth Then
-                notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(UserManager.GetCurrentUser.UserName, String.Empty, i, 76, False)
+                notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(UserManager.GetCurrentUser.UserName, String.Empty, i, 76, False, 0)
 
                 If Not notMain.Notifications.HasErrors Then
                     Response.Redirect(GetRedirectPage)
@@ -79,7 +79,7 @@ Partial Class BadgeAccess_Default
                 redirectPage = Request.QueryString.Get("redirectpage")
             End If
 
-            notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(Helpers.CleanInputText(txtUserName.Text.ToLower, 255), txtPassword.Text, bNumber, ddlGeoLoc.SelectedValue, True)
+            notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(Helpers.CleanInputText(txtUserName.Text.ToLower, 255), txtPassword.Text, bNumber, ddlGeoLoc.SelectedValue, True, ddlDepartments.SelectedValue)
 
             If Not notMain.Notifications.HasErrors Then
                 Response.Redirect(GetRedirectPage)

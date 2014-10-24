@@ -218,11 +218,13 @@ Partial Class Search
                     Dim trainingID As Int32
                     Dim trainingLevelID As Int32
                     Dim byPass As Int32
+                    Dim departmentID As Int32
 
                     Int32.TryParse(ddlProductFilterUser.SelectedValue, productID)
                     Int32.TryParse(ddlTestCentersUser.SelectedValue, testCenterID)
                     Int32.TryParse(ddlTraining.SelectedValue, trainingID)
                     Int32.TryParse(ddlTrainingLevel.SelectedValue, trainingLevelID)
+                    Int32.TryParse(ddlDepartmentUser.SelectedValue, departmentID)
 
                     If (chkByPass.Checked) Then
                         byPass = 1
@@ -235,6 +237,7 @@ Partial Class Search
                     us.TrainingLevelID = trainingLevelID
                     us.TestCenterID = testCenterID
                     us.ByPass = byPass
+                    us.DepartmentID = departmentID
 
                     gvwUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False)
                     gvwUsers.DataBind()
@@ -501,12 +504,14 @@ Partial Class Search
             Dim productID As Int32
             Dim trainingID As Int32
             Dim trainingLevelID As Int32
+            Dim departmentID As Int32
             Dim byPass As Int32
 
             Int32.TryParse(ddlProductFilterUser.SelectedValue, productID)
             Int32.TryParse(ddlTestCentersUser.SelectedValue, testCenterID)
             Int32.TryParse(ddlTraining.SelectedValue, trainingID)
             Int32.TryParse(ddlTrainingLevel.SelectedValue, trainingLevelID)
+            Int32.TryParse(ddlDepartmentUser.SelectedValue, departmentID)
 
             If (chkByPass.Checked) Then
                 byPass = 1
@@ -519,6 +524,7 @@ Partial Class Search
             us.TrainingLevelID = trainingLevelID
             us.TestCenterID = testCenterID
             us.ByPass = byPass
+            us.DepartmentID = departmentID
 
             Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), REMI.Dal.UserDB.UserSearch(us, False))
         ElseIf (pnlEnvReport.Visible) Then
@@ -618,6 +624,7 @@ Partial Class Search
             Dim geoLocationID As Int32 = ddlTestCenters.SelectedValue
             Dim _start As DateTime
             Dim _end As DateTime
+            Dim departmentID As Int32
             Dim testStage As String = txtTestStage.Text.Trim()
             Dim revision As String = txtRevision.Text.Trim()
 
@@ -656,6 +663,7 @@ Partial Class Search
 
             bs.ExcludedStatus = (From t In exBatchStatus Select t).Sum()
 
+            Int32.TryParse(ddlDepartment.SelectedValue, departmentID)
             Int32.TryParse(ddlAccessoryGroup.SelectedValue, accessory)
             Int32.TryParse(ddlProductFilter.SelectedValue, productID)
             Int32.TryParse(ddlProductType.SelectedValue, productTypeID)
@@ -695,7 +703,7 @@ Partial Class Search
             bs.TestStageID = testStageID
             bs.TrackingLocationID = trackingLocationID
             bs.UserID = userID
-
+            bs.DepartmentID = departmentID
             bs.BatchEnd = _end
             bs.BatchStart = _start
 
@@ -1013,6 +1021,11 @@ Partial Class Search
                 ddlDepartment.DataSource = LookupsManager.GetLookups(LookupType.Department, Nothing, Nothing, 0)
                 ddlDepartment.DataBind()
 
+                Dim ld As ListItem = New ListItem(UserManager.GetCurrentUser.Department, UserManager.GetCurrentUser.DepartmentID)
+                If (ddlDepartment.Items.Contains(ld)) Then
+                    ddlDepartment.SelectedValue = UserManager.GetCurrentUser.DepartmentID
+                End If
+
                 ddlBatchStatus.Items.Clear()
                 ddlBatchStatus.Items.Add("ALL")
                 ddlBatchStatus.DataSource = REMI.Helpers.GetBatchStatus()
@@ -1119,9 +1132,18 @@ Partial Class Search
                 ddlTestCentersUser.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 0)
                 ddlTestCentersUser.DataBind()
 
+                ddlDepartmentUser.Items.Clear()
+                ddlDepartmentUser.DataSource = Remi.Bll.LookupsManager.GetLookups(LookupType.Department, 0, 0, 0)
+                ddlDepartmentUser.DataBind()
+
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
                 If (ddlTestCentersUser.Items.Contains(l)) Then
                     ddlTestCentersUser.SelectedValue = UserManager.GetCurrentUser.TestCentreID
+                End If
+
+                Dim ld As ListItem = New ListItem(UserManager.GetCurrentUser.Department, UserManager.GetCurrentUser.DepartmentID)
+                If (ddlDepartmentUser.Items.Contains(ld)) Then
+                    ddlDepartmentUser.SelectedValue = UserManager.GetCurrentUser.DepartmentID
                 End If
             Case "4"
                 'RQ Results
@@ -1387,8 +1409,4 @@ Partial Class Search
     End Sub
 #End Region
 
-    Private Sub ddlTestCenters_SelectedIndexChanged(sender As Object, e As System.EventArgs) Handles ddlTestCenters.SelectedIndexChanged
-        ddlDepartment.DataSource = LookupsManager.GetLookups(LookupType.Department, Nothing, Nothing, 0)
-        ddlDepartment.DataBind()
-    End Sub
 End Class

@@ -9,6 +9,7 @@
     [TestCentreID] INT NULL,
 	[IsActive] [int] NULL,
 	DefaultPage nvarchar(255) NULL,
-	ByPassProduct INT NULL
+	ByPassProduct INT NULL,
+	DepartmentID INT NULL
 );
 

@@ -18,6 +18,12 @@ go
 ALTER TABLE [dbo].[Batches]  WITH CHECK ADD  CONSTRAINT [FK_Batches_Department] FOREIGN KEY([DepartmentID])
 REFERENCES [dbo].[Lookups] ([LookupID])
 go
+alter table Users add DepartmentID INT NULL
+alter table UsersAudit add DepartmentID INT NULL
+GO
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Department] FOREIGN KEY([DepartmentID])
+REFERENCES [dbo].[Lookups] ([LookupID])
+GO
 insert into Req.ReqFieldMapping (ReqTypeID, IntField, ExtField, IsActive)
 values (1,'Department','Department',1)
 GO
@@ -33,6 +39,7 @@ DECLARE @DepartmentID INT
 SELECT @DepartmentID=lookupid from Lookups where [Type]='Department' AND [Values]='Product Validation'
 
 Update Batches set DepartmentID=@DepartmentID where DepartmentID is null
+Update Users set DepartmentID=@DepartmentID where DepartmentID is null AND IsActive=1
 GO
 ALTER TRIGGER [dbo].[BatchesAuditDelete] ON  [dbo].[Batches]
 	for  delete
@@ -98,6 +105,102 @@ BEGIN
 			TestStagecompletionStatus, Comment, LastUser, RFBands, productID, @Action, IsMQual, ExecutiveSummary, MechanicalTools, [Order], DepartmentID 
 		from inserted
 	END
+END
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER TRIGGER [dbo].[UsersAuditInsertUpdate]
+   ON  [dbo].[Users]
+    after insert, update
+AS 
+BEGIN
+SET NOCOUNT ON;
+Declare @action char(1)
+DECLARE @count INT
+  
+--check if this is an insert or an update
+
+If Exists(Select * From Inserted) and Exists(Select * From Deleted) --Update, both tables referenced
+	begin
+		Set @action= 'U'
+	end
+else
+	begin
+		If Exists(Select * From Inserted) --insert, only one table referenced
+		Begin
+			Set @action= 'I'
+		end
+		if not Exists(Select * From Inserted) and not Exists(Select * From Deleted)--nothing changed, get out of here
+		Begin
+			RETURN
+		end
+	end
+
+--Only inserts records into the Audit table if the row was either updated or inserted and values actually changed.
+select @count= count(*) from
+(
+   select LDAPLogin, BadgeNumber, TestCentreID, IsActive, DefaultPage, ByPassProduct, DepartmentID from Inserted
+   except
+   select LDAPLogin, BadgeNumber, TestCentreID, IsActive, DefaultPage, ByPassProduct, DepartmentID from Deleted
+) a
+
+if ((@count) >0)
+	begin
+		insert into Usersaudit (
+		UserId, 
+		LDAPLogin, 
+		BadgeNumber,
+		TestCentreID,
+		Username,
+		Action,
+		IsActive, DefaultPage, ByPassProduct, DepartmentID)
+		Select 
+		Id, 
+		LDAPLogin, 
+		BadgeNumber,
+		TestCentreID,
+		lastuser,
+		@action, 
+		IsActive, DefaultPage, ByPassProduct, DepartmentID
+		from inserted
+	END
+END
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER TRIGGER [dbo].[UsersAuditDelete]
+   ON  [dbo].[Users]
+    for  delete
+AS 
+BEGIN
+ SET NOCOUNT ON;
+ 
+  If not Exists(Select * From Deleted) 
+	return	 --No delete action, get out of here
+	
+insert into Usersaudit (
+	UserId, 
+	LDAPLogin, 
+	BadgeNumber,
+	TestCentreID,
+	Username,	
+	Action,
+	IsActive, DefaultPage, ByPassProduct, DepartmentID)
+	Select 
+	Id, 
+	LDAPLogin, 
+	BadgeNumber,
+	TestCentreID,
+	lastuser,
+	'D',
+	IsActive, DefaultPage, ByPassProduct, DepartmentID
+	from deleted
 END
 GO
 ALTER PROCEDURE [dbo].[remispBatchesSearch]
@@ -1802,6 +1905,246 @@ GO
 PRINT N'Altering permissions on [Relab].[remispResultsInformation]'
 GO
 GRANT EXECUTE ON  [Relab].[remispResultsInformation] TO [remi]
+GO
+ALTER PROCEDURE [dbo].[remispUsersInsertUpdateSingleItem]
+	@ID int OUTPUT,
+	@LDAPLogin nvarchar(255),
+	@BadgeNumber int=null,
+	@TestCentreID INT = null,
+	@LastUser nvarchar(255),
+	@ConcurrencyID rowversion OUTPUT,
+	@IsActive INT = 1,
+	@ByPassProduct INT = 0,
+	@DefaultPage NVARCHAR(255),
+	@DepartmentID INT = 0
+AS
+	DECLARE @ReturnValue int
+
+	IF (@ID IS NULL AND NOT EXISTS (SELECT 1 FROM Users WHERE LDAPLogin=@LDAPLogin)) -- New Item
+	BEGIN
+		INSERT INTO Users (LDAPLogin, BadgeNumber, TestCentreID, LastUser, IsActive, DefaultPage, ByPassProduct, DepartmentID)
+		VALUES (@LDAPLogin, @BadgeNumber, @TestCentreID, @LastUser, @IsActive, @DefaultPage, @ByPassProduct, @DepartmentID)
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE IF(@ConcurrencyID IS NOT NULL) -- Exisiting Item
+	BEGIN
+		UPDATE Users SET
+			LDAPLogin = @LDAPLogin,
+			BadgeNumber=@BadgeNumber,
+			TestCentreID = @TestCentreID,
+			lastuser=@LastUser,
+			IsActive=@IsActive,
+			DefaultPage = @DefaultPage,
+			ByPassProduct = @ByPassProduct,
+			DepartmentID = @DepartmentID
+		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
+
+		SELECT @ReturnValue = @ID
+	END
+
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM Users WHERE ID = @ReturnValue)
+	SET @ID = @ReturnValue
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+GO
+GRANT EXECUTE ON remispUsersInsertUpdateSingleItem TO Remi
+GO
+ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @ByPass INT = 0, @showAllGrid BIT = 0, @UserID INT = 0, @DepartmentID INT = 0
+AS
+BEGIN
+	IF (@showAllGrid = 0)
+	BEGIN
+		SELECT DISTINCT u.ID, u.LDAPLogin
+		FROM Users u
+			LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
+			LEFT OUTER JOIN UsersProducts up ON up.UserID = u.ID
+		WHERE u.IsActive=1 AND (
+				(u.TestCentreID=@TestCenterID) 
+				OR
+				(@TestCenterID = 0)
+			  )
+			  AND
+			  (
+				(ut.LookupID=@TrainingID) 
+				OR
+				(@TrainingID = 0)
+			  )
+			  AND
+			  (
+				(ut.LevelLookupID=@TrainingLevelID) 
+				OR
+				(@TrainingLevelID = 0)
+			  )
+			  AND
+			  (
+				(u.ByPassProduct=@ByPass) 
+				OR
+				(@ByPass = 0)
+			  )
+			  AND
+			  (
+				(up.ProductID=@ProductID) 
+				OR
+				(@ProductID = 0)
+			  )
+			  AND 
+			  (
+				(u.DepartmentID=@DepartmentID) 
+				OR
+				(@DepartmentID = 0)
+			  )
+		ORDER BY u.LDAPLogin
+	END
+	ELSE
+	BEGIN
+		DECLARE @rows VARCHAR(8000)
+		DECLARE @query VARCHAR(4000)
+		SELECT @rows=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + l.[Values]
+		FROM Lookups l
+		WHERE l.Type='Training' And l.IsActive=1
+		AND (
+				(l.LookupID=@TrainingID) 
+				OR
+				(@TrainingID = 0)
+			  )
+		ORDER BY '],[' + l.[Values]
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
+
+		SET @query = '
+			SELECT *
+			FROM
+			(
+				SELECT CASE WHEN ut.lookupID IS NOT NULL THEN (CASE WHEN ut.LevelLookupID IS NULL THEN ''*'' ELSE (SELECT SUBSTRING([values], 1, 1) FROM Lookups WHERE LookupID=LevelLookupID) END) ELSE NULL END As Row, u.LDAPLogin, l.[values] As Training
+				FROM Users u WITH(NOLOCK)
+					LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
+					LEFT OUTER JOIN Lookups l on l.lookupid=ut.lookupid
+				WHERE u.IsActive = 1 AND (
+				(u.TestCentreID=' + CONVERT(VARCHAR, @TestCenterID) + ') 
+				OR
+				(' + CONVERT(VARCHAR, @TestCenterID) + ' = 0)
+			  )
+			  AND
+			  (
+				(ut.LookupID=' + CONVERT(VARCHAR, @TrainingID) + ') 
+				OR
+				(' + CONVERT(VARCHAR, @TrainingID) + ' = 0)
+			  )
+			  AND
+			  (
+				(u.ID=' + CONVERT(VARCHAR, @UserID) + ')
+				OR
+				(' + CONVERT(VARCHAR, @UserID) + ' = 0)
+			  )
+			)r
+			PIVOT 
+			(
+				MAX(row) 
+				FOR Training 
+					IN ('+@rows+')
+			) AS pvt'
+		EXECUTE (@query)	
+	END
+END
+GO
+GRANT EXECUTE ON remispUsersSearch TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispUsersSelectList]
+	@StartRowIndex int = -1,
+	@MaximumRows int = -1,
+	@determineDelete INT = 1,
+	@RecordCount int = NULL OUTPUT
+AS
+	IF (@RecordCount IS NOT NULL)
+	BEGIN
+		SET @RecordCount = (SELECT COUNT(*) FROM Users)
+		RETURN
+	END
+
+	SELECT UsersRows.BadgeNumber,UsersRows.ConcurrencyID,UsersRows.ID,usersrows.TestCentre, UsersRows.LastUser,UsersRows.LDAPLogin,UsersRows.Row, UsersRows.IsActive, 
+		CASE WHEN @determineDelete = 1 THEN dbo.remifnUserCanDelete(UsersRows.LDAPLogin) ELSE 0 END AS CanDelete, UsersRows.DefaultPage, UsersRows.TestCentreID,
+		ByPassProduct, UsersRows.DepartmentID, UsersRows.Department
+	FROM     
+		(SELECT ROW_NUMBER() OVER (ORDER BY ID) AS Row, Users.BadgeNumber,Users.ConcurrencyID,Users.ID,Users.LastUser,Users.LDAPLogin, 
+			Lookups.[Values] AS TestCentre, ISNULL(Users.IsActive,1) AS IsActive, Users.DefaultPage, Users.TestCentreID, Users.ByPassProduct,
+			Users.DepartmentID, ld.[Values] AS Department
+		FROM Users
+			LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
+			LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
+		) AS UsersRows
+	WHERE ((Row between (@startRowIndex) AND @startRowIndex + @maximumRows - 1) 
+			OR @startRowIndex = -1 OR @maximumRows = -1) 
+	ORDER BY IsActive desc, LDAPLogin
+GO
+GRANT EXECUTE ON remispUsersSelectList TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispUsersSelectListByTestCentre] @TestLocation INT, @IncludeInActive INT = 1, @determineDelete INT = 1, @RecordCount int = NULL OUTPUT
+AS
+	DECLARE @ConCurID timestamp
+
+	IF (@RecordCount IS NOT NULL)
+	BEGIN
+		SET @RecordCount = (SELECT COUNT(*) 
+							FROM Users 
+							WHERE TestCentreID=TestCentreID
+								AND 
+								(
+									(@IncludeInActive = 0 AND IsActive=1)
+									OR
+									@IncludeInActive = 1
+								)
+							)
+		RETURN
+	END
+
+	SELECT Users.BadgeNumber, Users.ConcurrencyID, Users.ID, Users.LastUser, Users.LDAPLogin, 
+		Lookups.[Values] AS TestCentre, ISNULL(Users.IsActive,1) AS IsActive, Users.DefaultPage, Users.TestCentreID, Users.ByPassProduct, 
+		CASE WHEN @determineDelete = 1 THEN dbo.remifnUserCanDelete(Users.LDAPLogin) ELSE 0 END AS CanDelete,
+		Users.DepartmentID, ld.[Values] AS Department
+	FROM Users
+		LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
+		LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
+	WHERE (TestCentreID=@TestLocation OR @TestLocation = 0)
+		AND 
+		(
+			(@IncludeInActive = 0 AND ISNULL(Users.IsActive, 1)=1)
+			OR
+			@IncludeInActive = 1
+		)
+	ORDER BY IsActive DESC, LDAPLogin
+GO
+GRANT EXECUTE ON remispUsersSelectListByTestCentre TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispUsersSelectSingleItemByBadgeNumber] @BadgeNumber int
+AS
+	SELECT u.BadgeNumber,u.ConcurrencyID,u.ID,u.LastUser,u.LDAPLogin, u.TestCentreID, ISNULL(u.IsActive,1) As IsActive, u.DefaultPage, Lookups.[values] As TestCentre,
+		u.ByPassProduct, u.DepartmentID, ld.[Values] AS Department
+	FROM Users as u
+		LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
+		LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
+	WHERE BadgeNumber = @BadgeNumber
+GO
+GRANT EXECUTE ON remispUsersSelectSingleItemByBadgeNumber TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispUsersSelectSingleItemByUserName] @LDAPLogin nvarchar(255) = '', @UserID INT = 0
+AS
+	SELECT Users.BadgeNumber,Users.ConcurrencyID,Users.ID,Users.LastUser,Users.LDAPLogin, Users.TestCentreID, ISNULL(Users.IsActive, 1) AS IsActive, 
+		Users.DefaultPage, Lookups.[Values] As TestCentre, Users.ByPassProduct, Users.DepartmentID, ld.[Values] AS Department
+	FROM Users
+		LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
+		LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
+	WHERE (@UserID = 0 AND LDAPLogin = @LDAPLogin) OR (@UserID > 0 AND Users.ID=@UserID)
+GO
+GRANT EXECUTE ON remispUsersSelectSingleItemByUserName TO Remi
 GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO

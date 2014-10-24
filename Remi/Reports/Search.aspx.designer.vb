@@ -122,6 +122,15 @@ Partial Public Class Search
     Protected WithEvents ddlTestCentersUser As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''ddlDepartmentUser control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlDepartmentUser As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
     '''ddlTraining control.
     '''</summary>
     '''<remarks>

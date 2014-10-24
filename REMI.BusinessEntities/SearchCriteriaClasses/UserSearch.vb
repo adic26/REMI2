@@ -5,6 +5,7 @@
         Private _trainingID As Int32
         Private _trainingLevelID As Int32
         Private _testCenterID As Int32
+        Private _departmentID As Int32
         Private _userID As Int32
 
         Public Property ByPass() As Int32
@@ -58,6 +59,15 @@
             End Get
             Set(value As Int32)
                 _testCenterID = value
+            End Set
+        End Property
+
+        Public Property DepartmentID() As Int32
+            Get
+                Return _departmentID
+            End Get
+            Set(value As Int32)
+                _departmentID = value
             End Set
         End Property
     End Class
