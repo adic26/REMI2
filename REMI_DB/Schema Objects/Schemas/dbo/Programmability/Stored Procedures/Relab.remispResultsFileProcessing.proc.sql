@@ -218,7 +218,7 @@ BEGIN
 			SET Description=null
 			WHERE Description='N/A' or Description='NA'
 			
-			TRUNCATE TABLE #files
+			DELETE FROM #files
 
 			IF (LTRIM(RTRIM(LOWER(@TestStageName))) NOT IN ('baseline', 'analysis') AND LTRIM(RTRIM(LOWER(@TestStageName))) NOT LIKE '%Calibra%' AND EXISTS(SELECT 1 FROM #measurement WHERE PassFail = -1))
 			BEGIN
@@ -422,10 +422,11 @@ BEGIN
 			END
 			
 			DROP TABLE #measurement
-			DROP TABLE #files
 		
 			SELECT @RowID = MIN(RowID) FROM #temp2 WHERE RowID > @RowID
 		END
+		
+		DROP TABLE #files
 		
 		PRINT 'Update Result'
 		UPDATE Relab.ResultsXML 

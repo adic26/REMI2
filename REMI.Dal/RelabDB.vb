@@ -53,13 +53,22 @@ Namespace REMI.Dal
             Return dt
         End Function
 
-        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String) As DataTable
+        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String, ByVal testStageName As String, ByVal unitNumber As Int32) As DataTable
             Dim dt As New DataTable("Results")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Relab.remispMeasurementsByReq_Test", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
                     myCommand.Parameters.AddWithValue("@TestIDs", testIDs)
+
+                    If (testStageName.Trim().Length > 0) Then
+                        myCommand.Parameters.AddWithValue("@TestStageName", testStageName)
+                    End If
+
+                    If (unitNumber > 0) Then
+                        myCommand.Parameters.AddWithValue("@UnitNumber", unitNumber)
+                    End If
+
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)

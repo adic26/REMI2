@@ -32,9 +32,9 @@ Namespace REMI.Bll
             Return New DataTable("ResultsInformation")
         End Function
 
-        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String) As DataTable
+        Public Shared Function GetResults(ByVal requestNumber As String, ByVal testIDs As String, ByVal testStageName As String, ByVal unitNumber As Int32) As DataTable
             Try
-                Return RelabDB.GetResults(requestNumber, testIDs)
+                Return RelabDB.GetResults(requestNumber, testIDs, testStageName, unitNumber)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -160,6 +160,7 @@ Namespace REMI.Bll
                                       And x.Result.TestStage.TestStageName = testStageName _
                                       And x.Result.TestUnit.Batch.QRANumber = requestNumber _
                                       And x.Result.TestUnit.BatchUnitNumber = unit _
+                                      And x.isProcessed = 0 _
                                      Select x).Count()
 
                 Return (countUnProcessed > 0)

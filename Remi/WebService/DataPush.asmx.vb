@@ -51,9 +51,9 @@ Public Class DataPush
     End Sub
 
     <WebMethod(Description:="Get All Results For A Request Based On A Test")> _
-    Public Function GetResults(ByVal requestNumber As String, ByVal testName As String) As DataTable
+    Public Function GetResults(ByVal requestNumber As String, ByVal testIDs As String, ByVal testStageName As String, ByVal unitNumber As Int32) As DataTable
         Try
-            Return RelabManager.GetResults(requestNumber, testName)
+            Return RelabManager.GetResults(requestNumber, testIDs, testStageName, unitNumber)
         Catch ex As Exception
             RelabManager.LogIssue("GetResults", "e3", NotificationType.Errors, ex)
         End Try
