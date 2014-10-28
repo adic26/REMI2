@@ -31,7 +31,7 @@ BEGIN
 	DECLARE @StationName NVARCHAR(400)
 	DECLARE @DegradationVal DECIMAL(10,3)
 	SET @ID = NULL
-	CREATE TABLE #files ([FileName] NVARCHAR(MAX))
+	CREATE TABLE #files ([FileName] NVARCHAR(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS)
 
 	BEGIN TRY
 		IF ((SELECT COUNT(*) FROM Relab.ResultsXML x WHERE ISNULL(IsProcessed,0)=0)=0)

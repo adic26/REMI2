@@ -1398,6 +1398,7 @@
       <SubType>NotInBuild</SubType>
     </None>
     <None Include="Scripts\August132014\4.sql" />
+    <None Include="Scripts\November032014\3.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
