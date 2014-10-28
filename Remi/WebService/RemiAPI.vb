@@ -562,53 +562,6 @@ Public Class RemiAPI
         Return 0
     End Function
 
-    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    'Public Function GetProductGroupExceptionsByProductID(ByVal productID As Int32) As List(Of ExceptionData)
-    'Try
-    '
-    '    Dim testExceptions As New List(Of ExceptionData)
-    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
-
-    '    For Each k As String In d.Keys
-    '        Dim ex As ExceptionData
-    '        ex.TestName = k
-    '        ex.ExceptionExists = d.Item(k)
-    '        testExceptions.Add(ex)
-    '    Next
-
-    '    Return testExceptions
-    'End If
-    'Catch ex As Exception
-    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptionsByProductID", "e3", NotificationType.Errors, ex, "Product Group ID: " + productID)
-    'End Try
-    '    Return New List(Of ExceptionData)
-    'End Function
-
-    '<Obsolete("Don't use this routine any more. Product Level Exceptions Are Removed!"), _
-    'WebMethod(Description:="Returns a list of the test exceptions for a given product group.")> _
-    'Public Function GetProductGroupExceptions(ByVal productGroupName As String) As List(Of ExceptionData)
-    'Try
-    'If UserManager.GetCurrentUser.HasREMIPageViewAuthority Then
-    '    Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
-    '    Dim testExceptions As New List(Of ExceptionData)
-    '    Dim d As Dictionary(Of String, Boolean) = ProductGroupManager.GetExceptionsTable(productID)
-
-    '    For Each k As String In d.Keys
-    '        Dim ex As ExceptionData
-    '        ex.TestName = k
-    '        ex.ExceptionExists = d.Item(k)
-    '        testExceptions.Add(ex)
-    '    Next
-
-    '    Return testExceptions
-    'End If
-    'Catch ex As Exception
-    '    ProductGroupManager.LogIssue("REMI API GetProductGroupExceptions", "e3", NotificationType.Errors, ex, "Product Group ID: " + productGroupName)
-    'End Try
-    '    Return New List(Of ExceptionData)
-    'End Function
-
     <WebMethod(Description:="Returns a full list of the settings for a product.")> _
     Public Function GetProductSettingsByProductID(ByVal productID As Int32) As SerializableDictionary(Of String, String)
         Try
@@ -814,16 +767,6 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a qra number this method will return the batch information.")> _
     Public Function GetBatch(ByVal QRANumber As String) As BatchView
         Try
-
-            'Dim ms As New System.IO.MemoryStream()
-            'Dim batch As BatchBase = BatchManager.GetViewBatch(QRANumber)
-            'Dim x As New System.Xml.Serialization.XmlSerializer(batch.GetType())
-            'Dim xtw As New System.Xml.XmlTextWriter(ms, System.Text.Encoding.UTF8)
-            'x.Serialize(xtw, batch)
-
-            'ms = DirectCast(xtw.BaseStream, System.IO.MemoryStream)
-
-            'Return New UTF8Encoding().GetString(ms.ToArray())
             Return BatchManager.GetViewBatch(QRANumber)
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatch", "e3", NotificationType.Errors, ex, "Request: " + QRANumber)
@@ -910,14 +853,6 @@ Public Class RemiAPI
 
             If (barcode.Validate() And barcode.HasTestUnitNumber) Then
                 Return TestStageManager.GetNextTestStage(barcode.BatchNumber, barcode.UnitNumber)
-
-                'Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
-                'Dim stage As TestStage = TestUnitManager.GetUnit(barcode.BatchNumber, barcode.UnitNumber).CurrentTestStage
-                'Dim testStageType(1) As TestStageType
-                'testStageType(0) = Contracts.TestStageType.EnvironmentalStress
-                'testStageType(1) = Contracts.TestStageType.Parametric
-
-                'Return b.GetNextTestStage(stage, barcode.BatchNumber, b.Job, b.TestRecords, testStageType, b.Tasks)
             End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API Get batch stages", "e3", NotificationType.Errors, ex, "Request: " + requestNumber)
