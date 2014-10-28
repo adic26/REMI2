@@ -178,7 +178,7 @@ BEGIN
 		INNER JOIN Batches b WITH(NOLOCK) ON tu.BatchID = b.ID
 		INNER JOIN BatchesAudit ba WITH(NOLOCK) ON b.ID = ba.BatchID AND ba.BatchStatus=2 --InProgress
 		INNER JOIN TestRecordsAudit tra WITH(NOLOCK) ON tr.ID = tra.TestRecordId AND tra.inserttime between @startdate and @enddate
-		INNER JOIN Lookups l ON l.Type='ProductType' AND l.LookupID=b.ProductTypeID
+		INNER JOIN Lookups l ON l.LookupID=b.ProductTypeID
 	WHERE tlh.Status=1 AND tl.TrackingLocationName NOT IN ('REMSTAR','Back to Requestor','Incoming Quarantine','Incoming Station 1','Incoming Station 2','Incoming Station 3','Florida Transit','Texas Transit','Chicago Transit','Ottawa Transit','Hungary Transit','Mexico Transit','Bochum Transit','Disposal','Incoming Station 1','Incoming Station 2','Incoming Station 4')
 		AND dtl.InTime BETWEEN @StartDate AND @EndDate AND l.[Values] = 'Accessory'
 		AND (@GeoLocationID IS NULL OR tl.TestCenterLocationID = @GeoLocationID)
@@ -194,7 +194,7 @@ BEGIN
 		INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID = tr.TestUnitID
 		INNER JOIN Batches b WITH(NOLOCK) ON tu.BatchID = b.ID
 		INNER JOIN BatchesAudit ba WITH(NOLOCK) ON b.ID = ba.BatchID AND ba.BatchStatus=2 --InProgress
-		INNER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND l.LookupID=b.ProductTypeID
+		INNER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=b.ProductTypeID
 	WHERE tlh.Status=1 AND tl.TrackingLocationName NOT IN ('REMSTAR','Back to Requestor','Incoming Quarantine','Incoming Station 1','Incoming Station 2','Incoming Station 3','Florida Transit','Texas Transit','Chicago Transit','Ottawa Transit','Hungary Transit','Mexico Transit','Bochum Transit','Disposal','Incoming Station 1','Incoming Station 2','Incoming Station 4')
 		AND dtl.InTime BETWEEN @StartDate AND @EndDate AND l.[Values] = 'Component'
 		AND (@GeoLocationID IS NULL OR tl.TestCenterLocationID = @GeoLocationID)
@@ -204,7 +204,7 @@ BEGIN
 	SELECT '# Worked On Handheld' As Item, tl.TrackingLocationName, tr.TestName, (CASE WHEN @reportBasedOn=1 THEN COUNT(DISTINCT b.ID) ELSE COUNT(distinct tu.id) END) As Count
 	FROM Batches b
 		INNER JOIN BatchesAudit ba WITH(NOLOCK) ON b.ID = ba.BatchID AND ba.BatchStatus=2 --InProgress
-		INNER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND l.LookupID=b.ProductTypeID
+		INNER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=b.ProductTypeID
 		INNER JOIN TestUnits tu WITH(NOLOCK) ON b.ID=tu.BatchID
 		INNER JOIN TestRecords tr WITH(NOLOCK) ON tr.TestUnitID=tu.ID
 		INNER JOIN TestRecordsAudit tra WITH(NOLOCK) ON tr.ID = tra.TestRecordId AND tra.inserttime between @startdate and @enddate

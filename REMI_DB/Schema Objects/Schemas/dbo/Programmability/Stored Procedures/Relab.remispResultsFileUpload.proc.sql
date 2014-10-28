@@ -7,12 +7,15 @@ BEGIN
 	DECLARE @VerNum INT
 	DECLARE @ResultID INT
 	DECLARE @ResultsXML XML
+	DECLARE @StartDate DATETIME
+	DECLARE @EndDate NVARCHAR(MAX)
+	DECLARE @Duration NVARCHAR(MAX)
 	DECLARE @ResultsLossFile XML
-
 	DECLARE @TestName NVARCHAR(400)
 	DECLARE @TestStageName NVARCHAR(400)
 	DECLARE @QRANumber NVARCHAR(11)
 	DECLARE @JobName NVARCHAR(400)
+	DECLARE @StationName NVARCHAR(400)
 	DECLARE @FinalResult NVARCHAR(15)
 	DECLARE @PassFail BIT
 	DECLARE @TestUnitNumber INT
@@ -27,8 +30,23 @@ BEGIN
 		@TestUnitNumber = T.c.query('UnitNumber').value('.', 'int'),
 		@TestStageName = T.c.query('TestStage').value('.', 'nvarchar(max)'),
 		@JobName = T.c.query('TestType').value('.', 'nvarchar(max)'),
-		@FinalResult = T.c.query('FinalResult').value('.', 'nvarchar(max)')
+		@FinalResult = T.c.query('FinalResult').value('.', 'nvarchar(max)'),
+		@EndDate = T.c.query('DateCompleted').value('.', 'nvarchar(max)'),
+		@Duration = T.c.query('Duration').value('.', 'nvarchar(max)'),
+		@StationName = T.c.query('StationName').value('.', 'nvarchar(400)')
 	FROM @ResultsXML.nodes('/TestResults/Header') T(c)
+	
+	IF (@EndDate IS NULL OR LTRIM(RTRIM(@EndDate)) = '')
+	BEGIN
+		SELECT @EndDate = T.c.query('DateCompleted').value('.', 'nvarchar(max)')
+		FROM @ResultsXML.nodes('/TestResults/Footer') T(c)
+	END
+	
+	IF (@Duration IS NULL OR LTRIM(RTRIM(@Duration)) = '')
+	BEGIN
+		SELECT @Duration = T.c.query('Duration').value('.', 'nvarchar(max)')
+		FROM @ResultsXML.nodes('/TestResults/Footer') T(c)
+	END
 	
 	if (@FinalResult IS NOT NULL AND LTRIM(RTRIM(@FinalResult)) <> '')
 	BEGIN
@@ -53,6 +71,15 @@ BEGIN
 		END
 	END
 
+	SELECT @EndDate= STUFF(@EndDate, CHARINDEX('-',@EndDate,(charindex('-',@EndDate, (charindex('-',@EndDate)+1))+1)), 1, ' ')
+	SELECT @EndDate= STUFF(@EndDate, CHARINDEX('-',@EndDate,(charindex('-',@EndDate, (charindex('-',@EndDate)+1))+1)), 1, ':')
+	SELECT @EndDate= STUFF(@EndDate, CHARINDEX('-',@EndDate,(charindex('-',@EndDate, (charindex('-',@EndDate)+1))+1)), 1, ':')
+					
+	If (CHARINDEX('.', @Duration) > 0)
+		SET @Duration = SUBSTRING(@Duration, 1, CHARINDEX('.', @Duration)-1)
+			
+	SET @StartDate=dateadd(s,-datediff(s,0,convert(DATETIME,@Duration)), CONVERT(DATETIME, @EndDate))
+
 	SELECT @TestUnitID = tu.ID
 	FROM TestUnits tu
 		INNER JOIN Batches b ON tu.BatchID=b.ID
@@ -60,6 +87,13 @@ BEGIN
 	
 	PRINT 'QRA: ' + CONVERT(VARCHAR, @QRANumber)
 	PRINT 'Unit Number: ' + CONVERT(VARCHAR, @TestUnitNumber)
+	PRINT 'Unit Number: ' + CONVERT(VARCHAR, @TestUnitNumber)
+	PRINT 'Duration: ' + CONVERT(VARCHAR, @Duration)
+	PRINT 'Date Started: ' + CONVERT(VARCHAR, @StartDate)
+	PRINT 'Date Completed: ' + CONVERT(VARCHAR, @EndDate)
+	PRINT 'Test Stage: ' + @TestStageName
+	PRINT 'Job: ' + @JobName
+	PRINT 'Test Name: ' + @TestName
 
 	IF (@TestUnitID IS NOT NULL)
 	BEGIN
@@ -103,18 +137,17 @@ BEGIN
 						VALUES (@TestStageID, @TestID, @TestUnitID, @PassFail)
 
 						SELECT @ResultID=ID FROM Relab.Results WHERE TestStageID=@TestStageID AND TestID=@TestID AND TestUnitID=@TestUnitID
-				
-						INSERT INTO Relab.ResultsXML (ResultID, ResultXML, VerNum, LossFile)
-						VALUES (@ResultID, @XML, 1, @ResultsLossFile)
+
+						INSERT INTO Relab.ResultsXML (ResultID, ResultXML, VerNum, StationName, StartDate, EndDate, LossFile)
+						VALUES (@ResultID, @XML, 1, @StationName, @StartDate, CONVERT(DATETIME, @EndDate), @ResultsLossFile)
 					END
 			END
 			ELSE
 			BEGIN
 				SELECT @VerNum = ISNULL(COUNT(*), 0)+1 FROM Relab.ResultsXML WHERE ResultID=@ResultID
-		
-				INSERT INTO Relab.ResultsXML (ResultID, ResultXML, VerNum, LossFile)
-				VALUES (@ResultID, @XML, @VerNum, @ResultsLossFile)
 
+				INSERT INTO Relab.ResultsXML (ResultID, ResultXML, VerNum, StationName, StartDate, EndDate, LossFile)
+				VALUES (@ResultID, @XML, @VerNum, @StationName, @StartDate, CONVERT(DATETIME, @EndDate), @ResultsLossFile)
 			END
 		END
 	END

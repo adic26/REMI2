@@ -112,12 +112,12 @@ case when @sortExpression is null then Priority end desc
 					INNER JOIN TestUnits AS tu WITH(NOLOCK) ON dtl.TestUnitID = tu.ID ON b.id = tu.batchid --batches where there's a tracking log
 					inner join Products p WITH(NOLOCK) on p.ID=b.ProductID
 					LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName
-					LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-					LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID 
-					LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID 
-					LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND b.RequestPurpose=l4.LookupID   
-					LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON l5.Type='Priority' AND b.Priority=l5.LookupID
-					LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON l6.Type='Department' AND b.DepartmentID=l6.LookupID
+					LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
+					LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID 
+					LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON b.TestCenterLocationID=l3.LookupID 
+					LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON b.RequestPurpose=l4.LookupID   
+					LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON b.Priority=l5.LookupID
+					LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON b.DepartmentID=l6.LookupID
 WHERE     tl.id = @TrackingLocationId AND dtl.OutTime IS NULL AND dtl.OutUser IS NULL)as b) as batchesrows
 	WHERE
 	 ((Row between (@startRowIndex) AND @startRowIndex + @maximumRows - 1) 

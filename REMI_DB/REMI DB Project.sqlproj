@@ -211,6 +211,7 @@
     <Folder Include="Scripts\October172014" />
     <Folder Include="Scripts\October202014" />
     <Folder Include="Scripts\October282014" />
+    <Folder Include="Scripts\November032014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -1397,6 +1398,8 @@
       <SubType>NotInBuild</SubType>
     </None>
     <None Include="Scripts\August132014\4.sql" />
+    <None Include="Scripts\November032014\3.sql" />
+    <None Include="Scripts\November032014\4.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -2327,5 +2330,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\October282014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\LookupType.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\UX_LookupType_Name.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\November032014\1.sql" />
+    <None Include="Scripts\November032014\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldSetupRole.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestFieldSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.Request.sql" />
   </ItemGroup>
 </Project>

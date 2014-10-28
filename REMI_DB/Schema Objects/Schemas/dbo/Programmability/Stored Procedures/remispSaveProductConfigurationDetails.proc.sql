@@ -1,15 +1,18 @@
 ﻿ALTER PROCEDURE remispSaveProductConfigurationDetails @PCID INT, @configID INT, @lookupID INT, @lookupValue NVARCHAR(2000), @LastUser NVARCHAR(255), @IsAttribute BIT = 0, @LookupAlt NVARCHAR(255)
 AS
 BEGIN
+	DECLARE @LookupTypeID INT
+	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Configuration'
+
 	IF (@lookupID = 0 AND LEN(LTRIM(RTRIM(@LookupAlt))) > 0)
 	BEGIN
-		SELECT @lookupID = LookupID FROM Lookups WHERE [values]=@LookupAlt AND Type='Configuration'
+		SELECT @lookupID = LookupID FROM Lookups WHERE [values]=@LookupAlt AND LookupTypeID =@LookupTypeID
 		
 		IF (@lookupID IS NULL OR @lookupID = 0)
 		BEGIN
 			SELECT @lookupID = MAX(LookupID)+1 FROM Lookups
 			
-			INSERT INTO Lookups (LookupID, Type,[Values], IsActive) VALUES (@lookupID, 'Configuration', LTRIM(RTRIM(@LookupAlt)), 1)
+			INSERT INTO Lookups (LookupID, LookupTypeID,[Values], IsActive) VALUES (@lookupID, @LookupTypeID, LTRIM(RTRIM(@LookupAlt)), 1)
 		END
 	END
 

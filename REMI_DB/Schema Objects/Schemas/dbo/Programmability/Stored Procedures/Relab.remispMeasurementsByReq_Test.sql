@@ -69,11 +69,11 @@ BEGIN
 		INNER JOIN Tests t ON t.ID=r.TestID
 		INNER JOIN @tests tst ON t.ID=tst.ID
 		INNER JOIN TestStages ts ON ts.ID=r.TestStageID
-		LEFT OUTER JOIN Lookups lu WITH(NOLOCK) ON lu.Type='UnitType' AND lu.LookupID=rm.MeasurementUnitTypeID
-		LEFT OUTER JOIN Lookups lt WITH(NOLOCK) ON lt.Type='MeasurementType' AND lt.LookupID=rm.MeasurementTypeID
-		LEFT OUTER JOIN Lookups ltsf WITH(NOLOCK) ON ltsf.Type='SFIFunctionalMatrix' AND ltsf.LookupID=rm.MeasurementTypeID
-		LEFT OUTER JOIN Lookups ltmf WITH(NOLOCK) ON ltmf.Type='MFIFunctionalMatrix' AND ltmf.LookupID=rm.MeasurementTypeID
-		LEFT OUTER JOIN Lookups ltacc WITH(NOLOCK) ON ltacc.Type='AccFunctionalMatrix' AND ltacc.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN Lookups lu WITH(NOLOCK) ON lu.LookupID=rm.MeasurementUnitTypeID
+		LEFT OUTER JOIN Lookups lt WITH(NOLOCK) ON lt.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN Lookups ltsf WITH(NOLOCK) ON ltsf.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN Lookups ltmf WITH(NOLOCK) ON ltmf.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN Lookups ltacc WITH(NOLOCK) ON ltacc.LookupID=rm.MeasurementTypeID
 		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) ON rmf.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN #parameters p WITH(NOLOCK) ON p.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN Relab.ResultsXML x ON x.ID = rm.XMLID

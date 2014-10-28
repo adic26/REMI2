@@ -52,7 +52,8 @@ BEGIN
 		( 
 		SELECT DISTINCT '],[' + l.[Values]
 		FROM Lookups l
-		WHERE l.Type='Training' And l.IsActive=1
+			INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
+		WHERE lt.Name='Training' And l.IsActive=1
 		AND (
 				(l.LookupID=@TrainingID) 
 				OR

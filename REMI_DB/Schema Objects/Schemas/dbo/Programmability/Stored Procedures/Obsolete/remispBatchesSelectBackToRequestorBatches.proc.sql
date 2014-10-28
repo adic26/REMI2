@@ -90,8 +90,8 @@ FROM
 			INNER JOIN TrackingLocations AS tl ON dtl.TrackingLocationID = tl.ID
 			INNER JOIN TestUnits AS tu ON dtl.TestUnitID = tu.ID ON b.id = tu.batchid --batches where there's a tracking log
 			inner join Products p on p.ID=b.ProductID
-			LEFT OUTER JOIN Lookups l ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-			LEFT OUTER JOIN Lookups l2 ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID  
+			LEFT OUTER JOIN Lookups l ON b.ProductTypeID=l.LookupID  
+			LEFT OUTER JOIN Lookups l2 ON b.AccessoryGroupID=l2.LookupID  
 		WHERE (tl.id != 81 AND dtl.OutTime IS NULL AND dtl.OutUser IS NULL) and b.BatchStatus = 8
 	)as b
 ) as batchesrows	

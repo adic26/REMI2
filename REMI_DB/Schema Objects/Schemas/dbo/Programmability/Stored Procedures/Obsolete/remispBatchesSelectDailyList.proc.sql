@@ -104,9 +104,9 @@ AS
 					INNER join TestStages ts ON ts.TestStageName = tu.CurrentTestStageName and ts.TestStageType = @GetBatchesAtEnvStages 
 					LEFT OUTER JOIN Products p ON p.ID = b.ProductID
 					LEFT OUTER join Jobs j ON j.JobName =b.JobName --and ts.JobID = j.ID
-					LEFT OUTER JOIN Lookups l ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-					LEFT OUTER JOIN Lookups l2 ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID  
-					LEFT OUTER JOIN Lookups l3 ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID 
+					LEFT OUTER JOIN Lookups l ON b.ProductTypeID=l.LookupID  
+					LEFT OUTER JOIN Lookups l2 ON b.AccessoryGroupID=l2.LookupID  
+					LEFT OUTER JOIN Lookups l3 ON b.TestCenterLocationID=l3.LookupID 
 				WHERE
 				(
 					(j.OperationsTest = @getoperationstests and @GetOperationsTests = 1)

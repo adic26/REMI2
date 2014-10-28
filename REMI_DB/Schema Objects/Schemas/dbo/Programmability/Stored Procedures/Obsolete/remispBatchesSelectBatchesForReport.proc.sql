@@ -71,9 +71,9 @@ BEGIN
 			FROM Batches AS b WITH(NOLOCK)
 				inner join Products p WITH(NOLOCK) on p.ID=b.ProductID
 				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName
-				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-				LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID  
-				LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID  
+				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
+				LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID  
+				LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON b.TestCenterLocationID=l3.LookupID  
 				INNER JOIN TestStages ts WITH(NOLOCK) ON ts.TestStageName=b.TestStageName
 			WHERE (b.TestCenterLocationID = @TestCentreLocation or @TestCentreLocation is null) and (b.BatchStatus != 5)
 				AND ts.TestStageType=4	

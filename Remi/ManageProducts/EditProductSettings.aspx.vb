@@ -55,8 +55,8 @@ Partial Class ManageProducts_EditProductSettings
         txtTSDContact.Text = product.TSDContact
         hdnIsActive.Value = product.IsActive
 
-        Dim pl = (From l In instance.Lookups Where l.Type = "MFIFunctionalMatrix" Or l.Type = "SFIFunctionalMatrix" Or l.Type = "AccFunctionalMatrix" Order By l.Type, l.Values _
-                  Select New With {.LookupID = l.LookupID, .Type = l.Type, .Values = l.Values, _
+        Dim pl = (From l In instance.Lookups Where l.LookupType.Name = "MFIFunctionalMatrix" Or l.LookupType.Name = "SFIFunctionalMatrix" Or l.LookupType.Name = "AccFunctionalMatrix" Order By l.LookupType.Name, l.Values _
+                  Select New With {.LookupID = l.LookupID, .Type = l.LookupType.Name, .Values = l.Values, _
                                    .HasAccess = If((From p In instance.ProductLookups Where p.Lookup.LookupID = l.LookupID And p.Product.ID = productID Select p.ID).FirstOrDefault() > 0, True, False) _
                                   })
 
@@ -71,8 +71,8 @@ Partial Class ManageProducts_EditProductSettings
 
         ProductGroupManager.ChangeAccess(LookupID, hdnProductID.Value, chk.Checked)
         Dim instance = New REMI.Dal.Entities().Instance()
-        gdvFunctional.DataSource = (From l In instance.Lookups Where l.Type = "MFIFunctionalMatrix" Or l.Type = "SFIFunctionalMatrix" Or l.Type = "AccFunctionalMatrix" Order By l.Type, l.Values _
-                  Select New With {.LookupID = l.LookupID, .Type = l.Type, .Values = l.Values, _
+        gdvFunctional.DataSource = (From l In instance.Lookups Where l.LookupType.Name = "MFIFunctionalMatrix" Or l.LookupType.Name = "SFIFunctionalMatrix" Or l.LookupType.Name = "AccFunctionalMatrix" Order By l.LookupType.Name, l.Values _
+                  Select New With {.LookupID = l.LookupID, .Type = l.LookupType.Name, .Values = l.Values, _
                                    .HasAccess = If((From p In instance.ProductLookups Where p.Lookup.LookupID = l.LookupID And p.Product.ID = hdnProductID.Value Select p.ID).FirstOrDefault() > 0, True, False) _
                                   })
         gdvFunctional.DataBind()

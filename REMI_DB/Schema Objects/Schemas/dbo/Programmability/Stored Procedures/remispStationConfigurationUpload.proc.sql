@@ -7,12 +7,15 @@ BEGIN
 	DECLARE @MaxLookupID INT
 	DECLARE @idoc INT
 	DECLARE @PluginID INT
+	DECLARE @LookupTypeID INT
 	DECLARE @ID INT
 	DECLARE @xml XML
 	DECLARE @LastUser NVARCHAR(255)
 
 	IF ((SELECT COUNT(*) FROM StationConfigurationUpload WHERE ISNULL(IsProcessed,0)=0)=0)
 		RETURN
+
+	SELECT @LookupTypeID=LookupTypeID FROM LookupType WHERE Name='Configuration'
 
 	WHILE ((SELECT COUNT(*) FROM StationConfigurationUpload WHERE ISNULL(IsProcessed,0)=0)>0)
 	BEGIN
@@ -62,14 +65,14 @@ BEGIN
 		SET IDENTITY_INSERT TrackingLocationsHostsConfiguration OFF
 	
 		INSERT INTO #temp3
-		SELECT DISTINCT 0 AS LookupID, 'Configuration' AS Type, LTRIM(RTRIM(LocalName)) AS LocalName
+		SELECT DISTINCT 0 AS LookupID, @LookupTypeID AS LookupTypeID, LTRIM(RTRIM(LocalName)) AS LocalName
 		FROM #temp 
-		WHERE NodeType=2 AND LocalName NOT IN (SELECT Lookups.[Values] FROM Lookups WHERE Type='Configuration')
+		WHERE NodeType=2 AND LocalName NOT IN (SELECT Lookups.[Values] FROM Lookups WHERE LookupTypeID=@LookupTypeID)
 
 		INSERT INTO #temp3
-		SELECT DISTINCT 0 AS LookupID, 'Configuration' AS Type, LTRIM(RTRIM(LocalName)) AS LocalName
+		SELECT DISTINCT 0 AS LookupID, @LookupTypeID AS LookupTypeID, LTRIM(RTRIM(LocalName)) AS LocalName
 		FROM #temp 
-		WHERE NodeType=1 AND LocalName NOT IN (SELECT Lookups.[Values] FROM Lookups WHERE Type='Configuration')
+		WHERE NodeType=1 AND LocalName NOT IN (SELECT Lookups.[Values] FROM Lookups WHERE LookupTypeID=@LookupTypeID)
 			AND ID IN (SELECT ParentID FROM #temp WHERE NodeType=3)
 
 		UPDATE #temp3 SET LookupID=ID+@MaxLookupID
@@ -79,13 +82,13 @@ BEGIN
 	
 		INSERT INTO TrackingLocationsHostsConfigValues (Value, LookupID, TrackingConfigID, LastUser, IsAttribute)
 		SELECT ISNULL((SELECT t2.Text FROM #temp t2 WHERE t2.NodeType=3 AND t2.ParentID=#temp.ID), '') AS Value, 
-			CASE WHEN #temp.NodeType=2 THEN (SELECT LookupID FROM Lookups WHERE Type='Configuration' AND [values]=#temp.LocalName) ELSE NULL END As LookupID, 
+			CASE WHEN #temp.NodeType=2 THEN (SELECT LookupID FROM Lookups WHERE LookupTypeID=@LookupTypeID AND [values]=#temp.LocalName) ELSE NULL END As LookupID, 
 			(SELECT ID_NEW FROM #temp2 WHERE #temp.ParentID=#temp2.ID) AS TrackingConfigID, @LastUser As LastUser, 1 AS IsAttribute
 		FROM #temp
 		WHERE #temp.NodeType=2
 
 		INSERT INTO TrackingLocationsHostsConfigValues (Value, LookupID, TrackingConfigID, LastUser, IsAttribute)
-		SELECT ISNULL(#temp.Text,'') AS Value, (SELECT Lookups.LookupID FROM #temp t INNER JOIN Lookups ON Type='Configuration' AND LOWER(LTRIM(RTRIM([Values])))=LOWER(LTRIM(RTRIM(t.LocalName))) WHERE t.NodeType=1 AND t.id=#temp.parentid) AS LookupID,
+		SELECT ISNULL(#temp.Text,'') AS Value, (SELECT Lookups.LookupID FROM #temp t INNER JOIN Lookups ON LookupTypeID=@LookupTypeID AND LOWER(LTRIM(RTRIM([Values])))=LOWER(LTRIM(RTRIM(t.LocalName))) WHERE t.NodeType=1 AND t.id=#temp.parentid) AS LookupID,
 			(SELECT #temp2.ID_NEW 
 			FROM #temp2 	
 				INNER JOIN #temp t1 ON t1.NodeType=1 AND #temp2.ID=t1.parentid
@@ -95,7 +98,7 @@ BEGIN
 		WHERE NodeType=3 AND ParentID NOT IN (Select ID FROM #temp WHERE #temp.NodeType=2)
 
 		INSERT INTO TrackingLocationsHostsConfigValues (Value, LookupID, TrackingConfigID, LastUser, IsAttribute)
-		SELECT ISNULL(#temp.Text,'') AS Value, (SELECT Lookups.LookupID FROM #temp t INNER JOIN Lookups ON Type='Configuration' AND LOWER(LTRIM(RTRIM([Values])))=LOWER(LTRIM(RTRIM(t.LocalName))) WHERE t.NodeType=1 AND t.id=#temp.id) AS LookupID,
+		SELECT ISNULL(#temp.Text,'') AS Value, (SELECT Lookups.LookupID FROM #temp t INNER JOIN Lookups ON LookupTypeID=@LookupTypeID AND LOWER(LTRIM(RTRIM([Values])))=LOWER(LTRIM(RTRIM(t.LocalName))) WHERE t.NodeType=1 AND t.id=#temp.id) AS LookupID,
 			(SELECT #temp2.ID_NEW 
 			FROM #temp2 	
 				INNER JOIN #temp t1 ON t1.NodeType=1 AND #temp2.ID=t1.parentid

@@ -41,51 +41,56 @@
 	DECLARE @TestCenterLocationID INT
 	DECLARE @ReturnValue int
 	DECLARE @maxid int
+	DECLARE @LookupTypeID INT
 	
 	IF NOT EXISTS (SELECT 1 FROM Products WHERE LTRIM(RTRIM(ProductGroupName))= LTRIM(RTRIM(@ProductGroupName)))
 	BEGIn
 		INSERT INTO Products (ProductGroupName) Values (LTRIM(RTRIM(@ProductGroupName)))
 	END
 	
-	IF NOT EXISTS (SELECT 1 FROM Lookups WHERE Type='ProductType' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@ProductType)))
+	IF NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='ProductType' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@ProductType)))
 	BEGIN
+		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='ProductType'
 		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
-		INSERT INTO Lookups (LookupID, Type, [Values]) Values (@maxid, 'ProductType', LTRIM(RTRIM(@ProductType)))
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@ProductType)))
 	END
 	
-	IF LTRIM(RTRIM(@AccessoryGroupName)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE Type='AccessoryType' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@AccessoryGroupName)))
+	IF LTRIM(RTRIM(@AccessoryGroupName)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='AccessoryType' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@AccessoryGroupName)))
 	BEGIN
+		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='AccessoryType'
 		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
-		INSERT INTO Lookups (LookupID, Type, [Values]) Values (@maxid, 'AccessoryType', LTRIM(RTRIM(@AccessoryGroupName)))
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@AccessoryGroupName)))
 	END
 	
-	IF LTRIM(RTRIM(@TestCenterLocation)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE Type='TestCenter' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@TestCenterLocation)))
+	IF LTRIM(RTRIM(@TestCenterLocation)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='TestCenter' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@TestCenterLocation)))
 	BEGIN
+		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='TestCenter'
 		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
-		INSERT INTO Lookups (LookupID, Type, [Values]) Values (@maxid, 'TestCenter', LTRIM(RTRIM(@TestCenterLocation)))
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@TestCenterLocation)))
 	END
 	
 	IF @RequestPurposeID = 0
 	BEGIN
-		SELECT @RequestPurposeID = LookupID FROM Lookups WHERE Type='RequestPurpose' AND [Values] = @RequestPurpose
+		SELECT @RequestPurposeID = LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='RequestPurpose' AND [Values] = @RequestPurpose
 	END
 
 	IF @PriorityID = 0
 	BEGIN
-		SELECT @PriorityID = LookupID FROM Lookups WHERE Type='Priority' AND [Values] = @Priority
+		SELECT @PriorityID = LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Priority' AND [Values] = @Priority
 	END
 
-	IF LTRIM(RTRIM(@Department)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE Type='Department' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Department)))
+	IF LTRIM(RTRIM(@Department)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Department' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Department)))
 	BEGIN
+		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Department'
 		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
-		INSERT INTO Lookups (LookupID, Type, [Values]) Values (@maxid, 'Department', LTRIM(RTRIM(@Department)))
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@Department)))
 	END
 
 	SELECT @ProductID = ID FROM Products WITH(NOLOCK) WHERE LTRIM(RTRIM(ProductGroupName))= LTRIM(RTRIM(@ProductGroupName))
-	SELECT @ProductTypeID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='ProductType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@ProductType))
-	SELECT @AccessoryGroupID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='AccessoryType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@AccessoryGroupName))
-	SELECT @TestCenterLocationID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='TestCenter' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@TestCenterLocation))
-	SELECT @DepartmentID = LookupID FROM Lookups WITH(NOLOCK) WHERE Type='Department' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@Department))
+	SELECT @ProductTypeID = LookupID FROM Lookups l WITH(NOLOCK) INNER JOIN LookupType lt WITH(NOLOCK) ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='ProductType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@ProductType))
+	SELECT @AccessoryGroupID = LookupID FROM Lookups l WITH(NOLOCK) INNER JOIN LookupType lt WITH(NOLOCK) ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='AccessoryType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@AccessoryGroupName))
+	SELECT @TestCenterLocationID = LookupID FROM Lookups l WITH(NOLOCK) INNER JOIN LookupType lt WITH(NOLOCK) ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='TestCenter' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@TestCenterLocation))
+	SELECT @DepartmentID = LookupID FROM Lookups l WITH(NOLOCK) INNER JOIN LookupType lt WITH(NOLOCK) ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Department' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@Department))
 		
 	IF (@ID IS NULL)
 	BEGIN

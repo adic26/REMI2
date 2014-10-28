@@ -359,7 +359,7 @@ Namespace REMI.Bll
                 Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
                 If bc.Validate Then
                     Dim instance = New REMI.Dal.Entities().Instance()
-                    Dim batch As REMI.Entities.Batch = (From b In instance.Batches.Include("TestCenter").Include("AccessoryGroup").Include("ProductType").Include("RequestPurpose") Where b.QRANumber = bc.BatchNumber Select b).FirstOrDefault()
+                    Dim batch As REMI.Entities.Batch = (From b In instance.Batches.Include("TestCenter").Include("AccessoryGroup").Include("ProductType").Include("Purpose") Where b.QRANumber = bc.BatchNumber Select b).FirstOrDefault()
 
                     Return batch
                 Else

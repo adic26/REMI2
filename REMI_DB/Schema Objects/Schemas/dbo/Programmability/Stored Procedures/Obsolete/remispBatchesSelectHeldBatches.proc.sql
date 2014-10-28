@@ -69,9 +69,9 @@
 			FROM Batches AS b WITH(NOLOCK)
 				 INNER JOIN Products p WITH(NOLOCK) on b.ProductID=p.id
 				 LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName
-				 LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND l.LookupID=b.ProductTypeID
-				 LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND l2.LookupID=b.AccessoryGroupID
-				 LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID  
+				 LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=b.ProductTypeID
+				 LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=b.AccessoryGroupID
+				 LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON b.TestCenterLocationID=l3.LookupID  
 			WHERE (b.TestCenterLocationID = @TestCentreLocation or @TestCentreLocation is null) and (b.BatchStatus = 1 or b.BatchStatus = 3) 
 				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WITH(NOLOCK) WHERE UserID=@UserID)))
 		)as b

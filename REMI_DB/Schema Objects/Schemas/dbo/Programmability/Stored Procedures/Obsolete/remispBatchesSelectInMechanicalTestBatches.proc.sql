@@ -107,9 +107,9 @@ case when @sortExpression is null then Priority end desc
                    TrackingLocationTypes as tlt on tl.TrackingLocationTypeID = tlt.id inner join
                       TestUnits AS tu ON dtl.TestUnitID = tu.ID ON b.id = tu.batchid --batches where there's a tracking log
                       inner join Products p on p.ID=b.ProductID
-                      LEFT OUTER JOIN Lookups l ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-					LEFT OUTER JOIN Lookups l2 ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID  
-					LEFT OUTER JOIN Lookups l3 ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID  
+                      LEFT OUTER JOIN Lookups l ON b.ProductTypeID=l.LookupID  
+					LEFT OUTER JOIN Lookups l2 ON b.AccessoryGroupID=l2.LookupID  
+					LEFT OUTER JOIN Lookups l3 ON b.TestCenterLocationID=l3.LookupID  
 WHERE   (b.TestCenterLocationID = @TestCentreLocation or @TestCentreLocation is null) and j.TechnicalOperationsTest = 1 and j.MechanicalTest=1 and  tlt.TrackingLocationFunction= 4  AND dtl.OutTime IS NULL AND dtl.OutUser IS NULL)as b) as batchesrows
 WHERE ((Row between (@startRowIndex) AND @startRowIndex + @maximumRows - 1) OR @startRowIndex = -1 OR @maximumRows = -1) 
 GO

@@ -15,7 +15,7 @@ Namespace REMI.Dal
     Public Class RequestDB
 
         Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
-            Dim dt As New DataTable()
+            Dim dt As New DataTable("RequestSetupInfo")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Req.GetRequestSetupInfo", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
@@ -37,7 +37,7 @@ Namespace REMI.Dal
         Public Shared Function GetConnectString(ByVal reqNumber As String) As String
             Dim requestType As String = reqNumber.Substring(0, reqNumber.IndexOf("-"))
 
-            Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.Type = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
+            Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
         End Function
 
         Public Shared Function GetTRSRequest(ByVal reqNumber As String) As IQRARequest
@@ -103,7 +103,7 @@ Namespace REMI.Dal
 
         Public Shared Function GetTRSQRAByTestCenter(ByVal testCenter As String) As DataTable
             Dim dtReq As New DataTable
-            Dim connections As List(Of String) = (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.Type = "RequestType" And r.DBType = "Oracle" Select r.RequestConnectName).Distinct.ToList()
+            Dim connections As List(Of String) = (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.DBType = "Oracle" Select r.RequestConnectName).Distinct.ToList()
 
             For Each con In connections
                 Using myOracleConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(con))
@@ -186,6 +186,132 @@ Namespace REMI.Dal
             reqData.FieldMapping = REMIAppCache.GetFieldMapping(reqData.RequestType)
 
             Return reqData
+        End Function
+
+        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
+            Dim instance = New REMI.Dal.Entities().Instance()
+            Dim val = (From rfc In request Select rfc.FieldSetupID, rfc.Value, rfc.RequestID, rfc.RequestNumber)
+            Dim reqID As Int32 = 0
+            Dim reqNumber As String = val(0).RequestNumber
+
+            Dim req = (From r In instance.Requests Where r.RequestNumber = reqNumber).FirstOrDefault()
+
+            If (req Is Nothing) Then
+                Dim rq As New REMI.Entities.Request()
+                rq.RequestNumber = reqNumber
+                instance.AddToRequests(rq)
+            Else
+                reqID = req.RequestID
+            End If
+
+            instance.SaveChanges()
+
+            reqID = (From r In instance.Requests Where r.RequestNumber = reqNumber Select r.RequestID).FirstOrDefault()
+
+            For Each rec In val
+                Dim fieldData = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID).FirstOrDefault()
+
+                If (fieldData Is Nothing) Then
+                    Dim sfd As New REMI.Entities.ReqFieldData()
+                    sfd.ReqFieldSetupID = rec.FieldSetupID
+                    sfd.RequestID = reqID
+                    sfd.Value = rec.Value
+                    instance.AddToReqFieldDatas(sfd)
+                Else
+                    fieldData.Value = rec.Value
+                End If
+            Next
+
+            instance.SaveChanges()
+
+            Return True
+        End Function
+
+        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
+            Dim rtID As Int32
+            Dim fieldData As RequestFieldsCollection = Nothing
+
+            rtID = (From fs In New REMI.Dal.Entities().Instance.ReqFieldSetups Where fs.RequestType.Lookup.Values = requestName Select fs.RequestTypeID).FirstOrDefault()
+
+            If (rtID > 0) Then
+                Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                    Using myCommand As New SqlCommand("Req.RequestFieldSetup", myConnection)
+                        myCommand.CommandType = CommandType.StoredProcedure
+                        myCommand.Parameters.AddWithValue("@RequestTypeID", rtID)
+
+                        If (includeArchived) Then
+                            myCommand.Parameters.AddWithValue("@IncludeArchived", 1)
+                        End If
+
+                        If (requestNumber.Trim().Length > 0) Then
+                            myCommand.Parameters.AddWithValue("@requestNumber", requestNumber)
+                        End If
+
+                        myConnection.Open()
+
+                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                            If myReader.HasRows Then
+                                fieldData = New RequestFieldsCollection
+
+                                While myReader.Read()
+                                    fieldData.Add(FillFieldData(myReader))
+                                End While
+                            End If
+                        End Using
+                    End Using
+                End Using
+            End If
+
+            Return fieldData
+        End Function
+
+        Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord) As BusinessEntities.RequestFields
+            Dim myFields As RequestFields = New BusinessEntities.RequestFields()
+
+            myFields.FieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldSetupID"))
+            myFields.RequestType = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestType"))
+            myFields.RequestTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestTypeID"))
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Description")) Then
+                myFields.Description = myDataRecord.GetString(myDataRecord.GetOrdinal("Description"))
+            Else
+                myFields.Description = String.Empty
+            End If
+
+            myFields.DisplayOrder = myDataRecord.GetInt32(myDataRecord.GetOrdinal("DisplayOrder"))
+            myFields.FieldType = myDataRecord.GetString(myDataRecord.GetOrdinal("FieldType"))
+            myFields.FieldTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldTypeID"))
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("FieldValidationID")) Then
+                myFields.FieldValidation = myDataRecord.GetString(myDataRecord.GetOrdinal("ValidationType"))
+                myFields.FieldValidationID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldValidationID"))
+            Else
+                myFields.FieldValidation = String.Empty
+                myFields.FieldValidationID = 0
+            End If
+
+            myFields.IsArchived = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("Archived"))
+            myFields.IsRequired = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsRequired"))
+            myFields.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("Name"))
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
+                myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
+                myFields.OptionsType = (From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.Values).ToList
+            Else
+                myFields.OptionsTypeID = 0
+                myFields.OptionsType = New List(Of String)()
+            End If
+
+            myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
+            myFields.RequestNumber = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestNumber"))
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Value")) Then
+                myFields.Value = myDataRecord.GetString(myDataRecord.GetOrdinal("Value"))
+            Else
+                myFields.Value = String.Empty
+            End If
+
+            Return myFields
         End Function
     End Class
 End Namespace

@@ -63,7 +63,7 @@ Partial Class Controls_BatchSelectControl
         TRSLink = 27
         RelabResultLink = 28
         BatchInfoLink = 29
-        Move = 29
+        Move = 30
     End Enum
 
     Public Sub New()

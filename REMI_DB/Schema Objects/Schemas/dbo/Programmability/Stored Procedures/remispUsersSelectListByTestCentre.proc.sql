@@ -22,8 +22,8 @@ AS
 		CASE WHEN @determineDelete = 1 THEN dbo.remifnUserCanDelete(Users.LDAPLogin) ELSE 0 END AS CanDelete,
 		Users.DepartmentID, ld.[Values] AS Department
 	FROM Users
-		LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
-		LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
+		LEFT OUTER JOIN Lookups ON LookupID=TestCentreID
+		LEFT OUTER JOIN Lookups ld ON ld.LookupID=DepartmentID
 	WHERE (TestCentreID=@TestLocation OR @TestLocation = 0)
 		AND 
 		(

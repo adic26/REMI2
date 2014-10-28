@@ -29,7 +29,7 @@ BEGIN
 		INNER JOIN Jobs j WITH(NOLOCK) ON j.ID=ts.JobID
 		INNER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=b.TestCenterLocationID
 		INNER JOIN #products products WITH(NOLOCK) ON products.ID = pd.ID
-		INNER JOIN Lookups lm ON lm.LookupID = rm.MeasurementTypeID AND lm.Type=''MeasurementType''
+		INNER JOIN Lookups lm ON lm.LookupID = rm.MeasurementTypeID
 		INNER JOIN #jobs job WITH(NOLOCK) ON job.id=j.ID
 		INNER JOIN #stageIDs stage WITH(NOLOCK) ON stage.id=ts.ID
 	WHERE r.TestID='+CONVERT(VARCHAR,@TestID)+' AND MeasurementValue IS NOT NULL 

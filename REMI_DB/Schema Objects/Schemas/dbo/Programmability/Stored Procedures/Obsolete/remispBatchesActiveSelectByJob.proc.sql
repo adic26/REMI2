@@ -86,9 +86,9 @@ AS
 			INNER JOIN TestUnits AS tu ON dtl.TestUnitID = tu.ID AND b.id = tu.batchid --batches where there's a tracking log
 			inner join Products p on p.ID=b.ProductID
 			LEFT OUTER JOIN Jobs j ON j.JobName = b.JobName
-			LEFT OUTER JOIN Lookups l ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID
-			LEFT OUTER JOIN Lookups l2 ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID
-			LEFT OUTER JOIN Lookups l3 ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID  
+			LEFT OUTER JOIN Lookups l ON b.ProductTypeID=l.LookupID
+			LEFT OUTER JOIN Lookups l2 ON b.AccessoryGroupID=l2.LookupID
+			LEFT OUTER JOIN Lookups l3 ON b.TestCenterLocationID=l3.LookupID  
 		WHERE b.BatchStatus NOT IN (5,8) AND b.Jobname=@JobName
 	)as b
 GO

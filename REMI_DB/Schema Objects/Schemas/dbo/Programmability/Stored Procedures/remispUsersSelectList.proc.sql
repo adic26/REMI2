@@ -18,8 +18,8 @@ AS
 			Lookups.[Values] AS TestCentre, ISNULL(Users.IsActive,1) AS IsActive, Users.DefaultPage, Users.TestCentreID, Users.ByPassProduct,
 			Users.DepartmentID, ld.[Values] AS Department
 		FROM Users
-			LEFT OUTER JOIN Lookups ON Type='TestCenter' AND LookupID=TestCentreID
-			LEFT OUTER JOIN Lookups ld ON ld.Type='Department' AND ld.LookupID=DepartmentID
+			LEFT OUTER JOIN Lookups ON LookupID=TestCentreID
+			LEFT OUTER JOIN Lookups ld ON ld.LookupID=DepartmentID
 		) AS UsersRows
 	WHERE ((Row between (@startRowIndex) AND @startRowIndex + @maximumRows - 1) 
 			OR @startRowIndex = -1 OR @maximumRows = -1) 

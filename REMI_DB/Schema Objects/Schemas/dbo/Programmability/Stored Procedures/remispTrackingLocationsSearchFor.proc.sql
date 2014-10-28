@@ -65,7 +65,7 @@ SELECT DISTINCT tl.ID, tl.TrackingLocationName, tl.TestCenterLocationID,
 	FROM TrackingLocations as tl
 		INNER JOIN TrackingLocationTypes as tlt ON tl.TrackingLocationTypeID = tlt.ID
 		LEFT OUTER JOIN TrackingLocationsHosts tlh ON tl.ID = tlh.TrackingLocationID
-		LEFT OUTER JOIN Lookups l3 ON l3.Type='TestCenter' AND l3.lookupID=tl.TestCenterLocationID
+		LEFT OUTER JOIN Lookups l3 ON l3.lookupID=tl.TestCenterLocationID
 	WHERE (tl.ID = @ID or @ID is null) and (tlh.status = @Status or @Status is null)
 		and (tl.TrackingLocationName = @TrackingLocationName or @TrackingLocationName is null)
 		and (TestCenterLocationID = @GeoLocationID or @GeoLocationID is null)

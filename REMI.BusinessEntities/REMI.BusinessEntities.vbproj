@@ -120,6 +120,7 @@
     <Compile Include="BusinessObjects\RequestNumber.vb" />
     <Compile Include="DataEntityCollections\CalibrationCollection.vb" />
     <Compile Include="DataEntityCollections\ProductConfigCollection.vb" />
+    <Compile Include="DataEntityCollections\RequestFieldsCollection.vb" />
     <Compile Include="DataEntityCollections\TrackingLocationTypePermissionCollection.vb" />
     <Compile Include="DataEntityCollections\ParameterResultCollection.vb" />
     <Compile Include="DataEntityCollections\TestResultCollection.vb" />
@@ -132,6 +133,7 @@
     <Compile Include="DataEntityObjects\ProductConfiguration.vb" />
     <Compile Include="DataEntityObjects\ProductSetting.vb" />
     <Compile Include="DataEntityObjects\ParameterResult.vb" />
+    <Compile Include="DataEntityObjects\RequestFields.vb" />
     <Compile Include="DataEntityObjects\TrackingLocationTypePermission.vb" />
     <Compile Include="Enumerations\TestCenter.vb" />
     <Compile Include="Helpers\REMIAppCache.vb" />

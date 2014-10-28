@@ -59,8 +59,8 @@ AS
 			FROM Batches as b
 				inner join Products p on b.ProductID=p.id 
 				LEFT OUTER JOIN Jobs j ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
-				LEFT OUTER JOIN Lookups l ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-				LEFT OUTER JOIN Lookups l2 ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID  
+				LEFT OUTER JOIN Lookups l ON b.ProductTypeID=l.LookupID  
+				LEFT OUTER JOIN Lookups l2 ON b.AccessoryGroupID=l2.LookupID  
 			WHERE (b.ID = @ID or @ID is null) AND (BatchStatus = @Status or @Status is null) 
 				AND (QRANumber LIKE '%' + @QRANumber + '%' OR @QRANumber IS NULL)
 				AND (p.ProductGroupName = @ProductGroupName OR @ProductGroupName IS NULL)
