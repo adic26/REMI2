@@ -30,7 +30,7 @@ namespace REMI.Bll.Tests
         public void GetTRSQRAByTestCenter()
         {
             var tc = new REMI.Entities.Lookup();
-            tc = (from l in instance.Lookups where l.Type=="TestCenter" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
+            tc = (from l in instance.Lookups where l.LookupType.Name == "TestCenter" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
 
             Assert.That(BatchManager.GetTRSQRAByTestCenter(tc.Values).Rows.Count == 0);
             Assert.That(BatchManager.GetTRSQRAByTestCenter(String.Empty).Rows.Count == 0);
@@ -173,7 +173,7 @@ namespace REMI.Bll.Tests
             var batch = new REMI.Entities.Batch();
             batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
             var p = new REMI.Entities.Lookup();
-            p = (from l in instance.Lookups where l.Type=="Priority" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
+            p = (from l in instance.Lookups where l.LookupType.Name == "Priority" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
 
             Assert.That(BatchManager.SetPriority(batch.QRANumber, p.LookupID).Count > 0);
         }

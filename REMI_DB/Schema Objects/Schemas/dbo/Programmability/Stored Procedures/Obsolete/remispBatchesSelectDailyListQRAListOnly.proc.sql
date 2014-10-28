@@ -81,9 +81,9 @@ FROM (
 				INNER JOIN TestUnits as tu ON (tu.BatchID = b.ID)
 				INNER JOIN Products p ON p.ID=b.ProductID
 				LEFT OUTER JOIN Jobs j ON (j.JobName = b.JobName)
-				LEFT OUTER JOIN Lookups l ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-				LEFT OUTER JOIN Lookups l2 ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID  
-				LEFT OUTER JOIN Lookups l3 ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID 
+				LEFT OUTER JOIN Lookups l ON b.ProductTypeID=l.LookupID  
+				LEFT OUTER JOIN Lookups l2 ON b.AccessoryGroupID=l2.LookupID  
+				LEFT OUTER JOIN Lookups l3 ON b.TestCenterLocationID=l3.LookupID 
 			WHERE ts.JobID = j.ID and (b.batchstatus=2) and (ts.TestStageType =  @GetBatchesAtEnvStages) and (@ProductID is null or p.ID = @ProductID)	
 					and
 					(

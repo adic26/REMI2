@@ -1,8 +1,11 @@
 ﻿ALTER PROCEDURE remispGetLookup @Type NVARCHAR(150), @Lookup NVARCHAR(150), @ParentID INT = NULL
 AS
 BEGIN
+	DECLARE @LookupTypeID INT
+	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@Type
+
 	SELECT LookupID, IsActive FROM Lookups 
-	WHERE Type=@Type AND [Values]=@Lookup AND 
+	WHERE LookupTypeID=@LookupTypeID AND [Values]=@Lookup AND 
 		(
 			(ISNULL(@ParentID, 0) > 0 AND ParentID=@ParentID)
 			OR

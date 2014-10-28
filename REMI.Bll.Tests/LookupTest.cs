@@ -67,7 +67,7 @@ namespace REMI.Bll.Tests
             var e = new REMI.Entities.Lookup();
             e = (from l in instance.Lookups where l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
 
-            Assert.True(LookupsManager.SaveLookup(e.Type, e.Values, e.IsActive, e.Description, (e.ParentID == null ? 0 : (int)e.ParentID)));
+            Assert.True(LookupsManager.SaveLookup(e.LookupType.Name, e.Values, e.IsActive, e.Description, (e.ParentID == null ? 0 : (int)e.ParentID)));
         }
     }
 }

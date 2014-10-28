@@ -12,7 +12,7 @@ Public Class Admin_Lookups
                 Response.Redirect("~/")
             End If
 
-            ddlLookupList.DataSource = (From l In New REMI.Dal.Entities().Instance().Lookups Select l.Type).Distinct
+            ddlLookupList.DataSource = (From l In New REMI.Dal.Entities().Instance().LookupTypes Select l.Name).OrderBy(Function(l) l)
             ddlLookupList.DataBind()
 
 

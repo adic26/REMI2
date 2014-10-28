@@ -20,11 +20,11 @@ BEGIN
 			LEFT OUTER JOIN Tests t WITH(NOLOCK) ON pvt.Test = t.ID
 			LEFT OUTER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID = pvt.TestUnitID
 			LEFT OUTER JOIN Batches b WITH(NOLOCK) ON tu.BatchID = b.ID
-			LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND l.LookupID=pvt.ProductTypeID
-			LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND l2.LookupID=pvt.AccessoryGroupID
+			LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=pvt.ProductTypeID
+			LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=pvt.AccessoryGroupID
 			LEFT OUTER JOIN Products p WITH(NOLOCK) ON p.ID=pvt.ProductID
-			LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND l3.LookupID=pvt.TestCenterID
-			LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND l4.LookupID=pvt.ReasonForRequest
+			LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.LookupID=pvt.TestCenterID
+			LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.LookupID=pvt.ReasonForRequest
 		WHERE (
 				(pvt.[ProductID]=@ProductID) 
 				OR

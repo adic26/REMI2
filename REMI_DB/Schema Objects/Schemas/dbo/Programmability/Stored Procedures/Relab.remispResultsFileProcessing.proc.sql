@@ -14,6 +14,8 @@ BEGIN
 	DECLARE @Val INT
 	DECLARE @JobID INT
 	DECLARE @FunctionalType INT
+	DECLARE @UnitTypeLookupTypeID INT
+	DECLARE @MeasurementTypeLookupTypeID INT
 	DECLARE @TestStageID INT
 	DECLARE @BaselineID INT
 	DECLARE @TestID INT
@@ -23,6 +25,7 @@ BEGIN
 	DECLARE @EndDate NVARCHAR(MAX)
 	DECLARE @Duration NVARCHAR(MAX)
 	DECLARE @LookupTypeName NVARCHAR(100)
+	DECLARE @LookupTypeNameID INT
 	DECLARE @TrackingLocationTypeName NVARCHAR(200)
 	DECLARE @TestStageName NVARCHAR(400)
 	DECLARE @StationName NVARCHAR(400)
@@ -38,6 +41,9 @@ BEGIN
 		END
 		
 		SET NOCOUNT ON
+
+		SELECT @MeasurementTypeLookupTypeID=LookupTypeID FROM LookupType WHERE Name='MeasurementType'
+		SELECT @UnitTypeLookupTypeID=LookupTypeID FROM LookupType WHERE Name='UnitType'
 		
 		SELECT @Val = COUNT(*) FROM Relab.ResultsXML x WHERE ISNULL(isProcessed,0)=0 AND ISNULL(ErrorOccured, 0) = 0
 		
@@ -121,13 +127,13 @@ BEGIN
 			SELECT DISTINCT (1) AS LookupID, T.c.query('Units').value('.', 'nvarchar(max)') AS UnitType, 1 AS Active
 			INTO #LookupsUnitType
 			FROM @xml.nodes('/TestResults/Measurements/Measurement') T(c)
-			WHERE LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('Units').value('.', 'nvarchar(max)')))) NOT IN ( (SELECT [Values] FROM Lookups WHERE Type='UnitType')) 
+			WHERE LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('Units').value('.', 'nvarchar(max)')))) NOT IN ( (SELECT [Values] FROM Lookups WHERE LookupTypeID=@UnitTypeLookupTypeID)) 
 				AND CONVERT(VARCHAR(MAX), T.c.query('Units').value('.', 'nvarchar(max)')) NOT IN ('N/A')
 			
 			SELECT @MaxID = MAX(LookupID)+1 FROM Lookups
 			
-			INSERT INTO Lookups (LookupID, Type,[Values], IsActive)
-			SELECT (ROW_NUMBER() OVER (ORDER BY LookupID)) + @MaxID AS LookupID, 'UnitType' AS Type, UnitType AS [Values], Active
+			INSERT INTO Lookups (LookupID, LookupTypeID,[Values], IsActive)
+			SELECT (ROW_NUMBER() OVER (ORDER BY LookupID)) + @MaxID AS LookupID, @UnitTypeLookupTypeID AS LookupTypeID, UnitType AS [Values], Active
 			FROM #LookupsUnitType
 			
 			DROP TABLE #LookupsUnitType
@@ -136,13 +142,13 @@ BEGIN
 			SELECT DISTINCT (1) AS LookupID, T.c.query('MeasurementName').value('.', 'nvarchar(max)') AS MeasurementType, 1 AS Active
 			INTO #LookupsMeasurementType
 			FROM @xml.nodes('/TestResults/Measurements/Measurement') T(c)
-			WHERE LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('MeasurementName').value('.', 'nvarchar(max)')))) NOT IN ( (SELECT [Values] FROM Lookups WHERE Type='MeasurementType')) 
+			WHERE LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('MeasurementName').value('.', 'nvarchar(max)')))) NOT IN ( (SELECT [Values] FROM Lookups WHERE LookupTypeID=@MeasurementTypeLookupTypeID)) 
 				AND CONVERT(VARCHAR(MAX), T.c.query('MeasurementName').value('.', 'nvarchar(max)')) NOT IN ('N/A')
 			
 			SELECT @MaxID = MAX(LookupID)+1 FROM Lookups
 			
-			INSERT INTO Lookups (LookupID, Type, [Values], IsActive)
-			SELECT (ROW_NUMBER() OVER (ORDER BY LookupID)) + @MaxID AS LookupID, 'MeasurementType' AS Type, MeasurementType AS [Values], Active
+			INSERT INTO Lookups (LookupID, LookupTypeID, [Values], IsActive)
+			SELECT (ROW_NUMBER() OVER (ORDER BY LookupID)) + @MaxID AS LookupID, @MeasurementTypeLookupTypeID AS LookupTypeID, MeasurementType AS [Values], Active
 			FROM #LookupsMeasurementType
 		
 			DROP TABLE #LookupsMeasurementType
@@ -185,6 +191,8 @@ BEGIN
 		WHERE LOWER(T.c.query('MeasurementName').value('.', 'nvarchar(max)')) <> LOWER('cableloss')
 
 		SELECT @RowID = MIN(RowID) FROM #temp2
+
+		SELECT @LookupTypeNameID=LookupTypeID FROM LookupType WHERE Name=@LookupTypeName
 		
 		WHILE (@RowID IS NOT NULL)
 		BEGIN
@@ -206,9 +214,9 @@ BEGIN
 				CAST(NULL AS DECIMAL(10,3)) AS DegradationVal
 			INTO #measurement
 			FROM @xmlPart.nodes('/Measurement') T(c)
-				LEFT OUTER JOIN Lookups l ON l.Type='UnitType' AND l.[Values]=LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('Units').value('.', 'nvarchar(max)'))))
-				LEFT OUTER JOIN Lookups l2 ON l2.Type=@LookupTypeName AND l2.[Values]=LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('MeasurementName').value('.', 'nvarchar(max)'))))
-				LEFT OUTER JOIN Lookups l3 ON l3.Type='MeasurementType' AND l3.[Values]=LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('MeasurementName').value('.', 'nvarchar(max)'))))
+				LEFT OUTER JOIN Lookups l ON l.LookupTypeID=@UnitTypeLookupTypeID AND l.[Values]=LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('Units').value('.', 'nvarchar(max)'))))
+				LEFT OUTER JOIN Lookups l2 ON l2.LookupTypeID=@LookupTypeNameID AND l2.[Values]=LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('MeasurementName').value('.', 'nvarchar(max)'))))
+				LEFT OUTER JOIN Lookups l3 ON l3.LookupTypeID=@MeasurementTypeLookupTypeID AND l3.[Values]=LTRIM(RTRIM(CONVERT(VARCHAR(MAX), T.c.query('MeasurementName').value('.', 'nvarchar(max)'))))
 
 			UPDATE #measurement
 			SET Comment=''

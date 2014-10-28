@@ -37,7 +37,7 @@ Namespace REMI.Dal
         Public Shared Function GetConnectString(ByVal reqNumber As String) As String
             Dim requestType As String = reqNumber.Substring(0, reqNumber.IndexOf("-"))
 
-            Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.Type = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
+            Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
         End Function
 
         Public Shared Function GetTRSRequest(ByVal reqNumber As String) As IQRARequest
@@ -103,7 +103,7 @@ Namespace REMI.Dal
 
         Public Shared Function GetTRSQRAByTestCenter(ByVal testCenter As String) As DataTable
             Dim dtReq As New DataTable
-            Dim connections As List(Of String) = (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.Type = "RequestType" And r.DBType = "Oracle" Select r.RequestConnectName).Distinct.ToList()
+            Dim connections As List(Of String) = (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.DBType = "Oracle" Select r.RequestConnectName).Distinct.ToList()
 
             For Each con In connections
                 Using myOracleConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(con))

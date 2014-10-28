@@ -35,8 +35,8 @@ from
 		inner join TestUnits AS tu ON dtl.TestUnitID = tu.ID on tu.CurrentTestName = t.TestName and b.id = tu.batchid 
 		inner join testrecords as tr on tr.TestUnitID = tu.id and tr.TestName = t.TestName and tr.TestStageName = t.TestName
 		inner join Products p on p.ID=b.ProductID
-		LEFT OUTER JOIN Lookups l ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID  
-		LEFT OUTER JOIN Lookups l2 ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID  
+		LEFT OUTER JOIN Lookups l ON b.ProductTypeID=l.LookupID  
+		LEFT OUTER JOIN Lookups l2 ON b.AccessoryGroupID=l2.LookupID  
 	WHERE (b.TestCenterLocation = @TestCentreLocation or @TestCentreLocation is null) and  (b.AccessoryGroupID = @AccessoryGroupID or @AccessoryGroupID is null) 
 		and (b.BatchStatus = 2) --in progress batches
 ) as results

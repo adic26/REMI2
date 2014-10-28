@@ -157,7 +157,7 @@ BEGIN
 			INNER JOIN TestRecords tr WITH(NOLOCK) ON tu.ID = tr.TestUnitID
 			INNER JOIN TestRecordsAudit tra WITH(NOLOCK) ON tr.ID = tra.TestRecordId AND tra.inserttime between ''' + CONVERT(VARCHAR, @startdate) + ''' and ''' + CONVERT(VARCHAR, @enddate) + '''
 			INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
-			INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID AND l.Type=''ProductType''
+			INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID 
 		WHERE ba.inserttime between ''' + CONVERT(VARCHAR, @startdate) + ''' and ''' + CONVERT(VARCHAR, @enddate) + ''' AND l.[Values] = ''Accessory''
 			and (b.TestCenterLocationID = ' + CONVERT(VARCHAR, @testLocationID) + ' or ' + CONVERT(VARCHAR, @testLocationID) + ' = 0) 
 			AND (' + CONVERT(VARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(VARCHAR, @ByPassProductCheck) + ' = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=' + CONVERT(VARCHAR, @UserID) + ')))
@@ -168,7 +168,7 @@ BEGIN
 			INNER JOIN BatchesAudit ba WITH(NOLOCK) ON b.ID = ba.BatchID AND ba.BatchStatus=2 --InProgress
 			INNER JOIN TestUnits tu WITH(NOLOCK) ON b.ID = tu.BatchID
 			INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
-			INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID AND l.Type=''ProductType''
+			INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID 
 		WHERE ba.inserttime between ''' + CONVERT(VARCHAR, @startdate) + ''' and ''' + CONVERT(VARCHAR, @enddate) + ''' AND l.[Values] = ''Component''
 			and (b.TestCenterLocationID = ' + CONVERT(VARCHAR, @testLocationID) + ' or ' + CONVERT(VARCHAR, @testLocationID) + ' = 0) 
 			AND (' + CONVERT(VARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(VARCHAR, @ByPassProductCheck) + ' = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=' + CONVERT(VARCHAR, @UserID) + ')))
@@ -181,7 +181,7 @@ BEGIN
 			INNER JOIN TestRecords tr WITH(NOLOCK) ON tu.ID = tr.TestUnitID
 			INNER JOIN TestRecordsAudit tra WITH(NOLOCK) ON tr.ID = tra.TestRecordId AND tra.inserttime between ''' + CONVERT(VARCHAR, @startdate) + ''' and ''' + CONVERT(VARCHAR, @enddate) + '''
 			INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
-			INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID AND l.Type=''ProductType''
+			INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID 
 		WHERE ba.inserttime between ''' + CONVERT(VARCHAR, @startdate) + ''' and ''' + CONVERT(VARCHAR, @enddate) + ''' AND l.[Values] = ''Handheld''
 			and (b.TestCenterLocationID = ' + CONVERT(VARCHAR, @testLocationID) + ' or ' + CONVERT(VARCHAR, @testLocationID) + ' = 0) 
 			AND (' + CONVERT(VARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(VARCHAR, @ByPassProductCheck) + ' = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=' + CONVERT(VARCHAR, @UserID) + ')))
@@ -326,7 +326,7 @@ BEGIN
 		INNER JOIN TestRecords tr WITH(NOLOCK) ON tu.ID = tr.TestUnitID
 		INNER JOIN TestRecordsAudit tra WITH(NOLOCK) ON tr.ID = tra.TestRecordId AND tra.inserttime between @startdate and @enddate
 		INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
-		INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID AND l.Type='ProductType'
+		INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID 
 	WHERE ba.inserttime between @startdate and @enddate AND l.[Values] = 'Accessory'
 		and (b.TestCenterLocationID = @testLocationID or @testLocationID is null) 
 		AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
@@ -338,7 +338,7 @@ BEGIN
 		INNER JOIN BatchesAudit ba WITH(NOLOCK) ON b.ID = ba.BatchID AND ba.BatchStatus=2 --InProgress
 		INNER JOIN TestUnits tu WITH(NOLOCK) ON b.ID = tu.BatchID
 		INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
-		INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID AND l.Type='ProductType'
+		INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID 
 	WHERE ba.inserttime between @startdate and @enddate AND l.[Values] = 'Component'
 		and (b.TestCenterLocationID = @testLocationID or @testLocationID is null) 
 		AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
@@ -352,7 +352,7 @@ BEGIN
 		INNER JOIN TestRecords tr WITH(NOLOCK) ON tu.ID = tr.TestUnitID
 		INNER JOIN TestRecordsAudit tra WITH(NOLOCK) ON tr.ID = tra.TestRecordId AND tra.inserttime between @startdate and @enddate
 		INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
-		INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID AND l.Type='ProductType'
+		INNER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID = l.LookupID 
 	WHERE ba.inserttime between @startdate and @enddate	AND l.[Values] = 'Handheld'
 		and (b.TestCenterLocationID = @testLocationID or @testLocationID is null) 
 		AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))

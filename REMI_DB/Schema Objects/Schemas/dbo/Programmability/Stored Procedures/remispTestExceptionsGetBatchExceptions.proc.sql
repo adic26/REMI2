@@ -9,11 +9,11 @@ l2.[Values] As AccessoryGroupName, l.[Values] As ProductType, pvt.IsMQual, l3.[V
 l4.[Values] AS ReasonForRequest
 FROM vw_ExceptionsPivoted as pvt
 	LEFT OUTER JOIN Tests t WITH(NOLOCK) ON pvt.Test = t.ID
-	LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND l.LookupID=pvt.ProductTypeID
-	LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND l2.LookupID=pvt.AccessoryGroupID
+	LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=pvt.ProductTypeID
+	LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=pvt.AccessoryGroupID
 	LEFT OUTER JOIN Products p WITH(NOLOCK) ON p.ID=pvt.ProductID
-	LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND l3.LookupID=pvt.TestCenterID
-	LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND l4.LookupID=pvt.ReasonForRequest
+	LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.LookupID=pvt.TestCenterID
+	LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.LookupID=pvt.ReasonForRequest
 	, Batches as b, teststages ts WITH(NOLOCK), Jobs j WITH(NOLOCK)
 where b.QRANumber = @qranumber 
 	and (ts.JobID = j.ID or j.ID is null)
@@ -67,11 +67,11 @@ l2.[Values] As AccessoryGroupName, l.[Values] As ProductType, pvt.IsMQual, l3.[V
 l4.[Values] AS ReasonForRequest
 FROM vw_ExceptionsPivoted as pvt
 	LEFT OUTER JOIN Tests t WITH(NOLOCK) ON pvt.Test = t.ID
-	LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND l.LookupID=pvt.ProductTypeID
-	LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND l2.LookupID=pvt.AccessoryGroupID
+	LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=pvt.ProductTypeID
+	LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=pvt.AccessoryGroupID
 	LEFT OUTER JOIN Products p WITH(NOLOCK) ON p.ID=pvt.ProductID
-	LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND l3.LookupID=pvt.TestCenterID
-	LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.Type='RequestPurpose' AND l4.LookupID=pvt.ReasonForRequest
+	LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.LookupID=pvt.TestCenterID
+	LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.LookupID=pvt.ReasonForRequest
 	INNER JOIN testunits tu WITH(NOLOCK) ON tu.ID=pvt.TestUnitID
 	INNER JOIN Batches b WITH(NOLOCK) ON b.ID=tu.BatchID
 WHERE b.QRANumber = @qranumber and tu.batchid = b.id and pvt.TestUnitID = tu.id

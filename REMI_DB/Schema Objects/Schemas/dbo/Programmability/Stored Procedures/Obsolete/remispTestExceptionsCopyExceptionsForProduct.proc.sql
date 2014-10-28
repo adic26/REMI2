@@ -5,9 +5,11 @@
 AS
 DECLARE @MAX INT
 DECLARE @LookupID INT
+DECLARE @LookupTypeID INT
 SELECT @MAX = MAX(ID) FROM TestExceptions
 
-SELECT @LookupID = LookupID FROM Lookups WHERE Type='Exceptions' AND [Values]='ProductID'
+SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Exceptions'
+SELECT @LookupID = LookupID FROM Lookups WHERE LookupTypeID=@LookupTypeID AND [Values]='ProductID'
 
 SELECT pvt.ID, ROW_NUMBER() OVER( ORDER BY ID )  + @MAX AS NEW_ID
 INTO #temp

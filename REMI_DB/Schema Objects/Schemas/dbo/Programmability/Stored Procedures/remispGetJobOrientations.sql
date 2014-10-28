@@ -4,7 +4,7 @@ BEGIN
 	SELECT jo.ID, jo.Name, jo.ProductTypeID, l.[Values] AS ProductType, jo.NumUnits, jo.NumDrops,
 		jo.Description, jo.CreatedDate, jo.IsActive, jo.Definition
 	FROM JobOrientation jo
-		INNER JOIN Lookups l ON l.LookupID=jo.ProductTypeID AND l.[Type]='ProductType'
+		INNER JOIN Lookups l ON l.LookupID=jo.ProductTypeID
 		INNER JOIN Jobs j ON j.ID=jo.JobID
 	WHERE ( 
 			(jo.JobID=@JobID AND @JobID > 0)

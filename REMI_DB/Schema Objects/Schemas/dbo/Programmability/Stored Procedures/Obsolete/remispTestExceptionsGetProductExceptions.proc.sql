@@ -26,10 +26,10 @@ from
 	pvt.IsMQual, l3.[Values] As TestCenter, l3.[LookupID] As TestCenterID
 	FROM vw_ExceptionsPivoted as pvt
 		LEFT OUTER JOIN Tests t WITH(NOLOCK) ON pvt.Test = t.ID
-		LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND l.LookupID=pvt.ProductTypeID
-		LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND l2.LookupID=pvt.AccessoryGroupID
+		LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=pvt.ProductTypeID
+		LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=pvt.AccessoryGroupID
 		LEFT OUTER JOIN Products p WITH(NOLOCK) ON p.ID=pvt.ProductID
-		LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND l3.LookupID=pvt.TestCenterID
+		LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.LookupID=pvt.TestCenterID
 	WHERE pvt.TestUnitID IS NULL AND
 		(
 			(pvt.[ProductID]=@ProductID) 

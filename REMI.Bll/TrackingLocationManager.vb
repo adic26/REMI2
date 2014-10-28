@@ -638,7 +638,7 @@ Namespace REMI.Bll
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
                 Dim trackinglocationType As Int32 = (From tl In instance.TrackingLocations Where tl.ID = trackingLocationID Select tl.TrackingLocationType.ID).FirstOrDefault()
-                Return (From t In instance.TrackingLocationsForTests.Include("Test").Include("TrackingLocationTypes") Where t.TrackingLocationTypes.ID = trackinglocationType And t.Test.IsArchived = False Select t.Test.TestName).ToList().ToArray()
+                Return (From t In instance.TrackingLocationsForTests.Include("Test").Include("TrackingLocationTypes") Where t.TrackingLocationType.ID = trackinglocationType And t.Test.IsArchived = False Select t.Test.TestName).ToList().ToArray()
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

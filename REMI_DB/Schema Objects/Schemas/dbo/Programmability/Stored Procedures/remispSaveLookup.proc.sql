@@ -2,23 +2,25 @@
 AS
 BEGIN
 	DECLARE @LookupID INT
+	DECLARE @LookupTypeID INT
 	SELECT @LookupID = MAX(LookupID) + 1 FROM Lookups
+	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@LookupType
 
 	IF (@ParentID = 0)
 	BEGIN
 		SET @ParentID = NULL
 	END
 	
-	IF LTRIM(RTRIM(@Value)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE Type=@LookupType AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Value)))
+	IF LTRIM(RTRIM(@Value)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE LookupTypeID=@LookupTypeID AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Value)))
 	BEGIN
-		INSERT INTO Lookups (LookupID, Type, [Values], IsActive, Description, ParentID) 
-		VALUES (@LookupID, @LookupType, LTRIM(RTRIM(@Value)), @IsActive, @Description, @ParentID)
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values], IsActive, Description, ParentID) 
+		VALUES (@LookupID, @LookupTypeID, LTRIM(RTRIM(@Value)), @IsActive, @Description, @ParentID)
 	END
 	ELSE
 	BEGIN
 		UPDATE Lookups
 		SET IsActive=@IsActive, Description=@Description, ParentID=@ParentID
-		WHERE Type=@LookupType AND [values]=LTRIM(RTRIM(@Value))
+		WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value))
 	END
 END
 GO

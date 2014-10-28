@@ -90,7 +90,9 @@ AS
 		BEGIN
 			PRINT 'Inserting ProductID'
 			DECLARE @LookupID INT
-			SELECT @LookupID=LookupID FROM Lookups WHERE Type='Exceptions' AND [Values]='ProductID'
+			DECLARE @LookupTypeID INT
+			SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Exceptions'
+			SELECT @LookupID=LookupID FROM Lookups WHERE LookupTypeID=@LookupTypeID AND [Values]='ProductID'
 			INSERT INTO TestExceptions (ID, LookupID, Value, LastUser) VALUES (@ID, @LookupID, @ProductID, @LastUser)
 		END
 

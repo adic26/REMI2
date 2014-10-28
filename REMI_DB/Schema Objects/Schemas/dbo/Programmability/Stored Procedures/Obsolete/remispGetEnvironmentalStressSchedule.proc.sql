@@ -12,7 +12,7 @@ from DeviceTrackingLog as dtl
 INNER JOIN TrackingLocations as tl ON dtl.trackinglocationid = tl.id
 INNER JOIN TrackingLocationTypes as tlt ON tl.TrackingLocationTypeID = tlt.ID
 INNER JOIN testunits as tu ON tu.id = dtl.testunitid 
-INNER JOIN Lookups l ON l.Type='TestCenter' AND l.LookupID=tl.TestCenterLocationID
+INNER JOIN Lookups l ON l.LookupID=tl.TestCenterLocationID
 where dtl.OutTime is null  
 and tlt.TrackingLocationFunction = 4 and (tlt.ID = @tltID or @tltid is null) 
 and (tl.TestCenterLocationID = @GeoLocationID or @GeoLocationID is null)

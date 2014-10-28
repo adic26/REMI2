@@ -121,9 +121,9 @@ FROM
 				FROM Batches AS b WITH(NOLOCK)
 					INNER JOIN Products p WITH(NOLOCK) ON b.ProductID=p.ID
 					LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON b.JobName=j.JobName
-					LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.Type='ProductType' AND b.ProductTypeID=l.LookupID
-					LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.Type='AccessoryType' AND b.AccessoryGroupID=l2.LookupID
-					LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.Type='TestCenter' AND b.TestCenterLocationID=l3.LookupID
+					LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID
+					LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID
+					LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON b.TestCenterLocationID=l3.LookupID
 					INNER JOIN TestStages ts WITH(NOLOCK) ON ts.TestStageName=b.TestStageName
 				WHERE (b.TestCenterLocationID = @TestCentreLocation or @TestCentreLocation is null) and b.BatchStatus = 8
 				AND ts.TestStageType NOT IN (4)	AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))

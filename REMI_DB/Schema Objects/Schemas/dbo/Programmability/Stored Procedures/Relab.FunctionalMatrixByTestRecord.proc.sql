@@ -6,6 +6,7 @@ BEGIN
 	DECLARE @rows VARCHAR(8000)
 	DECLARE @sql VARCHAR(8000)
 	DECLARE @LookupType NVARCHAR(20)
+	DECLARE @LookupTypeID INT
 	DECLARE @TestUnitID INT
 	CREATE Table #units(id int) 
 	INSERT INTO #units SELECT s FROM dbo.Split(',',@UnitIDs)
@@ -29,10 +30,12 @@ BEGIN
 	ELSE
 		SET @LookupType = 'SFIFunctionalMatrix'
 	
+	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@LookupType
+
 	SELECT @rows=  ISNULL(STUFF(
 		(SELECT DISTINCT '],[' + l.[Values]
 		FROM dbo.Lookups l
-		WHERE Type=@LookupType
+		WHERE LookupTypeID=@LookupTypeID
 		ORDER BY '],[' +  l.[Values]
 		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 	
@@ -45,7 +48,7 @@ BEGIN
 					ELSE (
 						SELECT PassFail 
 						FROM Relab.ResultsMeasurements rm 
-							LEFT OUTER JOIN Lookups lr ON lr.Type=''' + CONVERT(VARCHAR, @LookupType) + ''' AND rm.MeasurementTypeID=lr.LookupID
+							LEFT OUTER JOIN Lookups lr ON lr.LookupTypeID=''' + CONVERT(VARCHAR, @LookupTypeID) + ''' AND rm.MeasurementTypeID=lr.LookupID
 						WHERE rm.ResultID=r.ID AND lr.[values] = l.[values] AND rm.Archived = 0)
 				END As Row
 			FROM dbo.Lookups l
@@ -58,7 +61,7 @@ BEGIN
 			INNER JOIN #units ON tu.ID=#units.ID
 			LEFT OUTER JOIN Relab.Results r ON r.TestID = ' + CONVERT(VARCHAR, @TestID) + ' AND r.TestStageID = ' + CONVERT(VARCHAR, @TestStageID) + ' 
 				AND r.TestUnitID = tu.ID
-			WHERE l.Type=''' + CONVERT(VARCHAR, @LookupType) + '''
+			WHERE l.LookupTypeID=''' + CONVERT(VARCHAR, @LookupTypeID) + '''
 			) te 
 			PIVOT (MAX(row) FOR [Values] IN (' + @rows + ')) AS pvt
 			ORDER BY BatchUnitNumber'
