@@ -51,32 +51,38 @@ insert into Relab.ResultsInformation (Name, Value, XMLID, IsArchived)
 select l.[Values] As Name, m.MeasurementValue, m.XMLID, m.Archived 
 from Relab.ResultsMeasurements m
 inner join Lookups l on m.MeasurementTypeID=l.LookupID
-where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version')) order by resultid
+where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version', 'CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')) order by resultid
 
 --parameters
 select *
 into ResultsParameters_BAK
 from Relab.ResultsParameters
-where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version')) )
+where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version','CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')) )
 
 delete from Relab.ResultsParameters
-where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version')) )
+where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version','CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')) )
 
 --audit
 select *
 into ResultsMeasurementsAudit_BAK
 from Relab.ResultsMeasurementsAudit
-where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version')) )
+where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version','CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')) )
 
 delete from Relab.ResultsMeasurementsAudit
-where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version')) )
+where ResultMeasurementID in (select ID from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version','CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')) )
 
 --measurements
 select *
 into ResultsMeasurements_BAK
-from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version')) 
+from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version','CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')) 
 
-delete from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version')) 
+delete from Relab.ResultsMeasurements where MeasurementTypeID in (select lookupid from Lookups WHERE [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version','CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')) 
+
+delete l from Lookups l
+inner join LookupType lt on lt.LookupTypeID=l.LookupTypeID
+WHERE lt.Name='MeasurementType' and [Values] in ('Start','Start UTC','End','End UTC', 'OS','OSVersion','OS Version', 'CameraID','HWSerialNumber','Hardware ID','Build','APx Hardware Model','APx Software Version','ID Power Supply 2','ID Power Supply 1','ID BT Tester','Tester SW Version')
+
+Update Relab.ResultsInformation set Name='STEF Plugin Version' where Name='Build'
 
 
 rollback tran
