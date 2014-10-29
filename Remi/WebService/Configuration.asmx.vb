@@ -199,4 +199,16 @@ Public Class ProductConfiguration
     End Function
 #End Region
 
+#Region "RequestFields"
+    <WebMethod(Description:="Gets The Fields Setup Definition")> _
+    Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean) As RequestFieldsCollection
+        Try
+            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived)
+        Catch ex As Exception
+            RequestManager.LogIssue("GetRequestFieldSetup", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return Nothing
+    End Function
+#End Region
 End Class

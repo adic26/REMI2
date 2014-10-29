@@ -15,7 +15,7 @@ Namespace REMI.Dal
     Public Class RequestDB
 
         Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
-            Dim dt As New DataTable()
+            Dim dt As New DataTable("RequestSetupInfo")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Req.GetRequestSetupInfo", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
@@ -186,6 +186,73 @@ Namespace REMI.Dal
             reqData.FieldMapping = REMIAppCache.GetFieldMapping(reqData.RequestType)
 
             Return reqData
+        End Function
+
+        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean) As RequestFieldsCollection
+            Dim rID As Int32
+            Dim fieldData As RequestFieldsCollection = Nothing
+
+            rID = (From fs In New REMI.Dal.Entities().Instance.ReqFieldSetups Where fs.RequestType.Lookup.Values = requestName Select fs.RequestID).FirstOrDefault()
+
+            If (rID > 0) Then
+                Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                    Using myCommand As New SqlCommand("Req.RequestFieldSetup", myConnection)
+                        myCommand.CommandType = CommandType.StoredProcedure
+                        myCommand.Parameters.AddWithValue("@RequestID", rID)
+
+                        If (includeArchived) Then
+                            myCommand.Parameters.AddWithValue("@IncludeArchived", 1)
+                        End If
+
+                        myConnection.Open()
+
+                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                            If myReader.HasRows Then
+                                fieldData = New RequestFieldsCollection
+
+                                While myReader.Read()
+                                    fieldData.Add(FillFieldData(myReader))
+                                End While
+                            End If
+                        End Using
+                    End Using
+                End Using
+            End If
+
+            Return fieldData
+        End Function
+
+        Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord) As BusinessEntities.RequestFields
+            Dim myFields As RequestFields = New BusinessEntities.RequestFields()
+
+            myFields.FieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldSetupID"))
+            myFields.RequestType = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestType"))
+            myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Description")) Then
+                myFields.Description = myDataRecord.GetString(myDataRecord.GetOrdinal("Description"))
+            End If
+
+            myFields.DisplayOrder = myDataRecord.GetInt32(myDataRecord.GetOrdinal("DisplayOrder"))
+            myFields.FieldType = myDataRecord.GetString(myDataRecord.GetOrdinal("FieldType"))
+            myFields.FieldTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldTypeID"))
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("FieldValidationID")) Then
+                myFields.FieldValidation = myDataRecord.GetString(myDataRecord.GetOrdinal("ValidationType"))
+                myFields.FieldValidationID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldValidationID"))
+            End If
+
+            myFields.IsArchived = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("Archived"))
+            myFields.IsRequired = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsRequired"))
+            myFields.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("Name"))
+
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
+                myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
+                myFields.OptionsType = (From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.Values).ToList
+            End If
+
+            Return myFields
         End Function
     End Class
 End Namespace

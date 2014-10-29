@@ -2340,4 +2340,13 @@
     <None Include="Scripts\November032014\1.sql" />
     <None Include="Scripts\November032014\2.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldSetupRole.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestFieldSetup.sql" />
+  </ItemGroup>
 </Project>

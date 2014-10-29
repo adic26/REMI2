@@ -3419,6 +3419,33 @@ BEGIN
 	END
 END
 GO
+INSERT INTO LookupType (Name) VALUES ('FieldTypes')
+INSERT INTO LookupType (Name) VALUES ('ValidationTypes')
+GO
+
+DECLARE @LookupTypeID INT
+DECLARE @LookupID INT
+SELECT @LookupTypeID=LookupTypeID FROM LookupType WHERE Name='FieldTypes'
+
+SELECT @LookupID = MAX(LookupID)+1 FROM Lookups
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'DropDown')
+SET @LookupID = @LookupID +1
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'CheckBox')
+SET @LookupID = @LookupID +1
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'RadioButton')
+SET @LookupID = @LookupID +1
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'TextBox')
+SET @LookupID = @LookupID +1
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'TextArea')
+
+SELECT @LookupTypeID=LookupTypeID FROM LookupType WHERE Name='ValidationTypes'
+SET @LookupID = @LookupID +1
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'Double')
+SET @LookupID = @LookupID +1
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'Int')
+SET @LookupID = @LookupID +1
+INSERT INTO Lookups (LookupID,LookupTypeID, IsActive, [Values]) VALUES (@LookupID, @LookupTypeID, 1, 'String')
+GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

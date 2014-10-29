@@ -21,6 +21,9 @@
         Observations = 13,
         Priority = 14,
         RequestType = 15,
-        Department = 16
+        Department = 16,
+        NotSet = 17,
+        FieldTypes = 18,
+        ValidationTypes = 19
     }
 }

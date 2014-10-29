@@ -2,7 +2,10 @@
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[RequestTypeID] [int] NOT NULL,
 	[RequestConnectName] [nvarchar](150) NOT NULL,
-	[DBType] [nvarchar](50) NULL,
+	[DBType] [nvarchar](50) NOT NULL,
+	[HasIntegration] [bit] NOT NULL,
+	[CanReport] [bit] NOT NULL,
+	[HasApproval] [bit] NOT NULL,
  CONSTRAINT [PK_RequestType] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

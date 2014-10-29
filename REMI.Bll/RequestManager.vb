@@ -102,5 +102,15 @@ Namespace REMI.Bll
 
             Return nc
         End Function
+
+        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean) As RequestFieldsCollection
+            Try
+                Return RequestDB.GetRequestFieldSetup(requestName, includeArchived)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return Nothing
+        End Function
     End Class
 End Namespace
