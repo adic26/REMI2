@@ -21,14 +21,10 @@ BEGIN
 	DECLARE @TestID INT
 	DECLARE @xml XML
 	DECLARE @xmlPart XML
-	DECLARE @StartDate DATETIME
-	DECLARE @EndDate NVARCHAR(MAX)
-	DECLARE @Duration NVARCHAR(MAX)
 	DECLARE @LookupTypeName NVARCHAR(100)
 	DECLARE @LookupTypeNameID INT
 	DECLARE @TrackingLocationTypeName NVARCHAR(200)
 	DECLARE @TestStageName NVARCHAR(400)
-	DECLARE @StationName NVARCHAR(400)
 	DECLARE @DegradationVal DECIMAL(10,3)
 	SET @ID = NULL
 	CREATE TABLE #files ([FileName] NVARCHAR(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS)
@@ -84,20 +80,8 @@ BEGIN
 			SELECT @xmlPart = T.c.query('.') 
 			FROM @xml.nodes('/TestResults/Header') T(c)
 					
-			select @EndDate = T.c.query('DateCompleted').value('.', 'nvarchar(max)'),
-				@Duration = T.c.query('Duration').value('.', 'nvarchar(max)'),
-				@StationName = T.c.query('StationName').value('.', 'nvarchar(400)'),
-				@FunctionalType = T.c.query('FunctionalType').value('.', 'nvarchar(400)')
+			select @FunctionalType = T.c.query('FunctionalType').value('.', 'nvarchar(400)')
 			FROM @xmlPart.nodes('/Header') T(c)
-
-			SELECT @EndDate= STUFF(@EndDate, CHARINDEX('-',@EndDate,(charindex('-',@EndDate, (charindex('-',@EndDate)+1))+1)), 1, ' ')
-			SELECT @EndDate= STUFF(@EndDate, CHARINDEX('-',@EndDate,(charindex('-',@EndDate, (charindex('-',@EndDate)+1))+1)), 1, ':')
-			SELECT @EndDate= STUFF(@EndDate, CHARINDEX('-',@EndDate,(charindex('-',@EndDate, (charindex('-',@EndDate)+1))+1)), 1, ':')
-					
-			If (CHARINDEX('.', @Duration) > 0)
-				SET @Duration = SUBSTRING(@Duration, 1, CHARINDEX('.', @Duration)-1)
-			
-			SET @StartDate=dateadd(s,-datediff(s,0,convert(DATETIME,@Duration)), CONVERT(DATETIME, @EndDate))
 
 			IF (@TrackingLocationTypeName IS NOT NULL And @TrackingLocationTypeName = 'Functional Station' AND @FunctionalType <> 0)
 			BEGIN
@@ -479,10 +463,8 @@ BEGIN
 			
 			DROP TABLE #files
 			
-			PRINT 'Update Result'
-			UPDATE Relab.ResultsXML 
-			SET EndDate=CONVERT(DATETIME, @EndDate), StartDate =@StartDate, IsProcessed=1, StationName=@StationName
-			WHERE ID=@ID
+			PRINT 'Update Result To Be Processed'
+			UPDATE Relab.ResultsXML SET IsProcessed=1 WHERE ID=@ID
 			
 			UPDATE Relab.Results
 			SET PassFail=CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurements WHERE ResultID=@ResultID AND Archived=0 AND PassFail=0) > 0 THEN 0 ELSE 1 END
