@@ -93,7 +93,7 @@ IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION
 GO
 PRINT N'Creating [Req].[RequestFieldSetup]'
 GO
-CREATE PROCEDURE [Req].[RequestFieldSetup] @RequestID INT, @IncludeArchived BIT = 0
+create PROCEDURE [Req].[RequestFieldSetup] @RequestID INT, @IncludeArchived BIT = 0
 AS
 BEGIN
 	SELECT rfs.ReqFieldSetupID, lrt.[Values] AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
@@ -102,9 +102,9 @@ BEGIN
 	FROM Req.ReqFieldSetup rfs
 		INNER JOIN Lookups lft ON lft.LookupID=rfs.FieldTypeID
 		LEFT OUTER JOIN Lookups lvt ON lvt.LookupID=rfs.FieldValidationID
-		INNER JOIN Req.RequestType rt ON rt.ID=rfs.RequestID
-		INNER JOIN Lookups lrt ON lrt.LookupID=rt.RequestTypeID
-	WHERE rfs.RequestID=@RequestID AND 
+		INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID
+		INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID
+	WHERE rfs.RequestTypeID=@RequestID AND 
 		(
 			(@IncludeArchived = 1)
 			OR
@@ -112,6 +112,8 @@ BEGIN
 		)
 	ORDER BY ISNULL(rfs.DisplayOrder, 0) ASC
 END
+GO
+GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI
 GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
@@ -156,6 +158,20 @@ GO
 PRINT N'Altering permissions on [Req].[RequestFieldSetup]'
 GO
 GRANT EXECUTE ON  [Req].[RequestFieldSetup] TO [remi]
+GO
+exec sp_rename 'Req.ReqFieldSetup.RequestID', 'RequestTypeID', 'COLUMN'
+go
+exec sp_rename 'Req.RequestType.RequestTypeID', 'TypeID', 'COLUMN'
+go
+exec sp_rename 'Req.RequestType.ID', 'RequestTypeID', 'COLUMN'
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[Req].[FK_RequestType_RequestTypeID]') AND parent_object_id = OBJECT_ID(N'[Req].[RequestType]'))
+ALTER TABLE [Req].[RequestType] DROP CONSTRAINT [FK_RequestType_RequestTypeID]
+GO
+ALTER TABLE [Req].[RequestType]  WITH CHECK ADD  CONSTRAINT [FK_RequestType_TypeID] FOREIGN KEY([TypeID])
+REFERENCES [dbo].[Lookups] ([LookupID])
+GO
+ALTER TABLE [Req].[RequestType] CHECK CONSTRAINT [FK_RequestType_TypeID]
 GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO

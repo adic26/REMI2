@@ -192,7 +192,7 @@ Namespace REMI.Dal
             Dim rID As Int32
             Dim fieldData As RequestFieldsCollection = Nothing
 
-            rID = (From fs In New REMI.Dal.Entities().Instance.ReqFieldSetups Where fs.RequestType.Lookup.Values = requestName Select fs.RequestID).FirstOrDefault()
+            rID = (From fs In New REMI.Dal.Entities().Instance.ReqFieldSetups Where fs.RequestType.Lookup.Values = requestName Select fs.RequestTypeID).FirstOrDefault()
 
             If (rID > 0) Then
                 Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)

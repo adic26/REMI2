@@ -82,9 +82,11 @@
           </EntitySet>
           <EntitySet Name="ResultsParameters" EntityType="remiModel.Store.ResultsParameters" store:Type="Tables" Schema="Relab" />
           <EntitySet Name="ResultsXML" EntityType="remiModel.Store.ResultsXML" store:Type="Tables" Schema="Relab" />
+          <EntitySet Name="ReqFieldData" EntityType="remiModel.Store.ReqFieldData" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldMapping" EntityType="remiModel.Store.ReqFieldMapping" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldSetup" EntityType="remiModel.Store.ReqFieldSetup" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldSetupRole" EntityType="remiModel.Store.ReqFieldSetupRole" store:Type="Tables" Schema="Req" />
+          <EntitySet Name="Request" EntityType="remiModel.Store.Request" store:Type="Tables" Schema="Req" />
           <EntitySet Name="RequestSetup" EntityType="remiModel.Store.RequestSetup" store:Type="Tables" Schema="Req" />
           <EntitySet Name="RequestType" EntityType="remiModel.Store.RequestType" store:Type="Tables" Schema="Req" />
           <EntitySet Name="vw_BatchAudit" EntityType="remiModel.Store.vw_BatchAudit" store:Type="Views" store:Schema="dbo" store:Name="vw_BatchAudit">
@@ -342,6 +344,14 @@
             <End Role="Tests" EntitySet="Tests" />
             <End Role="ProductTestReady" EntitySet="ProductTestReady" />
           </AssociationSet>
+          <AssociationSet Name="FK_ReqFieldData_ReqFieldSetup" Association="remiModel.Store.FK_ReqFieldData_ReqFieldSetup">
+            <End Role="ReqFieldSetup" EntitySet="ReqFieldSetup" />
+            <End Role="ReqFieldData" EntitySet="ReqFieldData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReqFieldData_Request" Association="remiModel.Store.FK_ReqFieldData_Request">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="ReqFieldData" EntitySet="ReqFieldData" />
+          </AssociationSet>
           <AssociationSet Name="FK_ReqFieldMapping_RequestType" Association="remiModel.Store.FK_ReqFieldMapping_RequestType">
             <End Role="RequestType" EntitySet="RequestType" />
             <End Role="ReqFieldMapping" EntitySet="ReqFieldMapping" />
@@ -386,7 +396,7 @@
             <End Role="TestStages" EntitySet="TestStages" />
             <End Role="RequestSetup" EntitySet="RequestSetup" />
           </AssociationSet>
-          <AssociationSet Name="FK_RequestType_RequestTypeID" Association="remiModel.Store.FK_RequestType_RequestTypeID">
+          <AssociationSet Name="FK_RequestType_TypeID" Association="remiModel.Store.FK_RequestType_TypeID">
             <End Role="Lookups" EntitySet="Lookups" />
             <End Role="RequestType" EntitySet="RequestType" />
           </AssociationSet>
@@ -1325,6 +1335,15 @@
           <Property Name="lossFile" Type="xml" />
           <Property Name="ErrorOccured" Type="int" />
         </EntityType>
+        <EntityType Name="ReqFieldData">
+          <Key>
+            <PropertyRef Name="RequestID" />
+            <PropertyRef Name="ReqFieldSetupID" />
+          </Key>
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="ReqFieldSetupID" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" Nullable="false" MaxLength="400" />
+        </EntityType>
         <EntityType Name="ReqFieldMapping">
           <Key>
             <PropertyRef Name="ID" />
@@ -1340,7 +1359,7 @@
             <PropertyRef Name="ReqFieldSetupID" />
           </Key>
           <Property Name="ReqFieldSetupID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="RequestTypeID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
           <Property Name="Description" Type="nvarchar" MaxLength="350" />
           <Property Name="FieldTypeID" Type="int" Nullable="false" />
@@ -1358,6 +1377,13 @@
           <Property Name="ReqFieldSetupID" Type="int" Nullable="false" />
           <Property Name="RoleID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Name="RequestID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RequestNumber" Type="nvarchar" MaxLength="12" />
+        </EntityType>
         <EntityType Name="RequestSetup">
           <Key>
             <PropertyRef Name="ID" />
@@ -1372,10 +1398,10 @@
         </EntityType>
         <EntityType Name="RequestType">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="RequestTypeID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="RequestTypeID" Type="int" Nullable="false" />
+          <Property Name="RequestTypeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
           <Property Name="RequestConnectName" Type="nvarchar" Nullable="false" MaxLength="150" />
           <Property Name="DBType" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="HasIntegration" Type="bit" Nullable="false" />
@@ -2019,12 +2045,36 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ReqFieldData_ReqFieldSetup">
+          <End Role="ReqFieldSetup" Type="remiModel.Store.ReqFieldSetup" Multiplicity="1" />
+          <End Role="ReqFieldData" Type="remiModel.Store.ReqFieldData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReqFieldSetup">
+              <PropertyRef Name="ReqFieldSetupID" />
+            </Principal>
+            <Dependent Role="ReqFieldData">
+              <PropertyRef Name="ReqFieldSetupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReqFieldData_Request">
+          <End Role="Request" Type="remiModel.Store.Request" Multiplicity="1" />
+          <End Role="ReqFieldData" Type="remiModel.Store.ReqFieldData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="RequestID" />
+            </Principal>
+            <Dependent Role="ReqFieldData">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ReqFieldMapping_RequestType">
           <End Role="RequestType" Type="remiModel.Store.RequestType" Multiplicity="1" />
           <End Role="ReqFieldMapping" Type="remiModel.Store.ReqFieldMapping" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RequestType">
-              <PropertyRef Name="ID" />
+              <PropertyRef Name="RequestTypeID" />
             </Principal>
             <Dependent Role="ReqFieldMapping">
               <PropertyRef Name="RequestID" />
@@ -2060,10 +2110,10 @@
           <End Role="ReqFieldSetup" Type="remiModel.Store.ReqFieldSetup" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RequestType">
-              <PropertyRef Name="ID" />
+              <PropertyRef Name="RequestTypeID" />
             </Principal>
             <Dependent Role="ReqFieldSetup">
-              <PropertyRef Name="RequestID" />
+              <PropertyRef Name="RequestTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2151,7 +2201,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RequestType_RequestTypeID">
+        <Association Name="FK_RequestType_TypeID">
           <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="RequestType" Type="remiModel.Store.RequestType" Multiplicity="*" />
           <ReferentialConstraint>
@@ -2159,7 +2209,7 @@
               <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="RequestType">
-              <PropertyRef Name="RequestTypeID" />
+              <PropertyRef Name="TypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2650,7 +2700,6 @@
           <EntitySet Name="ResultsParameters" EntityType="REMI.Entities.ResultsParameter" />
           <EntitySet Name="ResultsXMLs" EntityType="REMI.Entities.ResultsXML" />
           <EntitySet Name="ReqFieldMappings" EntityType="REMI.Entities.ReqFieldMapping" />
-          <EntitySet Name="ReqFieldSetupRoles" EntityType="REMI.Entities.ReqFieldSetupRole" />
           <EntitySet Name="RequestSetups" EntityType="REMI.Entities.RequestSetup" />
           <AssociationSet Name="FK_ResultsMeasurements_Results" Association="REMI.Entities.FK_ResultsMeasurements_Results">
             <End Role="Result" EntitySet="Results" />
@@ -2757,10 +2806,6 @@
           <AssociationSet Name="FK__aspnet_Pr__UserI__3F115E1A" Association="REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A">
             <End Role="aspnet_Users" EntitySet="aspnet_Users" />
             <End Role="aspnet_Profile" EntitySet="aspnet_Profile" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ReqFieldSetupRole_aspnet_Roles" Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles">
-            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
-            <End Role="ReqFieldSetupRole" EntitySet="ReqFieldSetupRoles" />
           </AssociationSet>
           <AssociationSet Name="FK_BatchSpecificTestDurations_Tests" Association="REMI.Entities.FK_BatchSpecificTestDurations_Tests">
             <End Role="Test" EntitySet="Tests" />
@@ -3040,8 +3085,27 @@
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="UserTraining" EntitySet="UserTrainings" />
           </AssociationSet>
-          <EntitySet Name="ReqFieldSetups" EntityType="REMI.Entities.ReqFieldSetup" />
+          <EntitySet Name="ReqFieldDatas" EntityType="REMI.Entities.ReqFieldData" />
+          <EntitySet Name="Requests" EntityType="REMI.Entities.Request" />
+          <AssociationSet Name="FK_ReqFieldData_Request" Association="REMI.Entities.FK_ReqFieldData_Request">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="ReqFieldData" EntitySet="ReqFieldDatas" />
+          </AssociationSet>
           <EntitySet Name="RequestTypes" EntityType="REMI.Entities.RequestType" />
+          <AssociationSet Name="FK_RequestType_TypeID" Association="REMI.Entities.FK_RequestType_TypeID">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="RequestType" EntitySet="RequestTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReqFieldMapping_RequestType" Association="REMI.Entities.FK_ReqFieldMapping_RequestType">
+            <End Role="RequestType" EntitySet="RequestTypes" />
+            <End Role="ReqFieldMapping" EntitySet="ReqFieldMappings" />
+          </AssociationSet>
+          <EntitySet Name="ReqFieldSetups" EntityType="REMI.Entities.ReqFieldSetup" />
+          <EntitySet Name="ReqFieldSetupRoles" EntityType="REMI.Entities.ReqFieldSetupRole" />
+          <AssociationSet Name="FK_ReqFieldSetupRole_aspnet_Roles" Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles">
+            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+            <End Role="ReqFieldSetupRole" EntitySet="ReqFieldSetupRoles" />
+          </AssociationSet>
           <AssociationSet Name="FK_ReqFieldSetup_FieldTypeID" Association="REMI.Entities.FK_ReqFieldSetup_FieldTypeID">
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
@@ -3050,13 +3114,9 @@
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
           </AssociationSet>
-          <AssociationSet Name="FK_RequestType_RequestTypeID" Association="REMI.Entities.FK_RequestType_RequestTypeID">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="RequestType" EntitySet="RequestTypes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ReqFieldMapping_RequestType" Association="REMI.Entities.FK_ReqFieldMapping_RequestType">
-            <End Role="RequestType" EntitySet="RequestTypes" />
-            <End Role="ReqFieldMapping" EntitySet="ReqFieldMappings" />
+          <AssociationSet Name="FK_ReqFieldData_ReqFieldSetup" Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup">
+            <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
+            <End Role="ReqFieldData" EntitySet="ReqFieldDatas" />
           </AssociationSet>
           <AssociationSet Name="FK_ReqFieldSetup_RequestType" Association="REMI.Entities.FK_ReqFieldSetup_RequestType">
             <End Role="RequestType" EntitySet="RequestTypes" />
@@ -3066,7 +3126,7 @@
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
             <End Role="ReqFieldSetupRole" EntitySet="ReqFieldSetupRoles" />
           </AssociationSet>
-        </EntityContainer>
+          </EntityContainer>
         <EntityType Name="vw_BatchAudit">
           <Key>
             <PropertyRef Name="QRANumber" />
@@ -3318,17 +3378,7 @@
           <Property Type="String" Name="ExtField" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
           <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_ReqFieldMapping_RequestType" FromRole="ReqFieldMapping" ToRole="RequestType" />
-        </EntityType>
-        <EntityType Name="ReqFieldSetupRole">
-          <Key>
-            <PropertyRef Name="ReqFieldSetupRoleID" />
-          </Key>
-          <Property Type="Int32" Name="ReqFieldSetupRoleID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
-          <Property Type="Guid" Name="RoleID" Nullable="false" />
-          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="ReqFieldSetupRole" ToRole="aspnet_Roles" />
-          <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" FromRole="ReqFieldSetupRole" ToRole="ReqFieldSetup" />
-        </EntityType>
+          </EntityType>
         <EntityType Name="RequestSetup">
           <Key>
             <PropertyRef Name="ID" />
@@ -3515,9 +3565,9 @@
           <Property Type="String" Name="Description" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="hasProductCheck" />
           <NavigationProperty Name="aspnet_Applications" Relationship="REMI.Entities.FK__aspnet_Ro__Appli__40058253" FromRole="aspnet_Roles" ToRole="aspnet_Applications" />
-          <NavigationProperty Name="ReqFieldSetupRoles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="aspnet_Roles" ToRole="ReqFieldSetupRole" />
           <NavigationProperty Name="aspnet_Permissions" Relationship="REMI.Entities.aspnet_PermissionsInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Permissions" />
           <NavigationProperty Name="aspnet_Users" Relationship="REMI.Entities.aspnet_UsersInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Users" />
+          <NavigationProperty Name="ReqFieldSetupRoles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="aspnet_Roles" ToRole="ReqFieldSetupRole" />
         </EntityType>
         <EntityType Name="aspnet_SchemaVersions">
           <Key>
@@ -4237,18 +4287,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ReqFieldSetupRole_aspnet_Roles">
-          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="1" />
-          <End Type="REMI.Entities.ReqFieldSetupRole" Role="ReqFieldSetupRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="aspnet_Roles">
-              <PropertyRef Name="RoleId" />
-            </Principal>
-            <Dependent Role="ReqFieldSetupRole">
-              <PropertyRef Name="RoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_BatchSpecificTestDurations_Tests">
           <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
           <End Type="REMI.Entities.BatchSpecificTestDuration" Role="BatchSpecificTestDuration" Multiplicity="*" />
@@ -4928,10 +4966,10 @@
           <NavigationProperty Name="Users" Relationship="REMI.Entities.FK_Users_Department" FromRole="Lookup" ToRole="User" />
           <NavigationProperty Name="UserTrainings" Relationship="REMI.Entities.FK_UserTraining_Lookups" FromRole="Lookup" ToRole="UserTraining" />
           <NavigationProperty Name="UserTrainings1" Relationship="REMI.Entities.FK_UserTraining_LookupsLevel" FromRole="Lookup" ToRole="UserTraining" />
+          <NavigationProperty Name="RequestTypes" Relationship="REMI.Entities.FK_RequestType_TypeID" FromRole="Lookup" ToRole="RequestType" />
           <NavigationProperty Name="ReqFieldSetups" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" FromRole="Lookup" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="ReqFieldSetups1" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" FromRole="Lookup" ToRole="ReqFieldSetup" />
-          <NavigationProperty Name="RequestTypes" Relationship="REMI.Entities.FK_RequestType_RequestTypeID" FromRole="Lookup" ToRole="RequestType" />
-        </EntityType>
+          </EntityType>
         <Association Name="FK_Batches_AccessoryGroup">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
           <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
@@ -5148,12 +5186,82 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ReqFieldData">
+          <Key>
+            <PropertyRef Name="RequestID" />
+            <PropertyRef Name="ReqFieldSetupID" />
+          </Key>
+          <Property Type="Int32" Name="RequestID" Nullable="false" />
+          <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="400" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Request" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="ReqFieldData" ToRole="Request" />
+          <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldData" ToRole="ReqFieldSetup" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Type="Int32" Name="RequestID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="RequestNumber" MaxLength="12" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="Request" ToRole="ReqFieldData" />
+        </EntityType>
+        <Association Name="FK_ReqFieldData_Request">
+          <End Type="REMI.Entities.Request" Role="Request" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldData" Role="ReqFieldData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="RequestID" />
+            </Principal>
+            <Dependent Role="ReqFieldData">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RequestType">
+          <Key>
+            <PropertyRef Name="RequestTypeID" />
+          </Key>
+          <Property Type="Int32" Name="RequestTypeID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="TypeID" Nullable="false" />
+          <Property Type="String" Name="RequestConnectName" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DBType" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="HasIntegration" Nullable="false" />
+          <Property Type="Boolean" Name="CanReport" Nullable="false" />
+          <Property Type="Boolean" Name="HasApproval" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_RequestType_TypeID" FromRole="RequestType" ToRole="Lookup" />
+          <NavigationProperty Name="ReqFieldMappings" Relationship="REMI.Entities.FK_ReqFieldMapping_RequestType" FromRole="RequestType" ToRole="ReqFieldMapping" />
+          <NavigationProperty Name="ReqFieldSetups" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="RequestType" ToRole="ReqFieldSetup" />
+        </EntityType>
+        <Association Name="FK_RequestType_TypeID">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="RequestType">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReqFieldMapping_RequestType">
+          <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldMapping" Role="ReqFieldMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestType">
+              <PropertyRef Name="RequestTypeID" />
+            </Principal>
+            <Dependent Role="ReqFieldMapping">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="ReqFieldSetup">
           <Key>
             <PropertyRef Name="ReqFieldSetupID" />
           </Key>
           <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="RequestID" Nullable="false" />
+          <Property Type="Int32" Name="RequestTypeID" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Description" MaxLength="350" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="FieldTypeID" Nullable="false" />
@@ -5164,24 +5272,32 @@
           <Property Type="Int32" Name="OptionsTypeID" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" FromRole="ReqFieldSetup" ToRole="Lookup" />
           <NavigationProperty Name="Lookup1" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" FromRole="ReqFieldSetup" ToRole="Lookup" />
+          <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldData" />
           <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="ReqFieldSetup" ToRole="RequestType" />
           <NavigationProperty Name="ReqFieldSetupRoles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldSetupRole" />
         </EntityType>
-        <EntityType Name="RequestType">
+        <EntityType Name="ReqFieldSetupRole">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="ReqFieldSetupRoleID" />
           </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="RequestTypeID" Nullable="false" />
-          <Property Type="String" Name="RequestConnectName" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DBType" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="HasIntegration" Nullable="false" />
-          <Property Type="Boolean" Name="CanReport" Nullable="false" />
-          <Property Type="Boolean" Name="HasApproval" Nullable="false" />
-          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_RequestType_RequestTypeID" FromRole="RequestType" ToRole="Lookup" />
-          <NavigationProperty Name="ReqFieldMappings" Relationship="REMI.Entities.FK_ReqFieldMapping_RequestType" FromRole="RequestType" ToRole="ReqFieldMapping" />
-          <NavigationProperty Name="ReqFieldSetups" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="RequestType" ToRole="ReqFieldSetup" />
+          <Property Type="Int32" Name="ReqFieldSetupRoleID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
+          <Property Type="Guid" Name="RoleID" Nullable="false" />
+          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="ReqFieldSetupRole" ToRole="aspnet_Roles" />
+          <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" FromRole="ReqFieldSetupRole" ToRole="ReqFieldSetup" />
         </EntityType>
+        <Association Name="FK_ReqFieldSetupRole_aspnet_Roles">
+          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldSetupRole" Role="ReqFieldSetupRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aspnet_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="ReqFieldSetupRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ReqFieldSetup_FieldTypeID">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
           <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="*" />
@@ -5206,27 +5322,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RequestType_RequestTypeID">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
-          <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="*" />
+        <Association Name="FK_ReqFieldData_ReqFieldSetup">
+          <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldData" Role="ReqFieldData" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
+            <Principal Role="ReqFieldSetup">
+              <PropertyRef Name="ReqFieldSetupID" />
             </Principal>
-            <Dependent Role="RequestType">
-              <PropertyRef Name="RequestTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ReqFieldMapping_RequestType">
-          <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="1" />
-          <End Type="REMI.Entities.ReqFieldMapping" Role="ReqFieldMapping" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RequestType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ReqFieldMapping">
-              <PropertyRef Name="RequestID" />
+            <Dependent Role="ReqFieldData">
+              <PropertyRef Name="ReqFieldSetupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5235,10 +5339,10 @@
           <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RequestType">
-              <PropertyRef Name="ID" />
+              <PropertyRef Name="RequestTypeID" />
             </Principal>
             <Dependent Role="ReqFieldSetup">
-              <PropertyRef Name="RequestID" />
+              <PropertyRef Name="RequestTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5469,15 +5573,6 @@
                 <ScalarProperty Name="IntField" ColumnName="IntField" />
                 <ScalarProperty Name="RequestID" ColumnName="RequestID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ReqFieldSetupRoles">
-            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetupRole">
-              <MappingFragment StoreEntitySet="ReqFieldSetupRole">
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-                <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
-                <ScalarProperty Name="ReqFieldSetupRoleID" ColumnName="ReqFieldSetupRoleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -6218,19 +6313,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ReqFieldSetups">
-            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetup">
-              <MappingFragment StoreEntitySet="ReqFieldSetup">
-                <ScalarProperty Name="OptionsTypeID" ColumnName="OptionsTypeID" />
-                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
-                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
-                <ScalarProperty Name="Archived" ColumnName="Archived" />
-                <ScalarProperty Name="FieldValidationID" ColumnName="FieldValidationID" />
-                <ScalarProperty Name="FieldTypeID" ColumnName="FieldTypeID" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+          <EntitySetMapping Name="ReqFieldDatas">
+            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldData">
+              <MappingFragment StoreEntitySet="ReqFieldData">
+                <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="REMI.Entities.Request">
+              <MappingFragment StoreEntitySet="Request">
+                <ScalarProperty Name="RequestNumber" ColumnName="RequestNumber" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -6242,8 +6338,33 @@
                 <ScalarProperty Name="HasIntegration" ColumnName="HasIntegration" />
                 <ScalarProperty Name="DBType" ColumnName="DBType" />
                 <ScalarProperty Name="RequestConnectName" ColumnName="RequestConnectName" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
                 <ScalarProperty Name="RequestTypeID" ColumnName="RequestTypeID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReqFieldSetups">
+            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetup">
+              <MappingFragment StoreEntitySet="ReqFieldSetup">
+                <ScalarProperty Name="OptionsTypeID" ColumnName="OptionsTypeID" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="Archived" ColumnName="Archived" />
+                <ScalarProperty Name="FieldValidationID" ColumnName="FieldValidationID" />
+                <ScalarProperty Name="FieldTypeID" ColumnName="FieldTypeID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RequestTypeID" ColumnName="RequestTypeID" />
+                <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReqFieldSetupRoles">
+            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetupRole">
+              <MappingFragment StoreEntitySet="ReqFieldSetupRole">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
+                <ScalarProperty Name="ReqFieldSetupRoleID" ColumnName="ReqFieldSetupRoleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -6273,17 +6394,16 @@
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfo" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfoCompleted" Width="1.5" PointX="0.75" PointY="5.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_TestRecordAudit" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="18" PointY="50.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="22.5" PointY="60.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="22.5" PointY="47.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="24.75" PointY="45.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="24.75" PointY="48.875" />
+        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="12.75" PointY="52" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="17.25" PointY="61.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="20.25" PointY="47.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="22.5" PointY="46.375" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="22.5" PointY="49.5" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsOrphaned" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="24.75" PointY="51.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="20.25" PointY="59.375" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="75.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="1.5" PointX="9.75" PointY="56.125" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="12.75" PointY="38.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="22.5" PointY="52.375" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="15" PointY="60.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="70.75" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="13.5" PointY="43.25" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultXML_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
@@ -6292,55 +6412,55 @@
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsFiles_ResultsMeasurements" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsParameters_ResultsMeasurements" />
         <EntityTypeShape EntityType="REMI.Entities.ApplicationLog" Width="1.5" PointX="6.75" PointY="4.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="5.25" PointY="19.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="0.75" PointY="13" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="3" PointY="12.625" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="5.25" PointY="78.625" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="5.25" PointY="81.75" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="12" PointY="79.5" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="1.5" PointX="7.5" PointY="79.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="5.25" PointY="24.875" />
+        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="0.75" PointY="21.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="3" PointY="20.75" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="5.25" PointY="74.5" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="5.25" PointY="77.625" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="12" PointY="75.375" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="1.5" PointX="7.5" PointY="75.625" />
         <EntityTypeShape EntityType="REMI.Entities.aspnet_SchemaVersions" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="1.5" PointX="9.75" PointY="79.125" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="12.75" PointY="47.375" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="1.5" PointX="9.75" PointY="75" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="10.5" PointY="47.5" />
         <EntityTypeShape EntityType="REMI.Entities.BatchesAudit" Width="1.5" PointX="8.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="15.75" PointY="38.375" />
-        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="8.75" PointY="24.75" />
-        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="15" PointY="46.5" />
-        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="38" />
-        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="29.75" />
-        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="39" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="1.5" PointX="3" PointY="29.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="0.75" PointY="29.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="1.5" PointX="3" PointY="19.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="35.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="5.25" PointY="38.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="1.5" PointY="44" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="3.5" PointY="16" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="5.75" PointY="25.625" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="10.5" PointY="43.5" />
+        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="11.25" PointY="29.5" />
+        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="13.5" PointY="47.625" />
+        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="5.25" PointY="42.125" />
+        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="3" PointY="43.875" />
+        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="39.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="1.5" PointX="3" PointY="28.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="0.75" PointY="28.375" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="1.5" PointX="3" PointY="24.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="38.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="5.25" PointY="35.875" />
+        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="3" PointY="32.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="9" PointY="20.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="11.25" PointY="25.375" />
         <EntityTypeShape EntityType="REMI.Entities.StationConfigurationUpload" Width="1.5" PointX="4.75" PointY="8.75" />
         <EntityTypeShape EntityType="REMI.Entities.sysdiagram" Width="1.5" PointX="10.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.TargetAccess" Width="1.5" PointX="10.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="12.75" PointY="34.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="62.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="10.5" PointY="33.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="62.625" />
         <EntityTypeShape EntityType="REMI.Entities.TestExceptionsAudit" Width="1.5" PointX="10.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="15" PointY="51" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="15.75" PointY="50.125" />
         <EntityTypeShape EntityType="REMI.Entities.TestRecordsAudit" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="17.25" PointY="48.125" />
-        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="1.5" PointY="23" />
-        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="10.5" PointY="28.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="12.75" PointY="50.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="5.25" PointY="41.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="8.25" PointY="34.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="7.5" PointY="42.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="9.75" PointY="45.875" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="13" PointY="42.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="7.5" PointY="46.25" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="5.25" PointY="49.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="3" PointY="49.125" />
-        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="5.25" PointY="65.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="18" PointY="50.25" />
+        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="6" PointY="28.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="8.25" PointY="28.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="10.5" PointY="50.625" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="11.25" PointY="37.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="14.25" PointY="27.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="13.5" PointY="37" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="15.75" PointY="40" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="18" PointY="38.625" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="13.5" PointY="40.375" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="11.25" PointY="16.75" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="9" PointY="24.375" />
+        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="5.25" PointY="66" />
         <EntityTypeShape EntityType="REMI.Entities.UsersAudit" Width="1.5" PointX="8.75" PointY="10.75" />
-        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="7.5" PointY="66.625" />
-        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="7.5" PointY="51.625" />
+        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="7.5" PointY="66.75" />
+        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="7.5" PointY="51.75" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ApplicationVersions" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ProductConfigurationVersion" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationVersions_Applications" />
@@ -6348,7 +6468,6 @@
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" />
         <AssociationConnector Association="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" />
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A" />
-        <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" />
         <AssociationConnector Association="REMI.Entities.FK_BatchSpecificTestDurations_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_Calibration_Products" />
         <AssociationConnector Association="REMI.Entities.FK_Calibration_Tests" />
@@ -6393,7 +6512,7 @@
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Users" />
         <AssociationConnector Association="REMI.Entities.aspnet_PermissionsInRoles" />
         <AssociationConnector Association="REMI.Entities.aspnet_UsersInRoles" />
-        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="10.5" PointY="34.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="8.25" PointY="34.625" />
         <AssociationConnector Association="REMI.Entities.FK_BatchComments_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_JobOrientation" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Products" />
@@ -6401,7 +6520,7 @@
         <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_TaskAssignment_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_TestUnits_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="36.625" />
+        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="36.75" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_AccessoryGroup" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Department" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Priority" />
@@ -6420,12 +6539,18 @@
         <AssociationConnector Association="REMI.Entities.FK_Users_Department" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_LookupsLevel" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="7.5" PointY="55.25" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="74.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldData" Width="1.5" PointX="9.75" PointY="57.125" />
+        <EntityTypeShape EntityType="REMI.Entities.Request" Width="1.5" PointX="7.5" PointY="61.25" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_Request" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="70.375" />
+        <AssociationConnector Association="REMI.Entities.FK_RequestType_TypeID" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="7.5" PointY="56.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="1.5" PointX="9.75" PointY="60.125" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" />
-        <AssociationConnector Association="REMI.Entities.FK_RequestType_RequestTypeID" />
-        <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_RequestType" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" />
       </Diagram></edmx:Diagrams>

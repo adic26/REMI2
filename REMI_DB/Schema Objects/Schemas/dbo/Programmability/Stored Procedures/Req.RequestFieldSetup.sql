@@ -7,9 +7,9 @@ BEGIN
 	FROM Req.ReqFieldSetup rfs
 		INNER JOIN Lookups lft ON lft.LookupID=rfs.FieldTypeID
 		LEFT OUTER JOIN Lookups lvt ON lvt.LookupID=rfs.FieldValidationID
-		INNER JOIN Req.RequestType rt ON rt.ID=rfs.RequestID
-		INNER JOIN Lookups lrt ON lrt.LookupID=rt.RequestTypeID
-	WHERE rfs.RequestID=@RequestID AND 
+		INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID
+		INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID
+	WHERE rfs.RequestTypeID=@RequestID AND 
 		(
 			(@IncludeArchived = 1)
 			OR

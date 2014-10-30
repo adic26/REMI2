@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Req].[ReqFieldSetup](
 	[ReqFieldSetupID] [int] IDENTITY(1,1) NOT NULL,
-	[RequestID] [int] NOT NULL,
+	[RequestTypeID] [int] NOT NULL,
 	[Name] [nvarchar](150) NOT NULL,
 	[Description] [nvarchar](350) NULL,
 	[FieldTypeID] [int] NOT NULL,
@@ -31,8 +31,8 @@ GO
 ALTER TABLE [Req].[ReqFieldSetup] CHECK CONSTRAINT [FK_ReqFieldSetup_FieldValidationID]
 GO
 
-ALTER TABLE [Req].[ReqFieldSetup]  WITH CHECK ADD  CONSTRAINT [FK_ReqFieldSetup_RequestType] FOREIGN KEY([RequestID])
-REFERENCES [Req].[RequestType] ([ID])
+ALTER TABLE [Req].[ReqFieldSetup]  WITH CHECK ADD  CONSTRAINT [FK_ReqFieldSetup_RequestType] FOREIGN KEY([RequestTypeID])
+REFERENCES [Req].[RequestType] ([RequestTypeID])
 GO
 
 ALTER TABLE [Req].[ReqFieldSetup] CHECK CONSTRAINT [FK_ReqFieldSetup_RequestType]

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Req].[RequestType](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[RequestTypeID] [int] NOT NULL,
+	[RequestTypeID] [int] IDENTITY(1,1) NOT NULL,
+	[TypeID] [int] NOT NULL,
 	[RequestConnectName] [nvarchar](150) NOT NULL,
 	[DBType] [nvarchar](50) NOT NULL,
 	[HasIntegration] [bit] NOT NULL,
@@ -8,13 +8,13 @@
 	[HasApproval] [bit] NOT NULL,
  CONSTRAINT [PK_RequestType] PRIMARY KEY CLUSTERED 
 (
-	[ID] ASC
+	[RequestTypeID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
 
-ALTER TABLE [Req].[RequestType]  WITH CHECK ADD  CONSTRAINT [FK_RequestType_Lookups] FOREIGN KEY([RequestTypeID])
+ALTER TABLE [Req].[RequestType]  WITH CHECK ADD  CONSTRAINT [FK_RequestType_Lookups] FOREIGN KEY([TypeID])
 REFERENCES [dbo].[Lookups] ([LookupID])
 GO
 
