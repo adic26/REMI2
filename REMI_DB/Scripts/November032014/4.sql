@@ -93,18 +93,38 @@ IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION
 GO
 PRINT N'Creating [Req].[RequestFieldSetup]'
 GO
-create PROCEDURE [Req].[RequestFieldSetup] @RequestID INT, @IncludeArchived BIT = 0
+create PROCEDURE [Req].[RequestFieldSetup] @RequestTypeID INT, @IncludeArchived BIT = 0, @RequestNumber NVARCHAR(12) = NULL
 AS
 BEGIN
-	SELECT rfs.ReqFieldSetupID, lrt.[Values] AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
+	DECLARE @RequestID INT
+	DECLARE @RequestType NVARCHAR(150)
+	SET @RequestID = 0
+	
+	SELECT @RequestType=lrt.[values] FROM Req.RequestType rt INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID WHERE rt.RequestTypeID=@RequestTypeID
+	
+	IF (@RequestNumber IS NOT NULL)
+	BEGIN
+		SELECT @RequestID = RequestID FROM Req.Request WHERE RequestNumber=@RequestNumber
+	END
+	ELSE
+	BEGIN
+		SELECT @RequestNumber = REPLACE(RequestNumber, @RequestType + '-' + Right(Year(getDate()),2) + '-', '') + 1 FROM Req.Request WHERE RequestNumber LIKE @RequestType + '-' + Right(Year(getDate()),2) + '-%'
+		
+		IF (@RequestNumber IS NULL)
+			SET @RequestNumber = '0001'
+		
+		SET @RequestNumber = @RequestType + '-' + Right(Year(getDate()),2) + '-' + @RequestNumber
+	END
+
+	SELECT rfs.ReqFieldSetupID, @RequestType AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
 		lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, rfs.DisplayOrder, 
-		ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, rt.RequestTypeID AS RequestID
+		ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, @RequestTypeID AS RequestTypeID,
+		@RequestNumber AS RequestNumber, @RequestID AS RequestID, rfd.Value
 	FROM Req.ReqFieldSetup rfs
 		INNER JOIN Lookups lft ON lft.LookupID=rfs.FieldTypeID
 		LEFT OUTER JOIN Lookups lvt ON lvt.LookupID=rfs.FieldValidationID
-		INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID
-		INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID
-	WHERE rfs.RequestTypeID=@RequestID AND 
+		LEFT OUTER JOIN Req.ReqFieldData rfd ON rfd.RequestID=@RequestID AND rfd.ReqFieldSetupID=rfs.ReqFieldSetupID
+	WHERE rfs.RequestTypeID=@RequestTypeID AND 
 		(
 			(@IncludeArchived = 1)
 			OR
@@ -172,6 +192,30 @@ ALTER TABLE [Req].[RequestType]  WITH CHECK ADD  CONSTRAINT [FK_RequestType_Type
 REFERENCES [dbo].[Lookups] ([LookupID])
 GO
 ALTER TABLE [Req].[RequestType] CHECK CONSTRAINT [FK_RequestType_TypeID]
+GO
+CREATE TABLE [Req].[Request]
+(
+[RequestID] [int] NOT NULL IDENTITY(1, 1),
+[RequestNumber] [nvarchar] (12) COLLATE SQL_Latin1_General_CP1_CI_AS NULL
+)
+ALTER TABLE [Req].[Request] ADD CONSTRAINT [PK_Request] PRIMARY KEY CLUSTERED  ([RequestID])
+GO
+CREATE TABLE [Req].[ReqFieldData]
+(
+[RequestID] [int] NOT NULL,
+[ReqFieldSetupID] [int] NOT NULL,
+[Value] [nvarchar] (400) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL
+)
+GO
+-- Constraints and Indexes
+
+ALTER TABLE [Req].[ReqFieldData] ADD CONSTRAINT [PK_ReqFieldData] PRIMARY KEY CLUSTERED  ([RequestID], [ReqFieldSetupID])
+GO
+-- Foreign Keys
+
+ALTER TABLE [Req].[ReqFieldData] ADD CONSTRAINT [FK_ReqFieldData_ReqFieldSetup] FOREIGN KEY ([ReqFieldSetupID]) REFERENCES [Req].[ReqFieldSetup] ([ReqFieldSetupID])
+GO
+ALTER TABLE [Req].[ReqFieldData] ADD CONSTRAINT [FK_ReqFieldData_Request] FOREIGN KEY ([RequestID]) REFERENCES [Req].[Request] ([RequestID])
 GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO

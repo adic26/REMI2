@@ -203,12 +203,38 @@ Public Class ProductConfiguration
     <WebMethod(Description:="Gets The Fields Setup Definition")> _
     Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean) As RequestFieldsCollection
         Try
-            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived)
+            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, String.Empty)
         Catch ex As Exception
             RequestManager.LogIssue("GetRequestFieldSetup", "e3", NotificationType.Errors, ex)
         End Try
 
         Return Nothing
     End Function
+
+    <WebMethod(Description:="Gets The Raised Request")> _
+    Public Function GetRequest(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
+        Try
+            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
+        Catch ex As Exception
+            RequestManager.LogIssue("GetRequest", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return Nothing
+    End Function
+
+    <WebMethod(Description:="Save Raised Request")> _
+    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
+        Try
+            Return RequestManager.SaveRequest(requestName, request)
+        Catch ex As Exception
+            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return False
+    End Function
+
+
+
+
 #End Region
 End Class

@@ -188,7 +188,7 @@ Namespace REMI.Dal
             Return reqData
         End Function
 
-        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean) As RequestFieldsCollection
+        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
             Dim rID As Int32
             Dim fieldData As RequestFieldsCollection = Nothing
 
@@ -198,10 +198,14 @@ Namespace REMI.Dal
                 Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                     Using myCommand As New SqlCommand("Req.RequestFieldSetup", myConnection)
                         myCommand.CommandType = CommandType.StoredProcedure
-                        myCommand.Parameters.AddWithValue("@RequestID", rID)
+                        myCommand.Parameters.AddWithValue("@RequestTypeID", rID)
 
                         If (includeArchived) Then
                             myCommand.Parameters.AddWithValue("@IncludeArchived", 1)
+                        End If
+
+                        If (requestNumber.Trim().Length > 0) Then
+                            myCommand.Parameters.AddWithValue("@requestNumber", requestNumber)
                         End If
 
                         myConnection.Open()
@@ -227,10 +231,12 @@ Namespace REMI.Dal
 
             myFields.FieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldSetupID"))
             myFields.RequestType = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestType"))
-            myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
+            myFields.RequestTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestTypeID"))
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Description")) Then
                 myFields.Description = myDataRecord.GetString(myDataRecord.GetOrdinal("Description"))
+            Else
+                myFields.Description = String.Empty
             End If
 
             myFields.DisplayOrder = myDataRecord.GetInt32(myDataRecord.GetOrdinal("DisplayOrder"))
@@ -240,16 +246,30 @@ Namespace REMI.Dal
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("FieldValidationID")) Then
                 myFields.FieldValidation = myDataRecord.GetString(myDataRecord.GetOrdinal("ValidationType"))
                 myFields.FieldValidationID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldValidationID"))
+            Else
+                myFields.FieldValidation = String.Empty
+                myFields.FieldValidationID = 0
             End If
 
             myFields.IsArchived = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("Archived"))
             myFields.IsRequired = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsRequired"))
             myFields.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("Name"))
 
-
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 myFields.OptionsType = (From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.Values).ToList
+            Else
+                myFields.OptionsTypeID = 0
+                myFields.OptionsType = New List(Of String)()
+            End If
+
+            myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
+            myFields.RequestNumber = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestNumber"))
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Value")) Then
+                myFields.Value = myDataRecord.GetString(myDataRecord.GetOrdinal("Value"))
+            Else
+                myFields.Value = String.Empty
             End If
 
             Return myFields

@@ -526,7 +526,7 @@ Partial Class Search
             us.ByPass = byPass
             us.DepartmentID = departmentID
 
-            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), REMI.Dal.UserDB.UserSearch(us, False))
+            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), Remi.Dal.UserDB.UserSearch(us, False))
         ElseIf (pnlEnvReport.Visible) Then
             Dim startDate As DateTime = txtStartENV.Text
             Dim endDate As DateTime = txtEndENV.Text

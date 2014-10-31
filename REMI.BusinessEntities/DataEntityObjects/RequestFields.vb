@@ -13,7 +13,7 @@ Namespace REMI.BusinessEntities
         Private _fieldValidationID As Int32
         Private _displayOrder As Int32
         Private _optionsTypeID As Int32
-        Private _requestID As Int32
+        Private _requestTypeID As Int32
         Private _requestType As String
         Private _name As String
         Private _fieldType As String
@@ -22,19 +22,22 @@ Namespace REMI.BusinessEntities
         Private _isRequired As Boolean
         Private _isArchived As Boolean
         Private _optionsType As List(Of String)
+        Private _requestID As Int32
+        Private _requestNumber As String
+        Private _value As String
 #End Region
 
 #Region "Construcor(s)"
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String))
+        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String)
             _fieldSetupID = fieldSetupID
             _fieldTypeID = fieldTypeID
             _fieldValidationID = fieldValidationID
             _displayOrder = displayOrder
             _optionsTypeID = optionsTypeID
-            _requestID = requestID
+            _requestTypeID = requestTypeID
             _requestType = requestType
             _name = name
             _fieldType = fieldType
@@ -43,6 +46,9 @@ Namespace REMI.BusinessEntities
             _isArchived = isArchived
             _description = description
             _optionsType = optionsType
+            _requestID = requestID
+            _requestNumber = requestNumber
+            _value = value
         End Sub
 #End Region
 
@@ -110,6 +116,15 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        Public Property RequestTypeID() As Int32
+            Get
+                Return _requestTypeID
+            End Get
+            Set(ByVal value As Int32)
+                _requestTypeID = value
+            End Set
+        End Property
+
         Public Property Name() As String
             Get
                 Return _name
@@ -125,6 +140,24 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As String)
                 _requestType = value
+            End Set
+        End Property
+
+        Public Property Value() As String
+            Get
+                Return _value
+            End Get
+            Set(ByVal value As String)
+                _value = value
+            End Set
+        End Property
+
+        Public Property RequestNumber() As String
+            Get
+                Return _requestNumber
+            End Get
+            Set(ByVal value As String)
+                _requestNumber = value
             End Set
         End Property
 
