@@ -115,7 +115,7 @@ Namespace REMI.Bll
 
         Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
             Try
-
+                Return RequestDB.SaveRequest(requestName, request)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

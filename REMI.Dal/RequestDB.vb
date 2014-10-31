@@ -188,17 +188,56 @@ Namespace REMI.Dal
             Return reqData
         End Function
 
+        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
+            Dim instance = New REMI.Dal.Entities().Instance()
+            Dim val = (From rfc In request Select rfc.FieldSetupID, rfc.Value, rfc.RequestID, rfc.RequestNumber)
+            Dim reqID As Int32 = 0
+            Dim reqNumber As String = val(0).RequestNumber
+
+            Dim req = (From r In instance.Requests Where r.RequestNumber = reqNumber).FirstOrDefault()
+
+            If (req Is Nothing) Then
+                Dim rq As New REMI.Entities.Request()
+                rq.RequestNumber = reqNumber
+                instance.AddToRequests(rq)
+            Else
+                reqID = req.RequestID
+            End If
+
+            instance.SaveChanges()
+
+            reqID = (From r In instance.Requests Where r.RequestNumber = reqNumber Select r.RequestID).FirstOrDefault()
+
+            For Each rec In val
+                Dim fieldData = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID).FirstOrDefault()
+
+                If (fieldData Is Nothing) Then
+                    Dim sfd As New REMI.Entities.ReqFieldData()
+                    sfd.ReqFieldSetupID = rec.FieldSetupID
+                    sfd.RequestID = reqID
+                    sfd.Value = rec.Value
+                    instance.AddToReqFieldDatas(sfd)
+                Else
+                    fieldData.Value = rec.Value
+                End If
+            Next
+
+            instance.SaveChanges()
+
+            Return True
+        End Function
+
         Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
-            Dim rID As Int32
+            Dim rtID As Int32
             Dim fieldData As RequestFieldsCollection = Nothing
 
-            rID = (From fs In New REMI.Dal.Entities().Instance.ReqFieldSetups Where fs.RequestType.Lookup.Values = requestName Select fs.RequestTypeID).FirstOrDefault()
+            rtID = (From fs In New REMI.Dal.Entities().Instance.ReqFieldSetups Where fs.RequestType.Lookup.Values = requestName Select fs.RequestTypeID).FirstOrDefault()
 
-            If (rID > 0) Then
+            If (rtID > 0) Then
                 Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                     Using myCommand As New SqlCommand("Req.RequestFieldSetup", myConnection)
                         myCommand.CommandType = CommandType.StoredProcedure
-                        myCommand.Parameters.AddWithValue("@RequestTypeID", rID)
+                        myCommand.Parameters.AddWithValue("@RequestTypeID", rtID)
 
                         If (includeArchived) Then
                             myCommand.Parameters.AddWithValue("@IncludeArchived", 1)

@@ -232,9 +232,5 @@ Public Class ProductConfiguration
 
         Return False
     End Function
-
-
-
-
 #End Region
 End Class
