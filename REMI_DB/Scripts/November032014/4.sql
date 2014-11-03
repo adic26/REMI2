@@ -217,6 +217,8 @@ ALTER TABLE [Req].[ReqFieldData] ADD CONSTRAINT [FK_ReqFieldData_ReqFieldSetup] 
 GO
 ALTER TABLE [Req].[ReqFieldData] ADD CONSTRAINT [FK_ReqFieldData_Request] FOREIGN KEY ([RequestID]) REFERENCES [Req].[Request] ([RequestID])
 GO
+exec sp_rename 'Req.ReqFieldMapping.RequestID', 'RequestTypeID', 'COLUMN'
+GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN

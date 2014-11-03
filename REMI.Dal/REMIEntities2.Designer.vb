@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("6dbf6d13-563d-4fb6-89c9-febca3564d7d")>
+<Assembly: EdmSchemaAttribute("1f1b0038-8ae8-45c8-8e15-e23cb89a3abd")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -105,13 +105,13 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_LookupsLevel", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestType_TypeID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestType), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldMapping_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "ReqFieldMapping", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldMapping), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Roles), "ReqFieldSetupRole", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupRole), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetup_FieldTypeID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetup_FieldValidationID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetup_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupRole_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldSetupRole", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupRole), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldMapping_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "ReqFieldMapping", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldMapping), True)>
 
 #End Region
 
@@ -343,20 +343,6 @@ Namespace REMI.Entities
         End Property
     
         Private _ResultsXMLs As ObjectSet(Of ResultsXML)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property ReqFieldMappings() As ObjectSet(Of ReqFieldMapping)
-            Get
-                If (_ReqFieldMappings Is Nothing) Then
-                    _ReqFieldMappings = MyBase.CreateObjectSet(Of ReqFieldMapping)("ReqFieldMappings")
-                End If
-                Return _ReqFieldMappings
-            End Get
-        End Property
-    
-        Private _ReqFieldMappings As ObjectSet(Of ReqFieldMapping)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -1169,6 +1155,20 @@ Namespace REMI.Entities
         End Property
     
         Private _ReqFieldSetupRoles As ObjectSet(Of ReqFieldSetupRole)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ReqFieldMappings() As ObjectSet(Of ReqFieldMapping)
+            Get
+                If (_ReqFieldMappings Is Nothing) Then
+                    _ReqFieldMappings = MyBase.CreateObjectSet(Of ReqFieldMapping)("ReqFieldMappings")
+                End If
+                Return _ReqFieldMappings
+            End Get
+        End Property
+    
+        Private _ReqFieldMappings As ObjectSet(Of ReqFieldMapping)
 
         #End Region
 
@@ -1263,13 +1263,6 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToResultsXMLs(ByVal resultsXML As ResultsXML)
             MyBase.AddObject("ResultsXMLs", resultsXML)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the ReqFieldMappings EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToReqFieldMappings(ByVal reqFieldMapping As ReqFieldMapping)
-            MyBase.AddObject("ReqFieldMappings", reqFieldMapping)
         End Sub
     
         ''' <summary>
@@ -1676,6 +1669,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToReqFieldSetupRoles(ByVal reqFieldSetupRole As ReqFieldSetupRole)
             MyBase.AddObject("ReqFieldSetupRoles", reqFieldSetupRole)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ReqFieldMappings EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToReqFieldMappings(ByVal reqFieldMapping As ReqFieldMapping)
+            MyBase.AddObject("ReqFieldMappings", reqFieldMapping)
         End Sub
 
         #End Region
@@ -10408,14 +10408,14 @@ Namespace REMI.Entities
         ''' Create a new ReqFieldMapping object.
         ''' </summary>
         ''' <param name="id">Initial value of the ID property.</param>
-        ''' <param name="requestID">Initial value of the RequestID property.</param>
+        ''' <param name="requestTypeID">Initial value of the RequestTypeID property.</param>
         ''' <param name="intField">Initial value of the IntField property.</param>
         ''' <param name="extField">Initial value of the ExtField property.</param>
         ''' <param name="isActive">Initial value of the IsActive property.</param>
-        Public Shared Function CreateReqFieldMapping(id As Global.System.Int32, requestID As Global.System.Int32, intField As Global.System.String, extField As Global.System.String, isActive As Global.System.Boolean) As ReqFieldMapping
+        Public Shared Function CreateReqFieldMapping(id As Global.System.Int32, requestTypeID As Global.System.Int32, intField As Global.System.String, extField As Global.System.String, isActive As Global.System.Boolean) As ReqFieldMapping
             Dim reqFieldMapping as ReqFieldMapping = New ReqFieldMapping
             reqFieldMapping.ID = id
-            reqFieldMapping.RequestID = requestID
+            reqFieldMapping.RequestTypeID = requestTypeID
             reqFieldMapping.IntField = intField
             reqFieldMapping.ExtField = extField
             reqFieldMapping.IsActive = isActive
@@ -10458,24 +10458,24 @@ Namespace REMI.Entities
         ''' </summary>
         <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
         <DataMemberAttribute()>
-        Public Property RequestID() As Global.System.Int32
+        Public Property RequestTypeID() As Global.System.Int32
             Get
-                Return _RequestID
+                Return _RequestTypeID
             End Get
             Set
-                OnRequestIDChanging(value)
-                ReportPropertyChanging("RequestID")
-                _RequestID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("RequestID")
-                OnRequestIDChanged()
+                OnRequestTypeIDChanging(value)
+                ReportPropertyChanging("RequestTypeID")
+                _RequestTypeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("RequestTypeID")
+                OnRequestTypeIDChanged()
             End Set
         End Property
     
-        Private _RequestID As Global.System.Int32
-        Private Partial Sub OnRequestIDChanging(value As Global.System.Int32)
+        Private _RequestTypeID As Global.System.Int32
+        Private Partial Sub OnRequestTypeIDChanging(value As Global.System.Int32)
         End Sub
     
-        Private Partial Sub OnRequestIDChanged()
+        Private Partial Sub OnRequestTypeIDChanged()
         End Sub
     
         ''' <summary>
@@ -11918,14 +11918,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldMapping_RequestType", "ReqFieldMapping")>
-         Public Property ReqFieldMappings() As EntityCollection(Of ReqFieldMapping)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetup_RequestType", "ReqFieldSetup")>
+         Public Property ReqFieldSetups() As EntityCollection(Of ReqFieldSetup)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ReqFieldMapping)("REMI.Entities.FK_ReqFieldMapping_RequestType", "ReqFieldMapping")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetup_RequestType", "ReqFieldSetup")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldMapping)("REMI.Entities.FK_ReqFieldMapping_RequestType", "ReqFieldMapping", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetup_RequestType", "ReqFieldSetup", value)
                 End If
             End Set
         End Property
@@ -11936,14 +11936,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetup_RequestType", "ReqFieldSetup")>
-         Public Property ReqFieldSetups() As EntityCollection(Of ReqFieldSetup)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldMapping_RequestType", "ReqFieldMapping")>
+         Public Property ReqFieldMappings() As EntityCollection(Of ReqFieldMapping)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetup_RequestType", "ReqFieldSetup")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ReqFieldMapping)("REMI.Entities.FK_ReqFieldMapping_RequestType", "ReqFieldMapping")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetup_RequestType", "ReqFieldSetup", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldMapping)("REMI.Entities.FK_ReqFieldMapping_RequestType", "ReqFieldMapping", value)
                 End If
             End Set
         End Property

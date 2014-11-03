@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Req].[ReqFieldMapping](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[ReqTypeID] [int] NOT NULL,
+	[RequestTypeID] [int] NOT NULL,
 	[IntField] [nvarchar](150) NOT NULL,
 	[ExtField] [nvarchar](150) NOT NULL,
 	[IsActive] [bit] NOT NULL,
@@ -12,8 +12,8 @@
 
 GO
 
-ALTER TABLE [Req].[ReqFieldMapping]  WITH CHECK ADD  CONSTRAINT [FK_ReqFieldMapping_RequestType] FOREIGN KEY([ReqTypeID])
-REFERENCES [Req].[RequestType] ([ID])
+ALTER TABLE [Req].[ReqFieldMapping]  WITH CHECK ADD  CONSTRAINT [FK_ReqFieldMapping_RequestType] FOREIGN KEY([RequestTypeID])
+REFERENCES [Req].[RequestType] ([RequestTypeID])
 GO
 
 ALTER TABLE [Req].[ReqFieldMapping] CHECK CONSTRAINT [FK_ReqFieldMapping_RequestType]
