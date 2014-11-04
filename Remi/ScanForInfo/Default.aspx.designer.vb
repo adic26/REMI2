@@ -50,24 +50,6 @@ Partial Public Class ScanForInfo_Default
     Protected WithEvents hypRefresh As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
-    '''imgGetFails control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgGetFails As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''chkGetFails control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents chkGetFails As Global.System.Web.UI.WebControls.CheckBox
-
-    '''<summary>
     '''liEditExceptions control.
     '''</summary>
     '''<remarks>
@@ -363,6 +345,15 @@ Partial Public Class ScanForInfo_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnQRANumber As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnDepartmentID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnDepartmentID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''IESubmitBugRemedy_DoNotRemove control.

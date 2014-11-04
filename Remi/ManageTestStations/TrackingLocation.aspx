@@ -98,8 +98,7 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Manual" SortExpression="OperatingManualLocation">
                     <ItemTemplate>
-                        <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl='<%# Eval("TrackingLocationType").WILocation %>'
-                            Text="Click"></asp:HyperLink>
+                        <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl='<%# Eval("TrackingLocationType").WILocation %>' Text="Click"></asp:HyperLink>
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>

@@ -227,11 +227,15 @@
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Test Center:</td>
+                <td class="HorizTableFirstcolumn">Test Center:</td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlGeoLoc" runat="server" Width="195px" DataTextField="LookupType" DataValueField="LookupID">
-                    </asp:DropDownList>
+                    <asp:DropDownList ID="ddlGeoLoc" runat="server" Width="195px" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+                </td>
+            </tr>
+            <tr>
+                <td class="HorizTableFirstcolumn">Department:</td>
+                <td class="HorizTableSecondColumn">
+                    <asp:DropDownList ID="ddlDepartments" runat="server" Width="195px" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
                 </td>
             </tr>
             <tr>

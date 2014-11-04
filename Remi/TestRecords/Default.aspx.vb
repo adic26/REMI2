@@ -32,6 +32,7 @@ Partial Class TestRecords_Default
     Protected Sub ProcessQRA(ByVal QRA As String, ByVal testName As String, ByVal testStageName As String, ByVal jobName As String, ByVal testUnitID As Integer)
         Try
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRA))
+
             If bc.Validate Then
                 Dim b As Batch = BatchManager.GetItem(bc.BatchNumber)
                 If b IsNot Nothing Then
@@ -47,18 +48,16 @@ Partial Class TestRecords_Default
                     hdnJobName.Value = jobName
                     hdnTestName.Value = testName
                     hdnProductGroup.Value = b.ProductGroup
+                    hdnDepartmentID.Value = b.DepartmentID
                     hdnTestStageName.Value = testStageName
                     hdnTestUnitID.Value = testUnitID
                     grdTestRecords.DataSource = b.TestRecords(bc.BatchNumber, hdnTestName.Value, hdnTestStageName.Value, hdnJobName.Value, testUnitID)
                     grdTestRecords.DataBind()
 
-                    hypAddTR.Visible = True
-                    imgAddTR.Visible = True
+                    hypAddTR.Enabled = UserManager.GetCurrentUser.DepartmentID = b.DepartmentID
                     hypAddTR.NavigateUrl = b.TestRecordsAddNewLink
                 End If
             Else
-                hypAddTR.Visible = False
-                imgAddTR.Visible = False
                 notMain.Notifications = bc.Notifications
                 Exit Sub
             End If
@@ -73,10 +72,20 @@ Partial Class TestRecords_Default
 
     Protected Sub grdTestRecords_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdTestRecords.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
-
+            Dim lnkDelete As LinkButton = DirectCast(e.Row.FindControl("lnkDelete"), LinkButton)
+            Dim hypEditDetailsLink As HyperLink = DirectCast(e.Row.FindControl("hypEditDetailsLink"), HyperLink)
             Dim testID As Int32 = DataBinder.Eval(e.Row.DataItem, "TestID")
             Dim testStageID As Int32 = DataBinder.Eval(e.Row.DataItem, "TestStageID")
             Dim testUnitID As Int32 = DataBinder.Eval(e.Row.DataItem, "TestUnitID")
+
+            If (hypEditDetailsLink IsNot Nothing) Then
+                hypEditDetailsLink.Enabled = UserManager.GetCurrentUser.DepartmentID.ToString() = hdnDepartmentID.Value
+            End If
+
+            If (lnkDelete IsNot Nothing) Then
+                lnkDelete.Enabled = Remi.Bll.UserManager.GetCurrentUser.IsDeveloper
+                lnkDelete.Visible = Remi.Bll.UserManager.GetCurrentUser.IsDeveloper
+            End If
 
             If (testID > 0 And testStageID > 0) Then
                 Dim resultID As Int32 = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _

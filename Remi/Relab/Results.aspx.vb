@@ -203,8 +203,8 @@ Public Class Results
             e.Row.Cells(2).CssClass = "removeStyle"
             e.Row.Cells(1).Visible = False
 
-            Dim hasEditAuthority As Boolean = UserManager.GetCurrentUser.HasEditItemAuthority(String.Empty)
-
+            Dim batchInfo = (From b In New REMI.Dal.Entities().Instance().Batches Where b.ID = ddlBatches.SelectedValue Select b.Product.ProductGroupName, b.DepartmentID).FirstOrDefault()
+            Dim hasEditAuthority As Boolean = UserManager.GetCurrentUser.HasEditItemAuthority(batchInfo.ProductGroupName, batchInfo.DepartmentID)
 
             For Each dc As DataControlFieldCell In e.Row.Cells
                 Dim text As String = String.Empty

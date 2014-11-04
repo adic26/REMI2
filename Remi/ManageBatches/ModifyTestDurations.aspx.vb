@@ -88,7 +88,7 @@ Partial Class ManageBatches_ModifyTestDurations
                 ddlSelectTestStage.SelectedIndex = 0
             End If
 
-            If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+            If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
                 liModifyPriority.Visible = True
                 liModifyStage.Visible = True
                 liModifyStatus.Visible = True

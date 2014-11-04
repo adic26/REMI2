@@ -46,8 +46,8 @@
             <asp:HyperLink ID="hypBatchInfo" runat="Server" Text="Batch Info" ToolTip="Click to return to batch info" />
         </li>
         <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/add.png" ID="imgAddTR" runat="server" visible="false"/>
-            <asp:HyperLink ID="hypAddTR" runat="Server" Text="Add New Record" ToolTip="Click to add a test record for this batch." visible="false"/>
+            <asp:Image ImageUrl="../Design/Icons/png/24x24/add.png" ID="imgAddTR" runat="server" enabled="false"/>
+            <asp:HyperLink ID="hypAddTR" runat="Server" Text="Add New Record" ToolTip="Click to add a test record for this batch." enabled="false"/>
         </li>
     </ul>
 </asp:Content>
@@ -98,8 +98,7 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Edit" SortExpression="editdetailslink">
                 <ItemTemplate>
-                    <asp:HyperLink ID="hypEditDetailsLink" runat="server" Text="Edit" NavigateUrl='<%# Eval("editdetailslink") %>'
-                        ToolTip="Click to edit the status, FA & RIT for this test record." EnableViewState="False"></asp:HyperLink>
+                    <asp:HyperLink ID="hypEditDetailsLink" runat="server" Text="Edit" NavigateUrl='<%# Eval("editdetailslink") %>' Enabled="false" ToolTip="Click to edit the status, FA & RIT for this test record." EnableViewState="False"></asp:HyperLink>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:BoundField DataField="TestID" HeaderText="TestID" SortExpression="TestID" Visible="false" />
@@ -107,7 +106,7 @@
             <asp:BoundField DataField="TestUnitID" HeaderText="TestUnitID" SortExpression="TestUnitID" Visible="false" />
             <asp:TemplateField HeaderText="Delete" SortExpression="">
                 <ItemTemplate>
-                    <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("ID") %>' EnableViewState="true" onclientclick="return confirm('Are you sure you want to delete this Test Record?');" CommandName="DeleteItem" Enabled='<%# Remi.Bll.UserManager.GetCurrentUser.IsDeveloper %>' Visible='<%# Remi.Bll.UserManager.GetCurrentUser.IsDeveloper %>'>Delete</asp:LinkButton>
+                    <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("ID") %>' EnableViewState="true" onclientclick="return confirm('Are you sure you want to delete this Test Record?');" CommandName="DeleteItem" Enabled='false' Visible='false'>Delete</asp:LinkButton>
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
@@ -120,6 +119,7 @@
     <asp:HiddenField ID="hdnTestUnitID" runat="server" Value="-1" />
     <asp:HiddenField ID="hdnJobName" runat="server" Value="-1" />
     <asp:HiddenField ID="hdnQRAID" runat="server" Value="-1" />
+    <asp:HiddenField ID="hdnDepartmentID" runat="server" Value="-1" />
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="rightSidebarContent" runat="Server">
 </asp:Content>

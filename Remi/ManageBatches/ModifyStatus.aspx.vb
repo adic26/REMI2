@@ -33,7 +33,7 @@ Partial Class ManageBatches_ModifyStatus
             hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
             hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
 
-            If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+            If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
                 liModifyPriority.Visible = True
                 liModifyStage.Visible = True
                 liModifyTestDurations.Visible = True

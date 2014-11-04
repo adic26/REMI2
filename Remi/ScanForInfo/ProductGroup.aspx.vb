@@ -117,6 +117,8 @@ Partial Class ScanForInfo_ProductGroup
 
     Protected Sub grdReady_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdReady.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
+            e.Row.Cells(0).Enabled = UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsDeveloper Or UserManager.GetCurrentUser.IsTestCenterAdmin
+
             Select Case DirectCast(e.Row.Cells(4).FindControl("lblIsReady"), Label).Text.Trim().ToLower
                 Case "yes"
                     e.Row.Cells(4).BackColor = Drawing.Color.LightGreen
@@ -151,6 +153,12 @@ Partial Class ScanForInfo_ProductGroup
         BindTargetData()
     End Sub
 
+    Protected Sub grdTargetDates_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdTargetDates.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            e.Row.Cells(0).Enabled = UserManager.GetCurrentUser.HasEditItemAuthority(ddlProductGroup.SelectedItem.Text, 0)
+        End If
+    End Sub
+
     Protected Sub grdTargetDates_RowUpdating(ByVal sender As Object, ByVal e As GridViewUpdateEventArgs)
         Dim txtValueText As TextBox = grdTargetDates.Rows(e.RowIndex).FindControl("txtValueText")
         Dim psID As Int32
@@ -175,7 +183,7 @@ Partial Class ScanForInfo_ProductGroup
     End Sub
 
     Sub BindTargetData()
-        Dim instance = New REMI.Dal.Entities().Instance()
+        Dim instance = New Remi.Dal.Entities().Instance()
         Dim mSettings = (From ps In instance.ProductSettings Where ps.KeyName.StartsWith("M") And ps.Product.ID = Me.hdnProductID.Value Select ps.ID, ps.KeyName, ps.ValueText)
 
         If (mSettings.FirstOrDefault() Is Nothing) Then
@@ -214,7 +222,7 @@ Partial Class ScanForInfo_ProductGroup
             accMain.SelectedIndex = 1
             BindTargetData()
 
-            Dim targets = (From ps In New REMI.Dal.Entities().Instance().ProductSettings Where ps.KeyName.StartsWith("M") And ps.Product.ID = Me.hdnProductID.Value Select ps.KeyName, ps.ValueText).ToList()
+            Dim targets = (From ps In New Remi.Dal.Entities().Instance().ProductSettings Where ps.KeyName.StartsWith("M") And ps.Product.ID = Me.hdnProductID.Value Select ps.KeyName, ps.ValueText).ToList()
             ddlMRevision.DataSource = targets
             ddlMRevision.DataBind()
 
@@ -254,12 +262,11 @@ Partial Class ScanForInfo_ProductGroup
     End Sub
 
     Protected Sub SetupMenuItems(ByVal productGroup As String)
-        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-            'liEditExceptions.Visible = True
+        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
             liEditSettings.Visible = True
         End If
 
-        If (UserManager.GetCurrentUser.HasUploadConfigXML() Or UserManager.GetCurrentUser.HasEditItemAuthority(productGroup)) Then
+        If (UserManager.GetCurrentUser.HasUploadConfigXML() Or UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0)) Then
             liEditConfigSettings.Visible = True
         End If
     End Sub

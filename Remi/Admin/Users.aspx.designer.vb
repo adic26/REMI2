@@ -419,6 +419,15 @@ Partial Public Class Admin_Users
     Protected WithEvents ddlGeoLoc As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''ddlDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
     '''dlstProductGroups control.
     '''</summary>
     '''<remarks>

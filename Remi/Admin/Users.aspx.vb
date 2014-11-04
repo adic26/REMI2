@@ -87,6 +87,10 @@ Partial Class Admin_Users
             ddlGeoLoc.Items.Clear()
             ddlGeoLoc.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 1)
             ddlGeoLoc.DataBind()
+
+            ddlDepartments.Items.Clear()
+            ddlDepartments.DataSource = Remi.Bll.LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
+            ddlDepartments.DataBind()
         Else
             lblHeaderText.Text = String.Format("Editing {0}", CurrentUser.LDAPName)
             txtName.Visible = False
@@ -116,6 +120,15 @@ Partial Class Admin_Users
             Dim l As ListItem = New ListItem(CurrentUser.TestCentre, CurrentUser.TestCentreID)
             If (ddlGeoLoc.Items.Contains(l)) Then
                 ddlGeoLoc.SelectedValue = CurrentUser.TestCentreID
+            End If
+
+            ddlDepartments.Items.Clear()
+            ddlDepartments.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
+            ddlDepartments.DataBind()
+
+            Dim ld As ListItem = New ListItem(CurrentUser.Department, CurrentUser.DepartmentID)
+            If (ddlDepartments.Items.Contains(ld)) Then
+                ddlDepartments.SelectedValue = CurrentUser.DepartmentID
             End If
 
             dlstProductGroups.DataBind()
@@ -310,6 +323,7 @@ Partial Class Admin_Users
 
         tmpUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
         tmpUser.TestCentreID = Request.Form(ddlGeoLoc.UniqueID)
+        tmpUser.DepartmentID = Request.Form(ddlDepartments.UniqueID)
 
         UserManager.Save(tmpUser, True)
         notMain.Notifications.Add(tmpUser.Notifications)

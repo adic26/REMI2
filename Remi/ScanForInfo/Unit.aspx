@@ -36,7 +36,7 @@
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgMFG" runat="server" />
-            <asp:HyperLink ID="hypMFG" runat="server" ToolTip="Click to view the manufacturing information page for this unit" NavigateUrl="http://go/mfgweb">MfgWeb History</asp:HyperLink>
+            <asp:HyperLink ID="hypMFG" runat="server" ToolTip="Click to view the manufacturing information page for this unit" NavigateUrl="http://go/mfgweb" Target="_blank">MfgWeb History</asp:HyperLink>
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgBatchInfo" runat="server" />
@@ -68,7 +68,7 @@
                 <asp:TemplateField HeaderText="BSN" SortExpression="BSN">
                     <ItemTemplate>
                         <asp:HyperLink ID="hypBSN" runat="server" ToolTip="Click to view the manufacturing information page for this unit"
-                            NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>'></asp:HyperLink>
+                            NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>' Target="_blank" ></asp:HyperLink>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Assigned To" SortExpression="AssignedTo">

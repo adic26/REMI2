@@ -112,10 +112,6 @@
             <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgSummaryView" runat="server" />
             <asp:HyperLink ID="hypRefresh" runat="server">Refresh</asp:HyperLink>
         </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgGetFails" runat="server" />
-            <asp:CheckBox ID="chkGetFails" runat="server" AutoPostBack="True" Text="Get Fails" />
-        </li>
         <li id="liEditExceptions" runat="server" visible="false">
             <asp:Image ImageUrl="../Design/Icons/png/24x24/Delete.png" ID="imgEditExceptions"
                 runat="server" />
@@ -173,6 +169,7 @@
     <asp:Panel ID="pnlSummary" runat="server">
         <asp:Panel ID="submitform" runat="server" DefaultButton="btnSubmit">
             <asp:HiddenField ID="hdnQRANumber" runat="server" Value="0" />
+            <asp:HiddenField ID="hdnDepartmentID" runat="Server" Value="0" />
             <asp:TextBox ID="IESubmitBugRemedy_DoNotRemove" runat="server" Style="visibility: hidden;
                 display: none;" />
             <img alt="Scan Barcode into text box" class="ScanDeviceImage" src="../Design/Icons/png/48x48/barcode.png" />
@@ -242,15 +239,14 @@
                                             <%#DataBinder.Eval(Container.DataItem, "username")%>
                                             <br />
                                             <%#DataBinder.Eval(Container.DataItem, "text")%>
-                                            <asp:LinkButton ID="lnkDeleteComment" runat="server" OnClick="lnkDeleteComment_Click"
-                                                Style="display: block; width: 50px; border-bottom: none;" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
-                                                Visible='<%#(DataBinder.Eval(Container.DataItem, "username") = REMI.Bll.UserManager.GetCurrentValidUserLDAPName OrElse REMI.Bll.UserManager.GetCurrentUser().HasEditBatchCommentsAuthority()) %>'>Remove</asp:LinkButton>
+                                            <asp:LinkButton ID="lnkDeleteComment" runat="server" OnClick="lnkDeleteComment_Click" Style="display: block; width: 50px; border-bottom: none;" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'>Remove</asp:LinkButton>
+                                            <asp:HiddenField ID="hdnUserName" runat="server" Value='<%#DataBinder.Eval(Container.DataItem, "username")%>' />
                                         </li>
                                     </ItemTemplate>
                                 </asp:Repeater>
-                                <asp:TextBox runat="server" ID="txtNewCommentText" Rows="5" Columns="60" TextMode="MultiLine" Enabled="false"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtNewCommentText" Rows="5" Columns="60" TextMode="MultiLine" Enabled="true"></asp:TextBox>
                                 <br />
-                                <asp:Button runat="server" CssClass="button" Text="Add Comment" ID="btnAddComment" OnClick="btnAddComment_Click" Enabled="false" />
+                                <asp:Button runat="server" CssClass="button" Text="Add Comment" ID="btnAddComment" OnClick="btnAddComment_Click" Enabled="true" />
                                      <asp:UpdateProgress ID="UpdateProgress4" runat="server" DynamicLayout="true" DisplayAfter="100"
                                     AssociatedUpdatePanelID="updComments">
                                     <ProgressTemplate>

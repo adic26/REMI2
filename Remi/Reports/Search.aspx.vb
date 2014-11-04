@@ -19,7 +19,7 @@ Partial Class Search
                 rblSearchBy.Items(3).Enabled = True 'Users
             End If
 
-            If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority) Then
+            If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(0)) Then
                 rblSearchBy.Items(2).Enabled = True 'Exceptions
             End If
 

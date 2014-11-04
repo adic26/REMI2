@@ -313,15 +313,15 @@ Namespace REMI.BusinessEntities
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function HasRetestAuthority(ByVal ProductGroupName As String) As Boolean
-            Return CheckPermission("HasRetestAuthority", ProductGroupName)
+            Return CheckPermission("HasRetestAuthority", ProductGroupName, 0)
         End Function
 
         Public Function HasFALowTestingAuthority(ByVal productGroupName As String) As Boolean
-            Return CheckPermission("HasFALowTestingAuthority", productGroupName)
+            Return CheckPermission("HasFALowTestingAuthority", productGroupName, 0)
         End Function
 
         Public Function HasFAHighTestingAuthority(ByVal productGroupName As String) As Boolean
-            Return CheckPermission("HasFAHighTestingAuthority", productGroupName)
+            Return CheckPermission("HasFAHighTestingAuthority", productGroupName, 0)
         End Function
 
         Public Function HasFATestingAuthority(ByVal ProductGroupName As String) As Boolean
@@ -329,60 +329,60 @@ Namespace REMI.BusinessEntities
         End Function
 
         Public Function HasLastScanLocationOverride() As Boolean
-            Return CheckPermission("HasLastScanLocationOverride", String.Empty)
+            Return CheckPermission("HasLastScanLocationOverride", String.Empty, 0)
         End Function
 
         Public Function HasAdjustPriorityAuthority() As Boolean
-            Return CheckPermission("HasAdjustPriorityAuthority", String.Empty)
+            Return CheckPermission("HasAdjustPriorityAuthority", String.Empty, 0)
         End Function
 
-        Public Function HasEditBatchCommentsAuthority() As Boolean
-            Return CheckPermission("HasEditBatchCommentsAuthority", String.Empty)
+        Public Function HasEditBatchCommentsAuthority(ByVal batchDepartmentID As Int32) As Boolean
+            Return CheckPermission("HasEditBatchCommentsAuthority", String.Empty, batchDepartmentID)
         End Function
 
         Public Function HasTaskAssignmentAuthority() As Boolean
-            Return CheckPermission("HasTaskAssignmentAuthority", String.Empty)
+            Return CheckPermission("HasTaskAssignmentAuthority", String.Empty, 0)
         End Function
 
         Public Function HasFAAssignmentAuthority() As Boolean
-            Return CheckPermission("HasFAAssignmentAuthority", String.Empty)
+            Return CheckPermission("HasFAAssignmentAuthority", String.Empty, 0)
         End Function
 
         Public Function HasOverrideCompletedTestAuthority() As Boolean
-            Return CheckPermission("HasOverrideCompletedTestAuthority", String.Empty)
+            Return CheckPermission("HasOverrideCompletedTestAuthority", String.Empty, 0)
         End Function
 
-        Public Function HasScanForTestAuthority() As Boolean
+        Public Function HasScanForTestAuthority(ByVal batchDepartmentID As Int32) As Boolean
             If Roles.IsUserInRole(_ldapName, "SupplementaryAuthenticationRequired") Then
                 'when badge scanning is in place this can be reset back to false
                 Return True
             Else
-                Return CheckPermission("HasScanForTestAuthority", String.Empty)
+                Return CheckPermission("HasScanForTestAuthority", String.Empty, batchDepartmentID)
             End If
         End Function
 
-        Public Function HasEditItemAuthority(ByVal productGroup As String) As Boolean
-            Return CheckPermission("HasEditItemAuthority", productGroup)
+        Public Function HasEditItemAuthority(ByVal productGroup As String, ByVal batchDepartmentID As Int32) As Boolean
+            Return CheckPermission("HasEditItemAuthority", productGroup, batchDepartmentID)
         End Function
 
         Public Function HasUploadConfigXML() As Boolean
-            Return CheckPermission("HasUploadConfigXML", String.Empty)
+            Return CheckPermission("HasUploadConfigXML", String.Empty, 0)
         End Function
 
         Public Function HasDocumentAuthority() As Boolean
-            Return CheckPermission("HasDocumentAuthority", String.Empty)
+            Return CheckPermission("HasDocumentAuthority", String.Empty, 0)
         End Function
 
         Public Function HasAdminReadOnlyAuthority() As Boolean
-            Return CheckPermission("HasAdminReadOnlyAuthority", String.Empty)
+            Return CheckPermission("HasAdminReadOnlyAuthority", String.Empty, 0)
         End Function
 
         Public Function HasRelabAuthority() As Boolean
-            Return CheckPermission("HasRelabAuthority", String.Empty)
+            Return CheckPermission("HasRelabAuthority", String.Empty, 0)
         End Function
 
-        Public Function HasBatchSetupAuthority() As Boolean
-            Return CheckPermission("HasBatchSetupAuthority", String.Empty)
+        Public Function HasBatchSetupAuthority(ByVal batchDepartmentID As Int32) As Boolean
+            Return CheckPermission("HasBatchSetupAuthority", String.Empty, batchDepartmentID)
         End Function
 #End Region
 
@@ -434,14 +434,15 @@ Namespace REMI.BusinessEntities
         End Property
 #End Region
 
-        Private Function CheckPermission(ByVal Permission As String, ByVal productGroupName As String) As Boolean
+        Private Function CheckPermission(ByVal Permission As String, ByVal productGroupName As String, ByVal batchDepartmentID As Int32) As Boolean
             Dim roles As DataTable = REMIAppCache.GetRolesByPermission(Permission)
+            Dim hasPerm As Boolean = False
+
             If (roles Is Nothing) Then
                 roles = GetRolesByPermission(Permission)
                 REMIAppCache.SetRolesByPermission(Permission, roles)
             End If
 
-            Dim hasPerm As Boolean = False
             For Each role As DataRow In roles.Rows
                 hasPerm = RolesList.Contains(role.Item("RoleName").ToString())
                 Dim hasProductCheck As Boolean = False
@@ -455,10 +456,16 @@ Namespace REMI.BusinessEntities
                         hasPerm = False
                     End If
                 End If
+
                 If (hasPerm) Then
+                    If (Me.DepartmentID <> batchDepartmentID And batchDepartmentID > 0 And Not IsAdmin And Not IsTestCenterAdmin) Then
+                        hasPerm = False
+                    End If
+
                     Exit For
                 End If
             Next
+
             Return hasPerm
         End Function
 

@@ -255,13 +255,6 @@ Namespace REMI.Bll
                 End If
                 'now get any info we can about the user from the active directory
                 FillUserFromActiveDirectory(u, True)
-                'if the user is a member of the reliability team then
-                'make sure they have access to scan.
-                'If u.HasREMIPageViewAuthority AndAlso Not u.HasScanForTestAuthority Then 'if the user has no roles they cannot scan
-                '    u.RolesList.Add("LabTestAssociate") 'add user to the lowest role to allow them to scan.
-                '    Roles.AddUserToRole(u.LDAPName, "LabTestAssociate")
-                'End If
-                'send it back
                 Return u
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex, String.Format("UserName: {0}", userName))

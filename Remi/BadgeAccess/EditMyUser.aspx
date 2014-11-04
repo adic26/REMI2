@@ -70,7 +70,7 @@
                  <td class="HorizTableFirstcolumn">
                      Select Department: </td>
                  <td style="text-align:left;">
-                     <asp:DropDownList ID="ddlDepartments" runat="server" DataSourceID="odsDepartments" Width="195px" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+                     <asp:DropDownList ID="ddlDepartments" runat="server" DataSourceID="odsDepartments" Width="195px" DataTextField="LookupType" Enabled="false" DataValueField="LookupID"></asp:DropDownList>
                      <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                          <SelectParameters>
                             <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />

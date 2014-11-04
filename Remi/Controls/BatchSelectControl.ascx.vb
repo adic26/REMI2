@@ -682,6 +682,14 @@ Partial Class Controls_BatchSelectControl
             If (Me.AutoGenerateEditButton = True) Then
                 statusColumnID += 1
                 rtrColumnID += 1
+
+                e.Row.Cells(0).Enabled = UserManager.GetCurrentUser.HasEditItemAuthority(DirectCast(e.Row.DataItem, REMI.BusinessEntities.Batch).ProductGroup, DirectCast(e.Row.DataItem, REMI.BusinessEntities.Batch).DepartmentID)
+
+                Dim btnUp As LinkButton = DirectCast(e.Row.FindControl("btnUp"), LinkButton)
+                Dim btnDown As LinkButton = DirectCast(e.Row.FindControl("btnDown"), LinkButton)
+
+                btnUp.Enabled = e.Row.Cells(0).Enabled
+                btnDown.Enabled = e.Row.Cells(0).Enabled
             End If
 
             If (BatchSelectControlMode.TestingCompleteDisplay) Then

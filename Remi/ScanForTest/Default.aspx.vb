@@ -114,79 +114,85 @@ Partial Class Scanning_Default
                 End If
 
                 If (bc.UnitNumber > 0) Then
-                    If (units.Count = 0) Then
-                        cblUnit.Items.Clear()
-                        cblUnit.Items.Add("All")
-                        cblUnit.DataSource = TestUnitManager.GetAvailableUnits(bc.BatchNumber, 0)
-                        cblUnit.DataBind()
-                        cblUnit.Visible = True
+                    Dim deptID As Int32 = (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = bc.BatchNumber Select b.DepartmentID).FirstOrDefault()
 
-                        If (cblUnit.Items.FindByValue(bc.UnitNumber) IsNot Nothing) Then
-                            cblUnit.Items.FindByValue(bc.UnitNumber).Selected = True
-                        End If
-                    Else
-                        If (units.Contains("All")) Then
-                            units.Clear()
-                            units = (From item In cblUnit.Items.Cast(Of ListItem)() Where item.Value <> "All" Select item.Value).ToList()
-                        End If
+                    If (UserManager.GetCurrentUser.HasScanForTestAuthority(deptID)) Then
+                        If (units.Count = 0) Then
+                            cblUnit.Items.Clear()
+                            cblUnit.Items.Add("All")
+                            cblUnit.DataSource = TestUnitManager.GetAvailableUnits(bc.BatchNumber, 0)
+                            cblUnit.DataBind()
+                            cblUnit.Visible = True
 
-                        Dim selectedTestStage As String
-                        Dim selectedJobName As String
-
-                        If ddlTestStage.SelectedValue <> _notApplicableString Then
-                            selectedTestStage = ddlTestStage.SelectedValue
+                            If (cblUnit.Items.FindByValue(bc.UnitNumber) IsNot Nothing) Then
+                                cblUnit.Items.FindByValue(bc.UnitNumber).Selected = True
+                            End If
                         Else
-                            selectedTestStage = String.Empty
-                        End If
+                            If (units.Contains("All")) Then
+                                units.Clear()
+                                units = (From item In cblUnit.Items.Cast(Of ListItem)() Where item.Value <> "All" Select item.Value).ToList()
+                            End If
 
-                        If ddlJobs.SelectedValue <> _notApplicableString Then
-                            selectedJobName = ddlJobs.SelectedValue
-                        Else
-                            selectedJobName = String.Empty
-                        End If
+                            Dim selectedTestStage As String
+                            Dim selectedJobName As String
 
-                        Dim shelves As New Dictionary(Of Int32, String)
+                            If ddlTestStage.SelectedValue <> _notApplicableString Then
+                                selectedTestStage = ddlTestStage.SelectedValue
+                            Else
+                                selectedTestStage = String.Empty
+                            End If
 
-                        If (chkPick.Checked And chkPick.Visible) Then
+                            If ddlJobs.SelectedValue <> _notApplicableString Then
+                                selectedJobName = ddlJobs.SelectedValue
+                            Else
+                                selectedJobName = String.Empty
+                            End If
+
+                            Dim shelves As New Dictionary(Of Int32, String)
+
+                            If (chkPick.Checked And chkPick.Visible) Then
+                                For Each unit As String In units
+                                    bc = New DeviceBarcodeNumber(bc.BatchNumber, unit)
+                                    Dim shelfNumber As String = String.Empty
+                                    notMain.Notifications.Add(BatchManager.PickBatchFromREMSTAR(bc.Number, shelfNumber))
+
+                                    If (Not String.IsNullOrEmpty(shelfNumber)) Then
+                                        shelves.Add(unit, shelfNumber)
+                                    End If
+                                Next
+                            End If
+
+                            'Scan out remaining units selected
                             For Each unit As String In units
-                                bc = New DeviceBarcodeNumber(bc.BatchNumber, unit)
-                                Dim shelfNumber As String = String.Empty
-                                notMain.Notifications.Add(BatchManager.PickBatchFromREMSTAR(bc.Number, shelfNumber))
+                                Dim val As String = String.Empty
+                                Dim processScanning As Boolean = True
 
-                                If (Not String.IsNullOrEmpty(shelfNumber)) Then
-                                    shelves.Add(unit, shelfNumber)
+                                If (chkPick.Checked And chkPick.Visible And shelves.TryGetValue(unit, val) = False) Then
+                                    processScanning = False
+                                End If
+
+                                If (processScanning) Then
+                                    bc = New DeviceBarcodeNumber(bc.BatchNumber, unit)
+
+                                    'if this is a pc where scans can take place the user will have an option of selecting a location
+                                    'this will be parsed and added on to the scanned barcode. 
+                                    If Not String.IsNullOrEmpty(ddlPossibleLocations.SelectedValue) Then
+                                        bc.SetTrackingLocationPart(ddlPossibleLocations.SelectedValue, False)
+                                    End If
+                                    HandleScan(ScanManager.Scan(bc.Number, selectedTestStage, selectedTestStage, binType:=Request.Form(ddlBinType.UniqueID), jobName:=selectedJobName, productGroup:=String.Empty))
+                                Else
+                                    notMain.Notifications.AddWithMessage(String.Format("Unit {0} Was Not In Remstar. Scanning Cancelled", unit), NotificationType.Warning)
                                 End If
                             Next
+
+                            txtBarcodeReading.Text = "Enter Request Number..."
+                            txtBarcodeReading.CssClass = "ScanDeviceTextEntryHint"
+                            txtBarcodeReading.Focus()
+                            cblUnit.Items.Clear()
+                            cblUnit.Visible = False
                         End If
-
-                        'Scan out remaining units selected
-                        For Each unit As String In units
-                            Dim val As String = String.Empty
-                            Dim processScanning As Boolean = True
-
-                            If (chkPick.Checked And chkPick.Visible And shelves.TryGetValue(unit, val) = False) Then
-                                processScanning = False
-                            End If
-
-                            If (processScanning) Then
-                                bc = New DeviceBarcodeNumber(bc.BatchNumber, unit)
-
-                                'if this is a pc where scans can take place the user will have an option of selecting a location
-                                'this will be parsed and added on to the scanned barcode. 
-                                If Not String.IsNullOrEmpty(ddlPossibleLocations.SelectedValue) Then
-                                    bc.SetTrackingLocationPart(ddlPossibleLocations.SelectedValue, False)
-                                End If
-                                HandleScan(ScanManager.Scan(bc.Number, selectedTestStage, selectedTestStage, binType:=Request.Form(ddlBinType.UniqueID), jobName:=selectedJobName, productGroup:=String.Empty))
-                            Else
-                                notMain.Notifications.AddWithMessage(String.Format("Unit {0} Was Not In Remstar. Scanning Cancelled", unit), NotificationType.Warning)
-                            End If
-                        Next
-
-                        txtBarcodeReading.Text = "Enter Request Number..."
-                        txtBarcodeReading.CssClass = "ScanDeviceTextEntryHint"
-                        txtBarcodeReading.Focus()
-                        cblUnit.Items.Clear()
-                        cblUnit.Visible = False
+                    Else
+                        notMain.Notifications.AddWithMessage("That Request Isn't Part Of Your Department", NotificationType.Warning)
                     End If
                 End If
             End If
