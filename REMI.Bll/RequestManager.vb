@@ -17,7 +17,8 @@ Namespace REMI.Bll
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+
+            Return New DataTable("RequestSetupInfo")
         End Function
 
         Public Shared Function SaveRequestSetup(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal saveOptions As List(Of Int32), ByRef tnc As Web.UI.WebControls.TreeNodeCollection, ByVal TestStageType As Int32, ByVal orientationID As Int32) As NotificationCollection
@@ -113,9 +114,9 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
-        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
+        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
             Try
-                Return RequestDB.SaveRequest(requestName, request)
+                Return RequestDB.SaveRequest(requestName, request, userIdentification)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

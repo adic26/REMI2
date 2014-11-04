@@ -188,7 +188,7 @@ Namespace REMI.Dal
             Return reqData
         End Function
 
-        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
+        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
             Dim instance = New REMI.Dal.Entities().Instance()
             Dim val = (From rfc In request Select rfc.FieldSetupID, rfc.Value, rfc.RequestID, rfc.RequestNumber)
             Dim reqID As Int32 = 0
