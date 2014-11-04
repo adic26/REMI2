@@ -1368,6 +1368,7 @@
           <Property Name="IsRequired" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
           <Property Name="OptionsTypeID" Type="int" />
+          <Property Name="ColumnOrder" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -5252,6 +5253,7 @@
           <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldData" />
           <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="ReqFieldSetup" ToRole="RequestType" />
           <NavigationProperty Name="ReqFieldSetupRoles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldSetupRole" />
+          <Property Type="Int32" Name="ColumnOrder" Nullable="false" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -6335,6 +6337,7 @@
           <EntitySetMapping Name="ReqFieldSetups">
             <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetup">
               <MappingFragment StoreEntitySet="ReqFieldSetup">
+                <ScalarProperty Name="ColumnOrder" ColumnName="ColumnOrder" />
                 <ScalarProperty Name="OptionsTypeID" ColumnName="OptionsTypeID" />
                 <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
                 <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />

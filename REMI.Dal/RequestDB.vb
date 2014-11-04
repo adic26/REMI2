@@ -244,7 +244,7 @@ Namespace REMI.Dal
                         End If
 
                         If (requestNumber.Trim().Length > 0) Then
-                            myCommand.Parameters.AddWithValue("@requestNumber", requestNumber)
+                            myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
                         End If
 
                         myConnection.Open()
@@ -279,6 +279,7 @@ Namespace REMI.Dal
             End If
 
             myFields.DisplayOrder = myDataRecord.GetInt32(myDataRecord.GetOrdinal("DisplayOrder"))
+            myFields.ColumnOrder = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ColumnOrder"))
             myFields.FieldType = myDataRecord.GetString(myDataRecord.GetOrdinal("FieldType"))
             myFields.FieldTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldTypeID"))
 
@@ -290,13 +291,27 @@ Namespace REMI.Dal
                 myFields.FieldValidationID = 0
             End If
 
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ExtField")) Then
+                myFields.ExtField = myDataRecord.GetString(myDataRecord.GetOrdinal("ExtField"))
+            Else
+                myFields.ExtField = String.Empty
+            End If
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("IntField")) Then
+                myFields.IntField = myDataRecord.GetString(myDataRecord.GetOrdinal("IntField"))
+            Else
+                myFields.IntField = String.Empty
+            End If
+
+            myFields.Internal = myDataRecord.GetInt32(myDataRecord.GetOrdinal("Internal"))
+
             myFields.IsArchived = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("Archived"))
             myFields.IsRequired = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsRequired"))
             myFields.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("Name"))
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
-                myFields.OptionsType = (From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.Values).ToList
+                myFields.OptionsType = (From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Order By lo.Values Select lo.Values).ToList
             Else
                 myFields.OptionsTypeID = 0
                 myFields.OptionsType = New List(Of String)()
@@ -304,11 +319,21 @@ Namespace REMI.Dal
 
             myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
             myFields.RequestNumber = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestNumber"))
+            myFields.NewRequest = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("NewRequest"))
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Value")) Then
                 myFields.Value = myDataRecord.GetString(myDataRecord.GetOrdinal("Value"))
             Else
                 myFields.Value = String.Empty
+            End If
+
+            If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
+                Select Case myFields.IntField
+                    Case "ProductGroup"
+                        myFields.OptionsType = (From p In New REMI.Dal.Entities().Instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
+                    Case "RequestedTest"
+                        myFields.OptionsType = (From j In New REMI.Dal.Entities().Instance.Jobs Where j.IsActive = True Order By j.JobName Select j.JobName).ToList
+                End Select
             End If
 
             Return myFields

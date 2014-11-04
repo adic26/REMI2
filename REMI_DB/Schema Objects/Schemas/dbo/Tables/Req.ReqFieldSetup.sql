@@ -9,6 +9,7 @@
 	[IsRequired] [bit] NOT NULL,
 	[DisplayOrder] [int] NOT NULL,
 	[OptionsTypeID] [int] NULL,
+	[ColumnOrder] [int] NOT NULL,
  CONSTRAINT [PK_ReqFieldSetup] PRIMARY KEY CLUSTERED 
 (
 	[ReqFieldSetupID] ASC

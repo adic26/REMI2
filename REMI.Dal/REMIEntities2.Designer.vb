@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("1f1b0038-8ae8-45c8-8e15-e23cb89a3abd")>
+<Assembly: EdmSchemaAttribute("edcd7756-dad7-4e43-9c07-8eb50e68b12e")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -10612,7 +10612,8 @@ Namespace REMI.Entities
         ''' <param name="archived">Initial value of the Archived property.</param>
         ''' <param name="isRequired">Initial value of the IsRequired property.</param>
         ''' <param name="displayOrder">Initial value of the DisplayOrder property.</param>
-        Public Shared Function CreateReqFieldSetup(reqFieldSetupID As Global.System.Int32, requestTypeID As Global.System.Int32, name As Global.System.String, fieldTypeID As Global.System.Int32, archived As Global.System.Boolean, isRequired As Global.System.Boolean, displayOrder As Global.System.Int32) As ReqFieldSetup
+        ''' <param name="columnOrder">Initial value of the ColumnOrder property.</param>
+        Public Shared Function CreateReqFieldSetup(reqFieldSetupID As Global.System.Int32, requestTypeID As Global.System.Int32, name As Global.System.String, fieldTypeID As Global.System.Int32, archived As Global.System.Boolean, isRequired As Global.System.Boolean, displayOrder As Global.System.Int32, columnOrder As Global.System.Int32) As ReqFieldSetup
             Dim reqFieldSetup as ReqFieldSetup = New ReqFieldSetup
             reqFieldSetup.ReqFieldSetupID = reqFieldSetupID
             reqFieldSetup.RequestTypeID = requestTypeID
@@ -10621,6 +10622,7 @@ Namespace REMI.Entities
             reqFieldSetup.Archived = archived
             reqFieldSetup.IsRequired = isRequired
             reqFieldSetup.DisplayOrder = displayOrder
+            reqFieldSetup.ColumnOrder = columnOrder
             Return reqFieldSetup
         End Function
 
@@ -10878,6 +10880,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnOptionsTypeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ColumnOrder() As Global.System.Int32
+            Get
+                Return _ColumnOrder
+            End Get
+            Set
+                OnColumnOrderChanging(value)
+                ReportPropertyChanging("ColumnOrder")
+                _ColumnOrder = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ColumnOrder")
+                OnColumnOrderChanged()
+            End Set
+        End Property
+    
+        Private _ColumnOrder As Global.System.Int32
+        Private Partial Sub OnColumnOrderChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnColumnOrderChanged()
         End Sub
 
         #End Region
