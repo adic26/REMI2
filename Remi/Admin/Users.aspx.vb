@@ -67,11 +67,16 @@ Partial Class Admin_Users
         pnlViewAllUsers.Visible = False
         pnlLeftMenuActions.Visible = True
 
-        'uncheck roles
-        'For Each dli As DataListItem In dlstRoles.Items
-        '    Dim chkRole As CheckBox = dli.FindControl("chkRole")
-        '    chkRole.Checked = False
-        'Next
+        ddlGeoLoc.Items.Clear()
+        ddlGeoLoc.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 1)
+        ddlGeoLoc.DataBind()
+
+        ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
+        ddlDefaultPage.DataBind()
+
+        ddlDepartments.Items.Clear()
+        ddlDepartments.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
+        ddlDepartments.DataBind()
 
         If CurrentUser Is Nothing Then
             lblHeaderText.Text = "Add New User"
@@ -83,14 +88,6 @@ Partial Class Admin_Users
             hdnUserID.Value = -1
             chkIsActive.Checked = True
             chkByPassProduct.Checked = False
-
-            ddlGeoLoc.Items.Clear()
-            ddlGeoLoc.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 1)
-            ddlGeoLoc.DataBind()
-
-            ddlDepartments.Items.Clear()
-            ddlDepartments.DataSource = Remi.Bll.LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
-            ddlDepartments.DataBind()
         Else
             lblHeaderText.Text = String.Format("Editing {0}", CurrentUser.LDAPName)
             txtName.Visible = False
@@ -113,18 +110,10 @@ Partial Class Admin_Users
             hdnUserName.Value = CurrentUser.LDAPName
             hdnUserID.Value = CurrentUser.ID
 
-            ddlGeoLoc.Items.Clear()
-            ddlGeoLoc.DataSource = Remi.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 1)
-            ddlGeoLoc.DataBind()
-
             Dim l As ListItem = New ListItem(CurrentUser.TestCentre, CurrentUser.TestCentreID)
             If (ddlGeoLoc.Items.Contains(l)) Then
                 ddlGeoLoc.SelectedValue = CurrentUser.TestCentreID
             End If
-
-            ddlDepartments.Items.Clear()
-            ddlDepartments.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
-            ddlDepartments.DataBind()
 
             Dim ld As ListItem = New ListItem(CurrentUser.Department, CurrentUser.DepartmentID)
             If (ddlDepartments.Items.Contains(ld)) Then

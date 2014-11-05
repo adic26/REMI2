@@ -11,14 +11,24 @@ Partial Class BadgeAccess_EditMyUser
         ddlDepartments.SelectedValue = UserManager.GetCurrentUser.DepartmentID
     End Sub
 
+    Protected Sub ddlDefaultPage_Databound(ByVal sender As Object, ByVal e As EventArgs) Handles ddlDefaultPage.DataBound
+        ddlDefaultPage.SelectedValue = UserManager.GetCurrentUser.DefaultPage
+    End Sub
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If (UserManager.GetCurrentUser.IsIncomingSpecialist OrElse UserManager.GetCurrentUser.IsMaterialsManagementSpecialist) Then
-            Dim l As ListItem = New ListItem("Incoming Page", "/Incoming/default.aspx")
-            ddlDefaultPage.Items.Add(l) '
+        If (Not Page.IsPostBack) Then
+            ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
+            ddlDefaultPage.DataBind()
+
+            ddlTraining.Items.Clear()
+            ddlTraining.Items.Add("Select")
+            ddlTraining.DataSource = (From t In UserManager.GetCurrentUser.Training Where t.Field(Of String)("Level") = "Trainer" Select New With {.TrainingOption = t.Field(Of String)("TrainingOption"), .LookupID = t.Field(Of Int32)("LookupID")})
+            ddlTraining.DataBind()
         End If
 
         Dim username As String = UserManager.GetCurrentUser.LDAPName
         Dim val = (From u In New REMI.Dal.Entities().Instance().Users Where u.LDAPLogin = username Select u.DefaultPage).FirstOrDefault()
+
         If (val IsNot Nothing) Then
             Dim sl As ListItem = New ListItem
             sl = ddlDefaultPage.Items.FindByValue(val.ToString())
@@ -27,14 +37,8 @@ Partial Class BadgeAccess_EditMyUser
                 ddlDefaultPage.SelectedValue = sl.Value
             End If
         End If
-        hdnUserID.Value = UserManager.GetCurrentValidUserID
 
-        If (Not Page.IsPostBack) Then
-            ddlTraining.Items.Clear()
-            ddlTraining.Items.Add("Select")
-            ddlTraining.DataSource = (From t In UserManager.GetCurrentUser.Training Where t.Field(Of String)("Level") = "Trainer" Select New With {.TrainingOption = t.Field(Of String)("TrainingOption"), .LookupID = t.Field(Of Int32)("LookupID")})
-            ddlTraining.DataBind()
-        End If
+        hdnUserID.Value = UserManager.GetCurrentValidUserID
     End Sub
 
     Protected Sub ddlTraining_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTraining.SelectedIndexChanged

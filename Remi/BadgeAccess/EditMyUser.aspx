@@ -84,18 +84,7 @@
              <tr>
                  <td class="HorizTableFirstcolumn">Select Default Page: </td>
                  <td style="text-align:left;">
-                    <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px">
-                        <asp:ListItem Value="/default.aspx">Today Page</asp:ListItem>
-                        <asp:ListItem Value="/Reports/search.aspx">Search Page</asp:ListItem>
-                        <asp:ListItem Value="/ScanForTest/Default.aspx">Scan Device</asp:ListItem>
-                        <asp:ListItem Value="/ScanForInfo/Default.aspx">Batch Page</asp:ListItem>
-                        <asp:ListItem Value="/ScanForInfo/productgroup.aspx">Product Page</asp:ListItem>
-                        <asp:ListItem Value="/Inventory/Default.aspx">Inventory Page</asp:ListItem>                        
-                        <asp:ListItem Value="/ManageTestStations/TrackingLocation.aspx">Tracking Location Page</asp:ListItem>
-                        <asp:ListItem Value="/ManageTestStations/default.aspx">Timeline</asp:ListItem>
-                        <asp:ListItem Value="/Relab/Results.aspx">RQ Results Page</asp:ListItem>
-                        <asp:ListItem Value="/Overview.aspx">Overview</asp:ListItem>
-                    </asp:DropDownList>
+                    <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px" DataTextField="Name" DataValueField="Url"></asp:DropDownList>
                  </td>
             </tr>
             <tr>

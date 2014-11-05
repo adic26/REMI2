@@ -25,13 +25,22 @@ Namespace REMI.Bll
             Return False
         End Function
 
+        Public Shared Function GetMenuAccessByDepartment(ByVal name As String, ByVal departmentID As Int32) As DataTable
+            Try
+                Return SecurityDB.GetMenuAccessByDepartment(name, departmentID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("MenuAccess")
+        End Function
+
         Public Shared Function GetRolesPermissionsGrid() As DataTable
             Try
                 Return SecurityDB.GetRolesPermissionsGrid()
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+            Return New DataTable("PermissionsGrid")
         End Function
 
         Public Shared Function RemoveRole(ByVal roleName As String) As Boolean

@@ -2356,4 +2356,13 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Req.Request.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMenuAccessByDepartment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Menu.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\MenuDepartment.sql" />
+  </ItemGroup>
 </Project>
