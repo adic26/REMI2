@@ -1,7 +1,7 @@
 ﻿ALTER PROCEDURE [dbo].remispStationConfigurationUpload AS
 BEGIN
 	CREATE TABLE #temp2 (ID INT, ParentID INT, NodeType INT, LocalName NVARCHAR(100), Text NVARCHAR(100), ID_temp INT IDENTITY(1,1), ID_NEW INT, ParentID_NEW INT)
-	CREATE TABLE #temp3 (LookupID INT, Type NVARCHAR(150), LocalName NVARCHAR(150), ID INT IDENTITY(1,1))
+	CREATE TABLE #temp3 (LookupID INT, Type INT, LocalName NVARCHAR(150), ID INT IDENTITY(1,1))
 	DECLARE @TrackingLocationHostID INT
 	DECLARE @MaxID INT
 	DECLARE @MaxLookupID INT
@@ -77,8 +77,8 @@ BEGIN
 
 		UPDATE #temp3 SET LookupID=ID+@MaxLookupID
 
-		insert into Lookups (LookupID, Type, [Values])
-		select LookupID, Type, localname as [Values] from #temp3
+		insert into Lookups (LookupID, [Values], LookupTypeID)
+		select LookupID, localname as [Values], [Type] As LookupTypeID from #temp3
 	
 		INSERT INTO TrackingLocationsHostsConfigValues (Value, LookupID, TrackingConfigID, LastUser, IsAttribute)
 		SELECT ISNULL((SELECT t2.Text FROM #temp t2 WHERE t2.NodeType=3 AND t2.ParentID=#temp.ID), '') AS Value, 

@@ -1,7 +1,7 @@
 ﻿ALTER PROCEDURE [dbo].remispProductConfigurationUpload AS
 BEGIN
 	CREATE TABLE #temp2 (ID INT, ParentID INT NULL, NodeType INT, LocalName NVARCHAR(100), Text NVARCHAR(2000), ID_temp INT IDENTITY(1,1), ID_NEW INT NULL, ParentID_NEW INT NULL)
-	CREATE TABLE #temp3 (LookupID INT, Type NVARCHAR(150), LocalName NVARCHAR(150), ID INT IDENTITY(1,1))
+	CREATE TABLE #temp3 (LookupID INT, Type INT, LocalName NVARCHAR(150), ID INT IDENTITY(1,1))
 	DECLARE @MaxID INT
 	DECLARE @MaxLookupID INT
 	DECLARE @LookupTypeID INT
@@ -73,8 +73,8 @@ BEGIN
 		
 		UPDATE #temp3 SET LookupID=ID+@MaxLookupID
 
-		insert into Lookups (LookupID, Type, [Values])
-		select LookupID, Type, localname as [Values] from #temp3
+		insert into Lookups (LookupID, [Values], LookupTypeID)
+		select LookupID, localname as [Values], [Type] AS LookupTypeID from #temp3
 			
 		INSERT INTO ProductConfigValues (Value, LookupID, ProductConfigID, LastUser, IsAttribute)
 		SELECT ISNULL((SELECT t2.Text FROM #temp t2 WHERE t2.NodeType=3 AND t2.ParentID=#temp.ID),'') AS Value, 
