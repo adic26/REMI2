@@ -792,7 +792,7 @@ Namespace REMI.Dal
 
         Public Shared Function ProductConfigurationUpload(ByVal productID As Int32, ByVal testID As Int32, ByVal xml As XDocument, ByVal LastUser As String, ByVal pcName As String) As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispProductConfigurationProcess", myConnection)
+                Using myCommand As New SqlCommand("remispProductConfigurationUpload", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@ProductID", productID)
                     myCommand.Parameters.AddWithValue("@TestID", testID)
@@ -822,7 +822,7 @@ Namespace REMI.Dal
 
         Public Shared Function ProductConfigurationProcess() As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispProductConfigurationUpload", myConnection)
+                Using myCommand As New SqlCommand("remispProductConfigurationProcess", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()

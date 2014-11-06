@@ -575,7 +575,7 @@ Namespace REMI.Dal
 
         Public Shared Function StationConfigurationUpload(ByVal hostID As Int32, ByVal xml As XDocument, ByVal LastUser As String, ByVal pluginID As Int32) As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispStationConfigurationProcess", myConnection)
+                Using myCommand As New SqlCommand("remispStationConfigurationUpload", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@HostID", hostID)
                     myCommand.Parameters.AddWithValue("@XML", xml.ToString())
@@ -590,7 +590,7 @@ Namespace REMI.Dal
 
         Public Shared Function StationConfigurationProcess() As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispStationConfigurationUpload", myConnection)
+                Using myCommand As New SqlCommand("remispStationConfigurationProcess", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
