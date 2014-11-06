@@ -2,13 +2,10 @@
 <%@ Register Assembly="System.Web.Ajax" Namespace="System.Web.UI" TagPrefix="asp" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
-<%@ Register Src="../Controls/TestStageProcessView.ascx" TagName="TestStageProcessView" TagPrefix="uc2" %>
 <%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
 <%@ Register Src="../Controls/RequestSetup.ascx" TagName="RequestSetup" TagPrefix="rs" %>
 
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="pageTitleContent" runat="server">
     <h1>
         <asp:Label runat="server" ID="lblQRANumber" Text="Batch Information"></asp:Label>
@@ -335,15 +332,13 @@
                                             SortExpression="ID" Visible="False" />
                                         <asp:TemplateField HeaderText="Unit #" SortExpression="BatchUnitNumber">
                                             <ItemTemplate>
-                                                <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Unit"
-                                                    NavigateUrl='<%# Eval("UnitInfoLink") %>' Text='<%# Eval("BatchUnitNumber") %>'></asp:HyperLink>
+                                                <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Unit" Target="_blank" NavigateUrl='<%# Eval("UnitInfoLink") %>' Text='<%# Eval("BatchUnitNumber") %>'></asp:HyperLink>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="BSN" SortExpression="BSN">
                                             <ItemTemplate>
                                                 <asp:Label runat="server" ID="lblNoBSN" Visible='<%# Eval("NoBSN") %>' Text="No BSN Required" />
-                                                <asp:HyperLink ID="hypBSN" Visible='<%# Not Eval("NoBSN") %>' runat="server" ToolTip="Click to view the manufactuaring information page for this Unit"
-                                                    NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>'></asp:HyperLink>
+                                                <asp:HyperLink ID="hypBSN" Visible='<%# Not Eval("NoBSN") %>' runat="server" Target="_blank" ToolTip="Click to view the manufactuaring information page for this Unit" NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>'></asp:HyperLink>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Assigned To" SortExpression="AssignedTo">

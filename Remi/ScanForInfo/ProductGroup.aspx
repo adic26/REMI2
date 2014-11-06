@@ -1,9 +1,6 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" Inherits="Remi.ScanForInfo_ProductGroup" CodeBehind="ProductGroup.aspx.vb" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
-<%@ Register Src="../Controls/TestStageProcessView.ascx" TagName="TestStageProcessView"
-    TagPrefix="uc2" %>
-<%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl"
-    TagPrefix="uc3" %>
+<%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script type="text/javascript" src="../design/scripts/jquery.js"></script>

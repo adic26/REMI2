@@ -60,9 +60,8 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AjaxControlToolkit, Version=3.0.31106.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Ajax\AjaxControlToolkit.dll</HintPath>
+    <Reference Include="AjaxControlToolkit">
+      <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\AJAX\AjaxControlToolkit.dll</HintPath>
     </Reference>
     <Reference Include="DayPilot, Version=3.0.210.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -71,10 +70,6 @@
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\log4net\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="RIM.ReliabilityEngineering.ActiveDirectoryServices, Version=1.0.5352.14482, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\ActiveDirectory\RIM.ReliabilityEngineering.ActiveDirectoryServices.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -85,20 +80,14 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Ajax, Version=3.0.31106.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\System.Web.Ajax.dll</HintPath>
+      <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\AJAX\System.Web.Ajax.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.DataVisualization.Design" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Web.Mobile" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
@@ -253,9 +242,6 @@
     <Compile Include="Controls\ScanIndicator.ascx.designer.vb">
       <DependentUpon>ScanIndicator.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TestStageProcessView.ascx.designer.vb">
-      <DependentUpon>TestStageProcessView.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -312,9 +298,6 @@
     <Compile Include="ManageProducts\EditProductSettings.aspx.designer.vb">
       <DependentUpon>EditProductSettings.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ManageProducts\EnvReport.aspx.designer.vb">
-      <DependentUpon>EnvReport.aspx</DependentUpon>
-    </Compile>
     <Compile Include="ManageTestStations\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -366,10 +349,6 @@
     </Compile>
     <Compile Include="Controls\ScanIndicator.ascx.vb">
       <DependentUpon>ScanIndicator.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\TestStageProcessView.ascx.vb">
-      <DependentUpon>TestStageProcessView.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Default.aspx.vb">
@@ -426,10 +405,6 @@
     </Compile>
     <Compile Include="ManageProducts\EditProductSettings.aspx.vb">
       <DependentUpon>EditProductSettings.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ManageProducts\EnvReport.aspx.vb">
-      <DependentUpon>EnvReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ManageTestStations\Default.aspx.vb">
@@ -559,34 +534,6 @@
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TestHarness\Default2.aspx.designer.vb">
-      <DependentUpon>Default2.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="TestHarness\Default2.aspx.vb">
-      <DependentUpon>Default2.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="TestHarness\time.aspx.designer.vb">
-      <DependentUpon>time.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="TestHarness\time.aspx.vb">
-      <DependentUpon>time.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="TestHarness\TRSInfo.aspx.designer.vb">
-      <DependentUpon>TRSInfo.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="TestHarness\TRSInfo.aspx.vb">
-      <DependentUpon>TRSInfo.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="TestHarness\Users.aspx.designer.vb">
-      <DependentUpon>Users.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="TestHarness\Users.aspx.vb">
-      <DependentUpon>Users.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="TestRecords\Add.aspx.designer.vb">
       <DependentUpon>Add.aspx</DependentUpon>
     </Compile>
@@ -622,10 +569,6 @@
     </Compile>
     <Compile Include="WebService\RemiAPI.vb">
       <DependentUpon>RemiAPI.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WebService\Testing.vb">
-      <DependentUpon>Testing.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WebService\VersionCheck.vb">
@@ -666,7 +609,6 @@
     <Content Include="ManageBatches\ModifyTestStage.aspx" />
     <Content Include="ManageProducts\EditProductConfig.aspx" />
     <Content Include="ManageProducts\EditProductSettings.aspx" />
-    <Content Include="ManageProducts\EnvReport.aspx" />
     <Content Include="ManageTestStations\Default.aspx" />
     <Content Include="ManageTestStations\EditStationConfig.aspx" />
     <Content Include="ManageTestStations\ScannerCodes.aspx" />
@@ -681,15 +623,10 @@
     <Content Include="Relab\Versions.aspx" />
     <Content Include="Reports\ES\default.aspx" />
     <Content Include="Reports\Search.aspx" />
-    <Content Include="ResultFormattingProfiles\ResultFormattingProfiles.xml" />
     <Content Include="ScanForInfo\Default.aspx" />
     <Content Include="ScanForInfo\ProductGroup.aspx" />
     <Content Include="ScanForInfo\Unit.aspx" />
     <Content Include="ScanForTest\Default.aspx" />
-    <Content Include="TestHarness\Default2.aspx" />
-    <Content Include="TestHarness\time.aspx" />
-    <Content Include="TestHarness\TRSInfo.aspx" />
-    <Content Include="TestHarness\Users.aspx" />
     <Content Include="TestRecords\Add.aspx" />
     <Content Include="TestRecords\Default.aspx" />
     <Content Include="TestRecords\EditDetail.aspx" />
@@ -697,7 +634,6 @@
     <Content Include="WebService\Configuration.asmx" />
     <Content Include="WebService\DataPush.asmx" />
     <Content Include="WebService\RemiAPI.asmx" />
-    <Content Include="WebService\Testing.asmx" />
     <Content Include="WebService\VersionCheck.asmx" />
     <EmbeddedResource Include="licenses.licx" />
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -715,9 +651,7 @@
     <Content Include="Controls\IBatchListControl.ascx" />
     <Content Include="Controls\Notifications.ascx" />
     <Content Include="Controls\ScanIndicator.ascx" />
-    <Content Include="Controls\TestStageProcessView.ascx" />
     <Content Include="Design\AccordionHeader.gif" />
-    <Content Include="Design\AjaxControlToolkit.dll" />
     <Content Include="Design\blue_arrow_down.gif" />
     <Content Include="Design\Icons\png\128x128\10_percent_off.png" />
     <Content Include="Design\Icons\png\128x128\30_percent_off.png" />
@@ -2821,11 +2755,7 @@
     <Content Include="Design\layout_grid.gif" />
     <Content Include="Design\left.gif" />
     <Content Include="Design\leftMenuHeader.gif" />
-    <Content Include="Design\RealWorld.Grids.dll" />
     <Content Include="Design\rightMenuHeader.gif" />
-    <Content Include="Design\RIM_Exception.dll" />
-    <Content Include="Design\RIM_SECURITY.dll" />
-    <Content Include="Design\RIM_Tracer.dll" />
     <Content Include="Design\ruler_add.png" />
     <Content Include="Design\scripts\jquery-ui-1.8.2.custom.min.js" />
     <Content Include="Design\scripts\jquery-vsdoc.js" />
@@ -2840,7 +2770,6 @@
     <Content Include="Design\scripts\wz_tooltip.js" />
     <Content Include="Design\scripts\x.gif" />
     <Content Include="Design\style.css" />
-    <Content Include="Design\System.Web.Ajax.dll" />
     <Content Include="Design\tableft10.gif" />
     <Content Include="Design\tabright10.gif" />
     <Content Include="Images\ajax-loader.gif" />
