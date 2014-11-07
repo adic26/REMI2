@@ -2376,4 +2376,7 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUserDetails.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\UserDetails.sql" />
+  </ItemGroup>
 </Project>
