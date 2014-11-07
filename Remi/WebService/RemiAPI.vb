@@ -15,6 +15,115 @@ Imports System.Web.Script.Services
 Public Class RemiAPI
     Inherits System.Web.Services.WebService
 
+#Region "Search"
+    <WebMethod(EnableSession:=True, Description:="Search For A Batch.")> _
+    Public Function SearchBatch(ByVal userIdentification As String, ByVal AccessoryGroup As String, ByVal BatchStart As DateTime, ByVal BatchEnd As DateTime, ByVal department As String, ByVal TestCenter As String, ByVal JobName As String, ByVal Priority As String, ByVal Product As String, ByVal ProductType As String, ByVal Revision As String, ByVal TestName As String, ByVal TestStage As String, ByVal UserName As String, ByVal TrackingLocationName As String, ByVal NotInTrackingLocationFunction As TrackingLocationFunction, ByVal RequestReason As String, ByVal status As BatchStatus, ByVal TrackingLocationFunction As TrackingLocationFunction, ByVal exTestStageType As List(Of BatchSearchTestStageType), ByVal exBatchStatus As List(Of BatchSearchBatchStatus), ByVal testStageType As TestStageType) As List(Of BatchView)
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim bs As New BatchSearch
+                Dim accessoryGroupID As Int32 = 0
+                Dim priorityID As Int32 = 0
+                Dim departmentID As Int32 = 0
+                Dim productID As Int32 = 0
+                Dim productTypeID As Int32 = 0
+                Dim geoLocationID As Int32 = 0
+                Dim userID As Int32 = 0
+                Dim requestReasonID As Int32 = 0
+                Dim trackingLocationID As Int32 = 0
+                Dim testID As Int32 = 0
+
+                If (BatchStart <> DateTime.MinValue) Then
+                    bs.BatchStart = BatchStart
+                End If
+
+                If (BatchEnd <> DateTime.MinValue) Then
+                    bs.BatchEnd = BatchEnd
+                End If
+
+                If (Not String.IsNullOrEmpty(AccessoryGroup)) Then
+                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.AccessoryType, AccessoryGroup, 0), accessoryGroupID)
+                End If
+
+                If (Not String.IsNullOrEmpty(department)) Then
+                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.Department, department, 0), departmentID)
+                End If
+
+                If (Not String.IsNullOrEmpty(Priority)) Then
+                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.Priority, Priority, 0), priorityID)
+                End If
+
+                If (Not String.IsNullOrEmpty(Product)) Then
+                    Int32.TryParse(ProductGroupManager.GetProductIDByName(Product), productID)
+                End If
+
+                If (Not String.IsNullOrEmpty(ProductType)) Then
+                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.ProductType, ProductType, 0), productTypeID)
+                End If
+
+                If (Not String.IsNullOrEmpty(TestCenter)) Then
+                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.TestCenter, TestCenter, 0), geoLocationID)
+                End If
+
+                If (Not String.IsNullOrEmpty(UserName)) Then
+                    Int32.TryParse(UserManager.GetUser(UserName).ID, userID)
+                End If
+
+                If (Not String.IsNullOrEmpty(RequestReason)) Then
+                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.RequestPurpose, RequestReason, 0), requestReasonID)
+                End If
+
+                If (Not String.IsNullOrEmpty(TrackingLocationName) And geoLocationID > 0) Then
+                    Int32.TryParse(TrackingLocationManager.GetTrackingLocationID(TrackingLocationName, bs.GeoLocationID), trackingLocationID)
+                End If
+
+                If (Not String.IsNullOrEmpty(TestName)) Then
+                    Int32.TryParse(TestManager.GetTestByName(TestName, False).ID, testID)
+                End If
+
+                bs.AccessoryGroupID = accessoryGroupID
+                bs.DepartmentID = departmentID
+                bs.Priority = priorityID
+                bs.JobName = JobName
+                bs.ProductID = productID
+                bs.ProductTypeID = productTypeID
+                bs.GeoLocationID = geoLocationID
+                bs.Revision = Revision
+                bs.TestStage = TestStage
+                bs.UserID = userID
+                bs.TrackingLocationID = trackingLocationID
+                bs.TestID = testID
+                bs.NotInTrackingLocationFunction = NotInTrackingLocationFunction
+                bs.RequestReason = requestReasonID
+                bs.Status = status
+                bs.TrackingLocationFunction = TrackingLocationFunction
+
+                If (exTestStageType.Count > 0) Then
+                    bs.ExcludedTestStageType = (From t In exTestStageType Select DirectCast(System.Enum.Parse(GetType(BatchSearchTestStageType), t), Int32)).Sum()
+                End If
+
+                If (exBatchStatus.Count > 0) Then
+                    bs.ExcludedStatus = (From t In exBatchStatus Select DirectCast(System.Enum.Parse(GetType(BatchSearchBatchStatus), t), Int32)).Sum()
+                End If
+
+                bs.TestStageType = testStageType
+
+                Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False)
+                Dim batches As New List(Of BatchView)
+
+                For Each b In bc
+                    batches.Add(b)
+                Next
+
+                Return batches
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API SearchBatch", "e7", NotificationType.Errors, ex, "User: " + userIdentification)
+        End Try
+
+        Return Nothing
+    End Function
+#End Region
+
 #Region "Units"
     <WebMethod(EnableSession:=True, Description:="Adds an exception for a specific unit for a test.")> _
     Public Function AddUnitException(ByVal qraNumber As String, ByVal TestName As String, ByVal userIdentification As String) As Notification

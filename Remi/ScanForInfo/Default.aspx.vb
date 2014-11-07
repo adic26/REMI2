@@ -145,11 +145,12 @@ Partial Class ScanForInfo_Default
                         litTitle.Text = "REMI - " + bc.BatchNumber
                     End If
 
-                    Dim bColl As New BatchCollection
-                    bColl.Add(b)
+                    Dim bcol As New BatchCollection
+                    bcol.Add(b)
+
                     rptBatchComments.DataSource = b.Comments
                     rptBatchComments.DataBind()
-                    bscMain.SetBatches(bColl)
+                    bscMain.SetBatches(bcol)
                     notMain.Notifications.Add(b.GetAllNotifications(True))
                     grdDetail.DataSource = b.TestUnits
                     grdDetail.DataBind()

@@ -74,15 +74,6 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        'Public Property FailParameters() As ParameterResultCollection
-        '    Get
-        '        Return _FailParameters
-        '    End Get
-        '    Set(ByVal value As ParameterResultCollection)
-        '        _FailParameters = value
-        '    End Set
-        'End Property
-
         'collections and objects
         ''' <summary>
         ''' the exceptions related to this batch. includes test unit spoecific and product exceptions
