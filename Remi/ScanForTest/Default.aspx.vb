@@ -44,7 +44,7 @@ Partial Class Scanning_Default
                 Dim remstar As String() = REMI.Core.REMIConfiguration.RemStarHostNames().Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
 
                 'add remstar if required
-                If remstar.Contains(REMI.Core.REMIHttpContext.GetCurrentHostname) AndAlso ddlPossibleLocations.Items.FindByText("REMSTAR") Is Nothing AndAlso UserManager.GetCurrentUser.TestCentre = TestCenter.Cambridge.ToString() Then
+                If remstar.Contains(REMI.Core.REMIHttpContext.GetCurrentHostname) AndAlso ddlPossibleLocations.Items.FindByText("REMSTAR") Is Nothing AndAlso UserManager.GetCurrentUser.TestCentre = "Cambridge" Then
                     ddlPossibleLocations.Items.Add(New ListItem("REMSTAR - Cambridge", 25))
                 End If
 
