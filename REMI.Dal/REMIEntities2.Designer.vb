@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("edcd7756-dad7-4e43-9c07-8eb50e68b12e")>
+<Assembly: EdmSchemaAttribute("c2c86420-b0c3-468a-96fe-cad567dcb3d5")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -74,8 +74,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHostsConfiguration_TrackingLocationsPlugin", "TrackingLocationsPlugin", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.TrackingLocationsPlugin), "TrackingLocationsHostsConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHostsConfiguration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration", "TrackingLocationsHostsConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationsHostsConfiguration), "TrackingLocationsHostsConfigValue", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHostsConfigValue), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationTypePermissions_TrackingLocationTypes", "TrackingLocationType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationType), "TrackingLocationTypePermission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationTypePermission), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UsersProducts_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UsersProduct", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UsersProduct), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_PermissionsInRoles", "aspnet_Permissions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Permissions), "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_UsersInRoles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles), "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Users))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchComments_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchComment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchComment), True)>
@@ -100,7 +98,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestExceptions_LookupID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "TestException", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestException), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocations_TestCenterLocation", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocation), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHostsConfigValues_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "TrackingLocationsHostsConfigValue", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHostsConfigValue), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Users_Department", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "User", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.User), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_LookupsLevel", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
@@ -112,6 +109,12 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetup_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupRole_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldSetupRole", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupRole), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldMapping_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "ReqFieldMapping", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldMapping), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_MenuDepartment_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "MenuDepartment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.MenuDepartment), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_MenuDepartment_Menu", "Menu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Menu), "MenuDepartment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.MenuDepartment), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UsersProducts_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UsersProduct", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UsersProduct), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
 
 #End Region
 
@@ -1005,34 +1008,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property Users() As ObjectSet(Of User)
-            Get
-                If (_Users Is Nothing) Then
-                    _Users = MyBase.CreateObjectSet(Of User)("Users")
-                End If
-                Return _Users
-            End Get
-        End Property
-    
-        Private _Users As ObjectSet(Of User)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property UsersAudits() As ObjectSet(Of UsersAudit)
-            Get
-                If (_UsersAudits Is Nothing) Then
-                    _UsersAudits = MyBase.CreateObjectSet(Of UsersAudit)("UsersAudits")
-                End If
-                Return _UsersAudits
-            End Get
-        End Property
-    
-        Private _UsersAudits As ObjectSet(Of UsersAudit)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property UsersProducts() As ObjectSet(Of UsersProduct)
             Get
                 If (_UsersProducts Is Nothing) Then
@@ -1169,6 +1144,76 @@ Namespace REMI.Entities
         End Property
     
         Private _ReqFieldMappings As ObjectSet(Of ReqFieldMapping)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property Menus() As ObjectSet(Of Menu)
+            Get
+                If (_Menus Is Nothing) Then
+                    _Menus = MyBase.CreateObjectSet(Of Menu)("Menus")
+                End If
+                Return _Menus
+            End Get
+        End Property
+    
+        Private _Menus As ObjectSet(Of Menu)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property MenuDepartments() As ObjectSet(Of MenuDepartment)
+            Get
+                If (_MenuDepartments Is Nothing) Then
+                    _MenuDepartments = MyBase.CreateObjectSet(Of MenuDepartment)("MenuDepartments")
+                End If
+                Return _MenuDepartments
+            End Get
+        End Property
+    
+        Private _MenuDepartments As ObjectSet(Of MenuDepartment)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property UserDetails() As ObjectSet(Of UserDetail)
+            Get
+                If (_UserDetails Is Nothing) Then
+                    _UserDetails = MyBase.CreateObjectSet(Of UserDetail)("UserDetails")
+                End If
+                Return _UserDetails
+            End Get
+        End Property
+    
+        Private _UserDetails As ObjectSet(Of UserDetail)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property Users() As ObjectSet(Of User)
+            Get
+                If (_Users Is Nothing) Then
+                    _Users = MyBase.CreateObjectSet(Of User)("Users")
+                End If
+                Return _Users
+            End Get
+        End Property
+    
+        Private _Users As ObjectSet(Of User)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property UsersAudits() As ObjectSet(Of UsersAudit)
+            Get
+                If (_UsersAudits Is Nothing) Then
+                    _UsersAudits = MyBase.CreateObjectSet(Of UsersAudit)("UsersAudits")
+                End If
+                Return _UsersAudits
+            End Get
+        End Property
+    
+        Private _UsersAudits As ObjectSet(Of UsersAudit)
 
         #End Region
 
@@ -1595,20 +1640,6 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the Users EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToUsers(ByVal user As User)
-            MyBase.AddObject("Users", user)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the UsersAudits EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToUsersAudits(ByVal usersAudit As UsersAudit)
-            MyBase.AddObject("UsersAudits", usersAudit)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the UsersProducts EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToUsersProducts(ByVal usersProduct As UsersProduct)
@@ -1676,6 +1707,41 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToReqFieldMappings(ByVal reqFieldMapping As ReqFieldMapping)
             MyBase.AddObject("ReqFieldMappings", reqFieldMapping)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the Menus EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToMenus(ByVal menu As Menu)
+            MyBase.AddObject("Menus", menu)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the MenuDepartments EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToMenuDepartments(ByVal menuDepartment As MenuDepartment)
+            MyBase.AddObject("MenuDepartments", menuDepartment)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the UserDetails EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToUserDetails(ByVal userDetail As UserDetail)
+            MyBase.AddObject("UserDetails", userDetail)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the Users EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToUsers(ByVal user As User)
+            MyBase.AddObject("Users", user)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the UsersAudits EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToUsersAudits(ByVal usersAudit As UsersAudit)
+            MyBase.AddObject("UsersAudits", usersAudit)
         End Sub
 
         #End Region
@@ -7954,24 +8020,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Users_Department", "User")>
-         Public Property Users() As EntityCollection(Of User)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of User)("REMI.Entities.FK_Users_Department", "User")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of User)("REMI.Entities.FK_Users_Department", "User", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserTraining_Lookups", "UserTraining")>
          Public Property UserTrainings() As EntityCollection(Of UserTraining)
             Get
@@ -8052,6 +8100,42 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetup_FieldValidationID", "ReqFieldSetup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_MenuDepartment_Lookups", "MenuDepartment")>
+         Public Property MenuDepartments() As EntityCollection(Of MenuDepartment)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of MenuDepartment)("REMI.Entities.FK_MenuDepartment_Lookups", "MenuDepartment")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of MenuDepartment)("REMI.Entities.FK_MenuDepartment_Lookups", "MenuDepartment", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserDetails_Lookups", "UserDetail")>
+         Public Property UserDetails() As EntityCollection(Of UserDetail)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Lookups", "UserDetail")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Lookups", "UserDetail", value)
                 End If
             End Set
         End Property
@@ -8156,6 +8240,310 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Lookup)("REMI.Entities.FK_Lookups_LookupType", "Lookup", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="Menu")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class Menu
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new Menu object.
+        ''' </summary>
+        ''' <param name="menuID">Initial value of the MenuID property.</param>
+        ''' <param name="name">Initial value of the Name property.</param>
+        Public Shared Function CreateMenu(menuID As Global.System.Int32, name As Global.System.String) As Menu
+            Dim menu as Menu = New Menu
+            menu.MenuID = menuID
+            menu.Name = name
+            Return menu
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property MenuID() As Global.System.Int32
+            Get
+                Return _MenuID
+            End Get
+            Set
+                If (_MenuID <> Value) Then
+                    OnMenuIDChanging(value)
+                    ReportPropertyChanging("MenuID")
+                    _MenuID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("MenuID")
+                    OnMenuIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _MenuID As Global.System.Int32
+        Private Partial Sub OnMenuIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnMenuIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Name() As Global.System.String
+            Get
+                Return _Name
+            End Get
+            Set
+                OnNameChanging(value)
+                ReportPropertyChanging("Name")
+                _Name = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Name")
+                OnNameChanged()
+            End Set
+        End Property
+    
+        Private _Name As Global.System.String
+        Private Partial Sub OnNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property Url() As Global.System.String
+            Get
+                Return _Url
+            End Get
+            Set
+                OnUrlChanging(value)
+                ReportPropertyChanging("Url")
+                _Url = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("Url")
+                OnUrlChanged()
+            End Set
+        End Property
+    
+        Private _Url As Global.System.String
+        Private Partial Sub OnUrlChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnUrlChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_MenuDepartment_Menu", "MenuDepartment")>
+         Public Property MenuDepartments() As EntityCollection(Of MenuDepartment)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of MenuDepartment)("REMI.Entities.FK_MenuDepartment_Menu", "MenuDepartment")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of MenuDepartment)("REMI.Entities.FK_MenuDepartment_Menu", "MenuDepartment", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="MenuDepartment")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class MenuDepartment
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new MenuDepartment object.
+        ''' </summary>
+        ''' <param name="menuDepartmentID">Initial value of the MenuDepartmentID property.</param>
+        ''' <param name="departmentID">Initial value of the DepartmentID property.</param>
+        ''' <param name="menuID">Initial value of the MenuID property.</param>
+        Public Shared Function CreateMenuDepartment(menuDepartmentID As Global.System.Int32, departmentID As Global.System.Int32, menuID As Global.System.Int32) As MenuDepartment
+            Dim menuDepartment as MenuDepartment = New MenuDepartment
+            menuDepartment.MenuDepartmentID = menuDepartmentID
+            menuDepartment.DepartmentID = departmentID
+            menuDepartment.MenuID = menuID
+            Return menuDepartment
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property MenuDepartmentID() As Global.System.Int32
+            Get
+                Return _MenuDepartmentID
+            End Get
+            Set
+                If (_MenuDepartmentID <> Value) Then
+                    OnMenuDepartmentIDChanging(value)
+                    ReportPropertyChanging("MenuDepartmentID")
+                    _MenuDepartmentID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("MenuDepartmentID")
+                    OnMenuDepartmentIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _MenuDepartmentID As Global.System.Int32
+        Private Partial Sub OnMenuDepartmentIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnMenuDepartmentIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property DepartmentID() As Global.System.Int32
+            Get
+                Return _DepartmentID
+            End Get
+            Set
+                OnDepartmentIDChanging(value)
+                ReportPropertyChanging("DepartmentID")
+                _DepartmentID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("DepartmentID")
+                OnDepartmentIDChanged()
+            End Set
+        End Property
+    
+        Private _DepartmentID As Global.System.Int32
+        Private Partial Sub OnDepartmentIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnDepartmentIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property MenuID() As Global.System.Int32
+            Get
+                Return _MenuID
+            End Get
+            Set
+                OnMenuIDChanging(value)
+                ReportPropertyChanging("MenuID")
+                _MenuID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("MenuID")
+                OnMenuIDChanged()
+            End Set
+        End Property
+    
+        Private _MenuID As Global.System.Int32
+        Private Partial Sub OnMenuIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnMenuIDChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_MenuDepartment_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_MenuDepartment_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_MenuDepartment_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_MenuDepartment_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_MenuDepartment_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_MenuDepartment_Menu", "Menu")>
+        Public Property Menu() As Menu
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Menu)("REMI.Entities.FK_MenuDepartment_Menu", "Menu").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Menu)("REMI.Entities.FK_MenuDepartment_Menu", "Menu").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property MenuReference() As EntityReference(Of Menu)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Menu)("REMI.Entities.FK_MenuDepartment_Menu", "Menu")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Menu)("REMI.Entities.FK_MenuDepartment_Menu", "Menu", value)
                 End If
             End Set
         End Property
@@ -19990,31 +20378,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property C_TestCentre() As Global.System.String
-            Get
-                Return _C_TestCentre
-            End Get
-            Set
-                OnC_TestCentreChanging(value)
-                ReportPropertyChanging("C_TestCentre")
-                _C_TestCentre = StructuralObject.SetValidValue(value, true)
-                ReportPropertyChanged("C_TestCentre")
-                OnC_TestCentreChanged()
-            End Set
-        End Property
-    
-        Private _C_TestCentre As Global.System.String
-        Private Partial Sub OnC_TestCentreChanging(value As Global.System.String)
-        End Sub
-    
-        Private Partial Sub OnC_TestCentreChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
         <DataMemberAttribute()>
         Public Property IsActive() As Global.System.Int32
@@ -20067,31 +20430,6 @@ Namespace REMI.Entities
         ''' </summary>
         <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
         <DataMemberAttribute()>
-        Public Property TestCentreID() As Nullable(Of Global.System.Int32)
-            Get
-                Return _TestCentreID
-            End Get
-            Set
-                OnTestCentreIDChanging(value)
-                ReportPropertyChanging("TestCentreID")
-                _TestCentreID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("TestCentreID")
-                OnTestCentreIDChanged()
-            End Set
-        End Property
-    
-        Private _TestCentreID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnTestCentreIDChanging(value As Nullable(Of Global.System.Int32))
-        End Sub
-    
-        Private Partial Sub OnTestCentreIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
         Public Property ByPassProduct() As Nullable(Of Global.System.Int32)
             Get
                 Return _ByPassProduct
@@ -20111,35 +20449,28 @@ Namespace REMI.Entities
     
         Private Partial Sub OnByPassProductChanged()
         End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property DepartmentID() As Nullable(Of Global.System.Int32)
-            Get
-                Return _DepartmentID
-            End Get
-            Set
-                OnDepartmentIDChanging(value)
-                ReportPropertyChanging("DepartmentID")
-                _DepartmentID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("DepartmentID")
-                OnDepartmentIDChanged()
-            End Set
-        End Property
-    
-        Private _DepartmentID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnDepartmentIDChanging(value As Nullable(Of Global.System.Int32))
-        End Sub
-    
-        Private Partial Sub OnDepartmentIDChanged()
-        End Sub
 
         #End Region
 
         #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserDetails_Users", "UserDetail")>
+         Public Property UserDetails() As EntityCollection(Of UserDetail)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Users", "UserDetail")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Users", "UserDetail", value)
+                End If
+            End Set
+        End Property
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -20176,6 +20507,144 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="UserDetail")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class UserDetail
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new UserDetail object.
+        ''' </summary>
+        ''' <param name="userDetailsID">Initial value of the UserDetailsID property.</param>
+        ''' <param name="userID">Initial value of the UserID property.</param>
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        Public Shared Function CreateUserDetail(userDetailsID As Global.System.Int32, userID As Global.System.Int32, lookupID As Global.System.Int32) As UserDetail
+            Dim userDetail as UserDetail = New UserDetail
+            userDetail.UserDetailsID = userDetailsID
+            userDetail.UserID = userID
+            userDetail.LookupID = lookupID
+            Return userDetail
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property UserDetailsID() As Global.System.Int32
+            Get
+                Return _UserDetailsID
+            End Get
+            Set
+                If (_UserDetailsID <> Value) Then
+                    OnUserDetailsIDChanging(value)
+                    ReportPropertyChanging("UserDetailsID")
+                    _UserDetailsID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("UserDetailsID")
+                    OnUserDetailsIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _UserDetailsID As Global.System.Int32
+        Private Partial Sub OnUserDetailsIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnUserDetailsIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property UserID() As Global.System.Int32
+            Get
+                Return _UserID
+            End Get
+            Set
+                OnUserIDChanging(value)
+                ReportPropertyChanging("UserID")
+                _UserID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("UserID")
+                OnUserIDChanged()
+            End Set
+        End Property
+    
+        Private _UserID As Global.System.Int32
+        Private Partial Sub OnUserIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnUserIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Global.System.Int32
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property IsDefault() As Nullable(Of Global.System.Boolean)
+            Get
+                Return _IsDefault
+            End Get
+            Set
+                OnIsDefaultChanging(value)
+                ReportPropertyChanging("IsDefault")
+                _IsDefault = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsDefault")
+                OnIsDefaultChanged()
+            End Set
+        End Property
+    
+        Private _IsDefault As Nullable(Of Global.System.Boolean)
+        Private Partial Sub OnIsDefaultChanging(value As Nullable(Of Global.System.Boolean))
+        End Sub
+    
+        Private Partial Sub OnIsDefaultChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -20183,13 +20652,13 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Users_Department", "Lookup")>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserDetails_Lookups", "Lookup")>
         Public Property Lookup() As Lookup
             Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Users_Department", "Lookup").Value
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_UserDetails_Lookups", "Lookup").Value
             End Get
             Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Users_Department", "Lookup").Value = value
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_UserDetails_Lookups", "Lookup").Value = value
             End Set
         End Property
         ''' <summary>
@@ -20199,11 +20668,42 @@ Namespace REMI.Entities
         <DataMemberAttribute()>
         Public Property LookupReference() As EntityReference(Of Lookup)
             Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Users_Department", "Lookup")
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_UserDetails_Lookups", "Lookup")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Users_Department", "Lookup", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_UserDetails_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserDetails_Users", "User")>
+        Public Property User() As User
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserDetails_Users", "User").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserDetails_Users", "User").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property UserReference() As EntityReference(Of User)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserDetails_Users", "User")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of User)("REMI.Entities.FK_UserDetails_Users", "User", value)
                 End If
             End Set
         End Property
@@ -20505,31 +21005,6 @@ Namespace REMI.Entities
         ''' </summary>
         <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
         <DataMemberAttribute()>
-        Public Property TestCentreID() As Nullable(Of Global.System.Int32)
-            Get
-                Return _TestCentreID
-            End Get
-            Set
-                OnTestCentreIDChanging(value)
-                ReportPropertyChanging("TestCentreID")
-                _TestCentreID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("TestCentreID")
-                OnTestCentreIDChanged()
-            End Set
-        End Property
-    
-        Private _TestCentreID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnTestCentreIDChanging(value As Nullable(Of Global.System.Int32))
-        End Sub
-    
-        Private Partial Sub OnTestCentreIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
         Public Property ByPassProduct() As Nullable(Of Global.System.Int32)
             Get
                 Return _ByPassProduct
@@ -20548,31 +21023,6 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnByPassProductChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property DepartmentID() As Nullable(Of Global.System.Int32)
-            Get
-                Return _DepartmentID
-            End Get
-            Set
-                OnDepartmentIDChanging(value)
-                ReportPropertyChanging("DepartmentID")
-                _DepartmentID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("DepartmentID")
-                OnDepartmentIDChanged()
-            End Set
-        End Property
-    
-        Private _DepartmentID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnDepartmentIDChanging(value As Nullable(Of Global.System.Int32))
-        End Sub
-    
-        Private Partial Sub OnDepartmentIDChanged()
         End Sub
 
         #End Region
@@ -20998,37 +21448,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserTraining_Users", "User")>
-        Public Property User() As User
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property UserReference() As EntityReference(Of User)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserTraining_Lookups", "Lookup")>
         Public Property Lookup() As Lookup
             Get
@@ -21081,6 +21500,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_UserTraining_LookupsLevel", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserTraining_Users", "User")>
+        Public Property User() As User
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property UserReference() As EntityReference(Of User)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of User)("REMI.Entities.FK_UserTraining_Users", "User", value)
                 End If
             End Set
         End Property

@@ -1,15 +1,8 @@
 ﻿Imports REMI.Bll
 Imports REMI.BusinessEntities
+
 Partial Class BadgeAccess_EditMyUser
     Inherits System.Web.UI.Page
-
-    Protected Sub ddlGeoLoc_Databound(ByVal sender As Object, ByVal e As EventArgs) Handles ddlGeoLoc.DataBound
-        ddlGeoLoc.SelectedValue = UserManager.GetCurrentUser.TestCentreID
-    End Sub
-
-    Protected Sub ddlDepartments_Databound(ByVal sender As Object, ByVal e As EventArgs) Handles ddlDepartments.DataBound
-        ddlDepartments.SelectedValue = UserManager.GetCurrentUser.DepartmentID
-    End Sub
 
     Protected Sub ddlDefaultPage_Databound(ByVal sender As Object, ByVal e As EventArgs) Handles ddlDefaultPage.DataBound
         ddlDefaultPage.SelectedValue = UserManager.GetCurrentUser.DefaultPage
@@ -39,6 +32,40 @@ Partial Class BadgeAccess_EditMyUser
         End If
 
         hdnUserID.Value = UserManager.GetCurrentValidUserID
+
+        For Each dr As DataRow In UserManager.GetCurrentUser.UserDetails.Rows
+            For Each dli As DataListItem In dlstTestCenter.Items
+                Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
+                Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
+
+                hdnTCIsDefault.Value = dr.Item("IsDefault").ToString()
+
+                If chkTestCenter.Text = dr.Item("Values").ToString() Then
+                    chkTestCenter.Checked = True
+                    chkTestCenter.Enabled = False
+
+                    If (hdnTCIsDefault.Value = "True") Then
+                        chkTestCenter.Style.Add("font-weight", "bold")
+                    End If
+                End If
+            Next
+
+            For Each dli As DataListItem In dlstDepartments.Items
+                Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
+                Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
+
+                hdnDIsDefault.Value = dr.Item("IsDefault").ToString()
+
+                If chkDepartment.Text = dr.Item("Values").ToString() Then
+                    chkDepartment.Checked = True
+                    chkDepartment.Enabled = False
+
+                    If (hdnDIsDefault.Value = "True") Then
+                        chkDepartment.Style.Add("font-weight", "bold")
+                    End If
+                End If
+            Next
+        Next
     End Sub
 
     Protected Sub ddlTraining_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTraining.SelectedIndexChanged
@@ -91,46 +118,84 @@ Partial Class BadgeAccess_EditMyUser
     End Sub
 
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
-        If ddlGeoLoc.SelectedValue IsNot Nothing Then
-            UserManager.SetUserToSession(UserManager.GetUser(UserManager.GetCurrentUser.LDAPName, UserManager.GetCurrentUser.ID))
+        UserManager.SetUserToSession(UserManager.GetUser(UserManager.GetCurrentUser.LDAPName, UserManager.GetCurrentUser.ID))
+        UserManager.GetCurrentUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
 
-            UserManager.GetCurrentUser.TestCentre = ddlGeoLoc.SelectedItem.Text
-            UserManager.GetCurrentUser.TestCentreID = LookupsManager.GetLookupID(Contracts.LookupType.TestCenter, ddlGeoLoc.SelectedItem.Text, 0)
-            UserManager.GetCurrentUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
-            UserManager.GetCurrentUser.Department = ddlDepartments.SelectedItem.Text
-            UserManager.GetCurrentUser.DepartmentID = LookupsManager.GetLookupID(Contracts.LookupType.Department, ddlDepartments.SelectedItem.Text, 0)
+        Dim testCenters As DataList = DirectCast(Me.FindControl(dlstTestCenter.UniqueID), DataList)
+        Dim departments As DataList = DirectCast(Me.FindControl(dlstDepartments.UniqueID), DataList)
 
-            Dim training As GridView = DirectCast(Me.FindControl(gvwTraining.UniqueID), GridView)
-            For Each gvr As GridViewRow In training.Rows
-                Dim chkTrainingConfirm As CheckBox = gvr.FindControl("chkTrainingConfirm")
-                Dim lblTrainingConfirm As Label = gvr.FindControl("lblTrainingConfirm")
-                Dim hdnLevel As HiddenField = gvr.FindControl("hdnLevel")
-                Dim id As Int32 = If(DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(0).ToString() = String.Empty, 0, CType(DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(0).ToString(), Int32))
+        Dim userDetails As New DataTable
+        userDetails.Columns.Add("Name", Type.GetType("System.String"))
+        userDetails.Columns.Add("Values", Type.GetType("System.String"))
+        userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
+        userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
 
-                If ((String.IsNullOrEmpty(chkTrainingConfirm.Text) And chkTrainingConfirm.Checked) Or Not (String.IsNullOrEmpty(lblTrainingConfirm.Text))) Then
-                    UserManager.SaveTrainingConfirmation(hdnUserID.Value, id, hdnLevel.Value, True)
+        For Each dli As DataListItem In testCenters.Items
+            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
+                Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
+                Dim hdnTestCenterID As HiddenField = dli.FindControl("hdnTestCenterID")
+                Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
+
+                If Request.Form(chkTestCenter.UniqueID) = "on" Then
+                    Dim newRow As DataRow = userDetails.NewRow
+                    newRow("LookupID") = hdnTestCenterID.Value
+                    newRow("Values") = chkTestCenter.Text
+                    newRow("Name") = "TestCenter"
+                    newRow("IsDefault") = hdnTCIsDefault.Value
+                    userDetails.Rows.Add(newRow)
                 End If
-            Next
-
-            Dim trainingLevel As GridView = DirectCast(Me.FindControl(gvwTrainingLevels.UniqueID), GridView)
-
-            For Each gvr As GridViewRow In trainingLevel.Rows
-                Dim chkModify As CheckBox = gvr.FindControl("chkModify")
-                Dim ddlLevel As DropDownList = gvr.FindControl("ddlLevel")
-                Dim UserID As Int32 = DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(1).ToString()
-                Dim recordID As Int32 = DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(0).ToString()
-
-                If (chkModify.Checked) Then
-                    UserManager.SaveTrainingConfirmation(UserID, recordID, ddlLevel.SelectedValue, False)
-                End If
-            Next
-
-            If UserManager.Save(UserManager.GetCurrentUser, False) > 0 Then
-                notMain.Add("Location saved!", REMI.Validation.NotificationType.Information)
-                RedirectIfRequested()
-            Else
-                notMain.Add("Unable to save. Please contact support.", REMI.Validation.NotificationType.Errors)
             End If
+        Next
+
+        For Each dli As DataListItem In departments.Items
+            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
+                Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
+                Dim hdnDepartmentID As HiddenField = dli.FindControl("hdnDepartmentID")
+                Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
+
+                If Request.Form(chkDepartment.UniqueID) = "on" Then
+                    Dim newRow As DataRow = userDetails.NewRow
+                    newRow("LookupID") = hdnDepartmentID.Value
+                    newRow("Values") = chkDepartment.Text
+                    newRow("Name") = "Department"
+                    newRow("IsDefault") = hdnDIsDefault.Value
+                    userDetails.Rows.Add(newRow)
+                End If
+            End If
+        Next
+
+        UserManager.GetCurrentUser.UserDetails = userDetails
+
+        Dim training As GridView = DirectCast(Me.FindControl(gvwTraining.UniqueID), GridView)
+        For Each gvr As GridViewRow In training.Rows
+            Dim chkTrainingConfirm As CheckBox = gvr.FindControl("chkTrainingConfirm")
+            Dim lblTrainingConfirm As Label = gvr.FindControl("lblTrainingConfirm")
+            Dim hdnLevel As HiddenField = gvr.FindControl("hdnLevel")
+            Dim id As Int32 = If(DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(0).ToString() = String.Empty, 0, CType(DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(0).ToString(), Int32))
+
+            If ((String.IsNullOrEmpty(chkTrainingConfirm.Text) And chkTrainingConfirm.Checked) Or Not (String.IsNullOrEmpty(lblTrainingConfirm.Text))) Then
+                UserManager.SaveTrainingConfirmation(hdnUserID.Value, id, hdnLevel.Value, True)
+            End If
+        Next
+
+        Dim trainingLevel As GridView = DirectCast(Me.FindControl(gvwTrainingLevels.UniqueID), GridView)
+
+        For Each gvr As GridViewRow In trainingLevel.Rows
+            Dim chkModify As CheckBox = gvr.FindControl("chkModify")
+            Dim ddlLevel As DropDownList = gvr.FindControl("ddlLevel")
+            Dim UserID As Int32 = DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(1).ToString()
+            Dim recordID As Int32 = DirectCast(gvr.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(gvr.RowIndex).Values(0).ToString()
+
+            If (chkModify.Checked) Then
+                UserManager.SaveTrainingConfirmation(UserID, recordID, ddlLevel.SelectedValue, False)
+            End If
+        Next
+
+        If UserManager.Save(UserManager.GetCurrentUser, False) > 0 Then
+            notMain.Add("Location saved!", Remi.Validation.NotificationType.Information)
+            RedirectIfRequested()
+        Else
+            notMain.Add("Unable to save. Please contact support.", Remi.Validation.NotificationType.Errors)
         End If
     End Sub
 

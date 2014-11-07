@@ -13,8 +13,12 @@ Partial Class ManageUser_Default
 
         If UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
             Dim lookup As String = Contracts.LookupType.TestCenter.ToString()
+
+            Dim us As New UserSearch()
+            us.TestCenterID = UserManager.GetCurrentUser.TestCentreID
+
             Dim uc As UserCollection
-            uc = UserManager.GetListByLocation(UserManager.GetCurrentUser.TestCentreID, 0, 0, 0, False)
+            uc = REMI.Dal.UserDB.UserSearchList(us, False)
 
             ddlUsers.DataSource = uc
             ddlUsers.DataBind()

@@ -38,11 +38,11 @@ Public Class AutoCompleteService
         Return userNames.ToArray
     End Function
 
-    <WebMethod()> _
-    <System.Web.Script.Services.ScriptMethod()> _
-    Public Function GetREMIUsers(ByVal prefixText As String, ByVal count As Integer) As String()
-        Return (From x In Remi.Bll.UserManager.GetRemiUsernameList(0) Where x.StartsWith(prefixText) Select x).Take(count).ToArray()
-    End Function
+    '<WebMethod()> _
+    '<System.Web.Script.Services.ScriptMethod()> _
+    'Public Function GetREMIUsers(ByVal prefixText As String, ByVal count As Integer) As String()
+    '    Return (From x In Remi.Bll.UserManager.GetRemiUsernameList(0) Where x.StartsWith(prefixText) Select x).Take(count).ToArray()
+    'End Function
 
     Private Function GetDirectoryEntry() As DirectoryEntry
         Dim de As New DirectoryEntry

@@ -1,14 +1,17 @@
 ﻿ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @ByPass INT = 0, @showAllGrid BIT = 0, @UserID INT = 0, @DepartmentID INT = 0
 AS
-BEGIN
+BEGIN	
 	IF (@showAllGrid = 0)
 	BEGIN
 		SELECT DISTINCT u.ID, u.LDAPLogin
 		FROM Users u
 			LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
 			LEFT OUTER JOIN UsersProducts up ON up.UserID = u.ID
-		WHERE u.IsActive=1 AND (
-				(u.TestCentreID=@TestCenterID) 
+			INNER JOIN UserDetails udtc ON udtc.UserID=u.ID
+			INNER JOIN UserDetails udd ON udd.UserID=u.ID
+		WHERE u.IsActive=1 AND 
+			  (
+				(udtc.LookupID=@TestCenterID) 
 				OR
 				(@TestCenterID = 0)
 			  )
@@ -38,7 +41,7 @@ BEGIN
 			  )
 			  AND 
 			  (
-				(u.DepartmentID=@DepartmentID) 
+				(udd.LookupID=@DepartmentID) 
 				OR
 				(@DepartmentID = 0)
 			  )
@@ -70,8 +73,9 @@ BEGIN
 				FROM Users u WITH(NOLOCK)
 					LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
 					LEFT OUTER JOIN Lookups l on l.lookupid=ut.lookupid
+					INNER JOIN UserDetails ud ON ud.UserID=u.ID
 				WHERE u.IsActive = 1 AND (
-				(u.TestCentreID=' + CONVERT(VARCHAR, @TestCenterID) + ') 
+				(ud.lookupid=' + CONVERT(VARCHAR, @TestCenterID) + ') 
 				OR
 				(' + CONVERT(VARCHAR, @TestCenterID) + ' = 0)
 			  )

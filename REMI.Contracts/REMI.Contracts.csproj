@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Enumerations\BatchStatus.cs" />
     <Compile Include="Enumerations\LookupType.cs" />
+    <Compile Include="Enumerations\SearchBy.cs" />
     <Compile Include="Enumerations\TestRecordStatus.cs" />
     <Compile Include="Enumerations\TestResultSource.cs" />
     <Compile Include="Enumerations\TestStageCompletionStatus.cs" />

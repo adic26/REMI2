@@ -46,9 +46,9 @@ Partial Class Search
             If (Remi.Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
                 If (Not (Remi.Helpers.GetPostBackControl(Me.Page)).ID = "btnSearch" And ddlTestCenters.SelectedValue <> String.Empty) Then
                     ddlUsers.Items.Clear()
-                    Dim uc As UserCollection = UserManager.GetListByLocation(ddlTestCenters.SelectedValue, 0, 0, 0, False)
-                    uc.Insert(0, New User())
-                    ddlUsers.DataSource = uc
+                    Dim us As New UserSearch()
+                    us.TestCenterID = ddlTestCenters.SelectedValue
+                    ddlUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False)
                     ddlUsers.DataBind()
                 End If
             End If
@@ -740,8 +740,12 @@ Partial Class Search
 
     Protected Sub ddlTestCenterTraining_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTestCenterTraining.SelectedIndexChanged
         ddlUserTraining.Items.Clear()
-        Dim uc As UserCollection = UserManager.GetListByLocation(ddlTestCenterTraining.SelectedValue, 0, 0, 0, False)
+        Dim us As New UserSearch()
+        us.TestCenterID = ddlTestCenterTraining.SelectedValue
+
+        Dim uc As UserCollection = Remi.Dal.UserDB.UserSearchList(us, False)
         uc.Insert(0, New User())
+
         ddlUserTraining.DataSource = uc
         ddlUserTraining.DataBind()
     End Sub

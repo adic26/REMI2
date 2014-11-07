@@ -687,7 +687,10 @@ Public Class RemiAPI
 
                 If ((From tr In batch.TestRecords Where tr.TestName <> "Sample Evaluation" Select tr).Count > 0) Then
                     If (batch.TRSData.RequestStatus.ToLower = TRSStatus.Received.ToString().ToLower() Or batch.TRSData.RequestStatus.ToLower = TRSStatus.Submitted.ToString().ToLower() Or batch.TRSData.RequestStatus.ToLower = "pm review") Then
-                        Dim emails As List(Of String) = (From u In UserManager.GetListByLocation(batch.TestCenterLocationID, 0, 0, 0, True) Where u.IsProjectManager = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
+                        Dim us As New UserSearch()
+                        us.TestCenterID = batch.TestCenterLocationID
+
+                        Dim emails As List(Of String) = (From u In Remi.Dal.UserDB.UserSearchList(us, False) Where u.IsProjectManager = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
 
                         Remi.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", qraNumber), String.Format("Please assign this batch as soon as possible in the TRS <a href=""{0}"">{1}</a>", batch.TRSLink, qraNumber), True)
 

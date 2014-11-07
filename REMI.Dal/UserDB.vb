@@ -8,6 +8,7 @@ Imports System.Configuration
 Imports REMI.BusinessEntities
 Imports REMI.Validation
 Imports REMI.Core
+Imports REMI.Contracts.Enumerations
 
 Namespace REMI.Dal
     ''' <summary>
@@ -21,77 +22,60 @@ Namespace REMI.Dal
         ''' <summary>Gets an instance of User from the underlying datasource.</summary> 
         ''' <param name="UserName">The unique username of the User in the database.</param> 
         ''' <returns>A User if the ID was found in the database, or Nothing otherwise.</returns> 
-        Public Shared Function GetItem(ByVal UserName As String, Optional ByVal userID As Int32 = 0) As User
+        Public Shared Function GetItem(ByVal search As String, ByVal type As SearchType) As User
             Dim myUser As User = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispUsersSelectSingleItemByUserName", myConnection)
+                Using myCommand As New SqlCommand("remispGetUser", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    If (userID = 0) Then
-                        myCommand.Parameters.AddWithValue("@LDAPLogin", UserName)
-                    Else
-                        myCommand.Parameters.AddWithValue("@UserID", userID)
-                    End If
+
+                    myCommand.Parameters.AddWithValue("@SearchBy", type)
+                    myCommand.Parameters.AddWithValue("@SearchStr", search)
+
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.Read() Then
-                            myUser = FillDataRecord(myReader, 1)
+                            myUser = FillDataRecord(myReader, False, False)
+
+                            myReader.NextResult()
+
+                            'UserDetails
+                            Using myDataTable As New DataTable
+                                myDataTable.Load(myReader)
+                                myUser.UserDetails = myDataTable
+                            End Using
+
+                            'UserTraining
+                            Using myDataTable As New DataTable
+                                myDataTable.Load(myReader)
+                                myUser.Training = myDataTable
+
+                                For Each row As DataRow In myUser.Training.Rows
+                                    If (row.Item("DateAdded") IsNot Nothing And row.Item("DateAdded") IsNot DBNull.Value) Then
+                                        myUser.TrainingNames.Add(row.Item("TrainingOption").ToString())
+                                    End If
+                                Next row
+                            End Using
+
+                            'UserProducts
+                            Using myDataTable As New DataTable
+                                myDataTable.Load(myReader)
+                                myUser.ProductGroups = myDataTable
+
+                                For Each row As DataRow In myUser.ProductGroups.Rows
+                                    myUser.ProductGroupsNames.Add(row.Item("ProductGroupName").ToString())
+                                Next row
+                            End Using
                         End If
                     End Using
                 End Using
             End Using
 
             Return myUser
-        End Function
-
-        ''' <summary>Gets an instance of User from the underlying datasource.</summary> 
-        ''' <param name="Badgenumber">The unique badgenumber of the User in the database.</param> 
-        ''' <returns>A User if the ID was found in the database, or Nothing otherwise.</returns> 
-        Public Shared Function GetItem(ByVal badgeNumber As Integer) As User
-            Dim myUser As User = Nothing
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispUsersSelectSingleItemBybadgenumber", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@BadgeNumber", badgeNumber)
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.Read() Then
-                            myUser = FillDataRecord(myReader, 1)
-                        End If
-                    End Using
-                End Using
-            End Using
-
-            Return myUser
-        End Function
-
-        Public Shared Function GetListByLocation(ByVal testLocation As Int32, ByVal includeInActive As Int32, ByVal loadTraining As Int32, ByVal determineDelete As Int32) As UserCollection
-            Dim tempList As New UserCollection
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispUsersSelectListByTestCentre", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@TestLocation", testLocation)
-                    myCommand.Parameters.AddWithValue("@IncludeInActive", includeInActive)
-                    myCommand.Parameters.AddWithValue("@determineDelete", determineDelete)
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            tempList = New UserCollection()
-                            While myReader.Read()
-                                tempList.Add(FillDataRecord(myReader, loadTraining))
-                            End While
-                        End If
-                    End Using
-                End Using
-            End Using
-
-            Return tempList
         End Function
 
         Public Shared Function GetTraining(ByVal userID As Int32, ByVal ShowTrainedOnly As Int32) As DataTable
-            Dim dt As New DataTable
+            Dim dt As New DataTable("Training")
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetUserTraining", myConnection)
@@ -106,34 +90,6 @@ Namespace REMI.Dal
             End Using
 
             Return dt
-        End Function
-
-        Public Shared Function GetRemiUserNameList(ByVal determinCanDelete As Int32) As List(Of String)
-            Dim tempList As List(Of String) = REMIAppCache.GetListOfRemiUsernames()
-
-            If tempList Is Nothing Then
-                Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                    Using myCommand As New SqlCommand("remispUsersSelectList", myConnection)
-                        myCommand.CommandType = CommandType.StoredProcedure
-                        myCommand.Parameters.AddWithValue("@startRowIndex", -1)
-                        myCommand.Parameters.AddWithValue("@maximumRows", -1)
-                        myCommand.Parameters.AddWithValue("@determineDelete", determinCanDelete)
-                        myConnection.Open()
-                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                            If myReader.HasRows Then
-                                tempList = New List(Of String)
-                                While myReader.Read()
-                                    tempList.Add(myReader.GetString(myReader.GetOrdinal("LDAPLogin")))
-                                End While
-                            End If
-                        End Using
-                    End Using
-
-                    REMIAppCache.SetListOfRemiUsernames(tempList)
-                End Using
-            End If
-
-            Return tempList
         End Function
 
         ''' <summary>Saves an instance of the <see cref="User" /> in the database.</summary> 
@@ -153,16 +109,9 @@ Namespace REMI.Dal
                     If MyUser.BadgeNumber > 0 Then
                         myCommand.Parameters.AddWithValue("@BadgeNumber", MyUser.BadgeNumber)
                     End If
-                    If MyUser.TestCentreID > 0 Then
-                        myCommand.Parameters.AddWithValue("@TestCentreID", MyUser.TestCentreID)
-                    End If
                     myCommand.Parameters.AddWithValue("@IsActive", MyUser.IsActive)
                     myCommand.Parameters.AddWithValue("@ByPassProduct", MyUser.ByPassProduct)
                     myCommand.Parameters.AddWithValue("@DefaultPage", MyUser.DefaultPage)
-
-                    If MyUser.DepartmentID > 0 Then
-                        myCommand.Parameters.AddWithValue("@DepartmentID", MyUser.DepartmentID)
-                    End If
 
                     Helpers.SetSaveParameters(myCommand, MyUser)
                     myConnection.Open()
@@ -201,6 +150,39 @@ Namespace REMI.Dal
             Return Result
         End Function
 
+        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean) As UserCollection
+            Dim uc As New UserCollection
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispUsersSearch", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@showAllGrid", showAllGrid)
+
+                    For Each p As System.Reflection.PropertyInfo In us.GetType().GetProperties()
+                        If p.CanRead Then
+                            If (p.GetValue(us, Nothing) IsNot Nothing) Then
+                                If (p.GetValue(us, Nothing).ToString().ToLower() <> "all" And p.GetValue(us, Nothing).ToString().ToLower() <> "0" And p.GetValue(us, Nothing).ToString().ToLower() <> "notset") Then
+                                    myCommand.Parameters.AddWithValue("@" + p.Name, p.GetValue(us, Nothing))
+                                End If
+                            End If
+                        End If
+                    Next
+
+                    myConnection.Open()
+
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            While myReader.Read()
+                                uc.Add(FillDataRecord(myReader, False, False))
+                            End While
+                        End If
+                    End Using
+                End Using
+            End Using
+
+            Return uc
+        End Function
+
         Public Shared Function UserSearch(ByVal us As UserSearch, ByVal showAllGrid As Boolean) As DataTable
             Dim dt As New DataTable
 
@@ -237,17 +219,15 @@ Namespace REMI.Dal
         ''' <param name="myDataRecord">The Data record for the User produced by a select query</param>
         ''' <returns>A User object filled with the data from the IDataRecord object</returns>
         ''' <remarks></remarks>
-        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Int32) As User
+        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean) As User
             Dim myUser As New User()
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("TestCentre")) Then
-                myUser.TestCentre = myDataRecord.GetString(myDataRecord.GetOrdinal("TestCentre"))
-            End If
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("TestCentreID")) Then
-                myUser.TestCentreID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("TestCentreID"))
-            End If
+
             myUser.LDAPName = myDataRecord.GetString(myDataRecord.GetOrdinal("LDAPLogin"))
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("BadgeNumber")) Then
-                myUser.BadgeNumber = myDataRecord.GetInt32(myDataRecord.GetOrdinal("BadgeNumber"))
+
+            If (Helpers.HasColumn(myDataRecord, "BadgeNumber")) Then
+                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("BadgeNumber")) Then
+                    myUser.BadgeNumber = myDataRecord.GetInt32(myDataRecord.GetOrdinal("BadgeNumber"))
+                End If
             End If
 
             If (Helpers.HasColumn(myDataRecord, "IsActive")) Then
@@ -272,28 +252,21 @@ Namespace REMI.Dal
                 End If
             End If
 
-            myUser.ProductGroups = ProductGroupDB.GetUserProductGroupList(myDataRecord.GetInt32(myDataRecord.GetOrdinal("ID")))
+            If (loadProducts = True) Then
+                myUser.ProductGroups = ProductGroupDB.GetUserProductGroupList(myDataRecord.GetInt32(myDataRecord.GetOrdinal("ID")))
 
-            For Each row As DataRow In myUser.ProductGroups.Rows
-                myUser.ProductGroupsNames.Add(row.Item("ProductGroupName").ToString())
-            Next row
+                For Each row As DataRow In myUser.ProductGroups.Rows
+                    myUser.ProductGroupsNames.Add(row.Item("ProductGroupName").ToString())
+                Next row
+            End If
 
-            If (loadTraining = 1) Then
+            If (loadTraining = True) Then
                 myUser.Training = UserDB.GetTraining(myDataRecord.GetInt32(myDataRecord.GetOrdinal("ID")), 0)
                 For Each row As DataRow In myUser.Training.Rows
                     If (row.Item("DateAdded") IsNot Nothing And row.Item("DateAdded") IsNot DBNull.Value) Then
                         myUser.TrainingNames.Add(row.Item("TrainingOption").ToString())
                     End If
                 Next row
-            End If
-
-            If (Helpers.HasColumn(myDataRecord, "DepartmentID")) Then
-                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("DepartmentID")) Then
-                    myUser.DepartmentID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("DepartmentID"))
-                End If
-                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Department")) Then
-                    myUser.Department = myDataRecord.GetString(myDataRecord.GetOrdinal("Department"))
-                End If
             End If
 
             Helpers.FillObjectParameters(myDataRecord, myUser)

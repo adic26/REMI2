@@ -143,7 +143,6 @@
     <Compile Include="DataEntityObjects\TestException.vb" />
     <Compile Include="DataEntityObjects\TestRecord.vb" />
     <Compile Include="Bases\RequestBase.vb" />
-    <Compile Include="Enumerations\TestCompletionCriteria.vb" />
     <Compile Include="BusinessObjects\DeviceBarcodeNumber.vb" />
     <Compile Include="DataEntityObjects\Batch.vb" />
     <Compile Include="DataEntityCollections\BatchCollection.vb" />

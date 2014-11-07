@@ -72,7 +72,10 @@ Namespace REMI.Dal
         ''' <param name="LoggedItemBase">The loggeditembase child to fill.</param>
         ''' <remarks></remarks>
         Friend Shared Sub FillObjectParameters(ByVal myDataRecord As IDataRecord, ByVal LoggedItemBase As ILoggedItem)
-            LoggedItemBase.LastUser = myDataRecord.GetString(myDataRecord.GetOrdinal("LastUser"))
+            If (Helpers.HasColumn(myDataRecord, "LastUser")) Then
+                LoggedItemBase.LastUser = myDataRecord.GetString(myDataRecord.GetOrdinal("LastUser"))
+            End If
+
             LoggedItemBase.ID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ID"))
 
             If (Helpers.HasColumn(myDataRecord, "ConcurrencyID")) Then

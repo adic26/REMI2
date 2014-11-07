@@ -8,6 +8,8 @@ Imports System.DirectoryServices.AccountManagement
 Imports System.Web
 Imports RIM.ReliabilityEngineering.ActiveDirectoryServices
 Imports System.Configuration
+Imports REMI.Contracts.Enumerations
+
 Namespace REMI.Bll
     <DataObjectAttribute()> _
     Public Class UserManager
@@ -15,32 +17,14 @@ Namespace REMI.Bll
 
         Private Shared _userSessionVariableName As String = "CurrentUser"
 
-        Public Shared Function GetListByLocation(ByVal testLocation As Int32, ByVal includeInActive As Int32, ByVal loadTraining As Int32, ByVal determineDelete As Int32, Optional ByVal loadAD As Boolean = True) As UserCollection
-            Try
-                Dim us As UserCollection = UserDB.GetListByLocation(testLocation, includeInActive, loadTraining, determineDelete)
-
-                If (loadAD) Then
-                    For Each u As User In us
-                        If (u.IsActive = 1) Then
-                            FillUserFromActiveDirectory(u, False)
-                        End If
-                    Next
-                End If
-
-                Return us
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
-            End Try
-            Return New UserCollection
-        End Function
-
         Public Shared Function GetTraining(ByVal userID As Int32, ByVal ShowTrainedOnly As Int32) As DataTable
             Try
                 Return UserDB.GetTraining(userID, ShowTrainedOnly)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+
+            Return New DataTable("Training")
         End Function
 
         Public Shared Function GetSimiliarTraining(ByVal trainingID As Int32) As Object
@@ -90,6 +74,40 @@ Namespace REMI.Bll
                     Try
                         Dim userID As Integer = UserDB.Save(u)
                         Dim instance = New REMI.Dal.Entities().Instance()
+
+                        'Get existing set of UserDetails for user
+                        Dim userDetails As List(Of Int32) = (From ud In instance.UserDetails _
+                                   Where ud.User.ID = u.ID _
+                                   Select ProductID = ud.LookupID).ToList()
+
+                        'Get new set of UserDetails for user
+                        Dim userDetailsNew As List(Of Int32) = (From ud In u.UserDetails _
+                             Select DirectCast(ud.Item("LookupID"), Int32)).ToList()
+
+                        ''Gets the list of UserDetails that are missing for user
+                        Dim missingUserDetails = userDetailsNew.Except(userDetails)
+
+                        ''Gets the list of UserDetails that need to be removed
+                        Dim removeUserDetails = userDetails.Except(userDetailsNew)
+
+                        'Remove userdetails
+                        For Each t In removeUserDetails
+                            Dim lookupID As Int32 = t
+                            Dim up As REMI.Entities.UserDetail = (From ud In instance.UserDetails Where ud.User.ID = u.ID And ud.LookupID = lookupID Select ud).FirstOrDefault()
+
+                            If (Not up.IsDefault Or up.IsDefault Is Nothing) Then
+                                instance.DeleteObject(up)
+                            End If
+                        Next
+
+                        'Add missing UserDetails
+                        For Each t In missingUserDetails
+                            Dim lookupID As Int32 = t
+                            Dim ud As New REMI.Entities.UserDetail()
+                            ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
+                            ud.Lookup = (From l In instance.Lookups Where l.LookupID = lookupID Select l).FirstOrDefault()
+                            instance.AddToUserDetails(ud)
+                        Next
 
                         'Get existing set of products for user
                         Dim userProducts As List(Of Int32) = (From pm In instance.UsersProducts _
@@ -198,12 +216,12 @@ Namespace REMI.Bll
                                     instance.AddToUserTrainings(ut)
                                 End If
                             Next
-
                         End If
 
                         instance.SaveChanges()
 
                         If (UserManager.GetCurrentUser.ID = u.ID) Then
+                            UserManager.LogUserOut()
                             UserManager.SetUserToSession(u)
                         End If
 
@@ -223,20 +241,11 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function UserExists(ByVal userName As String) As Boolean
-            Dim u As User = UserDB.GetItem(userName.ToLower)
+            Dim u As User = UserDB.GetItem(userName.ToLower, Contracts.Enumerations.SearchType.UserName)
             If u IsNot Nothing Then
                 Return True
             End If
             Return False
-        End Function
-
-        Public Shared Function GetRemiUsernameList(ByVal determinCanDelete As Int32) As List(Of String)
-            Try
-                Return UserDB.GetRemiUserNameList(determinCanDelete)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
-            End Try
-            Return New List(Of String)
         End Function
 
         ''' <summary>
@@ -244,20 +253,19 @@ Namespace REMI.Bll
         ''' </summary>
         ''' <param name="userName">the LDAP username of the user to retreive.</param>
         ''' <returns>A user if the user is found or else nothing</returns>
-        ''' <remarks></remarks>
-        Private Shared Function GetItem(ByVal userName As String, Optional ByVal userID As Int32 = 0) As User
+        Private Shared Function GetItem(ByVal search As String, ByVal type As SearchType) As User
             Try
                 'try to get the user from the remi database
-                Dim u As User = UserDB.GetItem(userName.ToLower, userID)
+                Dim u As User = UserDB.GetItem(search, type)
                 If u Is Nothing Then
                     'if there is not user just create a new one and set it up
-                    u = New User With {.LDAPName = userName.ToLower, .LastUser = "remi", .IsActive = 1, .DefaultPage = "/default.aspx", .ByPassProduct = 0}
+                    u = New User With {.LDAPName = search.ToLower, .LastUser = "remi", .IsActive = 1, .DefaultPage = "/default.aspx", .ByPassProduct = 0}
                 End If
                 'now get any info we can about the user from the active directory
                 FillUserFromActiveDirectory(u, True)
                 Return u
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex, String.Format("UserName: {0}", userName))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex, String.Format("UserName: {0}", search))
             End Try
             Return Nothing
         End Function
@@ -284,11 +292,6 @@ Namespace REMI.Bll
         ''' <summary>
         ''' Add a user to the database.
         ''' </summary>
-        ''' <param name="username"></param>
-        ''' <param name="password"></param>
-        ''' <param name="badgenumber"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Shared Function ConfirmUserCredentialsAndSave(ByVal username As String, ByVal password As String, ByVal badgenumber As Integer, ByVal testCenterID As Int32, ByVal hasPasswordRequirement As Boolean, ByVal departmentID As Int32) As NotificationCollection
             Dim returnNotifications As New NotificationCollection
 
@@ -299,11 +302,31 @@ Namespace REMI.Bll
             End If
 
             If hasPasswordRequirement Then
-                Dim u As User = UserManager.GetItem(username.ToLower, 0)
+                Dim u As User = UserManager.GetItem(username.ToLower, SearchType.UserName)
                 u.BadgeNumber = badgenumber
                 u.ByPassProduct = 1
-                u.TestCentreID = testCenterID
-                u.DepartmentID = departmentID
+
+                Dim userDetails As New DataTable
+                userDetails.Columns.Add("Name", Type.GetType("System.String"))
+                userDetails.Columns.Add("Values", Type.GetType("System.String"))
+                userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
+                userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
+
+                Dim newRow As DataRow = userDetails.NewRow
+                newRow("LookupID") = testCenterID
+                newRow("Values") = String.Empty
+                newRow("Name") = "TestCenter"
+                newRow("IsDefault") = 1
+                userDetails.Rows.Add(newRow)
+
+                Dim newRow2 As DataRow = userDetails.NewRow
+                newRow2("LookupID") = departmentID
+                newRow2("Values") = String.Empty
+                newRow2("Name") = "Department"
+                newRow2("IsDefault") = 1
+                userDetails.Rows.Add(newRow2)
+
+                u.UserDetails = userDetails
 
                 If (Not u.RolesList.Contains("Relab")) Then
                     u.RolesList.Add("Relab")
@@ -320,33 +343,14 @@ Namespace REMI.Bll
             Else
                 returnNotifications.Add(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, username)
             End If
-            Return returnNotifications
-        End Function
 
-        ''' <summary>
-        ''' Gets a single user from the Users table.
-        ''' </summary>
-        ''' <param name="badgeNumber">the badgeNumber of the user to retreive.</param>
-        ''' <returns>A user if the user is found or else nothing</returns>
-        ''' <remarks></remarks>
-        Private Shared Function GetItem(ByVal badgeNumber As Integer) As User
-            Try
-                Dim u As User = UserDB.GetItem(badgeNumber)
-                If u IsNot Nothing Then
-                    FillUserFromActiveDirectory(u, True)
-                    Return u
-                End If
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("badgeNumber: {0}", badgeNumber))
-            End Try
-            Return Nothing
+            Return returnNotifications
         End Function
 
         ''' <summary>
         ''' Deletes a single user from the users table
         ''' </summary>
         ''' <returns>true if the user was deleted, false otherwise</returns>
-        ''' <remarks></remarks>
         Public Shared Function Delete(ByVal userIDToDelete As Int32, ByVal userID As Int32) As NotificationCollection
             Dim nc As New NotificationCollection
             Try
@@ -364,7 +368,6 @@ Namespace REMI.Bll
         ''' Gets a list of all possible roles in the system.
         ''' </summary>
         ''' <returns>A list of the roles in the system.</returns>
-        ''' <remarks></remarks>
         Public Shared Function GetRoles() As List(Of String)
             Try
                 Dim roles As List(Of String) = System.Web.Security.Roles.GetAllRoles.ToList
@@ -401,8 +404,6 @@ Namespace REMI.Bll
                 Else
                     'try treating it as a string
                     If userIdentification.ToLower.Contains("@"c) Then
-                        'this is an email address type username so try to get the user using it
-                        'the dta/tta application sends email addresses rather than badge numbers.
                         If u.UserName = userIdentification.ToLower.Split("@"c)(0) Then
                             Return True
                         End If
@@ -425,16 +426,13 @@ Namespace REMI.Bll
                     Return True
                 End If
             End If
-                Throw New ArgumentException("The user given cannot be set to the session in this context becuase they do not have the correct permissions.")
+            Throw New ArgumentException("The user given cannot be set to the session in this context becuase they do not have the correct permissions.")
         End Function
 
         ''' <summary>
         ''' Saves the user to the current session. This does not redirect the request if the auth fails. It just returns a bool
         ''' Use the authenticate method if you want to redirect the user to the badge scan page.
         ''' </summary>
-        ''' <param name="userID"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Shared Function SetUserToSession(ByVal userID As String) As Boolean
             Try
                 If UserIsInSession(userID) Then
@@ -465,33 +463,34 @@ Namespace REMI.Bll
         ''' Returns the user currently set to the session.
         ''' empty user if they cannot be set
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Shared Function GetCurrentUser() As User
             'is there a user stored in the session return that
             If HttpContext.Current.Session IsNot Nothing AndAlso HttpContext.Current.Session.Item(_userSessionVariableName) IsNot Nothing Then 'is the user there
                 Return DirectCast(HttpContext.Current.Session.Item(_userSessionVariableName), REMI.BusinessEntities.User)
             End If
-            'if not then get the user represented by the current windows credentials
 
-            Dim windowsUser As User = UserManager.GetItem(GetCleanedHttpContextCurrentUserName, 0)
+            Dim windowsUser As User = UserManager.GetItem(GetCleanedHttpContextCurrentUserName, SearchType.UserName)
+
             If windowsUser IsNot Nothing Then
                 If HttpContext.Current.Session IsNot Nothing Then
                     'try to put the user in the session so we don;t have to go to the database each time.
                     SetUserToSession(windowsUser)
                 End If
+
                 Return windowsUser
             End If
+
             Return Nothing
         End Function
 
         Public Shared Function GetUser(ByVal userIdentification As String, Optional ByVal userID As Int32 = 0) As User
             If Not String.IsNullOrEmpty(userIdentification) Then
                 Dim badgeNumber As Integer
+
                 'try to parse it as an integer - badge scan
                 If Integer.TryParse(userIdentification.ToLower, badgeNumber) Then
                     If badgeNumber > 0 Then
-                        Return UserManager.GetItem(badgeNumber)
+                        Return UserManager.GetItem(badgeNumber.ToString(), SearchType.Badge)
                     End If
                 Else
                     'its most likely a string
@@ -502,18 +501,18 @@ Namespace REMI.Bll
                         username = userIdentification.ToLower.Split("@"c)(0)
                     End If
 
-                    Return UserManager.GetItem(username, userID)
+                    Return UserManager.GetItem(username, SearchType.UserName)
                 End If
             ElseIf userID > 0 Then
-                Return UserManager.GetItem(String.Empty, userID)
+                Return UserManager.GetItem(userID.ToString(), SearchType.UserID)
             End If
+
             Return Nothing
         End Function
 
         ''' <summary>
         ''' Removes a user from the current session
         ''' </summary>
-        ''' <remarks></remarks>
         Public Shared Sub LogUserOut()
             HttpContext.Current.Session.Clear()
             HttpContext.Current.Session.RemoveAll()
@@ -537,8 +536,6 @@ Namespace REMI.Bll
         ''' <summary>
         ''' Cleans "RIMNET" from the windows username if it is present
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Shared Function GetCleanedHttpContextCurrentUserName() As String
             If HttpContext.Current IsNot Nothing AndAlso HttpContext.Current.User IsNot Nothing Then
                 Return CleanRIMNETUserName(HttpContext.Current.User.Identity.Name)
@@ -550,9 +547,6 @@ Namespace REMI.Bll
         ''' <summary>
         ''' Removes the domain prefix from the ldap usernames returned by the IIdentity
         ''' </summary>
-        ''' <param name="username"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Private Shared Function CleanRIMNETUserName(ByVal username As String) As String
             If Not String.IsNullOrEmpty(username) Then
                 username = username.Trim()
