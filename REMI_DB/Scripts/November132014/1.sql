@@ -4,7 +4,7 @@ ALTER TABLE [Req].[ReqFieldSetup] ADD [ColumnOrder] [int] NULL
 GO
 UPDATE [Req].[ReqFieldSetup] SET [ColumnOrder]=1
 GO
-ALTER TABLE [Req].[ReqFieldSetup] ADD [ColumnOrder] [int] NULL
+ALTER TABLE [Req].[ReqFieldSetup] ALTER COLUMN [ColumnOrder] [int] NOT NULL
 GO
 CREATE TABLE [dbo].[UserDetails](
 	[UserDetailsID] [int] IDENTITY(1,1) NOT NULL,
@@ -29,12 +29,12 @@ ALTER TABLE [dbo].[UserDetails] CHECK CONSTRAINT [FK_UserDetails_Users]
 GO
 ALTER TABLE [dbo].[UserDetails] ADD  DEFAULT ((0)) FOR [IsDefault]
 GO
-insert into UserDetails (UserID, LookupID)
+insert into UserDetails (UserID, LookupID, IsDefault)
 SELECT ID, TestCentreID, 1
 FROM Users
 WHERE TestCentreID IS NOT NULL
 
-insert into UserDetails (UserID, LookupID)
+insert into UserDetails (UserID, LookupID, IsDefault)
 SELECT ID, DepartmentID, 1
 FROM Users
 WHERE DepartmentID IS NOT NULL
@@ -348,7 +348,7 @@ INSERT INTO Menu (Name, Url) VALUES ('User','/ManageUser/Default.aspx')
 INSERT INTO Menu (Name, Url) VALUES ('Results','/Relab/Results.aspx')
 GO
 DECLARE @DepartmentID INT
-SELECT @DepartmentID = LookupID FROM Lookups l INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID WHERE lt.Name='Department'
+SELECT @DepartmentID = LookupID FROM Lookups l INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID WHERE lt.Name='Department' AND l.[values]='Product Validation'
 
 INSERT INTO MenuDepartment (DepartmentID, MenuID)
 SELECT @DepartmentID AS DepartmentID, MenuID
@@ -691,6 +691,19 @@ BEGIN
 	DROP TABLE #temp3	
 END
 GO
+CREATE PROCEDURE remispGetUserDetails @UserID INT
+AS
+BEGIN
+	SELECT lt.Name, l.[Values], l.LookupID, ISNULL(ud.IsDefault, 0) AS IsDefault
+	FROM UserDetails ud
+		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
+		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
+	WHERE ud.UserID=@UserID
+	ORDER BY lt.Name, l.[Values]
+END
+GO
+GRANT EXECUTE ON remispGetUserDetails TO REMI
+GO
 CREATE PROCEDURE [dbo].[remispGetUser] @SearchBy INT, @SearchStr NVARCHAR(255)
 AS	
 	DECLARE @UserID INT
@@ -726,19 +739,6 @@ AS
 	EXEC remispProductManagersSelectList @UserID
 GO
 GRANT EXECUTE ON remispGetUser TO Remi
-GO
-CREATE PROCEDURE remispGetUserDetails @UserID INT
-AS
-BEGIN
-	SELECT lt.Name, l.[Values], l.LookupID, ISNULL(ud.IsDefault, 0) AS IsDefault
-	FROM UserDetails ud
-		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
-		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
-	WHERE ud.UserID=@UserID
-	ORDER BY lt.Name, l.[Values]
-END
-GO
-GRANT EXECUTE ON remispGetUserDetails TO REMI
 GO
 ALTER procedure remispTrackingLocationsGetSpecificLocationForUsersTestCenter @username nvarchar(255), @locationname nvarchar(500)
 AS
