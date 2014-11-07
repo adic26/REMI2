@@ -17,6 +17,7 @@ Namespace REMI.BusinessEntities
         Private _userDetails As DataTable
         Private _productGroupsNames As List(Of String)
         Private _roles As List(Of String)
+        Private _detailsNames As List(Of String)
         Private _badgeNumber As Integer
         Private _isActive As Int32
         Private _byPassProduct As Int32
@@ -37,6 +38,7 @@ Namespace REMI.BusinessEntities
             _productGroupsNames = New List(Of String)
             _training = New DataTable
             _trainingNames = New List(Of String)
+            _detailsNames = New List(Of String)
             _roles = New List(Of String)
             _ldapName = String.Empty
             _jobTitle = String.Empty
@@ -121,25 +123,25 @@ Namespace REMI.BusinessEntities
 
         Public ReadOnly Property TestCentre() As String
             Get
-                Return (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "TestCenter" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of String)("Values")).FirstOrDefault()
+                Return If(UserDetails Is Nothing, String.Empty, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "TestCenter" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of String)("Values")).FirstOrDefault())
             End Get
         End Property
 
         Public ReadOnly Property TestCentreID() As Int32
             Get
-                Return (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "TestCenter" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).FirstOrDefault()
+                Return If(UserDetails Is Nothing, 0, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "TestCenter" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).FirstOrDefault())
             End Get
         End Property
 
         Public ReadOnly Property Department() As String
             Get
-                Return (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of String)("Values")).FirstOrDefault()
+                Return If(UserDetails Is Nothing, String.Empty, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of String)("Values")).FirstOrDefault())
             End Get
         End Property
 
         Public ReadOnly Property DepartmentID() As Int32
             Get
-                Return (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).FirstOrDefault()
+                Return If(UserDetails Is Nothing, 0, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).FirstOrDefault())
             End Get
         End Property
 
@@ -192,6 +194,17 @@ Namespace REMI.BusinessEntities
             Set(ByVal value As DataTable)
                 If value IsNot Nothing Then
                     _userDetails = value
+                End If
+            End Set
+        End Property
+
+        Public Property DetailsNames() As List(Of String)
+            Get
+                Return _detailsNames
+            End Get
+            Set(ByVal value As List(Of String))
+                If value IsNot Nothing Then
+                    _detailsNames = value
                 End If
             End Set
         End Property

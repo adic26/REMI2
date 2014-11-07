@@ -119,13 +119,17 @@
         <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
     </h2>
     <asp:Panel ID="pnlViewAllUsers" runat="server">
-        <asp:GridView ID="gvwUsers" runat="server" AutoGenerateColumns="False" DataKeyNames="LDAPName" DataSourceID="odsUsers" EmptyDataText="There are no users in the system." OnRowCommand="gvwUsers_RowCommand">
+        <asp:GridView ID="gvwUsers" runat="server" AutoGenerateColumns="False" DataKeyNames="LDAPName" EmptyDataText="There are no users in the system." OnRowCommand="gvwUsers_RowCommand">
             <RowStyle CssClass="evenrow" />
             <Columns>
                 <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="ID" Visible="False" />
                 <asp:BoundField DataField="LDAPName" HeaderText="Login" readonly="true"/>
                 <asp:BoundField DataField="BadgeNumber" HeaderText="Badge" readonly="true" SortExpression="BadgeNumber" />
-                <asp:BoundField DataField="TestCentre" HeaderText="Test Centre" readonly="true" SortExpression="TestCentre" />
+                <asp:TemplateField HeaderText="Details">
+                    <ItemTemplate>
+                        <asp:BulletedList runat="server" ID="bltDetails" DataSource='<%# Eval("DetailsNames") %>'></asp:BulletedList>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="Roles">
                     <ItemTemplate>
                         <asp:BulletedList ID="bltRoles" runat="server" DataSource='<%# Eval("RolesList") %>' >
@@ -150,7 +154,7 @@
                 <asp:BoundField DataField="IsActive" HeaderText="Active" readonly="true" SortExpression="IsActive" />
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:LinkButton ID="lnkEdit" runat="server" CommandArgument='<%# Eval("ID") %>' Commandname="Edit">Edit</asp:LinkButton>
+                        <asp:LinkButton ID="lnkEdit" runat="server" CommandArgument='<%# Eval("ID") %>' Commandname="EditRow">Edit</asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField ShowHeader="False">
@@ -162,20 +166,6 @@
             </Columns>
             <AlternatingRowStyle CssClass="oddrow" />
         </asp:GridView>
-        <asp:ObjectDataSource ID="odsUsers" runat="server" SelectMethod="GetListByLocation" 
-            TypeName="REMI.Bll.UserManager" DeleteMethod="Delete" 
-            OldValuesParameterFormatString="{0}">
-            <DeleteParameters>
-                <asp:Parameter Name="ID" Type="Int32" />
-            </DeleteParameters>
-            <SelectParameters>
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$ddlTestCenters" DefaultValue="0" Name="testLocation" PropertyName="SelectedValue" Type="Int32" />
-                <asp:Parameter Type="Int32" Name="loadTraining" DefaultValue="1" />
-                <asp:Parameter Type="Int32" Name="determineDelete" DefaultValue="1" />
-                <asp:Parameter Type="Boolean" Name="loadAD" DefaultValue="True" />
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$chkArchived" DefaultValue="false" Name="includeInActive" PropertyName="Checked" Type="Int32" />
-            </SelectParameters>
-        </asp:ObjectDataSource> 
     </asp:Panel>
     <asp:Panel ID="pnlAddNewUser" runat="server" Visible="False">
         <table >

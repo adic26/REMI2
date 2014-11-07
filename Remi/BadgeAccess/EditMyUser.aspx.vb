@@ -20,15 +20,12 @@ Partial Class BadgeAccess_EditMyUser
         End If
 
         Dim username As String = UserManager.GetCurrentUser.LDAPName
-        Dim val = (From u In New REMI.Dal.Entities().Instance().Users Where u.LDAPLogin = username Select u.DefaultPage).FirstOrDefault()
+        Dim sl As ListItem = New ListItem
 
-        If (val IsNot Nothing) Then
-            Dim sl As ListItem = New ListItem
-            sl = ddlDefaultPage.Items.FindByValue(val.ToString())
+        sl = ddlDefaultPage.Items.FindByValue(UserManager.GetCurrentUser.DefaultPage.ToString())
 
-            If ddlDefaultPage.Items.Contains(sl) Then
-                ddlDefaultPage.SelectedValue = sl.Value
-            End If
+        If ddlDefaultPage.Items.Contains(sl) Then
+            ddlDefaultPage.SelectedValue = sl.Value
         End If
 
         hdnUserID.Value = UserManager.GetCurrentValidUserID

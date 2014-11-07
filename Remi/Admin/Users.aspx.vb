@@ -52,6 +52,14 @@ Partial Class Admin_Users
                 ddlTestCenters.SelectedValue = UserManager.GetCurrentUser.TestCentreID
             End If
         End If
+
+        Dim testCenterID As Int32 = 0
+        Int32.TryParse(ddlTestCenters.SelectedValue, testCenterID)
+
+        Dim us As New UserSearch
+        us.TestCenterID = testCenterID
+        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
+        gvwUsers.DataBind()
     End Sub
 
     Protected Sub SetupPageViewAll()
@@ -59,7 +67,15 @@ Partial Class Admin_Users
         pnlViewAllUsers.Visible = True
         pnlLeftMenuActions.Visible = False
         lblHeaderText.Text = "View All Users"
+
+        Dim testCenterID As Int32 = 0
+        Int32.TryParse(ddlTestCenters.SelectedValue, testCenterID)
+
+        Dim us As New UserSearch
+        us.TestCenterID = testCenterID
+        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
         gvwUsers.DataBind()
+
     End Sub
 
     Protected Sub SetupPageAddEditUser(ByVal CurrentUser As User)
@@ -98,7 +114,13 @@ Partial Class Admin_Users
                 chkByPassProduct.Checked = False
             End If
 
-            ddlDefaultPage.SelectedValue = CurrentUser.DefaultPage
+            Dim sl As ListItem = New ListItem
+            sl = ddlDefaultPage.Items.FindByValue(CurrentUser.DefaultPage.ToString())
+
+            If ddlDefaultPage.Items.Contains(sl) Then
+                ddlDefaultPage.SelectedValue = sl.Value
+            End If
+
             hdnUserName.Value = CurrentUser.LDAPName
             hdnUserID.Value = CurrentUser.ID
 
@@ -111,9 +133,9 @@ Partial Class Admin_Users
 
                     If chkTestCenter.Text = dr.Item("Values").ToString() Then
                         chkTestCenter.Checked = True
-                        chkTestCenter.Enabled = False
 
                         If (hdnTCIsDefault.Value = "True") Then
+                            chkTestCenter.Enabled = False
                             chkTestCenter.Style.Add("font-weight", "bold")
                         End If
                     End If
@@ -127,9 +149,9 @@ Partial Class Admin_Users
 
                     If chkDepartment.Text = dr.Item("Values").ToString() Then
                         chkDepartment.Checked = True
-                        chkDepartment.Enabled = False
 
                         If (hdnDIsDefault.Value = "True") Then
+                            chkDepartment.Enabled = False
                             chkDepartment.Style.Add("font-weight", "bold")
                         End If
                     End If
@@ -182,7 +204,7 @@ Partial Class Admin_Users
 
     Protected Sub gvwUsers_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Select Case e.CommandName.ToLower()
-            Case "edit"
+            Case "editrow"
                 SetupPageAddEditUser(UserManager.GetUser(String.Empty, e.CommandArgument.ToString))
                 Exit Select
             Case "deleteitem"

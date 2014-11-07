@@ -26,11 +26,7 @@ AS
 	FROM Users u
 	WHERE u.ID=@UserID
 	
-	SELECT lt.Name, l.[Values], l.LookupID, ISNULL(ud.IsDefault, 0) AS IsDefault
-	FROM UserDetails ud
-		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
-		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
-	WHERE ud.UserID=@UserID
+	EXEC remispGetUserDetails @UserID
 	
 	EXEC remispGetUserTraining @UserID =@UserID, @ShowTrainedOnly = 1
 	

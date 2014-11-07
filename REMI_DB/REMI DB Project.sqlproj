@@ -2373,4 +2373,7 @@
   <ItemGroup>
     <None Include="Scripts\November132014\1.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUserDetails.sql" />
+  </ItemGroup>
 </Project>

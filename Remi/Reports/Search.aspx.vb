@@ -48,7 +48,7 @@ Partial Class Search
                     ddlUsers.Items.Clear()
                     Dim us As New UserSearch()
                     us.TestCenterID = ddlTestCenters.SelectedValue
-                    ddlUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False)
+                    ddlUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False, False, False)
                     ddlUsers.DataBind()
                 End If
             End If
@@ -239,7 +239,7 @@ Partial Class Search
                     us.ByPass = byPass
                     us.DepartmentID = departmentID
 
-                    gvwUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False)
+                    gvwUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False, False, False)
                     gvwUsers.DataBind()
 
                     Helpers.MakeAccessable(gvwUsers)
@@ -478,7 +478,7 @@ Partial Class Search
                     us.TrainingID = trainingID
                     us.UserID = userID
 
-                    gvwTraining.DataSource = REMI.Dal.UserDB.UserSearch(us, True)
+                    gvwTraining.DataSource = REMI.Dal.UserDB.UserSearch(us, True, False, False)
                     gvwTraining.DataBind()
 
                     Helpers.MakeAccessable(gvwTraining)
@@ -526,7 +526,7 @@ Partial Class Search
             us.ByPass = byPass
             us.DepartmentID = departmentID
 
-            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), Remi.Dal.UserDB.UserSearch(us, False))
+            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), REMI.Dal.UserDB.UserSearch(us, False, False, False))
         ElseIf (pnlEnvReport.Visible) Then
             Dim startDate As DateTime = txtStartENV.Text
             Dim endDate As DateTime = txtEndENV.Text
@@ -734,7 +734,7 @@ Partial Class Search
             us.TrainingID = trainingID
             us.UserID = userID
 
-            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchTraining", "xls"), REMI.Dal.UserDB.UserSearch(us, True))
+            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchTraining", "xls"), REMI.Dal.UserDB.UserSearch(us, True, False, False))
         End If
     End Sub
 
@@ -743,7 +743,7 @@ Partial Class Search
         Dim us As New UserSearch()
         us.TestCenterID = ddlTestCenterTraining.SelectedValue
 
-        Dim uc As UserCollection = Remi.Dal.UserDB.UserSearchList(us, False)
+        Dim uc As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False, False)
         uc.Insert(0, New User())
 
         ddlUserTraining.DataSource = uc

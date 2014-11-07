@@ -320,15 +320,6 @@ Partial Public Class Admin_Users
     Protected WithEvents gvwUsers As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''odsUsers control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsUsers As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
     '''pnlAddNewUser control.
     '''</summary>
     '''<remarks>

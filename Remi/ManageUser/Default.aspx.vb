@@ -18,7 +18,7 @@ Partial Class ManageUser_Default
             us.TestCenterID = UserManager.GetCurrentUser.TestCentreID
 
             Dim uc As UserCollection
-            uc = REMI.Dal.UserDB.UserSearchList(us, False)
+            uc = UserManager.UserSearchList(us, False, False, False, False, False, False)
 
             ddlUsers.DataSource = uc
             ddlUsers.DataBind()

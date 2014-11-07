@@ -40,6 +40,36 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
+        Public Shared Function UserSearch(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal includeInActive As Boolean) As DataTable
+            Try
+                Return UserDB.UserSearch(us, showAllGrid, determineDelete, includeInActive)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("UserSearch")
+        End Function
+
+        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal loadAD As Boolean, ByVal includeInActive As Boolean) As UserCollection
+            Try
+                Dim uc As UserCollection = UserDB.UserSearchList(us, showAllGrid, determineDelete, loadTraining, loadProducts, includeInActive)
+
+                If (loadAD) Then
+                    For Each u As User In uc
+                        If (u.IsActive = 1) Then
+                            FillUserFromActiveDirectory(u, False)
+                        End If
+                    Next
+                End If
+
+                Return uc
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return Nothing
+        End Function
+
         Public Shared Function SaveTrainingConfirmation(ByVal userID As Int32, ByVal id As Int32, ByVal levelID As Int32, ByVal updateConfirmDate As Boolean) As Boolean
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()

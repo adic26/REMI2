@@ -35,7 +35,7 @@ Namespace REMI.Dal
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.Read() Then
-                            myUser = FillDataRecord(myReader, False, False)
+                            myUser = FillDataRecord(myReader, False, False, False)
 
                             myReader.NextResult()
 
@@ -86,6 +86,23 @@ Namespace REMI.Dal
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
                     dt.TableName = "Training"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
+        Public Shared Function GetDetails(ByVal userID As Int32) As DataTable
+            Dim dt As New DataTable("UserDetails")
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetUserDetails", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "UserDetails"
                 End Using
             End Using
 
@@ -150,13 +167,20 @@ Namespace REMI.Dal
             Return Result
         End Function
 
-        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean) As UserCollection
+        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal includeInActive As Boolean) As UserCollection
             Dim uc As New UserCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispUsersSearch", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@showAllGrid", showAllGrid)
+                    myCommand.Parameters.AddWithValue("@DetermineDelete", determineDelete)
+
+                    If (includeInActive) Then
+                        myCommand.Parameters.AddWithValue("@IncludeInActive", 1)
+                    Else
+                        myCommand.Parameters.AddWithValue("@IncludeInActive", 0)
+                    End If
 
                     For Each p As System.Reflection.PropertyInfo In us.GetType().GetProperties()
                         If p.CanRead Then
@@ -173,7 +197,7 @@ Namespace REMI.Dal
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then
                             While myReader.Read()
-                                uc.Add(FillDataRecord(myReader, False, False))
+                                uc.Add(FillDataRecord(myReader, loadTraining, loadProducts, True))
                             End While
                         End If
                     End Using
@@ -183,13 +207,20 @@ Namespace REMI.Dal
             Return uc
         End Function
 
-        Public Shared Function UserSearch(ByVal us As UserSearch, ByVal showAllGrid As Boolean) As DataTable
+        Public Shared Function UserSearch(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal includeInActive As Boolean) As DataTable
             Dim dt As New DataTable
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispUsersSearch", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@showAllGrid", showAllGrid)
+                    myCommand.Parameters.AddWithValue("@DetermineDelete", determineDelete)
+
+                    If (includeInActive) Then
+                        myCommand.Parameters.AddWithValue("@IncludeInActive", 1)
+                    Else
+                        myCommand.Parameters.AddWithValue("@IncludeInActive", 0)
+                    End If
 
                     For Each p As System.Reflection.PropertyInfo In us.GetType().GetProperties()
                         If p.CanRead Then
@@ -219,7 +250,7 @@ Namespace REMI.Dal
         ''' <param name="myDataRecord">The Data record for the User produced by a select query</param>
         ''' <returns>A User object filled with the data from the IDataRecord object</returns>
         ''' <remarks></remarks>
-        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean) As User
+        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal loadDetails As Boolean) As User
             Dim myUser As New User()
 
             myUser.LDAPName = myDataRecord.GetString(myDataRecord.GetOrdinal("LDAPLogin"))
@@ -262,11 +293,22 @@ Namespace REMI.Dal
 
             If (loadTraining = True) Then
                 myUser.Training = UserDB.GetTraining(myDataRecord.GetInt32(myDataRecord.GetOrdinal("ID")), 0)
+
                 For Each row As DataRow In myUser.Training.Rows
                     If (row.Item("DateAdded") IsNot Nothing And row.Item("DateAdded") IsNot DBNull.Value) Then
                         myUser.TrainingNames.Add(row.Item("TrainingOption").ToString())
                     End If
                 Next row
+            End If
+
+            If (loadDetails = True) Then
+                myUser.UserDetails = UserDB.GetDetails(myDataRecord.GetInt32(myDataRecord.GetOrdinal("ID")))
+
+                If (myUser.UserDetails IsNot Nothing) Then
+                    For Each row As DataRow In myUser.UserDetails.Rows
+                        myUser.DetailsNames.Add(String.Format("{0}: {1}", row.Item("Name").ToString(), row.Item("Values").ToString()))
+                    Next row
+                End If
             End If
 
             Helpers.FillObjectParameters(myDataRecord, myUser)

@@ -123,46 +123,6 @@ Select Id, LDAPLogin, BadgeNumber,lastuser,'D',IsActive, DefaultPage, ByPassProd
 from deleted
 END
 GO
-create PROCEDURE [dbo].[remispGetUser] @SearchBy INT, @SearchStr NVARCHAR(255)
-AS	
-	DECLARE @UserID INT
-
-	IF (@SearchBy = 0)
-	BEGIN
-		SELECT @UserID=ID
-		FROM Users u
-		WHERE u.BadgeNumber=@SearchStr
-	END
-	ELSE IF (@SearchBy = 1)
-	BEGIN
-		SELECT @UserID=ID
-		FROM Users u
-		WHERE u.LDAPLogin=@SearchStr
-	END
-	ELSE IF (@SearchBy = 2)
-	BEGIN
-		SELECT @UserID=ID
-		FROM Users u
-		WHERE u.ID=@SearchStr
-	END
-	
-	SELECT u.BadgeNumber, u.ConcurrencyID, u.ID, u.LastUser, u.LDAPLogin, ISNULL(u.IsActive, 1) AS IsActive, 
-		u.DefaultPage, u.ByPassProduct
-	FROM Users u
-	WHERE u.ID=@UserID
-	
-	SELECT lt.Name, l.[Values], l.LookupID, ISNULL(ud.IsDefault, 0) AS IsDefault
-	FROM UserDetails ud
-		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
-		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
-	WHERE ud.UserID=@UserID
-	
-	EXEC remispGetUserTraining @UserID =@UserID, @ShowTrainedOnly = 1
-	
-	EXEC remispProductManagersSelectList @UserID
-GO
-GRANT EXECUTE ON remispGetUser TO Remi
-GO
 CREATE PROCEDURE [dbo].[remispMenuAccessByDepartment] @Name NVARCHAR(150) = NULL, @DepartmentID INT = NULL
 AS
 BEGIN
@@ -179,54 +139,64 @@ GO
 
 GRANT EXECUTE ON  [dbo].[remispMenuAccessByDepartment] TO [remi]
 GO
-ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @ByPass INT = 0, @showAllGrid BIT = 0, @UserID INT = 0, @DepartmentID INT = 0
+ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @ByPass INT = 0, @showAllGrid BIT = 0, @UserID INT = 0, @DepartmentID INT = 0, @DetermineDelete INT = 1,  @IncludeInActive INT = 1
 AS
 BEGIN	
 	IF (@showAllGrid = 0)
 	BEGIN
-		SELECT DISTINCT u.ID, u.LDAPLogin
-		FROM Users u
-			LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
-			LEFT OUTER JOIN UsersProducts up ON up.UserID = u.ID
-			INNER JOIN UserDetails udtc ON udtc.UserID=u.ID
-			INNER JOIN UserDetails udd ON udd.UserID=u.ID
-		WHERE u.IsActive=1 AND 
-			  (
-				(udtc.LookupID=@TestCenterID) 
-				OR
-				(@TestCenterID = 0)
-			  )
-			  AND
-			  (
-				(ut.LookupID=@TrainingID) 
-				OR
-				(@TrainingID = 0)
-			  )
-			  AND
-			  (
-				(ut.LevelLookupID=@TrainingLevelID) 
-				OR
-				(@TrainingLevelID = 0)
-			  )
-			  AND
-			  (
-				(u.ByPassProduct=@ByPass) 
-				OR
-				(@ByPass = 0)
-			  )
-			  AND
-			  (
-				(up.ProductID=@ProductID) 
-				OR
-				(@ProductID = 0)
-			  )
-			  AND 
-			  (
-				(udd.LookupID=@DepartmentID) 
-				OR
-				(@DepartmentID = 0)
-			  )
-		ORDER BY u.LDAPLogin
+		SELECT ID, LDAPLogin, BadgeNumber, ByPassProduct, DefaultPage, ISNULL(IsActive, 1) AS IsActive, LastUser, 
+				ConcurrencyID, CASE WHEN @DetermineDelete = 1 THEN dbo.remifnUserCanDelete(LDAPLogin) ELSE 0 END AS CanDelete
+		FROM 
+			(SELECT DISTINCT u.ID, u.LDAPLogin, u.BadgeNumber, u.ByPassProduct, u.DefaultPage, ISNULL(u.IsActive, 1) AS IsActive, u.LastUser, 
+				u.ConcurrencyID
+			 FROM Users u
+				LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
+				LEFT OUTER JOIN UsersProducts up ON up.UserID = u.ID
+				INNER JOIN UserDetails udtc ON udtc.UserID=u.ID
+				INNER JOIN UserDetails udd ON udd.UserID=u.ID
+			WHERE (
+					(@IncludeInActive = 0 AND ISNULL(u.IsActive, 1)=1)
+					OR
+					@IncludeInActive = 1
+				  )
+				  AND 
+				  (
+					(udtc.LookupID=@TestCenterID) 
+					OR
+					(@TestCenterID = 0)
+				  )
+				  AND
+				  (
+					(ut.LookupID=@TrainingID) 
+					OR
+					(@TrainingID = 0)
+				  )
+				  AND
+				  (
+					(ut.LevelLookupID=@TrainingLevelID) 
+					OR
+					(@TrainingLevelID = 0)
+				  )
+				  AND
+				  (
+					(u.ByPassProduct=@ByPass) 
+					OR
+					(@ByPass = 0)
+				  )
+				  AND
+				  (
+					(up.ProductID=@ProductID) 
+					OR
+					(@ProductID = 0)
+				  )
+				  AND 
+				  (
+					(udd.LookupID=@DepartmentID) 
+					OR
+					(@DepartmentID = 0)
+				  )
+			) AS UsersRows
+			ORDER BY LDAPLogin
 	END
 	ELSE
 	BEGIN
@@ -717,6 +687,55 @@ BEGIN
 	DROP TABLE #temp2
 	DROP TABLE #temp3	
 END
+GO
+CREATE PROCEDURE [dbo].[remispGetUser] @SearchBy INT, @SearchStr NVARCHAR(255)
+AS	
+	DECLARE @UserID INT
+
+	IF (@SearchBy = 0)
+	BEGIN
+		SELECT @UserID=ID
+		FROM Users u
+		WHERE u.BadgeNumber=@SearchStr
+	END
+	ELSE IF (@SearchBy = 1)
+	BEGIN
+		SELECT @UserID=ID
+		FROM Users u
+		WHERE u.LDAPLogin=@SearchStr
+	END
+	ELSE IF (@SearchBy = 2)
+	BEGIN
+		SELECT @UserID=ID
+		FROM Users u
+		WHERE u.ID=@SearchStr
+	END
+	
+	SELECT u.BadgeNumber, u.ConcurrencyID, u.ID, u.LastUser, u.LDAPLogin, ISNULL(u.IsActive, 1) AS IsActive, 
+		u.DefaultPage, u.ByPassProduct
+	FROM Users u
+	WHERE u.ID=@UserID
+	
+	EXEC remispGetUserDetails @UserID
+	
+	EXEC remispGetUserTraining @UserID =@UserID, @ShowTrainedOnly = 1
+	
+	EXEC remispProductManagersSelectList @UserID
+GO
+GRANT EXECUTE ON remispGetUser TO Remi
+GO
+CREATE PROCEDURE remispGetUserDetails @UserID INT
+AS
+BEGIN
+	SELECT lt.Name, l.[Values], l.LookupID, ISNULL(ud.IsDefault, 0) AS IsDefault
+	FROM UserDetails ud
+		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
+		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
+	WHERE ud.UserID=@UserID
+	ORDER BY lt.Name, l.[Values]
+END
+GO
+GRANT EXECUTE ON remispGetUserDetails TO REMI
 GO
 
 
