@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("c2c86420-b0c3-468a-96fe-cad567dcb3d5")>
+<Assembly: EdmSchemaAttribute("fcc7b4b0-4455-4b1b-9a77-6bdac45e7a0f")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -37,7 +37,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "BatchSpecificTestDuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchSpecificTestDuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TrackingLocations", "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocation), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_DeviceTrackingLog", "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.DeviceTrackingLog), "TestRecordsXTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecordsXTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobOrientation_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Job), "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobOrientation), True)>
@@ -58,7 +57,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TaskAssignment_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.TestStage), "TaskAssignment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TaskAssignment), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Test), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.TestStage), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_TestRecords", "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestRecord), "TestRecordsXTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecordsXTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
@@ -66,7 +64,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsForTests_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "TrackingLocationsForTest", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsForTest), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestStage), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestStage), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationPlugin_TrackingLocations", "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocation), "TrackingLocationsPlugin", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsPlugin), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocations_TrackingLocationTypes", "TrackingLocationType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationType), "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocation), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHosts_TrackingLocationID", "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocation), "TrackingLocationsHost", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHost), True)>
@@ -82,7 +79,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchSpecificTestDuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchSpecificTestDuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Batch), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TaskAssignment_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TaskAssignment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TaskAssignment), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestUnit), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_AccessoryGroup", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Department", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Priority", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
@@ -115,6 +111,10 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UsersProducts_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UsersProduct", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UsersProduct), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestUnit), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
 
 #End Region
 
@@ -882,20 +882,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property TestUnits() As ObjectSet(Of TestUnit)
-            Get
-                If (_TestUnits Is Nothing) Then
-                    _TestUnits = MyBase.CreateObjectSet(Of TestUnit)("TestUnits")
-                End If
-                Return _TestUnits
-            End Get
-        End Property
-    
-        Private _TestUnits As ObjectSet(Of TestUnit)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property TrackingLocations() As ObjectSet(Of TrackingLocation)
             Get
                 If (_TrackingLocations Is Nothing) Then
@@ -1200,6 +1186,20 @@ Namespace REMI.Entities
         End Property
     
         Private _Users As ObjectSet(Of User)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property TestUnits() As ObjectSet(Of TestUnit)
+            Get
+                If (_TestUnits Is Nothing) Then
+                    _TestUnits = MyBase.CreateObjectSet(Of TestUnit)("TestUnits")
+                End If
+                Return _TestUnits
+            End Get
+        End Property
+    
+        Private _TestUnits As ObjectSet(Of TestUnit)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -1577,13 +1577,6 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the TestUnits EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToTestUnits(ByVal testUnit As TestUnit)
-            MyBase.AddObject("TestUnits", testUnit)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the TrackingLocations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToTrackingLocations(ByVal trackingLocation As TrackingLocation)
@@ -1735,6 +1728,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToUsers(ByVal user As User)
             MyBase.AddObject("Users", user)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the TestUnits EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToTestUnits(ByVal testUnit As TestUnit)
+            MyBase.AddObject("TestUnits", testUnit)
         End Sub
     
         ''' <summary>
@@ -4779,24 +4779,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "TestUnit")>
-         Public Property TestUnits() As EntityCollection(Of TestUnit)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_AccessoryGroup", "Lookup")>
         Public Property AccessoryGroup() As Lookup
             Get
@@ -4973,6 +4955,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_TestCenterLocation", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "TestUnit")>
+         Public Property TestUnits() As EntityCollection(Of TestUnit)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit", value)
                 End If
             End Set
         End Property
@@ -6662,37 +6662,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnit")>
-        Public Property TestUnit() As TestUnit
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property TestUnitReference() As EntityReference(Of TestUnit)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_DeviceTrackingLog_TrackingLocations", "TrackingLocation")>
         Public Property TrackingLocation() As TrackingLocation
             Get
@@ -6732,6 +6701,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestRecordsXTrackingLog)("REMI.Entities.FK_TestRecordsXTrackingLogs_DeviceTrackingLog", "TestRecordsXTrackingLog", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnit")>
+        Public Property TestUnit() As TestUnit
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property TestUnitReference() As EntityReference(Of TestUnit)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of TestUnit)("REMI.Entities.FK_DeviceTrackingLog_TestUnits", "TestUnit", value)
                 End If
             End Set
         End Property
@@ -16732,6 +16732,24 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_TestRecords", "TestRecordsXTrackingLog")>
+         Public Property TestRecordsXTrackingLogs() As EntityCollection(Of TestRecordsXTrackingLog)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TestRecordsXTrackingLog)("REMI.Entities.FK_TestRecordsXTrackingLogs_TestRecords", "TestRecordsXTrackingLog")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestRecordsXTrackingLog)("REMI.Entities.FK_TestRecordsXTrackingLogs_TestRecords", "TestRecordsXTrackingLog", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestRecords_TestUnits", "TestUnit")>
         Public Property TestUnit() As TestUnit
             Get
@@ -16753,24 +16771,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of TestUnit)("REMI.Entities.FK_TestRecords_TestUnits", "TestUnit", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_TestRecords", "TestRecordsXTrackingLog")>
-         Public Property TestRecordsXTrackingLogs() As EntityCollection(Of TestRecordsXTrackingLog)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TestRecordsXTrackingLog)("REMI.Entities.FK_TestRecordsXTrackingLogs_TestRecords", "TestRecordsXTrackingLog")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestRecordsXTrackingLog)("REMI.Entities.FK_TestRecordsXTrackingLogs_TestRecords", "TestRecordsXTrackingLog", value)
                 End If
             End Set
         End Property
@@ -18136,10 +18136,66 @@ Namespace REMI.Entities
     
         Private Partial Sub OnLastUserChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property IMEI() As Global.System.String
+            Get
+                Return _IMEI
+            End Get
+            Set
+                OnIMEIChanging(value)
+                ReportPropertyChanging("IMEI")
+                _IMEI = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("IMEI")
+                OnIMEIChanged()
+            End Set
+        End Property
+    
+        Private _IMEI As Global.System.String
+        Private Partial Sub OnIMEIChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnIMEIChanged()
+        End Sub
 
         #End Region
 
         #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch")>
+        Public Property Batch() As Batch
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property BatchReference() As EntityReference(Of Batch)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch", value)
+                End If
+            End Set
+        End Property
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -18191,37 +18247,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Result)("REMI.Entities.FK_Results_TestUnits", "Result", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch")>
-        Public Property Batch() As Batch
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property BatchReference() As EntityReference(Of Batch)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch", value)
                 End If
             End Set
         End Property
@@ -20923,31 +20948,6 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnActionChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property C_TestCentre() As Global.System.String
-            Get
-                Return _C_TestCentre
-            End Get
-            Set
-                OnC_TestCentreChanging(value)
-                ReportPropertyChanging("C_TestCentre")
-                _C_TestCentre = StructuralObject.SetValidValue(value, true)
-                ReportPropertyChanged("C_TestCentre")
-                OnC_TestCentreChanged()
-            End Set
-        End Property
-    
-        Private _C_TestCentre As Global.System.String
-        Private Partial Sub OnC_TestCentreChanging(value As Global.System.String)
-        End Sub
-    
-        Private Partial Sub OnC_TestCentreChanged()
         End Sub
     
         ''' <summary>

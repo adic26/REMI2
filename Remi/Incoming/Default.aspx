@@ -39,6 +39,12 @@
                     <asp:TextBox ID="txtBSN" runat="server" Width="156px">0</asp:TextBox>
                 </td>
             </tr>
+            <tr>
+                <td class="HorizTableFirstcolumn">IMEI:</td>
+                <td class="HorizTableSecondColumn">
+                    <asp:TextBox runat="server" ID="txtIMEI" Width="156px"></asp:TextBox>
+                </td>
+            </tr>
         </table>
         
         <h2>Update Request</h2>
@@ -47,7 +53,7 @@
                 <td class="HorizTableFirstcolumn">Request Number</td>
                 <td class="HorizTableSecondColumn">
                     <asp:TextBox ID="txtQRANumber" runat="server" Width="152px"></asp:TextBox>
-                    <asp:CustomValidator ID="valQRANumber" runat="server" Display="Static" ControlToValidate="txtQRANumber" OnServerValidate="Validation" ValidateEmptyText="true"></asp:CustomValidator>
+                    <asp:CustomValidator ID="valQRANumber" runat="server" Display="Static" ControlToValidate="txtQRANumber" OnServerValidate="Validation" ValidateEmptyText="false"></asp:CustomValidator>
                 </td>
             </tr>
         </table>

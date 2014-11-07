@@ -70,6 +70,7 @@
                             NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>' Target="_blank" ></asp:HyperLink>
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:BoundField DataField="IMEI" HeaderText="IMEI" ReadOnly="True" SortExpression="IMEI" Visible="True" />
                 <asp:TemplateField HeaderText="Assigned To" SortExpression="AssignedTo">
                     <ItemTemplate>
                         <asp:Label ID="Label1" runat="server" Text='<%# Remi.Helpers.UserNameFormat(Eval("AssignedTo")) %>'></asp:Label>

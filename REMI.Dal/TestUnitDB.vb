@@ -509,6 +509,8 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@Comment", MyTestUnit.Comments)
                     End If
 
+                    myCommand.Parameters.AddWithValue("@IMEI", MyTestUnit.IMEI)
+
                     Helpers.SetSaveParameters(myCommand, MyTestUnit)
                     myConnection.Open()
 
@@ -628,6 +630,12 @@ Namespace REMI.Dal
             If Helpers.HasColumn(myDataRecord, "NoBSN") Then
                 If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("NoBSN")) Then
                     myTestUnit.NoBSN = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("NoBSN"))
+                End If
+            End If
+
+            If Helpers.HasColumn(myDataRecord, "IMEI") Then
+                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("IMEI")) Then
+                    myTestUnit.IMEI = myDataRecord.GetString(myDataRecord.GetOrdinal("IMEI"))
                 End If
             End If
 

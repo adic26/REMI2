@@ -49,6 +49,9 @@ ALTER TABLE UsersAudit DROP COLUMN DepartmentID
 ALTER TABLE UsersAudit DROP COLUMN TestCentreID
 alter table usersaudit drop column _TestCentre
 
+ALTER TABLE TestUnits ADD IMEI NVARCHAR(150) NULL
+ALTER TABLE TestUnitsAudit ADD IMEI NVARCHAR(150) NULL
+
 DROP PROCEDURE remispUsersSelectListByTestCentre
 DROP PROCEDURE remispUsersSelectList
 DROP PROCEDURE remispUsersSelectSingleItemBybadgenumber
@@ -753,5 +756,216 @@ AS
 GO
 GRANT EXECUTE ON remispTrackingLocationsGetSpecificLocationForUsersTestCenter TO Remi
 GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER TRIGGER [dbo].[testunitsAuditInsertUpdate]
+   ON  dbo.TestUnits
+    after insert, update
+AS 
+BEGIN
+SET NOCOUNT ON;
+ 
+Declare @action char(1)
+DECLARE @count INT
+  
+--check if this is an insert or an update
 
+If Exists(Select * From Inserted) and Exists(Select * From Deleted) --Update, both tables referenced
+begin
+	Set @action= 'U'
+end
+else
+begin
+	If Exists(Select * From Inserted) --insert, only one table referenced
+	Begin
+		Set @action= 'I'
+	end
+	if not Exists(Select * From Inserted) and not Exists(Select * From Deleted)--nothing changed, get out of here
+	Begin
+		RETURN
+	end
+end
+
+--Only inserts records into the Audit table if the row was either updated or inserted and values actually changed.
+select @count= count(*) from
+(
+   select Batchid, BSN, BatchUnitNumber, CurrentTestName, CurrentTestStageName, AssignedTo, Comment, IMEI from Inserted
+   except
+   select Batchid, BSN, BatchUnitNumber, CurrentTestName, CurrentTestStageName, AssignedTo, Comment, IMEI from Deleted
+) a
+
+if ((@count) >0)
+begin	
+	insert into testunitsaudit (
+		TestUnitId, 
+		Batchid, 
+		BSN,
+		BatchUnitNumber, 
+		CurrentTestName,
+		CurrentTestStageName,
+		AssignedTo,
+		Comment,
+		Username,
+		Action, IMEI)
+		Select 
+		Id, 
+		BatchID, 
+		BSN,
+		BatchUnitNumber, 
+		CurrentTestName,
+		CurrentTestStageName,
+		AssignedTo,
+		Comment,
+		lastuser,
+	@action, IMEI from inserted
+END
+END
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER TRIGGER [dbo].[testunitsAuditDelete]
+   ON  dbo.TestUnits
+    for  delete
+AS 
+BEGIN
+ SET NOCOUNT ON;
+ 
+  If not Exists(Select * From Deleted) 
+	return	 --No delete action, get out of here
+	
+insert into testunitsaudit (
+	TestUnitId, 
+	batchid, 
+	BSN,
+	BatchUnitNumber, 
+	CurrentTestName,
+	CurrentTestStageName,
+	AssignedTo,
+	Comment,
+	Username,
+	Action, IMEI)
+	Select 
+	Id, 
+	batchid, 
+	BSN,
+	BatchUnitNumber, 
+	CurrentTestName,
+	CurrentTestStageName,
+	AssignedTo,
+	Comment,
+	lastuser, 'D', IMEI from deleted
+
+END
+GO
+ALTER PROCEDURE [dbo].[remispTestUnitsSearchFor] @QRANumber nvarchar(11) = null, @UnitNumber INT = NULL
+AS
+BEGIN
+	SELECT tu.ID, tu.batchid, tu.BSN, tu.BatchUnitNumber, tu.CurrentTestStageName, tu.CurrentTestName, tu.AssignedTo,
+		tu.ConcurrencyID, tu.LastUser, tu.Comment, b.QRANumber, dtl.ConcurrencyID as dtlCID, dtl.ID as dtlID, dtl.InTime as dtlInTime,
+		dtl.InUser as dtlInUser, dtl.OutTime as dtlouttime, dtl.OutUser as dtloutuser, tl.TrackingLocationName, tl.ID as dtlTLID, b.TestCenterLocationID, ts.ID AS CurrentTestStageID,
+		ISNULL(j.NoBSN, 0) As NoBSN, j.JobName, j.ID AS JobID, tu.IMEI
+	FROM TestUnits as tu WITH(NOLOCK) 
+		INNER JOIN Batches as b WITH(NOLOCK) on b.ID = tu.batchid
+		LEFT OUTER JOIN devicetrackinglog as dtl WITH(NOLOCK) on dtl.TestUnitID =tu.id 
+			AND dtl.id = (SELECT  top(1)  DeviceTrackingLog.ID from DeviceTrackingLog WITH(NOLOCK) WHERE (TestUnitID = tu.id) ORDER BY devicetrackinglog.intime desc)
+		LEFT OUTER JOIN TrackingLocations as tl WITH(NOLOCK) on dtl.TrackingLocationID = tl.ID
+		INNER JOIN Jobs j ON j.JobName=b.JobName
+		LEFT OUTER JOIN TestStages ts ON ts.TestStageName=tu.CurrentTestStageName AND ts.JobID=j.ID
+	 WHERE b.ID = tu.BatchID AND b.QRANumber = @qranumber
+		AND
+		(
+			(@UnitNumber IS NULL)
+			OR
+			(@UnitNumber IS NOT NULL AND tu.BatchUnitNumber = @UnitNumber)
+		)
+END
+GO
+GRANT EXECUTE ON remispTestUnitsSearchFor TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispTestUnitsSelectListByLastUser] @UserID INT, @includeCompletedQRA BIT = 1
+AS
+	DECLARE @username NVARCHAR(255)
+	SELECT @username = LDAPLogin FROM Users WHERE ID=@UserID
+
+	SELECT tu.ID, tu.batchid, tu.BSN, tu.BatchUnitNumber, tu.CurrentTestStageName, tu.CurrentTestName, tu.AssignedTo,
+		tu.ConcurrencyID, tu.LastUser, tu.Comment, b.QRANumber, dtl.ConcurrencyID as dtlCID, dtl.ID as dtlID,
+		dtl.InTime as dtlInTime, dtl.InUser as dtlInUser, dtl.OutTime as dtlouttime, dtl.OutUser as dtloutuser,
+		tl.TrackingLocationName, tl.ID as dtlTLID, b.TestCenterLocationID, tu.IMEI
+	from TestUnits as tu, devicetrackinglog as dtl, Batches as b, TrackingLocations as tl  
+	where tl.ID = dtl.TrackingLocationID and tu.id = dtl.testunitid and tu.batchid = b.id 
+		and inuser = @username and outuser is null
+		AND (
+				(@includeCompletedQRA = 0 AND b.BatchStatus <> 5)
+				OR
+				(@includeCompletedQRA = 1)
+			)
+	order by QRANumber desc, BatchUnitNumber 
+GO
+GRANT EXECUTE ON remispTestUnitsSelectListByLastUser TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispTestUnitsInsertUpdateSingleItem]
+	@ID int OUTPUT,
+	@QRANumber nvarchar(11), 
+	@BSN bigint, 
+	@BatchUnitNumber int, 
+	@AssignedTo nvarchar(255) = null,
+	@CurrentTestStageName nvarchar(400) = null,
+	@CurrentTestName nvarchar(400) = null,
+	@LastUser nvarchar(255),
+	@Comment nvarchar(1000) = null,
+	@ConcurrencyID rowversion OUTPUT,
+	@IMEI NVARCHAR(150) = NULL
+AS
+BEGIN
+	DECLARE @ReturnValue int
+	declare @batchid int
+		--get the batch id
+	set @BatchID = (select ID from Batches where QRANumber = @QRANumber)
+	
+	IF (@ID IS NULL) -- New Item
+	BEGIN
+		INSERT INTO TestUnits (BatchID, BSN, BatchUnitNumber, AssignedTo, CurrentTestStageName, CurrentTestName, LastUser, Comment, IMEI)
+		VALUES (@BatchID, @BSN, @BatchUnitNumber, @AssignedTo, @CurrentTestStageName, @CurrentTestName, @LastUser, @Comment, @IMEI)
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE -- Exisiting Item
+	BEGIN
+		UPDATE TestUnits SET
+			batchid = @batchid, 
+			BSN = @BSN, 
+			BatchUnitNumber =@BatchUnitNumber,
+			AssignedTo = @AssignedTo,
+			CurrentTestStageName = @CurrentTestStageName, 
+			CurrentTestName = @CurrentTestName,
+			LastUser = @LastUser,
+			Comment = @Comment, IMEI=@IMEI
+		WHERE 
+			ID = @ID
+			AND ConcurrencyID = @ConcurrencyID
+
+		SELECT @ReturnValue = @ID
+	END
+
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM TestUnits WHERE ID = @ReturnValue)
+	SET @ID = @ReturnValue
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+END
+GO
+GRANT EXECUTE ON [dbo].[remispTestUnitsInsertUpdateSingleItem] TO REMI
+GO
 ROLLBACK TRAN

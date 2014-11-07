@@ -3,27 +3,10 @@ AS
 	DECLARE @username NVARCHAR(255)
 	SELECT @username = LDAPLogin FROM Users WHERE ID=@UserID
 
-	SELECT 
-	tu.ID,
-	tu.batchid, 
-	tu.BSN, 
-	tu.BatchUnitNumber, 
-	tu.CurrentTestStageName, 
-	tu.CurrentTestName, 
-	tu.AssignedTo,
-	tu.ConcurrencyID,
-	tu.LastUser,
-	tu.Comment,
-	b.QRANumber,
-	dtl.ConcurrencyID as dtlCID,
-	dtl.ID as dtlID,
-	dtl.InTime as dtlInTime,
-	dtl.InUser as dtlInUser,
-	dtl.OutTime as dtlouttime,
-	dtl.OutUser as dtloutuser,
-	tl.TrackingLocationName,
-	tl.ID as dtlTLID,
-	b.TestCenterLocationID
+	SELECT tu.ID, tu.batchid, tu.BSN, tu.BatchUnitNumber, tu.CurrentTestStageName, tu.CurrentTestName, tu.AssignedTo,
+		tu.ConcurrencyID, tu.LastUser, tu.Comment, b.QRANumber, dtl.ConcurrencyID as dtlCID, dtl.ID as dtlID,
+		dtl.InTime as dtlInTime, dtl.InUser as dtlInUser, dtl.OutTime as dtlouttime, dtl.OutUser as dtloutuser,
+		tl.TrackingLocationName, tl.ID as dtlTLID, b.TestCenterLocationID, tu.IMEI
 	from TestUnits as tu, devicetrackinglog as dtl, Batches as b, TrackingLocations as tl  
 	where tl.ID = dtl.TrackingLocationID and tu.id = dtl.testunitid and tu.batchid = b.id 
 		and inuser = @username and outuser is null

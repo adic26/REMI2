@@ -4,7 +4,7 @@ BEGIN
 	SELECT tu.ID, tu.batchid, tu.BSN, tu.BatchUnitNumber, tu.CurrentTestStageName, tu.CurrentTestName, tu.AssignedTo,
 		tu.ConcurrencyID, tu.LastUser, tu.Comment, b.QRANumber, dtl.ConcurrencyID as dtlCID, dtl.ID as dtlID, dtl.InTime as dtlInTime,
 		dtl.InUser as dtlInUser, dtl.OutTime as dtlouttime, dtl.OutUser as dtloutuser, tl.TrackingLocationName, tl.ID as dtlTLID, b.TestCenterLocationID, ts.ID AS CurrentTestStageID,
-		ISNULL(j.NoBSN, 0) As NoBSN, j.JobName, j.ID AS JobID
+		ISNULL(j.NoBSN, 0) As NoBSN, j.JobName, j.ID AS JobID, tu.IMEI
 	FROM TestUnits as tu WITH(NOLOCK) 
 		INNER JOIN Batches as b WITH(NOLOCK) on b.ID = tu.batchid
 		LEFT OUTER JOIN devicetrackinglog as dtl WITH(NOLOCK) on dtl.TestUnitID =tu.id 

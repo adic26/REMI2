@@ -10,21 +10,6 @@ Namespace REMI.Bll
         Inherits REMIManagerBase
 
 #Region "Persistance Functions"
-        Public Shared Function SetUnitBSN(ByVal qraNumber As String, ByVal bsn As Long, ByVal userIdentification As String) As Boolean
-            Try
-                Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
-                If bc.Validate Then
-                    If bsn > 0 Then
-                        Dim u As User = UserManager.GetUser(userIdentification, 0)
-                        Return TestUnitDB.SaveBSN(bc.BatchNumber, bc.UnitNumber, bsn, u.LDAPName)
-                    End If
-                End If
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1} User: {2}", qraNumber, bsn.ToString(), userIdentification))
-            End Try
-            Return False
-        End Function
-
         Public Shared Function GetUnitAssignedTo(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As String
             Try
                 Dim testUnit As REMI.Entities.TestUnit = TestUnitManager.GetRAWUnitInformation(QRANumber, batchUnitNumber)

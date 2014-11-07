@@ -34,9 +34,9 @@ end
 --Only inserts records into the Audit table if the row was either updated or inserted and values actually changed.
 select @count= count(*) from
 (
-   select Batchid, BSN, BatchUnitNumber, CurrentTestName, CurrentTestStageName, AssignedTo, Comment from Inserted
+   select Batchid, BSN, BatchUnitNumber, CurrentTestName, CurrentTestStageName, AssignedTo, Comment, IMEI from Inserted
    except
-   select Batchid, BSN, BatchUnitNumber, CurrentTestName, CurrentTestStageName, AssignedTo, Comment from Deleted
+   select Batchid, BSN, BatchUnitNumber, CurrentTestName, CurrentTestStageName, AssignedTo, Comment, IMEI from Deleted
 ) a
 
 if ((@count) >0)
@@ -51,7 +51,7 @@ begin
 		AssignedTo,
 		Comment,
 		Username,
-		Action)
+		Action, IMEI)
 		Select 
 		Id, 
 		BatchID, 
@@ -62,6 +62,6 @@ begin
 		AssignedTo,
 		Comment,
 		lastuser,
-	@action from inserted
+	@action, IMEI from inserted
 END
 END

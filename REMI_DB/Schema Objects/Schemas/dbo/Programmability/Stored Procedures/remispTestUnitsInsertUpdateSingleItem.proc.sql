@@ -1,15 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[remispTestUnitsInsertUpdateSingleItem]
-/*	'===============================================================
-	'   NAME:                	remispTestUnitsInsertUpdateSingleItem
-	'   DATE CREATED:       	20 April 2009
-	'   CREATED BY:          	Darragh O'Riordan
-	'   FUNCTION:            	Creates or updates an item in a table: TestUnits
-	'   VERSION: 1                   
-	'   COMMENTS:            
-	'   MODIFIED ON:         
-	'   MODIFIED BY:         
-	'   REASON FOR MODIFICATION: 
-	'===============================================================*/
+﻿ALTER PROCEDURE [dbo].[remispTestUnitsInsertUpdateSingleItem]
 	@ID int OUTPUT,
 	@QRANumber nvarchar(11), 
 	@BSN bigint, 
@@ -19,10 +8,10 @@
 	@CurrentTestName nvarchar(400) = null,
 	@LastUser nvarchar(255),
 	@Comment nvarchar(1000) = null,
-	@ConcurrencyID rowversion OUTPUT
-
-	AS
-
+	@ConcurrencyID rowversion OUTPUT,
+	@IMEI NVARCHAR(150) = NULL
+AS
+BEGIN
 	DECLARE @ReturnValue int
 	declare @batchid int
 		--get the batch id
@@ -30,28 +19,8 @@
 	
 	IF (@ID IS NULL) -- New Item
 	BEGIN
-		INSERT INTO TestUnits
-		(
-			BatchID, 
-			BSN, 
-			BatchUnitNumber,
-			AssignedTo,
-			CurrentTestStageName, 
-			CurrentTestName,
-			LastUser,
-			Comment
-		)
-		VALUES
-		(
-			@BatchID, 
-			@BSN, 
-			@BatchUnitNumber,
-			@AssignedTo,
-			@CurrentTestStageName, 
-			@CurrentTestName,
-			@LastUser,
-			@Comment
-		)
+		INSERT INTO TestUnits (BatchID, BSN, BatchUnitNumber, AssignedTo, CurrentTestStageName, CurrentTestName, LastUser, Comment, IMEI)
+		VALUES (@BatchID, @BSN, @BatchUnitNumber, @AssignedTo, @CurrentTestStageName, @CurrentTestName, @LastUser, @Comment, @IMEI)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
@@ -65,7 +34,7 @@
 			CurrentTestStageName = @CurrentTestStageName, 
 			CurrentTestName = @CurrentTestName,
 			LastUser = @LastUser,
-			Comment = @Comment
+			Comment = @Comment, IMEI=@IMEI
 		WHERE 
 			ID = @ID
 			AND ConcurrencyID = @ConcurrencyID
@@ -84,3 +53,7 @@
 	BEGIN
 		RETURN 0
 	END
+END
+GO
+GRANT EXECUTE ON [dbo].[remispTestUnitsInsertUpdateSingleItem] TO REMI
+GO
