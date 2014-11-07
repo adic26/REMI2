@@ -151,14 +151,18 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@UserName", userName)
                     MyConnection.Open()
 
-                    Dim returnValue As New SqlParameter("ReturnValue", SqlDbType.Int)
-                    returnValue.Direction = ParameterDirection.ReturnValue
-                    myCommand.Parameters.Add(returnValue)
-                    myCommand.ExecuteScalar()
-                    Result = Convert.ToInt32(returnValue.Value)
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            If myReader.Read() Then
+                                If Not myReader.IsDBNull(myReader.GetOrdinal("TrackingLocationID")) Then
+                                    Result = myReader.GetInt32(myReader.GetOrdinal("TrackingLocationID"))
+                                End If
+                            End If
+                        End If
+                    End Using
                 End Using
-
             End Using
+
             Return Result
         End Function
 

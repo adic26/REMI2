@@ -40,13 +40,19 @@ Namespace REMI.Dal
                             myReader.NextResult()
 
                             'UserDetails
-                            Using myDataTable As New DataTable
+                            Using myDataTable As New DataTable("UserDetails")
                                 myDataTable.Load(myReader)
                                 myUser.UserDetails = myDataTable
+
+                                If (myUser.UserDetails IsNot Nothing) Then
+                                    For Each row As DataRow In myUser.UserDetails.Rows
+                                        myUser.DetailsNames.Add(String.Format("{0}: {1}", row.Item("Name").ToString(), row.Item("Values").ToString()))
+                                    Next row
+                                End If
                             End Using
 
                             'UserTraining
-                            Using myDataTable As New DataTable
+                            Using myDataTable As New DataTable("Training")
                                 myDataTable.Load(myReader)
                                 myUser.Training = myDataTable
 
@@ -58,7 +64,7 @@ Namespace REMI.Dal
                             End Using
 
                             'UserProducts
-                            Using myDataTable As New DataTable
+                            Using myDataTable As New DataTable("ProductGroups")
                                 myDataTable.Load(myReader)
                                 myUser.ProductGroups = myDataTable
 
@@ -208,7 +214,7 @@ Namespace REMI.Dal
         End Function
 
         Public Shared Function UserSearch(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal includeInActive As Boolean) As DataTable
-            Dim dt As New DataTable
+            Dim dt As New DataTable("UsersSearch")
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispUsersSearch", myConnection)

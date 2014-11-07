@@ -34,9 +34,10 @@ Namespace REMI.BusinessEntities
 
 #Region "Constructor"
         Public Sub New()
-            _productGroups = New DataTable
+            _productGroups = New DataTable("ProductGroups")
             _productGroupsNames = New List(Of String)
-            _training = New DataTable
+            _training = New DataTable("Training")
+            _userDetails = New DataTable("UserDetails")
             _trainingNames = New List(Of String)
             _detailsNames = New List(Of String)
             _roles = New List(Of String)
@@ -474,7 +475,8 @@ Namespace REMI.BusinessEntities
         End Function
 
         Private Shared Function GetRolesByPermission(ByVal permissionName As String) As DataTable
-            Dim dt As New DataTable
+            Dim dt As New DataTable("Roles")
+
             Using myConnection As New SqlClient.SqlConnection(Core.REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlClient.SqlCommand("aspnet_GetRolesByPermission", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
