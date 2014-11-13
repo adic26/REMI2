@@ -6,6 +6,7 @@ Namespace REMI.BusinessEntities
     <Serializable()> _
     Public Class RequestFields
         Inherits LoggedItemBase
+        Implements IRequestFields
 
 #Region "Private Variables"
         Private _fieldSetupID As Int32
@@ -65,7 +66,7 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "Public Properties"
-        Public Property RequestTypeID() As Int32
+        Public Property RequestTypeID() As Int32 Implements IRequestFields.RequestTypeID
             Get
                 Return _requestTypeID
             End Get
@@ -74,7 +75,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property RequestType() As String
+        Public Property RequestType() As String Implements IRequestFields.RequestType
             Get
                 Return _requestType
             End Get
@@ -83,7 +84,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property RequestID() As Int32
+        Public Property RequestID() As Int32 Implements IRequestFields.RequestID
             Get
                 Return _requestID
             End Get
@@ -92,7 +93,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property RequestNumber() As String
+        Public Property RequestNumber() As String Implements IRequestFields.RequestNumber
             Get
                 Return _requestNumber
             End Get
@@ -101,7 +102,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property InternalField() As Int32
+        Public Property InternalField() As Int32 Implements IRequestFields.InternalField
             Get
                 Return _internalField
             End Get
@@ -110,7 +111,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property FieldSetupID() As Int32
+        Public Property FieldSetupID() As Int32 Implements IRequestFields.FieldSetupID
             Get
                 Return _fieldSetupID
             End Get
@@ -119,7 +120,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property Name() As String
+        Public Property Name() As String Implements IRequestFields.Name
             Get
                 Return _name
             End Get
@@ -128,7 +129,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property DisplayOrder() As Int32
+        Public Property DisplayOrder() As Int32 Implements IRequestFields.DisplayOrder
             Get
                 Return _displayOrder
             End Get
@@ -137,7 +138,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property ColumnOrder() As Int32
+        Public Property ColumnOrder() As Int32 Implements IRequestFields.ColumnOrder
             Get
                 Return _columnOrder
             End Get
@@ -146,7 +147,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property IsRequired() As Boolean
+        Public Property IsRequired() As Boolean Implements IRequestFields.IsRequired
             Get
                 Return _isRequired
             End Get
@@ -155,7 +156,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property FieldTypeID() As Int32
+        Public Property FieldTypeID() As Int32 Implements IRequestFields.FieldTypeID
             Get
                 Return _fieldTypeID
             End Get
@@ -164,7 +165,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property FieldType() As String
+        Public Property FieldType() As String Implements IRequestFields.FieldType
             Get
                 Return _fieldType
             End Get
@@ -173,7 +174,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property FieldValidationID() As Int32
+        Public Property FieldValidationID() As Int32 Implements IRequestFields.FieldValidationID
             Get
                 Return _fieldValidationID
             End Get
@@ -182,7 +183,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property FieldValidation() As String
+        Public Property FieldValidation() As String Implements IRequestFields.FieldValidation
             Get
                 Return _fieldValidation
             End Get
@@ -191,7 +192,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property Description() As String
+        Public Property Description() As String Implements IRequestFields.Description
             Get
                 Return _description
             End Get
@@ -200,7 +201,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property OptionsTypeID() As Int32
+        Public Property OptionsTypeID() As Int32 Implements IRequestFields.OptionsTypeID
             Get
                 Return _optionsTypeID
             End Get
@@ -209,7 +210,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property OptionsType() As List(Of String)
+        Public Property OptionsType() As List(Of String) Implements IRequestFields.OptionsType
             Get
                 Return _optionsType
             End Get
@@ -218,7 +219,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property IsArchived() As Boolean
+        Public Property IsArchived() As Boolean Implements IRequestFields.IsArchived
             Get
                 Return _isArchived
             End Get
@@ -227,7 +228,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property IntField() As String
+        Public Property IntField() As String Implements IRequestFields.IntField
             Get
                 Return _intField
             End Get
@@ -236,7 +237,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property ExtField() As String
+        Public Property ExtField() As String Implements IRequestFields.ExtField
             Get
                 Return _extField
             End Get
@@ -245,7 +246,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property IsFromExternalSystem() As Boolean
+        Public Property IsFromExternalSystem() As Boolean Implements IRequestFields.IsFromExternalSystem
             Get
                 Return _isFromExternalSystem
             End Get
@@ -254,7 +255,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property Value() As String
+        Public Property Value() As String Implements IRequestFields.Value
             Get
                 Return _value
             End Get
@@ -263,7 +264,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property NewRequest() As Boolean
+        Public Property NewRequest() As Boolean Implements IRequestFields.NewRequest
             Get
                 Return _newRequest
             End Get

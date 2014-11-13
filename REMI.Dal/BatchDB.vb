@@ -126,69 +126,66 @@ Namespace REMI.Dal
 
 #Region "New Slim Batch Methods"
         Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal userIdentification As String, Optional ByVal cacheRetrievedData As Boolean = True) As BatchView
-            Dim batchData As Batch = Nothing
+            Dim batch As BatchView = Nothing
 
             Using sqlConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                If batchData Is Nothing Then
-                    Dim bc As New DeviceBarcodeNumber(qraNumber)
+                Dim bc As New DeviceBarcodeNumber(qraNumber)
 
-                    If (bc.Validate()) Then
-                        Using myCommand As New SqlCommand("remispBatchGetViewBatch", sqlConnection)
-                            myCommand.CommandType = CommandType.StoredProcedure
-                            myCommand.Parameters.AddWithValue("@QRANumber", bc.BatchNumber)
-                            'open the sql connection
-                            If sqlConnection.State <> ConnectionState.Open Then
-                                sqlConnection.Open()
+                If (bc.Validate()) Then
+                    Using myCommand As New SqlCommand("remispBatchGetViewBatch", sqlConnection)
+                        myCommand.CommandType = CommandType.StoredProcedure
+                        myCommand.Parameters.AddWithValue("@QRANumber", bc.BatchNumber)
+                        'open the sql connection
+                        If sqlConnection.State <> ConnectionState.Open Then
+                            sqlConnection.Open()
+                        End If
+                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                            'This stored procedure returns more than one table or result set.
+                            'to read them all we must step through each result set.
+                            'as of 26 Sept 2011 it has the following result sets
+                            '1. Batch data
+                            '2. Batch Comments
+                            '3. Process Data
+                            '4. Test Results
+                            '5. Test Unit Data
+                            If myReader.HasRows Then
+                                batch = New BatchView(bc.BatchNumber)
+                                batch.ReqData = RequestDB.GetRequest(bc.BatchNumber, userIdentification)
+
+                                While myReader.Read()
+                                    FillBaseBatchFields(myReader, batch, False, False, True)
+                                End While
+
+                                myReader.NextResult()
+
+                                While myReader.Read()
+                                    FillBatchComment(myReader, batch)
+                                End While
+
+                                myReader.NextResult()
+
+                                While myReader.Read()
+                                    FillBatchTask(myReader, batch)
+                                End While
+
+                                myReader.NextResult()
+
+                                While myReader.Read()
+                                    batch.TestRecords.Add(TestRecordDB.FillDataRecord(myReader))
+                                End While
+
+                                myReader.NextResult()
+
+                                While myReader.Read()
+                                    batch.TestUnits.Add(TestUnitDB.FillDataRecord(myReader))
+                                End While
                             End If
-                            Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                                'This stored procedure returns more than one table or result set.
-                                'to read them all we must step through each result set.
-                                'as of 26 Sept 2011 it has the following result sets
-                                '1. Batch data
-                                '2. Batch Comments
-                                '3. Process Data
-                                '4. Test Results
-                                '5. Test Unit Data
-                                If myReader.HasRows Then
-                                    batchData = New Batch(bc.BatchNumber)
-
-                                    batchData.ReqData = RequestDB.GetRequest(bc.BatchNumber, userIdentification)
-
-                                    While myReader.Read()
-                                        FillBaseBatchFields(myReader, batchData, False, False, True)
-                                    End While
-
-                                    myReader.NextResult()
-
-                                    While myReader.Read()
-                                        FillBatchComment(myReader, batchData)
-                                    End While
-
-                                    myReader.NextResult()
-
-                                    While myReader.Read()
-                                        FillBatchTask(myReader, batchData)
-                                    End While
-
-                                    myReader.NextResult()
-
-                                    While myReader.Read()
-                                        batchData.TestRecords.Add(TestRecordDB.FillDataRecord(myReader))
-                                    End While
-
-                                    myReader.NextResult()
-
-                                    While myReader.Read()
-                                        batchData.TestUnits.Add(TestUnitDB.FillDataRecord(myReader))
-                                    End While
-                                End If
-                            End Using
                         End Using
-                    End If
+                    End Using
                 End If
             End Using
 
-            Return batchData
+            Return batch
         End Function
 #End Region
 
@@ -913,7 +910,7 @@ Namespace REMI.Dal
             End If
         End Sub
 
-        Private Shared Sub FillBaseBatchFields(ByVal dataRecord As IDataRecord, ByVal batchData As Batch, ByVal getTSRemaining As Boolean, ByVal isRemiTimedServiceCall As Boolean, ByVal loadOrientation As Boolean)
+        Private Shared Sub FillBaseBatchFields(ByVal dataRecord As IDataRecord, ByVal batchData As BatchView, ByVal getTSRemaining As Boolean, ByVal isRemiTimedServiceCall As Boolean, ByVal loadOrientation As Boolean)
             batchData.QRANumber = dataRecord.GetString(dataRecord.GetOrdinal("QRANumber"))
 
             batchData.ReqData = RequestDB.GetRequest(batchData.QRANumber, "remi")
@@ -969,7 +966,7 @@ Namespace REMI.Dal
             End If
 
             If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("testUnitCount")) Then
-                batchData.NumberofUnits = dataRecord.GetInt32(dataRecord.GetOrdinal("testUnitCount"))
+                batchData.NumberOfUnits = dataRecord.GetInt32(dataRecord.GetOrdinal("testUnitCount"))
             End If
 
             If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("jobWILocation")) Then
@@ -999,7 +996,7 @@ Namespace REMI.Dal
             End If
 
             If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("HasBatchSpecificExceptions")) Then
-                batchData.hasBatchSpecificExceptions = dataRecord.GetBoolean(dataRecord.GetOrdinal("HasBatchSpecificExceptions"))
+                batchData.HasBatchSpecificExceptions = dataRecord.GetBoolean(dataRecord.GetOrdinal("HasBatchSpecificExceptions"))
             End If
 
             If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ReportApprovedDate")) Then

@@ -350,7 +350,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public ReadOnly Property IsForDisposal() As Boolean
+        Public ReadOnly Property IsForDisposal() As Boolean Implements IBatch.IsForDisposal
             Get
                 'dates returned by trs data are in eastern time. no utc here.
                 If Me.ReportApprovedDate <> DateTime.MinValue AndAlso Me.ReportApprovedDate.AddYears(3) < DateTime.Now Then
@@ -454,12 +454,13 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public ReadOnly Property NeedsToBeSaved() As Boolean
+        Public ReadOnly Property NeedsToBeSaved() As Boolean Implements IBatch.NeedsToBeSaved
             Get
                 Return Me.Status = BatchStatus.NotSavedToREMI
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public Property ReqData() As RequestFieldsCollection
             Get
                 Return _reqData

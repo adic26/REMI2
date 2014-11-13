@@ -24,6 +24,7 @@ namespace REMI.Contracts
         int NumberOfUnitsExpected { get; set; }
         string TestStageName { get; set; }
         String Priority { get; set; }
+        //List<IRequestFields> ReqData {get;set;}
         int PriorityID { get; set; }
         System.DateTime ReportRequiredBy { get; set; }
         System.DateTime ReportApprovedDate { get; set; }
@@ -34,6 +35,8 @@ namespace REMI.Contracts
         string HasUnitsRequiredToBeReturnedToRequestorString { get; }
         Boolean RequestorRequiresUnitsReturned { get; }
         bool HasUnitsRequiredToBeReturnedToRequestor { get; }
+        bool IsForDisposal { get; }
+        bool NeedsToBeSaved { get; }
         bool HasUnitsNotReturnedToRequestor { get; set; }
         String Requestor { get; set; }
         bool IsCompleteInRequest { get; }

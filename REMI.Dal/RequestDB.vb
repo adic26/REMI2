@@ -402,7 +402,7 @@ Namespace REMI.Dal
 
                         Using myReader As SqlDataReader = myCommand.ExecuteReader()
                             If myReader.HasRows Then
-                                fieldData = New RequestFieldsCollection
+                                fieldData = New RequestFieldsCollection()
 
                                 While myReader.Read()
                                     fieldData.Add(FillFieldData(myReader))

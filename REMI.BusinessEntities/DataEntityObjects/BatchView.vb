@@ -9,17 +9,24 @@ Namespace REMI.BusinessEntities
     Public Class BatchView
         Inherits BatchBase
         Implements ITaskList
+
+        Private _testUnits As TestUnitCollection
+        Private _testRecords As TestRecordCollection
+        Private _taskList As List(Of ITaskModel)
+
         Public Sub New()
             _taskList = New List(Of ITaskModel)
             _testRecords = New TestRecordCollection
             _testUnits = New TestUnitCollection
         End Sub
+
         Public Sub New(ByVal qraNumber As String)
             MyBase.New(qraNumber)
             _taskList = New List(Of ITaskModel)
             _testRecords = New TestRecordCollection
             _testUnits = New TestUnitCollection
         End Sub
+
         Public Sub New(ByVal reqData As RequestFieldsCollection)
             MyBase.New(reqData)
             _taskList = New List(Of ITaskModel)
@@ -27,7 +34,6 @@ Namespace REMI.BusinessEntities
             _testUnits = New TestUnitCollection
         End Sub
 
-        Private _taskList As List(Of ITaskModel)
         <XmlIgnore()> _
         Public Property Tasks() As System.Collections.Generic.List(Of Contracts.ITaskModel) Implements Contracts.ITaskList.Tasks
             Get
@@ -38,7 +44,6 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Private _testUnits As TestUnitCollection
         Public Property TestUnits() As TestUnitCollection
             Get
                 Return _testUnits
@@ -48,7 +53,12 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Private _testRecords As TestRecordCollection
+        Public ReadOnly Property RequestFields() As RequestFieldsCollection
+            Get
+                Return ReqData
+            End Get
+        End Property
+
         <XmlIgnore()> _
         Public Property TestRecords() As TestRecordCollection
             Get
@@ -59,6 +69,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property TestRecords(ByVal qraNumber As String, ByVal testName As String, ByVal testStageName As String, ByVal jobName As String, ByVal testUnitID As Int32) As TestRecordCollection
             Get
                 Dim trColl As New TestRecordCollection
@@ -80,6 +91,7 @@ Namespace REMI.BusinessEntities
             Return True
         End Function
 
+        <XmlIgnore()> _
         Public Overridable ReadOnly Property PercentageComplete() As Integer
             Get
                 If Me.Status = BatchStatus.Complete OrElse Me.Status = BatchStatus.TestingComplete Then
@@ -99,6 +111,8 @@ Namespace REMI.BusinessEntities
                 Return Convert.ToInt32(result)
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property GetExpectedCompletionDateTime() As String
             Get
                 If EstTSCompletionTime > 0 Then
@@ -109,6 +123,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property GetExpectedJobCompletionDateTime() As String
             Get
                 If EstJobCompletionTime > 0 Then

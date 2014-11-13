@@ -1,12 +1,15 @@
 ﻿Imports REMI.Validation
+Imports System.Xml.Serialization
 
 Namespace REMI.BusinessEntities
     ''' <summary>
     ''' This class represents the data returned by a scan in to a test station or at a  tracking location
     ''' </summary>
     ''' <remarks></remarks>
+    <Serializable()> _
     Public Class ScanReturnData
         Inherits ValidationBase
+
         Private _direction As ScanDirection
         Private _testStationManualLocation As String
         Private _JobWILocationLink As String

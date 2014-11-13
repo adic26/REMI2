@@ -68,7 +68,8 @@ Namespace REMI.Bll
                                 scanData.Notifications.Add(ScanUnitForRemstarThroughREMI(scanData.Barcode.BatchNumber, scanData.Barcode.UnitNumber, scanData.BatchStatus = BatchStatus.Complete, scanData.CurrentUserName, binType))
                             End If
                         End If
-                        ReturnData.BatchData = DirectCast(BatchManager.GetViewBatch(QRANumber), BatchView)
+
+                        ReturnData.BatchData = BatchManager.GetBatchView(QRANumber)
                         scanData.SetReturnDataValues(ReturnData)
                     Else
                         ReturnData.Notifications.AddWithMessage("This batch or unit could not be found.", NotificationType.Errors)

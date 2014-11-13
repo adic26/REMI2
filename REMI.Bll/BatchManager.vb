@@ -492,6 +492,16 @@ Namespace REMI.Bll
             End Try
         End Function
 
+        Public Shared Function GetBatchView(ByVal batchQRANumber As String) As BatchView
+            Try
+                Return BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser.UserName)
+            Catch ex As Exception
+
+            End Try
+
+            Return Nothing
+        End Function
+
         Public Shared Function GetViewBatch(ByVal batchQRANumber As String) As IBatch
             'becuase we are running two batch models side by side
             'If the batch is not already in remi, I must use the older type batch getitem method

@@ -5,6 +5,7 @@ Imports REMI.Contracts
 Imports REMI.Core
 Imports System.Xml.Serialization
 
+
 Namespace REMI.BusinessEntities
     ''' <summary> 
     ''' The Batch class represents the information about the overall group of <see cref="TestUnit">Test Units</see> provided by the requestor for the test request. 
@@ -47,15 +48,16 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' Used to create a new batch
         ''' </summary>
-        ''' <param name="trsData"></param>
+        ''' <param name="reqData"></param>
         ''' <remarks></remarks>
         Public Sub New(ByVal reqData As RequestFieldsCollection)
             MyBase.New(reqData)
             BasicInitialisation()
+
             If reqData Is Nothing Then
                 Me.Notifications.AddWithMessage("Unable to locate request.", NotificationType.Errors)
             End If
-            Me.ReqData = reqData
+
             If Status = BatchStatus.NotSet Then
                 Status = BatchStatus.NotSavedToREMI
             End If
@@ -79,6 +81,7 @@ Namespace REMI.BusinessEntities
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
+        <XmlIgnore()> _
         Public Property TestExceptions() As TestExceptionCollection
             Get
                 Return _exceptions

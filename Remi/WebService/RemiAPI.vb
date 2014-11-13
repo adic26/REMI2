@@ -421,7 +421,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns an ID of Lookup based on type.")> _
     Public Function GetLookupIDByTypeString(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32
         Try
-            Return GetLookupID([Enum].Parse(GetType(REMI.Contracts.LookupType), type), lookup, parentID)
+            Return GetLookupID([Enum].Parse(GetType(Remi.Contracts.LookupType), type), lookup, parentID)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupIDByTypeString", "e3", NotificationType.Errors, ex)
         End Try
@@ -429,7 +429,7 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(Description:="Returns an ID of Lookup based on type.")> _
-    Public Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
+    Public Function GetLookupID(ByVal type As Remi.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
         Try
             Return LookupsManager.GetLookupID(type, lookup, parentID)
         Catch ex As Exception
@@ -618,9 +618,9 @@ Public Class RemiAPI
             userDetails.UserName = UserManager.GetCurrentValidUserLDAPName()
 
             Dim userPermissions As Integer = TrackingLocationManager.GetUserPermission(userDetails.UserName, trackingLocationHostName, trackingLocationName)
-            userDetails.HasBasicAccess = (userPermissions And REMI.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
-            userDetails.HasCalibrationAccess = (userPermissions And REMI.Contracts.TrackingLocationUserAccessPermission.CalibrationAccess) = TrackingLocationUserAccessPermission.CalibrationAccess
-            userDetails.HasModifiedAccess = (userPermissions And REMI.Contracts.TrackingLocationUserAccessPermission.ModifiedTestAccess) = TrackingLocationUserAccessPermission.ModifiedTestAccess
+            userDetails.HasBasicAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
+            userDetails.HasCalibrationAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.CalibrationAccess) = TrackingLocationUserAccessPermission.CalibrationAccess
+            userDetails.HasModifiedAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.ModifiedTestAccess) = TrackingLocationUserAccessPermission.ModifiedTestAccess
 
             Return userDetails
         End If
