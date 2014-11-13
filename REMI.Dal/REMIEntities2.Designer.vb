@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("fcc7b4b0-4455-4b1b-9a77-6bdac45e7a0f")>
+<Assembly: EdmSchemaAttribute("73445324-e26c-4bae-9e1b-79c00ce4dc70")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -10711,6 +10711,56 @@ Namespace REMI.Entities
     
         Private Partial Sub OnValueChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property LastUser() As Global.System.String
+            Get
+                Return _LastUser
+            End Get
+            Set
+                OnLastUserChanging(value)
+                ReportPropertyChanging("LastUser")
+                _LastUser = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("LastUser")
+                OnLastUserChanged()
+            End Set
+        End Property
+    
+        Private _LastUser As Global.System.String
+        Private Partial Sub OnLastUserChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnLastUserChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property InsertTime() As Nullable(Of Global.System.DateTime)
+            Get
+                Return _InsertTime
+            End Get
+            Set
+                OnInsertTimeChanging(value)
+                ReportPropertyChanging("InsertTime")
+                _InsertTime = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("InsertTime")
+                OnInsertTimeChanged()
+            End Set
+        End Property
+    
+        Private _InsertTime As Nullable(Of Global.System.DateTime)
+        Private Partial Sub OnInsertTimeChanging(value As Nullable(Of Global.System.DateTime))
+        End Sub
+    
+        Private Partial Sub OnInsertTimeChanged()
+        End Sub
 
         #End Region
 
@@ -12099,7 +12149,8 @@ Namespace REMI.Entities
         ''' <param name="hasIntegration">Initial value of the HasIntegration property.</param>
         ''' <param name="canReport">Initial value of the CanReport property.</param>
         ''' <param name="hasApproval">Initial value of the HasApproval property.</param>
-        Public Shared Function CreateRequestType(requestTypeID As Global.System.Int32, typeID As Global.System.Int32, requestConnectName As Global.System.String, dBType As Global.System.String, hasIntegration As Global.System.Boolean, canReport As Global.System.Boolean, hasApproval As Global.System.Boolean) As RequestType
+        ''' <param name="isExternal">Initial value of the IsExternal property.</param>
+        Public Shared Function CreateRequestType(requestTypeID As Global.System.Int32, typeID As Global.System.Int32, requestConnectName As Global.System.String, dBType As Global.System.String, hasIntegration As Global.System.Boolean, canReport As Global.System.Boolean, hasApproval As Global.System.Boolean, isExternal As Global.System.Boolean) As RequestType
             Dim requestType as RequestType = New RequestType
             requestType.RequestTypeID = requestTypeID
             requestType.TypeID = typeID
@@ -12108,6 +12159,7 @@ Namespace REMI.Entities
             requestType.HasIntegration = hasIntegration
             requestType.CanReport = canReport
             requestType.HasApproval = hasApproval
+            requestType.IsExternal = isExternal
             Return requestType
         End Function
 
@@ -12290,6 +12342,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnHasApprovalChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property IsExternal() As Global.System.Boolean
+            Get
+                Return _IsExternal
+            End Get
+            Set
+                OnIsExternalChanging(value)
+                ReportPropertyChanging("IsExternal")
+                _IsExternal = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsExternal")
+                OnIsExternalChanged()
+            End Set
+        End Property
+    
+        Private _IsExternal As Global.System.Boolean
+        Private Partial Sub OnIsExternalChanging(value As Global.System.Boolean)
+        End Sub
+    
+        Private Partial Sub OnIsExternalChanged()
         End Sub
 
         #End Region

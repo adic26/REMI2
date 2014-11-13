@@ -29,7 +29,7 @@
                 <li id="Incoming" runat="server"><a id="A10" href="~/Incoming/default.aspx" title="Incoming Functions." runat="server"><span>Incoming</span></a></li>                
                 <li id="Inventory" runat="server"><a id="A8" href="~/Inventory/Default.aspx" title="Inventory Maangement" runat="server"><span>Inventory</span> </a></li>
                 <li id="User" runat="server"><a id="A3" href="~/ManageUser/Default.aspx" title="View your profile." runat="server"><span>User</span></a></li>
-                <li id="Results" runat="server"><a id="A17" href="~/Relab/Results.aspx" title="RQ Results" runat="server"><span>Results</span></a></li>
+                <li id="Results" runat="server"><a id="A17" href="~/Relab/Results.aspx" title="Results" runat="server"><span>Results</span></a></li>
                 <li id="adminLink" runat="server"><a id="A7" href="~/Admin/Default.aspx" title="Administration Panel" runat="server"><span>Admin</span></a></li>
                 <li id="HelpLink" runat="server"><a id="A18" href="~/Help/Default.aspx" title="Help" runat="server"><span>Help</span></a></li>
                 <li id="logLink" runat="server"><a id="A15" href="~/Admin/Developer/Default.aspx" title="Developer" runat="server"><span>Developer</span></a></li>

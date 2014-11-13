@@ -24,7 +24,7 @@ Partial Class Search
             End If
 
             If (UserManager.GetCurrentUser.HasRelabAccess Or UserManager.GetCurrentUser.HasRelabAuthority Or testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
-                rblSearchBy.Items(4).Enabled = True 'RQ Results
+                rblSearchBy.Items(4).Enabled = True 'Results
             End If
 
             If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin Or testCenterAdmin) Then
@@ -1150,7 +1150,7 @@ Partial Class Search
                     ddlDepartmentUser.SelectedValue = UserManager.GetCurrentUser.DepartmentID
                 End If
             Case "4"
-                'RQ Results
+                'Results
                 pnlTraining.Visible = False
                 pnlSearchResults.Visible = True
                 pnlSearchUser.Visible = False

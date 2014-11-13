@@ -16,7 +16,6 @@ Namespace REMI.BusinessEntities
 #Region "Private Variables"
         Private _exceptions As TestExceptionCollection
         Private _job As Job
-        'Private _FailParameters As ParameterResultCollection
         Private _specificTestDurations As Dictionary(Of Integer, Double)
         Private _IsBackToRequestor As Boolean
         Private _isCached As Boolean
@@ -27,7 +26,6 @@ Namespace REMI.BusinessEntities
             _job = New Job
             _specificTestDurations = New Dictionary(Of Integer, Double)
             _exceptions = New TestExceptionCollection
-            '_FailParameters = New ParameterResultCollection
         End Sub
 
         ''' <summary>
@@ -51,13 +49,13 @@ Namespace REMI.BusinessEntities
         ''' </summary>
         ''' <param name="trsData"></param>
         ''' <remarks></remarks>
-        Public Sub New(ByVal trsData As IQRARequest)
-            MyBase.New(trsData)
+        Public Sub New(ByVal reqData As RequestFieldsCollection)
+            MyBase.New(reqData)
             BasicInitialisation()
-            If trsData Is Nothing Then
+            If reqData Is Nothing Then
                 Me.Notifications.AddWithMessage("Unable to locate request.", NotificationType.Errors)
             End If
-            Me.TRSData = trsData
+            Me.ReqData = reqData
             If Status = BatchStatus.NotSet Then
                 Status = BatchStatus.NotSavedToREMI
             End If
@@ -130,7 +128,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         Public Sub SetNewBatchStatus()
-            If Me.IsCompleteInTRS Then
+            If Me.IsCompleteInRequest Then
                 Me.Status = BatchStatus.Complete
             Else
                 Me.Status = BatchStatus.Received
@@ -306,7 +304,7 @@ Namespace REMI.BusinessEntities
         Public Function AdvanceBatchToTestingCompleteIfApplicable() As Boolean
             If GetNextTestStage() Is Nothing Then
 
-                If (TestStageCompletion = TestStageCompletionStatus.TestingComplete And Not (Me.IsCompleteInTRS)) Or (Me.TestStage.TestStageType = TestStageType.NonTestingTask And Not (Me.IsCompleteInTRS)) Then
+                If (TestStageCompletion = TestStageCompletionStatus.TestingComplete And Not (Me.IsCompleteInRequest)) Or (Me.TestStage.TestStageType = TestStageType.NonTestingTask And Not (Me.IsCompleteInRequest)) Then
                     If (Me.Status <> BatchStatus.TestingComplete) Then
                         Me.Status = BatchStatus.TestingComplete
                         Return True

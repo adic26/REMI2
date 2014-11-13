@@ -16,7 +16,7 @@ Namespace REMI.BusinessEntities
         Private _optionsTypeID As Int32
         Private _requestTypeID As Int32
         Private _requestID As Int32
-        Private _internal As Int32
+        Private _internalField As Int32
         Private _requestType As String
         Private _name As String
         Private _fieldType As String
@@ -28,6 +28,7 @@ Namespace REMI.BusinessEntities
         Private _description As String
         Private _isRequired As Boolean
         Private _isArchived As Boolean
+        Private _isFromExternalSystem As Boolean
         Private _optionsType As List(Of String)
         Private _newRequest As Boolean
 #End Region
@@ -36,7 +37,7 @@ Namespace REMI.BusinessEntities
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internal As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32)
+        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean)
             _fieldSetupID = fieldSetupID
             _fieldTypeID = fieldTypeID
             _fieldValidationID = fieldValidationID
@@ -54,11 +55,12 @@ Namespace REMI.BusinessEntities
             _requestID = requestID
             _requestNumber = requestNumber
             _value = value
-            _internal = internal
+            _internalField = internalField
             _columnOrder = columnOrder
             _extField = extField
             _intField = intField
             _newRequest = newRequest
+            _isFromExternalSystem = isFromExternalSystem
         End Sub
 #End Region
 
@@ -99,12 +101,12 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property Internal() As Int32
+        Public Property InternalField() As Int32
             Get
-                Return _internal
+                Return _internalField
             End Get
             Set(ByVal value As Int32)
-                _internal = value
+                _internalField = value
             End Set
         End Property
 
@@ -240,6 +242,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As String)
                 _extField = value
+            End Set
+        End Property
+
+        Public Property IsFromExternalSystem() As Boolean
+            Get
+                Return _isFromExternalSystem
+            End Get
+            Set(value As Boolean)
+                _isFromExternalSystem = value
             End Set
         End Property
 

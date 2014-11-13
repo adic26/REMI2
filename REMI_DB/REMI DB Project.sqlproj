@@ -212,7 +212,7 @@
     <Folder Include="Scripts\October202014" />
     <Folder Include="Scripts\October282014" />
     <Folder Include="Scripts\November032014" />
-    <Folder Include="Scripts\November132014" />
+    <Folder Include="Scripts\November202014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2371,12 +2371,28 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\November132014\1.sql" />
+    <None Include="Scripts\November202014\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUserDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\UserDetails.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestGet.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\November202014\2_RequestQRASetup.sql" />
+    <None Include="Scripts\November202014\3_DataMigration.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\November202014\4.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldDataAudit.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Req.ReqFieldDataAuditInsertUpdate.sql" />
   </ItemGroup>
 </Project>

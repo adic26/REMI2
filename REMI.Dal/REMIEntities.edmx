@@ -1377,7 +1377,9 @@
           </Key>
           <Property Name="RequestID" Type="int" Nullable="false" />
           <Property Name="ReqFieldSetupID" Type="int" Nullable="false" />
-          <Property Name="Value" Type="nvarchar" Nullable="false" MaxLength="400" />
+          <Property Name="Value" Type="nvarchar" Nullable="false" />
+          <Property Name="LastUser" Type="nvarchar" MaxLength="255" />
+          <Property Name="InsertTime" Type="datetime" />
         </EntityType>
         <EntityType Name="ReqFieldMapping">
           <Key>
@@ -1443,6 +1445,7 @@
           <Property Name="HasIntegration" Type="bit" Nullable="false" />
           <Property Name="CanReport" Type="bit" Nullable="false" />
           <Property Name="HasApproval" Type="bit" Nullable="false" />
+          <Property Name="IsExternal" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'REMILocal.dbo.vw_BatchAudit' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -5130,9 +5133,11 @@
           </Key>
           <Property Type="Int32" Name="RequestID" Nullable="false" />
           <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
-          <Property Type="String" Name="Value" Nullable="false" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Request" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="ReqFieldData" ToRole="Request" />
           <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldData" ToRole="ReqFieldSetup" />
+          <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="InsertTime" Precision="3" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -5168,6 +5173,7 @@
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_RequestType_TypeID" FromRole="RequestType" ToRole="Lookup" />
           <NavigationProperty Name="ReqFieldSetups" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="RequestType" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="ReqFieldMappings" Relationship="REMI.Entities.FK_ReqFieldMapping_RequestType" FromRole="RequestType" ToRole="ReqFieldMapping" />
+          <Property Type="Boolean" Name="IsExternal" Nullable="false" />
         </EntityType>
         <Association Name="FK_RequestType_TypeID">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -6403,6 +6409,8 @@
           <EntitySetMapping Name="ReqFieldDatas">
             <EntityTypeMapping TypeName="REMI.Entities.ReqFieldData">
               <MappingFragment StoreEntitySet="ReqFieldData">
+                <ScalarProperty Name="InsertTime" ColumnName="InsertTime" />
+                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
                 <ScalarProperty Name="RequestID" ColumnName="RequestID" />
@@ -6420,6 +6428,7 @@
           <EntitySetMapping Name="RequestTypes">
             <EntityTypeMapping TypeName="REMI.Entities.RequestType">
               <MappingFragment StoreEntitySet="RequestType">
+                <ScalarProperty Name="IsExternal" ColumnName="IsExternal" />
                 <ScalarProperty Name="HasApproval" ColumnName="HasApproval" />
                 <ScalarProperty Name="CanReport" ColumnName="CanReport" />
                 <ScalarProperty Name="HasIntegration" ColumnName="HasIntegration" />

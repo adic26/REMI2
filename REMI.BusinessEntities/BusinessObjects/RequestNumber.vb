@@ -50,7 +50,7 @@ Namespace REMI.BusinessEntities
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        <ValidTRSRequestString(Key:="w5")> _
+        <ValidRequestString(Key:="w5")> _
         Public Property Number() As String
             Set(ByVal value As String)
                 _number = value

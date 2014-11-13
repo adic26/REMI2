@@ -212,13 +212,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A8 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
-    '''user control.
+    '''User control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents user As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents User As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''A3 control.

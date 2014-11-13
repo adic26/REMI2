@@ -57,18 +57,13 @@
     </h2>
     <uc1:Notifications ID="notMain" runat="server" />
     <asp:Panel ID="pnlEditExceptions" runat="server" Visible="false">
-
         <br />
         Current Priority:
-        <asp:Label ID="lblCurrentPriority" runat="server" Font-Bold="True"
-            Font-Size="Medium" Text="Label"></asp:Label>
+        <asp:Label ID="lblCurrentPriority" runat="server" Font-Bold="True" Font-Size="Medium" Text="Label"></asp:Label>
         <br />
         <br />
         New Priority:
         <asp:DropDownList Style="font-weight: bold;" ID="ddlSelection" runat="server" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
-        &nbsp;<br />
-        <br />
-
         <asp:HiddenField ID="hdnQRANumber" runat="server" />
         <br />
     </asp:Panel>

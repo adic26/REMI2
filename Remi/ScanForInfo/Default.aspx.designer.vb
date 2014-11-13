@@ -266,60 +266,6 @@ Partial Public Class ScanForInfo_Default
     Protected WithEvents hypRelabLink As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
-    '''imgRelabLink2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgRelabLink2 As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypRelabLink2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypRelabLink2 As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
-    '''imgDropTestWebAppLink control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgDropTestWebAppLink As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypDropTestWebApp control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypDropTestWebApp As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
-    '''imgTumbleTestWebAppLink control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgTumbleTestWebAppLink As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypTumbleTestWebApp control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypTumbleTestWebApp As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
     '''pnlSummary control.
     '''</summary>
     '''<remarks>
@@ -453,6 +399,24 @@ Partial Public Class ScanForInfo_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents upExecutiveSummary As Global.System.Web.UI.UpdateProgress
+
+    '''<summary>
+    '''acpRequest control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents acpRequest As Global.AjaxControlToolkit.AccordionPane
+
+    '''<summary>
+    '''gvwRequestInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents gvwRequestInfo As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''acpBatchInfo control.

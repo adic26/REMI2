@@ -212,9 +212,9 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(Description:="Gets The Raised Request")> _
-    Public Function GetRequest(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
+    Public Function GetRequest(ByVal requestNumber As String) As RequestFieldsCollection
         Try
-            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
+            Return RequestManager.GetRequest(requestNumber)
         Catch ex As Exception
             RequestManager.LogIssue("GetRequest", "e3", NotificationType.Errors, ex)
         End Try

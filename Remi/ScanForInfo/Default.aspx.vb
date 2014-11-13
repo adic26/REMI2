@@ -14,6 +14,10 @@ Partial Class ScanForInfo_Default
         Helpers.MakeAccessable(grdTrackingLog)
     End Sub
 
+    Protected Sub gvwRequestInfoGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwRequestInfo.PreRender
+        Helpers.MakeAccessable(gvwRequestInfo)
+    End Sub
+
     Protected Sub grdDetailGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdDetail.PreRender
         Helpers.MakeAccessable(grdDetail)
     End Sub
@@ -74,6 +78,22 @@ Partial Class ScanForInfo_Default
         Dim b As BatchView = BatchManager.GetViewBatch(Request.QueryString.Get("QRA"))
         grdDetail.DataSource = b.TestUnits
         grdDetail.DataBind()
+    End Sub
+
+    Protected Sub gvwRequestInfo_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwRequestInfo.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim lblValue As Label = DirectCast(e.Row.FindControl("lblValue"), Label)
+            Dim hylValue As HyperLink = DirectCast(e.Row.FindControl("hylValue"), HyperLink)
+            Dim hdnType As HiddenField = DirectCast(e.Row.FindControl("hdnType"), HiddenField)
+
+            If (hdnType.Value = "Link") Then
+                lblValue.Visible = False
+                hylValue.Visible = True
+            Else
+                lblValue.Visible = True
+                hylValue.Visible = False
+            End If
+        End If
     End Sub
 
     Protected Sub grdAuditLog_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdAuditLog.RowDataBound
@@ -228,15 +248,17 @@ Partial Class ScanForInfo_Default
                     hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
                     hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
                     hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
-                    hypTRSLink.NavigateUrl = b.TRSLink()
+                    hypTRSLink.NavigateUrl = b.RequestLink()
                     hypRefresh.NavigateUrl = b.BatchInfoLink
                     txtExecutiveSummary.Text = b.ExecutiveSummary
+                    Dim isExternal As Boolean = (From rd In b.ReqData Select rd.IsFromExternalSystem).FirstOrDefault()
 
-                    If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin) Then
+                    If ((UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin) And Not (isExternal)) Then
                         txtExecutiveSummary.Enabled = True
                         btnExecutiveSummary.Visible = True
-                        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
                     End If
+
+                    hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
 
                     'You are a relab role or your role has permission to view relab
                     If (UserManager.GetCurrentUser.HasRelabAuthority Or UserManager.GetCurrentUser.HasRelabAccess()) Then
@@ -255,19 +277,12 @@ Partial Class ScanForInfo_Default
                     hypRelabLink.NavigateUrl = b.RelabResultLink
                     hypProductGroupLink.NavigateUrl = b.ProductGroupLink
                     hypTestRecords.NavigateUrl = b.TestRecordsLink
-                    hypDropTestWebApp.NavigateUrl = b.DropTestWebAppLink
-                    hypTumbleTestWebApp.NavigateUrl = b.TumbleTestWebAppLink
-
-                    If (b.JobName.ToLower.Contains("tumble")) Then
-                        hypTumbleTestWebApp.Visible = True
-                        imgTumbleTestWebAppLink.Visible = True
-                    ElseIf (b.JobName.ToLower.Contains("drop")) Then
-                        hypDropTestWebApp.Visible = True
-                        imgDropTestWebAppLink.Visible = True
-                    End If
 
                     gvwTaskAssignments.DataSource = LoadAssignments(b.QRANumber)
                     gvwTaskAssignments.DataBind()
+
+                    gvwRequestInfo.DataSource = b.ReqData
+                    gvwRequestInfo.DataBind()
 
                     Dim es As New ExceptionSearch()
                     es.QRANumber = b.QRANumber
@@ -276,7 +291,7 @@ Partial Class ScanForInfo_Default
                     gvwTestExceptions.DataBind()
 
                     'sets the accordion open pane
-                    accMain.SelectedIndex = 5
+                    accMain.SelectedIndex = 6
 
                     updComments.Update()
                     SetupMenuItems(b.ProductGroup, b.DepartmentID)

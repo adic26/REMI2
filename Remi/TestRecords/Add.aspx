@@ -119,7 +119,7 @@
         </table>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlRelabMatrix" Visible="false">
-        <h3>SFI Functional Test RQ Results Measurements</h3>
+        <h3>SFI Functional Test Results Measurements</h3>
         <asp:GridView ID="gvwRelabMatrix" AutoGenerateColumns="true" runat="server" CssClass="VerticalTable" EnableViewState="True" DataKeyNames="TestUnitID">
             <RowStyle CssClass="evenrow" />
             <AlternatingRowStyle CssClass="oddrow" />

@@ -60,7 +60,7 @@
         <asp:ListItem Text="Units" Value="6"></asp:ListItem>
         <asp:ListItem Text="Exceptions" Value="2" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="3" Enabled="false"></asp:ListItem>
-        <asp:ListItem Text="RQ Results" Value="4" Enabled="false"></asp:ListItem>
+        <asp:ListItem Text="Results" Value="4" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Environment Report" Value="5" Enabled="false"></asp:ListItem>
         <asp:ListItem Value="7" Enabled="false">KPI <img src="../Design/beta.jpg" /></asp:ListItem>
         <asp:ListItem Text="Training" Value="8"></asp:ListItem>

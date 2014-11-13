@@ -30,7 +30,7 @@
                 <td class="HorizTableFirstcolumn">Request /w Unit:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:TextBox ID="txtRequestUnit" Runat="server" Width="152px"></asp:TextBox>
-                    <asp:CustomValidator ID="valRequestUnit" runat="server" Display="Static" ControlToValidate="txtRequestUnit" OnServerValidate="Validation" ValidateEmptyText="true"></asp:CustomValidator>
+                    <asp:CustomValidator ID="valRequestUnit" runat="server" Display="Static" ControlToValidate="txtRequestUnit" OnServerValidate="Validation" ValidateEmptyText="false"></asp:CustomValidator>
                 </td>
             </tr>
             <tr>

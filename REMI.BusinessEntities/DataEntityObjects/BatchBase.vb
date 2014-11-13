@@ -12,22 +12,28 @@ Namespace REMI.BusinessEntities
 
 #Region "Declarations"
         Private _status As BatchStatus
-        Private _completionPriorityID As Int32
-        Private _completionPriority As String
         Private _testStageName As String
         Private _hasBatchSpecificExceptions As Boolean
         Private _comments As List(Of IBatchCommentView)
-        Private _trsData As IQRARequest
+        Private _reqData As RequestFieldsCollection
         Private _jobName As String
+        Private _requestor As String
         Private _continueOnFailures As Boolean
-        Private _qraNumber As String
-        Private _isMQual As Boolean
+        Private _requestNumber As String
         Private _orientation As IOrientation
-        Private _assemblyNumber As String
-        Private _assemblyRevision As String
-        Private _testCenterLocationID As Int32
-        Private _dateReportApproved As DateTime
         Private _testStageCompletionStatus As TestStageCompletionStatus
+        Private _jobWILocation As String
+        Private _activeTaskAssignee As String
+        Private _testStageID As Int32
+        Private _sampleSize As Int32
+        Private _jobID As Int32
+        Private _estTSCompletionTime As Double
+        Private _estJobCompletionTime As Double
+        Private _testStageTimeLeftGrid As Dictionary(Of String, Double)
+        Private _testStageIDTimeLeftGrid As Dictionary(Of String, Int32)
+        Private _orientationID As Int32
+        Private _orientationXML As String
+        Private _requestLink As String
         Private _productGroup As String
         Private _productType As String
         Private _accessoryGroup As String
@@ -36,40 +42,31 @@ Namespace REMI.BusinessEntities
         Private _purpose As String
         Private _purposeID As Int32
         Private _numberOfUnits As Integer
-        Private _jobWILocation As String
-        Private _hasUnitsRequiredToBeReturnedToRequestor As Boolean
-        Private _hasUnitsNotReturnedToRequestor As Boolean
-        Private _activeTaskAssignee As String
+        Private _productTypeID As Int32
+        Private _accessoryGroupID As Int32
+        Private _dateCreated As DateTime
+        Private _priorityID As Int32
+        Private _Priority As String
+        Private _executiveSummary As String
         Private _cprNumber As String
         Private _mechanicalTools As String
         Private _department As String
-        Private _hwRevision As String
         Private _departmentID As Int32
         Private _productID As Int32
-        Private _testStageID As Int32
-        Private _productTypeID As Int32
-        Private _jobID As Int32
-        Private _accessoryGroupID As Int32
-        Private _rqID As Int32
-        Private _estTSCompletionTime As Double
-        Private _estJobCompletionTime As Double
-        Private _partName As String
-        Private _dateCreated As DateTime
-        Private _testStageTimeLeftGrid As Dictionary(Of String, Double)
-        Private _testStageIDTimeLeftGrid As Dictionary(Of String, Int32)
-        Private _executiveSummary As String
-        Private _orientationID As Int32
-        Private _orientationXML As String
+        Private _hasUnitsRequiredToBeReturnedToRequestor As Boolean
+        Private _hasUnitsNotReturnedToRequestor As Boolean
+        Private _testCenterLocationID As Int32
+        Private _dateReportApproved As DateTime
+        Private _outOfDate As Boolean
 #End Region
 
 #Region "Constructors"
         Private Sub SharedInitialisation()
-            _completionPriorityID = 0
+            _priorityID = 0
             _status = BatchStatus.NotSet
             _testStageCompletionStatus = TestStageCompletionStatus.NotSet
             _purpose = "NotSet"
             _comments = New List(Of IBatchCommentView)
-            _trsData = New RequestBase()
         End Sub
 
         ''' <summary>
@@ -85,7 +82,7 @@ Namespace REMI.BusinessEntities
         Public Sub New(ByVal QRAnumber As String)
             SharedInitialisation()
             If Not String.IsNullOrEmpty(QRAnumber) Then
-                _qraNumber = QRAnumber.Trim()
+                _requestNumber = QRAnumber.Trim()
             Else
                 Throw New ArgumentNullException("The QRA number given to the batch constructor was null.")
             End If
@@ -94,14 +91,14 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' Used to create a new batch
         ''' </summary>
-        ''' <param name="trsData"></param>
+        ''' <param name="reqData"></param>
         ''' <remarks></remarks>
-        Public Sub New(ByVal trsData As IQRARequest)
+        Public Sub New(ByVal reqData As RequestFieldsCollection)
             SharedInitialisation()
-            If trsData Is Nothing Then
+            If reqData Is Nothing Then
                 Me.Notifications.AddWithMessage("Unable to locate request.", NotificationType.Errors)
             End If
-            Me.TRSData = trsData
+            Me.ReqData = reqData
             If Status = BatchStatus.NotSet Then
                 Status = BatchStatus.NotSavedToREMI
             End If
@@ -119,36 +116,15 @@ Namespace REMI.BusinessEntities
         End Property
 
         <NotNullOrEmpty(Key:="w8")> _
-        <ValidTRSRequestString(Key:="w9")> _
-        Public Property QRANumber() As String Implements IBatch.QRANumber
+        <ValidRequestString(Key:="w9")> _
+        Public Property QRANumber() As String Implements IBatch.RequestNumber
             Get
-                If Not String.IsNullOrEmpty(_qraNumber) Then
-                    Return _qraNumber
-                Else
-                    Return _trsData.RequestNumber
-                End If
+                Return _requestNumber
             End Get
             Set(ByVal value As String)
                 If Not String.IsNullOrEmpty(value) Then
-                    _qraNumber = value.Trim()
+                    _requestNumber = value.Trim()
                 End If
-            End Set
-        End Property
-
-        ''' <summary> 
-        ''' Gets or sets the associated product group of the batch. 
-        ''' </summary> 
-        <NotNullOrEmpty(Key:="w11")> _
-        Public Property ProductGroup() As String Implements IBatch.ProductGroup
-            Get
-                If Not String.IsNullOrEmpty(_productGroup) Then
-                    Return _productGroup
-                Else
-                    Return _trsData.ProductGroup
-                End If
-            End Get
-            Set(ByVal value As String)
-                _productGroup = value
             End Set
         End Property
 
@@ -167,42 +143,12 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        Public Property PartName() As String Implements IBatch.PartName
+        Public Property OutOfDate() As Boolean
             Get
-                If Not String.IsNullOrEmpty(_partName) Then
-                    Return _partName
-                Else
-                    Return _trsData.PartName
-                End If
+                Return _outOfDate
             End Get
-            Set(ByVal value As String)
-                _partName = value
-            End Set
-        End Property
-
-        Public Property CPRNumber() As String Implements IBatch.CPRNumber
-            Get
-                If Not String.IsNullOrEmpty(_cprNumber) Then
-                    Return _cprNumber
-                Else
-                    Return _trsData.CPRNumber
-                End If
-            End Get
-            Set(ByVal value As String)
-                _cprNumber = value
-            End Set
-        End Property
-
-        Public Property ExecutiveSummary() As String Implements IBatch.ExecutiveSummary
-            Get
-                If Not String.IsNullOrEmpty(_executiveSummary) Then
-                    Return _executiveSummary
-                Else
-                    Return _trsData.ExecutiveSummary
-                End If
-            End Get
-            Set(ByVal value As String)
-                _executiveSummary = value
+            Set(value As Boolean)
+                _outOfDate = value
             End Set
         End Property
 
@@ -253,134 +199,12 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        Public Property ReqID() As Integer Implements IBatch.ReqID
-            Set(value As Integer)
-                _rqID = value
-            End Set
-            Get
-                If _rqID < 0 Then
-                    Return _rqID
-                Else
-                    Return _trsData.RQID
-                End If
-            End Get
-        End Property
-
-        ''' <summary> 
-        ''' Gets or sets the associated product group of the batch. 
-        ''' </summary> 
-        <NotNullOrEmpty(Key:="w11")> _
-        Public Property ProductID() As Int32 Implements IBatch.ProductID
-            Get
-                Return _productID
-            End Get
-            Set(ByVal value As Int32)
-                _productID = value
-            End Set
-        End Property
-
-        ''' <summary> 
-        ''' Gets or sets the associated product type of the batch. 
-        ''' </summary> 
-        Public Property ProductType() As String Implements IBatch.ProductType
-            Get
-                If Not String.IsNullOrEmpty(_productType) Then
-                    Return _productType
-                Else
-                    Return _trsData.ProductType
-                End If
-            End Get
-            Set(ByVal value As String)
-                _productType = value
-            End Set
-        End Property
-
-        ''' <summary> 
-        ''' Gets or sets the associated product type of the batch. 
-        ''' </summary> 
-        Public Property ProductTypeID() As Int32 Implements IBatch.ProductTypeID
-            Get
-                Return _productTypeID
-            End Get
-            Set(ByVal value As Int32)
-                _productTypeID = value
-            End Set
-        End Property
-
         Public Property TestStageID() As Int32 Implements IBatch.TestStageID
             Get
                 Return _testStageID
             End Get
             Set(ByVal value As Int32)
                 _testStageID = value
-            End Set
-        End Property
-
-        ''' <summary> 
-        ''' Gets or sets the associated accessory group of the batch. 
-        ''' </summary> 
-        Public Property AccessoryGroupID() As Int32 Implements IBatch.AccessoryGroupID
-            Get
-                Return _accessoryGroupID
-            End Get
-            Set(ByVal value As Int32)
-                _accessoryGroupID = value
-            End Set
-        End Property
-
-        Public Property IsMQual() As Boolean Implements IBatch.IsMQual
-            Get
-                Return _isMQual
-            End Get
-            Set(ByVal value As Boolean)
-                _isMQual = value
-            End Set
-        End Property
-
-        Public ReadOnly Property IsMQualString() As String Implements IBatch.IsMQualString
-            Get
-                If IsMQual Then
-                    Return "Yes"
-                Else
-                    Return String.Empty
-                End If
-            End Get
-        End Property
-
-        ''' <summary> 
-        ''' Gets or sets the associated accessory group of the batch. 
-        ''' </summary> 
-        Public Property AccessoryGroup() As String Implements IBatch.AccessoryGroup
-            Get
-                If Not String.IsNullOrEmpty(_accessoryGroup) Then
-                    Return _accessoryGroup
-                Else
-                    Return _trsData.AccessoryGroup
-                End If
-            End Get
-            Set(ByVal value As String)
-                _accessoryGroup = value
-            End Set
-        End Property
-
-        ''' <summary>
-        ''' The name of the Job that this batch is currently doing.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        ''' 
-        <NotNullOrEmpty(Key:="w10")> _
-        Public Property JobName() As String Implements IBatch.JobName
-            Get
-                If String.IsNullOrEmpty(_jobName) Then
-                    Return _trsData.RequestedTest()
-                Else
-                    Return _jobName
-                End If
-            End Get
-            Set(ByVal value As String)
-                _jobName = value
             End Set
         End Property
 
@@ -426,37 +250,9 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        ''' <summary> 
-        ''' Gets or sets the priority of the batch as set by Ops Manager
-        ''' </summary> 
-        Public Property CompletionPriority() As String Implements IBatch.CompletionPriority
-            Get
-                If Not String.IsNullOrEmpty(Me._completionPriority) Then
-                    Return _completionPriority
-                Else
-                    Return _trsData.Priority
-                End If
-            End Get
-            Set(ByVal value As String)
-                _completionPriority = value
-            End Set
-        End Property
-
-        Public Property CompletionPriorityID() As Int32 Implements IBatch.CompletionPriorityID
-            Get
-                Return _completionPriorityID
-            End Get
-            Set(ByVal value As Int32)
-                _completionPriorityID = value
-            End Set
-        End Property
-
         ''' <summary>
         ''' Any comments associated with this batch.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         <XmlIgnore()> _
         <ValidStringLength(MaxLength:=800, key:="w33")> _
         Public Property Comments() As List(Of IBatchCommentView) Implements ICommentedItem.Comments
@@ -468,12 +264,30 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
+        Public Property Orientation() As IOrientation Implements IBatch.Orientation
+            Get
+                Return _orientation
+            End Get
+            Set(ByVal value As IOrientation)
+                If value IsNot Nothing Then
+                    _orientation = value
+                End If
+            End Set
+        End Property
+
         ''' <summary> 
         ''' Gets or sets the current status of the batch. 
         ''' </summary> 
         <EnumerationSet(Key:="w13")> _
         Public Property Status() As BatchStatus Implements IBatch.Status
             Get
+                If (_status = BatchStatus.Received And RequestStatus = "Assigned") Then
+                    _status = BatchStatus.InProgress
+                ElseIf (RequestStatus = "Assigned") Then
+                    _status = BatchStatus.InProgress
+                End If
+
                 Return _status
             End Get
             Set(ByVal value As BatchStatus)
@@ -481,31 +295,27 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public ReadOnly Property IsForDisposal() As Boolean
-            Get
-                'dates returned by trs data are in eastern time. no utc here.
-                If Me.ReportApprovedDate <> DateTime.MinValue AndAlso Me.ReportApprovedDate.AddYears(3) < DateTime.Now Then
-                    Return True
-                End If
-                Return False
-            End Get
-        End Property
-
         ''' <summary>
         ''' The REMI link for the batch information
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public ReadOnly Property BatchInfoLink() As String Implements IBatch.BatchInfoLink
             Get
                 Return REMIWebLinks.GetBatchInfoLink(QRANumber)
             End Get
         End Property
 
+        Public ReadOnly Property RequestorRequiresUnitsReturned() As Boolean Implements IBatch.RequestorRequiresUnitsReturned
+            Get
+                Dim rur As Boolean = False
+                Boolean.TryParse((From rd In ReqData Where rd.IntField = "RequestorRequiresUnitsReturned" Select rd.Value).FirstOrDefault(), rur)
+
+                Return rur
+            End Get
+        End Property
+
         Public ReadOnly Property HasUnitsRequiredToBeReturnedToRequestor() As Boolean Implements IBatch.HasUnitsRequiredToBeReturnedToRequestor
             Get
-                Return _hasUnitsNotReturnedToRequestor AndAlso _trsData.RequestorRequiresUnitsReturned
+                Return HasUnitsNotReturnedToRequestor AndAlso RequestorRequiresUnitsReturned
             End Get
         End Property
 
@@ -529,21 +339,82 @@ Namespace REMI.BusinessEntities
         End Property
 
         ''' <summary>
-        ''' Gets and sets the request purpose for the batch.
+        ''' Returns the number of test unit objects that are part of the batch.
         ''' </summary>
-        ''' <value>requestpurpose</value>
-        ''' <returns>requestpurpose</returns>
-        ''' <remarks></remarks>
-        Public Property RequestPurpose() As String Implements IBatch.RequestPurpose
+        Public Property NumberOfUnits() As Integer Implements IBatch.NumberofUnits
             Get
-                If Me._purpose <> "NotSet" Then
-                    Return Me._purpose
-                Else
-                    Return _trsData.RequestPurpose
+                Return _numberOfUnits
+            End Get
+            Set(ByVal value As Integer)
+                _numberOfUnits = value
+            End Set
+        End Property
+
+        Public ReadOnly Property IsForDisposal() As Boolean
+            Get
+                'dates returned by trs data are in eastern time. no utc here.
+                If Me.ReportApprovedDate <> DateTime.MinValue AndAlso Me.ReportApprovedDate.AddYears(3) < DateTime.Now Then
+                    Return True
                 End If
+                Return False
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' the location of the work instruction on livelink or similar for the job this batch is currently doing.
+        ''' </summary>
+        Public Property JobWILocation() As String Implements IBatch.JobWILocation
+            Get
+                Return _jobWILocation
             End Get
             Set(ByVal value As String)
-                _purpose = value
+                _jobWILocation = value
+            End Set
+        End Property
+
+        Public Property TestStageCompletion() As TestStageCompletionStatus Implements IBatch.TestStageCompletion
+            Get
+                Return _testStageCompletionStatus
+            End Get
+            Set(ByVal value As TestStageCompletionStatus)
+                _testStageCompletionStatus = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' Gets or sets the associated product group of the batch. 
+        ''' </summary> 
+        <NotNullOrEmpty(Key:="w11")> _
+        Public Property ProductID() As Int32 Implements IBatch.ProductID
+            Get
+                Return _productID
+            End Get
+            Set(ByVal value As Int32)
+                _productID = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' Gets or sets the associated product type of the batch. 
+        ''' </summary> 
+        Public Property ProductTypeID() As Int32 Implements IBatch.ProductTypeID
+            Get
+                Return _productTypeID
+            End Get
+            Set(ByVal value As Int32)
+                _productTypeID = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' Gets or sets the associated accessory group of the batch. 
+        ''' </summary> 
+        Public Property AccessoryGroupID() As Int32 Implements IBatch.AccessoryGroupID
+            Get
+                Return _accessoryGroupID
+            End Get
+            Set(ByVal value As Int32)
+                _accessoryGroupID = value
             End Set
         End Property
 
@@ -556,40 +427,14 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        ''' <summary>
-        ''' Returns the number of test unit objects that are part of the batch.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Property NumberOfUnits() As Integer Implements IBatch.NumberofUnits
+        Public Property PriorityID() As Int32 Implements IBatch.PriorityID
             Get
-                Return _numberOfUnits
+                Return _priorityID
             End Get
-            Set(ByVal value As Integer)
-                _numberOfUnits = value
+            Set(ByVal value As Int32)
+                _priorityID = value
             End Set
         End Property
-
-        ''' <summary>
-        ''' The location of the current test
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Property TestCenterLocation() As String Implements IBatch.TestCenterLocation
-            Get
-                If Not String.IsNullOrEmpty(Me._testCenterLocation) Then
-                    Return _testCenterLocation
-                Else
-                    Return _trsData.TestCenterLocation
-                End If
-            End Get
-            Set(ByVal value As String)
-                _testCenterLocation = value
-            End Set
-        End Property
-
 
         Public Property TestCenterLocationID() As Int32 Implements IBatch.TestCenterLocationID
             Get
@@ -597,34 +442,6 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As Int32)
                 _testCenterLocationID = value
-            End Set
-        End Property
-
-        ''' <summary>
-        ''' the location of the work instruction on livelink or similar for the job this batch is currently doing.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Property JobWILocation() As String Implements IBatch.JobWILocation
-            Get
-                Return _jobWILocation
-            End Get
-            Set(ByVal value As String)
-                _jobWILocation = value
-            End Set
-        End Property
-
-        Public Property MechanicalTools() As String Implements IBatch.MechanicalTools
-            Get
-                If Not String.IsNullOrEmpty(_mechanicalTools) Then
-                    Return _mechanicalTools
-                Else
-                    Return _trsData.MechanicalTools
-                End If
-            End Get
-            Set(value As String)
-                _mechanicalTools = value
             End Set
         End Property
 
@@ -637,250 +454,28 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property Department() As String Implements IBatch.Department
-            Get
-                If Not String.IsNullOrEmpty(_department) Then
-                    Return _department
-                Else
-                    Return _trsData.Department
-                End If
-            End Get
-            Set(value As String)
-                _department = value
-            End Set
-        End Property
-
-        Public Property AssemblyNumber() As String Implements IBatch.AssemblyNumber
-            Get
-                If Not String.IsNullOrEmpty(_assemblyNumber) Then
-                    Return _assemblyNumber
-                Else
-                    Return _trsData.AssemblyNumber
-                End If
-            End Get
-            Set(value As String)
-                _assemblyNumber = value
-            End Set
-        End Property
-
-        Public Property AssemblyRevision() As String Implements IBatch.AssemblyRevision
-            Get
-                If Not String.IsNullOrEmpty(_assemblyRevision) Then
-                    Return _assemblyRevision
-                Else
-                    Return _trsData.AssemblyRevision
-                End If
-            End Get
-            Set(value As String)
-                _assemblyRevision = value
-            End Set
-        End Property
-
-        Public Property HWRevision() As String Implements IBatch.HWRevision
-            Get
-                If Not String.IsNullOrEmpty(_hwRevision) Then
-                    Return _hwRevision
-                Else
-                    Return _trsData.HWRevision
-                End If
-            End Get
-            Set(value As String)
-                _hwRevision = value
-            End Set
-        End Property
-
-        Public Property ReportRequiredBy() As DateTime Implements IBatch.ReportRequiredBy
-            Get
-                If _reportingRequiredBy <> DateTime.MinValue Then
-                    Return _reportingRequiredBy
-                Else
-                    Return _trsData.ReportRequiredBy
-                End If
-            End Get
-            Set(value As DateTime)
-                _reportingRequiredBy = value
-            End Set
-        End Property
-
-        Public Property DateCreated() As DateTime Implements IBatch.DateCreated
-            Get
-                If _dateCreated <> DateTime.MinValue Then
-                    Return _dateCreated
-                Else
-                    Return _trsData.DateCreated
-                End If
-            End Get
-            Set(value As DateTime)
-                _dateCreated = value
-            End Set
-        End Property
-
-        Public Property ReportApprovedDate() As DateTime Implements IBatch.ReportApprovedDate
-            Get
-                If _dateReportApproved <> DateTime.MinValue Then
-                    Return _dateReportApproved
-                Else
-                    Return _trsData.DateReportApproved
-                End If
-            End Get
-            Set(value As DateTime)
-                _dateReportApproved = value
-            End Set
-        End Property
-
-        Public Property TestStageCompletion() As TestStageCompletionStatus Implements IBatch.TestStageCompletion
-            Get
-                Return _testStageCompletionStatus
-            End Get
-            Set(ByVal value As TestStageCompletionStatus)
-                _testStageCompletionStatus = value
-            End Set
-        End Property
-#End Region
-
-#Region "REMI Out Of Date"
-        ''' <summary>
-        ''' checks if a field in remi si out of date compared to TRS. This should be changed to an attribute really.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private ReadOnly Property REMIIsOutOfDate() As Boolean
-            Get
-                Return (Me._trsData.RequestPurpose <> "NotSet" AndAlso Me._purpose <> Me._trsData.RequestPurpose) _
-                    OrElse (Me._trsData.TestCenterLocation <> String.Empty AndAlso Me._testCenterLocation <> Me._trsData.TestCenterLocation) _
-                     OrElse (Me._trsData.ProductGroup <> String.Empty AndAlso Me._productGroup <> Me._trsData.ProductGroup) _
-                     OrElse (Me._trsData.CPRNumber <> String.Empty AndAlso Me._cprNumber <> Me._trsData.CPRNumber) _
-                     OrElse (Me._trsData.HWRevision <> String.Empty AndAlso Me.HWRevision <> Me._trsData.HWRevision) _
-                     OrElse (Me._trsData.AccessoryGroup <> String.Empty AndAlso Me.AccessoryGroup <> Me._trsData.AccessoryGroup) _
-                     OrElse (Me._trsData.PartName <> String.Empty AndAlso Me.PartName <> Me._trsData.PartName) _
-                     OrElse (Me._trsData.AssemblyNumber <> String.Empty AndAlso Me.AssemblyNumber <> Me._trsData.AssemblyNumber) _
-                     OrElse (Me._trsData.AssemblyRevision <> String.Empty AndAlso Me.AssemblyRevision <> Me._trsData.AssemblyRevision) _
-                     OrElse (Me._trsData.ReportRequiredBy <> DateTime.MinValue AndAlso Me.ReportRequiredBy <> Me._trsData.ReportRequiredBy) _
-                     OrElse (Me._trsData.DateReportApproved <> DateTime.MinValue AndAlso Me.ReportApprovedDate <> Me._trsData.DateReportApproved) _
-                     OrElse (Me._trsData.ProductType <> String.Empty AndAlso Me.ProductType <> Me._trsData.ProductType) _
-                     OrElse (Me.IsMQual <> Me._trsData.MQual)
-            End Get
-        End Property
-
-        Public Function CheckForTRSUpdates() As Boolean
-            If REMIIsOutOfDate Then
-                _purpose = _trsData.RequestPurpose
-
-                If (Not String.IsNullOrEmpty(_trsData.TestCenterLocation)) Then
-                    _testCenterLocation = _trsData.TestCenterLocation
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.ProductGroup)) Then
-                    _productGroup = _trsData.ProductGroup
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.CPRNumber)) Then
-                    _cprNumber = _trsData.CPRNumber
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.ProductType)) Then
-                    _productType = _trsData.ProductType
-                End If
-
-                If (_trsData.DateReportApproved <> DateTime.MinValue) Then
-                    _dateReportApproved = _trsData.DateReportApproved
-                End If
-
-                If (_trsData.ReportRequiredBy <> DateTime.MinValue) Then
-                    _reportingRequiredBy = _trsData.ReportRequiredBy
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.HWRevision)) Then
-                    _hwRevision = _trsData.HWRevision
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.AssemblyRevision)) Then
-                    _assemblyRevision = _trsData.AssemblyRevision
-                End If
-
-                If (IsMQual <> Me._trsData.MQual) Then
-                    _isMQual = _trsData.MQual
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.AssemblyNumber)) Then
-                    _assemblyNumber = _trsData.AssemblyNumber
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.PartName)) Then
-                    _partName = _trsData.PartName
-                End If
-
-                If (Not String.IsNullOrEmpty(_trsData.AccessoryGroup)) Then
-                    _accessoryGroup = _trsData.AccessoryGroup
-                End If
-
-                Return True
-            End If
-            Return False
-        End Function
-
         Public ReadOnly Property NeedsToBeSaved() As Boolean
             Get
                 Return Me.Status = BatchStatus.NotSavedToREMI
             End Get
         End Property
-#End Region
 
-#Region "TRS Data Properties"
-        ''' <summary>
-        ''' Gets and sets the TRS data associated with this batch.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        ''' 
-        <XmlIgnore()> _
-        Public Property TRSData() As IQRARequest Implements IBatch.TRSData
+        Public Property ReqData() As RequestFieldsCollection
             Get
-                Return _trsData
+                Return _reqData
             End Get
-            Set(ByVal value As IQRARequest)
-                If value IsNot Nothing Then
-                    _trsData = value
-                End If
-            End Set
-        End Property
-
-        <XmlIgnore()> _
-        Public Property Orientation() As IOrientation Implements IBatch.Orientation
-            Get
-                Return _orientation
-            End Get
-            Set(ByVal value As IOrientation)
-                If value IsNot Nothing Then
-                    _orientation = value
-                End If
+            Set(value As RequestFieldsCollection)
+                _reqData = value
             End Set
         End Property
 
         ''' <summary>
-        ''' The Job ID of this batch in the QA/Relab Databases.
+        ''' indicates if a batch is complete in the request
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public ReadOnly Property RelabJobID() As Integer Implements IBatch.RelabJobID
+        Public ReadOnly Property IsCompleteInRequest() As Boolean Implements IBatch.IsCompleteInRequest
             Get
-                Return _trsData.JobId
-            End Get
-        End Property
-
-        ''' <summary>
-        ''' indicates if a batch is complete in the trs
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public ReadOnly Property IsCompleteInTRS() As Boolean Implements IBatch.IsCompleteInTRS
-            Get
-                If _trsData.RequestStatus IsNot Nothing Then
-                    Select Case _trsData.RequestStatus.ToLower
+                If (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault() IsNot Nothing Then
+                    Select Case (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault().ToLower
                         Case "completed", "canceled", "closed - pass", "closed - fail", "closed - no result"
                             Return True
                         Case Else
@@ -891,69 +486,547 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+#Region "Linked Fields Required By System From Request"
         ''' <summary>
-        ''' Gets the request id of the batch in the QA databases database. This is used to create the TRS http link for the batch.
+        ''' The name of the Job that this batch is currently doing.
         ''' </summary>
-        ''' <value>integer</value>
-        ''' <returns>integer</returns>
-        ''' <remarks></remarks>
-        Public ReadOnly Property NumberOfUnitsExpected() As Integer Implements IBatch.NumberOfUnitsExpected
+        <NotNullOrEmpty(Key:="w10")> _
+        Public Property JobName() As String Implements IBatch.JobName
             Get
-                Return _trsData.SampleSize
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_jobName = val) Then
+                    val = _jobName
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _jobName = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_jobName <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' Gets or sets the associated product group of the batch. 
+        ''' </summary> 
+        <NotNullOrEmpty(Key:="w11")> _
+        Public Property ProductGroup() As String Implements IBatch.ProductGroup
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_productGroup = val) Then
+                    val = _productGroup
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _productGroup = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_productGroup <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public Property CPRNumber() As String Implements IBatch.CPRNumber
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_cprNumber = val) Then
+                    val = _cprNumber
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _cprNumber = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_cprNumber <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public Property ExecutiveSummary() As String Implements IBatch.ExecutiveSummary
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_executiveSummary = val) Then
+                    val = _executiveSummary
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _executiveSummary = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_executiveSummary <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' Gets or sets the associated product type of the batch. 
+        ''' </summary> 
+        Public Property ProductType() As String Implements IBatch.ProductType
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_productType = val) Then
+                    val = _productType
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _productType = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_productType <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' Gets or sets the associated accessory group of the batch. 
+        ''' </summary> 
+        Public Property AccessoryGroup() As String Implements IBatch.AccessoryGroup
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_accessoryGroup = val) Then
+                    val = _accessoryGroup
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _accessoryGroup = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_accessoryGroup <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Gets and sets the request purpose for the batch.
+        ''' </summary>
+        ''' <value>requestpurpose</value>
+        ''' <returns>requestpurpose</returns>
+        Public Property RequestPurpose() As String Implements IBatch.RequestPurpose
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_purpose = val) Then
+                    val = _purpose
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _purpose = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_purpose <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' The location of the current test
+        ''' </summary>
+        Public Property TestCenterLocation() As String Implements IBatch.TestCenterLocation
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_testCenterLocation = val) Then
+                    val = _testCenterLocation
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _testCenterLocation = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_testCenterLocation <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' Gets or sets the priority of the batch as set by Ops Manager
+        ''' </summary> 
+        Public Property Priority() As String Implements IBatch.Priority
+            Get
+                Dim val As String = String.Empty
+                val = _Priority
+
+                If ((From rd In ReqData Where rd.IntField = "Priority" Select rd.Value) IsNot Nothing And (_Priority = String.Empty Or _Priority = "NotSet")) Then
+                    val = (From rd In ReqData Where rd.IntField = "Priority" Select rd.Value).FirstOrDefault()
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _Priority = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "Priority" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "Priority" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_Priority <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public ReadOnly Property RequestStatus() As String
+            Get
+                Return (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault()
             End Get
         End Property
 
-        Public ReadOnly Property Requestor() As String
+        Public Property MechanicalTools() As String Implements IBatch.MechanicalTools
             Get
-                Return _trsData.Requestor
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_mechanicalTools = val) Then
+                    val = _mechanicalTools
+                End If
+
+                Return val
             End Get
+            Set(ByVal data As String)
+                _mechanicalTools = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_mechanicalTools <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
         End Property
 
-        Public ReadOnly Property TRSStatus() As String
+        Public Property Department() As String Implements IBatch.Department
             Get
-                Return _trsData.RequestStatus
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "Department" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "Department" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_department = val) Then
+                    val = _department
+                End If
+
+                Return val
             End Get
+            Set(ByVal data As String)
+                _department = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "Department" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "Department" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_department <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
         End Property
+
+        Public Property RequestLink() As String Implements IBatch.RequestLink
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_requestLink = val) Then
+                    val = _requestLink
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _requestLink = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_requestLink <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public Property NumberOfUnitsExpected() As Int32 Implements IBatch.NumberOfUnitsExpected
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_sampleSize.ToString() = val) Then
+                    val = _sampleSize.ToString()
+                End If
+
+                Dim unitCount As Int32
+                Int32.TryParse(val, unitCount)
+
+                Return unitCount
+            End Get
+            Set(ByVal data As Int32)
+                _sampleSize = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_sampleSize.ToString() <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public Property Requestor() As String Implements IBatch.Requestor
+            Get
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_requestor = val) Then
+                    val = _requestor
+                End If
+
+                Return val
+            End Get
+            Set(ByVal data As String)
+                _requestor = data
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value).FirstOrDefault()
+                End If
+
+                If (_requestor <> val) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public Property DateCreated() As DateTime Implements IBatch.DateCreated
+            Get
+                Dim createdDate As DateTime
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value).FirstOrDefault()
+                End If
+
+                DateTime.TryParse(val, createdDate)
+
+                If (_dateCreated = createdDate) Then
+                    createdDate = _dateCreated
+                End If
+
+                Return createdDate
+            End Get
+            Set(ByVal data As DateTime)
+                _dateCreated = data
+                Dim createdDate As DateTime
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value).FirstOrDefault()
+                End If
+
+                DateTime.TryParse(val, createdDate)
+
+                If (_dateCreated <> createdDate) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public Property ReportRequiredBy() As DateTime Implements IBatch.ReportRequiredBy
+            Get
+                Dim reportDate As DateTime
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value).FirstOrDefault()
+                End If
+
+                DateTime.TryParse(val, reportDate)
+
+                If (_reportingRequiredBy = reportDate) Then
+                    reportDate = _reportingRequiredBy
+                End If
+
+                Return reportDate
+            End Get
+            Set(ByVal data As DateTime)
+                _reportingRequiredBy = data
+                Dim reportDate As DateTime
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value).FirstOrDefault()
+                End If
+
+                DateTime.TryParse(val, reportDate)
+
+                If (_reportingRequiredBy <> reportDate) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+
+        Public Property ReportApprovedDate() As DateTime Implements IBatch.ReportApprovedDate
+            Get
+                Dim approveDate As DateTime
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value).FirstOrDefault()
+                End If
+
+                DateTime.TryParse(val, approveDate)
+
+                If (_dateReportApproved = approveDate) Then
+                    approveDate = _dateReportApproved
+                End If
+
+                Return approveDate
+            End Get
+            Set(ByVal data As DateTime)
+                _dateReportApproved = data
+                Dim approveDate As DateTime
+                Dim val As String = String.Empty
+
+                If ((From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value) IsNot Nothing) Then
+                    val = (From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value).FirstOrDefault()
+                End If
+
+                DateTime.TryParse(val, approveDate)
+
+                If (_dateReportApproved <> approveDate) Then
+                    OutOfDate = True
+                End If
+            End Set
+        End Property
+#End Region
 #End Region
 
 #Region "HTTP Links"
-        'Public ReadOnly Property RelabResultLink2() As String Implements IBatch.RelabResultLink2
-        '    Get
-        '        Return REMIWebLinks.GetRelabResultLink2(RelabJobID)
-        '    End Get
-        'End Property
-
         Public ReadOnly Property RelabResultLink() As String Implements IBatch.RelabResultLink
             Get
                 Return REMIWebLinks.GetRelabResultLink(ID)
             End Get
         End Property
-        ''' <summary>
-        ''' Returns the TRS link for the QRA in the batch.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public ReadOnly Property TRSLink() As String Implements IBatch.TRSLink
-            Get
-                Return REMIWebLinks.GetTRSLink(ReqID)
-            End Get
-        End Property
-        Public ReadOnly Property DropTestWebAppLink() As String Implements IBatch.DropTestWebAppLink
-            Get
-                Return REMIWebLinks.GetDropTestWebAppLink(RelabJobID)
-            End Get
-        End Property
-        Public ReadOnly Property TumbleTestWebAppLink() As String Implements IBatch.TumbleTestWebAppLink
-            Get
-                Return REMIWebLinks.GetTumbleTestWebAppLink(RelabJobID)
-            End Get
-        End Property
+
         Public ReadOnly Property TestRecordsLink() As String
             Get
                 Return REMIWebLinks.GetTestRecordsLink(QRANumber, String.Empty, String.Empty, String.Empty, 0)
             End Get
         End Property
+
         Public ReadOnly Property TestRecordsAddNewLink() As String
             Get
                 Return REMIWebLinks.GetTestRecordsAddLink(QRANumber)
@@ -963,52 +1036,45 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI link for editing the exceptions for this batch.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public ReadOnly Property ExceptionManagerLink() As String
             Get
                 Return REMIWebLinks.GetEditExceptionsLink(QRANumber)
             End Get
         End Property
+
         ''' <summary>
         ''' The REMI link for editing the status for this batch.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public ReadOnly Property SetStatusManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchStatusLink(QRANumber)
             End Get
         End Property
+
         Public ReadOnly Property SetCommentsManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchCommentsLink(QRANumber)
             End Get
         End Property
+
         Public ReadOnly Property SetTestDurationsManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchSpecificTestDurationsLink(QRANumber)
             End Get
         End Property
+
         ''' <summary>
         ''' The REMI link for editing the test stage for this batch.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public ReadOnly Property SetTestStageManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchTestStageLink(QRANumber)
             End Get
         End Property
+
         ''' <summary>
         ''' The REMI link for editing the priority for this batch.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public ReadOnly Property SetPriorityManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchPriorityLink(QRANumber)
@@ -1018,9 +1084,6 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI product group information page for this batch.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public ReadOnly Property ProductGroupLink() As String Implements IBatch.ProductGroupLink
             Get
                 Return REMIWebLinks.GetProductInfoLink(ProductID)
@@ -1037,5 +1100,6 @@ Namespace REMI.BusinessEntities
             Return String.Empty
         End Function
 #End Region
+
     End Class
 End Namespace

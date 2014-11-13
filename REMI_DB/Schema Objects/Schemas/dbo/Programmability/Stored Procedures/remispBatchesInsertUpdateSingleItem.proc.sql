@@ -17,23 +17,20 @@
 	@requestor nvarchar(500) = null,
 	@unitsToBeReturnedToRequestor bit = null,
 	@expectedSampleSize int = null,
-	@relabJobID int = null,
 	@reportApprovedDate datetime = null,
 	@reportRequiredBy datetime = null,
-	@rqID int = null,
-	@partName nvarchar(500) = null,
-	@assemblyNumber nvarchar(500) = null,
-	@assemblyRevision nvarchar(500) = null,
-	@trsStatus nvarchar(500) = null,
+	--@partName nvarchar(500) = null,
+	--@assemblyNumber nvarchar(500) = null,
+	--@assemblyRevision nvarchar(500) = null,
+	@reqStatus nvarchar(500) = null,
 	@cprNumber nvarchar(500) = null,
-	@hwRevision nvarchar(500) = null,
 	@pmNotes nvarchar(500) = null,
-	@IsMQual bit = 0,
 	@MechanicalTools NVARCHAR(10),
 	@RequestPurposeID int = 0,
 	@PriorityID INT = 0,
 	@DepartmentID INT = 0,
-	@Department NVARCHAR(150) = NULL
+	@Department NVARCHAR(150) = NULL,
+	@ExecutiveSummary NVARCHAR(4000) = NULL
 	AS
 	DECLARE @ProductID INT
 	DECLARE @ProductTypeID INT
@@ -68,16 +65,6 @@
 		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
 		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@TestCenterLocation)))
 	END
-	
-	IF @RequestPurposeID = 0
-	BEGIN
-		SELECT @RequestPurposeID = LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='RequestPurpose' AND [Values] = @RequestPurpose
-	END
-
-	IF @PriorityID = 0
-	BEGIN
-		SELECT @PriorityID = LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Priority' AND [Values] = @Priority
-	END
 
 	IF LTRIM(RTRIM(@Department)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Department' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Department)))
 	BEGIN
@@ -86,6 +73,22 @@
 		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@Department)))
 	END
 
+	IF LTRIM(RTRIM(@RequestPurpose)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='RequestPurpose' AND (LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@RequestPurpose)) OR LTRIM(RTRIM([Description]))=LTRIM(RTRIM(@RequestPurpose))))
+	BEGIN
+		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='RequestPurpose'
+		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@RequestPurpose)))
+	END
+
+	IF LTRIM(RTRIM(@Priority)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Priority' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Priority)))
+	BEGIN
+		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Priority'
+		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@Priority)))
+	END
+
+	SELECT @RequestPurposeID = LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='RequestPurpose' AND ([Values] = @RequestPurpose OR [Description] = @RequestPurpose)
+	SELECT @PriorityID = LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Priority' AND [Values] = @Priority
 	SELECT @ProductID = ID FROM Products WITH(NOLOCK) WHERE LTRIM(RTRIM(ProductGroupName))= LTRIM(RTRIM(@ProductGroupName))
 	SELECT @ProductTypeID = LookupID FROM Lookups l WITH(NOLOCK) INNER JOIN LookupType lt WITH(NOLOCK) ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='ProductType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@ProductType))
 	SELECT @AccessoryGroupID = LookupID FROM Lookups l WITH(NOLOCK) INNER JOIN LookupType lt WITH(NOLOCK) ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='AccessoryType' AND LTRIM(RTRIM([Values]))= LTRIM(RTRIM(@AccessoryGroupName))
@@ -110,18 +113,12 @@
 		Requestor,
 		unitsToBeReturnedToRequestor,
 		expectedSampleSize,
-		relabJobID,
 		reportApprovedDate,
 		reportRequiredBy,
-		rqID,
-		partName,
-		assemblyNumber,
-		assemblyRevision,
 		trsStatus,
 		cprNumber,
-		hwRevision,
 		pmNotes,
-		ProductID, IsMQual, MechanicalTools, DepartmentID ) 
+		ProductID, MechanicalTools, DepartmentID, ExecutiveSummary ) 
 		VALUES 
 		(@QRANumber, 
 		@PriorityID, 
@@ -138,18 +135,12 @@
 		@Requestor,
 		@unitsToBeReturnedToRequestor,
 		@expectedSampleSize,
-		@relabJobID,
 		@reportApprovedDate,
 		@reportRequiredBy,
-		@rqID,
-		@partName,
-		@assemblyNumber,
-		@assemblyRevision,
-		@trsStatus,
+		@reqStatus,
 		@cprNumber,
-		@hwRevision,
 		@pmNotes,
-		@ProductID, @IsMQual, @MechanicalTools, @DepartmentID)
+		@ProductID, @MechanicalTools, @DepartmentID,@ExecutiveSummary)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
@@ -171,20 +162,13 @@
 		TestStageCompletionStatus = @testStageCompletionStatus,
 		unitsToBeReturnedToRequestor=@unitsToBeReturnedToRequestor,
 		expectedSampleSize=@expectedSampleSize,
-		relabJobID=@relabJobID,
 		reportApprovedDate=@reportApprovedDate,
 		reportRequiredBy=@reportRequiredBy,
-		rqID=@rqID,
-		partName=@partName,
-		assemblyNumber=@assemblyNumber,
-		assemblyRevision=@assemblyRevision,
-		trsStatus=@trsStatus,
+		trsStatus=@reqStatus,
 		cprNumber=@cprNumber,
-		hwRevision=@hwRevision,
 		pmNotes=@pmNotes ,
 		ProductID=@ProductID,
-		IsMQual = @IsMQual,
-		MechanicalTools = @MechanicalTools, DepartmentID = @DepartmentID
+		MechanicalTools = @MechanicalTools, DepartmentID = @DepartmentID,ExecutiveSummary=@ExecutiveSummary
 		WHERE (ID = @ID) AND (ConcurrencyID = @ConcurrencyID)
 
 		SELECT @ReturnValue = @ID

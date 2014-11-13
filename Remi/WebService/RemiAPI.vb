@@ -828,13 +828,13 @@ Public Class RemiAPI
                 Dim batch As Batch = BatchManager.GetItem(barcode.BatchNumber)
 
                 If ((From tr In batch.TestRecords Where tr.TestName <> "Sample Evaluation" Select tr).Count > 0) Then
-                    If (batch.TRSData.RequestStatus.ToLower = TRSStatus.Received.ToString().ToLower() Or batch.TRSData.RequestStatus.ToLower = TRSStatus.Submitted.ToString().ToLower() Or batch.TRSData.RequestStatus.ToLower = "pm review") Then
+                    If (batch.RequestStatus.ToLower = TRSStatus.Received.ToString().ToLower() Or batch.RequestStatus.ToLower = TRSStatus.Submitted.ToString().ToLower() Or batch.RequestStatus.ToLower = "pm review") Then
                         Dim us As New UserSearch()
                         us.TestCenterID = batch.TestCenterLocationID
 
                         Dim emails As List(Of String) = (From u In UserManager.UserSearchList(us, False, False, False, False, False, False) Where u.IsProjectManager = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
 
-                        Remi.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", qraNumber), String.Format("Please assign this batch as soon as possible in the TRS <a href=""{0}"">{1}</a>", batch.TRSLink, qraNumber), True)
+                        Remi.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", qraNumber), String.Format("Please assign this batch as soon as possible in the Request <a href=""{0}"">{1}</a>", batch.RequestLink, qraNumber), True)
 
                         Return True
                     End If
@@ -1105,18 +1105,6 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    <WebMethod(Description:="Returns the data associated with a particular batch.")> _
-    Public Function GetBatchResultsOverview(ByVal qraNumber As String) As List(Of TestStageResultOverview)
-        Try
-            Dim b As BatchView = BatchManager.GetViewBatch(qraNumber)
-
-            Return GetTestStageOverview(b)
-        Catch ex As Exception
-            BatchManager.LogIssue("REMI API Get View Batch", "e3", NotificationType.Errors, ex)
-        End Try
-        Return Nothing
-    End Function
-
     <WebMethod(EnableSession:=True, Description:="Returns a list of the Request's of active batches.")> _
     Public Function GetActiveBatchList() As String()
         Try
@@ -1127,30 +1115,30 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    <WebMethod(EnableSession:=True, Description:="Returns a list of the Request's of reviewed batches in TRS.")> _
-    Public Function GetTRSReviewedBatchList(ByVal testCenter As String) As String()
+    <WebMethod(EnableSession:=True, Description:="Returns a list of the Request's not in remi")> _
+    Public Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
         Try
-            Return BatchManager.GetTRSReviewedBatchList(testCenter)
+            Return RequestManager.GetRequestsNotInREMI(searchStr)
         Catch ex As Exception
-            BatchManager.LogIssue("GetTRSReviewedBatchList", "e3", NotificationType.Errors, ex)
+            BatchManager.LogIssue("GetRequestsNotInREMI", "e3", NotificationType.Errors, ex)
         End Try
-        Return Nothing
+
+        Return New DataTable("Requests")
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Checks if batch is ready to be moved to a different status.")> _
-    Public Function CheckBatchForStatusUpdates(ByVal qraNumber As String, ByVal userIdentification As String) As Integer
+    Public Function CheckBatchForStatusUpdates(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
         Try
             If (HasAccess("RemiTimedServiceAvailable")) Then
                 If UserManager.SetUserToSession(userIdentification) Then
                     Return BatchManager.CheckSingleBatchForStatusUpdate(Helpers.CleanInputText(qraNumber, 21))
                 End If
-            Else
-                Return 0
             End If
         Catch ex As Exception
             BatchManager.LogIssue("CheckBatchForStatusUpdates", "e3", NotificationType.Errors, ex)
         End Try
-        Return 1
+
+        Return False
     End Function
 
     <Obsolete("Don't use this routine any more. Use ScanAdvanced instead."), _
@@ -1185,6 +1173,19 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+#Region "Report Generator Methods"
+    <WebMethod(Description:="Returns the data associated with a particular batch.")> _
+    Public Function GetBatchResultsOverview(ByVal qraNumber As String) As List(Of TestStageResultOverview)
+        Try
+            Dim b As BatchView = BatchManager.GetViewBatch(qraNumber)
+
+            Return GetTestStageOverview(b)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API Get View Batch", "e3", NotificationType.Errors, ex)
+        End Try
+        Return Nothing
+    End Function
+
     Private Function GetTestStageOverview(ByVal batchOverview As BatchView) As List(Of TestStageResultOverview)
         Dim retVal As New List(Of TestStageResultOverview)
         Dim newT As TaskResultOverview
@@ -1194,15 +1195,11 @@ Public Class RemiAPI
         newT = New TaskResultOverview
         newT.FailDocs = New List(Of Integer)
 
-        'add all the columns
-        ' dt.Columns.Add("Sample Evaluation Test")
         Dim applicableParamtericTests As String() = (From task In batchOverview.Tasks Where task.TestType = TestType.Parametric Order By task.TestName Ascending Select task.TestName).Distinct().ToArray()
 
         For Each ts In (From task In batchOverview.Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder).Distinct
-
             newTS = New TestStageResultOverview
             newTS.Tasks = New List(Of TaskResultOverview)
-
             newTS.TestStageName = ts.TestStageName
             newTS.Order = ts.ProcessOrder
 
@@ -1210,14 +1207,13 @@ Public Class RemiAPI
                 newT = New TaskResultOverview
                 allFails = New List(Of Integer)
                 newT.TaskName = t
-                newT.OverallResult = batchOverview.GetTRSTestOverviewCellString(batchOverview.JobName, newTS.TestStageName, newT.TaskName)
+                newT.OverallResult = batchOverview.GetOverviewCellString(batchOverview.JobName, newTS.TestStageName, newT.TaskName)
 
+                For Each record In (From tr In batchOverview.TestRecords Where tr.TestName = newT.TaskName And tr.TestStageName = newTS.TestStageName And tr.JobName = batchOverview.JobName Select tr)
 
-                For Each record In (From tr In batchOverview.TestRecords _
-                    Where tr.TestName = newT.TaskName And tr.TestStageName = newTS.TestStageName And _
-                    tr.JobName = batchOverview.JobName Select tr)
-
-                    allFails.AddRange(From fd In record.FailDocs Select fd.RQID)
+                    If (record.FailDocs.Count > 0) Then
+                        allFails.AddRange((From fd In record.FailDocs Select Convert.ToInt32(fd.Item("RQ_ID"))))
+                    End If
                 Next
                 newT.FailDocs = allFails.Distinct().ToList()
                 newTS.Tasks.Add(newT)
@@ -1226,6 +1222,7 @@ Public Class RemiAPI
         Next
         Return retVal
     End Function
+#End Region
 #End Region
 
 #Region "Incoming"
@@ -1248,11 +1245,11 @@ Public Class RemiAPI
                     ib.JobID = b.Job.ID
                     ib.ProductGroup = b.ProductGroup
                     ib.QRANumber = b.QRANumber
-                    ib.AssemblyNumber = b.AssemblyNumber
-                    ib.AssemblyRevision = b.AssemblyRevision
+                    'ib.AssemblyNumber = b.AssemblyNumber
+                    'ib.AssemblyRevision = b.AssemblyRevision
+                    'ib.PartName = b.PartName
                     ib.IsInREMI = b.Status <> BatchStatus.NotSavedToREMI
                     ib.Notifications = b.Notifications
-                    ib.PartName = b.PartName
                 End If
             End If
 
@@ -1263,50 +1260,50 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    ''' <summary>
-    ''' Added as write becuase if the get fails it auto adds the batch.
-    ''' </summary>
-    ''' <param name="qraNumber"></param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    <WebMethod(EnableSession:=True, Description:="Attempts to retrieve a batch from REMI and if it cannot find the batch will attempt to retrieve it from TRS.")> _
-    Public Function IncomingGetBatch(ByVal qraNumber As String) As IncomingAppBatchData
-        Try
-            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(qraNumber), 21))
-            Dim ib As New IncomingAppBatchData
-            If bc.Validate Then
-                Dim b As Batch = BatchManager.GetItem(bc.BatchNumber)
-                If b IsNot Nothing Then
-                    ib.JobName = b.Job.Name
-                    ib.JobID = b.Job.ID
-                    ib.ProductGroup = b.ProductGroup
-                    ib.QRANumber = b.QRANumber
-                    ib.AssemblyNumber = b.AssemblyNumber
-                    ib.AssemblyRevision = b.AssemblyRevision
-                    ib.IsInREMI = b.Status <> BatchStatus.NotSavedToREMI
-                    ib.Notifications = b.Notifications
-                    ib.PartName = b.PartName
-                End If
-            End If
-            Return ib
-        Catch ex As Exception
-            BatchManager.LogIssue("REMI API Get incoming batch", "e3", NotificationType.Errors, ex, "Request: " + qraNumber)
-        End Try
-        Return Nothing
-    End Function
+    ' ''' <summary>
+    ' ''' Added as write becuase if the get fails it auto adds the batch.
+    ' ''' </summary>
+    ' ''' <param name="qraNumber"></param>
+    ' ''' <returns></returns>
+    ' ''' <remarks></remarks>
+    '<WebMethod(EnableSession:=True, Description:="Attempts to retrieve a batch from REMI and if it cannot find the batch will attempt to retrieve it from TRS.")> _
+    'Public Function IncomingGetBatch(ByVal qraNumber As String) As IncomingAppBatchData
+    '    Try
+    '        Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(qraNumber), 21))
+    '        Dim ib As New IncomingAppBatchData
+    '        If bc.Validate Then
+    '            Dim b As Batch = BatchManager.GetItem(bc.BatchNumber)
+    '            If b IsNot Nothing Then
+    '                ib.JobName = b.Job.Name
+    '                ib.JobID = b.Job.ID
+    '                ib.ProductGroup = b.ProductGroup
+    '                ib.QRANumber = b.QRANumber
+    '                'ib.AssemblyNumber = b.AssemblyNumber
+    '                'ib.AssemblyRevision = b.AssemblyRevision
+    '                'ib.PartName = b.PartName
+    '                ib.IsInREMI = b.Status <> BatchStatus.NotSavedToREMI
+    '                ib.Notifications = b.Notifications
+    '            End If
+    '        End If
+    '        Return ib
+    '    Catch ex As Exception
+    '        BatchManager.LogIssue("REMI API Get incoming batch", "e3", NotificationType.Errors, ex, "Request: " + qraNumber)
+    '    End Try
+    '    Return Nothing
+    'End Function
 
-    <WebMethod(EnableSession:=True, Description:="Adds a new batch to REMI. This is used to confirm the job is correct.")> _
-    Public Function IncomingSaveBatch(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
-        Try
-            If UserManager.SetUserToSession(userIdentification) Then
-                Dim b As Batch = BatchManager.GetItem(qraNumber)
-                Return True
-            End If
-        Catch ex As Exception
-            BatchManager.LogIssue("REMI API Add Incoming Batch", "e9", NotificationType.Errors, ex, "Request: " + qraNumber + " UID: " + userIdentification)
-        End Try
-        Return False
-    End Function
+    '<WebMethod(EnableSession:=True, Description:="Adds a new batch to REMI. This is used to confirm the job is correct.")> _
+    'Public Function IncomingSaveBatch(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
+    '    Try
+    '        If UserManager.SetUserToSession(userIdentification) Then
+    '            Dim b As Batch = BatchManager.GetItem(qraNumber)
+    '            Return True
+    '        End If
+    '    Catch ex As Exception
+    '        BatchManager.LogIssue("REMI API Add Incoming Batch", "e9", NotificationType.Errors, ex, "Request: " + qraNumber + " UID: " + userIdentification)
+    '    End Try
+    '    Return False
+    'End Function
 #End Region
 
 #Region "SendMail"

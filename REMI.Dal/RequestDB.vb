@@ -34,159 +34,306 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetConnectName(ByVal reqNumber As String) As String
+            Return reqNumber.Substring(0, reqNumber.IndexOf("-"))
+        End Function
+
         Public Shared Function GetConnectString(ByVal reqNumber As String) As String
             Dim requestType As String = reqNumber.Substring(0, reqNumber.IndexOf("-"))
 
             Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
         End Function
 
-        Public Shared Function GetTRSRequest(ByVal reqNumber As String) As IQRARequest
-            Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(GetConnectString(reqNumber)))
-                myConnection.Open()
-
-                Return GetTRSRequest(reqNumber, myConnection)
-            End Using
-        End Function
-
-        Public Shared Function GetTRSRequest(ByVal reqNumber As String, ByVal myConnection As OracleConnection) As IQRARequest
+        Public Shared Function GetRequest(ByVal reqNumber As String, ByVal useridentification As String) As RequestFieldsCollection
             Dim reqNum As New RequestNumber(reqNumber)
-            Dim requestData As IQRARequest = Nothing
+            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = reqNum.Type Select r).FirstOrDefault()
 
-            If reqNum.Validate Then
-                requestData = REMIAppCache.GetReqData(reqNumber)
+            Dim rf As RequestFieldsCollection = REMIAppCache.GetReqData(reqNum.Number)
 
-                If requestData IsNot Nothing Then
-                    Return requestData
-                Else
-                    'GET IN DB
-                    'could not find it in cache, return it from the 
-                    ' oracle database if possible
-                    Dim connectionCreatedInternally As Boolean
+            If (rf Is Nothing) Then
+                rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number)
 
-                    If myConnection Is Nothing Then
-                        myConnection = New OracleConnection(REMIConfiguration.ConnectionStringReq(GetConnectString(reqNumber)))
-                        connectionCreatedInternally = True
-                    End If
-
-                    If myConnection.State <> ConnectionState.Open Then
-                        myConnection.Open()
-                    End If
-
-                    Try
-                        Using myCommand As New OracleCommand("REMI_HELPER.get_request_information", myConnection)
-                            myCommand.CommandType = CommandType.StoredProcedure
-                            myCommand.Parameters.Add(New OracleParameter("p_reqnum", OracleType.VarChar)).Value = reqNum.Number
-                            myCommand.Parameters.Add(New OracleParameter("C_REF_RET", OracleType.Cursor)).Direction = ParameterDirection.ReturnValue
-                            Dim myReader As OracleDataReader = myCommand.ExecuteReader
-
-                            If myReader.HasRows Then
-                                requestData = GetRecord(myReader, reqNum)
-                            End If
-                        End Using
-                    Catch ex As Exception
-                        Emailer.SendErrorEMail("REMI Error", "Current Request: " + reqNum.Number, REMI.Validation.NotificationType.Errors, ex)
-                    End Try
-
-                    If connectionCreatedInternally Then
-                        myConnection.Close()
-                        myConnection.Dispose()
-                    End If
-                    'now put it in the cache
-                    If requestData IsNot Nothing Then
-                        REMIAppCache.SetReqData(requestData)
+                If (requestType.IsExternal) Then
+                    If (rf.Count > 0) Then
+                        LinkExternalRequest(reqNumber, rf, useridentification, requestType.DBType)
                     End If
                 End If
+
+                REMIAppCache.SetReqData(rf, reqNum.Number)
             End If
 
-            Return requestData
+            Return rf
         End Function
 
-        Public Shared Function GetTRSQRAByTestCenter(ByVal testCenter As String) As DataTable
-            Dim dtReq As New DataTable
-            Dim connections As List(Of String) = (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.DBType = "Oracle" Select r.RequestConnectName).Distinct.ToList()
-
-            For Each con In connections
-                Using myOracleConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(con))
-                    myOracleConnection.Open()
-
-                    Using myCommand As New OracleCommand("REMI_HELPER.get_QRA_By_TestCenter", myOracleConnection)
-                        myCommand.CommandTimeout = 40
-                        myCommand.CommandType = CommandType.StoredProcedure
-                        myCommand.Parameters.Add(New OracleParameter("p_test_center", OracleType.VarChar)).Value = testCenter
-                        myCommand.Parameters.Add(New OracleParameter("C_REF_RET", OracleType.Cursor)).Direction = ParameterDirection.ReturnValue
-                        Dim myReader As OracleDataReader = myCommand.ExecuteReader
-                        Dim dt As New DataTable
-                        dt.Load(myReader)
-                        dtReq.Merge(dt, True)
-                    End Using
-                End Using
-            Next
-
-            'Dim connectionsSQL As List(Of String) = (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.Type = "RequestType" And r.DBType = "SQL" Select r.RequestConnectName).Distinct.ToList()
-
-            'For Each con In connectionsSQL
-            '    Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringReq(con))
-            '        myConnection.Open()
-
-            '    End Using
-            'Next
-
-            Return dtReq
-        End Function
-
-        Public Shared Sub UpdateTRSPercentageComplete(ByVal reqNumber As String, ByVal percentageComplete As Integer)
-            Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(GetConnectString(reqNumber)))
-                myConnection.Open()
-                Using myCommand As New OracleCommand("REMI_HELPER.qra_percent_update", myConnection)
+#Region "Oracle"
+        ''' <summary>
+        ''' Accesses the FA System and attempts to get a list of FA's for a particular QRA.
+        ''' </summary>
+        ''' <param name="QRANumber">the QRA number of the batch </param>
+        ''' <returns>A list of FA numbers</returns>
+        Public Shared Function GetFANumberList(ByVal QRANumber As String) As List(Of String)
+            Dim FAQRANumberList As New List(Of String)
+            Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(RequestDB.GetConnectString(QRANumber)))
+                Using myCommand As New OracleCommand("REMI_HELPER.get_FAs_by_QRA", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-
-                    Dim pPercentComplete As New OracleParameter
-                    pPercentComplete.Direction = ParameterDirection.Input
-                    pPercentComplete.OracleType = OracleType.Number
-                    pPercentComplete.ParameterName = "percent_complete"
-                    pPercentComplete.Value = percentageComplete
-                    myCommand.Parameters.Add(pPercentComplete)
+                    Dim pOut As New OracleParameter
+                    pOut.Direction = ParameterDirection.ReturnValue
+                    pOut.OracleType = OracleType.Cursor
+                    pOut.ParameterName = "C_REF_RET"
+                    myCommand.Parameters.Add(pOut)
 
                     Dim pQRANumber As New OracleParameter
                     pQRANumber.Direction = ParameterDirection.Input
                     pQRANumber.OracleType = OracleType.VarChar
-                    pQRANumber.ParameterName = "p_reqnum"
-                    pQRANumber.Value = reqNumber
+                    pQRANumber.ParameterName = "p_qra_num"
+                    pQRANumber.Value = QRANumber
+
                     myCommand.Parameters.Add(pQRANumber)
-
-                    myCommand.ExecuteOracleScalar()
-
+                    myConnection.Open()
+                    Using myReader As OracleDataReader = myCommand.ExecuteReader
+                        If myReader.HasRows Then
+                            While myReader.Read()
+                                FAQRANumberList.Add(myReader.GetValue(0).ToString)
+                            End While
+                        End If
+                    End Using
                 End Using
             End Using
+
+            Return FAQRANumberList
+        End Function
+
+        Public Shared Sub LinkExternalRequest(ByVal reqNumber As String, ByRef rf As RequestFieldsCollection, ByVal useridentification As String, ByVal dbType As String)
+            Dim reqNum As New RequestNumber(reqNumber)
+
+            If reqNum.Validate Then
+                Dim extReq As Dictionary(Of String, String) = GetExternalRequestNotLinked(reqNumber, dbType)
+                LinkExternalRecord(extReq, reqNum, rf, useridentification)
+            End If
         End Sub
 
-        Private Shared Function GetRecord(ByVal myReader As IDataReader, ByVal reqNum As RequestNumber) As IQRARequest
-            Dim reqData As New RequestBase(reqNum)
-            Dim currentUnitNumber As Integer
+        Public Shared Function GetProperty(ByVal name As String, ByRef fields As Dictionary(Of String, String)) As String
+            Dim returnVal As String = String.Empty
 
-            While myReader.Read
-                Select Case myReader.Item(0).ToString.ToLower.Trim
-                    Case "failed unit number"
-                        If Integer.TryParse(myReader.Item(1).ToString.Trim, currentUnitNumber) Then
-                            reqData.AffectsUnits.Add(currentUnitNumber)
-                        End If
-                    Case Else
-                        Dim keyName As String = myReader.Item(0).ToString.Trim
-                        Dim propValue As String = myReader.Item(1).ToString.Trim
-                        If Not reqData.RequestProperties.ContainsKey(keyName) Then
-                            reqData.RequestProperties.Add(keyName, propValue)
-                        End If
-                End Select
-            End While
-
-            If (REMIAppCache.GetFieldMapping(reqData.RequestType) Is Nothing) Then
-                REMIAppCache.SetFieldMapping(reqData.RequestType, (From fm In New REMI.Dal.Entities().Instance.ReqFieldMappings Where fm.RequestType.Lookup.Values = reqData.RequestType).ToDictionary(Function(k) k.IntField, Function(v) v.ExtField))
+            If fields.ContainsKey(name) Then
+                fields.TryGetValue(name, returnVal)
             End If
 
-            reqData.FieldMapping = REMIAppCache.GetFieldMapping(reqData.RequestType)
-
-            Return reqData
+            Return returnVal
         End Function
+
+        Public Shared Function GetExternalRequestNotLinked(ByVal reqNumber As String, ByVal dbType As String) As Dictionary(Of String, String)
+            Dim reqNum As New RequestNumber(reqNumber)
+            Dim requestProperties As Dictionary(Of String, String) = REMIAppCache.GetExtReqData(reqNum.Number)
+
+            If reqNum.Validate And requestProperties Is Nothing Then
+                requestProperties = New Dictionary(Of String, String)
+                requestProperties.Add("RequestNumber", reqNumber)
+                requestProperties.Add("RequestType", GetConnectName(reqNumber))
+                requestProperties.Add("Summary", String.Empty)
+                requestProperties.Add("Request Link", String.Empty)
+
+                Try
+                    Dim currentUnitNumber As Integer
+                    Dim affectsUnits As New List(Of Integer)
+                    Dim hasRecords As Boolean = False
+
+                    If (dbType = "Oracle") Then
+                        Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(GetConnectString(reqNumber)))
+                            myConnection.Open()
+
+                            Using myCommand As New OracleCommand("REMI_HELPER.get_request_information", myConnection)
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.Add(New OracleParameter("p_reqnum", OracleType.VarChar)).Value = reqNum.Number
+                                myCommand.Parameters.Add(New OracleParameter("C_REF_RET", OracleType.Cursor)).Direction = ParameterDirection.ReturnValue
+                                Dim myReader As OracleDataReader = myCommand.ExecuteReader
+
+                                If myReader.HasRows Then
+                                    hasRecords = True
+
+                                    While myReader.Read
+                                        Select Case myReader.Item(0).ToString.ToLower.Trim
+                                            Case "failed unit number"
+                                                If Integer.TryParse(myReader.Item(1).ToString.Trim, currentUnitNumber) Then
+                                                    affectsUnits.Add(currentUnitNumber)
+                                                End If
+                                            Case Else
+                                                Dim keyName As String = myReader.Item(0).ToString.Trim
+                                                Dim propValue As String = myReader.Item(1).ToString.Trim
+
+                                                If Not requestProperties.ContainsKey(keyName) Then
+                                                    If (keyName = "Request Link") Then
+                                                        requestProperties(keyName) = propValue
+                                                    Else
+                                                        requestProperties.Add(keyName, propValue)
+                                                    End If
+                                                Else
+                                                    requestProperties(keyName) = propValue
+                                                End If
+                                        End Select
+                                    End While
+                                End If
+                            End Using
+                        End Using
+                    ElseIf (dbType = "SQL") Then
+                        Using myConnection2 As New SqlConnection(REMIConfiguration.ConnectionStringReq(reqNumber))
+                            Using myCommand As New SqlCommand("get_request_information", myConnection2)
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.AddWithValue("@ReqNum", reqNum.Number)
+                                myConnection2.Open()
+
+                                Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                                    If myReader.HasRows Then
+                                        hasRecords = True
+
+                                        While myReader.Read
+                                            Select Case myReader.Item(0).ToString.ToLower.Trim
+                                                Case "failed unit number"
+                                                    If Integer.TryParse(myReader.Item(1).ToString.Trim, currentUnitNumber) Then
+                                                        affectsUnits.Add(currentUnitNumber)
+                                                    End If
+                                                Case Else
+                                                    Dim keyName As String = myReader.Item(0).ToString.Trim
+                                                    Dim propValue As String = myReader.Item(1).ToString.Trim
+
+                                                    If Not requestProperties.ContainsKey(keyName) Then
+                                                        If (keyName = "Request Link") Then
+                                                            requestProperties(keyName) = propValue
+                                                        Else
+                                                            requestProperties.Add(keyName, propValue)
+                                                        End If
+                                                    Else
+                                                        requestProperties(keyName) = propValue
+                                                    End If
+                                            End Select
+                                        End While
+                                    End If
+                                End Using
+                            End Using
+                        End Using
+                    End If
+
+                    If (hasRecords) Then
+                        Dim val As String = String.Empty
+
+                        If (requestProperties.TryGetValue("Failure Description", val)) Then
+                            Dim summaryString As New System.Text.StringBuilder
+                            summaryString.Append("<b>Failure: </b> ")
+                            summaryString.Append(requestProperties.Item("Failure Description"))
+
+                            If affectsUnits.Count >= 1 Then
+                                summaryString.Append("<br /><b>Affected Units:</b> ")
+
+                                For i As Int32 = 0 To affectsUnits.Count - 1
+                                    summaryString.Append(If(i > 0, ", ", String.Empty) + affectsUnits(i).ToString)
+                                Next
+                            End If
+
+                            summaryString.Append("<br />")
+
+                            If (requestProperties.TryGetValue("Top Level", val)) Then
+                                summaryString.Append(String.Format("<b>Top Level:</b> {0}<br />", requestProperties.Item("Top Level")))
+                            End If
+
+                            If (requestProperties.TryGetValue("2nd Level", val)) Then
+                                summaryString.Append(String.Format("<b>2nd Level:</b> {0}<br />", requestProperties.Item("2nd Level")))
+                            End If
+
+                            If (requestProperties.TryGetValue("3rd Level", val)) Then
+                                summaryString.Append(String.Format("<b>3rd Level:</b> {0}<br />", requestProperties.Item("3rd Level")))
+                            End If
+
+                            requestProperties("Summary") = summaryString.ToString()
+                        Else
+                            requestProperties("Summary") = String.Empty
+                        End If
+
+                        REMIAppCache.SetExtReqData(requestProperties, reqNumber)
+                    End If
+                Catch ex As Exception
+                    Emailer.SendErrorEMail("REMI Error", "Current Request: " + reqNum.Number, REMI.Validation.NotificationType.Errors, ex)
+                End Try
+            ElseIf requestProperties Is Nothing Then
+                requestProperties = New Dictionary(Of String, String)
+                requestProperties.Add("RequestNumber", reqNumber)
+                requestProperties.Add("RequestType", GetConnectName(reqNumber))
+                requestProperties.Add("Summary", String.Empty)
+                requestProperties.Add("Request Link", String.Empty)
+            End If
+
+            Return requestProperties
+        End Function
+
+        Public Shared Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
+            Dim dtReq As New DataTable("Requests")
+            Dim lastRequestConnectName As String = String.Empty
+            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Select r).ToList()
+
+            For Each r In requestType
+                If (r.RequestConnectName <> lastRequestConnectName) Then
+
+                    lastRequestConnectName = r.RequestConnectName
+
+                    If (r.DBType = "Oracle") Then
+                        Using myOracleConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(r.RequestConnectName))
+                            myOracleConnection.Open()
+
+                            Using myCommand As New OracleCommand("REMI_HELPER.get_Requests_By_Search", myOracleConnection)
+                                myCommand.CommandTimeout = 40
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.Add(New OracleParameter("p_search", OracleType.VarChar)).Value = searchStr
+                                myCommand.Parameters.Add(New OracleParameter("C_REF_RET", OracleType.Cursor)).Direction = ParameterDirection.ReturnValue
+                                Dim myReader As OracleDataReader = myCommand.ExecuteReader
+                                Dim dt As New DataTable("Requests")
+                                dt.Load(myReader)
+
+                                If (dt.Rows.Count > 0) Then
+                                    dtReq.Merge(dt, True)
+                                End If
+                            End Using
+                        End Using
+                    ElseIf (r.DBType = "SQL") Then
+                        Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringReq(r.RequestConnectName))
+                            Using myCommand As New SqlCommand("Req.RequestGet", myConnection)
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.AddWithValue("@RequestTypeID", r.RequestTypeID)
+                                myCommand.Parameters.AddWithValue("@Department", searchStr)
+                                myConnection.Open()
+                                Dim dt2 As New DataTable("Requests")
+                                Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                                da.Fill(dt2)
+
+                                If (dt2.Rows.Count > 0) Then
+                                    dtReq.Merge(dt2, True)
+                                End If
+                            End Using
+                        End Using
+                    End If
+                End If
+            Next
+
+            Return dtReq
+        End Function
+#End Region
+
+        Private Shared Sub LinkExternalRecord(ByVal extFields As Dictionary(Of String, String), ByVal reqNum As RequestNumber, ByRef rf As RequestFieldsCollection, ByVal useridentification As String)
+            Dim isOutOfDate As Boolean = False
+
+            For Each rec In extFields
+                If (rf IsNot Nothing) Then
+                    For Each r In rf
+                        If (r.Name = rec.Key And r.Value <> rec.Value) Then
+                            isOutOfDate = True
+                            r.Value = rec.Value.Trim()
+                        End If
+                    Next
+                End If
+            Next
+
+            If (isOutOfDate) Then
+                SaveRequest(GetConnectName(reqNum.Number), rf, useridentification)
+            End If
+        End Sub
 
         Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
             Dim instance = New REMI.Dal.Entities().Instance()
@@ -216,6 +363,8 @@ Namespace REMI.Dal
                     sfd.ReqFieldSetupID = rec.FieldSetupID
                     sfd.RequestID = reqID
                     sfd.Value = rec.Value
+                    sfd.InsertTime = DateTime.Now
+                    sfd.LastUser = userIdentification
                     instance.AddToReqFieldDatas(sfd)
                 Else
                     fieldData.Value = rec.Value
@@ -303,8 +452,8 @@ Namespace REMI.Dal
                 myFields.IntField = String.Empty
             End If
 
-            myFields.Internal = myDataRecord.GetInt32(myDataRecord.GetOrdinal("Internal"))
-
+            myFields.InternalField = myDataRecord.GetInt32(myDataRecord.GetOrdinal("InternalField"))
+            myFields.IsFromExternalSystem = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsFromExternalSystem"))
             myFields.IsArchived = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("Archived"))
             myFields.IsRequired = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsRequired"))
             myFields.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("Name"))

@@ -73,7 +73,7 @@
                         EnableViewState="False"></asp:HyperLink>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="RQ Results" SortExpression="">
+            <asp:TemplateField HeaderText="Results" SortExpression="">
                 <ItemTemplate>
                     <asp:HyperLink ID="hypRQResult" runat="server" Text='Measurements' Visible="false" ToolTip="Click to view the measurements for this unit." EnableViewState="False"></asp:HyperLink>
                 </ItemTemplate>

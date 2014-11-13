@@ -31,7 +31,7 @@
             <ItemTemplate>
                 <asp:Label EnableViewState="false" ID="lblReportDate" runat="server" Text='<%# Remi.Helpers.datetimeformat(Eval("ReportRequiredby")) %>'></asp:Label></ItemTemplate>
         </asp:TemplateField>
-        <asp:BoundField DataField="CompletionPriority" HeaderText="Priority" SortExpression="CompletionPriority" ReadOnly="true" />
+        <asp:BoundField DataField="Priority" HeaderText="Priority" SortExpression="Priority" ReadOnly="true" />
         <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" visible="false" ReadOnly="true" />
         <asp:TemplateField HeaderText="RTR">
             <ItemTemplate>
@@ -45,16 +45,16 @@
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the WI for the job for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="TRS">
+        <asp:TemplateField HeaderText="Request">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="false" ID="hypTRSLink" runat="server" NavigateUrl='<%# Eval("TRSLink") %>'
+                <asp:HyperLink EnableViewState="false" ID="hypTRSLink" runat="server" NavigateUrl='<%# Eval("RequestLink")%>'
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the request page for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="RQ Results">
+        <asp:TemplateField HeaderText="Results">
             <ItemTemplate>
                 <asp:HyperLink EnableViewState="false" ID="hypRelabLink" runat="server" NavigateUrl='<%# Eval("RelabResultLink") %>'
-                    Text='<%# "View" %>' ToolTip='<%# "Click to view the Results page for this batch" %>'></asp:HyperLink>
+                    Text='<%# "View" %>' ToolTip='<%# "Click to view the Results for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Info">

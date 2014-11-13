@@ -133,7 +133,7 @@
                 <td class="HorizTableSecondColumn">
                     <asp:Repeater ID="rptDocList" runat="server">
                         <ItemTemplate>
-                           <asp:HyperLink ID="hypDocumentName" runat="server" NavigateUrl='<%# DataBinder.Eval(Container.DataItem, "TRSLink")%>'
+                           <asp:HyperLink ID="hypDocumentName" runat="server" NavigateUrl='<%# DataBinder.Eval(Container.DataItem, "RequestLink")%>'
                                 Target="_blank" Text='<%# DataBinder.Eval(Container.DataItem, "RequestNumber")%>'
                                 ToolTip="Click to view the full document details" />
                            <asp:Button  ID="lnkRemoveFailDocument" runat="server"  Font-Size="XX-Small" CssClass="button"  Width="15px" Height="15px" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "RequestNumber")%>' Text="Remove"></asp:Button>
@@ -148,11 +148,10 @@
                 </td>
                 <td class="HorizTableSecondColumn" style="white-space:normal;">
        
-                 <asp:DataList ID="rptFAList" runat="server" BorderStyle="None" DataSourceID="odsFailDocList"
-                        RepeatColumns="2" DataKeyField="requestnumber" 
+                 <asp:DataList ID="rptFAList" runat="server" BorderStyle="None" RepeatColumns="2" DataKeyField="requestnumber" 
                         BorderWidth="0">
                         <ItemTemplate>
-                            <asp:HyperLink ID="hypDocumentName" runat="server" NavigateUrl='<%# DataBinder.Eval(Container.DataItem, "TRSLink")%>'
+                            <asp:HyperLink ID="hypDocumentName" runat="server" NavigateUrl='<%# DataBinder.Eval(Container.DataItem, "RequestLink")%>'
                                 Target="_blank" Text='<%# DataBinder.Eval(Container.DataItem, "RequestNumber")%>'
                                 ToolTip="Click to view the full document details" />
                             <br />
@@ -163,14 +162,6 @@
                         </ItemTemplate>
                         <ItemStyle Width="250px" CssClass="faListItem" />
                     </asp:DataList>
-               
-                    <asp:ObjectDataSource ID="odsFailDocList" runat="server" OldValuesParameterFormatString="original_{0}"
-                        SelectMethod="GetFailDocs" TypeName="REMI.Bll.TestRecordManager">
-                        <SelectParameters>
-                            <asp:ControlParameter ControlID="hdnQRANumber" Name="QRANumber" PropertyName="Value" Type="String" />
-                            <asp:ControlParameter ControlID="hdnTRID" Name="trID" PropertyName="Value" Type="Int32" />
-                        </SelectParameters>
-                    </asp:ObjectDataSource>
                     OR enter other Cater document number:&nbsp;<asp:TextBox ID="txtAssignAnyFailDoc" runat="server"
                         Width="142px"></asp:TextBox><asp:Button ID="btnAssignAnyFailDoc" Width="44px" Height="20px" Font-Size="XX-Small" runat="server" Text="Assign" cssclass="button"/>
                     <br />
@@ -225,7 +216,7 @@
         </table>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlRelabMatrix" Visible="false">
-        <h3>Functional RQ Results Measurements</h3>
+        <h3>Functional Results Measurements</h3>
         <asp:GridView ID="gvwRelabMatrix" AutoGenerateColumns="true" runat="server" CssClass="VerticalTable" EnableViewState="True" DataKeyNames="TestUnitID">
             <RowStyle CssClass="evenrow" />
             <AlternatingRowStyle CssClass="oddrow" />

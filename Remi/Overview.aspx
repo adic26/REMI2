@@ -43,7 +43,7 @@
                 </li>
                 <li>
                     <asp:Image ImageUrl="../Design/Icons/png/24x24/process.png" ID="imgShowTRS" runat="server" />
-                    <asp:CheckBox runat="server" ID="chkShowTRS" Text="Show TRS" AutoPostBack="true" CausesValidation="true" TextAlign="Right" EnableViewState="true" />
+                    <asp:CheckBox runat="server" ID="chkShowTRS" Text="Show Upcoming" AutoPostBack="true" CausesValidation="true" TextAlign="Right" EnableViewState="true" />
                 </li>
             </ul>
         </ContentTemplate>
@@ -124,12 +124,12 @@
             </script>
 
             <asp:Panel runat="server" ID="pnlShowTRS" Visible="false">
-                <h3>TRS</h3>
-                <asp:GridView runat="server" ID="gvwTRS" AutoGenerateColumns="true" EnableViewState="true" EmptyDataText="There are no TRS batches.">
+                <h3>Upcoming Requests</h3>
+                <asp:GridView runat="server" ID="gvwTRS" AutoGenerateColumns="true" EnableViewState="true" EmptyDataText="There are no requests upcoming.">
                     <Columns>
-                        <asp:TemplateField HeaderText="TRS" SortExpression="" ItemStyle-Width="4%">
+                        <asp:TemplateField HeaderText="Request" SortExpression="" ItemStyle-Width="4%">
                             <ItemTemplate>
-                                <asp:HyperLink ID="hplTRS" runat="server" Text='<%# Eval("QRA") %>' Target="_blank" NavigateUrl='<%# "https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=" + Eval("RequestID").ToString() %>' EnableViewState="true"></asp:HyperLink>
+                                <asp:HyperLink ID="hplTRS" runat="server" Text='<%# Eval("RequestNumber") %>' Target="_blank" NavigateUrl='<%# Eval("RequestID").ToString() %>' EnableViewState="true"></asp:HyperLink>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

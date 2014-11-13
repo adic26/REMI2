@@ -137,7 +137,7 @@ Public Class Overview
             If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("gvwTRS") Or postBackID.Contains("chkShowTRS"))) Then
                 If (chkShowTRS.Checked) Then
                     pnlShowTRS.Visible = True
-                    gvwTRS.DataSource = BatchManager.GetTRSQRAByTestCenter(UserManager.GetCurrentUser.TestCentre)
+                    gvwTRS.DataSource = RequestManager.GetRequestsNotInREMI(ddlDepartment.SelectedItem.Text)
                     gvwTRS.DataBind()
                 Else
                     pnlShowTRS.Visible = False

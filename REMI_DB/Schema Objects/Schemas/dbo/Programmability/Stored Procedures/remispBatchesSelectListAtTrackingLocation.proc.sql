@@ -41,7 +41,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 		) as ActiveTaskAssignee,
 	CONVERT(BIT,0) AS HasBatchSpecificExceptions,
 	batchesrows.AccessoryGroupID,batchesrows.ProductTypeID,BatchesRows.RQID As ReqID, AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, 
-	ReportApprovedDate, IsMQual, JobID, ExecutiveSummary, MechanicalTools, batchesrows.RequestPurposeID, batchesrows.PriorityID, DepartmentID, Department
+	ReportApprovedDate, IsMQual, JobID, ExecutiveSummary, MechanicalTools, batchesrows.RequestPurposeID, batchesrows.PriorityID, DepartmentID, Department, Requestor
 	FROM     
 		(SELECT ROW_NUMBER() OVER (ORDER BY 
 case when @sortExpression='qra' and @direction='asc' then qranumber end,
@@ -81,7 +81,7 @@ case when @sortExpression is null then Priority end desc
                       b.TestStageCompletionStatus,
 					 (select count(*) from testunits WITH(NOLOCK) where testunits.batchid = b.id) as testUnitCount,
 					 b.WILocation, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, JobID,
-					 ExecutiveSummary, MechanicalTools, RequestPurposeID, PriorityID, DepartmentID, Department
+					 ExecutiveSummary, MechanicalTools, RequestPurposeID, PriorityID, DepartmentID, Department, Requestor
                       from
 				(SELECT DISTINCT 
                       b.ID, 
@@ -105,7 +105,7 @@ case when @sortExpression is null then Priority end desc
                       b.TestStageCompletionStatus,
                       j.WILocation,
 					  b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, j.ID As JobID,
-					  ExecutiveSummary, MechanicalTools, l4.[Values] AS RequestPurpose, l5.[Values] AS Priority, b.DepartmentID, l6.[Values] AS Department
+					  ExecutiveSummary, MechanicalTools, l4.[Values] AS RequestPurpose, l5.[Values] AS Priority, b.DepartmentID, l6.[Values] AS Department, b.Requestor
 				FROM Batches AS b 
 					INNER JOIN DeviceTrackingLog AS dtl WITH(NOLOCK) 
 					INNER JOIN TrackingLocations AS tl WITH(NOLOCK) ON dtl.TrackingLocationID = tl.ID 

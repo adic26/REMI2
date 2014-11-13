@@ -142,23 +142,11 @@
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTRSLink" runat="server" />
-            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to view the TRS for this batch" Target="_blank">TRS Link</asp:HyperLink>
+            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to view the TRS for this batch" Target="_blank">Request Link</asp:HyperLink>
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgRelabLink" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypRelabLink" runat="server" ToolTip="Click to view the Results page for this batch" Visible="false" Target="_blank">RQ Results</asp:HyperLink>
-        </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgRelabLink2" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypRelabLink2" runat="server" ToolTip="Click to view the Old Relab results page for this batch" Target="_blank" Visible="false">Relab Link</asp:HyperLink>
-        </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgDropTestWebAppLink" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypDropTestWebApp" runat="server" ToolTip="Click to view the DropTest report page for this batch" Visible="false" Target="_blank">DropTest Link</asp:HyperLink>
-        </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTumbleTestWebAppLink" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypTumbleTestWebApp" runat="server" ToolTip="Click to view the TumbleTest report page for this batch" Visible="false" Target="_blank">TumbleTest Link</asp:HyperLink>
+            <asp:HyperLink ID="hypRelabLink" runat="server" ToolTip="Click to view the Results for this batch" Visible="false" Target="_blank">Results</asp:HyperLink>
         </li>
     </ul>
 </asp:Content>
@@ -198,6 +186,27 @@
                                 </asp:UpdateProgress>
                             </ContentTemplate>
                         </asp:UpdatePanel>
+                    </Content>
+                </asp:AccordionPane>
+                <asp:AccordionPane ID="acpRequest" runat="server">
+                    <Header>
+                        <h2>Request Info</h2>
+                    </Header>
+                    <Content>
+                        <asp:GridView ID="gvwRequestInfo" runat="server" AutoGenerateColumns="false">
+                            <Columns>
+                                <asp:BoundField DataField="Name" HeaderText="Field" ReadOnly="True" SortExpression="ID" Visible="True" />
+                                <asp:TemplateField HeaderText="Info" ItemStyle-Wrap="true">
+                                    <ItemTemplate>
+                                        <div style="white-space:normal;text-align:left;">
+                                            <asp:HiddenField runat="server" ID="hdnType" Value='<%# Eval("FieldType")%>' />
+                                            <asp:Label runat="server" ID="lblValue" Width="500px" Text='<%# Eval("Value") %>' Visible="true"></asp:Label>
+                                            <asp:HyperLink ID="hylValue"  runat="server" Target="_blank" Text="Link" NavigateUrl='<%# Eval("Value")%>' Visible="false"></asp:HyperLink>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
                     </Content>
                 </asp:AccordionPane>
                 <asp:AccordionPane ID="acpBatchInfo" runat="server">

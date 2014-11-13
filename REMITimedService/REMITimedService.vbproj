@@ -251,9 +251,6 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <WebReferenceUrl Include="http://rem002ykf/webservice/remiapi.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\RemiAPI\</RelPath>

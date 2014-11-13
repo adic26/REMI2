@@ -18,18 +18,16 @@ Partial Class Controls_BatchSelectControl
     Private _isAdmin As Boolean
 
     Public Enum BatchSelectControlMode
-        IncomingMode = 1
-        ManageMode = 2
-        BasicDisplay = 3
-        All = 4
-        BatchInfoDisplay = 5
-        ProductInfoDisplay = 6
-        TestingCompleteDisplay = 7
-        HeldInfoDisplay = 8
-        SearchInfoDisplay = 9
-        OverviewDisplay = 10
-        JobDisplay = 11
-        TrackingLocationDisplay = 12
+        BasicDisplay = 1
+        All = 2
+        BatchInfoDisplay = 3
+        ProductInfoDisplay = 4
+        TestingCompleteDisplay = 5
+        HeldInfoDisplay = 6
+        SearchInfoDisplay = 7
+        OverviewDisplay = 8
+        JobDisplay = 9
+        TrackingLocationDisplay = 10
     End Enum
 
     Protected Enum GridviewColumNames
@@ -49,21 +47,19 @@ Partial Class Controls_BatchSelectControl
         Job = 13
         Teststage = 14
         CPR = 15
-        IsMQual = 16
-        Priority = 17
-        EstJobCompleletion = 18
-        EstTSCompleletion = 19
-        TSDue = 20
-        ReportDue = 21
-        Status = 22
-        ReqID = 23
-        HasUnitsRequireingReturnToRequestor = 24
-        Comments = 25
-        WILocation = 26
-        TRSLink = 27
-        RelabResultLink = 28
-        BatchInfoLink = 29
-        Move = 30
+        Priority = 16
+        EstJobCompleletion = 17
+        EstTSCompleletion = 18
+        TSDue = 19
+        ReportDue = 20
+        Status = 21
+        HasUnitsRequireingReturnToRequestor = 22
+        Comments = 23
+        WILocation = 24
+        TRSLink = 25
+        RelabResultLink = 26
+        BatchInfoLink = 27
+        Move = 28
     End Enum
 
     Public Sub New()
@@ -194,14 +190,12 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = True
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TSDue).Visible = False
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
                 grdBatches.Columns(GridviewColumNames.Status).Visible = False
                 grdBatches.Columns(GridviewColumNames.Teststage).Visible = True
                 grdBatches.Columns(GridviewColumNames.ActiveTaskAssignee).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.WILocation).Visible = UserManager.GetCurrentUser.HasDocumentAuthority()
@@ -210,64 +204,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.HasUnitsRequireingReturnToRequestor).Visible = False
                 grdBatches.Columns(GridviewColumNames.Comments).Visible = False
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
-                grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
-                grdBatches.Columns(GridviewColumNames.Move).Visible = False
-                grdBatches.Columns(GridviewColumNames.Department).Visible = True
-            Case BatchSelectControlMode.ManageMode
-                grdBatches.Columns(GridviewColumNames.Id).Visible = False
-                grdBatches.Columns(GridviewColumNames.Job).Visible = True
-                grdBatches.Columns(GridviewColumNames.NumberofUnits).Visible = True
-                grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
-                grdBatches.Columns(GridviewColumNames.Priority).Visible = True
-                grdBatches.Columns(GridviewColumNames.Product).Visible = True
-                grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
-                grdBatches.Columns(GridviewColumNames.QRA).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
-                grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
-                grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = True
-                grdBatches.Columns(GridviewColumNames.TSDue).Visible = False
-                grdBatches.Columns(GridviewColumNames.Status).Visible = False
-                grdBatches.Columns(GridviewColumNames.Teststage).Visible = True
-                grdBatches.Columns(GridviewColumNames.ActiveTaskAssignee).Visible = True
-                grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = False
-                grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = False
-                grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
-                grdBatches.Columns(GridviewColumNames.TRSLink).Visible = True
-                grdBatches.Columns(GridviewColumNames.HasUnitsRequireingReturnToRequestor).Visible = False
-                grdBatches.Columns(GridviewColumNames.RelabResultLink).Visible = False
-                grdBatches.Columns(GridviewColumNames.Comments).Visible = False
-                grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
-                grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
-                grdBatches.Columns(GridviewColumNames.Move).Visible = False
-                grdBatches.Columns(GridviewColumNames.Department).Visible = True
-            Case BatchSelectControlMode.IncomingMode
-                grdBatches.Columns(GridviewColumNames.Id).Visible = False
-                grdBatches.Columns(GridviewColumNames.Job).Visible = True
-                grdBatches.Columns(GridviewColumNames.NumberofUnits).Visible = True
-                grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
-                grdBatches.Columns(GridviewColumNames.Priority).Visible = False
-                grdBatches.Columns(GridviewColumNames.Product).Visible = True
-                grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
-                grdBatches.Columns(GridviewColumNames.QRA).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
-                grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
-                grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
-                grdBatches.Columns(GridviewColumNames.Status).Visible = False
-                grdBatches.Columns(GridviewColumNames.TSDue).Visible = False
-                grdBatches.Columns(GridviewColumNames.Teststage).Visible = True
-                grdBatches.Columns(GridviewColumNames.ActiveTaskAssignee).Visible = True
-                grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = False
-                grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = False
-                grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
-                grdBatches.Columns(GridviewColumNames.TRSLink).Visible = True
-                grdBatches.Columns(GridviewColumNames.RelabResultLink).Visible = False
-                grdBatches.Columns(GridviewColumNames.HasUnitsRequireingReturnToRequestor).Visible = False
-                grdBatches.Columns(GridviewColumNames.Comments).Visible = False
-                grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
                 grdBatches.Columns(GridviewColumNames.Department).Visible = True
@@ -281,7 +217,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = True
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = True
                 grdBatches.Columns(GridviewColumNames.TSDue).Visible = True
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = True
@@ -296,7 +231,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.HasUnitsRequireingReturnToRequestor).Visible = False
                 grdBatches.Columns(GridviewColumNames.Comments).Visible = False
                 grdBatches.Columns(GridviewColumNames.BatchInfoLink).Visible = False
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.MechanicalTools).Visible = True
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
                 grdBatches.Columns(GridviewColumNames.Department).Visible = True
@@ -310,7 +244,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = False
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
                 grdBatches.Columns(GridviewColumNames.Status).Visible = True
@@ -319,7 +252,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = True
                 grdBatches.Columns(GridviewColumNames.TSDue).Visible = True
                 grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
                 grdBatches.Columns(GridviewColumNames.TRSLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.HasUnitsRequireingReturnToRequestor).Visible = False
@@ -339,8 +271,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = True
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TSDue).Visible = False
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
@@ -365,11 +295,9 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
                 grdBatches.Columns(GridviewColumNames.Priority).Visible = True
                 grdBatches.Columns(GridviewColumNames.Product).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = True
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
                 grdBatches.Columns(GridviewColumNames.TSDue).Visible = False
@@ -401,8 +329,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = True
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TSDue).Visible = True
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
@@ -427,11 +353,9 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
                 grdBatches.Columns(GridviewColumNames.Priority).Visible = True
                 grdBatches.Columns(GridviewColumNames.Product).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.QRA).Visible = True
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = True
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TSDue).Visible = False
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
@@ -459,7 +383,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.Status).Visible = True
                 grdBatches.Columns(GridviewColumNames.Teststage).Visible = True
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = True
                 grdBatches.Columns(GridviewColumNames.ActiveTaskAssignee).Visible = True
                 grdBatches.Columns(GridviewColumNames.TRSLink).Visible = True
                 grdBatches.Columns(GridviewColumNames.RelabResultLink).Visible = True
@@ -468,7 +391,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = False
                 grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
@@ -490,7 +412,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.RequestPurpose).Visible = True
                 grdBatches.Columns(GridviewColumNames.Status).Visible = True
                 grdBatches.Columns(GridviewColumNames.Teststage).Visible = False
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = False
                 grdBatches.Columns(GridviewColumNames.ActiveTaskAssignee).Visible = False
                 grdBatches.Columns(GridviewColumNames.TRSLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.RelabResultLink).Visible = False
@@ -499,7 +420,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
@@ -522,7 +442,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.AccessoryGroup).Visible = False
                 grdBatches.Columns(GridviewColumNames.ReportDue).Visible = False
                 grdBatches.Columns(GridviewColumNames.Teststage).Visible = False
-                grdBatches.Columns(GridviewColumNames.IsMQual).Visible = False
                 grdBatches.Columns(GridviewColumNames.ActiveTaskAssignee).Visible = False
                 grdBatches.Columns(GridviewColumNames.TRSLink).Visible = False
                 grdBatches.Columns(GridviewColumNames.RelabResultLink).Visible = False
@@ -530,7 +449,6 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
-                grdBatches.Columns(GridviewColumNames.ReqID).Visible = False
                 grdBatches.Columns(GridviewColumNames.TestCenter).Visible = False
                 grdBatches.Columns(GridviewColumNames.Department).Visible = True
                 grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
@@ -666,7 +584,7 @@ Partial Class Controls_BatchSelectControl
 
         If (grdBatches.DataSource.GetType.Name = "BatchCollection") Then
             Dim dt As List(Of IBatch) = DirectCast(grdBatches.DataSource, List(Of IBatch))
-            dt.Find(Function(c) c.QRANumber = hypQRANumber.Text).ActiveTaskAssignee = Request.Form(txtActiveTaskAssignee.UniqueID)
+            dt.Find(Function(c) c.RequestNumber = hypQRANumber.Text).ActiveTaskAssignee = Request.Form(txtActiveTaskAssignee.UniqueID)
 
             grdBatches.EditIndex = -1
             grdBatches.DataSource = dt
@@ -740,11 +658,11 @@ Partial Class Controls_BatchSelectControl
                     grdBatches.DataBind()
 
                     Dim instance = New Remi.Dal.Entities().Instance()
-                    Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.QRANumber).FirstOrDefault()
+                    Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.RequestNumber).FirstOrDefault()
                     batch.Order = list.IndexOf(item) + 1
                     batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                    Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.QRANumber).FirstOrDefault()
+                    Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.RequestNumber).FirstOrDefault()
                     batch2.Order = list.IndexOf(item2) + 1
                     batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 
@@ -765,11 +683,11 @@ Partial Class Controls_BatchSelectControl
                     grdBatches.DataBind()
 
                     Dim instance = New Remi.Dal.Entities().Instance()
-                    Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.QRANumber).FirstOrDefault()
+                    Dim batch As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item.RequestNumber).FirstOrDefault()
                     batch.Order = list.IndexOf(item) + 1
                     batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                    Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.QRANumber).FirstOrDefault()
+                    Dim batch2 As Remi.Entities.Batch = (From b In instance.Batches Where b.QRANumber = item2.RequestNumber).FirstOrDefault()
                     batch2.Order = list.IndexOf(item2) + 1
                     batch.LastUser = UserManager.GetCurrentValidUserLDAPName
 

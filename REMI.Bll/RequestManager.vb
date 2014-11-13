@@ -11,6 +11,16 @@ Namespace REMI.Bll
     Public Class RequestManager
         Inherits REMIManagerBase
 
+        Public Shared Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
+            Try
+                Return RequestDB.GetRequestsNotInREMI(searchStr)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("Requests")
+        End Function
+
         Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
             Try
                 Return RequestDB.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)
@@ -102,6 +112,16 @@ Namespace REMI.Bll
             instance.SaveChanges()
 
             Return nc
+        End Function
+
+        Public Shared Function GetRequest(ByVal reqNumber As String) As RequestFieldsCollection
+            Try
+                Return RequestDB.GetRequest(reqNumber, UserManager.GetCurrentUser.UserName)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return Nothing
         End Function
 
         Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection

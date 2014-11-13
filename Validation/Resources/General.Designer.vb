@@ -659,7 +659,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to The job requested could not be found in the TRS or REMI..
+        '''  Looks up a localized string similar to The job requested could not be found in the request or REMI..
         '''</summary>
         Public Shared ReadOnly Property w36() As String
             Get
@@ -1028,7 +1028,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to TRS Status Is Not Properly Set. This Batch Should not Be Started..
+        '''  Looks up a localized string similar to Request Status Is Not Properly Set. This Batch Should not Be Started..
         '''</summary>
         Public Shared ReadOnly Property w81() As String
             Get

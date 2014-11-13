@@ -120,14 +120,61 @@ PACKAGE BODY "REMI_HELPER" IS
             select 'Request Status', trs.summary_page_functions.get_data (rh.rq_id, 'STATUS'), 0
             from trs.request_header rh
             where rh.reqnum = p_reqnum
-            AND trs.stamp_valid(rh.stamp_id) = 1;
-
+            AND trs.stamp_valid(rh.stamp_id) = 1
+            
+            union all
+            
+            select 'Request Link', 'https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=' || to_char(rh.rq_id), 0
+            from trs.request_header rh, (
+                SELECT rh.rq_id, count(1) c
+                FROM trs.request_files rf, trs.request_header rh
+                WHERE trs.stamp_valid(rf.stamp_id) = 1
+                and rh.rq_id = rf.rq_id
+                and rh.reqnum = p_reqnum
+                and rf_id is null and url is null
+                group by rh.rq_id
+            ) rf
+            where rh.reqnum = p_reqnum
+            AND trs.stamp_valid(rh.stamp_id) = 1
+            and rh.rq_id = rf.rq_id(+)
+            
+            union all
+            
+            
+           SELECT 'Drop/Tumble Link', CASE WHEN lower(ri.text) LIKE '%drop%' THEN 'https://hwqaweb.rim.net/relab_alpha/webforms_drop.drop_report?p_arg=' || nvl(to_char(job_id), 'N/A') 
+            WHEN lower(ri.text) LIKE '%tumble%' THEN 'https://hwqaweb.rim.net/relab_alpha/web_tumble_forms.tumble_report?p_arg=' || nvl(to_char(job_id), 'N/A')
+            ELSE nvl(to_char(job_id), 'N/A') END AS field_value, 0
+            FROM trs.request_header rh,
+                 trs.request_info ri,
+                 trs.time_user_stamp t,
+                 trs.request_fields rf,
+                 relab_alpha.job_header rajh,
+                 (  SELECT rf.rf_id, count(rf.fl_id) c_attachments
+                    FROM trs.request_files rf, trs.request_header rh
+                    WHERE rh.reqnum = p_reqnum
+                    and rh.rq_id = rf.rq_id
+                    and rf.url is null
+                    and trs.stamp_valid(rh.stamp_id) = 1
+                    and trs.stamp_valid(rf.stamp_id) = 1
+                    group by rf.rf_id
+                ) rfiles
+            WHERE rh.rq_id = ri.rq_id
+            AND ri.stamp_id = t.stamp_id
+            AND ri.rf_id = rf.rf_id
+            and ri.rf_id = rfiles.rf_id(+)
+            AND (SYSDATE BETWEEN t.cre_date AND NVL (t.term_date, SYSDATE + 1))
+            AND (rh.reqnum = p_reqnum)
+            AND (rajh.description = rh.reqnum)
+            AND trs.stamp_valid(rh.stamp_id) = 1
+            and rf.rf_id=542;
+            
+            
         -- return the cursor type.
         return o_cur;
 
     END;
-
-	FUNCTION get_departments
+    
+    FUNCTION get_departments
     RETURN sys_refcursor
     IS
 
@@ -571,18 +618,19 @@ BEGIN
     return o_cur;
 end;
 
-FUNCTION get_QRA_By_TestCenter (p_test_center in trs.request_info.Text%type)
+FUNCTION get_Requests_By_Search (p_search in trs.request_info.Text%type)
     RETURN sys_refcursor
     IS
         o_cur sys_refcursor;
     BEGIN
         open o_cur for
         Select * from       
-		(select distinct rh.rq_id as RequestID, rh.reqnum as QRA, sf.description as Status,
+		(select distinct rh.rq_id as RequestID, rh.reqnum as RequestNumber, sf.description as Status,
         max(case when rf_id = 6 then text else null end) as Product,
         max(case when rf_id = 15396 then text else null end) as ProductType,
         max(case when rf_id = 24895 then text else null end) as AccessoryGroupName,
         max(case when rf_id = 5755 then text else null end) as TestCenter,
+        max(case when rf_id = 2 then text else null end) as Department,
         max(case when rf_id = 12 then text else null end) as SampleSize,
         max(case when rf_id = 542 then text else null end) as "Job",
         max(case when rf_id = 294 then text else null end) as Purpose,
@@ -592,7 +640,7 @@ FUNCTION get_QRA_By_TestCenter (p_test_center in trs.request_info.Text%type)
         rh.req_by as Requestor, t.cre_date
         from trs.request_header rh, trs.request_info ri, trs.time_user_stamp t1, trs.time_user_stamp t,
           trs.request_status rs, trs.status_fields sf, trs.time_user_stamp ts
-        where rf_id in (6, 15396, 24895, 5755, 12, 542, 294, 706, 589, 387)
+        where rf_id in (6, 15396, 24895, 5755, 12, 542, 294, 706, 589, 387,2)
           and rh.rq_id = ri.rq_id
           and rs.rq_id = rh.rq_id
           and rs.sf_id = sf.sf_id
@@ -604,8 +652,8 @@ FUNCTION get_QRA_By_TestCenter (p_test_center in trs.request_info.Text%type)
           and sysdate between ts.cre_date and nvl( ts.term_date, sysdate + 1 )
           and rh.rt_id = 1 and rs.sf_id in (123, 131, 929, 930)
         group by rh.reqnum, rh.rq_id, rh.req_by, sf.description, t.cre_date)
-        where TestCenter = p_test_center;
-
+        where Department = p_search
+        order by RequestNumber desc;
       
       --123 Submitted
       --124 Assigned
@@ -614,9 +662,7 @@ FUNCTION get_QRA_By_TestCenter (p_test_center in trs.request_info.Text%type)
       --929 PM Review
       return o_cur;
     END;
---------------------------------------------------------------------------------
 
-END;
 
 FUNCTION   SET_STATUS(p_qra_num in job_header.description%type, p_status in status_fields.description%type, p_userName in USERINFO.user_data.UserName%type)
 	RETURN sys_refcursor

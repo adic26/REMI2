@@ -26,14 +26,6 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        Public Shared Function GetListOfRemiUsernames() As List(Of String)
-            Return DirectCast(System.Web.HttpRuntime.Cache.Get("RemiUserNameList"), List(Of String))
-        End Function
-
-        Public Shared Sub SetListOfRemiUsernames(ByVal usernameList As List(Of String))
-            System.Web.HttpRuntime.Cache.Add("RemiUserNameList", usernameList, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
-        End Sub
-
         Public Shared Sub ClearListOfRemiUsernames()
             If System.Web.HttpRuntime.Cache.Get("RemiUserNameList") IsNot Nothing Then
                 System.Web.HttpRuntime.Cache.Remove("RemiUserNameList")
@@ -62,34 +54,22 @@ Namespace REMI.BusinessEntities
 
         Public Shared Sub ClearAllBatchData(ByVal qraNumber As String)
             System.Web.HttpRuntime.Cache.Remove("Batch-" + qraNumber)
-            RemoveFailParams(qraNumber)
             RemoveSpecificTestDurations(qraNumber)
             RemoveTestExceptions(qraNumber)
             RemoveTestRecords(qraNumber)
             RemoveReqData(qraNumber)
         End Sub
 
-        Public Shared Function GetReqData(ByVal rqNumber As String) As IQRARequest
-            Return DirectCast(System.Web.HttpRuntime.Cache.Get("TRSData-" + rqNumber), IQRARequest)
+        Public Shared Function GetReqData(ByVal rqNumber As String) As RequestFieldsCollection
+            Return DirectCast(System.Web.HttpRuntime.Cache.Get("ReqData-" + rqNumber), RequestFieldsCollection)
         End Function
 
-        Public Shared Sub SetReqData(ByVal trsData As IQRARequest)
-            System.Web.HttpRuntime.Cache.Add("TRSData-" + trsData.RequestNumber, trsData, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
+        Public Shared Sub SetReqData(ByVal reqData As RequestFieldsCollection, ByVal requestNumber As String)
+            System.Web.HttpRuntime.Cache.Add("ReqData-" + requestNumber, reqData, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
         End Sub
 
         Public Shared Sub RemoveReqData(ByVal rqNumber As String)
-            System.Web.HttpRuntime.Cache.Remove("TRSData-" + rqNumber)
-        End Sub
-
-        Public Shared Function GetFailParams(ByVal qraNumber As String) As ParameterResultCollection
-            Return DirectCast(System.Web.HttpRuntime.Cache.Get("FailParams-" + qraNumber), ParameterResultCollection)
-        End Function
-
-        Public Shared Sub SetFailParams(ByVal qraNumber As String, ByVal failParams As ParameterResultCollection)
-            System.Web.HttpRuntime.Cache.Add("FailParams-" + qraNumber, failParams, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
-        End Sub
-        Public Shared Sub RemoveFailParams(ByVal qraNumber As String)
-            System.Web.HttpRuntime.Cache.Remove("FailParams-" + qraNumber)
+            System.Web.HttpRuntime.Cache.Remove("ReqData-" + rqNumber)
         End Sub
 
         Public Shared Function GetSpecificTestDurations(ByVal qraNumber As String) As Dictionary(Of Integer, Double)
@@ -196,13 +176,13 @@ Namespace REMI.BusinessEntities
             End While
         End Sub
 
-        Public Shared Sub SetFieldMapping(ByVal type As String, ByVal fieldMapping As Dictionary(Of String, String))
-            System.Web.HttpRuntime.Cache.Add(type, fieldMapping, Nothing, DateTime.Now.Add(TimeSpan.FromDays(1)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
-        End Sub
+        'Public Shared Sub SetFieldMapping(ByVal type As String, ByVal fieldMapping As Dictionary(Of String, String))
+        '    System.Web.HttpRuntime.Cache.Add(type, fieldMapping, Nothing, DateTime.Now.Add(TimeSpan.FromDays(1)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
+        'End Sub
 
-        Public Shared Function GetFieldMapping(ByVal type As String) As Dictionary(Of String, String)
-            Return DirectCast(System.Web.HttpRuntime.Cache.Get(type), Dictionary(Of String, String))
-        End Function
+        'Public Shared Function GetFieldMapping(ByVal type As String) As Dictionary(Of String, String)
+        '    Return DirectCast(System.Web.HttpRuntime.Cache.Get(type), Dictionary(Of String, String))
+        'End Function
 
         Public Shared Sub SetMenuAccess(ByVal departmentID As Int32, ByVal dtMenuAccess As DataTable)
             System.Web.HttpRuntime.Cache.Add("MenuAccess-" + departmentID.ToString(), dtMenuAccess, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
@@ -211,5 +191,17 @@ Namespace REMI.BusinessEntities
         Public Shared Function GetMenuAccess(ByVal departmentID As Int32) As DataTable
             Return DirectCast(System.Web.HttpRuntime.Cache.Get("MenuAccess-" + departmentID.ToString()), DataTable)
         End Function
+
+        Public Shared Function GetExtReqData(ByVal rqNumber As String) As Dictionary(Of String, String)
+            Return DirectCast(System.Web.HttpRuntime.Cache.Get("ExtReqData-" + rqNumber), Dictionary(Of String, String))
+        End Function
+
+        Public Shared Sub SetExtReqData(ByVal reqData As Dictionary(Of String, String), ByVal requestNumber As String)
+            System.Web.HttpRuntime.Cache.Add("ExtReqData-" + requestNumber, reqData, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
+        End Sub
+
+        Public Shared Sub RemoveExtReqData(ByVal rqNumber As String)
+            System.Web.HttpRuntime.Cache.Remove("ExtReqData-" + rqNumber)
+        End Sub
     End Class
 End Namespace

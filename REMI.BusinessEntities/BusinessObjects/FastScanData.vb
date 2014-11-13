@@ -733,7 +733,7 @@ Namespace REMI.BusinessEntities
 
             If (returnData.BatchData IsNot Nothing) Then
                 returnData.CPRNumber = returnData.BatchData.CPRNumber
-                returnData.HWRevision = returnData.BatchData.HWRevision
+                'returnData.HWRevision = returnData.BatchData.HWRevision
                 returnData.ProductID = returnData.BatchData.ProductID
                 returnData.ProductType = returnData.BatchData.ProductType
                 returnData.ProductTypeID = returnData.BatchData.ProductTypeID

@@ -2,7 +2,9 @@
 (
 [RequestID] [int] NOT NULL,
 [ReqFieldSetupID] [int] NOT NULL,
-[Value] [nvarchar] (400) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL
+[Value] [nvarchar] (400) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+LastUser [nvarchar](255),
+InsertTime DateTime
 )
 GO
 -- Constraints and Indexes
