@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Req].[ReqFieldDataAudit](
-	[ReqFieldDataAuditID] [INT] NOT NULL,
+	[ReqFieldDataAuditID] [INT] IDENTITY(1,1) NOT NULL,
 	[RequestID] [int] NOT NULL,
 	[ReqFieldSetupID] [int] NOT NULL,
 	[Value] [nvarchar](4000) NOT NULL,

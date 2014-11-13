@@ -59,13 +59,13 @@ UPDATE f SET Value=b.ExpectedSampleSize FROM #fields f INNER JOIN Batches b ON b
 UPDATE f SET Value='http://hwqaweb/pls/trs/data_entry.main?formMode=VIEW&rqId=' + CONVERT(VARCHAR, b.RQID) FROM #fields f INNER JOIN Batches b ON b.QRANumber=f.RequestNumber WHERE f.Name='Request Link'
 
 UPDATE f 
-SET Value='https://hwqaweb.rim.net/relab_alpha/webforms_drop.drop_report?printable=false&p_arg=' + CONVERT(VARCHAR, b.RelabJobID)
+SET Value='https://hwqaweb.rim.net/relab_alpha/webforms_drop.drop_report?printable=false&p_arg=' + CONVERT(VARCHAR, b.RelabJobID) + '&printable=false'
 FROM #fields f 
 	INNER JOIN Batches b ON b.QRANumber=f.RequestNumber 
 WHERE f.Name='Drop/Tumble Link' AND LOWER(b.JobName) LIKE '%drop%'
 
 UPDATE f 
-SET Value='https://hwqaweb.rim.net/relab_alpha/web_tumble_forms.tumble_report?printable=false&p_arg=' + CONVERT(VARCHAR, b.RelabJobID)
+SET Value='https://hwqaweb.rim.net/relab_alpha/web_tumble_forms.tumble_report?printable=false&p_arg=' + CONVERT(VARCHAR, b.RelabJobID) + '&printable=false'
 FROM #fields f 
 	INNER JOIN Batches b ON b.QRANumber=f.RequestNumber 
 WHERE f.Name='Drop/Tumble Link' AND LOWER(b.JobName) LIKE '%tumble%'

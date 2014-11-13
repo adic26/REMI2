@@ -368,6 +368,8 @@ Namespace REMI.Dal
                     instance.AddToReqFieldDatas(sfd)
                 Else
                     fieldData.Value = rec.Value
+                    fieldData.InsertTime = DateTime.Now
+                    fieldData.LastUser = userIdentification
                 End If
             Next
 
