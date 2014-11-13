@@ -1098,7 +1098,7 @@ IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION
 GO
 PRINT N'Creating [Req].[RequestGet]'
 GO
-ALTER PROCEDURE [Req].[RequestGet] @RequestTypeID INT, @Department NVARCHAR(150)
+create PROCEDURE [Req].[RequestGet] @RequestTypeID INT, @Department NVARCHAR(150)
 AS
 BEGIN
 	DECLARE @Count INT

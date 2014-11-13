@@ -2,6 +2,8 @@ BEGIN TRAN
 GO
 DBCC CHECKIDENT ('Req.Request', RESEED, 1);
 go
+alter table Req.ReqFieldData ALTER COLUMN Value NVARCHAR(4000) NOT NULL
+GO
 DECLARE @RequestTypeID INT
 DECLARE @TypeID INT
 DECLARE @LookupTypeID INT
@@ -80,6 +82,5 @@ WHERE IntField IN ('AssemblyRevision','AssemblyNumber','PartName','BoardRevision
 	'POPNumber','BoardRevision','MechanicalToolsRevisionMajor','PercentComplete','IncludeInTempo','ReportType','HasSpecialInstructions',
 	'GetSpecialInstructions','ActualEndDate','ActualStartDate','IsReportRequired')
 	
-alter table Req.ReqFieldData ALTER COLUMN Value NVARCHAR(4000) NOT NULL
 GO
 rollback TRAN

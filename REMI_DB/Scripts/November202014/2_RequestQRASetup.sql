@@ -1,5 +1,8 @@
 begin tran
 GO
+ALTER TABLE Req.RequestType ADD IsExternal BIT DEFAULT(0) NOT NULL
+go
+
 DECLARE @NextLookupID INT
 DECLARE @TypeID INT
 DECLARE @RequestTypeID INT
@@ -7,8 +10,6 @@ DECLARE @DropDownID INT
 DECLARE @TextBoxID INT
 DECLARE @LookupTypeID INT
 DECLARE @LinkID INT
-
-ALTER TABLE Req.RequestType ADD IsExternal BIT DEFAULT(0) NOT NULL
 
 UPDATE Req.RequestType SET IsExternal=1 WHERE DBType <> 'SQL'
 
