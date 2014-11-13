@@ -129,7 +129,7 @@
                     <Columns>
                         <asp:TemplateField HeaderText="Request" SortExpression="" ItemStyle-Width="4%">
                             <ItemTemplate>
-                                <asp:HyperLink ID="hplTRS" runat="server" Text='<%# Eval("RequestNumber") %>' Target="_blank" NavigateUrl='<%# Eval("RequestID").ToString() %>' EnableViewState="true"></asp:HyperLink>
+                                <asp:HyperLink ID="hplTRS" runat="server" Text='<%# Eval("RequestNumber") %>' Target="_blank" NavigateUrl='<%# Eval("RequestID").ToString()%>' EnableViewState="true"></asp:HyperLink>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

@@ -625,7 +625,7 @@ FUNCTION get_Requests_By_Search (p_search in trs.request_info.Text%type)
     BEGIN
         open o_cur for
         Select * from       
-		(select distinct rh.rq_id as RequestID, rh.reqnum as RequestNumber, sf.description as Status,
+		(select distinct 'https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=' || to_char(rh.rq_id) as RequestID, rh.reqnum as RequestNumber, sf.description as Status,
         max(case when rf_id = 6 then text else null end) as Product,
         max(case when rf_id = 15396 then text else null end) as ProductType,
         max(case when rf_id = 24895 then text else null end) as AccessoryGroupName,
