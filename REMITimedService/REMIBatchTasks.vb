@@ -214,7 +214,7 @@ Public Class REMIBatchTasks
                 If (department.Field(Of String)("LookupType").ToString() <> "All Test Centers") Then
                     Try
                         sb.AppendLine(String.Format("{0} - Retrieving TRS Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
-                        batches.Concat((From r As DataRow In remi.GetInstance.GetRequestsNotInREMI(department.Field(Of String)("LookupType").ToString()) Select r.Field(Of String)("RequestNumber").ToString()))
+                        batches.Concat((From r As DataRow In remi.GetInstance.GetRequestsNotInREMI(department.Field(Of String)("LookupType").ToString()) Select r.Field(Of String)("RequestNumber")).ToList())
                     Catch ex As Exception
                         sb.AppendLine(String.Format("{0} - Error Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
                     End Try
