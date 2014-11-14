@@ -616,6 +616,7 @@ Public Class RemiAPI
         If UserManager.SetUserToSession(userIdentification) Then
             Dim userDetails As New UserDetails
             userDetails.UserName = UserManager.GetCurrentValidUserLDAPName()
+            userDetails.user = UserManager.GetCurrentUser
 
             Dim userPermissions As Integer = TrackingLocationManager.GetUserPermission(userDetails.UserName, trackingLocationHostName, trackingLocationName)
             userDetails.HasBasicAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
@@ -1363,6 +1364,7 @@ Public Class RemiAPI
         Public HasBasicAccess As Boolean
         Public HasModifiedAccess As Boolean
         Public HasCalibrationAccess As Boolean
+        Public user As User
     End Structure
 #End Region
 

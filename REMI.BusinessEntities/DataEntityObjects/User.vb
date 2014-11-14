@@ -1,6 +1,7 @@
 ﻿Imports REMI.Validation
 Imports System.Web.Security
 Imports System.DirectoryServices.ActiveDirectory
+Imports System.Xml.Serialization
 
 Namespace REMI.BusinessEntities
     ''' <summary>
@@ -53,6 +54,7 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "Public Properties"
+        <XmlIgnore()> _
         Public Property ExistsInREMI() As Boolean
             Get
                 Return _existsInREMI
@@ -62,6 +64,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property RequiresSuppAuth() As Boolean
             Get
                 Dim ex1 As Boolean
@@ -104,6 +107,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property CanDelete() As Int32
             Get
                 Return _canDelete
@@ -199,6 +203,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property DetailsNames() As List(Of String)
             Get
                 Return _detailsNames
@@ -221,6 +226,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property TrainingNames() As List(Of String)
             Get
                 Return _trainingNames
@@ -232,6 +238,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property ProductGroupsNames() As List(Of String)
             Get
                 Return _productGroupsNames
@@ -246,6 +253,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' Gets or sets the list of roles that the user is a member of.
         ''' </summary>
+        <XmlIgnore()> _
         Public Property RolesList() As List(Of String)
             Get
                 Return _roles
@@ -382,54 +390,63 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "HAS ROLE"
+        <XmlIgnore()> _
         Public ReadOnly Property IsAdmin() As Boolean
             Get
                 Return RolesList.Contains("Administrator")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsIncomingSpecialist() As Boolean
             Get
                 Return RolesList.Contains("IncomingSpecialist")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsMaterialsManagementSpecialist() As Boolean
             Get
                 Return RolesList.Contains("MaterialsManagementSpecialist")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsLabTestCoordinator() As Boolean
             Get
                 Return RolesList.Contains("LabTestCoordinator")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsLabTechOpsManager() As Boolean
             Get
                 Return RolesList.Contains("LabTechOpsManager")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsProjectManager() As Boolean
             Get
                 Return RolesList.Contains("ProjectManager")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsDeveloper() As Boolean
             Get
                 Return RolesList.Contains("Developer")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property HasRelabAccess() As Boolean
             Get
                 Return RolesList.Contains("Relab")
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsTestCenterAdmin() As Boolean
             Get
                 Return RolesList.Contains("TestCenterAdmin")
