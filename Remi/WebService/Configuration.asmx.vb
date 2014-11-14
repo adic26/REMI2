@@ -201,9 +201,9 @@ Public Class ProductConfiguration
 
 #Region "Request"
     <WebMethod(Description:="Gets The Fields Setup Definition")> _
-    Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean) As RequestFieldsCollection
+    Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
         Try
-            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, String.Empty)
+            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
         Catch ex As Exception
             RequestManager.LogIssue("GetRequestFieldSetup", "e3", NotificationType.Errors, ex)
         End Try
