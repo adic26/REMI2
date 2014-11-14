@@ -1193,6 +1193,53 @@ PRINT N'Altering permissions on [Req].[RequestGet]'
 GO
 GRANT EXECUTE ON  [Req].[RequestGet] TO [remi]
 GO
+CREATE TABLE [Req].[RequestTypeAccess](
+	[RequestTypeAccessID] [int] IDENTITY(1,1) NOT NULL,
+	[RequestTypeID] [int] NOT NULL,
+	[LookupID] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_RequestTypeAccess] PRIMARY KEY CLUSTERED 
+(
+	[RequestTypeAccessID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [Req].[RequestTypeAccess]  WITH CHECK ADD  CONSTRAINT [FK_RequestTypeAccess_Lookups] FOREIGN KEY([LookupID])
+REFERENCES [dbo].[Lookups] ([LookupID])
+GO
+ALTER TABLE [Req].[RequestTypeAccess] CHECK CONSTRAINT [FK_RequestTypeAccess_Lookups]
+GO
+ALTER TABLE [Req].[RequestTypeAccess]  WITH CHECK ADD  CONSTRAINT [FK_RequestTypeAccess_RequestType] FOREIGN KEY([RequestTypeID])
+REFERENCES [Req].[RequestType] ([RequestTypeID])
+GO
+ALTER TABLE [Req].[RequestTypeAccess] CHECK CONSTRAINT [FK_RequestTypeAccess_RequestType]
+GO
+ALTER TABLE [Req].[RequestTypeAccess] ADD  CONSTRAINT [DF_RequestTypeAccess_IsActive]  DEFAULT ((0)) FOR [IsActive]
+GO
+DECLARE @LookupID INT
+DECLARE @RequestTypeID INT
+SELECT @LookupID=LookupID FROM Lookups WHERE LookupTypeID IN (SELECT LookupTypeID FROM LookupType WHERE Name='Department') AND [Values]='Product Validation'
+SELECT @RequestTypeID=RequestTypeID FROM Req.RequestType WHERE TypeID IN (SELECT LookupID FROM Lookups WHERE [Values]='QRA' AND LookupTypeID IN (SELECT LookupTypeID FROM LookupType WHERE Name='RequestType'))
+
+INSERT INTO Req.RequestTypeAccess (RequestTypeID, LookupID, IsActive) VALUES (@RequestTypeID, @LookupID, 1)
+GO
+create PROCEDURE Req.remispGetRequestTypes @UserName NVARCHAR(255)
+AS
+BEGIN
+	SELECT lt.[Values] AS RequestType, l.[Values] AS Department, rta.IsActive
+	FROM Req.RequestTypeAccess rta
+		INNER JOIN Lookups l ON rta.LookupID=l.LookupID
+		INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rta.RequestTypeID
+		INNER JOIN Lookups lt ON rt.TypeID=lt.LookupID
+		INNER JOIN UserDetails ud ON ud.LookupID = l.LookupID
+		INNER JOIN Users u ON u.ID=ud.UserID
+	WHERE u.LDAPLogin=@UserName
+END
+GO
+GRANT EXECUTE ON Req.remispGetRequestTypes TO REMI
+GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN

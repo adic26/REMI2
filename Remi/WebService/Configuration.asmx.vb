@@ -223,7 +223,7 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets All RequestTypes Based On User")> _
-    Public Function GetRequestTypes(ByVal userIdentification As String) As List(Of String)
+    Public Function GetRequestTypes(ByVal userIdentification As String) As DataTable
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Return RequestManager.GetRequestTypes()
@@ -232,7 +232,7 @@ Public Class ProductConfiguration
             RequestManager.LogIssue("GetRequestTypes", "e3", NotificationType.Errors, ex)
         End Try
 
-        Return New List(Of String)
+        Return New DataTable("RequestTypes")
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Save Raised Request")> _

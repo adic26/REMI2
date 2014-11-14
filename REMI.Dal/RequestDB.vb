@@ -34,6 +34,22 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetRequestTypes(ByVal userIdentification As String) As DataTable
+            Dim dt As New DataTable("RequestTypes")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("Req.remispGetRequestTypes", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@UserName", userIdentification)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "RequestTypes"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
         Public Shared Function GetConnectName(ByVal reqNumber As String) As String
             Return reqNumber.Substring(0, reqNumber.IndexOf("-"))
         End Function
@@ -464,7 +480,7 @@ Namespace REMI.Dal
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
                 options.Add(" ")
-                options.AddRange((From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Order By lo.Values Select lo.Values).ToList)
+                options.AddRange((From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
 
                 myFields.OptionsType = options
             Else

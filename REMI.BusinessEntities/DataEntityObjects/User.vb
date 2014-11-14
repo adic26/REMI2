@@ -30,6 +30,7 @@ Namespace REMI.BusinessEntities
         Private _existsInREMI As Boolean
         Private _canDelete As Int32
         Private _training As DataTable
+        Private _requestTypes As DataTable
         Private _trainingNames As List(Of String)
 #End Region
 
@@ -39,6 +40,7 @@ Namespace REMI.BusinessEntities
             _productGroupsNames = New List(Of String)
             _training = New DataTable("Training")
             _userDetails = New DataTable("UserDetails")
+            _requestTypes = New DataTable("RequestTypes")
             _trainingNames = New List(Of String)
             _detailsNames = New List(Of String)
             _roles = New List(Of String)
@@ -188,6 +190,17 @@ Namespace REMI.BusinessEntities
             Set(ByVal value As DataTable)
                 If value IsNot Nothing Then
                     _productGroups = value
+                End If
+            End Set
+        End Property
+
+        Public Property RequestTypes() As DataTable
+            Get
+                Return _requestTypes
+            End Get
+            Set(ByVal value As DataTable)
+                If value IsNot Nothing Then
+                    _requestTypes = value
                 End If
             End Set
         End Property

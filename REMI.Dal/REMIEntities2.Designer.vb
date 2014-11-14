@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("73445324-e26c-4bae-9e1b-79c00ce4dc70")>
+<Assembly: EdmSchemaAttribute("ba2fbc7e-7514-4437-bad2-11998ebddcff")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -115,6 +115,8 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestTypeAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "RequestTypeAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestTypeAccess), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestTypeAccess_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "RequestTypeAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestTypeAccess), True)>
 
 #End Region
 
@@ -1214,6 +1216,20 @@ Namespace REMI.Entities
         End Property
     
         Private _UsersAudits As ObjectSet(Of UsersAudit)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property RequestTypeAccesses() As ObjectSet(Of RequestTypeAccess)
+            Get
+                If (_RequestTypeAccesses Is Nothing) Then
+                    _RequestTypeAccesses = MyBase.CreateObjectSet(Of RequestTypeAccess)("RequestTypeAccesses")
+                End If
+                Return _RequestTypeAccesses
+            End Get
+        End Property
+    
+        Private _RequestTypeAccesses As ObjectSet(Of RequestTypeAccess)
 
         #End Region
 
@@ -1742,6 +1758,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToUsersAudits(ByVal usersAudit As UsersAudit)
             MyBase.AddObject("UsersAudits", usersAudit)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the RequestTypeAccesses EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToRequestTypeAccesses(ByVal requestTypeAccess As RequestTypeAccess)
+            MyBase.AddObject("RequestTypeAccesses", requestTypeAccess)
         End Sub
 
         #End Region
@@ -8139,6 +8162,24 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestTypeAccess_Lookups", "RequestTypeAccess")>
+         Public Property RequestTypeAccesses() As EntityCollection(Of RequestTypeAccess)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestTypeAccess)("REMI.Entities.FK_RequestTypeAccess_Lookups", "RequestTypeAccess")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestTypeAccess)("REMI.Entities.FK_RequestTypeAccess_Lookups", "RequestTypeAccess", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -12436,6 +12477,226 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldMapping)("REMI.Entities.FK_ReqFieldMapping_RequestType", "ReqFieldMapping", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestTypeAccess_RequestType", "RequestTypeAccess")>
+         Public Property RequestTypeAccesses() As EntityCollection(Of RequestTypeAccess)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestTypeAccess)("REMI.Entities.FK_RequestTypeAccess_RequestType", "RequestTypeAccess")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestTypeAccess)("REMI.Entities.FK_RequestTypeAccess_RequestType", "RequestTypeAccess", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="RequestTypeAccess")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class RequestTypeAccess
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new RequestTypeAccess object.
+        ''' </summary>
+        ''' <param name="requestTypeAccessID">Initial value of the RequestTypeAccessID property.</param>
+        ''' <param name="requestTypeID">Initial value of the RequestTypeID property.</param>
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        ''' <param name="isActive">Initial value of the IsActive property.</param>
+        Public Shared Function CreateRequestTypeAccess(requestTypeAccessID As Global.System.Int32, requestTypeID As Global.System.Int32, lookupID As Global.System.Int32, isActive As Global.System.Boolean) As RequestTypeAccess
+            Dim requestTypeAccess as RequestTypeAccess = New RequestTypeAccess
+            requestTypeAccess.RequestTypeAccessID = requestTypeAccessID
+            requestTypeAccess.RequestTypeID = requestTypeID
+            requestTypeAccess.LookupID = lookupID
+            requestTypeAccess.IsActive = isActive
+            Return requestTypeAccess
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property RequestTypeAccessID() As Global.System.Int32
+            Get
+                Return _RequestTypeAccessID
+            End Get
+            Set
+                If (_RequestTypeAccessID <> Value) Then
+                    OnRequestTypeAccessIDChanging(value)
+                    ReportPropertyChanging("RequestTypeAccessID")
+                    _RequestTypeAccessID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("RequestTypeAccessID")
+                    OnRequestTypeAccessIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _RequestTypeAccessID As Global.System.Int32
+        Private Partial Sub OnRequestTypeAccessIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnRequestTypeAccessIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property RequestTypeID() As Global.System.Int32
+            Get
+                Return _RequestTypeID
+            End Get
+            Set
+                OnRequestTypeIDChanging(value)
+                ReportPropertyChanging("RequestTypeID")
+                _RequestTypeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("RequestTypeID")
+                OnRequestTypeIDChanged()
+            End Set
+        End Property
+    
+        Private _RequestTypeID As Global.System.Int32
+        Private Partial Sub OnRequestTypeIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnRequestTypeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Global.System.Int32
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property IsActive() As Global.System.Boolean
+            Get
+                Return _IsActive
+            End Get
+            Set
+                OnIsActiveChanging(value)
+                ReportPropertyChanging("IsActive")
+                _IsActive = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsActive")
+                OnIsActiveChanged()
+            End Set
+        End Property
+    
+        Private _IsActive As Global.System.Boolean
+        Private Partial Sub OnIsActiveChanging(value As Global.System.Boolean)
+        End Sub
+    
+        Private Partial Sub OnIsActiveChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestTypeAccess_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_RequestTypeAccess_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_RequestTypeAccess_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_RequestTypeAccess_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_RequestTypeAccess_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestTypeAccess_RequestType", "RequestType")>
+        Public Property RequestType() As RequestType
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_RequestTypeAccess_RequestType", "RequestType").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_RequestTypeAccess_RequestType", "RequestType").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property RequestTypeReference() As EntityReference(Of RequestType)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_RequestTypeAccess_RequestType", "RequestType")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of RequestType)("REMI.Entities.FK_RequestTypeAccess_RequestType", "RequestType", value)
                 End If
             End Set
         End Property

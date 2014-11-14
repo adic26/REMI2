@@ -35,7 +35,7 @@ Namespace REMI.Dal
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.Read() Then
-                            myUser = FillDataRecord(myReader, False, False, False)
+                            myUser = FillDataRecord(myReader, False, False, False, False)
 
                             myReader.NextResult()
 
@@ -71,6 +71,11 @@ Namespace REMI.Dal
                                 For Each row As DataRow In myUser.ProductGroups.Rows
                                     myUser.ProductGroupsNames.Add(row.Item("ProductGroupName").ToString())
                                 Next row
+                            End Using
+
+                            Using myDataTable As New DataTable("RequestTypes")
+                                myDataTable.Load(myReader)
+                                myUser.RequestTypes = myDataTable
                             End Using
                         End If
                     End Using
@@ -203,7 +208,7 @@ Namespace REMI.Dal
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then
                             While myReader.Read()
-                                uc.Add(FillDataRecord(myReader, loadTraining, loadProducts, True))
+                                uc.Add(FillDataRecord(myReader, loadTraining, loadProducts, True, True))
                             End While
                         End If
                     End Using
@@ -256,7 +261,7 @@ Namespace REMI.Dal
         ''' <param name="myDataRecord">The Data record for the User produced by a select query</param>
         ''' <returns>A User object filled with the data from the IDataRecord object</returns>
         ''' <remarks></remarks>
-        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal loadDetails As Boolean) As User
+        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal loadDetails As Boolean, ByVal loadRequestTypes As Boolean) As User
             Dim myUser As New User()
 
             myUser.LDAPName = myDataRecord.GetString(myDataRecord.GetOrdinal("LDAPLogin"))
@@ -315,6 +320,10 @@ Namespace REMI.Dal
                         myUser.DetailsNames.Add(String.Format("{0}: {1}", row.Item("Name").ToString(), row.Item("Values").ToString()))
                     Next row
                 End If
+            End If
+
+            If (loadRequestTypes = True) Then
+                myUser.RequestTypes = RequestDB.GetRequestTypes(myUser.UserName)
             End If
 
             Helpers.FillObjectParameters(myDataRecord, myUser)

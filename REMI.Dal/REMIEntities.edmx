@@ -92,6 +92,7 @@
           <EntitySet Name="Request" EntityType="remiModel.Store.Request" store:Type="Tables" Schema="Req" />
           <EntitySet Name="RequestSetup" EntityType="remiModel.Store.RequestSetup" store:Type="Tables" Schema="Req" />
           <EntitySet Name="RequestType" EntityType="remiModel.Store.RequestType" store:Type="Tables" Schema="Req" />
+          <EntitySet Name="RequestTypeAccess" EntityType="remiModel.Store.RequestTypeAccess" store:Type="Tables" Schema="Req" />
           <EntitySet Name="vw_BatchAudit" EntityType="remiModel.Store.vw_BatchAudit" store:Type="Views" store:Schema="dbo" store:Name="vw_BatchAudit">
             <DefiningQuery>SELECT 
       [vw_BatchAudit].[QRANumber] AS [QRANumber], 
@@ -410,6 +411,14 @@
           <AssociationSet Name="FK_RequestType_TypeID" Association="remiModel.Store.FK_RequestType_TypeID">
             <End Role="Lookups" EntitySet="Lookups" />
             <End Role="RequestType" EntitySet="RequestType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestTypeAccess_Lookups" Association="remiModel.Store.FK_RequestTypeAccess_Lookups">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="RequestTypeAccess" EntitySet="RequestTypeAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestTypeAccess_RequestType" Association="remiModel.Store.FK_RequestTypeAccess_RequestType">
+            <End Role="RequestType" EntitySet="RequestType" />
+            <End Role="RequestTypeAccess" EntitySet="RequestTypeAccess" />
           </AssociationSet>
           <AssociationSet Name="FK_Results_Tests" Association="remiModel.Store.FK_Results_Tests">
             <End Role="Tests" EntitySet="Tests" />
@@ -1447,6 +1456,15 @@
           <Property Name="HasApproval" Type="bit" Nullable="false" />
           <Property Name="IsExternal" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="RequestTypeAccess">
+          <Key>
+            <PropertyRef Name="RequestTypeAccessID" />
+          </Key>
+          <Property Name="RequestTypeAccessID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RequestTypeID" Type="int" Nullable="false" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'REMILocal.dbo.vw_BatchAudit' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
@@ -2273,6 +2291,30 @@
             </Principal>
             <Dependent Role="RequestType">
               <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestTypeAccess_Lookups">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="RequestTypeAccess" Type="remiModel.Store.RequestTypeAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="RequestTypeAccess">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestTypeAccess_RequestType">
+          <End Role="RequestType" Type="remiModel.Store.RequestType" Multiplicity="1" />
+          <End Role="RequestTypeAccess" Type="remiModel.Store.RequestTypeAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestType">
+              <PropertyRef Name="RequestTypeID" />
+            </Principal>
+            <Dependent Role="RequestTypeAccess">
+              <PropertyRef Name="RequestTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3215,6 +3257,15 @@
           <AssociationSet Name="FK_Results_TestUnits" Association="REMI.Entities.FK_Results_TestUnits">
             <End Role="TestUnit" EntitySet="TestUnits" />
             <End Role="Result" EntitySet="Results" />
+          </AssociationSet>
+          <EntitySet Name="RequestTypeAccesses" EntityType="REMI.Entities.RequestTypeAccess" />
+          <AssociationSet Name="FK_RequestTypeAccess_Lookups" Association="REMI.Entities.FK_RequestTypeAccess_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="RequestTypeAccess" EntitySet="RequestTypeAccesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestTypeAccess_RequestType" Association="REMI.Entities.FK_RequestTypeAccess_RequestType">
+            <End Role="RequestType" EntitySet="RequestTypes" />
+            <End Role="RequestTypeAccess" EntitySet="RequestTypeAccesses" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
@@ -4921,6 +4972,7 @@
           <NavigationProperty Name="ReqFieldSetups1" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" FromRole="Lookup" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="MenuDepartments" Relationship="REMI.Entities.FK_MenuDepartment_Lookups" FromRole="Lookup" ToRole="MenuDepartment" />
           <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="Lookup" ToRole="UserDetail" />
+          <NavigationProperty Name="RequestTypeAccesses" Relationship="REMI.Entities.FK_RequestTypeAccess_Lookups" FromRole="Lookup" ToRole="RequestTypeAccess" />
           </EntityType>
         <Association Name="FK_Batches_AccessoryGroup">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
@@ -5174,6 +5226,7 @@
           <NavigationProperty Name="ReqFieldSetups" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="RequestType" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="ReqFieldMappings" Relationship="REMI.Entities.FK_ReqFieldMapping_RequestType" FromRole="RequestType" ToRole="ReqFieldMapping" />
           <Property Type="Boolean" Name="IsExternal" Nullable="false" />
+          <NavigationProperty Name="RequestTypeAccesses" Relationship="REMI.Entities.FK_RequestTypeAccess_RequestType" FromRole="RequestType" ToRole="RequestTypeAccess" />
         </EntityType>
         <Association Name="FK_RequestType_TypeID">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -5511,6 +5564,41 @@
             </Principal>
             <Dependent Role="Result">
               <PropertyRef Name="TestUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RequestTypeAccess">
+          <Key>
+            <PropertyRef Name="RequestTypeAccessID" />
+          </Key>
+          <Property Type="Int32" Name="RequestTypeAccessID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="RequestTypeID" Nullable="false" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_RequestTypeAccess_Lookups" FromRole="RequestTypeAccess" ToRole="Lookup" />
+          <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_RequestTypeAccess_RequestType" FromRole="RequestTypeAccess" ToRole="RequestType" />
+        </EntityType>
+        <Association Name="FK_RequestTypeAccess_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.RequestTypeAccess" Role="RequestTypeAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="RequestTypeAccess">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestTypeAccess_RequestType">
+          <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="1" />
+          <End Type="REMI.Entities.RequestTypeAccess" Role="RequestTypeAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestType">
+              <PropertyRef Name="RequestTypeID" />
+            </Principal>
+            <Dependent Role="RequestTypeAccess">
+              <PropertyRef Name="RequestTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6551,6 +6639,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="RequestTypeAccesses">
+            <EntityTypeMapping TypeName="REMI.Entities.RequestTypeAccess">
+              <MappingFragment StoreEntitySet="RequestTypeAccess">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="RequestTypeID" ColumnName="RequestTypeID" />
+                <ScalarProperty Name="RequestTypeAccessID" ColumnName="RequestTypeAccessID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -6742,6 +6840,9 @@
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecords_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_Results_TestUnits" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="4.4253989236547611" PointY="10.457644363147042" />
+        <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_RequestType" />
       </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
