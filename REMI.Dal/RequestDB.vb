@@ -462,7 +462,11 @@ Namespace REMI.Dal
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
-                myFields.OptionsType = (From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Order By lo.Values Select lo.Values).ToList
+                Dim options As New List(Of String)
+                options.Add(" ")
+                options.AddRange((From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Order By lo.Values Select lo.Values).ToList)
+
+                myFields.OptionsType = options
             Else
                 myFields.OptionsTypeID = 0
                 myFields.OptionsType = New List(Of String)()

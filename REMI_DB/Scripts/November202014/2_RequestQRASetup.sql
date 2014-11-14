@@ -10,6 +10,7 @@ DECLARE @DropDownID INT
 DECLARE @TextBoxID INT
 DECLARE @LookupTypeID INT
 DECLARE @LinkID INT
+DECLARE @DateTimeID INT
 
 UPDATE Req.RequestType SET IsExternal=1 WHERE DBType <> 'SQL'
 
@@ -28,10 +29,14 @@ SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='FieldTypes'
 
 INSERT INTO Lookups (LookupID, LookupTypeID, ParentID, [Values],Description, IsActive)
 VALUES (@NextLookupID, @LookupTypeID, null, 'Link', NULL, 1)
+SET @NextLookupID = @NextLookupID +1
+INSERT INTO Lookups (LookupID, LookupTypeID, ParentID, [Values],Description, IsActive)
+VALUES (@NextLookupID, @LookupTypeID, null, 'DateTime', NULL, 1)
 
 SELECT @DropDownID=LookupID FROM Lookups WHERE LookupTypeID=@LookupTypeID AND [Values]='DropDown'
 SELECT @TextBoxID=LookupID FROM Lookups WHERE LookupTypeID=@LookupTypeID AND [Values]='TextBox'
 SELECT @LinkID=LookupID FROM Lookups WHERE LookupTypeID=@LookupTypeID AND [Values]='Link'
+SELECT @DateTimeID=LookupID FROM Lookups WHERE LookupTypeID=@LookupTypeID AND [Values]='DateTime'
 
 SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Yes/No'
 
@@ -130,7 +135,7 @@ insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldV
 values (@RequestTypeID,'Requestor',null,@TextBoxID,null,0,1,2,NULL,1)
 
 insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
-values (@RequestTypeID,'Received Date',null,@TextBoxID,null,0,1,3,NULL,1)
+values (@RequestTypeID,'Received Date',null,@DateTimeID,null,0,1,3,NULL,1)
 
 insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
 values (@RequestTypeID,'Executive Summary',null,@TextBoxID,null,0,1,4,NULL,1)
@@ -167,13 +172,13 @@ insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldV
 values (@RequestTypeID,'Is Report Required',null,@DropDownID,null,0,1,11,@LookupTypeID,1)
 
 insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
-values (@RequestTypeID,'Report Required by',null,@TextBoxID,null,0,1,12,NULL,1)
+values (@RequestTypeID,'Report Required by',null,@DateTimeID,null,0,1,12,NULL,1)
 
 insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
 values (@RequestTypeID,'FA Required',null,@DropDownID,null,0,1,13,@LookupTypeID,1)
 
 insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
-values (@RequestTypeID,'Sample Available Date',null,@TextBoxID,null,0,1,14,NULL,1)
+values (@RequestTypeID,'Sample Available Date',null,@DateTimeID,null,0,1,14,NULL,1)
 
 insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
 values (@RequestTypeID,'Return Material?',null,@DropDownID,null,0,1,15,@LookupTypeID,1)

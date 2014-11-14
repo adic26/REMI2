@@ -12,9 +12,16 @@ BEGIN
 		BEGIN
 			SELECT @RequestID = RequestID FROM Req.Request WHERE RequestNumber=@RequestNumber
 		END
-		ELSE
+	ELSE
 		BEGIN
-			SELECT @RequestNumber = REPLACE(RequestNumber, @RequestType + '-' + Right(Year(getDate()),2) + '-', '') + 1 FROM Req.Request WHERE RequestNumber LIKE @RequestType + '-' + Right(Year(getDate()),2) + '-%'
+			SELECT @RequestNumber = REPLACE(RequestNumber, @RequestType + '-' + Right(Year(getDate()),2) + '-', '') + 1 
+			FROM Req.Request 
+			WHERE RequestNumber LIKE @RequestType + '-' + Right(Year(getDate()),2) + '-%'
+			
+			IF (LEN(@RequestNumber) < 4)
+			BEGIN
+				SET @RequestNumber = REPLICATE('0', 4-LEN(@RequestNumber)) + @RequestNumber
+			END
 		
 			IF (@RequestNumber IS NULL)
 				SET @RequestNumber = '0001'

@@ -21,6 +21,16 @@ Namespace REMI.Bll
             Return New DataTable("Requests")
         End Function
 
+        Public Shared Function GetRequestTypes() As List(Of String)
+            Try
+                Return (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.IsExternal = False Select r.Lookup.Values).ToList()
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New List(Of String)
+        End Function
+
         Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
             Try
                 Return RequestDB.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)

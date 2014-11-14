@@ -1535,4 +1535,30 @@ Public Class RemiAPI
     End Function
 #End Region
 
+#Region "Request"
+    <WebMethod(Description:="Gets The Raised Request")> _
+    Public Function GetRequest(ByVal requestNumber As String) As RequestFieldsCollection
+        Try
+            Return RequestManager.GetRequest(requestNumber)
+        Catch ex As Exception
+            RequestManager.LogIssue("GetRequest", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return Nothing
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Save Raised Request")> _
+    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RequestManager.SaveRequest(requestName, request, userIdentification)
+            End If
+        Catch ex As Exception
+            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return False
+    End Function
+#End Region
+
 End Class

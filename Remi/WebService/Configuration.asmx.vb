@@ -211,30 +211,6 @@ Public Class ProductConfiguration
         Return Nothing
     End Function
 
-    <WebMethod(Description:="Gets The Raised Request")> _
-    Public Function GetRequest(ByVal requestNumber As String) As RequestFieldsCollection
-        Try
-            Return RequestManager.GetRequest(requestNumber)
-        Catch ex As Exception
-            RequestManager.LogIssue("GetRequest", "e3", NotificationType.Errors, ex)
-        End Try
-
-        Return Nothing
-    End Function
-
-    <WebMethod(EnableSession:=True, Description:="Save Raised Request")> _
-    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
-        Try
-            If UserManager.SetUserToSession(userIdentification) Then
-                Return RequestManager.SaveRequest(requestName, request, userIdentification)
-            End If
-        Catch ex As Exception
-            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex)
-        End Try
-
-        Return False
-    End Function
-
     <WebMethod(Description:="Get the setup information for the batch for stage and test")> _
     Public Function GetBatchTestSetupInfo(ByVal batchID As Int32, ByVal jobID As Int32, ByVal productID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
         Try
@@ -245,5 +221,19 @@ Public Class ProductConfiguration
 
         Return New DataTable("RequestSetupInfo")
     End Function
+
+    <WebMethod(EnableSession:=True, Description:="Gets All RequestTypes Based On User")> _
+    Public Function GetRequestTypes(ByVal userIdentification As String) As List(Of String)
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RequestManager.GetRequestTypes()
+            End If
+        Catch ex As Exception
+            RequestManager.LogIssue("GetRequestTypes", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return New List(Of String)
+    End Function
 #End Region
+
 End Class
