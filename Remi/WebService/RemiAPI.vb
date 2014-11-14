@@ -374,6 +374,17 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(Description:="Returns a list of the Tests available for that station and job.")> _
+    Public Function GetTests(ByVal trackingLocationID As Int32, ByVal jobID As Int32) As List(Of String)
+        Try
+            Return TestManager.GetTests(trackingLocationID, jobID)
+        Catch ex As Exception
+            TestManager.LogIssue("REMI API GetTests", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return New List(Of String)
+    End Function
+
     <WebMethod(Description:="Returns a list of the Tests available for that station.")> _
     Public Function GetTestsByStation(ByVal trackingLocationID As Int32) As String()
         Try
@@ -1545,19 +1556,6 @@ Public Class RemiAPI
         End Try
 
         Return Nothing
-    End Function
-
-    <WebMethod(EnableSession:=True, Description:="Save Raised Request")> _
-    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
-        Try
-            If UserManager.SetUserToSession(userIdentification) Then
-                Return RequestManager.SaveRequest(requestName, request, userIdentification)
-            End If
-        Catch ex As Exception
-            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex)
-        End Try
-
-        Return False
     End Function
 #End Region
 

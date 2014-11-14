@@ -234,6 +234,19 @@ Public Class ProductConfiguration
 
         Return New List(Of String)
     End Function
+
+    <WebMethod(EnableSession:=True, Description:="Save Raised Request")> _
+    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RequestManager.SaveRequest(requestName, request, userIdentification)
+            End If
+        Catch ex As Exception
+            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return False
+    End Function
 #End Region
 
 End Class
