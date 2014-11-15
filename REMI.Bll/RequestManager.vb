@@ -145,13 +145,19 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+            Dim saved As Boolean = False
             Try
-                Return RequestDB.SaveRequest(requestName, request, userIdentification)
+                saved = RequestDB.SaveRequest(requestName, request, userIdentification)
+
+                If (saved) Then
+                    BatchManager.GetItem(request(0).RequestNumber, userIdentification, False, True, False)
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                saved = False
             End Try
 
-            Return Nothing
+            Return saved
         End Function
     End Class
 End Namespace

@@ -530,7 +530,7 @@ Namespace REMI.Bll
             Try
                 Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(batchQRANumber))
                 If bc.Validate Then
-                    b = BatchDB.GetBatchByQRANumber(batchQRANumber, True)
+                    b = BatchDB.GetBatchByQRANumber(batchQRANumber, cacheRetrievedData)
 
                     If b Is Nothing Then
                         b = New Batch(RequestDB.GetRequest(bc.BatchNumber, UserManager.GetCurrentUser.UserName))

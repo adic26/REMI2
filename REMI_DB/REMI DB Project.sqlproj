@@ -2395,4 +2395,10 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Req.ReqFieldDataAuditInsertUpdate.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTests.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.remispGetRequestTypes.sql" />
+  </ItemGroup>
 </Project>
