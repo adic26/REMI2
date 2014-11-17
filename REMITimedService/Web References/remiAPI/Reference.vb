@@ -33,7 +33,11 @@ Namespace RemiAPI
     Partial Public Class RemiAPI
         Inherits System.Web.Services.Protocols.SoapHttpClientProtocol
         
+        Private SearchBatchOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private AddUnitExceptionOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private UpdateUnitIMEIOperationCompleted As System.Threading.SendOrPostCallback
         
         Private AddUnitOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -69,6 +73,8 @@ Namespace RemiAPI
         
         Private GetParametricTestsOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetTestsOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetTestsByStationOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetTestStagesOperationCompleted As System.Threading.SendOrPostCallback
@@ -101,9 +107,13 @@ Namespace RemiAPI
         
         Private GetOracleProductTypesOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetOracleDepartmentListOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetJobsOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetJobOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetOrientationsByJobOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetTRSJobsOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -136,6 +146,8 @@ Namespace RemiAPI
         Private GetProductSettingByProductIDOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetBatchUnitsInStageOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private BatchUpdateOrientationOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetTestingSummaryOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -173,17 +185,17 @@ Namespace RemiAPI
         
         Private GetTestsByBatchStageOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetTestsByBatchOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private SaveBatchCommentOperationCompleted As System.Threading.SendOrPostCallback
         
         Private DNPParametricForBatchOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetPercentageCompleteForBatchOperationCompleted As System.Threading.SendOrPostCallback
         
-        Private GetBatchResultsOverviewOperationCompleted As System.Threading.SendOrPostCallback
-        
         Private GetActiveBatchListOperationCompleted As System.Threading.SendOrPostCallback
         
-        Private GetTRSReviewedBatchListOperationCompleted As System.Threading.SendOrPostCallback
+        Private GetRequestsNotInREMIOperationCompleted As System.Threading.SendOrPostCallback
         
         Private CheckBatchForStatusUpdatesOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -191,13 +203,13 @@ Namespace RemiAPI
         
         Private ScanAdvancedOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetBatchResultsOverviewOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private IncomingGetAndSaveBatchOperationCompleted As System.Threading.SendOrPostCallback
         
-        Private IncomingGetBatchOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private IncomingSaveBatchOperationCompleted As System.Threading.SendOrPostCallback
-        
         Private SendMailOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private SendMailAdvancedOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetAllAccessByWorkstationOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -214,6 +226,8 @@ Namespace RemiAPI
         Private DeleteExceptionOperationCompleted As System.Threading.SendOrPostCallback
         
         Private AddExceptionOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetRequestOperationCompleted As System.Threading.SendOrPostCallback
         
         Private useDefaultCredentialsSetExplicitly As Boolean
         
@@ -254,7 +268,13 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
+        Public Event SearchBatchCompleted As SearchBatchCompletedEventHandler
+        
+        '''<remarks/>
         Public Event AddUnitExceptionCompleted As AddUnitExceptionCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event UpdateUnitIMEICompleted As UpdateUnitIMEICompletedEventHandler
         
         '''<remarks/>
         Public Event AddUnitCompleted As AddUnitCompletedEventHandler
@@ -308,6 +328,9 @@ Namespace RemiAPI
         Public Event GetParametricTestsCompleted As GetParametricTestsCompletedEventHandler
         
         '''<remarks/>
+        Public Event GetTestsCompleted As GetTestsCompletedEventHandler
+        
+        '''<remarks/>
         Public Event GetTestsByStationCompleted As GetTestsByStationCompletedEventHandler
         
         '''<remarks/>
@@ -356,10 +379,16 @@ Namespace RemiAPI
         Public Event GetOracleProductTypesCompleted As GetOracleProductTypesCompletedEventHandler
         
         '''<remarks/>
+        Public Event GetOracleDepartmentListCompleted As GetOracleDepartmentListCompletedEventHandler
+        
+        '''<remarks/>
         Public Event GetJobsCompleted As GetJobsCompletedEventHandler
         
         '''<remarks/>
         Public Event GetJobCompleted As GetJobCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetOrientationsByJobCompleted As GetOrientationsByJobCompletedEventHandler
         
         '''<remarks/>
         Public Event GetTRSJobsCompleted As GetTRSJobsCompletedEventHandler
@@ -408,6 +437,9 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetBatchUnitsInStageCompleted As GetBatchUnitsInStageCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event BatchUpdateOrientationCompleted As BatchUpdateOrientationCompletedEventHandler
         
         '''<remarks/>
         Public Event GetTestingSummaryCompleted As GetTestingSummaryCompletedEventHandler
@@ -464,6 +496,9 @@ Namespace RemiAPI
         Public Event GetTestsByBatchStageCompleted As GetTestsByBatchStageCompletedEventHandler
         
         '''<remarks/>
+        Public Event GetTestsByBatchCompleted As GetTestsByBatchCompletedEventHandler
+        
+        '''<remarks/>
         Public Event SaveBatchCommentCompleted As SaveBatchCommentCompletedEventHandler
         
         '''<remarks/>
@@ -473,13 +508,10 @@ Namespace RemiAPI
         Public Event GetPercentageCompleteForBatchCompleted As GetPercentageCompleteForBatchCompletedEventHandler
         
         '''<remarks/>
-        Public Event GetBatchResultsOverviewCompleted As GetBatchResultsOverviewCompletedEventHandler
-        
-        '''<remarks/>
         Public Event GetActiveBatchListCompleted As GetActiveBatchListCompletedEventHandler
         
         '''<remarks/>
-        Public Event GetTRSReviewedBatchListCompleted As GetTRSReviewedBatchListCompletedEventHandler
+        Public Event GetRequestsNotInREMICompleted As GetRequestsNotInREMICompletedEventHandler
         
         '''<remarks/>
         Public Event CheckBatchForStatusUpdatesCompleted As CheckBatchForStatusUpdatesCompletedEventHandler
@@ -491,16 +523,16 @@ Namespace RemiAPI
         Public Event ScanAdvancedCompleted As ScanAdvancedCompletedEventHandler
         
         '''<remarks/>
+        Public Event GetBatchResultsOverviewCompleted As GetBatchResultsOverviewCompletedEventHandler
+        
+        '''<remarks/>
         Public Event IncomingGetAndSaveBatchCompleted As IncomingGetAndSaveBatchCompletedEventHandler
         
         '''<remarks/>
-        Public Event IncomingGetBatchCompleted As IncomingGetBatchCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event IncomingSaveBatchCompleted As IncomingSaveBatchCompletedEventHandler
-        
-        '''<remarks/>
         Public Event SendMailCompleted As SendMailCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event SendMailAdvancedCompleted As SendMailAdvancedCompletedEventHandler
         
         '''<remarks/>
         Public Event GetAllAccessByWorkstationCompleted As GetAllAccessByWorkstationCompletedEventHandler
@@ -527,6 +559,103 @@ Namespace RemiAPI
         Public Event AddExceptionCompleted As AddExceptionCompletedEventHandler
         
         '''<remarks/>
+        Public Event GetRequestCompleted As GetRequestCompletedEventHandler
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SearchBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function SearchBatch( _
+                    ByVal userIdentification As String,  _
+                    ByVal AccessoryGroup As String,  _
+                    ByVal BatchStart As Date,  _
+                    ByVal BatchEnd As Date,  _
+                    ByVal department As String,  _
+                    ByVal TestCenter As String,  _
+                    ByVal JobName As String,  _
+                    ByVal Priority As String,  _
+                    ByVal Product As String,  _
+                    ByVal ProductType As String,  _
+                    ByVal Revision As String,  _
+                    ByVal TestName As String,  _
+                    ByVal TestStage As String,  _
+                    ByVal UserName As String,  _
+                    ByVal TrackingLocationName As String,  _
+                    ByVal NotInTrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal RequestReason As String,  _
+                    ByVal status As BatchStatus,  _
+                    ByVal TrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal exTestStageType() As BatchSearchTestStageType,  _
+                    ByVal exBatchStatus() As BatchSearchBatchStatus,  _
+                    ByVal testStageType As TestStageType) As BatchView()
+            Dim results() As Object = Me.Invoke("SearchBatch", New Object() {userIdentification, AccessoryGroup, BatchStart, BatchEnd, department, TestCenter, JobName, Priority, Product, ProductType, Revision, TestName, TestStage, UserName, TrackingLocationName, NotInTrackingLocationFunction, RequestReason, status, TrackingLocationFunction, exTestStageType, exBatchStatus, testStageType})
+            Return CType(results(0),BatchView())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub SearchBatchAsync( _
+                    ByVal userIdentification As String,  _
+                    ByVal AccessoryGroup As String,  _
+                    ByVal BatchStart As Date,  _
+                    ByVal BatchEnd As Date,  _
+                    ByVal department As String,  _
+                    ByVal TestCenter As String,  _
+                    ByVal JobName As String,  _
+                    ByVal Priority As String,  _
+                    ByVal Product As String,  _
+                    ByVal ProductType As String,  _
+                    ByVal Revision As String,  _
+                    ByVal TestName As String,  _
+                    ByVal TestStage As String,  _
+                    ByVal UserName As String,  _
+                    ByVal TrackingLocationName As String,  _
+                    ByVal NotInTrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal RequestReason As String,  _
+                    ByVal status As BatchStatus,  _
+                    ByVal TrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal exTestStageType() As BatchSearchTestStageType,  _
+                    ByVal exBatchStatus() As BatchSearchBatchStatus,  _
+                    ByVal testStageType As TestStageType)
+            Me.SearchBatchAsync(userIdentification, AccessoryGroup, BatchStart, BatchEnd, department, TestCenter, JobName, Priority, Product, ProductType, Revision, TestName, TestStage, UserName, TrackingLocationName, NotInTrackingLocationFunction, RequestReason, status, TrackingLocationFunction, exTestStageType, exBatchStatus, testStageType, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SearchBatchAsync( _
+                    ByVal userIdentification As String,  _
+                    ByVal AccessoryGroup As String,  _
+                    ByVal BatchStart As Date,  _
+                    ByVal BatchEnd As Date,  _
+                    ByVal department As String,  _
+                    ByVal TestCenter As String,  _
+                    ByVal JobName As String,  _
+                    ByVal Priority As String,  _
+                    ByVal Product As String,  _
+                    ByVal ProductType As String,  _
+                    ByVal Revision As String,  _
+                    ByVal TestName As String,  _
+                    ByVal TestStage As String,  _
+                    ByVal UserName As String,  _
+                    ByVal TrackingLocationName As String,  _
+                    ByVal NotInTrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal RequestReason As String,  _
+                    ByVal status As BatchStatus,  _
+                    ByVal TrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal exTestStageType() As BatchSearchTestStageType,  _
+                    ByVal exBatchStatus() As BatchSearchBatchStatus,  _
+                    ByVal testStageType As TestStageType,  _
+                    ByVal userState As Object)
+            If (Me.SearchBatchOperationCompleted Is Nothing) Then
+                Me.SearchBatchOperationCompleted = AddressOf Me.OnSearchBatchOperationCompleted
+            End If
+            Me.InvokeAsync("SearchBatch", New Object() {userIdentification, AccessoryGroup, BatchStart, BatchEnd, department, TestCenter, JobName, Priority, Product, ProductType, Revision, TestName, TestStage, UserName, TrackingLocationName, NotInTrackingLocationFunction, RequestReason, status, TrackingLocationFunction, exTestStageType, exBatchStatus, testStageType}, Me.SearchBatchOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSearchBatchOperationCompleted(ByVal arg As Object)
+            If (Not (Me.SearchBatchCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent SearchBatchCompleted(Me, New SearchBatchCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/AddUnitException", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function AddUnitException(ByVal qraNumber As String, ByVal TestName As String, ByVal userIdentification As String) As Notification
             Dim results() As Object = Me.Invoke("AddUnitException", New Object() {qraNumber, TestName, userIdentification})
@@ -550,6 +679,33 @@ Namespace RemiAPI
             If (Not (Me.AddUnitExceptionCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent AddUnitExceptionCompleted(Me, New AddUnitExceptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/UpdateUnitIMEI", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function UpdateUnitIMEI(ByVal QRANumber As String, ByVal IMEI As String, ByVal userIdentification As String) As Boolean
+            Dim results() As Object = Me.Invoke("UpdateUnitIMEI", New Object() {QRANumber, IMEI, userIdentification})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub UpdateUnitIMEIAsync(ByVal QRANumber As String, ByVal IMEI As String, ByVal userIdentification As String)
+            Me.UpdateUnitIMEIAsync(QRANumber, IMEI, userIdentification, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub UpdateUnitIMEIAsync(ByVal QRANumber As String, ByVal IMEI As String, ByVal userIdentification As String, ByVal userState As Object)
+            If (Me.UpdateUnitIMEIOperationCompleted Is Nothing) Then
+                Me.UpdateUnitIMEIOperationCompleted = AddressOf Me.OnUpdateUnitIMEIOperationCompleted
+            End If
+            Me.InvokeAsync("UpdateUnitIMEI", New Object() {QRANumber, IMEI, userIdentification}, Me.UpdateUnitIMEIOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnUpdateUnitIMEIOperationCompleted(ByVal arg As Object)
+            If (Not (Me.UpdateUnitIMEICompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent UpdateUnitIMEICompleted(Me, New UpdateUnitIMEICompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -1013,6 +1169,33 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTests", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetTests(ByVal trackingLocationID As Integer, ByVal jobID As Integer) As String()
+            Dim results() As Object = Me.Invoke("GetTests", New Object() {trackingLocationID, jobID})
+            Return CType(results(0),String())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestsAsync(ByVal trackingLocationID As Integer, ByVal jobID As Integer)
+            Me.GetTestsAsync(trackingLocationID, jobID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestsAsync(ByVal trackingLocationID As Integer, ByVal jobID As Integer, ByVal userState As Object)
+            If (Me.GetTestsOperationCompleted Is Nothing) Then
+                Me.GetTestsOperationCompleted = AddressOf Me.OnGetTestsOperationCompleted
+            End If
+            Me.InvokeAsync("GetTests", New Object() {trackingLocationID, jobID}, Me.GetTestsOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetTestsOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetTestsCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetTestsCompleted(Me, New GetTestsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTestsByStation", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function GetTestsByStation(ByVal trackingLocationID As Integer) As String()
             Dim results() As Object = Me.Invoke("GetTestsByStation", New Object() {trackingLocationID})
@@ -1445,6 +1628,33 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetOracleDepartmentList", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetOracleDepartmentList() As String()
+            Dim results() As Object = Me.Invoke("GetOracleDepartmentList", New Object(-1) {})
+            Return CType(results(0),String())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetOracleDepartmentListAsync()
+            Me.GetOracleDepartmentListAsync(Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetOracleDepartmentListAsync(ByVal userState As Object)
+            If (Me.GetOracleDepartmentListOperationCompleted Is Nothing) Then
+                Me.GetOracleDepartmentListOperationCompleted = AddressOf Me.OnGetOracleDepartmentListOperationCompleted
+            End If
+            Me.InvokeAsync("GetOracleDepartmentList", New Object(-1) {}, Me.GetOracleDepartmentListOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetOracleDepartmentListOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetOracleDepartmentListCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetOracleDepartmentListCompleted(Me, New GetOracleDepartmentListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetJobs", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function GetJobs() As String()
             Dim results() As Object = Me.Invoke("GetJobs", New Object(-1) {})
@@ -1495,6 +1705,33 @@ Namespace RemiAPI
             If (Not (Me.GetJobCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetJobCompleted(Me, New GetJobCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetOrientationsByJob", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetOrientationsByJob(ByVal JobName As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetOrientationsByJob", New Object() {JobName})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetOrientationsByJobAsync(ByVal JobName As String)
+            Me.GetOrientationsByJobAsync(JobName, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetOrientationsByJobAsync(ByVal JobName As String, ByVal userState As Object)
+            If (Me.GetOrientationsByJobOperationCompleted Is Nothing) Then
+                Me.GetOrientationsByJobOperationCompleted = AddressOf Me.OnGetOrientationsByJobOperationCompleted
+            End If
+            Me.InvokeAsync("GetOrientationsByJob", New Object() {JobName}, Me.GetOrientationsByJobOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetOrientationsByJobOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetOrientationsByJobCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetOrientationsByJobCompleted(Me, New GetOrientationsByJobCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -1927,6 +2164,33 @@ Namespace RemiAPI
             If (Not (Me.GetBatchUnitsInStageCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetBatchUnitsInStageCompleted(Me, New GetBatchUnitsInStageCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/BatchUpdateOrientation", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function BatchUpdateOrientation(ByVal requestNumber As String, ByVal orientationID As Integer) As Boolean
+            Dim results() As Object = Me.Invoke("BatchUpdateOrientation", New Object() {requestNumber, orientationID})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub BatchUpdateOrientationAsync(ByVal requestNumber As String, ByVal orientationID As Integer)
+            Me.BatchUpdateOrientationAsync(requestNumber, orientationID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub BatchUpdateOrientationAsync(ByVal requestNumber As String, ByVal orientationID As Integer, ByVal userState As Object)
+            If (Me.BatchUpdateOrientationOperationCompleted Is Nothing) Then
+                Me.BatchUpdateOrientationOperationCompleted = AddressOf Me.OnBatchUpdateOrientationOperationCompleted
+            End If
+            Me.InvokeAsync("BatchUpdateOrientation", New Object() {requestNumber, orientationID}, Me.BatchUpdateOrientationOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnBatchUpdateOrientationOperationCompleted(ByVal arg As Object)
+            If (Not (Me.BatchUpdateOrientationCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent BatchUpdateOrientationCompleted(Me, New BatchUpdateOrientationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -2417,6 +2681,33 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTestsByBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetTestsByBatch(ByVal requestNumber As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetTestsByBatch", New Object() {requestNumber})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestsByBatchAsync(ByVal requestNumber As String)
+            Me.GetTestsByBatchAsync(requestNumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestsByBatchAsync(ByVal requestNumber As String, ByVal userState As Object)
+            If (Me.GetTestsByBatchOperationCompleted Is Nothing) Then
+                Me.GetTestsByBatchOperationCompleted = AddressOf Me.OnGetTestsByBatchOperationCompleted
+            End If
+            Me.InvokeAsync("GetTestsByBatch", New Object() {requestNumber}, Me.GetTestsByBatchOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetTestsByBatchOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetTestsByBatchCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetTestsByBatchCompleted(Me, New GetTestsByBatchCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SaveBatchComment", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function SaveBatchComment(ByVal qraNumber As String, ByVal userIdentification As String, ByVal comment As String) As Boolean
             Dim results() As Object = Me.Invoke("SaveBatchComment", New Object() {qraNumber, userIdentification, comment})
@@ -2498,33 +2789,6 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchResultsOverview", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetBatchResultsOverview(ByVal qraNumber As String) As <System.Xml.Serialization.XmlArrayItemAttribute(IsNullable:=false)> TestStageResultOverview()
-            Dim results() As Object = Me.Invoke("GetBatchResultsOverview", New Object() {qraNumber})
-            Return CType(results(0),TestStageResultOverview())
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal qraNumber As String)
-            Me.GetBatchResultsOverviewAsync(qraNumber, Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal qraNumber As String, ByVal userState As Object)
-            If (Me.GetBatchResultsOverviewOperationCompleted Is Nothing) Then
-                Me.GetBatchResultsOverviewOperationCompleted = AddressOf Me.OnGetBatchResultsOverviewOperationCompleted
-            End If
-            Me.InvokeAsync("GetBatchResultsOverview", New Object() {qraNumber}, Me.GetBatchResultsOverviewOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetBatchResultsOverviewOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetBatchResultsOverviewCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetBatchResultsOverviewCompleted(Me, New GetBatchResultsOverviewCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetActiveBatchList", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function GetActiveBatchList() As String()
             Dim results() As Object = Me.Invoke("GetActiveBatchList", New Object(-1) {})
@@ -2552,37 +2816,37 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTRSReviewedBatchList", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetTRSReviewedBatchList(ByVal testCenter As String) As String()
-            Dim results() As Object = Me.Invoke("GetTRSReviewedBatchList", New Object() {testCenter})
-            Return CType(results(0),String())
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetRequestsNotInREMI", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetRequestsNotInREMI(ByVal searchStr As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetRequestsNotInREMI", New Object() {searchStr})
+            Return CType(results(0),System.Data.DataTable)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetTRSReviewedBatchListAsync(ByVal testCenter As String)
-            Me.GetTRSReviewedBatchListAsync(testCenter, Nothing)
+        Public Overloads Sub GetRequestsNotInREMIAsync(ByVal searchStr As String)
+            Me.GetRequestsNotInREMIAsync(searchStr, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetTRSReviewedBatchListAsync(ByVal testCenter As String, ByVal userState As Object)
-            If (Me.GetTRSReviewedBatchListOperationCompleted Is Nothing) Then
-                Me.GetTRSReviewedBatchListOperationCompleted = AddressOf Me.OnGetTRSReviewedBatchListOperationCompleted
+        Public Overloads Sub GetRequestsNotInREMIAsync(ByVal searchStr As String, ByVal userState As Object)
+            If (Me.GetRequestsNotInREMIOperationCompleted Is Nothing) Then
+                Me.GetRequestsNotInREMIOperationCompleted = AddressOf Me.OnGetRequestsNotInREMIOperationCompleted
             End If
-            Me.InvokeAsync("GetTRSReviewedBatchList", New Object() {testCenter}, Me.GetTRSReviewedBatchListOperationCompleted, userState)
+            Me.InvokeAsync("GetRequestsNotInREMI", New Object() {searchStr}, Me.GetRequestsNotInREMIOperationCompleted, userState)
         End Sub
         
-        Private Sub OnGetTRSReviewedBatchListOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetTRSReviewedBatchListCompletedEvent) Is Nothing) Then
+        Private Sub OnGetRequestsNotInREMIOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetRequestsNotInREMICompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetTRSReviewedBatchListCompleted(Me, New GetTRSReviewedBatchListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+                RaiseEvent GetRequestsNotInREMICompleted(Me, New GetRequestsNotInREMICompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/CheckBatchForStatusUpdates", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function CheckBatchForStatusUpdates(ByVal qraNumber As String, ByVal userIdentification As String) As Integer
+        Public Function CheckBatchForStatusUpdates(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
             Dim results() As Object = Me.Invoke("CheckBatchForStatusUpdates", New Object() {qraNumber, userIdentification})
-            Return CType(results(0),Integer)
+            Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
@@ -2660,6 +2924,33 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchResultsOverview", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetBatchResultsOverview(ByVal qraNumber As String) As <System.Xml.Serialization.XmlArrayItemAttribute(IsNullable:=false)> TestStageResultOverview()
+            Dim results() As Object = Me.Invoke("GetBatchResultsOverview", New Object() {qraNumber})
+            Return CType(results(0),TestStageResultOverview())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal qraNumber As String)
+            Me.GetBatchResultsOverviewAsync(qraNumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal qraNumber As String, ByVal userState As Object)
+            If (Me.GetBatchResultsOverviewOperationCompleted Is Nothing) Then
+                Me.GetBatchResultsOverviewOperationCompleted = AddressOf Me.OnGetBatchResultsOverviewOperationCompleted
+            End If
+            Me.InvokeAsync("GetBatchResultsOverview", New Object() {qraNumber}, Me.GetBatchResultsOverviewOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetBatchResultsOverviewOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetBatchResultsOverviewCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetBatchResultsOverviewCompleted(Me, New GetBatchResultsOverviewCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/IncomingGetAndSaveBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function IncomingGetAndSaveBatch(ByVal qraNumber As String, ByVal userIdentification As String) As IncomingAppBatchData
             Dim results() As Object = Me.Invoke("IncomingGetAndSaveBatch", New Object() {qraNumber, userIdentification})
@@ -2687,60 +2978,6 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/IncomingGetBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function IncomingGetBatch(ByVal qraNumber As String) As IncomingAppBatchData
-            Dim results() As Object = Me.Invoke("IncomingGetBatch", New Object() {qraNumber})
-            Return CType(results(0),IncomingAppBatchData)
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub IncomingGetBatchAsync(ByVal qraNumber As String)
-            Me.IncomingGetBatchAsync(qraNumber, Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub IncomingGetBatchAsync(ByVal qraNumber As String, ByVal userState As Object)
-            If (Me.IncomingGetBatchOperationCompleted Is Nothing) Then
-                Me.IncomingGetBatchOperationCompleted = AddressOf Me.OnIncomingGetBatchOperationCompleted
-            End If
-            Me.InvokeAsync("IncomingGetBatch", New Object() {qraNumber}, Me.IncomingGetBatchOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnIncomingGetBatchOperationCompleted(ByVal arg As Object)
-            If (Not (Me.IncomingGetBatchCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent IncomingGetBatchCompleted(Me, New IncomingGetBatchCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/IncomingSaveBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function IncomingSaveBatch(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
-            Dim results() As Object = Me.Invoke("IncomingSaveBatch", New Object() {qraNumber, userIdentification})
-            Return CType(results(0),Boolean)
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub IncomingSaveBatchAsync(ByVal qraNumber As String, ByVal userIdentification As String)
-            Me.IncomingSaveBatchAsync(qraNumber, userIdentification, Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub IncomingSaveBatchAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal userState As Object)
-            If (Me.IncomingSaveBatchOperationCompleted Is Nothing) Then
-                Me.IncomingSaveBatchOperationCompleted = AddressOf Me.OnIncomingSaveBatchOperationCompleted
-            End If
-            Me.InvokeAsync("IncomingSaveBatch", New Object() {qraNumber, userIdentification}, Me.IncomingSaveBatchOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnIncomingSaveBatchOperationCompleted(ByVal arg As Object)
-            If (Not (Me.IncomingSaveBatchCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent IncomingSaveBatchCompleted(Me, New IncomingSaveBatchCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SendMail", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Sub SendMail(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String)
             Me.Invoke("SendMail", New Object() {destinations, sender, subject, messageBody})
@@ -2763,6 +3000,32 @@ Namespace RemiAPI
             If (Not (Me.SendMailCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent SendMailCompleted(Me, New System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SendMailAdvanced", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Sub SendMailAdvanced(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean)
+            Me.Invoke("SendMailAdvanced", New Object() {destinations, sender, subject, messageBody, isHTML})
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SendMailAdvancedAsync(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean)
+            Me.SendMailAdvancedAsync(destinations, sender, subject, messageBody, isHTML, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SendMailAdvancedAsync(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean, ByVal userState As Object)
+            If (Me.SendMailAdvancedOperationCompleted Is Nothing) Then
+                Me.SendMailAdvancedOperationCompleted = AddressOf Me.OnSendMailAdvancedOperationCompleted
+            End If
+            Me.InvokeAsync("SendMailAdvanced", New Object() {destinations, sender, subject, messageBody, isHTML}, Me.SendMailAdvancedOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSendMailAdvancedOperationCompleted(ByVal arg As Object)
+            If (Not (Me.SendMailAdvancedCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent SendMailAdvancedCompleted(Me, New System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -2983,6 +3246,33 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetRequest", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetRequest(ByVal requestNumber As String) As RequestFields()
+            Dim results() As Object = Me.Invoke("GetRequest", New Object() {requestNumber})
+            Return CType(results(0),RequestFields())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetRequestAsync(ByVal requestNumber As String)
+            Me.GetRequestAsync(requestNumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetRequestAsync(ByVal requestNumber As String, ByVal userState As Object)
+            If (Me.GetRequestOperationCompleted Is Nothing) Then
+                Me.GetRequestOperationCompleted = AddressOf Me.OnGetRequestOperationCompleted
+            End If
+            Me.InvokeAsync("GetRequest", New Object() {requestNumber}, Me.GetRequestOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetRequestOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetRequestCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetRequestCompleted(Me, New GetRequestCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         Public Shadows Sub CancelAsync(ByVal userState As Object)
             MyBase.CancelAsync(userState)
         End Sub
@@ -3004,68 +3294,173 @@ Namespace RemiAPI
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
      System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Public Enum TrackingLocationFunction
+        
+        '''<remarks/>
+        NotSet
+        
+        '''<remarks/>
+        NonTesting
+        
+        '''<remarks/>
+        Testing
+        
+        '''<remarks/>
+        ExternalLocation
+        
+        '''<remarks/>
+        EnvironmentalStressing
+        
+        '''<remarks/>
+        IncomingLabeling
+        
+        '''<remarks/>
+        REMSTAR
+    End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Public Enum BatchStatus
+        
+        '''<remarks/>
+        NotSet
+        
+        '''<remarks/>
+        Held
+        
+        '''<remarks/>
+        InProgress
+        
+        '''<remarks/>
+        Quarantined
+        
+        '''<remarks/>
+        Received
+        
+        '''<remarks/>
+        Complete
+        
+        '''<remarks/>
+        NotSavedToREMI
+        
+        '''<remarks/>
+        Rejected
+        
+        '''<remarks/>
+        TestingComplete
+    End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Public Enum BatchSearchTestStageType
+        
+        '''<remarks/>
+        Parametric
+        
+        '''<remarks/>
+        EnvironmentalStress
+        
+        '''<remarks/>
+        IncomingEvaluation
+        
+        '''<remarks/>
+        NonTestingTask
+        
+        '''<remarks/>
+        FailureAnalysis
+    End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Public Enum BatchSearchBatchStatus
+        
+        '''<remarks/>
+        Held
+        
+        '''<remarks/>
+        InProgress
+        
+        '''<remarks/>
+        Quarantined
+        
+        '''<remarks/>
+        Received
+        
+        '''<remarks/>
+        Complete
+        
+        '''<remarks/>
+        NotSavedToREMI
+        
+        '''<remarks/>
+        Rejected
+        
+        '''<remarks/>
+        TestingComplete
+    End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Public Enum TestStageType
+        
+        '''<remarks/>
+        NotSet
+        
+        '''<remarks/>
+        Parametric
+        
+        '''<remarks/>
+        EnvironmentalStress
+        
+        '''<remarks/>
+        IncomingEvaluation
+        
+        '''<remarks/>
+        NonTestingTask
+        
+        '''<remarks/>
+        FailureAnalysis
+    End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class Notification
+    Partial Public Class BatchView
+        Inherits BatchBase
         
-        Private messageField As String
+        Private testUnitsField() As TestUnit
         
-        Private errorCodeField As String
-        
-        Private additionalInformationField As String
-        
-        Private propertyNameField As String
-        
-        Private typeField As NotificationType
+        Private requestFieldsField() As RequestFields
         
         '''<remarks/>
-        Public Property Message() As String
+        Public Property TestUnits() As TestUnit()
             Get
-                Return Me.messageField
+                Return Me.testUnitsField
             End Get
             Set
-                Me.messageField = value
+                Me.testUnitsField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property ErrorCode() As String
+        Public Property RequestFields() As RequestFields()
             Get
-                Return Me.errorCodeField
+                Return Me.requestFieldsField
             End Get
             Set
-                Me.errorCodeField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property AdditionalInformation() As String
-            Get
-                Return Me.additionalInformationField
-            End Get
-            Set
-                Me.additionalInformationField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property PropertyName() As String
-            Get
-                Return Me.propertyNameField
-            End Get
-            Set
-                Me.propertyNameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property Type() As NotificationType
-            Get
-                Return Me.typeField
-            End Get
-            Set
-                Me.typeField = value
+                Me.requestFieldsField = value
             End Set
         End Property
     End Class
@@ -3073,27 +3468,384 @@ Namespace RemiAPI
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
      System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum NotificationType
+    Partial Public Class TestUnit
+        Inherits LoggedItemBase
+        
+        Private qRANumberField As String
+        
+        Private assignedToField As String
+        
+        Private noBSNField As Boolean
+        
+        Private currentLogField As DeviceTrackingLog
+        
+        Private commentsField As String
+        
+        Private bSNField As Long
+        
+        Private iMEIField As String
+        
+        Private batchUnitNumberField As Integer
+        
+        Private testCenterIDField As Integer
+        
+        Private currentTestNameField As String
+        
+        Private currentTestStageField As TestStage
         
         '''<remarks/>
-        NotSet
+        Public Property QRANumber() As String
+            Get
+                Return Me.qRANumberField
+            End Get
+            Set
+                Me.qRANumberField = value
+            End Set
+        End Property
         
         '''<remarks/>
-        Errors
+        Public Property AssignedTo() As String
+            Get
+                Return Me.assignedToField
+            End Get
+            Set
+                Me.assignedToField = value
+            End Set
+        End Property
         
         '''<remarks/>
-        Information
+        Public Property NoBSN() As Boolean
+            Get
+                Return Me.noBSNField
+            End Get
+            Set
+                Me.noBSNField = value
+            End Set
+        End Property
         
         '''<remarks/>
-        Warning
+        Public Property CurrentLog() As DeviceTrackingLog
+            Get
+                Return Me.currentLogField
+            End Get
+            Set
+                Me.currentLogField = value
+            End Set
+        End Property
         
         '''<remarks/>
-        Fatal
+        Public Property Comments() As String
+            Get
+                Return Me.commentsField
+            End Get
+            Set
+                Me.commentsField = value
+            End Set
+        End Property
         
         '''<remarks/>
-        Debug
-    End Enum
+        Public Property BSN() As Long
+            Get
+                Return Me.bSNField
+            End Get
+            Set
+                Me.bSNField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property IMEI() As String
+            Get
+                Return Me.iMEIField
+            End Get
+            Set
+                Me.iMEIField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property BatchUnitNumber() As Integer
+            Get
+                Return Me.batchUnitNumberField
+            End Get
+            Set
+                Me.batchUnitNumberField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestCenterID() As Integer
+            Get
+                Return Me.testCenterIDField
+            End Get
+            Set
+                Me.testCenterIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property CurrentTestName() As String
+            Get
+                Return Me.currentTestNameField
+            End Get
+            Set
+                Me.currentTestNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property CurrentTestStage() As TestStage
+            Get
+                Return Me.currentTestStageField
+            End Get
+            Set
+                Me.currentTestStageField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class DeviceTrackingLog
+        Inherits BusinessBase
+        
+        Private testUnitIDField As Integer
+        
+        Private trackingLocationIDField As Integer
+        
+        Private trackingLocationNameField As String
+        
+        Private inTimeField As Date
+        
+        Private outTimeField As Date
+        
+        Private inUserField As String
+        
+        Private outUserField As String
+        
+        Private testUnitBatchUnitNumberField As Integer
+        
+        Private testUnitQRANumberField As String
+        
+        '''<remarks/>
+        Public Property TestUnitID() As Integer
+            Get
+                Return Me.testUnitIDField
+            End Get
+            Set
+                Me.testUnitIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TrackingLocationID() As Integer
+            Get
+                Return Me.trackingLocationIDField
+            End Get
+            Set
+                Me.trackingLocationIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TrackingLocationName() As String
+            Get
+                Return Me.trackingLocationNameField
+            End Get
+            Set
+                Me.trackingLocationNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property InTime() As Date
+            Get
+                Return Me.inTimeField
+            End Get
+            Set
+                Me.inTimeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property OutTime() As Date
+            Get
+                Return Me.outTimeField
+            End Get
+            Set
+                Me.outTimeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property InUser() As String
+            Get
+                Return Me.inUserField
+            End Get
+            Set
+                Me.inUserField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property OutUser() As String
+            Get
+                Return Me.outUserField
+            End Get
+            Set
+                Me.outUserField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestUnitBatchUnitNumber() As Integer
+            Get
+                Return Me.testUnitBatchUnitNumberField
+            End Get
+            Set
+                Me.testUnitBatchUnitNumberField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestUnitQRANumber() As String
+            Get
+                Return Me.testUnitQRANumberField
+            End Get
+            Set
+                Me.testUnitQRANumberField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.Xml.Serialization.XmlIncludeAttribute(GetType(DeviceTrackingLog)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(LoggedItemBase)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ProductConfiguration)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(Calibration)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestRecord)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public MustInherit Class BusinessBase
+        Inherits ValidationBase
+        
+        Private idField As Integer
+        
+        Private concurrencyIDField() As Byte
+        
+        '''<remarks/>
+        Public Property ID() As Integer
+            Get
+                Return Me.idField
+            End Get
+            Set
+                Me.idField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="base64Binary")>  _
+        Public Property ConcurrencyID() As Byte()
+            Get
+                Return Me.concurrencyIDField
+            End Get
+            Set
+                Me.concurrencyIDField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.Xml.Serialization.XmlIncludeAttribute(GetType(ConfigurationReturnData)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ScanReturnData)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BusinessBase)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DeviceTrackingLog)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(LoggedItemBase)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ProductConfiguration)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(Calibration)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestRecord)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class ValidationBase
+        
+        Private resourceManagerField As ResourceManager
+        
+        Private notificationsField() As Notification
+        
+        '''<remarks/>
+        Public Property ResourceManager() As ResourceManager
+            Get
+                Return Me.resourceManagerField
+            End Get
+            Set
+                Me.resourceManagerField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Notifications() As Notification()
+            Get
+                Return Me.notificationsField
+            End Get
+            Set
+                Me.notificationsField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class ResourceManager
+        
+        Private ignoreCaseField As Boolean
+        
+        '''<remarks/>
+        Public Property IgnoreCase() As Boolean
+            Get
+                Return Me.ignoreCaseField
+            End Get
+            Set
+                Me.ignoreCaseField = value
+            End Set
+        End Property
+    End Class
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -3218,6 +3970,100 @@ Namespace RemiAPI
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class Notification
+        
+        Private messageField As String
+        
+        Private errorCodeField As String
+        
+        Private additionalInformationField As String
+        
+        Private propertyNameField As String
+        
+        Private typeField As NotificationType
+        
+        '''<remarks/>
+        Public Property Message() As String
+            Get
+                Return Me.messageField
+            End Get
+            Set
+                Me.messageField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ErrorCode() As String
+            Get
+                Return Me.errorCodeField
+            End Get
+            Set
+                Me.errorCodeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property AdditionalInformation() As String
+            Get
+                Return Me.additionalInformationField
+            End Get
+            Set
+                Me.additionalInformationField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property PropertyName() As String
+            Get
+                Return Me.propertyNameField
+            End Get
+            Set
+                Me.propertyNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Type() As NotificationType
+            Get
+                Return Me.typeField
+            End Get
+            Set
+                Me.typeField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Public Enum NotificationType
+        
+        '''<remarks/>
+        NotSet
+        
+        '''<remarks/>
+        Errors
+        
+        '''<remarks/>
+        Information
+        
+        '''<remarks/>
+        Warning
+        
+        '''<remarks/>
+        Fatal
+        
+        '''<remarks/>
+        Debug
+    End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
     Partial Public Class TaskResultOverview
         
         Private taskNameField As String
@@ -3319,6 +4165,8 @@ Namespace RemiAPI
         
         Private hasCalibrationAccessField As Boolean
         
+        Private userField As User
+        
         '''<remarks/>
         Public Property UserName() As String
             Get
@@ -3358,84 +4206,14 @@ Namespace RemiAPI
                 Me.hasCalibrationAccessField = value
             End Set
         End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class TimeSpan
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class ResourceManager
-        
-        Private ignoreCaseField As Boolean
         
         '''<remarks/>
-        Public Property IgnoreCase() As Boolean
+        Public Property user() As User
             Get
-                Return Me.ignoreCaseField
+                Return Me.userField
             End Get
             Set
-                Me.ignoreCaseField = value
-            End Set
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.Xml.Serialization.XmlIncludeAttribute(GetType(ConfigurationReturnData)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(ScanReturnData)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BusinessBase)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DeviceTrackingLog)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(LoggedItemBase)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(ProductConfiguration)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(Calibration)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestRecord)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class ValidationBase
-        
-        Private resourceManagerField As ResourceManager
-        
-        Private notificationsField() As Notification
-        
-        '''<remarks/>
-        Public Property ResourceManager() As ResourceManager
-            Get
-                Return Me.resourceManagerField
-            End Get
-            Set
-                Me.resourceManagerField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property Notifications() As Notification()
-            Get
-                Return Me.notificationsField
-            End Get
-            Set
-                Me.notificationsField = value
+                Me.userField = value
             End Set
         End Property
     End Class
@@ -3446,220 +4224,162 @@ Namespace RemiAPI
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class ConfigurationReturnData
-        Inherits ValidationBase
-        
-        Private calibrationsField() As Calibration
-        
-        Private productConfigsField() As ProductConfiguration
-        
-        Private stationXMLField As String
-        
-        Private testXMLField As String
-        
-        Private hostIDField As Integer
-        
-        Private hasProductXMLField As Boolean
-        
-        Private hasStationXMLField As Boolean
-        
-        Private hasCalibrationXMLField As Boolean
-        
-        '''<remarks/>
-        Public Property Calibrations() As Calibration()
-            Get
-                Return Me.calibrationsField
-            End Get
-            Set
-                Me.calibrationsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ProductConfigs() As ProductConfiguration()
-            Get
-                Return Me.productConfigsField
-            End Get
-            Set
-                Me.productConfigsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property StationXML() As String
-            Get
-                Return Me.stationXMLField
-            End Get
-            Set
-                Me.stationXMLField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestXML() As String
-            Get
-                Return Me.testXMLField
-            End Get
-            Set
-                Me.testXMLField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property HostID() As Integer
-            Get
-                Return Me.hostIDField
-            End Get
-            Set
-                Me.hostIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property HasProductXML() As Boolean
-            Get
-                Return Me.hasProductXMLField
-            End Get
-            Set
-                Me.hasProductXMLField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property HasStationXML() As Boolean
-            Get
-                Return Me.hasStationXMLField
-            End Get
-            Set
-                Me.hasStationXMLField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property HasCalibrationXML() As Boolean
-            Get
-                Return Me.hasCalibrationXMLField
-            End Get
-            Set
-                Me.hasCalibrationXMLField = value
-            End Set
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class Calibration
+    Partial Public Class User
         Inherits LoggedItemBase
         
-        Private nameField As String
+        Private badgeNumberField As Integer
         
-        Private testNameField As String
+        Private byPassProductField As Integer
         
-        Private productGroupNameField As String
+        Private isActiveField As Integer
         
-        Private hostNameField As String
+        Private defaultPageField As String
         
-        Private testIDField As Integer
+        Private lDAPNameField As String
         
-        Private hostIDField As Integer
+        Private productGroupsField As System.Data.DataTable
         
-        Private productIDField As Integer
+        Private requestTypesField As System.Data.DataTable
         
-        Private dateCreatedField As Date
+        Private userDetailsField As System.Data.DataTable
         
-        Private fileField As String
+        Private trainingField As System.Data.DataTable
+        
+        Private emailAddressField As String
+        
+        Private fullNameField As String
+        
+        Private extensionField As String
+        
+        Private jobTitleField As String
         
         '''<remarks/>
-        Public Property Name() As String
+        Public Property BadgeNumber() As Integer
             Get
-                Return Me.nameField
+                Return Me.badgeNumberField
             End Get
             Set
-                Me.nameField = value
+                Me.badgeNumberField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property TestName() As String
+        Public Property ByPassProduct() As Integer
             Get
-                Return Me.testNameField
+                Return Me.byPassProductField
             End Get
             Set
-                Me.testNameField = value
+                Me.byPassProductField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property ProductGroupName() As String
+        Public Property IsActive() As Integer
             Get
-                Return Me.productGroupNameField
+                Return Me.isActiveField
             End Get
             Set
-                Me.productGroupNameField = value
+                Me.isActiveField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property HostName() As String
+        Public Property DefaultPage() As String
             Get
-                Return Me.hostNameField
+                Return Me.defaultPageField
             End Get
             Set
-                Me.hostNameField = value
+                Me.defaultPageField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property TestID() As Integer
+        Public Property LDAPName() As String
             Get
-                Return Me.testIDField
+                Return Me.lDAPNameField
             End Get
             Set
-                Me.testIDField = value
+                Me.lDAPNameField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property HostID() As Integer
+        Public Property ProductGroups() As System.Data.DataTable
             Get
-                Return Me.hostIDField
+                Return Me.productGroupsField
             End Get
             Set
-                Me.hostIDField = value
+                Me.productGroupsField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property ProductID() As Integer
+        Public Property RequestTypes() As System.Data.DataTable
             Get
-                Return Me.productIDField
+                Return Me.requestTypesField
             End Get
             Set
-                Me.productIDField = value
+                Me.requestTypesField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property DateCreated() As Date
+        Public Property UserDetails() As System.Data.DataTable
             Get
-                Return Me.dateCreatedField
+                Return Me.userDetailsField
             End Get
             Set
-                Me.dateCreatedField = value
+                Me.userDetailsField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property File() As String
+        Public Property Training() As System.Data.DataTable
             Get
-                Return Me.fileField
+                Return Me.trainingField
             End Get
             Set
-                Me.fileField = value
+                Me.trainingField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property EmailAddress() As String
+            Get
+                Return Me.emailAddressField
+            End Get
+            Set
+                Me.emailAddressField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FullName() As String
+            Get
+                Return Me.fullNameField
+            End Get
+            Set
+                Me.fullNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Extension() As String
+            Get
+                Return Me.extensionField
+            End Get
+            Set
+                Me.extensionField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property JobTitle() As String
+            Get
+                Return Me.jobTitleField
+            End Get
+            Set
+                Me.jobTitleField = value
             End Set
         End Property
     End Class
@@ -3668,15 +4388,16 @@ Namespace RemiAPI
     <System.Xml.Serialization.XmlIncludeAttribute(GetType(ProductConfiguration)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Calibration)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestRecord)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
      System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
@@ -3694,173 +4415,6 @@ Namespace RemiAPI
             End Get
             Set
                 Me.lastUserField = value
-            End Set
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.Xml.Serialization.XmlIncludeAttribute(GetType(DeviceTrackingLog)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(LoggedItemBase)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(ProductConfiguration)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(Calibration)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestRecord)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public MustInherit Class BusinessBase
-        Inherits ValidationBase
-        
-        Private idField As Integer
-        
-        Private concurrencyIDField() As Byte
-        
-        '''<remarks/>
-        Public Property ID() As Integer
-            Get
-                Return Me.idField
-            End Get
-            Set
-                Me.idField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="base64Binary")>  _
-        Public Property ConcurrencyID() As Byte()
-            Get
-                Return Me.concurrencyIDField
-            End Get
-            Set
-                Me.concurrencyIDField = value
-            End Set
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class DeviceTrackingLog
-        Inherits BusinessBase
-        
-        Private testUnitIDField As Integer
-        
-        Private trackingLocationIDField As Integer
-        
-        Private trackingLocationNameField As String
-        
-        Private inTimeField As Date
-        
-        Private outTimeField As Date
-        
-        Private inUserField As String
-        
-        Private outUserField As String
-        
-        Private testUnitBatchUnitNumberField As Integer
-        
-        Private testUnitQRANumberField As String
-        
-        '''<remarks/>
-        Public Property TestUnitID() As Integer
-            Get
-                Return Me.testUnitIDField
-            End Get
-            Set
-                Me.testUnitIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TrackingLocationID() As Integer
-            Get
-                Return Me.trackingLocationIDField
-            End Get
-            Set
-                Me.trackingLocationIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TrackingLocationName() As String
-            Get
-                Return Me.trackingLocationNameField
-            End Get
-            Set
-                Me.trackingLocationNameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property InTime() As Date
-            Get
-                Return Me.inTimeField
-            End Get
-            Set
-                Me.inTimeField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property OutTime() As Date
-            Get
-                Return Me.outTimeField
-            End Get
-            Set
-                Me.outTimeField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property InUser() As String
-            Get
-                Return Me.inUserField
-            End Get
-            Set
-                Me.inUserField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property OutUser() As String
-            Get
-                Return Me.outUserField
-            End Get
-            Set
-                Me.outUserField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestUnitBatchUnitNumber() As Integer
-            Get
-                Return Me.testUnitBatchUnitNumberField
-            End Get
-            Set
-                Me.testUnitBatchUnitNumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestUnitQRANumber() As String
-            Get
-                Return Me.testUnitQRANumberField
-            End Get
-            Set
-                Me.testUnitQRANumberField = value
             End Set
         End Property
     End Class
@@ -3991,6 +4545,124 @@ Namespace RemiAPI
             End Get
             Set
                 Me.versionNumField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class Calibration
+        Inherits LoggedItemBase
+        
+        Private nameField As String
+        
+        Private testNameField As String
+        
+        Private productGroupNameField As String
+        
+        Private hostNameField As String
+        
+        Private testIDField As Integer
+        
+        Private hostIDField As Integer
+        
+        Private productIDField As Integer
+        
+        Private dateCreatedField As Date
+        
+        Private fileField As String
+        
+        '''<remarks/>
+        Public Property Name() As String
+            Get
+                Return Me.nameField
+            End Get
+            Set
+                Me.nameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestName() As String
+            Get
+                Return Me.testNameField
+            End Get
+            Set
+                Me.testNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ProductGroupName() As String
+            Get
+                Return Me.productGroupNameField
+            End Get
+            Set
+                Me.productGroupNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HostName() As String
+            Get
+                Return Me.hostNameField
+            End Get
+            Set
+                Me.hostNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestID() As Integer
+            Get
+                Return Me.testIDField
+            End Get
+            Set
+                Me.testIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HostID() As Integer
+            Get
+                Return Me.hostIDField
+            End Get
+            Set
+                Me.hostIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ProductID() As Integer
+            Get
+                Return Me.productIDField
+            End Get
+            Set
+                Me.productIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property DateCreated() As Date
+            Get
+                Return Me.dateCreatedField
+            End Get
+            Set
+                Me.dateCreatedField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property File() As String
+            Get
+                Return Me.fileField
+            End Get
+            Set
+                Me.fileField = value
             End Set
         End Property
     End Class
@@ -4251,284 +4923,93 @@ Namespace RemiAPI
     End Enum
     
     '''<remarks/>
-    <System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class BatchBase
+    Partial Public Class Job
         Inherits LoggedItemBase
         
-        Private activeTaskAssigneeField As String
+        Private nameField As String
         
-        Private qRANumberField As String
+        Private wILocationField As String
         
-        Private productGroupField As String
+        Private procedureLocationField As String
         
-        Private estJobCompletionTimeField As Double
+        Private isTechOperationsTestField As Boolean
         
-        Private partNameField As String
+        Private isMechanicalTestField As Boolean
         
-        Private cPRNumberField As String
-        
-        Private executiveSummaryField As String
-        
-        Private orientationIDField As Integer
-        
-        Private orientationXMLField As String
-        
-        Private estTSCompletionTimeField As Double
-        
-        Private reqIDField As Integer
-        
-        Private productIDField As Integer
-        
-        Private productTypeField As String
-        
-        Private productTypeIDField As Integer
-        
-        Private testStageIDField As Integer
-        
-        Private accessoryGroupIDField As Integer
-        
-        Private isMQualField As Boolean
-        
-        Private accessoryGroupField As String
-        
-        Private jobNameField As String
+        Private isActiveField As Boolean
         
         Private continueOnFailuresField As Boolean
         
-        Private jobIDField As Integer
+        Private noBSNField As Boolean
         
-        Private testStageNameField As String
+        Private isOperationsTestField As Boolean
         
-        Private hasBatchSpecificExceptionsField As Boolean
+        Private testStagesField() As TestStage
         
-        Private completionPriorityField As String
-        
-        Private completionPriorityIDField As Integer
-        
-        Private statusField As BatchStatus
-        
-        Private hasUnitsNotReturnedToRequestorField As Boolean
-        
-        Private requestPurposeField As String
-        
-        Private requestPurposeIDField As Integer
-        
-        Private numberOfUnitsField As Integer
-        
-        Private testCenterLocationField As String
-        
-        Private testCenterLocationIDField As Integer
-        
-        Private jobWILocationField As String
-        
-        Private mechanicalToolsField As String
-        
-        Private assemblyNumberField As String
-        
-        Private assemblyRevisionField As String
-        
-        Private hWRevisionField As String
-        
-        Private reportRequiredByField As Date
-        
-        Private dateCreatedField As Date
-        
-        Private reportApprovedDateField As Date
-        
-        Private testStageCompletionField As TestStageCompletionStatus
+        Private commentField As String
         
         '''<remarks/>
-        Public Property ActiveTaskAssignee() As String
+        Public Property Name() As String
             Get
-                Return Me.activeTaskAssigneeField
+                Return Me.nameField
             End Get
             Set
-                Me.activeTaskAssigneeField = value
+                Me.nameField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property QRANumber() As String
+        Public Property WILocation() As String
             Get
-                Return Me.qRANumberField
+                Return Me.wILocationField
             End Get
             Set
-                Me.qRANumberField = value
+                Me.wILocationField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property ProductGroup() As String
+        Public Property ProcedureLocation() As String
             Get
-                Return Me.productGroupField
+                Return Me.procedureLocationField
             End Get
             Set
-                Me.productGroupField = value
+                Me.procedureLocationField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property EstJobCompletionTime() As Double
+        Public Property IsTechOperationsTest() As Boolean
             Get
-                Return Me.estJobCompletionTimeField
+                Return Me.isTechOperationsTestField
             End Get
             Set
-                Me.estJobCompletionTimeField = value
+                Me.isTechOperationsTestField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property PartName() As String
+        Public Property IsMechanicalTest() As Boolean
             Get
-                Return Me.partNameField
+                Return Me.isMechanicalTestField
             End Get
             Set
-                Me.partNameField = value
+                Me.isMechanicalTestField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property CPRNumber() As String
+        Public Property IsActive() As Boolean
             Get
-                Return Me.cPRNumberField
+                Return Me.isActiveField
             End Get
             Set
-                Me.cPRNumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ExecutiveSummary() As String
-            Get
-                Return Me.executiveSummaryField
-            End Get
-            Set
-                Me.executiveSummaryField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property OrientationID() As Integer
-            Get
-                Return Me.orientationIDField
-            End Get
-            Set
-                Me.orientationIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property OrientationXML() As String
-            Get
-                Return Me.orientationXMLField
-            End Get
-            Set
-                Me.orientationXMLField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property EstTSCompletionTime() As Double
-            Get
-                Return Me.estTSCompletionTimeField
-            End Get
-            Set
-                Me.estTSCompletionTimeField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ReqID() As Integer
-            Get
-                Return Me.reqIDField
-            End Get
-            Set
-                Me.reqIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ProductID() As Integer
-            Get
-                Return Me.productIDField
-            End Get
-            Set
-                Me.productIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ProductType() As String
-            Get
-                Return Me.productTypeField
-            End Get
-            Set
-                Me.productTypeField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ProductTypeID() As Integer
-            Get
-                Return Me.productTypeIDField
-            End Get
-            Set
-                Me.productTypeIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestStageID() As Integer
-            Get
-                Return Me.testStageIDField
-            End Get
-            Set
-                Me.testStageIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property AccessoryGroupID() As Integer
-            Get
-                Return Me.accessoryGroupIDField
-            End Get
-            Set
-                Me.accessoryGroupIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property IsMQual() As Boolean
-            Get
-                Return Me.isMQualField
-            End Get
-            Set
-                Me.isMQualField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property AccessoryGroup() As String
-            Get
-                Return Me.accessoryGroupField
-            End Get
-            Set
-                Me.accessoryGroupField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property JobName() As String
-            Get
-                Return Me.jobNameField
-            End Get
-            Set
-                Me.jobNameField = value
+                Me.isActiveField = value
             End Set
         End Property
         
@@ -4543,344 +5024,6 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property JobID() As Integer
-            Get
-                Return Me.jobIDField
-            End Get
-            Set
-                Me.jobIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestStageName() As String
-            Get
-                Return Me.testStageNameField
-            End Get
-            Set
-                Me.testStageNameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property HasBatchSpecificExceptions() As Boolean
-            Get
-                Return Me.hasBatchSpecificExceptionsField
-            End Get
-            Set
-                Me.hasBatchSpecificExceptionsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CompletionPriority() As String
-            Get
-                Return Me.completionPriorityField
-            End Get
-            Set
-                Me.completionPriorityField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CompletionPriorityID() As Integer
-            Get
-                Return Me.completionPriorityIDField
-            End Get
-            Set
-                Me.completionPriorityIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property Status() As BatchStatus
-            Get
-                Return Me.statusField
-            End Get
-            Set
-                Me.statusField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property HasUnitsNotReturnedToRequestor() As Boolean
-            Get
-                Return Me.hasUnitsNotReturnedToRequestorField
-            End Get
-            Set
-                Me.hasUnitsNotReturnedToRequestorField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property RequestPurpose() As String
-            Get
-                Return Me.requestPurposeField
-            End Get
-            Set
-                Me.requestPurposeField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property RequestPurposeID() As Integer
-            Get
-                Return Me.requestPurposeIDField
-            End Get
-            Set
-                Me.requestPurposeIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property NumberOfUnits() As Integer
-            Get
-                Return Me.numberOfUnitsField
-            End Get
-            Set
-                Me.numberOfUnitsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestCenterLocation() As String
-            Get
-                Return Me.testCenterLocationField
-            End Get
-            Set
-                Me.testCenterLocationField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestCenterLocationID() As Integer
-            Get
-                Return Me.testCenterLocationIDField
-            End Get
-            Set
-                Me.testCenterLocationIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property JobWILocation() As String
-            Get
-                Return Me.jobWILocationField
-            End Get
-            Set
-                Me.jobWILocationField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property MechanicalTools() As String
-            Get
-                Return Me.mechanicalToolsField
-            End Get
-            Set
-                Me.mechanicalToolsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property AssemblyNumber() As String
-            Get
-                Return Me.assemblyNumberField
-            End Get
-            Set
-                Me.assemblyNumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property AssemblyRevision() As String
-            Get
-                Return Me.assemblyRevisionField
-            End Get
-            Set
-                Me.assemblyRevisionField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property HWRevision() As String
-            Get
-                Return Me.hWRevisionField
-            End Get
-            Set
-                Me.hWRevisionField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ReportRequiredBy() As Date
-            Get
-                Return Me.reportRequiredByField
-            End Get
-            Set
-                Me.reportRequiredByField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property DateCreated() As Date
-            Get
-                Return Me.dateCreatedField
-            End Get
-            Set
-                Me.dateCreatedField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ReportApprovedDate() As Date
-            Get
-                Return Me.reportApprovedDateField
-            End Get
-            Set
-                Me.reportApprovedDateField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestStageCompletion() As TestStageCompletionStatus
-            Get
-                Return Me.testStageCompletionField
-            End Get
-            Set
-                Me.testStageCompletionField = value
-            End Set
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum BatchStatus
-        
-        '''<remarks/>
-        NotSet
-        
-        '''<remarks/>
-        Held
-        
-        '''<remarks/>
-        InProgress
-        
-        '''<remarks/>
-        Quarantined
-        
-        '''<remarks/>
-        Received
-        
-        '''<remarks/>
-        Complete
-        
-        '''<remarks/>
-        NotSavedToREMI
-        
-        '''<remarks/>
-        Rejected
-        
-        '''<remarks/>
-        TestingComplete
-    End Enum
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum TestStageCompletionStatus
-        
-        '''<remarks/>
-        NotSet
-        
-        '''<remarks/>
-        InProgress
-        
-        '''<remarks/>
-        TestingComplete
-        
-        '''<remarks/>
-        ReadyForNextStage
-        
-        '''<remarks/>
-        ProcessComplete
-    End Enum
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class BatchView
-        Inherits BatchBase
-        
-        Private testUnitsField() As TestUnit
-        
-        '''<remarks/>
-        Public Property TestUnits() As TestUnit()
-            Get
-                Return Me.testUnitsField
-            End Get
-            Set
-                Me.testUnitsField = value
-            End Set
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class TestUnit
-        Inherits LoggedItemBase
-        
-        Private qRANumberField As String
-        
-        Private assignedToField As String
-        
-        Private noBSNField As Boolean
-        
-        Private currentLogField As DeviceTrackingLog
-        
-        Private commentsField As String
-        
-        Private bSNField As Long
-        
-        Private batchUnitNumberField As Integer
-        
-        Private testCenterIDField As Integer
-        
-        Private currentTestNameField As String
-        
-        Private currentTestStageField As TestStage
-        
-        '''<remarks/>
-        Public Property QRANumber() As String
-            Get
-                Return Me.qRANumberField
-            End Get
-            Set
-                Me.qRANumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property AssignedTo() As String
-            Get
-                Return Me.assignedToField
-            End Get
-            Set
-                Me.assignedToField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property NoBSN() As Boolean
             Get
                 Return Me.noBSNField
@@ -4891,72 +5034,32 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property CurrentLog() As DeviceTrackingLog
+        Public Property IsOperationsTest() As Boolean
             Get
-                Return Me.currentLogField
+                Return Me.isOperationsTestField
             End Get
             Set
-                Me.currentLogField = value
+                Me.isOperationsTestField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property Comments() As String
+        Public Property TestStages() As TestStage()
             Get
-                Return Me.commentsField
+                Return Me.testStagesField
             End Get
             Set
-                Me.commentsField = value
+                Me.testStagesField = value
             End Set
         End Property
         
         '''<remarks/>
-        Public Property BSN() As Long
+        Public Property Comment() As String
             Get
-                Return Me.bSNField
+                Return Me.commentField
             End Get
             Set
-                Me.bSNField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property BatchUnitNumber() As Integer
-            Get
-                Return Me.batchUnitNumberField
-            End Get
-            Set
-                Me.batchUnitNumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestCenterID() As Integer
-            Get
-                Return Me.testCenterIDField
-            End Get
-            Set
-                Me.testCenterIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CurrentTestName() As String
-            Get
-                Return Me.currentTestNameField
-            End Get
-            Set
-                Me.currentTestNameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CurrentTestStage() As TestStage
-            Get
-                Return Me.currentTestStageField
-            End Get
-            Set
-                Me.currentTestStageField = value
+                Me.commentField = value
             End Set
         End Property
     End Class
@@ -5078,31 +5181,6 @@ Namespace RemiAPI
             End Set
         End Property
     End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum TestStageType
-        
-        '''<remarks/>
-        NotSet
-        
-        '''<remarks/>
-        Parametric
-        
-        '''<remarks/>
-        EnvironmentalStress
-        
-        '''<remarks/>
-        IncomingEvaluation
-        
-        '''<remarks/>
-        NonTestingTask
-        
-        '''<remarks/>
-        FailureAnalysis
-    End Enum
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -5379,30 +5457,11 @@ Namespace RemiAPI
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
      System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum TrackingLocationFunction
-        
-        '''<remarks/>
-        NotSet
-        
-        '''<remarks/>
-        NonTesting
-        
-        '''<remarks/>
-        Testing
-        
-        '''<remarks/>
-        ExternalLocation
-        
-        '''<remarks/>
-        EnvironmentalStressing
-        
-        '''<remarks/>
-        IncomingLabeling
-        
-        '''<remarks/>
-        REMSTAR
-    End Enum
+    Partial Public Class TimeSpan
+    End Class
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -5425,374 +5484,6 @@ Namespace RemiAPI
         '''<remarks/>
         NonTestingTask
     End Enum
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class User
-        Inherits LoggedItemBase
-        
-        Private existsInREMIField As Boolean
-        
-        Private badgeNumberField As Integer
-        
-        Private byPassProductField As Integer
-        
-        Private isActiveField As Integer
-        
-        Private canDeleteField As Integer
-        
-        Private defaultPageField As String
-        
-        Private testCentreField As String
-        
-        Private testCentreIDField As Integer
-        
-        Private lDAPNameField As String
-        
-        Private productGroupsField As System.Data.DataTable
-        
-        Private trainingField As System.Data.DataTable
-        
-        Private trainingNamesField() As String
-        
-        Private productGroupsNamesField() As String
-        
-        Private rolesListField() As String
-        
-        Private emailAddressField As String
-        
-        Private fullNameField As String
-        
-        Private extensionField As String
-        
-        Private jobTitleField As String
-        
-        '''<remarks/>
-        Public Property ExistsInREMI() As Boolean
-            Get
-                Return Me.existsInREMIField
-            End Get
-            Set
-                Me.existsInREMIField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property BadgeNumber() As Integer
-            Get
-                Return Me.badgeNumberField
-            End Get
-            Set
-                Me.badgeNumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ByPassProduct() As Integer
-            Get
-                Return Me.byPassProductField
-            End Get
-            Set
-                Me.byPassProductField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property IsActive() As Integer
-            Get
-                Return Me.isActiveField
-            End Get
-            Set
-                Me.isActiveField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CanDelete() As Integer
-            Get
-                Return Me.canDeleteField
-            End Get
-            Set
-                Me.canDeleteField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property DefaultPage() As String
-            Get
-                Return Me.defaultPageField
-            End Get
-            Set
-                Me.defaultPageField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestCentre() As String
-            Get
-                Return Me.testCentreField
-            End Get
-            Set
-                Me.testCentreField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestCentreID() As Integer
-            Get
-                Return Me.testCentreIDField
-            End Get
-            Set
-                Me.testCentreIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property LDAPName() As String
-            Get
-                Return Me.lDAPNameField
-            End Get
-            Set
-                Me.lDAPNameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ProductGroups() As System.Data.DataTable
-            Get
-                Return Me.productGroupsField
-            End Get
-            Set
-                Me.productGroupsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property Training() As System.Data.DataTable
-            Get
-                Return Me.trainingField
-            End Get
-            Set
-                Me.trainingField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TrainingNames() As String()
-            Get
-                Return Me.trainingNamesField
-            End Get
-            Set
-                Me.trainingNamesField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ProductGroupsNames() As String()
-            Get
-                Return Me.productGroupsNamesField
-            End Get
-            Set
-                Me.productGroupsNamesField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property RolesList() As String()
-            Get
-                Return Me.rolesListField
-            End Get
-            Set
-                Me.rolesListField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property EmailAddress() As String
-            Get
-                Return Me.emailAddressField
-            End Get
-            Set
-                Me.emailAddressField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property FullName() As String
-            Get
-                Return Me.fullNameField
-            End Get
-            Set
-                Me.fullNameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property Extension() As String
-            Get
-                Return Me.extensionField
-            End Get
-            Set
-                Me.extensionField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property JobTitle() As String
-            Get
-                Return Me.jobTitleField
-            End Get
-            Set
-                Me.jobTitleField = value
-            End Set
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Partial Public Class Job
-        Inherits LoggedItemBase
-        
-        Private nameField As String
-        
-        Private wILocationField As String
-        
-        Private procedureLocationField As String
-        
-        Private isTechOperationsTestField As Boolean
-        
-        Private isMechanicalTestField As Boolean
-        
-        Private isActiveField As Boolean
-        
-        Private continueOnFailuresField As Boolean
-        
-        Private noBSNField As Boolean
-        
-        Private isOperationsTestField As Boolean
-        
-        Private testStagesField() As TestStage
-        
-        Private commentField As String
-        
-        '''<remarks/>
-        Public Property Name() As String
-            Get
-                Return Me.nameField
-            End Get
-            Set
-                Me.nameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property WILocation() As String
-            Get
-                Return Me.wILocationField
-            End Get
-            Set
-                Me.wILocationField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ProcedureLocation() As String
-            Get
-                Return Me.procedureLocationField
-            End Get
-            Set
-                Me.procedureLocationField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property IsTechOperationsTest() As Boolean
-            Get
-                Return Me.isTechOperationsTestField
-            End Get
-            Set
-                Me.isTechOperationsTestField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property IsMechanicalTest() As Boolean
-            Get
-                Return Me.isMechanicalTestField
-            End Get
-            Set
-                Me.isMechanicalTestField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property IsActive() As Boolean
-            Get
-                Return Me.isActiveField
-            End Get
-            Set
-                Me.isActiveField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ContinueOnFailures() As Boolean
-            Get
-                Return Me.continueOnFailuresField
-            End Get
-            Set
-                Me.continueOnFailuresField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property NoBSN() As Boolean
-            Get
-                Return Me.noBSNField
-            End Get
-            Set
-                Me.noBSNField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property IsOperationsTest() As Boolean
-            Get
-                Return Me.isOperationsTestField
-            End Get
-            Set
-                Me.isOperationsTestField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestStages() As TestStage()
-            Get
-                Return Me.testStagesField
-            End Get
-            Set
-                Me.testStagesField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property Comment() As String
-            Get
-                Return Me.commentField
-            End Get
-            Set
-                Me.commentField = value
-            End Set
-        End Property
-    End Class
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -6027,6 +5718,923 @@ Namespace RemiAPI
         '''<remarks/>
         UnderRepair
     End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class RequestFields
+        Inherits LoggedItemBase
+        
+        Private requestTypeIDField As Integer
+        
+        Private requestTypeField As String
+        
+        Private requestIDField As Integer
+        
+        Private requestNumberField As String
+        
+        Private internalFieldField As Integer
+        
+        Private fieldSetupIDField As Integer
+        
+        Private nameField As String
+        
+        Private displayOrderField As Integer
+        
+        Private columnOrderField As Integer
+        
+        Private isRequiredField As Boolean
+        
+        Private fieldTypeIDField As Integer
+        
+        Private fieldTypeField As String
+        
+        Private fieldValidationIDField As Integer
+        
+        Private fieldValidationField As String
+        
+        Private descriptionField As String
+        
+        Private optionsTypeIDField As Integer
+        
+        Private optionsTypeField() As String
+        
+        Private isArchivedField As Boolean
+        
+        Private intFieldField As String
+        
+        Private extFieldField As String
+        
+        Private isFromExternalSystemField As Boolean
+        
+        Private valueField As String
+        
+        Private newRequestField As Boolean
+        
+        '''<remarks/>
+        Public Property RequestTypeID() As Integer
+            Get
+                Return Me.requestTypeIDField
+            End Get
+            Set
+                Me.requestTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property RequestType() As String
+            Get
+                Return Me.requestTypeField
+            End Get
+            Set
+                Me.requestTypeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property RequestID() As Integer
+            Get
+                Return Me.requestIDField
+            End Get
+            Set
+                Me.requestIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property RequestNumber() As String
+            Get
+                Return Me.requestNumberField
+            End Get
+            Set
+                Me.requestNumberField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property InternalField() As Integer
+            Get
+                Return Me.internalFieldField
+            End Get
+            Set
+                Me.internalFieldField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FieldSetupID() As Integer
+            Get
+                Return Me.fieldSetupIDField
+            End Get
+            Set
+                Me.fieldSetupIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Name() As String
+            Get
+                Return Me.nameField
+            End Get
+            Set
+                Me.nameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property DisplayOrder() As Integer
+            Get
+                Return Me.displayOrderField
+            End Get
+            Set
+                Me.displayOrderField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ColumnOrder() As Integer
+            Get
+                Return Me.columnOrderField
+            End Get
+            Set
+                Me.columnOrderField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property IsRequired() As Boolean
+            Get
+                Return Me.isRequiredField
+            End Get
+            Set
+                Me.isRequiredField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FieldTypeID() As Integer
+            Get
+                Return Me.fieldTypeIDField
+            End Get
+            Set
+                Me.fieldTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FieldType() As String
+            Get
+                Return Me.fieldTypeField
+            End Get
+            Set
+                Me.fieldTypeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FieldValidationID() As Integer
+            Get
+                Return Me.fieldValidationIDField
+            End Get
+            Set
+                Me.fieldValidationIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FieldValidation() As String
+            Get
+                Return Me.fieldValidationField
+            End Get
+            Set
+                Me.fieldValidationField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Description() As String
+            Get
+                Return Me.descriptionField
+            End Get
+            Set
+                Me.descriptionField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property OptionsTypeID() As Integer
+            Get
+                Return Me.optionsTypeIDField
+            End Get
+            Set
+                Me.optionsTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property OptionsType() As String()
+            Get
+                Return Me.optionsTypeField
+            End Get
+            Set
+                Me.optionsTypeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property IsArchived() As Boolean
+            Get
+                Return Me.isArchivedField
+            End Get
+            Set
+                Me.isArchivedField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property IntField() As String
+            Get
+                Return Me.intFieldField
+            End Get
+            Set
+                Me.intFieldField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ExtField() As String
+            Get
+                Return Me.extFieldField
+            End Get
+            Set
+                Me.extFieldField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property IsFromExternalSystem() As Boolean
+            Get
+                Return Me.isFromExternalSystemField
+            End Get
+            Set
+                Me.isFromExternalSystemField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Value() As String
+            Get
+                Return Me.valueField
+            End Get
+            Set
+                Me.valueField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property NewRequest() As Boolean
+            Get
+                Return Me.newRequestField
+            End Get
+            Set
+                Me.newRequestField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class BatchBase
+        Inherits LoggedItemBase
+        
+        Private activeTaskAssigneeField As String
+        
+        Private qRANumberField As String
+        
+        Private estJobCompletionTimeField As Double
+        
+        Private outOfDateField As Boolean
+        
+        Private orientationIDField As Integer
+        
+        Private orientationXMLField As String
+        
+        Private estTSCompletionTimeField As Double
+        
+        Private testStageIDField As Integer
+        
+        Private continueOnFailuresField As Boolean
+        
+        Private jobIDField As Integer
+        
+        Private testStageNameField As String
+        
+        Private hasBatchSpecificExceptionsField As Boolean
+        
+        Private statusField As BatchStatus
+        
+        Private hasUnitsNotReturnedToRequestorField As Boolean
+        
+        Private numberOfUnitsField As Integer
+        
+        Private jobWILocationField As String
+        
+        Private testStageCompletionField As TestStageCompletionStatus
+        
+        Private productIDField As Integer
+        
+        Private productTypeIDField As Integer
+        
+        Private accessoryGroupIDField As Integer
+        
+        Private requestPurposeIDField As Integer
+        
+        Private priorityIDField As Integer
+        
+        Private testCenterLocationIDField As Integer
+        
+        Private departmentIDField As Integer
+        
+        Private jobNameField As String
+        
+        Private productGroupField As String
+        
+        Private cPRNumberField As String
+        
+        Private executiveSummaryField As String
+        
+        Private productTypeField As String
+        
+        Private accessoryGroupField As String
+        
+        Private requestPurposeField As String
+        
+        Private testCenterLocationField As String
+        
+        Private priorityField As String
+        
+        Private mechanicalToolsField As String
+        
+        Private departmentField As String
+        
+        Private requestLinkField As String
+        
+        Private numberOfUnitsExpectedField As Integer
+        
+        Private requestorField As String
+        
+        Private dateCreatedField As Date
+        
+        Private reportRequiredByField As Date
+        
+        Private reportApprovedDateField As Date
+        
+        '''<remarks/>
+        Public Property ActiveTaskAssignee() As String
+            Get
+                Return Me.activeTaskAssigneeField
+            End Get
+            Set
+                Me.activeTaskAssigneeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property QRANumber() As String
+            Get
+                Return Me.qRANumberField
+            End Get
+            Set
+                Me.qRANumberField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property EstJobCompletionTime() As Double
+            Get
+                Return Me.estJobCompletionTimeField
+            End Get
+            Set
+                Me.estJobCompletionTimeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property OutOfDate() As Boolean
+            Get
+                Return Me.outOfDateField
+            End Get
+            Set
+                Me.outOfDateField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property OrientationID() As Integer
+            Get
+                Return Me.orientationIDField
+            End Get
+            Set
+                Me.orientationIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property OrientationXML() As String
+            Get
+                Return Me.orientationXMLField
+            End Get
+            Set
+                Me.orientationXMLField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property EstTSCompletionTime() As Double
+            Get
+                Return Me.estTSCompletionTimeField
+            End Get
+            Set
+                Me.estTSCompletionTimeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestStageID() As Integer
+            Get
+                Return Me.testStageIDField
+            End Get
+            Set
+                Me.testStageIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ContinueOnFailures() As Boolean
+            Get
+                Return Me.continueOnFailuresField
+            End Get
+            Set
+                Me.continueOnFailuresField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property JobID() As Integer
+            Get
+                Return Me.jobIDField
+            End Get
+            Set
+                Me.jobIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestStageName() As String
+            Get
+                Return Me.testStageNameField
+            End Get
+            Set
+                Me.testStageNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HasBatchSpecificExceptions() As Boolean
+            Get
+                Return Me.hasBatchSpecificExceptionsField
+            End Get
+            Set
+                Me.hasBatchSpecificExceptionsField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Status() As BatchStatus
+            Get
+                Return Me.statusField
+            End Get
+            Set
+                Me.statusField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HasUnitsNotReturnedToRequestor() As Boolean
+            Get
+                Return Me.hasUnitsNotReturnedToRequestorField
+            End Get
+            Set
+                Me.hasUnitsNotReturnedToRequestorField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property NumberOfUnits() As Integer
+            Get
+                Return Me.numberOfUnitsField
+            End Get
+            Set
+                Me.numberOfUnitsField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property JobWILocation() As String
+            Get
+                Return Me.jobWILocationField
+            End Get
+            Set
+                Me.jobWILocationField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestStageCompletion() As TestStageCompletionStatus
+            Get
+                Return Me.testStageCompletionField
+            End Get
+            Set
+                Me.testStageCompletionField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ProductID() As Integer
+            Get
+                Return Me.productIDField
+            End Get
+            Set
+                Me.productIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ProductTypeID() As Integer
+            Get
+                Return Me.productTypeIDField
+            End Get
+            Set
+                Me.productTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property AccessoryGroupID() As Integer
+            Get
+                Return Me.accessoryGroupIDField
+            End Get
+            Set
+                Me.accessoryGroupIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property RequestPurposeID() As Integer
+            Get
+                Return Me.requestPurposeIDField
+            End Get
+            Set
+                Me.requestPurposeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property PriorityID() As Integer
+            Get
+                Return Me.priorityIDField
+            End Get
+            Set
+                Me.priorityIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestCenterLocationID() As Integer
+            Get
+                Return Me.testCenterLocationIDField
+            End Get
+            Set
+                Me.testCenterLocationIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property DepartmentID() As Integer
+            Get
+                Return Me.departmentIDField
+            End Get
+            Set
+                Me.departmentIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property JobName() As String
+            Get
+                Return Me.jobNameField
+            End Get
+            Set
+                Me.jobNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ProductGroup() As String
+            Get
+                Return Me.productGroupField
+            End Get
+            Set
+                Me.productGroupField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property CPRNumber() As String
+            Get
+                Return Me.cPRNumberField
+            End Get
+            Set
+                Me.cPRNumberField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ExecutiveSummary() As String
+            Get
+                Return Me.executiveSummaryField
+            End Get
+            Set
+                Me.executiveSummaryField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ProductType() As String
+            Get
+                Return Me.productTypeField
+            End Get
+            Set
+                Me.productTypeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property AccessoryGroup() As String
+            Get
+                Return Me.accessoryGroupField
+            End Get
+            Set
+                Me.accessoryGroupField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property RequestPurpose() As String
+            Get
+                Return Me.requestPurposeField
+            End Get
+            Set
+                Me.requestPurposeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestCenterLocation() As String
+            Get
+                Return Me.testCenterLocationField
+            End Get
+            Set
+                Me.testCenterLocationField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Priority() As String
+            Get
+                Return Me.priorityField
+            End Get
+            Set
+                Me.priorityField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property MechanicalTools() As String
+            Get
+                Return Me.mechanicalToolsField
+            End Get
+            Set
+                Me.mechanicalToolsField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Department() As String
+            Get
+                Return Me.departmentField
+            End Get
+            Set
+                Me.departmentField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property RequestLink() As String
+            Get
+                Return Me.requestLinkField
+            End Get
+            Set
+                Me.requestLinkField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property NumberOfUnitsExpected() As Integer
+            Get
+                Return Me.numberOfUnitsExpectedField
+            End Get
+            Set
+                Me.numberOfUnitsExpectedField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Requestor() As String
+            Get
+                Return Me.requestorField
+            End Get
+            Set
+                Me.requestorField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property DateCreated() As Date
+            Get
+                Return Me.dateCreatedField
+            End Get
+            Set
+                Me.dateCreatedField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ReportRequiredBy() As Date
+            Get
+                Return Me.reportRequiredByField
+            End Get
+            Set
+                Me.reportRequiredByField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ReportApprovedDate() As Date
+            Get
+                Return Me.reportApprovedDateField
+            End Get
+            Set
+                Me.reportApprovedDateField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Public Enum TestStageCompletionStatus
+        
+        '''<remarks/>
+        NotSet
+        
+        '''<remarks/>
+        InProgress
+        
+        '''<remarks/>
+        TestingComplete
+        
+        '''<remarks/>
+        ReadyForNextStage
+        
+        '''<remarks/>
+        ProcessComplete
+    End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class ConfigurationReturnData
+        Inherits ValidationBase
+        
+        Private calibrationsField() As Calibration
+        
+        Private productConfigsField() As ProductConfiguration
+        
+        Private stationXMLField As String
+        
+        Private testXMLField As String
+        
+        Private hostIDField As Integer
+        
+        Private hasProductXMLField As Boolean
+        
+        Private hasStationXMLField As Boolean
+        
+        Private hasCalibrationXMLField As Boolean
+        
+        '''<remarks/>
+        Public Property Calibrations() As Calibration()
+            Get
+                Return Me.calibrationsField
+            End Get
+            Set
+                Me.calibrationsField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ProductConfigs() As ProductConfiguration()
+            Get
+                Return Me.productConfigsField
+            End Get
+            Set
+                Me.productConfigsField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property StationXML() As String
+            Get
+                Return Me.stationXMLField
+            End Get
+            Set
+                Me.stationXMLField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property TestXML() As String
+            Get
+                Return Me.testXMLField
+            End Get
+            Set
+                Me.testXMLField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HostID() As Integer
+            Get
+                Return Me.hostIDField
+            End Get
+            Set
+                Me.hostIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HasProductXML() As Boolean
+            Get
+                Return Me.hasProductXMLField
+            End Get
+            Set
+                Me.hasProductXMLField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HasStationXML() As Boolean
+            Get
+                Return Me.hasStationXMLField
+            End Get
+            Set
+                Me.hasStationXMLField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property HasCalibrationXML() As Boolean
+            Get
+                Return Me.hasCalibrationXMLField
+            End Get
+            Set
+                Me.hasCalibrationXMLField = value
+            End Set
+        End Property
+    End Class
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -6447,7 +7055,46 @@ Namespace RemiAPI
         
         '''<remarks/>
         RequestType
+        
+        '''<remarks/>
+        Department
+        
+        '''<remarks/>
+        NotSet
+        
+        '''<remarks/>
+        FieldTypes
+        
+        '''<remarks/>
+        ValidationTypes
     End Enum
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub SearchBatchCompletedEventHandler(ByVal sender As Object, ByVal e As SearchBatchCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class SearchBatchCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As BatchView()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),BatchView())
+            End Get
+        End Property
+    End Class
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
@@ -6472,6 +7119,33 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),Notification)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub UpdateUnitIMEICompletedEventHandler(ByVal sender As Object, ByVal e As UpdateUnitIMEICompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class UpdateUnitIMEICompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
             End Get
         End Property
     End Class
@@ -6937,6 +7611,33 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetTestsCompletedEventHandler(ByVal sender As Object, ByVal e As GetTestsCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetTestsCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As String()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),String())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetTestsByStationCompletedEventHandler(ByVal sender As Object, ByVal e As GetTestsByStationCompletedEventArgs)
     
     '''<remarks/>
@@ -7369,6 +8070,33 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetOracleDepartmentListCompletedEventHandler(ByVal sender As Object, ByVal e As GetOracleDepartmentListCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetOracleDepartmentListCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As String()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),String())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetJobsCompletedEventHandler(ByVal sender As Object, ByVal e As GetJobsCompletedEventArgs)
     
     '''<remarks/>
@@ -7417,6 +8145,33 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),Job)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetOrientationsByJobCompletedEventHandler(ByVal sender As Object, ByVal e As GetOrientationsByJobCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetOrientationsByJobCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
             End Get
         End Property
     End Class
@@ -7849,6 +8604,33 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub BatchUpdateOrientationCompletedEventHandler(ByVal sender As Object, ByVal e As BatchUpdateOrientationCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class BatchUpdateOrientationCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
             End Get
         End Property
     End Class
@@ -8341,6 +9123,33 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetTestsByBatchCompletedEventHandler(ByVal sender As Object, ByVal e As GetTestsByBatchCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetTestsByBatchCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub SaveBatchCommentCompletedEventHandler(ByVal sender As Object, ByVal e As SaveBatchCommentCompletedEventArgs)
     
     '''<remarks/>
@@ -8422,33 +9231,6 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetBatchResultsOverviewCompletedEventHandler(ByVal sender As Object, ByVal e As GetBatchResultsOverviewCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetBatchResultsOverviewCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As TestStageResultOverview()
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),TestStageResultOverview())
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetActiveBatchListCompletedEventHandler(ByVal sender As Object, ByVal e As GetActiveBatchListCompletedEventArgs)
     
     '''<remarks/>
@@ -8476,13 +9258,13 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetTRSReviewedBatchListCompletedEventHandler(ByVal sender As Object, ByVal e As GetTRSReviewedBatchListCompletedEventArgs)
+    Public Delegate Sub GetRequestsNotInREMICompletedEventHandler(ByVal sender As Object, ByVal e As GetRequestsNotInREMICompletedEventArgs)
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetTRSReviewedBatchListCompletedEventArgs
+    Partial Public Class GetRequestsNotInREMICompletedEventArgs
         Inherits System.ComponentModel.AsyncCompletedEventArgs
         
         Private results() As Object
@@ -8493,10 +9275,10 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        Public ReadOnly Property Result() As String()
+        Public ReadOnly Property Result() As System.Data.DataTable
             Get
                 Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),String())
+                Return CType(Me.results(0),System.Data.DataTable)
             End Get
         End Property
     End Class
@@ -8520,10 +9302,10 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        Public ReadOnly Property Result() As Integer
+        Public ReadOnly Property Result() As Boolean
             Get
                 Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),Integer)
+                Return CType(Me.results(0),Boolean)
             End Get
         End Property
     End Class
@@ -8584,6 +9366,33 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetBatchResultsOverviewCompletedEventHandler(ByVal sender As Object, ByVal e As GetBatchResultsOverviewCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetBatchResultsOverviewCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As TestStageResultOverview()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),TestStageResultOverview())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub IncomingGetAndSaveBatchCompletedEventHandler(ByVal sender As Object, ByVal e As IncomingGetAndSaveBatchCompletedEventArgs)
     
     '''<remarks/>
@@ -8611,61 +9420,11 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub IncomingGetBatchCompletedEventHandler(ByVal sender As Object, ByVal e As IncomingGetBatchCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class IncomingGetBatchCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As IncomingAppBatchData
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),IncomingAppBatchData)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub IncomingSaveBatchCompletedEventHandler(ByVal sender As Object, ByVal e As IncomingSaveBatchCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class IncomingSaveBatchCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As Boolean
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),Boolean)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub SendMailCompletedEventHandler(ByVal sender As Object, ByVal e As System.ComponentModel.AsyncCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub SendMailAdvancedCompletedEventHandler(ByVal sender As Object, ByVal e As System.ComponentModel.AsyncCompletedEventArgs)
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
@@ -8879,6 +9638,33 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),Boolean)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetRequestCompletedEventHandler(ByVal sender As Object, ByVal e As GetRequestCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetRequestCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As RequestFields()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),RequestFields())
             End Get
         End Property
     End Class
