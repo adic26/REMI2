@@ -106,14 +106,14 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property CurrentTestName() As String
-            Get
-                Return _currentTestName
-            End Get
-            Set(ByVal value As String)
-                _currentTestName = value
-            End Set
-        End Property
+        'Public Property CurrentTestName() As String
+        '    Get
+        '        Return _currentTestName
+        '    End Get
+        '    Set(ByVal value As String)
+        '        _currentTestName = value
+        '    End Set
+        'End Property
 
         Public ReadOnly Property DisplayName() As String
             Get

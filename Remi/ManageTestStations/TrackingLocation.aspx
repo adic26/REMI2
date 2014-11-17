@@ -87,7 +87,6 @@
                 <asp:BoundField DataField="BarcodePrefix" HeaderText="Barcode Suffix" SortExpression="BarcodePrefix" />
                 <asp:BoundField DataField="GeoLocationName" HeaderText="Location" SortExpression="GeoLocationName" />
                 <asp:BoundField DataField="UnitCapacity" HeaderText="Capacity" SortExpression="UnitCapacity" />
-                <asp:BoundField DataField="CurrentTestName" HeaderText="Current Test" SortExpression="CurrentTestName" />
                 <asp:BoundField DataField="CurrentUnitCount" HeaderText="Current Count" SortExpression="CurrentUnitCount" />
                 <asp:BoundField DataField="TrackingLocationType" HeaderText="Fixture Type" SortExpression="TrackingLocationType" />
                 <asp:TemplateField HeaderText="Scanner Program" SortExpression="GetBarcodeProgrammingLink">

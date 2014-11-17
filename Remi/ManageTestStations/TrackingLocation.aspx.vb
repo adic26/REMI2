@@ -66,7 +66,7 @@ Partial Class ManageTestStations_TrackingLocation
 
         If (locationID = ddlTestCenters.SelectedValue) Then
             ProcessBarcode(tmpBarcodeSuffix)
-            lblTrackingLocation.Text = ddlTrackingLocation.Items.FindByValue(hdnBarcodePrefix.Value).Text
+            lblTrackingLocation.Text = ddlTrackingLocation.Items.FindByValue(tmpBarcodeSuffix).Text
         ElseIf (locationID <> ddlTestCenters.SelectedValue) Then
             ddlTrackingLocation.DataBind()
 

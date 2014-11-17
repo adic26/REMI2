@@ -304,9 +304,9 @@ Namespace REMI.Dal
                         myTrackingLocation.HostName = myDataRecord.GetString(myDataRecord.GetOrdinal("HostName"))
                     End If
                 End If
-                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestName")) Then
-                    myTrackingLocation.CurrentTestName = myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestName"))
-                End If
+                'If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestName")) Then
+                '    myTrackingLocation.CurrentTestName = myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestName"))
+                'End If
                 'tracking location type items
                 myTrackingLocation.TrackingLocationType.UnitCapacity = myDataRecord.GetInt32(myDataRecord.GetOrdinal("TLTUnitCapacity"))
                 If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("TLTComment")) Then
