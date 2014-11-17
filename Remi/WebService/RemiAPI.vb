@@ -1482,18 +1482,23 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns configuration object.")> _
     Public Function BuildConfigurationObject(ByVal srd As ScanReturnData, ByVal machineName As String) As ConfigurationReturnData
         Dim configReturnData As New ConfigurationReturnData()
-        Dim config As New ProductConfiguration()
-        Dim hostID As Int32 = GetHostID(machineName, srd.TrackingLocationID)
 
-        configReturnData.HostID = hostID
-        configReturnData.StationXML = TrackingLocationManager.GetStationConfigurationXML(hostID, String.Empty).ToString() 'config.GetStationConfigurationXML(hostID)
-        configReturnData.TestXML = config.GetProductConfigurationXML(srd.ProductID, srd.TestID)
-        configReturnData.HasProductXML = ProductGroupManager.HasProductConfigurationXML(srd.ProductID, srd.TestID, String.Empty).ToString() 'config.HasProductConfigurationXML(srd.ProductID, srd.TestID)
-        configReturnData.HasCalibrationXML = CalibrationManager.HasCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.HasCalibrationConfigurationXML(srd.ProductID, srd.TestID, hostID)
-        configReturnData.HasStationXML = If(configReturnData.StationXML = "<StationConfiguration />", False, True)
-        configReturnData.Calibrations = CalibrationManager.GetAllCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.GetAllCalibrationConfigurationXML(hostID, srd.ProductID, srd.TestID)
-        configReturnData.ProductConfigs = ProductGroupManager.GetAllProductConfigurationXMLs(srd.ProductID, srd.TestID, True)
+        Try
+            Dim config As New ProductConfiguration()
+            Dim hostID As Int32 = GetHostID(machineName, srd.TrackingLocationID)
 
+            configReturnData.HostID = hostID
+            configReturnData.StationXML = TrackingLocationManager.GetStationConfigurationXML(hostID, String.Empty).ToString() 'config.GetStationConfigurationXML(hostID)
+            configReturnData.TestXML = config.GetProductConfigurationXML(srd.ProductID, srd.TestID)
+            configReturnData.HasProductXML = ProductGroupManager.HasProductConfigurationXML(srd.ProductID, srd.TestID, String.Empty).ToString() 'config.HasProductConfigurationXML(srd.ProductID, srd.TestID)
+            configReturnData.HasCalibrationXML = CalibrationManager.HasCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.HasCalibrationConfigurationXML(srd.ProductID, srd.TestID, hostID)
+            configReturnData.HasStationXML = If(configReturnData.StationXML = "<StationConfiguration />", False, True)
+            configReturnData.Calibrations = CalibrationManager.GetAllCalibrationConfigurationXML(srd.ProductID, hostID, srd.TestID) 'config.GetAllCalibrationConfigurationXML(hostID, srd.ProductID, srd.TestID)
+            configReturnData.ProductConfigs = ProductGroupManager.GetAllProductConfigurationXMLs(srd.ProductID, srd.TestID, True)
+
+        Catch ex As Exception
+            ProductGroupManager.LogIssue("REMI API BuildConfigurationObject", "e8", NotificationType.Errors, ex)
+        End Try
         Return configReturnData
     End Function
 #End Region

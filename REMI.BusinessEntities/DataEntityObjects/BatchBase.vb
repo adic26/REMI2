@@ -106,6 +106,7 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "Public Properties"
+        <XmlIgnore()> _
         Public Property ActiveTaskAssignee() As String Implements IBatch.ActiveTaskAssignee
             Get
                 Return _activeTaskAssignee
@@ -128,6 +129,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property EstJobCompletionTime() As Double Implements IBatch.EstJobCompletionTime
             Set(value As Double)
                 _estJobCompletionTime = value
@@ -137,6 +139,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property GetJoinedComments() As String
             Get
                 Return (String.Join(Environment.NewLine, (From c In Me.Comments Select c.Text).ToArray()))
@@ -190,6 +193,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public Property EstTSCompletionTime() As Double Implements IBatch.EstTSCompletionTime
             Set(value As Double)
                 _estTSCompletionTime = value
@@ -208,6 +212,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property ContinueOnFailures() As Boolean Implements IBatch.ContinueOnFailures
             Get
                 Return _continueOnFailures
@@ -241,6 +246,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' Gets or sets whether the batch has exceptions
         ''' </summary>
+        <XmlIgnore()> _
         Public Property HasBatchSpecificExceptions() As Boolean Implements IBatch.hasBatchSpecificExceptions
             Get
                 Return _hasBatchSpecificExceptions
@@ -298,12 +304,14 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI link for the batch information
         ''' </summary>
+        <XmlIgnore()> _
         Public ReadOnly Property BatchInfoLink() As String Implements IBatch.BatchInfoLink
             Get
                 Return REMIWebLinks.GetBatchInfoLink(QRANumber)
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property RequestorRequiresUnitsReturned() As Boolean Implements IBatch.RequestorRequiresUnitsReturned
             Get
                 Dim rur As Boolean = False
@@ -313,12 +321,14 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property HasUnitsRequiredToBeReturnedToRequestor() As Boolean Implements IBatch.HasUnitsRequiredToBeReturnedToRequestor
             Get
                 Return HasUnitsNotReturnedToRequestor AndAlso RequestorRequiresUnitsReturned
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public Property HasUnitsNotReturnedToRequestor() As Boolean Implements IBatch.HasUnitsNotReturnedToRequestor
             Get
                 Return _hasUnitsNotReturnedToRequestor
@@ -328,6 +338,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property HasUnitsRequiredToBeReturnedToRequestorString() As String Implements IBatch.HasUnitsRequiredToBeReturnedToRequestorString
             Get
                 If HasUnitsNotReturnedToRequestor Then
@@ -350,6 +361,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property IsForDisposal() As Boolean Implements IBatch.IsForDisposal
             Get
                 'dates returned by trs data are in eastern time. no utc here.
@@ -363,6 +375,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' the location of the work instruction on livelink or similar for the job this batch is currently doing.
         ''' </summary>
+        <XmlIgnore()> _
         Public Property JobWILocation() As String Implements IBatch.JobWILocation
             Get
                 Return _jobWILocation
@@ -372,6 +385,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property TestStageCompletion() As TestStageCompletionStatus Implements IBatch.TestStageCompletion
             Get
                 Return _testStageCompletionStatus
@@ -454,13 +468,13 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property NeedsToBeSaved() As Boolean Implements IBatch.NeedsToBeSaved
             Get
                 Return Me.Status = BatchStatus.NotSavedToREMI
             End Get
         End Property
 
-        <XmlIgnore()> _
         Public Property ReqData() As RequestFieldsCollection
             Get
                 Return _reqData
@@ -473,6 +487,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' indicates if a batch is complete in the request
         ''' </summary>
+        <XmlIgnore()> _
         Public ReadOnly Property IsCompleteInRequest() As Boolean Implements IBatch.IsCompleteInRequest
             Get
                 If (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault() IsNot Nothing Then
@@ -580,6 +595,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property ExecutiveSummary() As String Implements IBatch.ExecutiveSummary
             Get
                 Dim val As String = String.Empty
@@ -911,6 +927,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property DateCreated() As DateTime Implements IBatch.DateCreated
             Get
                 Dim createdDate As DateTime
@@ -945,6 +962,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property ReportRequiredBy() As DateTime Implements IBatch.ReportRequiredBy
             Get
                 Dim reportDate As DateTime
@@ -979,6 +997,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property ReportApprovedDate() As DateTime Implements IBatch.ReportApprovedDate
             Get
                 Dim approveDate As DateTime
@@ -1016,18 +1035,21 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "HTTP Links"
+        <XmlIgnore()> _
         Public ReadOnly Property RelabResultLink() As String Implements IBatch.RelabResultLink
             Get
                 Return REMIWebLinks.GetRelabResultLink(ID)
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property TestRecordsLink() As String
             Get
                 Return REMIWebLinks.GetTestRecordsLink(QRANumber, String.Empty, String.Empty, String.Empty, 0)
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property TestRecordsAddNewLink() As String
             Get
                 Return REMIWebLinks.GetTestRecordsAddLink(QRANumber)
@@ -1037,6 +1059,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI link for editing the exceptions for this batch.
         ''' </summary>
+        <XmlIgnore()> _
         Public ReadOnly Property ExceptionManagerLink() As String
             Get
                 Return REMIWebLinks.GetEditExceptionsLink(QRANumber)
@@ -1046,18 +1069,21 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI link for editing the status for this batch.
         ''' </summary>
+        <XmlIgnore()> _
         Public ReadOnly Property SetStatusManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchStatusLink(QRANumber)
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property SetCommentsManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchCommentsLink(QRANumber)
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property SetTestDurationsManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchSpecificTestDurationsLink(QRANumber)
@@ -1067,6 +1093,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI link for editing the test stage for this batch.
         ''' </summary>
+        <XmlIgnore()> _
         Public ReadOnly Property SetTestStageManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchTestStageLink(QRANumber)
@@ -1076,6 +1103,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI link for editing the priority for this batch.
         ''' </summary>
+        <XmlIgnore()> _
         Public ReadOnly Property SetPriorityManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchPriorityLink(QRANumber)
@@ -1085,12 +1113,14 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The REMI product group information page for this batch.
         ''' </summary>
+        <XmlIgnore()> _
         Public ReadOnly Property ProductGroupLink() As String Implements IBatch.ProductGroupLink
             Get
                 Return REMIWebLinks.GetProductInfoLink(ProductID)
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property JobLink() As String Implements IBatch.JobLink
             Get
                 Return REMIWebLinks.GetJobLink(Me.JobID)
