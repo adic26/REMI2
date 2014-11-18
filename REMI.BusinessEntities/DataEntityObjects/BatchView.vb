@@ -44,7 +44,6 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        <XmlIgnore()> _
         Public Property TestUnits() As TestUnitCollection
             Get
                 Return _testUnits
