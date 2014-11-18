@@ -1,6 +1,7 @@
 ﻿Imports REMI.Core
 Imports REMI.Validation
 Imports REMI.Contracts
+Imports System.Xml.Serialization
 
 Namespace REMI.BusinessEntities
     ''' <summary>
@@ -66,6 +67,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property Decommissioned() As Boolean
             Get
                 Return _decommissioned
@@ -75,6 +77,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property HostID() As Int32
             Get
                 Return _hostID
@@ -84,6 +87,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property CanDelete() As Boolean
             Get
                 Return _canDelete
@@ -93,6 +97,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property HostName() As String
             Get
                 If Not String.IsNullOrEmpty(_hostName) Then
@@ -106,21 +111,14 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        'Public Property CurrentTestName() As String
-        '    Get
-        '        Return _currentTestName
-        '    End Get
-        '    Set(ByVal value As String)
-        '        _currentTestName = value
-        '    End Set
-        'End Property
-
+        <XmlIgnore()> _
         Public ReadOnly Property DisplayName() As String
             Get
                 Return _name + " - " + GeoLocationName
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property DisplayNameHost() As String
             Get
                 Return String.Format("{0}: {1} - {2}", _name, HostName, GeoLocationName)
@@ -182,6 +180,7 @@ Namespace REMI.BusinessEntities
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
+        <XmlIgnore()> _
         Public ReadOnly Property BarcodePrefix() As String
             Get
                 Return ID.ToString("d5")
@@ -192,6 +191,7 @@ Namespace REMI.BusinessEntities
         ''' Gets or sets the status of the tracking host.
         ''' </summary>
         <EnumerationSet(Key:="w17")> _
+        <XmlIgnore()> _
         Public Property Status() As TrackingLocationStatus
             Get
                 Return _status
@@ -202,6 +202,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         <EnumerationSet(Key:="w17")> _
+        <XmlIgnore()> _
         Public Property LocationStatus() As TrackingStatus
             Get
                 Return _locationStatus
@@ -211,6 +212,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Private Property LAstPingTime() As DateTime
             Get
                 Return _lastPingTime
@@ -224,6 +226,7 @@ Namespace REMI.BusinessEntities
         ''' </summary>
         ''' 
         <ValidRange(Message:="The number of current units must be greater than 0.", Max:=999999, Min:=0)> _
+        <XmlIgnore()> _
         Public Property CurrentUnitCount() As Integer
             Get
                 Return _currentUnitCount
@@ -234,6 +237,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         <ValidStringLength(MaxLength:=1000, key:="w33")> _
+        <XmlIgnore()> _
         Public Property Comment() As String
             Get
                 Return _comment
@@ -243,12 +247,14 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property ProgrammingLink() As String
             Get
                 Return REMIWebLinks.GetScannerProgrammingLink(ID)
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property TrackingLocationLink() As String
             Get
                 Return REMIWebLinks.GetTrackingLocationInfoLink(ID.ToString)
@@ -280,6 +286,7 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "TL Type Properties"
+        <XmlIgnore()> _
         Public ReadOnly Property WILocation() As String
             Get
                 If TrackingLocationType IsNot Nothing Then
@@ -289,22 +296,27 @@ Namespace REMI.BusinessEntities
                 End If
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property UnitCapacity() As Integer
             Get
                 Return TrackingLocationType.UnitCapacity
             End Get
         End Property
+
         Public ReadOnly Property TrackingLocationTypeName() As String
             Get
                 Return TrackingLocationType.Name
             End Get
         End Property
+
         Public ReadOnly Property TrackingLocationFunction() As TrackingLocationFunction
             Get
                 Return TrackingLocationType.TrackingLocationFunction
             End Get
         End Property
 #End Region
+
         Public Function GetProgrammingData() As List(Of String)
             Dim barcodeLocation As String = "~/Images/Barcodes/"
             Dim requiredASCIIString As String

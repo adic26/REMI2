@@ -90,6 +90,21 @@ SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Revision'
 insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
 values (@RequestTypeID,'Revision',null,@DropDownID,null,0,1,17,@LookupTypeID,1)
 
+SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Status'
+insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
+values (@RequestTypeID,'Request Status',null,@DropDownID,null,0,1,18,@LookupTypeID,1)
+
+SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='AccessoryType'
+insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
+values (@RequestTypeID,'Accessory Type',null,@DropDownID,null,1,1,19,@LookupTypeID,1)
+
+insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
+values (@RequestTypeID,'ReportRequiredBy',null,@DateTimeID,null,1,1,20,null,1)
+
+SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Priority'
+insert into Req.ReqFieldSetup (RequestTypeID,Name,Description,FieldTypeID,FieldValidationID,Archived,IsRequired,DisplayOrder,OptionsTypeID, ColumnOrder)
+values (@RequestTypeID,'Priority',null,@DropDownID,null,0,1,21,@LookupTypeID,1)
+
 INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'Requestor', 'Requestor', 1)
 INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'DateCreated', 'Received Date', 1)
 INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'TestCenterLocation', 'Test Centre Location', 1)
@@ -102,6 +117,10 @@ INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VA
 INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'CPRNumber', 'CPR', 1)
 INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'SampleSize', 'Sample Size', 1)
 INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'MechanicalTools', 'Revision', 1)
+INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'RequestStatus', 'Request Status', 1)
+INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'AccessoryGroup', 'Accessory Type', 1)
+INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'ReportRequiredBy', 'ReportRequiredBy', 1)
+INSERT INTO Req.ReqFieldMapping (RequestTypeID, IntField, ExtField, IsActive) VALUES (@RequestTypeID, 'Priority', 'Priority', 1)
 
 EXEC Req.RequestFieldSetup @RequestTypeID, 0, ''
 
