@@ -25,7 +25,7 @@
 	@reqStatus nvarchar(500) = null,
 	@cprNumber nvarchar(500) = null,
 	@pmNotes nvarchar(500) = null,
-	@MechanicalTools NVARCHAR(10),
+	@MechanicalTools NVARCHAR(10) = null,
 	@RequestPurposeID int = 0,
 	@PriorityID INT = 0,
 	@DepartmentID INT = 0,

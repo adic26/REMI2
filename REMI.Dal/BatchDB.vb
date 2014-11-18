@@ -338,7 +338,6 @@ Namespace REMI.Dal
 
             Using sqlConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 If batchData Is Nothing Then
-                    batchData = New Batch(qraNumber)
 
                     Using myCommand As New SqlCommand("remispBatchesSelectByQRANumber", sqlConnection)
                         myCommand.CommandType = CommandType.StoredProcedure
@@ -350,6 +349,8 @@ Namespace REMI.Dal
 
                         Using myReader As SqlDataReader = myCommand.ExecuteReader()
                             If myReader.HasRows Then
+                                batchData = New Batch(qraNumber)
+
                                 While myReader.Read()
                                     FillBaseBatchFields(myReader, batchData, True, False, False)
                                 End While
@@ -364,7 +365,9 @@ Namespace REMI.Dal
                     End Using
                 End If
 
-                FillFullBatchFields(batchData, sqlConnection, cacheRetrievedData, True, True, True, True, False, True)
+                If (batchData IsNot Nothing) Then
+                    FillFullBatchFields(batchData, sqlConnection, cacheRetrievedData, True, True, True, True, False, True)
+                End If
             End Using
 
             Return batchData
