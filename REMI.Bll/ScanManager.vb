@@ -41,10 +41,10 @@ Namespace REMI.Bll
                 scanData.SetReturnDataValues(ReturnData)
             Else
                 If barcode.Validate Then
-                    Dim trsstatus As String = String.Empty
+                    Dim reqStatus As String = String.Empty
 
                     Try
-                        trsstatus = RequestDB.GetTRSRequest(barcode.BatchNumber).RequestStatus.ToLower()
+                        reqStatus = (From rf In RequestDB.GetRequest(barcode.BatchNumber, UserManager.GetCurrentUser.UserName) Where rf.IntField = "RequestStatus" Select rf.Value).FirstOrDefault()
                     Catch
                     End Try
 
@@ -57,7 +57,7 @@ Namespace REMI.Bll
                     If scanData IsNot Nothing Then
                         scanData.SetCurrentTestRecordStatus()
                         scanData.SetSelectedTestRecordStatus()
-                        scanData.TRSStatus = trsstatus
+                        scanData.TRSStatus = reqStatus.ToLower()
                         scanData.CurrentUserName = UserManager.GetCurrentUser.UserName
 
                         'Check that we were able to get all of the objects we require and that they are all valid
@@ -68,7 +68,8 @@ Namespace REMI.Bll
                                 scanData.Notifications.Add(ScanUnitForRemstarThroughREMI(scanData.Barcode.BatchNumber, scanData.Barcode.UnitNumber, scanData.BatchStatus = BatchStatus.Complete, scanData.CurrentUserName, binType))
                             End If
                         End If
-                        ReturnData.BatchData = DirectCast(BatchManager.GetViewBatch(QRANumber), BatchView)
+
+                        ReturnData.BatchData = BatchManager.GetBatchView(QRANumber)
                         scanData.SetReturnDataValues(ReturnData)
                     Else
                         ReturnData.Notifications.AddWithMessage("This batch or unit could not be found.", NotificationType.Errors)

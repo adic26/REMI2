@@ -167,15 +167,6 @@ Partial Public Class TestRecords_EditDetail
     Protected WithEvents rptFAList As Global.System.Web.UI.WebControls.DataList
 
     '''<summary>
-    '''odsFailDocList control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsFailDocList As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
     '''txtAssignAnyFailDoc control.
     '''</summary>
     '''<remarks>

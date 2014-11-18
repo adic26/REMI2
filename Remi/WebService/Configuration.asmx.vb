@@ -199,11 +199,11 @@ Public Class ProductConfiguration
     End Function
 #End Region
 
-#Region "RequestFields"
+#Region "Request"
     <WebMethod(Description:="Gets The Fields Setup Definition")> _
-    Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean) As RequestFieldsCollection
+    Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
         Try
-            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, String.Empty)
+            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
         Catch ex As Exception
             RequestManager.LogIssue("GetRequestFieldSetup", "e3", NotificationType.Errors, ex)
         End Try
@@ -211,21 +211,36 @@ Public Class ProductConfiguration
         Return Nothing
     End Function
 
-    <WebMethod(Description:="Gets The Raised Request")> _
-    Public Function GetRequest(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
+    <WebMethod(Description:="Get the setup information for the batch for stage and test")> _
+    Public Function GetBatchTestSetupInfo(ByVal batchID As Int32, ByVal jobID As Int32, ByVal productID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
         Try
-            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
+            Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)
         Catch ex As Exception
-            RequestManager.LogIssue("GetRequest", "e3", NotificationType.Errors, ex)
+            RequestManager.LogIssue("GetBatchTestSetupInfo", "e3", NotificationType.Errors, ex)
         End Try
 
-        Return Nothing
+        Return New DataTable("RequestSetupInfo")
     End Function
 
-    <WebMethod(Description:="Save Raised Request")> _
-    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
+    <WebMethod(EnableSession:=True, Description:="Gets All RequestTypes Based On User")> _
+    Public Function GetRequestTypes(ByVal userIdentification As String) As DataTable
         Try
-            Return RequestManager.SaveRequest(requestName, request)
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RequestManager.GetRequestTypes()
+            End If
+        Catch ex As Exception
+            RequestManager.LogIssue("GetRequestTypes", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return New DataTable("RequestTypes")
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Save Raised Request")> _
+    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RequestManager.SaveRequest(requestName, request, userIdentification)
+            End If
         Catch ex As Exception
             RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex)
         End Try
@@ -233,4 +248,5 @@ Public Class ProductConfiguration
         Return False
     End Function
 #End Region
+
 End Class

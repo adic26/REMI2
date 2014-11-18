@@ -42,5 +42,22 @@ Namespace REMI.Dal
 
             Return dt
         End Function
+
+        Public Shared Function GetMenuAccessByDepartment(ByVal name As String, ByVal departmentID As Int32) As DataTable
+            Dim dt As New DataTable("PermissionsGrid")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispMenuAccessByDepartment", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@Name", name)
+                    myCommand.Parameters.AddWithValue("@DepartmentID", departmentID)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "MenuAccess"
+                End Using
+            End Using
+
+            Return dt
+        End Function
     End Class
 End Namespace

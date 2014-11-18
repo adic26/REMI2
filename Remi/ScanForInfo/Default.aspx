@@ -2,13 +2,10 @@
 <%@ Register Assembly="System.Web.Ajax" Namespace="System.Web.UI" TagPrefix="asp" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
-<%@ Register Src="../Controls/TestStageProcessView.ascx" TagName="TestStageProcessView" TagPrefix="uc2" %>
 <%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
 <%@ Register Src="../Controls/RequestSetup.ascx" TagName="RequestSetup" TagPrefix="rs" %>
 
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="pageTitleContent" runat="server">
     <h1>
         <asp:Label runat="server" ID="lblQRANumber" Text="Batch Information"></asp:Label>
@@ -112,10 +109,6 @@
             <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgSummaryView" runat="server" />
             <asp:HyperLink ID="hypRefresh" runat="server">Refresh</asp:HyperLink>
         </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgGetFails" runat="server" />
-            <asp:CheckBox ID="chkGetFails" runat="server" AutoPostBack="True" Text="Get Fails" />
-        </li>
         <li id="liEditExceptions" runat="server" visible="false">
             <asp:Image ImageUrl="../Design/Icons/png/24x24/Delete.png" ID="imgEditExceptions"
                 runat="server" />
@@ -149,23 +142,11 @@
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTRSLink" runat="server" />
-            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to view the TRS for this batch" Target="_blank">TRS Link</asp:HyperLink>
+            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to view the TRS for this batch" Target="_blank">Request Link</asp:HyperLink>
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgRelabLink" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypRelabLink" runat="server" ToolTip="Click to view the Results page for this batch" Visible="false" Target="_blank">RQ Results</asp:HyperLink>
-        </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgRelabLink2" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypRelabLink2" runat="server" ToolTip="Click to view the Old Relab results page for this batch" Target="_blank" Visible="false">Relab Link</asp:HyperLink>
-        </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgDropTestWebAppLink" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypDropTestWebApp" runat="server" ToolTip="Click to view the DropTest report page for this batch" Visible="false" Target="_blank">DropTest Link</asp:HyperLink>
-        </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTumbleTestWebAppLink" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypTumbleTestWebApp" runat="server" ToolTip="Click to view the TumbleTest report page for this batch" Visible="false" Target="_blank">TumbleTest Link</asp:HyperLink>
+            <asp:HyperLink ID="hypRelabLink" runat="server" ToolTip="Click to view the Results for this batch" Visible="false" Target="_blank">Results</asp:HyperLink>
         </li>
     </ul>
 </asp:Content>
@@ -173,6 +154,7 @@
     <asp:Panel ID="pnlSummary" runat="server">
         <asp:Panel ID="submitform" runat="server" DefaultButton="btnSubmit">
             <asp:HiddenField ID="hdnQRANumber" runat="server" Value="0" />
+            <asp:HiddenField ID="hdnDepartmentID" runat="Server" Value="0" />
             <asp:TextBox ID="IESubmitBugRemedy_DoNotRemove" runat="server" Style="visibility: hidden;
                 display: none;" />
             <img alt="Scan Barcode into text box" class="ScanDeviceImage" src="../Design/Icons/png/48x48/barcode.png" />
@@ -204,6 +186,27 @@
                                 </asp:UpdateProgress>
                             </ContentTemplate>
                         </asp:UpdatePanel>
+                    </Content>
+                </asp:AccordionPane>
+                <asp:AccordionPane ID="acpRequest" runat="server">
+                    <Header>
+                        <h2>Request Info</h2>
+                    </Header>
+                    <Content>
+                        <asp:GridView ID="gvwRequestInfo" runat="server" AutoGenerateColumns="false">
+                            <Columns>
+                                <asp:BoundField DataField="Name" HeaderText="Field" ReadOnly="True" SortExpression="ID" Visible="True" />
+                                <asp:TemplateField HeaderText="Info" ItemStyle-Wrap="true">
+                                    <ItemTemplate>
+                                        <div style="white-space:normal;text-align:left;">
+                                            <asp:HiddenField runat="server" ID="hdnType" Value='<%# Eval("FieldType")%>' />
+                                            <asp:Label runat="server" ID="lblValue" Width="500px" Text='<%# Eval("Value") %>' Visible="true"></asp:Label>
+                                            <asp:HyperLink ID="hylValue"  runat="server" Target="_blank" Text="Link" NavigateUrl='<%# Eval("Value")%>' Visible="false"></asp:HyperLink>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
                     </Content>
                 </asp:AccordionPane>
                 <asp:AccordionPane ID="acpBatchInfo" runat="server">
@@ -242,15 +245,14 @@
                                             <%#DataBinder.Eval(Container.DataItem, "username")%>
                                             <br />
                                             <%#DataBinder.Eval(Container.DataItem, "text")%>
-                                            <asp:LinkButton ID="lnkDeleteComment" runat="server" OnClick="lnkDeleteComment_Click"
-                                                Style="display: block; width: 50px; border-bottom: none;" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
-                                                Visible='<%#(DataBinder.Eval(Container.DataItem, "username") = REMI.Bll.UserManager.GetCurrentValidUserLDAPName OrElse REMI.Bll.UserManager.GetCurrentUser().HasEditBatchCommentsAuthority()) %>'>Remove</asp:LinkButton>
+                                            <asp:LinkButton ID="lnkDeleteComment" runat="server" OnClick="lnkDeleteComment_Click" Style="display: block; width: 50px; border-bottom: none;" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'>Remove</asp:LinkButton>
+                                            <asp:HiddenField ID="hdnUserName" runat="server" Value='<%#DataBinder.Eval(Container.DataItem, "username")%>' />
                                         </li>
                                     </ItemTemplate>
                                 </asp:Repeater>
-                                <asp:TextBox runat="server" ID="txtNewCommentText" Rows="5" Columns="60" TextMode="MultiLine" Enabled="false"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtNewCommentText" Rows="5" Columns="60" TextMode="MultiLine" Enabled="true"></asp:TextBox>
                                 <br />
-                                <asp:Button runat="server" CssClass="button" Text="Add Comment" ID="btnAddComment" OnClick="btnAddComment_Click" Enabled="false" />
+                                <asp:Button runat="server" CssClass="button" Text="Add Comment" ID="btnAddComment" OnClick="btnAddComment_Click" Enabled="true" />
                                      <asp:UpdateProgress ID="UpdateProgress4" runat="server" DynamicLayout="true" DisplayAfter="100"
                                     AssociatedUpdatePanelID="updComments">
                                     <ProgressTemplate>
@@ -339,17 +341,16 @@
                                             SortExpression="ID" Visible="False" />
                                         <asp:TemplateField HeaderText="Unit #" SortExpression="BatchUnitNumber">
                                             <ItemTemplate>
-                                                <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Unit"
-                                                    NavigateUrl='<%# Eval("UnitInfoLink") %>' Text='<%# Eval("BatchUnitNumber") %>'></asp:HyperLink>
+                                                <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Unit" Target="_blank" NavigateUrl='<%# Eval("UnitInfoLink") %>' Text='<%# Eval("BatchUnitNumber") %>'></asp:HyperLink>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="BSN" SortExpression="BSN">
                                             <ItemTemplate>
                                                 <asp:Label runat="server" ID="lblNoBSN" Visible='<%# Eval("NoBSN") %>' Text="No BSN Required" />
-                                                <asp:HyperLink ID="hypBSN" Visible='<%# Not Eval("NoBSN") %>' runat="server" ToolTip="Click to view the manufactuaring information page for this Unit"
-                                                    NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>'></asp:HyperLink>
+                                                <asp:HyperLink ID="hypBSN" Visible='<%# Not Eval("NoBSN") %>' runat="server" Target="_blank" ToolTip="Click to view the manufactuaring information page for this Unit" NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>'></asp:HyperLink>
                                             </ItemTemplate>
                                         </asp:TemplateField>
+                                        <asp:BoundField DataField="IMEI" HeaderText="IMEI" ReadOnly="True" SortExpression="IMEI" Visible="True" />
                                         <asp:TemplateField HeaderText="Assigned To" SortExpression="AssignedTo">
                                             <ItemTemplate>
                                                 <asp:Label ID="Label1" runat="server" Text='<%# Remi.Helpers.UserNameFormat(Eval("AssignedTo")) %>'></asp:Label>

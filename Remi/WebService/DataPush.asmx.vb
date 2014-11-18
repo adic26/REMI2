@@ -19,9 +19,8 @@ Public Class DataPush
     Public Function UploadData(ByVal xml As String, ByVal lossFile As String, ByVal xsd As String) As Boolean
         Try
             Select Case xsd
-                Case "urn:xmlns:relab.rim.com/ResultFile.xsd"
+                Case "urn:xmlns:relab.rim.com/ResultFile.xsd", "relab.rim.com/ResultFile.xsd", "TsdLib.ResultsFile.xsd"
                     Return RelabManager.UploadResults(xml, lossFile)
-
             End Select
         Catch ex As Exception
             RelabManager.LogIssue("UploadData", "e3", NotificationType.Errors, ex)
@@ -33,9 +32,8 @@ Public Class DataPush
     Public Function UploadDataImageFile(ByVal file() As Byte, ByVal contentType As String, ByVal fileName As String, ByVal xsd As String) As Boolean
         Try
             Select Case xsd
-                Case "urn:xmlns:relab.rim.com/ResultFile.xsd"
+                Case "urn:xmlns:relab.rim.com/ResultFile.xsd", "relab.rim.com/ResultFile.xsd", "TsdLib.ResultsFile.xsd"
                     Return RelabManager.UploadResultsMeasurementsFile(file, contentType, fileName)
-
             End Select
         Catch ex As Exception
             RelabManager.LogIssue("UploadDataImageFile", "e3", NotificationType.Errors, ex)

@@ -52,6 +52,14 @@ Partial Class Admin_Users
                 ddlTestCenters.SelectedValue = UserManager.GetCurrentUser.TestCentreID
             End If
         End If
+
+        Dim testCenterID As Int32 = 0
+        Int32.TryParse(ddlTestCenters.SelectedValue, testCenterID)
+
+        Dim us As New UserSearch
+        us.TestCenterID = testCenterID
+        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
+        gvwUsers.DataBind()
     End Sub
 
     Protected Sub SetupPageViewAll()
@@ -59,7 +67,15 @@ Partial Class Admin_Users
         pnlViewAllUsers.Visible = True
         pnlLeftMenuActions.Visible = False
         lblHeaderText.Text = "View All Users"
+
+        Dim testCenterID As Int32 = 0
+        Int32.TryParse(ddlTestCenters.SelectedValue, testCenterID)
+
+        Dim us As New UserSearch
+        us.TestCenterID = testCenterID
+        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
         gvwUsers.DataBind()
+
     End Sub
 
     Protected Sub SetupPageAddEditUser(ByVal CurrentUser As User)
@@ -67,11 +83,8 @@ Partial Class Admin_Users
         pnlViewAllUsers.Visible = False
         pnlLeftMenuActions.Visible = True
 
-        'uncheck roles
-        'For Each dli As DataListItem In dlstRoles.Items
-        '    Dim chkRole As CheckBox = dli.FindControl("chkRole")
-        '    chkRole.Checked = False
-        'Next
+        ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
+        ddlDefaultPage.DataBind()
 
         If CurrentUser Is Nothing Then
             lblHeaderText.Text = "Add New User"
@@ -105,18 +118,49 @@ Partial Class Admin_Users
                 chkByPassProduct.Checked = False
             End If
 
-            ddlDefaultPage.SelectedValue = CurrentUser.DefaultPage
+            Dim sl As ListItem = New ListItem
+            sl = ddlDefaultPage.Items.FindByValue(CurrentUser.DefaultPage.ToString())
+
+            If ddlDefaultPage.Items.Contains(sl) Then
+                ddlDefaultPage.SelectedValue = sl.Value
+            End If
+
             hdnUserName.Value = CurrentUser.LDAPName
             hdnUserID.Value = CurrentUser.ID
 
-            ddlGeoLoc.Items.Clear()
-            ddlGeoLoc.DataSource = Remi.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 1)
-            ddlGeoLoc.DataBind()
+            For Each dr As DataRow In CurrentUser.UserDetails.Rows
+                For Each dli As DataListItem In dlstTestCenter.Items
+                    Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
+                    Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
 
-            Dim l As ListItem = New ListItem(CurrentUser.TestCentre, CurrentUser.TestCentreID)
-            If (ddlGeoLoc.Items.Contains(l)) Then
-                ddlGeoLoc.SelectedValue = CurrentUser.TestCentreID
-            End If
+                    hdnTCIsDefault.Value = dr.Item("IsDefault").ToString()
+
+                    If chkTestCenter.Text = dr.Item("Values").ToString() Then
+                        chkTestCenter.Checked = True
+
+                        If (hdnTCIsDefault.Value = "True") Then
+                            chkTestCenter.Enabled = False
+                            chkTestCenter.Style.Add("font-weight", "bold")
+                        End If
+                    End If
+                Next
+
+                For Each dli As DataListItem In dlstDepartments.Items
+                    Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
+                    Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
+
+                    hdnDIsDefault.Value = dr.Item("IsDefault").ToString()
+
+                    If chkDepartment.Text = dr.Item("Values").ToString() Then
+                        chkDepartment.Checked = True
+
+                        If (hdnDIsDefault.Value = "True") Then
+                            chkDepartment.Enabled = False
+                            chkDepartment.Style.Add("font-weight", "bold")
+                        End If
+                    End If
+                Next
+            Next
 
             dlstProductGroups.DataBind()
             gvwTraining.DataBind()
@@ -164,7 +208,7 @@ Partial Class Admin_Users
 
     Protected Sub gvwUsers_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Select Case e.CommandName.ToLower()
-            Case "edit"
+            Case "editrow"
                 SetupPageAddEditUser(UserManager.GetUser(String.Empty, e.CommandArgument.ToString))
                 Exit Select
             Case "deleteitem"
@@ -307,9 +351,52 @@ Partial Class Admin_Users
         tmpUser.RolesList = userRoles
         tmpUser.ProductGroups = userProjects
         tmpUser.Training = userTraining
-
         tmpUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
-        tmpUser.TestCentreID = Request.Form(ddlGeoLoc.UniqueID)
+
+        Dim testCenters As DataList = DirectCast(Me.FindControl(dlstTestCenter.UniqueID), DataList)
+        Dim departments As DataList = DirectCast(Me.FindControl(dlstDepartments.UniqueID), DataList)
+
+        Dim userDetails As New DataTable
+        userDetails.Columns.Add("Name", Type.GetType("System.String"))
+        userDetails.Columns.Add("Values", Type.GetType("System.String"))
+        userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
+        userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
+
+        For Each dli As DataListItem In testCenters.Items
+            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
+                Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
+                Dim hdnTestCenterID As HiddenField = dli.FindControl("hdnTestCenterID")
+                Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
+
+                If Request.Form(chkTestCenter.UniqueID) = "on" Then
+                    Dim newRow As DataRow = userDetails.NewRow
+                    newRow("LookupID") = hdnTestCenterID.Value
+                    newRow("Values") = chkTestCenter.Text
+                    newRow("Name") = "TestCenter"
+                    newRow("IsDefault") = hdnTCIsDefault.Value
+                    userDetails.Rows.Add(newRow)
+                End If
+            End If
+        Next
+
+        For Each dli As DataListItem In departments.Items
+            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
+                Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
+                Dim hdnDepartmentID As HiddenField = dli.FindControl("hdnDepartmentID")
+                Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
+
+                If Request.Form(chkDepartment.UniqueID) = "on" Then
+                    Dim newRow As DataRow = userDetails.NewRow
+                    newRow("LookupID") = hdnDepartmentID.Value
+                    newRow("Values") = chkDepartment.Text
+                    newRow("Name") = "Department"
+                    newRow("IsDefault") = hdnDIsDefault.Value
+                    userDetails.Rows.Add(newRow)
+                End If
+            End If
+        Next
+
+        tmpUser.UserDetails = userDetails
 
         UserManager.Save(tmpUser, True)
         notMain.Notifications.Add(tmpUser.Notifications)

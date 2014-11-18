@@ -65,11 +65,11 @@ namespace REMI.Bll.Tests
             Assert.True(UserManager.UserExists(ut.User.LDAPLogin));
         }
 
-        [Test]
-        public void GetRemiUsernameList()
-        {
-            Assert.That(UserManager.GetRemiUsernameList(1).Count > 0);
-        }
+        //[Test]
+        //public void GetRemiUsernameList()
+        //{
+        //    Assert.That(UserManager.GetRemiUsernameList(1).Count > 0);
+        //}
 
         [Test]
         public void GetRoles()

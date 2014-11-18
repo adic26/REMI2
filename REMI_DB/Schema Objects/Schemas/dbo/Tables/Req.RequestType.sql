@@ -6,6 +6,7 @@
 	[HasIntegration] [bit] NOT NULL,
 	[CanReport] [bit] NOT NULL,
 	[HasApproval] [bit] NOT NULL,
+	[IsExternal] [bit] NOT NULL,
  CONSTRAINT [PK_RequestType] PRIMARY KEY CLUSTERED 
 (
 	[RequestTypeID] ASC

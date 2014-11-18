@@ -18,6 +18,28 @@ Namespace REMI.Dal
     Public Class TestDB
 
 #Region "Public Methods"
+        Public Shared Function GetTests(ByVal trackingLocationID As Int32, ByVal jobID As Int32) As List(Of String)
+            Dim tempList As New List(Of String)
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+
+                Using myCommand As New SqlCommand("remispTests", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@TrackingLocationID", trackingLocationID)
+                    myCommand.Parameters.AddWithValue("@JobID", jobID)
+                    myConnection.Open()
+
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            While myReader.Read()
+                                tempList.Add(myReader.GetString(0))
+                            End While
+                        End If
+                    End Using
+                End Using
+            End Using
+
+            Return tempList
+        End Function
 
         ''' <summary>Gets an instance of Test from the underlying datasource.</summary> 
         ''' <param name="id">The unique ID of the Test in the database.</param> 
@@ -227,31 +249,6 @@ Namespace REMI.Dal
             End If
             Return Result > 0
         End Function
-        'Public Shared Function GetApplicableTLTypes(ByVal testId As Integer) As TrackingLocationTypeCollection
-        '    Dim tempList As New TrackingLocationTypeCollection
-        '    Using myconnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-        '        Using myCommand As New SqlCommand("remispTestSelectApplicableTrackingLocationTypes", myconnection)
-        '            myCommand.CommandType = CommandType.StoredProcedure
-        '            myCommand.Parameters.AddWithValue("@testid", testId)
-
-        '            myconnection.Open()
-        '            Using myReader As SqlDataReader = myCommand.ExecuteReader()
-        '                If myReader.HasRows Then
-        '                    While myReader.Read()
-        '                        Dim tlt As New TrackingLocationType
-        '                        tlt.ID = myReader.GetInt32(0)
-        '                        tlt.Name = myReader.GetString(1)
-
-        '                        tempList.Add(tlt)
-        '                    End While
-        '                End If
-
-        '            End Using
-        '        End Using
-        '    End Using
-
-        '    Return tempList
-        'End Function
 
         Public Shared Function GetApplicableTLTypes(ByVal testID As Integer) As TrackingLocationTypeCollection
             Dim tempList As New TrackingLocationTypeCollection
@@ -301,30 +298,6 @@ Namespace REMI.Dal
             Dim TLName As String
         End Structure
 
-        'Public Shared Function GetApplicableTLTypesByTestType(ByVal testTypeID As Integer, ByVal myconnection As SqlConnection) As TrackingLocationTypeCollection
-        'Dim tempList As New List(Of TLType)
-
-        'Using myCommand As New SqlCommand("SELECT t.id, tlt.id, tlt.TrackingLocationTypeName FROM trackinglocationtypes as tlt, TrackingLocationsForTests as tlfort, Tests as t where(tlfort.testid = t.id And tlt.ID = tlfort.TrackingLocationtypeID)	 and t.TestType = @TestType	 order by tlt.TrackingLocationTypeName asc", myconnection)
-        '    myCommand.CommandType = CommandType.Text
-        '    myCommand.Parameters.AddWithValue("@testType", testTypeID)
-
-        '    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-        '        If myReader.HasRows Then
-        '            While myReader.Read()
-        '                Dim tlt As New TLType
-        '                tlt.testId = myReader.GetInt32(0)
-        '                tlt.TLTypeId = myReader.GetInt32(1)
-        '                tlt.TLName = myReader.GetString(2)
-        '                tempList.Add(tlt)
-        '            End While
-        '        End If
-
-        '    End Using
-        'End Using
-
-        'Return tempList
-
-        'End Function
         ''' <summary>Saves an instance of the <see cref="Test" /> in the database.</summary> 
         ''' <param name="myTest">The Test instance to save.</param> 
         ''' <returns>Returns the id when the object was saved successfully, or 0 otherwise.</returns> 

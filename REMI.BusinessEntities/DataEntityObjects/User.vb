@@ -1,7 +1,7 @@
 ﻿Imports REMI.Validation
 Imports System.Web.Security
 Imports System.DirectoryServices.ActiveDirectory
-
+Imports System.Xml.Serialization
 
 Namespace REMI.BusinessEntities
     ''' <summary>
@@ -13,14 +13,12 @@ Namespace REMI.BusinessEntities
         Inherits LoggedItemBase
 
 #Region "Private Variables"
-        Private _testCentre As String
-        Private _testCentreID As Int32
-        Private _departmentID As Int32
-        Private _department As String
         Private _ldapName As String
         Private _productGroups As DataTable
+        Private _userDetails As DataTable
         Private _productGroupsNames As List(Of String)
         Private _roles As List(Of String)
+        Private _detailsNames As List(Of String)
         Private _badgeNumber As Integer
         Private _isActive As Int32
         Private _byPassProduct As Int32
@@ -32,15 +30,19 @@ Namespace REMI.BusinessEntities
         Private _existsInREMI As Boolean
         Private _canDelete As Int32
         Private _training As DataTable
+        Private _requestTypes As DataTable
         Private _trainingNames As List(Of String)
 #End Region
+
+#Region "Constructor"
         Public Sub New()
-            _productGroups = New DataTable
+            _productGroups = New DataTable("ProductGroups")
             _productGroupsNames = New List(Of String)
-            _training = New DataTable
+            _training = New DataTable("Training")
+            _userDetails = New DataTable("UserDetails")
+            _requestTypes = New DataTable("RequestTypes")
             _trainingNames = New List(Of String)
-            _testCentre = "Cambridge"
-            _testCentreID = 76
+            _detailsNames = New List(Of String)
             _roles = New List(Of String)
             _ldapName = String.Empty
             _jobTitle = String.Empty
@@ -51,8 +53,10 @@ Namespace REMI.BusinessEntities
             _byPassProduct = 1
             _defaultPage = "ScanForInfo/default.aspx"
         End Sub
-#Region "Public Properties"
+#End Region
 
+#Region "Public Properties"
+        <XmlIgnore()> _
         Public Property ExistsInREMI() As Boolean
             Get
                 Return _existsInREMI
@@ -62,7 +66,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-
+        <XmlIgnore()> _
         Public ReadOnly Property RequiresSuppAuth() As Boolean
             Get
                 Dim ex1 As Boolean
@@ -74,10 +78,10 @@ Namespace REMI.BusinessEntities
                 End If
 
                 'or check if the user does not have permission to access remi. 
-                Return ex1 'Or Not HasREMIPageViewAuthority()
-
+                Return ex1
             End Get
         End Property
+
         Public Property BadgeNumber() As Integer
             Get
                 Return _badgeNumber
@@ -105,6 +109,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property CanDelete() As Int32
             Get
                 Return _canDelete
@@ -123,48 +128,33 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property TestCentre() As String
+        Public ReadOnly Property TestCentre() As String
             Get
-                Return _testCentre
+                Return If(UserDetails Is Nothing, String.Empty, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "TestCenter" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of String)("Values")).FirstOrDefault())
             End Get
-            Set(ByVal value As String)
-                _testCentre = value
-            End Set
         End Property
 
-        Public Property TestCentreID() As Int32
+        Public ReadOnly Property TestCentreID() As Int32
             Get
-                Return _testCentreID
+                Return If(UserDetails Is Nothing, 0, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "TestCenter" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).FirstOrDefault())
             End Get
-            Set(value As Int32)
-                _testCentreID = value
-            End Set
         End Property
 
-        Public Property Department() As String
+        Public ReadOnly Property Department() As String
             Get
-                Return _department
+                Return If(UserDetails Is Nothing, String.Empty, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of String)("Values")).FirstOrDefault())
             End Get
-            Set(ByVal value As String)
-                _department = value
-            End Set
         End Property
 
-        Public Property DepartmentID() As Int32
+        Public ReadOnly Property DepartmentID() As Int32
             Get
-                Return _departmentID
+                Return If(UserDetails Is Nothing, 0, (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).FirstOrDefault())
             End Get
-            Set(value As Int32)
-                _departmentID = value
-            End Set
         End Property
 
         ''' <summary>
         ''' Gets or sets the LDAP username of the user.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         <NotNullOrEmpty(Message:="The LDAP Name must be set. ")> _
         <ValidStringLength(Message:="The LDAP name must be less than 255 characters.", MaxLength:=255)> _
         Public Property LDAPName() As String
@@ -176,11 +166,10 @@ Namespace REMI.BusinessEntities
                 End If
             End Get
             Set(ByVal value As String)
-
                 _ldapName = value
-
             End Set
         End Property
+
         Public ReadOnly Property UserName() As String
             Get
                 If _ldapName.StartsWith("RIMNET\") Then
@@ -190,12 +179,10 @@ Namespace REMI.BusinessEntities
                 End If
             End Get
         End Property
+
         ''' <summary>
         ''' Gets or sets the list of productgroups the user is managing.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Property ProductGroups() As DataTable
             Get
                 Return _productGroups
@@ -203,6 +190,40 @@ Namespace REMI.BusinessEntities
             Set(ByVal value As DataTable)
                 If value IsNot Nothing Then
                     _productGroups = value
+                End If
+            End Set
+        End Property
+
+        Public Property RequestTypes() As DataTable
+            Get
+                Return _requestTypes
+            End Get
+            Set(ByVal value As DataTable)
+                If value IsNot Nothing Then
+                    _requestTypes = value
+                End If
+            End Set
+        End Property
+
+        Public Property UserDetails() As DataTable
+            Get
+                Return _userDetails
+            End Get
+            Set(ByVal value As DataTable)
+                If value IsNot Nothing Then
+                    _userDetails = value
+                End If
+            End Set
+        End Property
+
+        <XmlIgnore()> _
+        Public Property DetailsNames() As List(Of String)
+            Get
+                Return _detailsNames
+            End Get
+            Set(ByVal value As List(Of String))
+                If value IsNot Nothing Then
+                    _detailsNames = value
                 End If
             End Set
         End Property
@@ -218,6 +239,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property TrainingNames() As List(Of String)
             Get
                 Return _trainingNames
@@ -229,6 +251,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property ProductGroupsNames() As List(Of String)
             Get
                 Return _productGroupsNames
@@ -240,13 +263,10 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-
         ''' <summary>
         ''' Gets or sets the list of roles that the user is a member of.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
+        <XmlIgnore()> _
         Public Property RolesList() As List(Of String)
             Get
                 Return _roles
@@ -254,8 +274,8 @@ Namespace REMI.BusinessEntities
             Set(ByVal value As List(Of String))
                 _roles = value
             End Set
-
         End Property
+
         Public Property EmailAddress() As String
             Get
                 Return _emailAddress
@@ -264,6 +284,7 @@ Namespace REMI.BusinessEntities
                 _emailAddress = value
             End Set
         End Property
+
         Public Property FullName() As String
             Get
                 Return _fullName
@@ -272,6 +293,7 @@ Namespace REMI.BusinessEntities
                 _fullName = value
             End Set
         End Property
+
         Public Property Extension() As String
             Get
                 Return _extension
@@ -280,6 +302,7 @@ Namespace REMI.BusinessEntities
                 _extension = value
             End Set
         End Property
+
         Public Property JobTitle() As String
             Get
                 Return _jobTitle
@@ -288,14 +311,11 @@ Namespace REMI.BusinessEntities
                 _jobTitle = value
             End Set
         End Property
-#End Region
 
-#Region "Public Functions"
         ''' <summary>
         ''' Overrides the default tostring to return the LDAP name of the user.
         ''' </summary>
         ''' <returns>The LDAP name of the user</returns>
-        ''' <remarks></remarks>
         Public Overrides Function ToString() As String
             If String.IsNullOrEmpty(_ldapName) Then
                 Return String.Empty
@@ -309,19 +329,16 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' Checks if the user has the authority to perform certain actions in the system. mostly to do with setting result reviews and such.
         ''' </summary>
-        ''' <param name="ProductGroupName">The product group of the batch (To check if the user is PM for that project.)</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Function HasRetestAuthority(ByVal ProductGroupName As String) As Boolean
-            Return CheckPermission("HasRetestAuthority", ProductGroupName)
+            Return CheckPermission("HasRetestAuthority", ProductGroupName, 0)
         End Function
 
         Public Function HasFALowTestingAuthority(ByVal productGroupName As String) As Boolean
-            Return CheckPermission("HasFALowTestingAuthority", productGroupName)
+            Return CheckPermission("HasFALowTestingAuthority", productGroupName, 0)
         End Function
 
         Public Function HasFAHighTestingAuthority(ByVal productGroupName As String) As Boolean
-            Return CheckPermission("HasFAHighTestingAuthority", productGroupName)
+            Return CheckPermission("HasFAHighTestingAuthority", productGroupName, 0)
         End Function
 
         Public Function HasFATestingAuthority(ByVal ProductGroupName As String) As Boolean
@@ -329,104 +346,120 @@ Namespace REMI.BusinessEntities
         End Function
 
         Public Function HasLastScanLocationOverride() As Boolean
-            Return CheckPermission("HasLastScanLocationOverride", String.Empty)
+            Return CheckPermission("HasLastScanLocationOverride", String.Empty, 0)
         End Function
 
         Public Function HasAdjustPriorityAuthority() As Boolean
-            Return CheckPermission("HasAdjustPriorityAuthority", String.Empty)
+            Return CheckPermission("HasAdjustPriorityAuthority", String.Empty, 0)
         End Function
 
-        Public Function HasEditBatchCommentsAuthority() As Boolean
-            Return CheckPermission("HasEditBatchCommentsAuthority", String.Empty)
+        Public Function HasEditBatchCommentsAuthority(ByVal batchDepartmentID As Int32) As Boolean
+            Return CheckPermission("HasEditBatchCommentsAuthority", String.Empty, batchDepartmentID)
         End Function
 
         Public Function HasTaskAssignmentAuthority() As Boolean
-            Return CheckPermission("HasTaskAssignmentAuthority", String.Empty)
+            Return CheckPermission("HasTaskAssignmentAuthority", String.Empty, 0)
         End Function
 
         Public Function HasFAAssignmentAuthority() As Boolean
-            Return CheckPermission("HasFAAssignmentAuthority", String.Empty)
+            Return CheckPermission("HasFAAssignmentAuthority", String.Empty, 0)
         End Function
 
         Public Function HasOverrideCompletedTestAuthority() As Boolean
-            Return CheckPermission("HasOverrideCompletedTestAuthority", String.Empty)
+            Return CheckPermission("HasOverrideCompletedTestAuthority", String.Empty, 0)
         End Function
 
-        Public Function HasScanForTestAuthority() As Boolean
+        Public Function HasScanForTestAuthority(ByVal batchDepartmentID As Int32) As Boolean
             If Roles.IsUserInRole(_ldapName, "SupplementaryAuthenticationRequired") Then
-                'when badge scanning is in place this can be reset back to false
                 Return True
             Else
-                Return CheckPermission("HasScanForTestAuthority", String.Empty)
+                Return CheckPermission("HasScanForTestAuthority", String.Empty, batchDepartmentID)
             End If
         End Function
 
-        Public Function HasEditItemAuthority(ByVal productGroup As String) As Boolean
-            Return CheckPermission("HasEditItemAuthority", productGroup)
+        Public Function HasEditItemAuthority(ByVal productGroup As String, ByVal batchDepartmentID As Int32) As Boolean
+            Return CheckPermission("HasEditItemAuthority", productGroup, batchDepartmentID)
         End Function
 
         Public Function HasUploadConfigXML() As Boolean
-            Return CheckPermission("HasUploadConfigXML", String.Empty)
+            Return CheckPermission("HasUploadConfigXML", String.Empty, 0)
         End Function
 
         Public Function HasDocumentAuthority() As Boolean
-            Return CheckPermission("HasDocumentAuthority", String.Empty)
+            Return CheckPermission("HasDocumentAuthority", String.Empty, 0)
         End Function
 
         Public Function HasAdminReadOnlyAuthority() As Boolean
-            Return CheckPermission("HasAdminReadOnlyAuthority", String.Empty)
+            Return CheckPermission("HasAdminReadOnlyAuthority", String.Empty, 0)
         End Function
 
         Public Function HasRelabAuthority() As Boolean
-            Return CheckPermission("HasRelabAuthority", String.Empty)
+            Return CheckPermission("HasRelabAuthority", String.Empty, 0)
         End Function
 
-        Public Function HasBatchSetupAuthority() As Boolean
-            Return CheckPermission("HasBatchSetupAuthority", String.Empty)
+        Public Function HasBatchSetupAuthority(ByVal batchDepartmentID As Int32) As Boolean
+            Return CheckPermission("HasBatchSetupAuthority", String.Empty, batchDepartmentID)
         End Function
 #End Region
 
 #Region "HAS ROLE"
+        <XmlIgnore()> _
         Public ReadOnly Property IsAdmin() As Boolean
             Get
                 Return RolesList.Contains("Administrator")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property IsIncomingSpecialist() As Boolean
             Get
                 Return RolesList.Contains("IncomingSpecialist")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property IsMaterialsManagementSpecialist() As Boolean
             Get
                 Return RolesList.Contains("MaterialsManagementSpecialist")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property IsLabTestCoordinator() As Boolean
             Get
                 Return RolesList.Contains("LabTestCoordinator")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property IsLabTechOpsManager() As Boolean
             Get
                 Return RolesList.Contains("LabTechOpsManager")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property IsProjectManager() As Boolean
             Get
                 Return RolesList.Contains("ProjectManager")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property IsDeveloper() As Boolean
             Get
                 Return RolesList.Contains("Developer")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property HasRelabAccess() As Boolean
             Get
                 Return RolesList.Contains("Relab")
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property IsTestCenterAdmin() As Boolean
             Get
                 Return RolesList.Contains("TestCenterAdmin")
@@ -434,14 +467,15 @@ Namespace REMI.BusinessEntities
         End Property
 #End Region
 
-        Private Function CheckPermission(ByVal Permission As String, ByVal productGroupName As String) As Boolean
+        Private Function CheckPermission(ByVal Permission As String, ByVal productGroupName As String, ByVal batchDepartmentID As Int32) As Boolean
             Dim roles As DataTable = REMIAppCache.GetRolesByPermission(Permission)
+            Dim hasPerm As Boolean = False
+
             If (roles Is Nothing) Then
                 roles = GetRolesByPermission(Permission)
                 REMIAppCache.SetRolesByPermission(Permission, roles)
             End If
 
-            Dim hasPerm As Boolean = False
             For Each role As DataRow In roles.Rows
                 hasPerm = RolesList.Contains(role.Item("RoleName").ToString())
                 Dim hasProductCheck As Boolean = False
@@ -455,15 +489,24 @@ Namespace REMI.BusinessEntities
                         hasPerm = False
                     End If
                 End If
+
                 If (hasPerm) Then
+                    Dim departments As List(Of Int32) = (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).ToList()
+
+                    If (Not (departments.Contains(batchDepartmentID) And batchDepartmentID > 0) And Not IsAdmin And Not IsTestCenterAdmin) Then
+                        hasPerm = False
+                    End If
+
                     Exit For
                 End If
             Next
+
             Return hasPerm
         End Function
 
         Private Shared Function GetRolesByPermission(ByVal permissionName As String) As DataTable
-            Dim dt As New DataTable
+            Dim dt As New DataTable("Roles")
+
             Using myConnection As New SqlClient.SqlConnection(Core.REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlClient.SqlCommand("aspnet_GetRolesByPermission", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure

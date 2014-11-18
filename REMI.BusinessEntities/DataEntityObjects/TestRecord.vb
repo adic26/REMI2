@@ -18,7 +18,7 @@ Namespace REMI.BusinessEntities
         Private _testStageName As String
         Private _testName As String
         Private _status As TestRecordStatus
-        Private _failDocs As List(Of IQRARequest)
+        Private _failDocs As List(Of Dictionary(Of String, String))
         Private _highestResultVerNum As Integer
         Private _comments As String
         Private _numberOfTests As Integer
@@ -30,6 +30,7 @@ Namespace REMI.BusinessEntities
         Private _functionalType As Int32
         Private _resultSource As TestResultSource
 #End Region
+
 #Region "Constructors"
         Public Sub New(ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal testUnitID As Integer, ByVal userName As String)
             _jobName = jobName
@@ -37,7 +38,7 @@ Namespace REMI.BusinessEntities
             _testName = testName
             _testUnitID = testUnitID
             LastUser = userName
-            _failDocs = New List(Of IQRARequest)
+            _failDocs = New List(Of Dictionary(Of String, String))
             _status = TestRecordStatus.NotSet
         End Sub
         Public Sub New(ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal testUnitID As Integer, ByVal userName As String, ByVal testID As Int32, ByVal testStageID As Int32)
@@ -48,7 +49,7 @@ Namespace REMI.BusinessEntities
             LastUser = userName
             _testID = testID
             _testStageID = testStageID
-            _failDocs = New List(Of IQRARequest)
+            _failDocs = New List(Of Dictionary(Of String, String))
             _status = TestRecordStatus.NotSet
         End Sub
         Public Sub New(ByVal qraNumber As String, ByVal batchUnitNumber As Integer, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal testUnitID As Integer, ByVal userName As String)
@@ -59,7 +60,7 @@ Namespace REMI.BusinessEntities
             _testName = testName
             _testUnitID = testUnitID
             LastUser = userName
-            _failDocs = New List(Of IQRARequest)
+            _failDocs = New List(Of Dictionary(Of String, String))
             _status = TestRecordStatus.NotSet
         End Sub
         Public Sub New(ByVal qraNumber As String, ByVal batchUnitNumber As Integer, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal testUnitID As Integer, ByVal userName As String, ByVal testID As Int32, ByVal testStageID As Int32)
@@ -72,24 +73,19 @@ Namespace REMI.BusinessEntities
             LastUser = userName
             _testID = testID
             _testStageID = testStageID
-            _failDocs = New List(Of IQRARequest)
+            _failDocs = New List(Of Dictionary(Of String, String))
             _status = TestRecordStatus.NotSet
         End Sub
         Public Sub New()
-            _failDocs = New List(Of IQRARequest)
+            _failDocs = New List(Of Dictionary(Of String, String))
             _status = TestRecordStatus.NotSet
         End Sub
 #End Region
+
 #Region "Public Properties"
-
-        'REMI Database Properties
-
         ''' <summary>
         ''' The unique database ID of the test unit being logged.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         <ValidIDNumber(Key:="w40")> _
         Public Property TestUnitID() As Integer
             Get
@@ -139,9 +135,6 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The name of the job.
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         <NotNullOrEmpty(key:="w41")> _
         <ValidStringLength(key:="w42", MaxLength:=400)> _
         Public Property JobName() As String
@@ -152,6 +145,7 @@ Namespace REMI.BusinessEntities
                 _jobName = value
             End Set
         End Property
+
         <NotNullOrEmpty(Message:="w43")> _
         <ValidStringLength(Message:="w44", MaxLength:=400)> _
         Public Property TestStageName() As String
@@ -162,6 +156,7 @@ Namespace REMI.BusinessEntities
                 _testStageName = value
             End Set
         End Property
+
         <NotNullOrEmpty(Message:="w45")> _
         <ValidStringLength(Message:="w46", MaxLength:=400)> _
         Public Property TestName() As String
@@ -187,15 +182,12 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' Gets or sets the FA/RIT doc if there is a failure
         ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         <Xml.Serialization.XmlIgnore()> _
-        Public Property FailDocs() As List(Of IQRARequest)
+        Public Property FailDocs() As List(Of Dictionary(Of String, String))
             Get
                 Return _failDocs
             End Get
-            Set(ByVal value As List(Of IQRARequest))
+            Set(ByVal value As List(Of Dictionary(Of String, String)))
                 If value IsNot Nothing Then
                     _failDocs = value
                 End If
@@ -284,7 +276,7 @@ Namespace REMI.BusinessEntities
 
         Public ReadOnly Property FailDocCSVList() As String
             Get
-                Return String.Join(",", (From f In FailDocs Select f.RequestNumber).ToArray)
+                Return String.Join(",", (From f In FailDocs Select f.Item("RequestNumber")).ToArray)
             End Get
         End Property
 
@@ -292,14 +284,14 @@ Namespace REMI.BusinessEntities
             Get
                 Dim i As Integer = 0
                 Dim retStr As New System.Text.StringBuilder
-                For Each f As RequestBase In FailDocs
+                For Each f In FailDocs
                     If i > 0 Then
                         retStr.Append("<br/>")
                     End If
                     retStr.Append("<a href=""") 'if its an RIT/SCM then display the number and link too
-                    retStr.Append(f.TRSLink)
+                    retStr.Append(f.Item("Request Link"))
                     retStr.Append(""" target=""_blank"">")
-                    retStr.Append(f.RequestNumber)
+                    retStr.Append(f.Item("RequestNumber"))
                     retStr.Append("</a>")
                     i += 1
                 Next
@@ -320,12 +312,11 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 #End Region
+
 #Region "Public functions"
         ''' <summary>
         ''' Checks if the test record status is FA, RIT, Complete or Quarantined
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
         Public Function RecordStatusIsProcessComplete() As Boolean
             Return (Status = TestRecordStatus.FARaised OrElse Status = TestRecordStatus.CompleteKnownFailure OrElse Status = TestRecordStatus.Complete OrElse Status = TestRecordStatus.Quarantined)
         End Function
@@ -338,28 +329,16 @@ Namespace REMI.BusinessEntities
             Return (Status = TestRecordStatus.CompleteFail OrElse Status = TestRecordStatus.Complete OrElse Status = TestRecordStatus.WaitingForResult)
         End Function
 
-        Public Sub AddFailDoc(ByVal failDoc As IQRARequest, ByVal comments As String, ByVal username As String)
+        Public Sub AddFailDoc(ByVal failDoc As Dictionary(Of String, String), ByVal comments As String, ByVal username As String)
             If failDoc IsNot Nothing Then
-                If (From f In Me.FailDocs Where f.RequestNumber = failDoc.RequestNumber Select f).Count = 0 Then
+                If (From f In Me.FailDocs Where f.Item("RequestNumber") = failDoc.Item("RequestNumber") Select f).Count = 0 Then
                     Me.FailDocs.Add(failDoc)
                 End If
-                'check if there is already an FA associated with this fail doc. 
-                'if so do not change the status. if not change the status to whatever is required.
-                If (From f In Me.FailDocs Where f.RequestType = "FA" Select f).Count = 0 Then
-                    Select Case failDoc.RequestType
-                        Case "FA"
-                            Me.Status = TestRecordStatus.FARaised
-                            Me.ResultSource = TestResultSource.Manual
-                        Case "RIT", "SCM"
-                            Me.Status = TestRecordStatus.CompleteKnownFailure
-                            Me.ResultSource = TestResultSource.Manual
 
-                    End Select
-                Else
-                    Me.Status = TestRecordStatus.FARaised
-                    Me.ResultSource = TestResultSource.Manual
-                End If
-                Me.Notifications.AddWithMessage(String.Format("{0} assigned to the test record ok.", failDoc.RequestNumber), NotificationType.Information)
+                Me.Status = TestRecordStatus.FARaised
+                Me.ResultSource = TestResultSource.Manual
+
+                Me.Notifications.AddWithMessage(String.Format("{0} assigned to the test record ok.", failDoc.Item("RequestNumber")), NotificationType.Information)
                 Me.Comments = comments
                 LastUser = username
             Else
@@ -369,7 +348,7 @@ Namespace REMI.BusinessEntities
 
         Public Sub RemoveFailDoc(ByVal failDocNumber As String, ByVal username As String, ByVal comments As String)
             Try
-                Dim selectedFaildoc As IQRARequest = (From f In _failDocs Where f.RequestNumber.Equals(failDocNumber) Select f).Single
+                Dim selectedFaildoc As Dictionary(Of String, String) = (From f In _failDocs Where f.Item("RequestNumber").Equals(failDocNumber) Select f).Single
                 If selectedFaildoc IsNot Nothing Then
                     _failDocs.Remove(selectedFaildoc)
                     Me.LastUser = username
@@ -378,11 +357,8 @@ Namespace REMI.BusinessEntities
                         Me.Status = TestRecordStatus.CompleteFail
                         Me.ResultSource = TestResultSource.Manual
                     Else
-                        If (From f In _failDocs Where f.RequestType = "FA" Select f).Count > 0 Then
+                        If (From f In _failDocs Where f.Item("RequestType") = "FA" Select f).Count > 0 Then
                             Me.Status = TestRecordStatus.FARaised
-                            Me.ResultSource = TestResultSource.Manual
-                        ElseIf (From f In _failDocs Where f.RequestType = "RIT" OrElse f.RequestType = "SCM" Select f).Count > 0 Then
-                            Me.Status = TestRecordStatus.CompleteKnownFailure
                             Me.ResultSource = TestResultSource.Manual
                         End If
                     End If
@@ -474,21 +450,21 @@ Namespace REMI.BusinessEntities
             Return returnVal
         End Function
 
-        Public Overrides Function Validate() As Boolean
-            Dim baseValid As Boolean = MyBase.Validate
-            Dim localValid As Boolean = True
-            If localValid AndAlso FailDocs.Count >= 1 Then
-                'check each fail doc for validity
-                For Each f As RequestBase In FailDocs
-                    If Not f.Validate Then
-                        localValid = False
-                        Exit For
-                    End If
-                Next
+        'Public Overrides Function Validate() As Boolean
+        '    Dim baseValid As Boolean = MyBase.Validate
+        '    Dim localValid As Boolean = True
+        '    If localValid AndAlso FailDocs.Count >= 1 Then
+        '        'check each fail doc for validity
+        '        For Each f As RequestBase In FailDocs
+        '            If Not f.Validate Then
+        '                localValid = False
+        '                Exit For
+        '            End If
+        '        Next
 
-            End If
-            Return baseValid AndAlso localValid
-        End Function
+        '    End If
+        '    Return baseValid AndAlso localValid
+        'End Function
 #End Region
     End Class
 End Namespace

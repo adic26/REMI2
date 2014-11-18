@@ -50,6 +50,15 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents pnlHead As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
+    '''Overview control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Overview As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+
+    '''<summary>
     '''A11 control.
     '''</summary>
     '''<remarks>
@@ -59,13 +68,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A11 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
-    '''SearchLink control.
+    '''Search control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents SearchLink As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents Search As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''A16 control.
@@ -77,6 +86,15 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A16 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
+    '''ScanDevice control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ScanDevice As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+
+    '''<summary>
     '''A2 control.
     '''</summary>
     '''<remarks>
@@ -84,6 +102,15 @@ Partial Public Class MasterPages_MasterPage
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents A2 As Global.System.Web.UI.HtmlControls.HtmlAnchor
+
+    '''<summary>
+    '''BatchInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents BatchInfo As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''A4 control.
@@ -95,6 +122,15 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A4 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
+    '''ProductInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ProductInfo As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+
+    '''<summary>
     '''A6 control.
     '''</summary>
     '''<remarks>
@@ -102,6 +138,15 @@ Partial Public Class MasterPages_MasterPage
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents A6 As Global.System.Web.UI.HtmlControls.HtmlAnchor
+
+    '''<summary>
+    '''TrackingLocation control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents TrackingLocation As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''A5 control.
@@ -113,6 +158,15 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A5 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
+    '''Timeline control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Timeline As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+
+    '''<summary>
     '''A9 control.
     '''</summary>
     '''<remarks>
@@ -122,13 +176,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A9 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
-    '''incomingLink control.
+    '''Incoming control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents incomingLink As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents Incoming As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''A10 control.
@@ -140,13 +194,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A10 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
-    '''inventoryLink control.
+    '''Inventory control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents inventoryLink As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents Inventory As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''A8 control.
@@ -158,6 +212,15 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A8 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
+    '''User control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents User As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+
+    '''<summary>
     '''A3 control.
     '''</summary>
     '''<remarks>
@@ -167,13 +230,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents A3 As Global.System.Web.UI.HtmlControls.HtmlAnchor
 
     '''<summary>
-    '''RelabLink control.
+    '''Results control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents RelabLink As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents Results As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''A17 control.

@@ -165,4 +165,13 @@ Partial Public Class TestRecords_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnQRAID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnDepartmentID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnDepartmentID As Global.System.Web.UI.WebControls.HiddenField
 End Class

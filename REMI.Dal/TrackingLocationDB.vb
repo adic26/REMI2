@@ -151,14 +151,18 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@UserName", userName)
                     MyConnection.Open()
 
-                    Dim returnValue As New SqlParameter("ReturnValue", SqlDbType.Int)
-                    returnValue.Direction = ParameterDirection.ReturnValue
-                    myCommand.Parameters.Add(returnValue)
-                    myCommand.ExecuteScalar()
-                    Result = Convert.ToInt32(returnValue.Value)
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            If myReader.Read() Then
+                                If Not myReader.IsDBNull(myReader.GetOrdinal("TrackingLocationID")) Then
+                                    Result = myReader.GetInt32(myReader.GetOrdinal("TrackingLocationID"))
+                                End If
+                            End If
+                        End If
+                    End Using
                 End Using
-
             End Using
+
             Return Result
         End Function
 
@@ -300,9 +304,9 @@ Namespace REMI.Dal
                         myTrackingLocation.HostName = myDataRecord.GetString(myDataRecord.GetOrdinal("HostName"))
                     End If
                 End If
-                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestName")) Then
-                    myTrackingLocation.CurrentTestName = myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestName"))
-                End If
+                'If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestName")) Then
+                '    myTrackingLocation.CurrentTestName = myDataRecord.GetString(myDataRecord.GetOrdinal("CurrentTestName"))
+                'End If
                 'tracking location type items
                 myTrackingLocation.TrackingLocationType.UnitCapacity = myDataRecord.GetInt32(myDataRecord.GetOrdinal("TLTUnitCapacity"))
                 If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("TLTComment")) Then
@@ -575,7 +579,7 @@ Namespace REMI.Dal
 
         Public Shared Function StationConfigurationUpload(ByVal hostID As Int32, ByVal xml As XDocument, ByVal LastUser As String, ByVal pluginID As Int32) As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispStationConfigurationProcess", myConnection)
+                Using myCommand As New SqlCommand("remispStationConfigurationUpload", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@HostID", hostID)
                     myCommand.Parameters.AddWithValue("@XML", xml.ToString())
@@ -590,7 +594,7 @@ Namespace REMI.Dal
 
         Public Shared Function StationConfigurationProcess() As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispStationConfigurationUpload", myConnection)
+                Using myCommand As New SqlCommand("remispStationConfigurationProcess", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()

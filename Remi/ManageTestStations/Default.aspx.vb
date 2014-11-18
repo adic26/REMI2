@@ -22,6 +22,7 @@ Partial Class ManageTestStations_Default
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             ddlDepartments.DataBind()
+            ddlDepartments.SelectedValue = UserManager.GetCurrentUser.DepartmentID
         Else
             Bind()
         End If

@@ -29,7 +29,15 @@ Partial Class ManageBatches_ModifyStatus
             hypCancel.NavigateUrl = b.BatchInfoLink
             hypRefresh.NavigateUrl = b.SetStatusManagerLink
             SetupTestStageDropDownList(b.Status.ToString)
+            hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
+            hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
+            hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
 
+            If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+                liModifyPriority.Visible = True
+                liModifyStage.Visible = True
+                liModifyTestDurations.Visible = True
+            End If
 
             pnlEditExceptions.Visible = True
             pnlLeftMenuActions.Visible = True

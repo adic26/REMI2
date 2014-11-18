@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Enumerations\BatchStatus.cs" />
     <Compile Include="Enumerations\LookupType.cs" />
+    <Compile Include="Enumerations\SearchBy.cs" />
     <Compile Include="Enumerations\TestRecordStatus.cs" />
     <Compile Include="Enumerations\TestResultSource.cs" />
     <Compile Include="Enumerations\TestStageCompletionStatus.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="ILoggedItem.cs" />
     <Compile Include="ILookups.cs" />
     <Compile Include="IOrientation.cs" />
-    <Compile Include="IQRARequest.cs" />
+    <Compile Include="IRequestFields.cs" />
     <Compile Include="ITaskList.cs" />
     <Compile Include="ITaskModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

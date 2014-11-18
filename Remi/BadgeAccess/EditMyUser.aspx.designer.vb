@@ -95,13 +95,13 @@ Partial Public Class BadgeAccess_EditMyUser
     Protected WithEvents hdnUserID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''ddlGeoLoc control.
+    '''dlstTestCenter control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlGeoLoc As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents dlstTestCenter As Global.System.Web.UI.WebControls.DataList
 
     '''<summary>
     '''odsTestCentres control.
@@ -113,13 +113,13 @@ Partial Public Class BadgeAccess_EditMyUser
     Protected WithEvents odsTestCentres As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''ddlDepartments control.
+    '''dlstDepartments control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents dlstDepartments As Global.System.Web.UI.WebControls.DataList
 
     '''<summary>
     '''odsDepartments control.

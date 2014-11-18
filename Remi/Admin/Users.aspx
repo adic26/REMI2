@@ -119,13 +119,17 @@
         <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
     </h2>
     <asp:Panel ID="pnlViewAllUsers" runat="server">
-        <asp:GridView ID="gvwUsers" runat="server" AutoGenerateColumns="False" DataKeyNames="LDAPName" DataSourceID="odsUsers" EmptyDataText="There are no users in the system." OnRowCommand="gvwUsers_RowCommand">
+        <asp:GridView ID="gvwUsers" runat="server" AutoGenerateColumns="False" DataKeyNames="LDAPName" EmptyDataText="There are no users in the system." OnRowCommand="gvwUsers_RowCommand">
             <RowStyle CssClass="evenrow" />
             <Columns>
                 <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="ID" Visible="False" />
                 <asp:BoundField DataField="LDAPName" HeaderText="Login" readonly="true"/>
                 <asp:BoundField DataField="BadgeNumber" HeaderText="Badge" readonly="true" SortExpression="BadgeNumber" />
-                <asp:BoundField DataField="TestCentre" HeaderText="Test Centre" readonly="true" SortExpression="TestCentre" />
+                <asp:TemplateField HeaderText="Details">
+                    <ItemTemplate>
+                        <asp:BulletedList runat="server" ID="bltDetails" DataSource='<%# Eval("DetailsNames") %>'></asp:BulletedList>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="Roles">
                     <ItemTemplate>
                         <asp:BulletedList ID="bltRoles" runat="server" DataSource='<%# Eval("RolesList") %>' >
@@ -150,7 +154,7 @@
                 <asp:BoundField DataField="IsActive" HeaderText="Active" readonly="true" SortExpression="IsActive" />
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:LinkButton ID="lnkEdit" runat="server" CommandArgument='<%# Eval("ID") %>' Commandname="Edit">Edit</asp:LinkButton>
+                        <asp:LinkButton ID="lnkEdit" runat="server" CommandArgument='<%# Eval("ID") %>' Commandname="EditRow">Edit</asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField ShowHeader="False">
@@ -162,20 +166,6 @@
             </Columns>
             <AlternatingRowStyle CssClass="oddrow" />
         </asp:GridView>
-        <asp:ObjectDataSource ID="odsUsers" runat="server" SelectMethod="GetListByLocation" 
-            TypeName="REMI.Bll.UserManager" DeleteMethod="Delete" 
-            OldValuesParameterFormatString="{0}">
-            <DeleteParameters>
-                <asp:Parameter Name="ID" Type="Int32" />
-            </DeleteParameters>
-            <SelectParameters>
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$ddlTestCenters" DefaultValue="0" Name="testLocation" PropertyName="SelectedValue" Type="Int32" />
-                <asp:Parameter Type="Int32" Name="loadTraining" DefaultValue="1" />
-                <asp:Parameter Type="Int32" Name="determineDelete" DefaultValue="1" />
-                <asp:Parameter Type="Boolean" Name="loadAD" DefaultValue="True" />
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$chkArchived" DefaultValue="false" Name="includeInActive" PropertyName="Checked" Type="Int32" />
-            </SelectParameters>
-        </asp:ObjectDataSource> 
     </asp:Panel>
     <asp:Panel ID="pnlAddNewUser" runat="server" Visible="False">
         <table >
@@ -214,24 +204,50 @@
                 <td class="HorizTableFirstcolumn">
                     Default page:</td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px">
-                        <asp:ListItem Value="/default.aspx">Today Page</asp:ListItem>
-                        <asp:ListItem Value="/Reports/search.aspx">Search Page</asp:ListItem>
-                        <asp:ListItem Value="/ScanForTest/Default.aspx">Scan Device</asp:ListItem>
-                        <asp:ListItem Value="/ScanForInfo/Default.aspx">Batch Page</asp:ListItem>
-                        <asp:ListItem Value="/ScanForInfo/productgroup.aspx">Product Page</asp:ListItem>
-                        <asp:ListItem Value="/Inventory/Default.aspx">Inventory Page</asp:ListItem>                        
-                        <asp:ListItem Value="/Incoming/default.aspx">Incoming Page</asp:ListItem>
-                        <asp:ListItem Value="/ManageTestStations/TrackingLocation.aspx">Tracking Location Page</asp:ListItem>
-                    </asp:DropDownList>
+                    <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px" DataTextField="Name" DataValueField="Url"></asp:DropDownList>
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Test Center:</td>
+                <td class="HorizTableFirstcolumn">Test Center:</td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlGeoLoc" runat="server" Width="195px" DataTextField="LookupType" DataValueField="LookupID">
-                    </asp:DropDownList>
+                    <asp:DataList ID="dlstTestCenter" runat="server" DataSourceID="odsTestCentres" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
+                         <ItemTemplate>
+                             <asp:HiddenField ID="hdnTCIsDefault" runat="server" Value="" />
+                            <asp:HiddenField ID="hdnTestCenterID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
+                            <asp:CheckBox ID='chkTestCenter' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
+                        </ItemTemplate>
+                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
+                     </asp:DataList>
+                    <asp:ObjectDataSource ID="odsTestCentres" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
+                        <SelectParameters>
+                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="4" />
+                            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
+                        </SelectParameters>
+                    </asp:ObjectDataSource>
+                </td>
+            </tr>
+            <tr>
+                <td class="HorizTableFirstcolumn">Department:</td>
+                <td class="HorizTableSecondColumn">
+                    <asp:DataList ID="dlstDepartments" runat="server" DataSourceID="odsDepartments" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
+                        <ItemTemplate>
+                            <asp:HiddenField ID="hdnDIsDefault" runat="server" Value="" />
+                            <asp:HiddenField ID="hdnDepartmentID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
+                            <asp:CheckBox ID='chkDepartment' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
+                        </ItemTemplate>
+                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
+                    </asp:DataList>
+
+                     <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
+                         <SelectParameters>
+                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
+                            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
+                        </SelectParameters>
+                     </asp:ObjectDataSource>
                 </td>
             </tr>
             <tr>

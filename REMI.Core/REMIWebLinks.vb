@@ -52,27 +52,6 @@ Namespace REMI.Core
             Return hostName
         End Function
 
-        Public Shared Function GetTRSLink(ByVal reqid As Integer) As String
-            If reqid > 0 Then
-                Return String.Format("{0}{1}", REMIConfiguration.TRSLinkCreationString, reqid)
-            Else
-                Return REMIConfiguration.BaseTRSLink
-            End If
-        End Function
-        Public Shared Function GetDropTestWebAppLink(ByVal dropTestId As Integer) As String
-            If dropTestId > 0 Then
-                Return String.Format("{0}{1}", REMIConfiguration.DropTestWebAppLink, dropTestId)
-            Else
-                Return REMIConfiguration.BaseDropTestLink
-            End If
-        End Function
-        Public Shared Function GetTumbleTestWebAppLink(ByVal tumbleTestId As Integer) As String
-            If tumbleTestId > 0 Then
-                Return String.Format("{0}{1}", REMIConfiguration.TumbleTestWebAppLink, tumbleTestId)
-            Else
-                Return REMIConfiguration.TumbleTestWebAppLink
-            End If
-        End Function
         Public Shared Function GetFailDocLink(ByVal reqid As Integer) As String
             If reqid > 0 Then
                 Return String.Format("{0}{1}", REMIConfiguration.TRSLinkCreationString, reqid)

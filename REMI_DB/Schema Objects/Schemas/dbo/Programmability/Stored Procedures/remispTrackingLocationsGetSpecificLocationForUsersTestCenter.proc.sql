@@ -1,15 +1,16 @@
 ﻿ALTER procedure remispTrackingLocationsGetSpecificLocationForUsersTestCenter @username nvarchar(255), @locationname nvarchar(500)
 AS
-declare @selectedID int
+	DECLARE @selectedID INT
 
-select top(1) @selectedID = tl.ID 
-from TrackingLocations as tl
-	INNER JOIN Lookups l ON tl.TestCenterLocationID=l.LookupID
-	INNER JOIN Users as u ON u.TestCentreID = l.lookUpID
-	INNER JOIN TrackingLocationsHosts tlh ON tl.ID = tlh.TrackingLocationID
-where TrackingLocationName = @locationname and u.LDAPLogin = @username
+	SELECT TOP(1) @selectedID = tl.ID 
+	FROM TrackingLocations as tl
+		INNER JOIN Lookups l ON tl.TestCenterLocationID=l.LookupID
+		INNER JOIN Users u ON u.LDAPLogin = @username
+		INNER JOIN UserDetails ud ON ud.UserID=u.ID AND ud.LookupID=l.LookupID
+		INNER JOIN TrackingLocationsHosts tlh ON tl.ID = tlh.TrackingLocationID
+	WHERE TrackingLocationName = @locationname
 
-return @selectedid
+	SELECT @selectedid AS TrackingLocationID
 GO
 GRANT EXECUTE ON remispTrackingLocationsGetSpecificLocationForUsersTestCenter TO Remi
 GO

@@ -46,7 +46,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 		) as ActiveTaskAssignee, CONVERT(BIT,0) AS HasBatchSpecificExceptions,
 	batchesrows.ProductTypeID,batchesrows.AccessoryGroupID,batchesrows.RQID As ReqID, batchesrows.TestCenterLocationID,
 	AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate, IsMQual, JobID, MechanicalTools, BatchesRows.RequestPurposeID,
-	BatchesRows.PriorityID, DepartmentID, Department
+	BatchesRows.PriorityID, DepartmentID, Department, Requestor
 	FROM     
 	(
 		SELECT ROW_NUMBER() OVER 
@@ -88,7 +88,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 			b.TestStageCompletionStatus,
 			(select count(*) from testunits WITH(NOLOCK) where testunits.batchid = b.id) as testUnitCount,
 			b.WILocation,b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, JobID, MechanicalTools,
-			RequestPurposeID, PriorityID, DepartmentID, Department
+			RequestPurposeID, PriorityID, DepartmentID, Department, Requestor
 		FROM 
 		(
 			SELECT DISTINCT b.ID, 
@@ -110,7 +110,8 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 				l3.[Values] As TestCenterLocation,
 				b.ConcurrencyID,
 				b.TestStageCompletionStatus, j.WILocation,b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
-				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, b.DepartmentID, l6.[Values] AS Department
+				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, b.DepartmentID, l6.[Values] AS Department,
+				b.Requestor
 			FROM Batches AS b WITH(NOLOCK)
 				LEFT OUTER JOIN Jobs as j WITH(NOLOCK) on b.jobname = j.JobName 
 				inner join TestStages as ts WITH(NOLOCK) on j.ID = ts.JobID

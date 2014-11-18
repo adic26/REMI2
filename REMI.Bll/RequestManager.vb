@@ -11,13 +11,34 @@ Namespace REMI.Bll
     Public Class RequestManager
         Inherits REMIManagerBase
 
+        Public Shared Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
+            Try
+                Return RequestDB.GetRequestsNotInREMI(searchStr)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("Requests")
+        End Function
+
+        Public Shared Function GetRequestTypes() As DataTable
+            Try
+                Return RequestDB.GetRequestTypes(UserManager.GetCurrentValidUserLDAPName)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("RequestTypes")
+        End Function
+
         Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
             Try
                 Return RequestDB.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
-            Return New DataTable
+
+            Return New DataTable("RequestSetupInfo")
         End Function
 
         Public Shared Function SaveRequestSetup(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal saveOptions As List(Of Int32), ByRef tnc As Web.UI.WebControls.TreeNodeCollection, ByVal TestStageType As Int32, ByVal orientationID As Int32) As NotificationCollection
@@ -103,6 +124,16 @@ Namespace REMI.Bll
             Return nc
         End Function
 
+        Public Shared Function GetRequest(ByVal reqNumber As String) As RequestFieldsCollection
+            Try
+                Return RequestDB.GetRequest(reqNumber, UserManager.GetCurrentUser.UserName)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return Nothing
+        End Function
+
         Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
             Try
                 Return RequestDB.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
@@ -113,14 +144,20 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
-        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection) As Boolean
+        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+            Dim saved As Boolean = False
             Try
-                Return RequestDB.SaveRequest(requestName, request)
+                saved = RequestDB.SaveRequest(requestName, request, userIdentification)
+
+                If (saved) Then
+                    BatchManager.GetItem(request(0).RequestNumber, userIdentification, False, True, False)
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                saved = False
             End Try
 
-            Return Nothing
+            Return saved
         End Function
     End Class
 End Namespace

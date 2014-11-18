@@ -56,13 +56,13 @@ Partial Class MasterPages_MasterPage
 
         'You are a relab role or your role has permission to view relab
         If UserManager.GetCurrentUser.HasRelabAuthority() Or UserManager.GetCurrentUser.HasRelabAccess() Then
-            RelabLink.Visible = True
+            Results.Visible = True
         Else
-            RelabLink.Visible = False
+            Results.Visible = False
         End If
 
         If Not (UserManager.GetCurrentUser.IsIncomingSpecialist OrElse UserManager.GetCurrentUser.IsMaterialsManagementSpecialist) Then
-            incomingLink.Visible = False
+            Incoming.Visible = False
         End If
 
         imgUserName.CssClass = "Pass"
@@ -71,5 +71,23 @@ Partial Class MasterPages_MasterPage
         If hlUser IsNot Nothing Then
             hlUser.Text = UserManager.GetCurrentUser.UserName
         End If
+
+        If (REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID) Is Nothing) Then
+            REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID))
+        End If
+
+        Dim dtMenuAccess As DataTable = REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID)
+
+        Overview.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Overview").FirstOrDefault() IsNot Nothing, True, False)
+        Search.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Search").FirstOrDefault() IsNot Nothing, True, False)
+        ScanDevice.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Scan Device").FirstOrDefault() IsNot Nothing, True, False)
+        BatchInfo.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Batch Info").FirstOrDefault() IsNot Nothing, True, False)
+        ProductInfo.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Product Info").FirstOrDefault() IsNot Nothing, True, False)
+        TrackingLocation.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Tracking Location").FirstOrDefault() IsNot Nothing, True, False)
+        Timeline.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Timeline").FirstOrDefault() IsNot Nothing, True, False)
+        Incoming.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Incoming").FirstOrDefault() IsNot Nothing, True, False)
+        Inventory.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Inventory").FirstOrDefault() IsNot Nothing, True, False)
+        user.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "User").FirstOrDefault() IsNot Nothing, True, False)
+        Results.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Results").FirstOrDefault() IsNot Nothing, True, False)
     End Sub
 End Class

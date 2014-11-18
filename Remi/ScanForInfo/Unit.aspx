@@ -1,6 +1,5 @@
 ﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" Inherits="Remi.ScanUnit"  Codebehind="Unit.aspx.vb" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
-<%@ Register Src="../Controls/TestStageProcessView.ascx" TagName="TestStageProcessView" TagPrefix="uc2" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -36,7 +35,7 @@
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgMFG" runat="server" />
-            <asp:HyperLink ID="hypMFG" runat="server" ToolTip="Click to view the manufacturing information page for this unit" NavigateUrl="http://go/mfgweb">MfgWeb History</asp:HyperLink>
+            <asp:HyperLink ID="hypMFG" runat="server" ToolTip="Click to view the manufacturing information page for this unit" NavigateUrl="http://go/mfgweb" Target="_blank">MfgWeb History</asp:HyperLink>
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgBatchInfo" runat="server" />
@@ -68,9 +67,10 @@
                 <asp:TemplateField HeaderText="BSN" SortExpression="BSN">
                     <ItemTemplate>
                         <asp:HyperLink ID="hypBSN" runat="server" ToolTip="Click to view the manufacturing information page for this unit"
-                            NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>'></asp:HyperLink>
+                            NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>' Target="_blank" ></asp:HyperLink>
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:BoundField DataField="IMEI" HeaderText="IMEI" ReadOnly="True" SortExpression="IMEI" Visible="True" />
                 <asp:TemplateField HeaderText="Assigned To" SortExpression="AssignedTo">
                     <ItemTemplate>
                         <asp:Label ID="Label1" runat="server" Text='<%# Remi.Helpers.UserNameFormat(Eval("AssignedTo")) %>'></asp:Label>

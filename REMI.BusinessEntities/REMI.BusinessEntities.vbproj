@@ -82,13 +82,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
@@ -135,7 +131,6 @@
     <Compile Include="DataEntityObjects\ParameterResult.vb" />
     <Compile Include="DataEntityObjects\RequestFields.vb" />
     <Compile Include="DataEntityObjects\TrackingLocationTypePermission.vb" />
-    <Compile Include="Enumerations\TestCenter.vb" />
     <Compile Include="Helpers\REMIAppCache.vb" />
     <Compile Include="Enumerations\TestResultCriteria.vb" />
     <Compile Include="BusinessObjects\FastScanData.vb" />
@@ -146,8 +141,6 @@
     <Compile Include="DataEntityObjects\TestResult.vb" />
     <Compile Include="DataEntityObjects\TestException.vb" />
     <Compile Include="DataEntityObjects\TestRecord.vb" />
-    <Compile Include="Bases\RequestBase.vb" />
-    <Compile Include="Enumerations\TestCompletionCriteria.vb" />
     <Compile Include="BusinessObjects\DeviceBarcodeNumber.vb" />
     <Compile Include="DataEntityObjects\Batch.vb" />
     <Compile Include="DataEntityCollections\BatchCollection.vb" />

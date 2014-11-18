@@ -9,25 +9,31 @@ Namespace REMI.BusinessEntities
     Public Class BatchView
         Inherits BatchBase
         Implements ITaskList
+
+        Private _testUnits As TestUnitCollection
+        Private _testRecords As TestRecordCollection
+        Private _taskList As List(Of ITaskModel)
+
         Public Sub New()
             _taskList = New List(Of ITaskModel)
             _testRecords = New TestRecordCollection
             _testUnits = New TestUnitCollection
         End Sub
+
         Public Sub New(ByVal qraNumber As String)
             MyBase.New(qraNumber)
             _taskList = New List(Of ITaskModel)
             _testRecords = New TestRecordCollection
             _testUnits = New TestUnitCollection
         End Sub
-        Public Sub New(ByVal trsData As IQRARequest)
-            MyBase.New(trsData)
+
+        Public Sub New(ByVal reqData As RequestFieldsCollection)
+            MyBase.New(reqData)
             _taskList = New List(Of ITaskModel)
             _testRecords = New TestRecordCollection
             _testUnits = New TestUnitCollection
         End Sub
 
-        Private _taskList As List(Of ITaskModel)
         <XmlIgnore()> _
         Public Property Tasks() As System.Collections.Generic.List(Of Contracts.ITaskModel) Implements Contracts.ITaskList.Tasks
             Get
@@ -38,7 +44,6 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Private _testUnits As TestUnitCollection
         Public Property TestUnits() As TestUnitCollection
             Get
                 Return _testUnits
@@ -48,7 +53,13 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Private _testRecords As TestRecordCollection
+        <XmlIgnore()> _
+        Public ReadOnly Property RequestFields() As RequestFieldsCollection
+            Get
+                Return ReqData
+            End Get
+        End Property
+
         <XmlIgnore()> _
         Public Property TestRecords() As TestRecordCollection
             Get
@@ -59,6 +70,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property TestRecords(ByVal qraNumber As String, ByVal testName As String, ByVal testStageName As String, ByVal jobName As String, ByVal testUnitID As Int32) As TestRecordCollection
             Get
                 Dim trColl As New TestRecordCollection
@@ -80,6 +92,7 @@ Namespace REMI.BusinessEntities
             Return True
         End Function
 
+        <XmlIgnore()> _
         Public Overridable ReadOnly Property PercentageComplete() As Integer
             Get
                 If Me.Status = BatchStatus.Complete OrElse Me.Status = BatchStatus.TestingComplete Then
@@ -99,6 +112,8 @@ Namespace REMI.BusinessEntities
                 Return Convert.ToInt32(result)
             End Get
         End Property
+
+        <XmlIgnore()> _
         Public ReadOnly Property GetExpectedCompletionDateTime() As String
             Get
                 If EstTSCompletionTime > 0 Then
@@ -109,6 +124,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        <XmlIgnore()> _
         Public ReadOnly Property GetExpectedJobCompletionDateTime() As String
             Get
                 If EstJobCompletionTime > 0 Then
@@ -119,31 +135,6 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        'Public Overridable Function TestingIsCompleteAndReviewedOrNotRequired(ByVal testStageName As String, ByVal testName As String, ByVal unitNumber As Integer) As Boolean
-        '    Dim currentTask = (From t In Tasks Where t.TestStageName = testStageName And t.IsArchived = False And t.TestIsArchived = False AndAlso t.TestName = testName AndAlso t.UnitsForTask.Contains(unitNumber) Select t).FirstOrDefault
-
-        '    If currentTask IsNot Nothing Then
-        '        Dim currentTR As TestRecord = TestRecords.GetItem(JobName, testStageName, testName, unitNumber)
-
-        '        If (currentTR IsNot Nothing AndAlso currentTR.RecordStatusIsProcessComplete) Then
-        '            Return True
-        '        ElseIf (currentTR IsNot Nothing AndAlso Me.ContinueOnFailures AndAlso currentTR.RecordStatusIsProcessCompleteOrContinueOnFailure) Then
-        '            Return True
-        '        End If
-        '    End If
-        'End Function
-
-        'Public Overridable Function CountUnTestedOrReviewed(ByVal unitNumber As Integer, ByVal teststageName As String) As Integer
-        '    Dim count As Integer
-
-        '    For Each t In (From task In Tasks Where task.TestStageName = teststageName And task.IsArchived = False And task.TestIsArchived = False Select task)
-        '        If Not TestingIsCompleteAndReviewedOrNotRequired(teststageName, t.TestName, unitNumber) Then
-        '            count += 1
-        '        End If
-        '    Next
-
-        '    Return count
-        'End Function
 #Region "Public Table Views"
         ''' <summary>
         ''' This function returns a link which is placed in the daily list tables. 
@@ -158,7 +149,7 @@ Namespace REMI.BusinessEntities
             If TestUnits IsNot Nothing Then
                 retStr.Append("<a href=&quot;")
                 retStr.Append(Me.RelabResultLink)
-                retStr.Append("&quot;>View RQ Results</a><br/>")
+                retStr.Append("&quot;>View Results</a><br/>")
                 retStr.Append(String.Format("<a target=&quot;_blank&quot; href=&quot;/Relab/Versions.aspx?TestID=###TESTID####&Batch={0}&quot;>Version History</a> <br />", Me.ID))
 
                 For Each tu As TestUnit In TestUnits
@@ -192,15 +183,13 @@ Namespace REMI.BusinessEntities
                             If tr.FailDocs.Count > 0 Then
                                 For fdNumber As Integer = tr.FailDocs.Count - 1 To 0 Step -1
                                     If tr.FailDocs(fdNumber) IsNot Nothing Then
-                                        Select Case tr.FailDocs(fdNumber).RequestType
-                                            Case "RIT", "SCM"
-                                                retStr.Append("RIT/SCM (<a href=&quot;") 'if its an RIT/SCM then display the number and link too
+                                        Select Case tr.FailDocs(fdNumber).Item("RequestType")
                                             Case "FA" 'if its an FA then display the number and link too
                                                 retStr.Append("FA (<a href=&quot;")
                                         End Select
-                                        retStr.Append(tr.FailDocs(fdNumber).TRSLink)
+                                        retStr.Append(tr.FailDocs(fdNumber).Item("Request Link"))
                                         retStr.Append("&quot;>")
-                                        retStr.Append(tr.FailDocs(fdNumber).RequestNumber)
+                                        retStr.Append(tr.FailDocs(fdNumber).Item("RequestNumber"))
                                         retStr.Append("</a>)")
                                         If fdNumber > 0 Then
                                             retStr.Append("<br />")
@@ -274,7 +263,8 @@ Namespace REMI.BusinessEntities
                 End If
             End If
         End Function
-        Public Function GetTRSTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String) As String
+
+        Public Function GetOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String) As String
             If (From t In Tasks Where t.TestStageName = testStageName AndAlso t.TestName = TestName Select t).FirstOrDefault() Is Nothing Then
                 If (Me.Status = BatchStatus.Complete) Then
                     Return "N/A"

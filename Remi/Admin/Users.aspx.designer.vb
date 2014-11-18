@@ -320,15 +320,6 @@ Partial Public Class Admin_Users
     Protected WithEvents gvwUsers As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''odsUsers control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsUsers As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
     '''pnlAddNewUser control.
     '''</summary>
     '''<remarks>
@@ -410,13 +401,40 @@ Partial Public Class Admin_Users
     Protected WithEvents ddlDefaultPage As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''ddlGeoLoc control.
+    '''dlstTestCenter control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlGeoLoc As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents dlstTestCenter As Global.System.Web.UI.WebControls.DataList
+
+    '''<summary>
+    '''odsTestCentres control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsTestCentres As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
+    '''dlstDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dlstDepartments As Global.System.Web.UI.WebControls.DataList
+
+    '''<summary>
+    '''odsDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''dlstProductGroups control.

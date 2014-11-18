@@ -37,35 +37,23 @@
     <asp:GridView ID="grdDetail" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" EnableViewState="false" Width="81%" EmptyDataText="No Unit Information Available." >
         <RowStyle CssClass="evenrow" />
         <Columns>
-            <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True"
-                                    SortExpression="ID" Visible="False" />
-
-   
+            <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="ID" Visible="False" />
             <asp:TemplateField HeaderText="RequestNumber" SortExpression="QRANumber">
                 <ItemTemplate>
-                 <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Batch"
-                                            NavigateUrl='<%# Eval("BatchInfoLink") %>' 
-                                            Text='<%# Eval("QRANumber") %>'></asp:HyperLink>
+                 <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Batch" Target="_blank" NavigateUrl='<%# Eval("BatchInfoLink") %>' Text='<%# Eval("QRANumber") %>'></asp:HyperLink>
                 </ItemTemplate>
-            
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Unit #" SortExpression="BatchUnitNumber">
                 <ItemTemplate>
-                    <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Unit"
-                                            NavigateUrl='<%# Eval("UnitInfoLink") %>' 
-                                            Text='<%# Eval("BatchUnitNumber") %>'></asp:HyperLink>
+                    <asp:HyperLink ID="hypBUN" runat="server" ToolTip="Click to view the information for this Unit" Target="_blank" NavigateUrl='<%# Eval("UnitInfoLink") %>' Text='<%# Eval("BatchUnitNumber") %>'></asp:HyperLink>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="BSN" SortExpression="BSN">
                 <ItemTemplate>
-                    <asp:HyperLink ID="hypBSN" runat="server" ToolTip="Click to view the manufactuaring information page for this Unit"
-                                            NavigateUrl='<%# Eval("MfgWebLink") %>' 
-                        Text='<%# Eval("BSN") %>'></asp:HyperLink>
+                    <asp:HyperLink ID="hypBSN" runat="server" Target="_blank" ToolTip="Click to view the manufactuaring information page for this Unit" NavigateUrl='<%# Eval("MfgWebLink") %>' Text='<%# Eval("BSN") %>'></asp:HyperLink>
                 </ItemTemplate>
             </asp:TemplateField>
-
-            <asp:TemplateField HeaderText="Current Test Stage" 
-                                    SortExpression="CurrentTestStage">
+            <asp:TemplateField HeaderText="Current Test Stage" SortExpression="CurrentTestStage">
                 <ItemTemplate>
                     <asp:Label ID="Label4" runat="server" Text='<%# Eval("CurrentTestStage") %>'></asp:Label>
                 </ItemTemplate>
@@ -83,10 +71,7 @@
         </Columns>
         <AlternatingRowStyle CssClass="oddrow" />
     </asp:GridView>
-
     </span>
-
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="rightSidebarContent" Runat="Server">
 </asp:Content>
-

@@ -178,7 +178,7 @@ BEGIN
 			FROM @xml.nodes('/TestResults/Measurements/Measurement') T(c)
 			WHERE LOWER(T.c.query('MeasurementName').value('.', 'nvarchar(max)')) IN
 				('apx software version','id power supply 2','id power supply 1','id bt tester','tester sw version',
-				'start','start utc','end','end utc', 'os','osversion','os version', 'cameraid','hwserialnumber','hardware id',
+				'start','start utc','end','end utc', 'os','osversion','os version', 'cameraid','hwserialnumber','hardware id','hardwareid',
 				'build','apx hardware model')
 				
 			SELECT @InfoRowID = MIN(RowID) FROM #temp4

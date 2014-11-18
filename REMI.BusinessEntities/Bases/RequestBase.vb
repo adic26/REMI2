@@ -174,14 +174,6 @@ Namespace REMI.BusinessEntities
 
         Public ReadOnly Property TestCenterLocation() As String Implements IQRARequest.TestCenterLocation
             Get
-                'Dim testcenter As String = GetProperty("Test Center Location").Trim()
-
-                'If (Not String.IsNullOrEmpty(testcenter)) Then
-                '    Return GetProperty("Test Center Location") 'fa
-                'Else
-                '    Return GetProperty("test centre location")
-                'End If
-
                 Return GetProperty("TestCenterLocation")
             End Get
         End Property
@@ -267,7 +259,6 @@ Namespace REMI.BusinessEntities
         Public ReadOnly Property ReportRequiredBy() As DateTime Implements IQRARequest.ReportRequiredBy
             Get
                 Dim dt As DateTime
-                'returns datetime.minvalue if it can't convert
                 DateTime.TryParse(GetProperty("ReportRequiredBy"), dt)
                 Return dt
             End Get

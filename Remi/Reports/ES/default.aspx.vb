@@ -11,7 +11,7 @@ Partial Class ES_Default
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim qra As String = Request.QueryString.Get("QRA")
         Dim b As BatchView = BatchManager.GetViewBatch(qra)
-        Dim instance = New REMI.Dal.Entities().Instance()
+        Dim instance = New Remi.Dal.Entities().Instance()
 
         lblES.Text = b.ExecutiveSummary
 
@@ -41,7 +41,7 @@ Partial Class ES_Default
         Dim trs As New HyperLink()
         trs.Target = "_blank"
         trs.Text = b.QRANumber
-        trs.NavigateUrl = b.TRSLink
+        trs.NavigateUrl = b.RequestLink
         tCell.Controls.Add(trs)
         tCell.ColumnSpan = 2
         tRow.Cells.Add(tCell)
@@ -80,7 +80,7 @@ Partial Class ES_Default
         tCell.Style.Add("text-align", "left")
         tCell.Wrap = True
         tCell.Width = 400
-        tCell.Text = Server.HtmlDecode(b.TRSData.ReasonForRequest).Replace(vbCr, "").Replace(vbLf, "</br>")
+        tCell.Text = Server.HtmlDecode((From r In b.ReqData Where r.IntField = "ReasonForRequest" Select r.Value).FirstOrDefault()).Replace(vbCr, "").Replace(vbLf, "</br>")
         tCell.ColumnSpan = 5
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
@@ -162,7 +162,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.PartName
+        tCell.Text = String.Empty 'b.PartName
         tCell.ColumnSpan = 5
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
@@ -175,7 +175,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.AssemblyNumber
+        tCell.Text = String.Empty 'b.AssemblyNumber
         tCell.ColumnSpan = 5
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
@@ -222,7 +222,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.BoardRevision
+        tCell.Text = String.Empty ' b.TRSData.BoardRevision
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
@@ -237,7 +237,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.MechanicalToolsRevisionMajor
+        tCell.Text = String.Empty 'b.TRSData.MechanicalToolsRevisionMajor
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
 
@@ -249,7 +249,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.BoardRevisionMinor
+        tCell.Text = String.Empty ' b.TRSData.BoardRevisionMinor
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
@@ -258,7 +258,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.MechanicalToolsRevisionMinor
+        tCell.Text = String.Empty 'b.TRSData.MechanicalToolsRevisionMinor
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
 
@@ -270,7 +270,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.POPNumber
+        tCell.Text = String.Empty 'b.TRSData.POPNumber
         tCell.ColumnSpan = 2
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
@@ -280,7 +280,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = String.Format("{0} {1}", b.AssemblyNumber, b.AssemblyRevision)
+        tCell.Text = String.Empty ' String.Format("{0} {1}", b.AssemblyNumber, b.AssemblyRevision)
         tCell.ColumnSpan = 2
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
@@ -308,7 +308,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.SampleAvailableDate.ToString("MMM d yyyy")
+        tCell.Text = String.Empty '((From r In b.ReqData Where r.IntField = "SampleAvailableDate" Select r.Value).FirstOrDefault()).ToString("MMM d yyyy")
         tCell.ColumnSpan = 2
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
@@ -321,7 +321,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.ActualStartDate.ToString("MMM d yyyy")
+        tCell.Text = String.Empty 'b.TRSData.ActualStartDate.ToString("MMM d yyyy")
         tCell.ColumnSpan = 2
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
@@ -331,7 +331,7 @@ Partial Class ES_Default
         tRow.Cells.Add(tCell)
         tCell = New TableCell()
         tCell.Style.Add("text-align", "left")
-        tCell.Text = b.TRSData.ActualEndDate.ToString("MMM d yyyy")
+        tCell.Text = String.Empty 'b.TRSData.ActualEndDate.ToString("MMM d yyyy")
         tCell.ColumnSpan = 2
         tRow.Cells.Add(tCell)
         tblInfo.Rows.Add(tRow)
@@ -355,8 +355,8 @@ Partial Class ES_Default
 
             pnlFailures.Controls.Add(lbl)
             pnlFailures.Controls.Add(gv)
-
-            For Each record In (From tr In b.TestRecords Where tr.Status = TestRecordStatus.FARaised And tr.TestID = tst.ID Select tr)
+            'tr.Status = TestRecordStatus.FARaised And 
+            For Each record In (From tr In b.TestRecords Where tr.TestID = tst.ID Select tr)
                 Dim lblStage As New Label()
                 lblStage.Text = String.Format("<b>Test Stage:</b> {0} <br/>", record.TestStageName)
 
@@ -378,9 +378,8 @@ Partial Class ES_Default
                 Dim lblFA As New Label()
 
                 For Each rec In record.FailDocs
-                    'Dim fa As FARequest = DirectCast(Remi.Dal.RequestDB.GetTRSRequest(rec.RequestNumber), FARequest)
-                    Dim fa As IQRARequest = Remi.Dal.RequestDB.GetTRSRequest(rec.RequestNumber)
-                    lblFA.Text += String.Format("<a href=""{0}"" target=""_blank"">{1}</a> - <b>Root Cause</b> {2}<br/>", rec.TRSLink, rec.RequestNumber, fa.RootCause)
+                    Dim fa As Dictionary(Of String, String) = Remi.Dal.RequestDB.GetExternalRequestNotLinked(rec.Item("RequestNumber"), "Oracle")
+                    lblFA.Text += String.Format("<a href=""{0}"" target=""_blank"">{1}</a> - <b>Root Cause</b> {2}<br/>", rec.Item("Request Link"), rec.Item("RequestNumber"), Remi.Dal.RequestDB.GetProperty("RootCause", fa))
                 Next
 
                 pnlFailures.Controls.Add(lblFA)

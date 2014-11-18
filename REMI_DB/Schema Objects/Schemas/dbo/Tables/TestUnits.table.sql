@@ -8,6 +8,7 @@
     [AssignedTo]           NVARCHAR (255)  COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
     [Comment]              NVARCHAR (1000) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
     [ConcurrencyID]        TIMESTAMP       NOT NULL,
-    [LastUser]             NVARCHAR (255)  COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL
+    [LastUser]             NVARCHAR (255)  COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[IMEI]				   NVARCHAR (150)  COLLATE SQL_Latin1_General_CP1_CI_AS NULL
 );
 

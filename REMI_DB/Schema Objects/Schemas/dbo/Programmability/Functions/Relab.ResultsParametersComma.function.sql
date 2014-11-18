@@ -5,7 +5,7 @@ BEGIN
 	DECLARE @listStr NVARCHAR(MAX)
 	SELECT @listStr = COALESCE(@listStr+', ' ,'') + LTRIM(RTRIM(ParameterName)) + ': ' + LTRIM(RTRIM(Value))
 	FROM Relab.ResultsParameters
-	WHERE Relab.ResultsParameters.ResultMeasurementID=@ResultMeasurementID
+	WHERE Relab.ResultsParameters.ResultMeasurementID=@ResultMeasurementID AND ParameterName <> 'Command'
 	ORDER BY ParameterName, Value ASC
 	
 	Return @listStr

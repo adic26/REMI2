@@ -21,6 +21,7 @@ Namespace REMI.BusinessEntities
         Private _comments As String
         Private _testCenterID As Int32
         Private _NoBSN As Boolean
+        Private _IMEI As String
 #End Region
 
 #Region "Constructor(s)"
@@ -134,6 +135,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As Long)
                 _bsn = value
+            End Set
+        End Property
+
+        Public Property IMEI() As String
+            Get
+                Return _IMEI
+            End Get
+            Set(ByVal value As String)
+                _IMEI = value
             End Set
         End Property
 

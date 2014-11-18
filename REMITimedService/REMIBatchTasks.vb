@@ -208,15 +208,15 @@ Public Class REMIBatchTasks
             sb.AppendLine(DateTime.Now + " - Retrieving Active Jobs...")
 
             Dim batches As String() = remi.GetInstance.GetActiveBatchList
-            Dim dtTestCenters As DataTable = remi.GetInstance.GetLookups(remiAPI.LookupType.TestCenter)
+            Dim dtDepartments As DataTable = remi.GetInstance.GetLookups(RemiAPI.LookupType.Department)
 
-            For Each center As DataRow In dtTestCenters.Rows.Cast(Of DataRow)()
-                If (center.Field(Of String)("LookupType").ToString() <> "All Test Centers") Then
+            For Each department As DataRow In dtDepartments.Rows.Cast(Of DataRow)()
+                If (department.Field(Of String)("LookupType").ToString() <> "All Test Centers") Then
                     Try
-                        sb.AppendLine(String.Format("{0} - Retrieving TRS Batches For {1}...", DateTime.Now, center.Field(Of String)("LookupType").ToString()))
-                        batches.Concat(remi.GetInstance.GetTRSReviewedBatchList(center.Field(Of String)("LookupType").ToString()))
+                        sb.AppendLine(String.Format("{0} - Retrieving TRS Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
+                        batches.Concat((From r As DataRow In remi.GetInstance.GetRequestsNotInREMI(department.Field(Of String)("LookupType").ToString()) Select r.Field(Of String)("RequestNumber")).ToList())
                     Catch ex As Exception
-                        sb.AppendLine(String.Format("{0} - Error Retrieving TRS Batches For {1}...", DateTime.Now, center.Field(Of String)("LookupType").ToString()))
+                        sb.AppendLine(String.Format("{0} - Error Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
                     End Try
                 End If
             Next

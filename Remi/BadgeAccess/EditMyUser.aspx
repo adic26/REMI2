@@ -54,8 +54,14 @@
                  <td class="HorizTableFirstcolumn">
                      Select Test Centre: </td>
                  <td style="text-align:left;">
-                    <asp:DropDownList ID="ddlGeoLoc" runat="server" DataSourceID="odsTestCentres" Width="195px" DataTextField="LookupType" DataValueField="LookupID">
-                    </asp:DropDownList>
+                     <asp:DataList ID="dlstTestCenter" runat="server" DataSourceID="odsTestCentres" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
+                         <ItemTemplate>
+                             <asp:HiddenField ID="hdnTCIsDefault" runat="server" Value="" />
+                            <asp:HiddenField ID="hdnTestCenterID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
+                            <asp:CheckBox ID='chkTestCenter' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
+                        </ItemTemplate>
+                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
+                     </asp:DataList>
                     <asp:ObjectDataSource ID="odsTestCentres" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                         <SelectParameters>
                             <asp:Parameter Type="Int32" Name="Type" DefaultValue="4" />
@@ -70,7 +76,15 @@
                  <td class="HorizTableFirstcolumn">
                      Select Department: </td>
                  <td style="text-align:left;">
-                     <asp:DropDownList ID="ddlDepartments" runat="server" DataSourceID="odsDepartments" Width="195px" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+                     <asp:DataList ID="dlstDepartments" runat="server" DataSourceID="odsDepartments" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
+                        <ItemTemplate>
+                            <asp:HiddenField ID="hdnDIsDefault" runat="server" Value="" />
+                            <asp:HiddenField ID="hdnDepartmentID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
+                            <asp:CheckBox ID='chkDepartment' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
+                        </ItemTemplate>
+                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
+                    </asp:DataList>
+
                      <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                          <SelectParameters>
                             <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
@@ -84,18 +98,7 @@
              <tr>
                  <td class="HorizTableFirstcolumn">Select Default Page: </td>
                  <td style="text-align:left;">
-                    <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px">
-                        <asp:ListItem Value="/default.aspx">Today Page</asp:ListItem>
-                        <asp:ListItem Value="/Reports/search.aspx">Search Page</asp:ListItem>
-                        <asp:ListItem Value="/ScanForTest/Default.aspx">Scan Device</asp:ListItem>
-                        <asp:ListItem Value="/ScanForInfo/Default.aspx">Batch Page</asp:ListItem>
-                        <asp:ListItem Value="/ScanForInfo/productgroup.aspx">Product Page</asp:ListItem>
-                        <asp:ListItem Value="/Inventory/Default.aspx">Inventory Page</asp:ListItem>                        
-                        <asp:ListItem Value="/ManageTestStations/TrackingLocation.aspx">Tracking Location Page</asp:ListItem>
-                        <asp:ListItem Value="/ManageTestStations/default.aspx">Timeline</asp:ListItem>
-                        <asp:ListItem Value="/Relab/Results.aspx">RQ Results Page</asp:ListItem>
-                        <asp:ListItem Value="/Overview.aspx">Overview</asp:ListItem>
-                    </asp:DropDownList>
+                    <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px" DataTextField="Name" DataValueField="Url"></asp:DropDownList>
                  </td>
             </tr>
             <tr>

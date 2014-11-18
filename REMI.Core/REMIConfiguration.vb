@@ -67,11 +67,6 @@ Namespace REMI.Core
                 Return ConfigurationManager.AppSettings("BaseTRSLink")
             End Get
         End Property
-        Public Shared ReadOnly Property BaseDropTestLink() As String
-            Get
-                Return ConfigurationManager.AppSettings("BaseDropTestLink")
-            End Get
-        End Property
         Public Shared ReadOnly Property MfgWebLink() As String
             Get
                 Return ConfigurationManager.AppSettings("MfgWebLink")
@@ -99,16 +94,7 @@ Namespace REMI.Core
                 Return ConfigurationManager.ConnectionStrings("REMSTARDBConnectionString").ConnectionString
             End Get
         End Property
-        Public Shared ReadOnly Property DropTestWebAppLink() As String
-            Get
-                Return ConfigurationManager.AppSettings("DropTestWebAppLink")
-            End Get
-        End Property
-        Public Shared ReadOnly Property TumbleTestWebAppLink() As String
-            Get
-                Return ConfigurationManager.AppSettings("TumbleTestWebAppLink")
-            End Get
-        End Property
+       
         Public Shared ReadOnly Property REMIBatchInfoLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiBatchInfoLink")

@@ -1,7 +1,9 @@
 ﻿Imports REMI.Validation
+Imports System.Xml.Serialization
 
 Namespace REMI.BusinessEntities
 
+    <Serializable()> _
     Public Class ConfigurationReturnData
         Inherits ValidationBase
 

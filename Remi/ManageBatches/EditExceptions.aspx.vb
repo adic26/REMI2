@@ -70,7 +70,7 @@ Partial Class ManageBatches_EditExceptions
         If bc.Validate Then
             b = BatchManager.GetItem(bc.BatchNumber)
 
-            If (Not UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) And Not UserManager.GetCurrentUser.IsTestCenterAdmin And Not UserManager.GetCurrentUser.HasBatchSetupAuthority) Then
+            If (Not UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) And Not UserManager.GetCurrentUser.IsTestCenterAdmin And Not UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)) Then
                 Response.Redirect(b.BatchInfoLink, True)
             End If
 

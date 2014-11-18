@@ -17,6 +17,7 @@ BEGIN
 		FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
 			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
 		WHERE ResultID=@ResultID AND ((@IncludeArchived = 0 AND rm.Archived=@FalseBit) OR (@IncludeArchived=1)) AND ((@OnlyFails = 1 AND PassFail=@FalseBit) OR (@OnlyFails = 0))
+			AND rp.ParameterName <> 'Command'
 		ORDER BY '],[' +  rp.ParameterName
 		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
@@ -31,7 +32,7 @@ BEGIN
 			FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
 				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
 			WHERE ResultID=' + @ResultID + ' AND ((' + @IncludeArchived + ' = 0 AND rm.Archived=' + @FalseBit + ') OR (' + @IncludeArchived + '=1)) 
-				AND ((' + @OnlyFails + ' = 1 AND PassFail=' + @FalseBit + ') OR (' + @OnlyFails + ' = 0))
+				AND ((' + @OnlyFails + ' = 1 AND PassFail=' + @FalseBit + ') OR (' + @OnlyFails + ' = 0)) AND rp.ParameterName <> ''Command'' 
 			) te PIVOT (MAX(Value) FOR ParameterName IN (' + @rows + ')) AS pvt')
 	END
 	ELSE

@@ -212,6 +212,7 @@
     <Folder Include="Scripts\October202014" />
     <Folder Include="Scripts\October282014" />
     <Folder Include="Scripts\November032014" />
+    <Folder Include="Scripts\November202014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -575,9 +576,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsSelectForTest.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectSingleItemByBadgeNumber.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByTestUnitID.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -647,10 +645,7 @@
       <SubType>Code</SubType>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectSingleItemByUserName.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectList.proc.sql">
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUser.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductSettingsInsertUpdateSingleItem.proc.sql">
@@ -1560,11 +1555,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSelectListByTestCentre.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\ProductConfigurationAudit.table.sql">
       <SubType>Code</SubType>
     </None>
@@ -2355,5 +2345,60 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Req.Request.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMenuAccessByDepartment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Menu.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\MenuDepartment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispUsersSelectSingleItemByBadgeNumber.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispUsersSelectList.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispUsersSelectListByTestCentre.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\November202014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUserDetails.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\UserDetails.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestGet.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\November202014\2_RequestQRASetup.sql" />
+    <None Include="Scripts\November202014\3_DataMigration.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\November202014\4.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldDataAudit.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Req.ReqFieldDataAuditInsertUpdate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTests.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.remispGetRequestTypes.sql" />
   </ItemGroup>
 </Project>

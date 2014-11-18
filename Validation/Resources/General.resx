@@ -316,7 +316,7 @@
     <value>The user name entered could not be found on the GAL. Check the name again.</value>
   </data>
   <data name="w36" xml:space="preserve">
-    <value>The job requested could not be found in the TRS or REMI.</value>
+    <value>The job requested could not be found in the request or REMI.</value>
   </data>
   <data name="w37" xml:space="preserve">
     <value>The given user has not been given access to scan yet.</value>
@@ -442,6 +442,6 @@
     <value>The Procedure location is too long, the location must be less than 400 characters.</value>
   </data>
   <data name="w81" xml:space="preserve">
-    <value>TRS Status Is Not Properly Set. This Batch Should not Be Started.</value>
+    <value>Request Status Is Not Properly Set. This Batch Should not Be Started.</value>
   </data>
 </root>

@@ -92,16 +92,6 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void SetUnitBSN()
-        {
-            var unit = new REMI.Entities.TestUnit();
-            unit = (from u in instance.TestUnits.Include("Batch") where u.BSN > 0 orderby u.Batch.ID descending select u).FirstOrDefault();
-            DeviceBarcodeNumber bc = new DeviceBarcodeNumber(unit.Batch.QRANumber, unit.BatchUnitNumber.ToString());
-
-            Assert.True(TestUnitManager.SetUnitBSN(bc.Number, (long)unit.BSN, ConfigurationManager.AppSettings["userName"].ToString()));
-        }
-
-        [Test]
         public void Save()
         {
             var unit = new REMI.Entities.TestUnit();

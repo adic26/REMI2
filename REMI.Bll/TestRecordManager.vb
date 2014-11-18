@@ -79,28 +79,30 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.Select, False)> _
-        Public Shared Function GetFailDocs(ByVal qranumber As String, ByVal trID As Int32) As List(Of IQRARequest)
+        Public Shared Function GetFailDocs(ByVal qranumber As String, ByVal trID As Int32) As List(Of Dictionary(Of String, String))
             Dim docNumbers As List(Of String) = New List(Of String)
-            Dim trsDocList As New List(Of IQRARequest)
             Dim tr As TestRecord = TestRecordManager.GetItemByID(trID)
+            Dim trsDocList As New List(Of Dictionary(Of String, String))
 
             If Not String.IsNullOrEmpty(qranumber) Then
-                Dim t As IQRARequest = RequestDB.GetTRSRequest(qranumber)
-                'get a list of docs to get
-                docNumbers.AddRange(TestRecordDB.GetFANumberList(qranumber))
-                docNumbers.AddRange(TestRecordDB.GetRITNumberList(t.ProductGroup, qranumber))
+                Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser.UserName)
+                docNumbers.AddRange(RequestDB.GetFANumberList(qranumber))
 
-                'get the data for each doc returned
                 If docNumbers IsNot Nothing Then
-                    Dim req As IQRARequest
+                    Dim req As Dictionary(Of String, String)
+
                     For Each trsDocNumber In docNumbers
-                        req = RequestDB.GetTRSRequest(trsDocNumber)
-                        If req IsNot Nothing And Not tr.FailDocs.Contains(req) Then
+                        req = RequestDB.GetExternalRequestNotLinked(trsDocNumber, "Oracle")
+
+                        Dim faList As List(Of String) = (From f In tr.FailDocs Select f.Item("RequestNumber")).ToList()
+
+                        If (Not faList.Contains(req.Item("RequestNumber"))) Then
                             trsDocList.Add(req)
                         End If
                     Next
                 End If
             End If
+
             Return trsDocList
         End Function
 
@@ -319,39 +321,8 @@ Namespace REMI.Bll
 
                     If result = FinalTestResult.Fail Then
                         returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.CompleteFail, "Unit was removed from test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
-
-                        ''DNP test for current stage and future stages
-                        'Dim tex As New REMI.BusinessEntities.TestException()
-                        'tex.JobName = b.JobName
-                        'tex.LastUser = userIdentification
-                        'tex.QRAnumber = b.QRANumber
-                        'tex.TestUnitID = tu.ID
-                        'tex.UnitNumber = tu.BatchUnitNumber
-                        'Dim dropTumbleNum As Int32
-                        'Int32.TryParse(testStage.Replace("Drops", String.Empty).Replace("Drop", String.Empty).Replace("Tumbles", String.Empty).Replace("Tumble", String.Empty).Trim(), dropTumbleNum)
-
-                        'For Each ts As TestStage In (From tsttsg In b.Job.TestStages Where tsttsg.IsArchived = False And tsttsg.ProcessOrder > processOrder And (tsttsg.TestStageType = TestStageType.EnvironmentalStress Or tsttsg.TestStageType = TestStageType.Parametric) And tsttsg.Name <> String.Format("Post {0}", dropTumbleNum) Order By tsttsg.ProcessOrder Ascending Select tsttsg)
-                        '    tex.TestStageName = ts.Name ' test stage can be what it is coming from the test stage records
-
-                        '    'Depending on whether it is ENVStress or Parametric we need to setup the test name correctly for DNP's
-                        '    If (ts.TestStageType = TestStageType.EnvironmentalStress) Then
-                        '        tex.TestName = ts.Name
-                        '    ElseIf (ts.TestStageType = TestStageType.Parametric) Then
-                        '        tex.TestName = String.Empty ' DNP all parametric tests at the next stage for that unit
-                        '    End If
-
-                        '    TestUnitManager.AddException(tex)
-                        'Next
                     Else
                         returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.Complete, "Unit was added back to test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
-
-                        'For Each ts As TestStage In (From tsttsg In b.Job.TestStages Where tsttsg.IsArchived = False And tsttsg.ProcessOrder > processOrder And (tsttsg.TestStageType = TestStageType.EnvironmentalStress Or tsttsg.TestStageType = TestStageType.Parametric) Order By tsttsg.ProcessOrder Ascending Select tsttsg)
-                        '    If (ts.TestStageType = TestStageType.EnvironmentalStress) Then
-                        '        TestUnitManager.DeleteException(qranumber, ts.Name, ts.Name, tu.ID)
-                        '    ElseIf (ts.TestStageType = TestStageType.Parametric) Then
-                        '        TestUnitManager.DeleteException(qranumber, String.Empty, ts.Name, tu.ID)
-                        '    End If
-                        'Next
                     End If
                 End If
             End If
@@ -378,12 +349,12 @@ Namespace REMI.Bll
         Private Shared Function AddCaterDocumentSingleTestRecord(ByVal tr As TestRecord, ByVal docNumber As String, ByVal comments As String) As NotificationCollection
             If tr IsNot Nothing Then
                 'add any new docs
-                Dim failDoc As IQRARequest = RequestDB.GetTRSRequest(docNumber)
+                Dim failDoc As Dictionary(Of String, String) = RequestDB.GetExternalRequestNotLinked(docNumber, "Oracle")
 
                 If failDoc IsNot Nothing AndAlso Not tr.FailDocs.Contains(failDoc) Then
                     tr.AddFailDoc(failDoc, comments, UserManager.GetCurrentValidUserLDAPName)
                     Save(tr)
-                    tr.Notifications.AddWithMessage(failDoc.RequestNumber + " assigned to test record for " + tr.TestIdentificationString + ".", NotificationType.Information)
+                    tr.Notifications.AddWithMessage(tr.QRANumber + " assigned to test record for " + tr.TestIdentificationString + ".", NotificationType.Information)
                 Else
                     tr.Notifications.AddWithMessage(docNumber + " cannot be loaded or is already assigned.", NotificationType.Information)
                 End If

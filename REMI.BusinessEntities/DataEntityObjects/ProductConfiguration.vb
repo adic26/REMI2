@@ -3,6 +3,7 @@ Imports REMI.Validation
 Imports REMI.Contracts
 
 Namespace REMI.BusinessEntities
+    <Serializable()> _
     Public Class ProductConfiguration
         Inherits LoggedItemBase
 

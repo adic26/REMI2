@@ -14,6 +14,10 @@ Partial Class ScanForInfo_Default
         Helpers.MakeAccessable(grdTrackingLog)
     End Sub
 
+    Protected Sub gvwRequestInfoGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwRequestInfo.PreRender
+        Helpers.MakeAccessable(gvwRequestInfo)
+    End Sub
+
     Protected Sub grdDetailGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdDetail.PreRender
         Helpers.MakeAccessable(grdDetail)
     End Sub
@@ -66,12 +70,30 @@ Partial Class ScanForInfo_Default
     Protected Sub grdDetail_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles grdDetail.RowCommand
         Select Case e.CommandName.ToLower()
             Case "deleteunit"
-                TestUnitManager.DeleteUnit(Convert.ToInt32(e.CommandArgument))
+                If (UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin) Then
+                    TestUnitManager.DeleteUnit(Convert.ToInt32(e.CommandArgument))
+                End If
         End Select
 
         Dim b As BatchView = BatchManager.GetViewBatch(Request.QueryString.Get("QRA"))
         grdDetail.DataSource = b.TestUnits
         grdDetail.DataBind()
+    End Sub
+
+    Protected Sub gvwRequestInfo_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwRequestInfo.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim lblValue As Label = DirectCast(e.Row.FindControl("lblValue"), Label)
+            Dim hylValue As HyperLink = DirectCast(e.Row.FindControl("hylValue"), HyperLink)
+            Dim hdnType As HiddenField = DirectCast(e.Row.FindControl("hdnType"), HiddenField)
+
+            If (hdnType.Value = "Link") Then
+                lblValue.Visible = False
+                hylValue.Visible = True
+            Else
+                lblValue.Visible = True
+                hylValue.Visible = False
+            End If
+        End If
     End Sub
 
     Protected Sub grdAuditLog_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdAuditLog.RowDataBound
@@ -81,11 +103,20 @@ Partial Class ScanForInfo_Default
         End If
     End Sub
 
+    Protected Sub grdDetail_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptBatchComments.ItemDataBound
+        Dim lnkDeleteComment As LinkButton = DirectCast(e.Item.FindControl("lnkDeleteComment"), LinkButton)
+        Dim hdnUserName As HiddenField = DirectCast(e.Item.FindControl("hdnUserName"), HiddenField)
+
+        If (lnkDeleteComment IsNot Nothing) Then
+            lnkDeleteComment.Visible = Remi.Bll.UserManager.GetCurrentUser().HasEditBatchCommentsAuthority(hdnDepartmentID.Value) Or hdnUserName.Value = Remi.Bll.UserManager.GetCurrentValidUserLDAPName
+        End If
+    End Sub
+
     Protected Sub grdDetail_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdDetail.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
             Dim lnkDelete As LinkButton = DirectCast(e.Row.FindControl("lnkDelete"), LinkButton)
 
-            If (UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin) And DirectCast(e.Row.DataItem, REMI.BusinessEntities.TestUnit).CanDelete Then
+            If (UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin) And DirectCast(e.Row.DataItem, Remi.BusinessEntities.TestUnit).CanDelete Then
                 lnkDelete.Visible = True
             Else
                 lnkDelete.Visible = False
@@ -117,9 +148,8 @@ Partial Class ScanForInfo_Default
 
         If bc.Validate Then
             b = BatchManager.GetViewBatch(bc.BatchNumber)
+
             If b IsNot Nothing Then
-                btnAddComment.Enabled = True
-                txtNewCommentText.Enabled = True
                 lnkCheckForUpdates2.Enabled = True
                 lnkCheckForUpdates.Enabled = True
                 ddlTime.Enabled = True
@@ -130,20 +160,23 @@ Partial Class ScanForInfo_Default
 
                 If (UserManager.GetCurrentUser.ByPassProduct Or (From up In UserManager.GetCurrentUser.ProductGroups.Rows Where up("ID") = b.ProductID Select up("id")).FirstOrDefault() <> Nothing) Then
                     Dim litTitle As Literal = Master.FindControl("litPageTitle")
+
                     If litTitle IsNot Nothing Then
                         litTitle.Text = "REMI - " + bc.BatchNumber
                     End If
 
-                    Dim bColl As New BatchCollection
-                    bColl.Add(b)
+                    Dim bcol As New BatchCollection
+                    bcol.Add(b)
+
                     rptBatchComments.DataSource = b.Comments
                     rptBatchComments.DataBind()
-                    bscMain.SetBatches(bColl)
+                    bscMain.SetBatches(bcol)
                     notMain.Notifications.Add(b.GetAllNotifications(True))
                     grdDetail.DataSource = b.TestUnits
                     grdDetail.DataBind()
                     lblQRANumber.Text = bc.BatchNumber
                     hdnQRANumber.Value = bc.ToString
+                    hdnDepartmentID.Value = b.DepartmentID
                     grdTrackingLog.DataBind()
 
                     If (b.Orientation IsNot Nothing) Then
@@ -152,7 +185,7 @@ Partial Class ScanForInfo_Default
                         lblOrientation.Text = String.Empty
                     End If
 
-                    Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
+                    Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
                                       Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                       Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
 
@@ -171,9 +204,9 @@ Partial Class ScanForInfo_Default
                         rqResults.Rows.Add(row)
                     Next
 
-                    gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority(), True)
+                    gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True)
                     gvwTestingSummary.DataBind()
-                    gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
+                    gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
                     gvwStressingSummary.DataBind()
 
                     setup.JobID = b.JobID
@@ -185,7 +218,7 @@ Partial Class ScanForInfo_Default
                     setup.TestStageType = TestStageType.Parametric
                     setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
                     setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-                    setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority()
+                    setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)
                     setup.OrientationID = 0
                     setup.DataBind()
 
@@ -198,7 +231,7 @@ Partial Class ScanForInfo_Default
                     setupStressing.TestStageType = TestStageType.EnvironmentalStress
                     setupStressing.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
                     setupStressing.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-                    setupStressing.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority()
+                    setupStressing.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)
                     setupStressing.OrientationID = If(b.Orientation Is Nothing, 0, b.Orientation.ID)
                     setupStressing.DataBind()
 
@@ -215,22 +248,24 @@ Partial Class ScanForInfo_Default
                     hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
                     hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
                     hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
-                    hypTRSLink.NavigateUrl = b.TRSLink()
+                    hypTRSLink.NavigateUrl = b.RequestLink()
                     hypRefresh.NavigateUrl = b.BatchInfoLink
                     txtExecutiveSummary.Text = b.ExecutiveSummary
+                    Dim isExternal As Boolean = (From rd In b.ReqData Select rd.IsFromExternalSystem).FirstOrDefault()
 
-                    If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin) Then
+                    If ((UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin) And Not (isExternal)) Then
                         txtExecutiveSummary.Enabled = True
                         btnExecutiveSummary.Visible = True
-                        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
                     End If
+
+                    hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
 
                     'You are a relab role or your role has permission to view relab
                     If (UserManager.GetCurrentUser.HasRelabAuthority Or UserManager.GetCurrentUser.HasRelabAccess()) Then
                         hypRelabLink.Visible = True
                         imgRelabLink.Visible = True
 
-                        Dim record As Int32 = (From r In New REMI.Dal.Entities().Instance().Results _
+                        Dim record As Int32 = (From r In New Remi.Dal.Entities().Instance().Results _
                                       Where r.TestUnit.Batch.ID = b.ID _
                                       Take 1 _
                                       Select r.ID).FirstOrDefault()
@@ -242,19 +277,12 @@ Partial Class ScanForInfo_Default
                     hypRelabLink.NavigateUrl = b.RelabResultLink
                     hypProductGroupLink.NavigateUrl = b.ProductGroupLink
                     hypTestRecords.NavigateUrl = b.TestRecordsLink
-                    hypDropTestWebApp.NavigateUrl = b.DropTestWebAppLink
-                    hypTumbleTestWebApp.NavigateUrl = b.TumbleTestWebAppLink
-
-                    If (b.JobName.ToLower.Contains("tumble")) Then
-                        hypTumbleTestWebApp.Visible = True
-                        imgTumbleTestWebAppLink.Visible = True
-                    ElseIf (b.JobName.ToLower.Contains("drop")) Then
-                        hypDropTestWebApp.Visible = True
-                        imgDropTestWebAppLink.Visible = True
-                    End If
 
                     gvwTaskAssignments.DataSource = LoadAssignments(b.QRANumber)
                     gvwTaskAssignments.DataBind()
+
+                    gvwRequestInfo.DataSource = b.ReqData
+                    gvwRequestInfo.DataBind()
 
                     Dim es As New ExceptionSearch()
                     es.QRANumber = b.QRANumber
@@ -263,10 +291,10 @@ Partial Class ScanForInfo_Default
                     gvwTestExceptions.DataBind()
 
                     'sets the accordion open pane
-                    accMain.SelectedIndex = 5
+                    accMain.SelectedIndex = 6
 
                     updComments.Update()
-                    SetupMenuItems(b.ProductGroup)
+                    SetupMenuItems(b.ProductGroup, b.DepartmentID)
                 End If
             Else
                 notMain.Notifications.AddWithMessage(String.Format("{0} could not be found in REMI.", bc.ToString), NotificationType.Errors)
@@ -349,17 +377,21 @@ Partial Class ScanForInfo_Default
         acpDocuments.Visible = UserManager.GetCurrentUser.HasDocumentAuthority()
     End Sub
 
-    Protected Sub SetupMenuItems(ByVal productGroup As String)
-
-        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority() Then
+    Protected Sub SetupMenuItems(ByVal productGroup As String, ByVal departmentID As Int32)
+        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, departmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(departmentID) Then
             liEditExceptions.Visible = True
         End If
 
-        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, departmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
             liModifyPriority.Visible = True
             liModifyStage.Visible = True
             liModifyStatus.Visible = True
             liModifyTestDurations.Visible = True
+        End If
+
+        If UserManager.GetCurrentUser.DepartmentID <> departmentID Then
+            txtNewCommentText.Enabled = False
+            btnAddComment.Enabled = False
         End If
     End Sub
 
@@ -376,7 +408,7 @@ Partial Class ScanForInfo_Default
             btnEdit.Text = "Edit Setup"
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
-            Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
+            Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
                                       Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                       Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
 
@@ -395,7 +427,7 @@ Partial Class ScanForInfo_Default
                 rqResults.Rows.Add(row)
             Next
 
-            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
+            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True)
             gvwTestingSummary.DataBind()
 
             ScriptManager.RegisterStartupScript(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll();ApplyTableFormatting();", True)
@@ -417,7 +449,7 @@ Partial Class ScanForInfo_Default
             lblNote.Visible = True
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
-            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             gvwStressingSummary.DataBind()
 
             If (b.Orientation IsNot Nothing) Then
@@ -464,7 +496,7 @@ Partial Class ScanForInfo_Default
                 rqResults.Rows.Add(row)
             Next
 
-            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority, True)
+            gvwTestingSummary.DataSource = b.GetParametricTestOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, rqResults, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True)
             gvwTestingSummary.DataBind()
             ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll();ApplyTableFormatting();", True)
         End If
@@ -476,14 +508,10 @@ Partial Class ScanForInfo_Default
             TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
-            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority, True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
+            gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             gvwStressingSummary.DataBind()
             ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
         End If
-    End Sub
-
-    Protected Sub chkGetFails_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkGetFails.CheckedChanged
-        ProcessQRA(hdnQRANumber.Value)
     End Sub
 
     Protected Sub gvwTestExceptions_OnPageIndexChanging(ByVal sender As Object, ByVal e As GridViewPageEventArgs) Handles gvwTestExceptions.PageIndexChanging

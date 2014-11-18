@@ -19,12 +19,12 @@ Partial Class Search
                 rblSearchBy.Items(3).Enabled = True 'Users
             End If
 
-            If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority) Then
+            If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(0)) Then
                 rblSearchBy.Items(2).Enabled = True 'Exceptions
             End If
 
             If (UserManager.GetCurrentUser.HasRelabAccess Or UserManager.GetCurrentUser.HasRelabAuthority Or testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
-                rblSearchBy.Items(4).Enabled = True 'RQ Results
+                rblSearchBy.Items(4).Enabled = True 'Results
             End If
 
             If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin Or testCenterAdmin) Then
@@ -46,9 +46,9 @@ Partial Class Search
             If (Remi.Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
                 If (Not (Remi.Helpers.GetPostBackControl(Me.Page)).ID = "btnSearch" And ddlTestCenters.SelectedValue <> String.Empty) Then
                     ddlUsers.Items.Clear()
-                    Dim uc As UserCollection = UserManager.GetListByLocation(ddlTestCenters.SelectedValue, 0, 0, 0, False)
-                    uc.Insert(0, New User())
-                    ddlUsers.DataSource = uc
+                    Dim us As New UserSearch()
+                    us.TestCenterID = ddlTestCenters.SelectedValue
+                    ddlUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False, False, False)
                     ddlUsers.DataBind()
                 End If
             End If
@@ -239,7 +239,7 @@ Partial Class Search
                     us.ByPass = byPass
                     us.DepartmentID = departmentID
 
-                    gvwUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False)
+                    gvwUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False, False, False)
                     gvwUsers.DataBind()
 
                     Helpers.MakeAccessable(gvwUsers)
@@ -478,7 +478,7 @@ Partial Class Search
                     us.TrainingID = trainingID
                     us.UserID = userID
 
-                    gvwTraining.DataSource = REMI.Dal.UserDB.UserSearch(us, True)
+                    gvwTraining.DataSource = REMI.Dal.UserDB.UserSearch(us, True, False, False)
                     gvwTraining.DataBind()
 
                     Helpers.MakeAccessable(gvwTraining)
@@ -526,7 +526,7 @@ Partial Class Search
             us.ByPass = byPass
             us.DepartmentID = departmentID
 
-            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), Remi.Dal.UserDB.UserSearch(us, False))
+            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), REMI.Dal.UserDB.UserSearch(us, False, False, False))
         ElseIf (pnlEnvReport.Visible) Then
             Dim startDate As DateTime = txtStartENV.Text
             Dim endDate As DateTime = txtEndENV.Text
@@ -734,14 +734,18 @@ Partial Class Search
             us.TrainingID = trainingID
             us.UserID = userID
 
-            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchTraining", "xls"), REMI.Dal.UserDB.UserSearch(us, True))
+            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchTraining", "xls"), REMI.Dal.UserDB.UserSearch(us, True, False, False))
         End If
     End Sub
 
     Protected Sub ddlTestCenterTraining_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTestCenterTraining.SelectedIndexChanged
         ddlUserTraining.Items.Clear()
-        Dim uc As UserCollection = UserManager.GetListByLocation(ddlTestCenterTraining.SelectedValue, 0, 0, 0, False)
+        Dim us As New UserSearch()
+        us.TestCenterID = ddlTestCenterTraining.SelectedValue
+
+        Dim uc As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False, False)
         uc.Insert(0, New User())
+
         ddlUserTraining.DataSource = uc
         ddlUserTraining.DataBind()
     End Sub
@@ -1146,7 +1150,7 @@ Partial Class Search
                     ddlDepartmentUser.SelectedValue = UserManager.GetCurrentUser.DepartmentID
                 End If
             Case "4"
-                'RQ Results
+                'Results
                 pnlTraining.Visible = False
                 pnlSearchResults.Visible = True
                 pnlSearchUser.Visible = False

@@ -5,7 +5,7 @@ Namespace REMI.Validation
     ''' The ValidBarcodeString checks that a barocde string is valid by checking against a RegEx.
     ''' </summary> 
     <AttributeUsage(AttributeTargets.[Property])> _
-    Public NotInheritable Class ValidTRSRequestString
+    Public NotInheritable Class ValidRequestString
         Inherits ValidationAttribute
         ''' <summary> 
         ''' Determines whether the barcode string can be accepted and used to create a barcode object. 

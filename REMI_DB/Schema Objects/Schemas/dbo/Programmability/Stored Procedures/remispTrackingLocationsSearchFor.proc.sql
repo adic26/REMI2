@@ -54,14 +54,14 @@ SELECT DISTINCT tl.ID, tl.TrackingLocationName, tl.TestCenterLocationID,
 	) AS CurrentCount,
 	tlt.wilocation as TLTWILocation, tlt.UnitCapacity as TLTUnitCapacity, tlt.Comment as TLTComment, tlt.ConcurrencyID as TLTConcurrencyID, tlt.LastUser as TLTLastUser,
 	tlt.ID as TLTID, tlt.TrackingLocationTypeName as TLTName, tlt.TrackingLocationFunction as TLTFunction,
-	(
-		SELECT TOP(1) tu.CurrentTestName as CurrentTestName
-		FROM TestUnits AS tu
-			INNER JOIN DeviceTrackingLog AS dtl ON dtl.TestUnitID = tu.ID
-		WHERE tu.CurrentTestName is not null and dtl.TrackingLocationID = tl.ID and (dtl.OutUser IS NULL)
-	) AS CurrentTestName,
+	--(
+	--	SELECT TOP(1) tu.CurrentTestName as CurrentTestName
+	--	FROM TestUnits AS tu WITH (NOLOCK)
+	--		INNER JOIN DeviceTrackingLog AS dtl WITH (NOLOCK) ON dtl.TestUnitID = tu.ID AND dtl.OutUser IS NULL AND dtl.TrackingLocationID = tl.ID
+	--	WHERE tu.CurrentTestName is not null
+	--) AS CurrentTestName,
 	(CASE WHEN EXISTS (SELECT TOP 1 1 FROM DeviceTrackingLog dl WHERE dl.TrackingLocationID=tl.ID) THEN @FalseBit ELSE @TrueBit END) As CanDelete,
-	CASE WHEN ISNULL(l3.IsActive, 1) = 0 THEN CONVERT(BIT, 1) ELSE ISNULL(tl.Decommissioned, 0) END AS Decommissioned, ISNULL(tl.IsMultiDeviceZone, 0) AS IsMultiDeviceZone, tl.Status AS LocationStatus
+	CASE WHEN ISNULL(l3.IsActive, 1) = 0 THEN @TrueBit ELSE ISNULL(tl.Decommissioned, 0) END AS Decommissioned, ISNULL(tl.IsMultiDeviceZone, 0) AS IsMultiDeviceZone, tl.Status AS LocationStatus
 	FROM TrackingLocations as tl
 		INNER JOIN TrackingLocationTypes as tlt ON tl.TrackingLocationTypeID = tlt.ID
 		LEFT OUTER JOIN TrackingLocationsHosts tlh ON tl.ID = tlh.TrackingLocationID
@@ -99,7 +99,7 @@ SELECT DISTINCT tl.ID, tl.TrackingLocationName, tl.TestCenterLocationID,
 				OR
 				(@OnlyActive = 0)
 			)
-	ORDER BY CASE WHEN ISNULL(l3.IsActive,1) = 0 THEN CONVERT(BIT, 1) ELSE ISNULL(tl.Decommissioned, 0) END, tl.TrackingLocationName
+	ORDER BY CASE WHEN ISNULL(l3.IsActive,1) = 0 THEN @TrueBit ELSE ISNULL(tl.Decommissioned, 0) END, tl.TrackingLocationName
 GO
 GRANT EXECUTE ON remispTrackingLocationsSearchFor TO Remi
 GO

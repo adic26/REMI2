@@ -80,7 +80,7 @@ If one of the below status' is set in TRS then REMI batch status is set to "Comp
     <li>Closed - No Result</li>
 </ul>
 <u>Missing Batch In REMI:</u> If the batch isn't in REMI yet and you go to Batch Info and type in the QRA #. If it exists in TRS then the batch will be added to REMI as "Received" status.<br />
-<u>RQ Results:</u><br />
+<u>Results:</u><br />
 <ul>
     <li>If the REMI batch status is set to "In Progress" or "Received" then REMITimedService will update the batch as long as the test stage and job is set.</li>
 </ul>

@@ -14,42 +14,6 @@ Option Explicit On
 Partial Public Class Incoming_Default
 
     '''<summary>
-    '''Image1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Image1 As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypSetBSN control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypSetBSN As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
-    '''Image2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Image2 As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypUpdateBatch control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypUpdateBatch As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
     '''imgAddAction control.
     '''</summary>
     '''<remarks>
@@ -95,13 +59,22 @@ Partial Public Class Incoming_Default
     Protected WithEvents notMain As Global.Remi.Controls_Notifications
 
     '''<summary>
-    '''txtQRANumber control.
+    '''txtRequestUnit control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtQRANumber As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents txtRequestUnit As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''valRequestUnit control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents valRequestUnit As Global.System.Web.UI.WebControls.CustomValidator
 
     '''<summary>
     '''txtBSN control.
@@ -111,4 +84,31 @@ Partial Public Class Incoming_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents txtBSN As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtIMEI control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtIMEI As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtQRANumber control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtQRANumber As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''valQRANumber control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents valQRANumber As Global.System.Web.UI.WebControls.CustomValidator
 End Class

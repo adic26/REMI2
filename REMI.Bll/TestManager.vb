@@ -13,6 +13,17 @@ Namespace REMI.Bll
     Public Class TestManager
         Inherits REMIManagerBase
 
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetTests(ByVal trackingLocationID As Int32, ByVal jobID As Int32) As List(Of String)
+            Try
+                Return TestDB.GetTests(trackingLocationID, jobID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New List(Of String)
+        End Function
+
         <DataObjectMethod(DataObjectMethodType.[Select], True)> _
         Public Shared Function GetTest(ByVal ID As Integer) As Test
             Try

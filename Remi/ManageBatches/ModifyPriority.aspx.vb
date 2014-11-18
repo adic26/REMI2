@@ -29,6 +29,15 @@ Partial Class ManageBatches_ModifyPriority
             hypRefresh.NavigateUrl = b.SetPriorityManagerLink
             hypCancel.NavigateUrl = b.BatchInfoLink
             SetupTestStageDropDownList(b)
+            hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
+            hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
+            hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
+
+            If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+                liModifyStage.Visible = True
+                liModifyStatus.Visible = True
+                liModifyTestDurations.Visible = True
+            End If
 
             pnlEditExceptions.Visible = True
             pnlLeftMenuActions.Visible = True
@@ -41,14 +50,14 @@ Partial Class ManageBatches_ModifyPriority
     End Sub
 
     Public Sub SaveStatus()
-        notMain.Notifications.Add(BatchManager.SetPriority(hdnQRANumber.Value, ddlSelection.SelectedItem.Value))
+        notMain.Notifications.Add(BatchManager.SetPriority(hdnQRANumber.Value, ddlSelection.SelectedItem.Value, ddlSelection.SelectedItem.Text))
     End Sub
 
     Protected Sub SetupTestStageDropDownList(ByVal b As Batch)
-        lblCurrentPriority.Text = b.CompletionPriority.ToString
+        lblCurrentPriority.Text = b.Priority.ToString
         ddlSelection.DataSource = LookupsManager.GetLookups(LookupType.Priority, Nothing, Nothing, 0)
         ddlSelection.DataBind()
-        ddlSelection.SelectedValue = b.CompletionPriorityID
+        ddlSelection.SelectedValue = ddlSelection.Items.FindByText(b.Priority).Value
     End Sub
 
     Protected Sub lkbSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lkbSave.Click

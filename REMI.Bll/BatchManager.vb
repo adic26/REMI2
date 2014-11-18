@@ -79,7 +79,7 @@ Namespace REMI.Bll
                     Dim b As BatchView = DirectCast(GetViewBatch(bc.BatchNumber), BatchView)
 
                     If b IsNot Nothing Then
-                        If b.IsCompleteInTRS Then
+                        If b.IsCompleteInRequest Then
                             binName = "Cell(445x600x600)"
                         Else
                             binName = "SMALL-REM" + remstarNumber.ToString
@@ -192,16 +192,6 @@ Namespace REMI.Bll
             End Try
 
             Return False
-        End Function
-
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTRSQRAByTestCenter(ByVal testCenter As String) As DataTable
-            Try
-                Return RequestDB.GetTRSQRAByTestCenter(testCenter)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, testCenter)
-            End Try
-            Return New DataTable("TRSData")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
@@ -414,54 +404,43 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTRSReviewedBatchList(ByVal testCenter As String) As String()
-            Try
-                Dim trs As New List(Of String)
-                trs.AddRange((From q As DataRow In BatchManager.GetTRSQRAByTestCenter(testCenter).Rows.Cast(Of DataRow)() Where q.Field(Of String)("Status") = TRSStatus.Received.ToString() Select q.Field(Of String)("QRA")).ToList())
-
-                Return trs.ToArray
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return Nothing
-        End Function
-
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetActiveBatchList() As String()
             Try
                 Dim bc As BatchCollection = BatchDB.GetActiveBatches(-1, -1, True)
-                Dim qras As String() = (From s In bc Select s.QRANumber).ToArray
-                Dim trs As New List(Of String)
-                trs.AddRange(qras)
+                Dim qras As String() = (From s In bc Select s.RequestNumber).ToArray
+                Dim requests As New List(Of String)
+                requests.AddRange(qras)
 
-                Return trs.ToArray
+                Return requests.ToArray
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return Nothing
         End Function
 
-        Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Integer
+        Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Boolean
+            Dim isSuccess As Boolean
+
             Try
+                REMIAppCache.RemoveExtReqData(qraNumber)
                 REMIAppCache.RemoveReqData(qraNumber)
                 Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=False)
-                Dim oldPercentageComplete As Integer = b.PercentageComplete
-                Dim batchChanged As Boolean = b.CheckForTRSUpdates
+                Dim batchChanged As Boolean = b.OutOfDate
 
                 'check batches for trs completion
-                If b.Status <> BatchStatus.Complete AndAlso b.IsCompleteInTRS Then
+                If b.Status <> BatchStatus.Complete AndAlso b.IsCompleteInRequest Then
                     b.Status = BatchStatus.Complete
                     batchChanged = True
                 End If
 
                 'check received batches for assignement
-                If b.Status <> BatchStatus.InProgress AndAlso b.Status = BatchStatus.Received AndAlso b.TRSStatus.ToLower = TRSStatus.Assigned.ToString().ToLower() Then
+                If b.Status <> BatchStatus.InProgress AndAlso b.Status = BatchStatus.Received AndAlso b.RequestStatus.ToLower = TRSStatus.Assigned.ToString().ToLower() Then
                     b.Status = BatchStatus.InProgress
                     batchChanged = True
                 End If
 
                 'check for rejected batches
-                If b.Status <> BatchStatus.Rejected AndAlso b.TRSStatus.ToLower = TRSStatus.Rejected.ToString().ToLower() AndAlso b.Status <> BatchStatus.Rejected Then
+                If b.Status <> BatchStatus.Rejected AndAlso b.RequestStatus.ToLower = TRSStatus.Rejected.ToString().ToLower() AndAlso b.Status <> BatchStatus.Rejected Then
                     b.Status = BatchStatus.Rejected
                     batchChanged = True
                 End If
@@ -473,7 +452,6 @@ Namespace REMI.Bll
                     nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Select ts).FirstOrDefault
                 Else
                     If (b.TestStage.ToString().ToLower().Trim().Equals("analysis") AndAlso b.Status = BatchStatus.InProgress) Then
-                        'If ((b.TestStage.TestStageType = TestStageType.IncomingEvaluation Or b.TestStage.ToString().ToLower().Trim().Equals("analysis")) AndAlso b.Status = BatchStatus.InProgress) Then
                         nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Where ts.ProcessOrder > b.TestStage.ProcessOrder Select ts).FirstOrDefault
                     End If
                 End If
@@ -492,20 +470,16 @@ Namespace REMI.Bll
                 End If
 
                 If batchChanged Then
-                    Save(b)
-                    'and update the trs progress
-                    'this is horribley done due to not having enough time for proper refactoring. The old 'Batch' doesn't support accurate teststage Exceptions so here I get the new batchView which
-                    'is a more lightweight old batch to calculate the percentage remaining. The old batch should really be put to bed in the REMI system
-                    'all together and the new batchview used everywhere. yuck.
-                    Dim bv As BatchView = DirectCast(BatchManager.GetViewBatch(qraNumber), BatchView)
-                    UpdatePercentageCompleteInTRS(bv.QRANumber, bv.PercentageComplete)
+                    Boolean.TryParse((Save(b) > 0).ToString(), isSuccess)
+                Else
+                    isSuccess = True
                 End If
-
-                Return 0
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, "Current Request: " + qraNumber)
-                Return 1
+                isSuccess = False
             End Try
+
+            Return isSuccess
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
@@ -518,17 +492,13 @@ Namespace REMI.Bll
             End Try
         End Function
 
-        ''' <summary> 
-        ''' Gets a single batch from the database without its testunit data. 
-        ''' </summary> 
-        ''' <param name="QRANumber">The QRA Number of the batch in the database.</param> 
-        ''' <returns>A batch object when the QRA exists in the database, or <see langword="null"/> otherwise.</returns> 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Private Shared Function GetSingleBatchFromREMIDB(ByVal QRANumber As String, Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True) As Batch
-            Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
-            If bc.Validate Then
-                Return BatchDB.GetBatchByQRANumber(QRANumber, getFailParams, cacheRetrievedData:=cacheRetrievedData)
-            End If
+        Public Shared Function GetBatchView(ByVal batchQRANumber As String) As BatchView
+            Try
+                Return BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser.UserName)
+            Catch ex As Exception
+
+            End Try
+
             Return Nothing
         End Function
 
@@ -536,7 +506,7 @@ Namespace REMI.Bll
             'becuase we are running two batch models side by side
             'If the batch is not already in remi, I must use the older type batch getitem method
             'so as to got through the initial batch setup process.
-            Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(batchQRANumber)
+            Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser.UserName)
             If b IsNot Nothing Then
                 Return b
             End If
@@ -551,28 +521,21 @@ Namespace REMI.Bll
         ''' <returns>A batch</returns>
         ''' <remarks>This function always returns an object. Check the ID for a null batch!</remarks>
         Public Shared Function GetItem(ByVal batchQRANumber As String, Optional ByVal userIdentification As String = "", Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
+            Dim b As Batch
+
             If refreshCache Then
                 REMIAppCache.ClearAllBatchData(batchQRANumber)
             End If
 
-            Dim b As Batch
-
             Try
                 Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(batchQRANumber))
                 If bc.Validate Then
-                    b = GetSingleBatchFromREMIDB(bc.BatchNumber, getFailParams, cacheRetrievedData:=cacheRetrievedData)
+                    b = BatchDB.GetBatchByQRANumber(batchQRANumber, cacheRetrievedData)
 
-                    'if it cannot be found create it from scratch
                     If b Is Nothing Then
-                        'create new batch from the batch data in trs
-                        b = New Batch(RequestDB.GetTRSRequest(bc.BatchNumber))
+                        b = New Batch(RequestDB.GetRequest(bc.BatchNumber, UserManager.GetCurrentUser.UserName))
 
-                        If String.IsNullOrEmpty(b.QRANumber) Then 'batch does not exist in TRS
-                            b.Status = BatchStatus.NotSet
-                        Else 'job exists in trs
-                            'save the new batch to remi before returning it
-                            AddNewBatchToREMI(bc, b)
-                        End If
+                        AddNewBatchToREMI(bc, b)
                     End If
 
                     'if the batch is valid but the correct number of units are not available, then add the extra units.
@@ -597,7 +560,7 @@ Namespace REMI.Bll
         ''' <param name="myBatch">The Batch instance to save.</param> 
         ''' <returns>The new ID if the Batch is new in the database or the existing ID when an item was updated.</returns> 
         <DataObjectMethod(DataObjectMethodType.Update, True)> _
-        Public Shared Function Save(ByVal myBatch As Batch) As Integer
+        Public Shared Function Save(ByVal myBatch As Batch) As Int32
             Dim currentUser As String = UserManager.GetCurrentValidUserLDAPName
             Try
                 myBatch.LastUser = currentUser
@@ -609,71 +572,9 @@ Namespace REMI.Bll
                 Return 0
             End Try
         End Function
-
-        Public Shared Function UpdatePercentageCompleteInTRS(ByVal qraNumber As String, ByVal percentageComplete As Integer) As Boolean
-            Try
-                RequestDB.UpdateTRSPercentageComplete(qraNumber, percentageComplete)
-            Catch ex As Exception
-                LogIssue("UpdatePercentageComplete", "", NotificationType.Errors, ex, String.Format("Unable to update percentage complete for {0} to percentage {1}", qraNumber, percentageComplete))
-                Return False
-            End Try
-
-            Return True
-        End Function
 #End Region
 
 #Region "Manage Batches Methods"
-        Public Shared Function UpdateBatchFromTRS(ByVal qraNumber As String) As Integer
-            Dim result As Integer
-            REMIAppCache.RemoveReqData(qraNumber)
-            Dim q As IQRARequest = RequestDB.GetTRSRequest(qraNumber)
-            Dim b As Batch = GetItem(qraNumber)
-
-            If q IsNot Nothing AndAlso b IsNot Nothing Then
-                b.ProductGroup = q.ProductGroup
-                b.ProductType = q.ProductType
-                b.AccessoryGroup = q.AccessoryGroup
-                b.CPRNumber = q.CPRNumber
-                b.PartName = q.PartName
-                b.AssemblyNumber = q.AssemblyNumber
-                b.AssemblyRevision = q.AssemblyRevision
-                b.ReportApprovedDate = q.DateReportApproved
-                b.ReportRequiredBy = q.ReportRequiredBy
-                b.IsMQual = q.MQual
-                b.HWRevision = q.HWRevision
-                b.TestCenterLocation = q.TestCenterLocation
-                b.CompletionPriority = q.Priority
-
-                If (b.ExecutiveSummary.Trim().Length = 0) Then
-                    b.ExecutiveSummary = q.ExecutiveSummary
-                End If
-
-                If (q.RequestPurpose.ToLower.Contains("internal use")) Then
-                    b.RequestPurpose = "Internal Use Only"
-                Else
-                    b.RequestPurpose = q.RequestPurpose
-                End If
-
-                b.MechanicalTools = q.MechanicalTools
-                b.Department = q.Department
-
-                Dim j As Job = JobManager.GetJobByName(q.RequestedTest)
-
-                If j IsNot Nothing Then
-                    b.SetJob(j)
-                End If
-
-                If (b.Status = BatchStatus.Received And q.RequestStatus = "Assigned") Then
-                    b.Status = BatchStatus.InProgress
-                ElseIf (q.RequestStatus = "Assigned") Then
-                    b.Status = BatchStatus.InProgress
-                End If
-                result = BatchManager.Save(b)
-            End If
-
-            Return result
-        End Function
-
         Public Shared Function RevertBatchSpecificTestDuration(ByVal qraNumber As String, ByVal teststageid As Integer, ByVal comment As String) As Notification
             Dim n As New Notification
             If BatchDB.DeleteBatchSpecificTestDuration(qraNumber, teststageid, comment, UserManager.GetCurrentValidUserLDAPName) Then
@@ -708,14 +609,14 @@ Namespace REMI.Bll
             Return New DataSet
         End Function
 
-        Public Shared Function SetPriority(ByVal qraNumber As String, ByVal priority As Int32) As NotificationCollection
+        Public Shared Function SetPriority(ByVal qraNumber As String, ByVal priorityID As Int32, ByVal priority As String) As NotificationCollection
             Dim b As Batch
             Try
                 b = BatchManager.GetItem(qraNumber)
                 If b IsNot Nothing Then
                     If b.Validate Then
-                        'validate that the teststageid is part of this job
-                        b.CompletionPriorityID = priority
+                        b.PriorityID = priorityID
+                        b.Priority = priority
 
                         If b.Validate Then
                             BatchManager.Save(b)
@@ -827,44 +728,7 @@ Namespace REMI.Bll
             End Try
             Return b.Notifications
         End Function
-
-        'Public Shared Function ChangeJob(ByVal qraNumber As String, ByVal jobName As String) As NotificationCollection
-        '    Dim b As Batch
-        '    Try
-        '        b = BatchManager.GetItem(qraNumber)
-        '        If b IsNot Nothing Then
-        '            If b.Validate Then
-        '                Dim j As Job = JobManager.GetJobByName(jobName)
-        '                'validate that the teststageid is part of this job
-        '                If j IsNot Nothing Then
-        '                    b.Notifications.Add(b.SetJob(j))
-        '                    If Not b.Notifications.HasErrors Then
-        '                        BatchManager.Save(b)
-
-        '                        For Each tu As TestUnit In b.TestUnits
-        '                            If j.TestStages.Count > 0 Then
-        '                                tu.CurrentTestStage = j.TestStages.Item(0)
-        '                                TestUnitManager.Save(tu)
-        '                            End If
-        '                        Next
-        '                        If (REMI.Core.REMIConfiguration.Debug) Then
-        '                            b.Notifications.AddWithMessage("The job was changed ok.", NotificationType.Information)
-        '                        End If
-        '                    End If
-        '                Else
-        '                    b.Notifications.AddWithMessage(String.Format("The given job (Name: {0}) cannot be found.", jobName), NotificationType.Warning)
-        '                End If
-        '            End If
-        '        Else
-        '            b = New Batch
-        '            b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", qraNumber), NotificationType.Warning)
-        '        End If
-        '    Catch ex As Exception
-        '        b = New Batch
-        '        b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, String.Format("Request: {0} JobName: {1}", qraNumber, jobName)))
-        '    End Try
-        '    Return b.Notifications
-        'End Function
 #End Region
+
     End Class
 End Namespace

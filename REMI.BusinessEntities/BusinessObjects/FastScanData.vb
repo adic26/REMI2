@@ -9,6 +9,7 @@ Namespace REMI.BusinessEntities
     ''' old and new respectively would be another way to name these. you might not like it but it is consistent:)
     ''' </summary>
     ''' <remarks></remarks>
+    <Serializable()> _
     Public Class FastScanData
         Inherits REMI.Validation.ValidationBase
 
@@ -210,7 +211,7 @@ Namespace REMI.BusinessEntities
                 _selectedTestStage = value
             End Set
         End Property
-     
+
         Public Property HWRevision() As String
             Get
                 Return _hwRevision
@@ -357,7 +358,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         <NotNullOrEmpty(key:="w11")> _
-                Public Property ProductGroupName() As String
+        Public Property ProductGroupName() As String
             Get
                 Return _productGroupName
             End Get
@@ -413,7 +414,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         <NotNullOrEmpty(key:="w14")> _
-                Public Property SelectedTrackingLocationName() As String
+        Public Property SelectedTrackingLocationName() As String
             Get
                 Return _selectedTrackingLocationName
             End Get
@@ -423,7 +424,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         <ValidIDNumber(key:="w69")> _
-                Public Property SelectedTrackingLocationID() As Integer
+        Public Property SelectedTrackingLocationID() As Integer
             Get
                 Return _selectedTrackingLocationID
             End Get
@@ -491,7 +492,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
         <EnumerationSet(key:="w68")> _
-                Public Property SelectedTrackingLocationFunction() As TrackingLocationFunction
+        Public Property SelectedTrackingLocationFunction() As TrackingLocationFunction
             Get
                 Return _selectedTrackingLocationFunction
             End Get
@@ -733,7 +734,7 @@ Namespace REMI.BusinessEntities
 
             If (returnData.BatchData IsNot Nothing) Then
                 returnData.CPRNumber = returnData.BatchData.CPRNumber
-                returnData.HWRevision = returnData.BatchData.HWRevision
+                'returnData.HWRevision = returnData.BatchData.HWRevision
                 returnData.ProductID = returnData.BatchData.ProductID
                 returnData.ProductType = returnData.BatchData.ProductType
                 returnData.ProductTypeID = returnData.BatchData.ProductTypeID

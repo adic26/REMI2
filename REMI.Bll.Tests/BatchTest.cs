@@ -25,16 +25,6 @@ namespace REMI.Bll.Tests
         {
             instance = null;
         }
-        
-        [Test]
-        public void GetTRSQRAByTestCenter()
-        {
-            var tc = new REMI.Entities.Lookup();
-            tc = (from l in instance.Lookups where l.LookupType.Name == "TestCenter" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
-
-            Assert.That(BatchManager.GetTRSQRAByTestCenter(tc.Values).Rows.Count == 0);
-            Assert.That(BatchManager.GetTRSQRAByTestCenter(String.Empty).Rows.Count == 0);
-        }
 
         [Test]
         public void GetBatchDocuments()
@@ -145,7 +135,7 @@ namespace REMI.Bll.Tests
             var batch = new REMI.Entities.Batch();
             batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
 
-            Assert.That(BatchManager.CheckSingleBatchForStatusUpdate(batch.QRANumber) > -1);
+            Assert.That(BatchManager.CheckSingleBatchForStatusUpdate(batch.QRANumber) == true);
         }
 
         [Test]
@@ -159,15 +149,6 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void UpdateBatchFromTRS()
-        {
-            var batch = new REMI.Entities.Batch();
-            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
-
-            Assert.That(BatchManager.UpdateBatchFromTRS(batch.QRANumber) > 0);
-        }
-
-        [Test]
         public void SetPriority()
         {
             var batch = new REMI.Entities.Batch();
@@ -175,7 +156,7 @@ namespace REMI.Bll.Tests
             var p = new REMI.Entities.Lookup();
             p = (from l in instance.Lookups where l.LookupType.Name == "Priority" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
 
-            Assert.That(BatchManager.SetPriority(batch.QRANumber, p.LookupID).Count > 0);
+            Assert.That(BatchManager.SetPriority(batch.QRANumber, p.LookupID, p.Values).Count > 0);
         }
 
         [Test]

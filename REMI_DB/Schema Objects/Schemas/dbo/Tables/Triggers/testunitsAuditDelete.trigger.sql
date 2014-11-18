@@ -3,7 +3,7 @@
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE TRIGGER [dbo].[testunitsAuditDelete]
+ALTER TRIGGER [dbo].[testunitsAuditDelete]
    ON  dbo.TestUnits
     for  delete
 AS 
@@ -23,7 +23,7 @@ insert into testunitsaudit (
 	AssignedTo,
 	Comment,
 	Username,
-	Action)
+	Action, IMEI)
 	Select 
 	Id, 
 	batchid, 
@@ -33,7 +33,6 @@ insert into testunitsaudit (
 	CurrentTestStageName,
 	AssignedTo,
 	Comment,
-	lastuser,
-'D' from deleted
+	lastuser, 'D', IMEI from deleted
 
 END

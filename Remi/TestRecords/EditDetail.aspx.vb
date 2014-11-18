@@ -110,7 +110,8 @@ Partial Class TestRecords_EditDetail
             End If
         End If
 
-        odsFailDocList.DataBind()
+        rptFAList.DataSource = (From fd In TestRecordManager.GetFailDocs(hdnQRANumber.Value, hdnTRID.Value) Select New With {.RequestNumber = fd.Item("RequestNumber"), .RequestLink = fd.Item("Request Link"), .Summary = fd.Item("Summary")}).ToList()
+        rptFAList.DataBind()
     End Sub
 
     Protected Sub odsTrackingLogs_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.ObjectDataSourceSelectingEventArgs) Handles odsTrackingLogs.Selecting
@@ -121,6 +122,8 @@ Partial Class TestRecords_EditDetail
         rptFAList.SelectedIndex = e.Item.ItemIndex
         notMain.Notifications = TestRecordManager.AddCaterDocument(hdnTRID.Value, rptFAList.DataKeys(rptFAList.SelectedIndex), txtComment.Text, chkApplyToSimilarResults.Checked)
         ProcessTRID(hdnTRID.Value)
+
+        rptFAList.DataSource = (From fd In TestRecordManager.GetFailDocs(hdnQRANumber.Value, hdnTRID.Value) Select New With {.RequestNumber = fd.Item("RequestNumber"), .RequestLink = fd.Item("Request Link"), .Summary = fd.Item("Summary")}).ToList()
         rptFAList.DataBind()
     End Sub
 
@@ -135,6 +138,7 @@ Partial Class TestRecords_EditDetail
     Protected Sub rptDocList_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.RepeaterCommandEventArgs) Handles rptDocList.ItemCommand
         notMain.Notifications = TestRecordManager.RemoveCaterDocument(hdnTRID.Value, e.CommandArgument, txtComment.Text, chkApplyToSimilarResults.Checked)
         ProcessTRID(hdnTRID.Value)
+        rptFAList.DataSource = (From fd In TestRecordManager.GetFailDocs(hdnQRANumber.Value, hdnTRID.Value) Select New With {.RequestNumber = fd.Item("RequestNumber"), .RequestLink = fd.Item("Request Link"), .Summary = fd.Item("Summary")}).ToList()
         rptFAList.DataBind()
     End Sub
 
@@ -178,8 +182,11 @@ Partial Class TestRecords_EditDetail
         If tr IsNot Nothing Then
             pnlDetails.Visible = True
             hdnTestRecordLink.Value = tr.TestRecordsLink
-            rptDocList.DataSource = tr.FailDocs
+            rptDocList.DataSource = (From fd In tr.FailDocs Select New With {.RequestNumber = fd.Item("RequestNumber"), .RequestLink = fd.Item("Request Link")}).ToList()
             rptDocList.DataBind()
+
+            rptFAList.DataSource = (From fd In TestRecordManager.GetFailDocs(tr.QRANumber, tr.ID) Select New With {.RequestNumber = fd.Item("RequestNumber"), .RequestLink = fd.Item("Request Link"), .Summary = fd.Item("Summary")}).ToList()
+            rptFAList.DataBind()
             hdnQRANumber.Value = tr.QRANumber
             lblResultText.Text = tr.TestIdentificationString
             txtComment.Text = tr.Comments

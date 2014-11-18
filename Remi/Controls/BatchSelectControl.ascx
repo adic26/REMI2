@@ -60,12 +60,7 @@
                 <asp:Label EnableViewState="true" ID="lblCPR" runat="server" Text='<%# Eval("CPRNumber") %>'></asp:Label>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="MQual" SortExpression="IsMQualString">
-            <ItemTemplate>              
-               <asp:Label EnableViewState="true" ID="lblIsMQual" runat="server" Text='<%# Eval("IsMQualString") %>'></asp:Label>
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:BoundField DataField="CompletionPriority" HeaderText="Priority" SortExpression="CompletionPriority" ReadOnly="true" />    
+        <asp:BoundField DataField="Priority" HeaderText="Priority" SortExpression="Priority" ReadOnly="true" />    
         <asp:TemplateField HeaderText="Job Rem (h)" SortExpression="EstJobCompletionTime">
             <ItemTemplate>
                 <asp:Label EnableViewState="true" ID="lblEstJobCompletionTime" runat="server" Text='<%# string.format("{0:F2}",Eval("EstJobCompletionTime")) %>'></asp:Label>
@@ -86,7 +81,6 @@
                 <asp:Label EnableViewState="true" ID="lblReportDate" runat="server" Text='<%# Remi.Helpers.datetimeformat(Eval("ReportRequiredby")) %>'></asp:Label></ItemTemplate>
         </asp:TemplateField>
         <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" Visible="True" ReadOnly="true" />
-        <asp:BoundField DataField="ReqID" HeaderText="ReqID" SortExpression="ReqID" Visible="True" ReadOnly="true" />
         <asp:TemplateField HeaderText="RTR">
             <ItemTemplate>              
                <asp:Label EnableViewState="true" ID="lblRTR" runat="server" Text='<%# Eval("HasUnitsRequiredToBeReturnedToRequestorString") %>'></asp:Label>
@@ -103,13 +97,13 @@
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the WI for the job for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="TRS">
+        <asp:TemplateField HeaderText="Request">
             <ItemTemplate>
-                <asp:HyperLink EnableViewState="true" ID="hypTRSLink" runat="server" NavigateUrl='<%# Eval("TRSLink") %>' Target="_blank" 
+                <asp:HyperLink EnableViewState="true" ID="hypTRSLink" runat="server" NavigateUrl='<%# Eval("RequestLink") %>' Target="_blank" 
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the request page for this batch" %>'></asp:HyperLink>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="RQ Results">
+        <asp:TemplateField HeaderText="Results">
             <ItemTemplate>
                 <asp:HyperLink EnableViewState="true" ID="hypRelabLink" runat="server" NavigateUrl='<%# Eval("RelabResultLink") %>' Target="_blank" 
                     Text='<%# "View" %>' ToolTip='<%# "Click to view the Results page for this batch" %>'></asp:HyperLink>
