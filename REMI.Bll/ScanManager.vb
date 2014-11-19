@@ -44,7 +44,7 @@ Namespace REMI.Bll
                     Dim reqStatus As String = String.Empty
 
                     Try
-                        reqStatus = (From rf In RequestDB.GetRequest(barcode.BatchNumber, UserManager.GetCurrentUser.UserName) Where rf.IntField = "RequestStatus" Select rf.Value).FirstOrDefault()
+                        reqStatus = (From rf In RequestDB.GetRequest(barcode.BatchNumber, UserManager.GetCurrentUser) Where rf.IntField = "RequestStatus" Select rf.Value).FirstOrDefault()
                     Catch
                     End Try
 

@@ -200,10 +200,12 @@ Public Class ProductConfiguration
 #End Region
 
 #Region "Request"
-    <WebMethod(Description:="Gets The Fields Setup Definition")> _
-    Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
+    <WebMethod(EnableSession:=True, Description:="Gets The Fields Setup Definition")> _
+    Public Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String, ByVal useridentification As String) As RequestFieldsCollection
         Try
-            Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
+            If UserManager.SetUserToSession(useridentification) Then
+                Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
+            End If
         Catch ex As Exception
             RequestManager.LogIssue("GetRequestFieldSetup", "e3", NotificationType.Errors, ex)
         End Try

@@ -60,18 +60,18 @@ Namespace REMI.Dal
             Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
         End Function
 
-        Public Shared Function GetRequest(ByVal reqNumber As String, ByVal useridentification As String) As RequestFieldsCollection
+        Public Shared Function GetRequest(ByVal reqNumber As String, ByVal user As User) As RequestFieldsCollection
             Dim reqNum As New RequestNumber(reqNumber)
             Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = reqNum.Type Select r).FirstOrDefault()
 
             Dim rf As RequestFieldsCollection = REMIAppCache.GetReqData(reqNum.Number)
 
             If (rf Is Nothing) Then
-                rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number)
+                rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number, user)
 
                 If (requestType.IsExternal) Then
                     If (rf.Count > 0) Then
-                        LinkExternalRequest(reqNumber, rf, useridentification, requestType.DBType)
+                        LinkExternalRequest(reqNumber, rf, user.UserName, requestType.DBType)
                     End If
                 End If
 
@@ -394,7 +394,7 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
+        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String, ByVal user As User) As RequestFieldsCollection
             Dim rtID As Int32
             Dim fieldData As RequestFieldsCollection = Nothing
 
@@ -421,7 +421,7 @@ Namespace REMI.Dal
                                 fieldData = New RequestFieldsCollection()
 
                                 While myReader.Read()
-                                    fieldData.Add(FillFieldData(myReader))
+                                    fieldData.Add(FillFieldData(myReader, user))
                                 End While
                             End If
                         End Using
@@ -432,7 +432,7 @@ Namespace REMI.Dal
             Return fieldData
         End Function
 
-        Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord) As BusinessEntities.RequestFields
+        Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord, ByVal user As User) As BusinessEntities.RequestFields
             Dim myFields As RequestFields = New BusinessEntities.RequestFields()
 
             myFields.FieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldSetupID"))
@@ -503,7 +503,7 @@ Namespace REMI.Dal
                     Case "ProductGroup"
                         myFields.OptionsType = (From p In New REMI.Dal.Entities().Instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
                     Case "RequestedTest"
-                        myFields.OptionsType = (From j In New REMI.Dal.Entities().Instance.Jobs Where j.IsActive = True Order By j.JobName Select j.JobName).ToList
+                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user).AsEnumerable() Select j.Name).ToList()
                 End Select
             End If
 

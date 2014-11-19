@@ -125,13 +125,14 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetJobListDT() As JobCollection
+        Public Shared Function GetJobListDT(ByVal user As User) As JobCollection
             Dim tempList As New JobCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myConnection.Open()
                 Using myCommand As New SqlCommand("remispJobsList", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@UserID", user.ID)
 
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then

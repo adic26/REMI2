@@ -85,7 +85,7 @@ Namespace REMI.Bll
             Dim trsDocList As New List(Of Dictionary(Of String, String))
 
             If Not String.IsNullOrEmpty(qranumber) Then
-                Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser.UserName)
+                Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser)
                 docNumbers.AddRange(RequestDB.GetFANumberList(qranumber))
 
                 If docNumbers IsNot Nothing Then

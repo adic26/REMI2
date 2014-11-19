@@ -126,7 +126,7 @@ Namespace REMI.Bll
 
         Public Shared Function GetRequest(ByVal reqNumber As String) As RequestFieldsCollection
             Try
-                Return RequestDB.GetRequest(reqNumber, UserManager.GetCurrentUser.UserName)
+                Return RequestDB.GetRequest(reqNumber, UserManager.GetCurrentUser)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -136,7 +136,7 @@ Namespace REMI.Bll
 
         Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
             Try
-                Return RequestDB.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
+                Return RequestDB.GetRequestFieldSetup(requestName, includeArchived, requestNumber, UserManager.GetCurrentUser)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

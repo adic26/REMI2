@@ -253,7 +253,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetListAtLocation(ByVal BarcodePrefix As Integer, ByVal startRowIndex As Integer, ByVal MaximumRows As Integer, ByVal sortExpression As String) As BatchCollection
             Try
-                Dim bc As BatchCollection = BatchDB.GetListAtLocation(BarcodePrefix, startRowIndex, MaximumRows, sortExpression)
+                Dim bc As BatchCollection = BatchDB.GetListAtLocation(BarcodePrefix, startRowIndex, MaximumRows, sortExpression, UserManager.GetCurrentUser)
                 Return bc
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, BarcodePrefix.ToString)
@@ -268,7 +268,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetBatchesInChamber(ByVal testCentreLocation As Int32, ByVal byPass As Boolean, ByVal userID As Int32) As BatchCollection
             Try
-                Return BatchDB.GetListInChambers(testCentreLocation, -1, -1, String.Empty, byPass, userID)
+                Return BatchDB.GetListInChambers(testCentreLocation, -1, -1, String.Empty, byPass, UserManager.GetCurrentUser)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Test Center Location: {0}", testCentreLocation))
                 Return New BatchCollection
@@ -386,7 +386,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetActiveBatches() As BatchCollection
             Try
-                Return BatchDB.GetActiveBatches(-1, -1, False)
+                Return BatchDB.GetActiveBatches(-1, -1, False, UserManager.GetCurrentUser)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -396,7 +396,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetActiveBatches(ByVal requestor As String) As BatchCollection
             Try
-                Return BatchDB.GetActiveBatches(requestor, -1, -1)
+                Return BatchDB.GetActiveBatches(requestor, -1, -1, UserManager.GetCurrentUser)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("requestor: {0}", requestor))
             End Try
@@ -406,7 +406,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetActiveBatchList() As String()
             Try
-                Dim bc As BatchCollection = BatchDB.GetActiveBatches(-1, -1, True)
+                Dim bc As BatchCollection = BatchDB.GetActiveBatches(-1, -1, True, UserManager.GetCurrentUser)
                 Dim qras As String() = (From s In bc Select s.RequestNumber).ToArray
                 Dim requests As New List(Of String)
                 requests.AddRange(qras)
@@ -485,7 +485,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True) As BatchCollection
             Try
-                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining)
+                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Empty)
                 Return New BatchCollection
@@ -494,7 +494,7 @@ Namespace REMI.Bll
 
         Public Shared Function GetBatchView(ByVal batchQRANumber As String) As BatchView
             Try
-                Return BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser.UserName)
+                Return BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser)
             Catch ex As Exception
 
             End Try
@@ -506,7 +506,7 @@ Namespace REMI.Bll
             'becuase we are running two batch models side by side
             'If the batch is not already in remi, I must use the older type batch getitem method
             'so as to got through the initial batch setup process.
-            Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser.UserName)
+            Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser)
             If b IsNot Nothing Then
                 Return b
             End If
@@ -530,10 +530,10 @@ Namespace REMI.Bll
             Try
                 Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(batchQRANumber))
                 If bc.Validate Then
-                    b = BatchDB.GetBatchByQRANumber(batchQRANumber, cacheRetrievedData)
+                    b = BatchDB.GetBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser, cacheRetrievedData)
 
                     If b Is Nothing Then
-                        b = New Batch(RequestDB.GetRequest(bc.BatchNumber, UserManager.GetCurrentUser.UserName))
+                        b = New Batch(RequestDB.GetRequest(bc.BatchNumber, UserManager.GetCurrentUser))
 
                         AddNewBatchToREMI(bc, b)
                     End If
