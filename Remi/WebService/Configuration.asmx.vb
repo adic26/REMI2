@@ -238,7 +238,7 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Save Raised Request")> _
-    Public Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+    Public Function SaveRequest(ByVal requestName As String, ByRef request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Return RequestManager.SaveRequest(requestName, request, userIdentification)

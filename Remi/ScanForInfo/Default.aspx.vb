@@ -388,11 +388,6 @@ Partial Class ScanForInfo_Default
             liModifyStatus.Visible = True
             liModifyTestDurations.Visible = True
         End If
-
-        If UserManager.GetCurrentUser.DepartmentID <> departmentID Then
-            txtNewCommentText.Enabled = False
-            btnAddComment.Enabled = False
-        End If
     End Sub
 
     Protected Sub ddlTime_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTime.SelectedIndexChanged

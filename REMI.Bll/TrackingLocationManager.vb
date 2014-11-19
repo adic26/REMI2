@@ -26,29 +26,34 @@ Namespace REMI.Bll
 
         <DataObjectMethod(DataObjectMethodType.[Insert], False)> _
         Public Shared Function SaveUserPermissions(ByVal userPermissions As TrackingLocationTypePermissionCollection) As Boolean
-            If UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-                'get the old collection
-                Dim oldCollection As TrackingLocationTypePermissionCollection = GetUserPermissionList(userPermissions.Username)
-                Dim modifiedCollection As New TrackingLocationTypePermissionCollection(userPermissions.Username)
-                'compare each item in the old collection with the new collection
-                For Each singlePermission In oldCollection
-                    'if the currentPermissions don't match then add this permission
-                    'to the modified collection.
+            Try
+                If UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+                    'get the old collection
+                    Dim oldCollection As TrackingLocationTypePermissionCollection = GetUserPermissionList(userPermissions.Username)
+                    Dim modifiedCollection As New TrackingLocationTypePermissionCollection(userPermissions.Username)
+                    'compare each item in the old collection with the new collection
+                    For Each singlePermission In oldCollection
+                        'if the currentPermissions don't match then add this permission
+                        'to the modified collection.
 
-                    Dim trackingLocationTypeID As Int32 = singlePermission.TrackingLocationTypeID
-                    Dim equivelantNewPermission As TrackingLocationTypePermission = (From up In userPermissions Where up.TrackingLocationTypeID = trackingLocationTypeID Select up).FirstOrDefault
+                        Dim trackingLocationTypeID As Int32 = singlePermission.TrackingLocationTypeID
+                        Dim equivelantNewPermission As TrackingLocationTypePermission = (From up In userPermissions Where up.TrackingLocationTypeID = trackingLocationTypeID Select up).FirstOrDefault
 
-                    If equivelantNewPermission IsNot Nothing AndAlso equivelantNewPermission.CurrentPermissions <> singlePermission.CurrentPermissions Then
-                        singlePermission.CurrentPermissions = equivelantNewPermission.CurrentPermissions
-                        modifiedCollection.Add(singlePermission)
-                    End If
-                Next
+                        If equivelantNewPermission IsNot Nothing AndAlso equivelantNewPermission.CurrentPermissions <> singlePermission.CurrentPermissions Then
+                            singlePermission.CurrentPermissions = equivelantNewPermission.CurrentPermissions
+                            modifiedCollection.Add(singlePermission)
+                        End If
+                    Next
 
-                'save the modified collection
-                TrackingLocationTypeDB.SavePermissions(modifiedCollection, UserManager.GetCurrentValidUserLDAPName)
-            Else
-                Throw New Security.SecurityException("Unauthorized attempt to edit a setting.")
-            End If
+                    'save the modified collection
+                    TrackingLocationTypeDB.SavePermissions(modifiedCollection, UserManager.GetCurrentValidUserLDAPName)
+                Else
+                    Throw New Security.SecurityException("Unauthorized attempt to edit a setting.")
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
+
             Return False
         End Function
 
@@ -68,6 +73,7 @@ Namespace REMI.Bll
         Public Shared Function GetList(Optional ByVal TestCenterLocationID As Int32 = 0, Optional ByVal onlyActive As Int32 = 0) As TrackingLocationCollection
             Dim sCriteria As New TrackingLocationCriteria
             sCriteria.GeoLocationID = TestCenterLocationID
+
             Try
                 Return TrackingLocationDB.SearchFor(sCriteria, onlyActive)
             Catch ex As Exception
@@ -80,10 +86,9 @@ Namespace REMI.Bll
         Public Shared Function GetLocationsWithoutHost(Optional ByVal TestCenterLocationID As Int32 = 0, Optional ByVal onlyActive As Int32 = 0) As TrackingLocationCollection
             Dim sCriteria As New TrackingLocationCriteria
             sCriteria.GeoLocationID = TestCenterLocationID
-            Try
-                Dim tl As TrackingLocationCollection = TrackingLocationDB.SearchFor(sCriteria, onlyActive, 1)
 
-                Return tl
+            Try
+                Return TrackingLocationDB.SearchFor(sCriteria, onlyActive, 1)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return New TrackingLocationCollection
@@ -91,7 +96,12 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function GetSpecificLocationForCurrentUsersTestCenter(ByVal StationName As String, ByVal lastUser As String) As Integer
-            Return TrackingLocationDB.GetSpecificLocationForUsersTestCenter(StationName, lastUser)
+            Try
+                Return TrackingLocationDB.GetSpecificLocationForUsersTestCenter(StationName, lastUser)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
+            Return 0
         End Function
 
         Public Shared Function GetTrackingLocationID(ByVal trackingLocationName As String, ByVal testCenterID As Int32) As Int32
@@ -230,14 +240,20 @@ Namespace REMI.Bll
             End If
 
             Return TrackingLocationDB.SearchFor(tlc, onlyActive, 0, showHostsNamedAll)
+
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetTrackingLocationsByHostNameAtTestCenter(ByVal HostName As String, ByVal testCenter As Int32) As TrackingLocationCollection
-            Dim tlc As New TrackingLocationCriteria
-            tlc.HostName = HostName
-            tlc.GeoLocationID = testCenter
-            Return TrackingLocationDB.SearchFor(tlc)
+            Try
+                Dim tlc As New TrackingLocationCriteria
+                tlc.HostName = HostName
+                tlc.GeoLocationID = testCenter
+                Return TrackingLocationDB.SearchFor(tlc)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return Nothing
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _

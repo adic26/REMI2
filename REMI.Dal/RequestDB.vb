@@ -283,7 +283,7 @@ Namespace REMI.Dal
         Public Shared Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
             Dim dtReq As New DataTable("Requests")
             Dim lastRequestConnectName As String = String.Empty
-            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Select r).ToList()
+            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Order By r.RequestConnectName Select r).ToList()
 
             For Each r In requestType
                 If (r.RequestConnectName <> lastRequestConnectName) Then
@@ -351,11 +351,10 @@ Namespace REMI.Dal
             End If
         End Sub
 
-        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+        Public Shared Function SaveRequest(ByVal requestName As String, ByRef request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
             Dim instance = New REMI.Dal.Entities().Instance()
-            Dim val = (From rfc In request Select rfc.FieldSetupID, rfc.Value, rfc.RequestID, rfc.RequestNumber)
             Dim reqID As Int32 = 0
-            Dim reqNumber As String = val(0).RequestNumber
+            Dim reqNumber As String = request(0).RequestNumber
 
             Dim req = (From r In instance.Requests Where r.RequestNumber = reqNumber).FirstOrDefault()
 
@@ -363,15 +362,14 @@ Namespace REMI.Dal
                 Dim rq As New REMI.Entities.Request()
                 rq.RequestNumber = reqNumber
                 instance.AddToRequests(rq)
+                instance.SaveChanges()
+
+                reqID = (From r In instance.Requests Where r.RequestNumber = reqNumber Select r.RequestID).FirstOrDefault()
             Else
                 reqID = req.RequestID
             End If
 
-            instance.SaveChanges()
-
-            reqID = (From r In instance.Requests Where r.RequestNumber = reqNumber Select r.RequestID).FirstOrDefault()
-
-            For Each rec In val
+            For Each rec In request
                 Dim fieldData = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID).FirstOrDefault()
 
                 If (fieldData Is Nothing) Then

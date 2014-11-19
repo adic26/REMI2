@@ -11,32 +11,37 @@ Namespace REMI.Bll
         Public Shared Function Delete(ByVal id As Int32) As NotificationCollection
             Dim nc As New NotificationCollection
 
-            If (UserManager.GetCurrentUser.IsDeveloper) Then
-                Dim instance = New REMI.Dal.Entities().Instance()
-                Dim record As IQueryable(Of REMI.Entities.TestRecord)
-                record = (From tr In instance.TestRecords Where tr.ID = id Select tr)
+            Try
+                If (UserManager.GetCurrentUser.IsDeveloper) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim record As IQueryable(Of REMI.Entities.TestRecord)
+                    record = (From tr In instance.TestRecords Where tr.ID = id Select tr)
 
-                If (record.FirstOrDefault() IsNot Nothing) Then 'Record exists
-                    Dim recordTracking = (From trt In instance.TestRecordsXTrackingLogs Where trt.TestRecord.ID = id Select trt).ToList()
+                    If (record.FirstOrDefault() IsNot Nothing) Then 'Record exists
+                        Dim recordTracking = (From trt In instance.TestRecordsXTrackingLogs Where trt.TestRecord.ID = id Select trt).ToList()
 
-                    For Each rec In recordTracking
-                        instance.DeleteObject(rec)
-                    Next
+                        For Each rec In recordTracking
+                            instance.DeleteObject(rec)
+                        Next
 
-                    instance.DeleteObject(record.FirstOrDefault())
-                    instance.SaveChanges()
+                        instance.DeleteObject(record.FirstOrDefault())
+                        instance.SaveChanges()
 
-                    nc.AddWithMessage("Successfully Deleted Test Record", NotificationType.Information)
+                        nc.AddWithMessage("Successfully Deleted Test Record", NotificationType.Information)
+                    End If
+                Else
+                    nc.AddWithMessage("You do not have the accses to delete test records", NotificationType.Warning)
                 End If
-            Else
-                nc.AddWithMessage("You do not have the accses to delete test records", NotificationType.Warning)
-            End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
 
             Return nc
         End Function
 
         Public Shared Function Save(ByVal testRecord As TestRecord) As Integer
             Dim returnVal As Integer
+
             Try
                 'check if it is valid and save
                 testRecord.LastUser = UserManager.GetCurrentValidUserLDAPName
@@ -80,28 +85,33 @@ Namespace REMI.Bll
 
         <DataObjectMethod(DataObjectMethodType.Select, False)> _
         Public Shared Function GetFailDocs(ByVal qranumber As String, ByVal trID As Int32) As List(Of Dictionary(Of String, String))
-            Dim docNumbers As List(Of String) = New List(Of String)
-            Dim tr As TestRecord = TestRecordManager.GetItemByID(trID)
             Dim trsDocList As New List(Of Dictionary(Of String, String))
 
-            If Not String.IsNullOrEmpty(qranumber) Then
-                Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser)
-                docNumbers.AddRange(RequestDB.GetFANumberList(qranumber))
+            Try
+                Dim docNumbers As List(Of String) = New List(Of String)
+                Dim tr As TestRecord = TestRecordManager.GetItemByID(trID)
 
-                If docNumbers IsNot Nothing Then
-                    Dim req As Dictionary(Of String, String)
+                If Not String.IsNullOrEmpty(qranumber) Then
+                    Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser)
+                    docNumbers.AddRange(RequestDB.GetFANumberList(qranumber))
 
-                    For Each trsDocNumber In docNumbers
-                        req = RequestDB.GetExternalRequestNotLinked(trsDocNumber, "Oracle")
+                    If docNumbers IsNot Nothing Then
+                        Dim req As Dictionary(Of String, String)
 
-                        Dim faList As List(Of String) = (From f In tr.FailDocs Select f.Item("RequestNumber")).ToList()
+                        For Each trsDocNumber In docNumbers
+                            req = RequestDB.GetExternalRequestNotLinked(trsDocNumber, "Oracle")
 
-                        If (Not faList.Contains(req.Item("RequestNumber"))) Then
-                            trsDocList.Add(req)
-                        End If
-                    Next
+                            Dim faList As List(Of String) = (From f In tr.FailDocs Select f.Item("RequestNumber")).ToList()
+
+                            If (Not faList.Contains(req.Item("RequestNumber"))) Then
+                                trsDocList.Add(req)
+                            End If
+                        Next
+                    End If
                 End If
-            End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
 
             Return trsDocList
         End Function
@@ -195,6 +205,7 @@ Namespace REMI.Bll
 
                 Return True
             Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function
@@ -248,8 +259,10 @@ Namespace REMI.Bll
                 End If
                 Return True
             Catch ex As Exception
-                Return False
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
             End Try
+
+            Return False
         End Function
 
         Public Shared Function UpdateStatus(ByVal trID As Integer, ByVal status As TestRecordStatus, ByVal comments As String, ByVal updateSimilarTestRecords As Boolean) As NotificationCollection
@@ -278,110 +291,131 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function DTATTAUpdateUnitTestStatus(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult) As Boolean
-            Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qranumber))
             Dim returnValue As Boolean
 
-            If barcode.Validate() Then
-                Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
-                Dim tu As TestUnit = b.TestUnits.FindByBatchUnitNumber(barcode.UnitNumber)
+            Try
+                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qranumber))
 
-                If b IsNot Nothing And tu IsNot Nothing Then
-                    Dim testStageRecord As TestStage = TestStageManager.GetTestStage(testStage, b.JobName)
+                If barcode.Validate() Then
+                    Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
+                    Dim tu As TestUnit = b.TestUnits.FindByBatchUnitNumber(barcode.UnitNumber)
 
-                    Dim processOrder As Int32 = 0
+                    If b IsNot Nothing And tu IsNot Nothing Then
+                        Dim testStageRecord As TestStage = TestStageManager.GetTestStage(testStage, b.JobName)
 
-                    If (testStageRecord IsNot Nothing) Then
-                        processOrder = testStageRecord.ProcessOrder
-                    Else
-                        For Each ts As TestStage In (From tsttsg In b.Job.TestStages Where tsttsg.IsArchived = False Select tsttsg Order By tsttsg.ProcessOrder)
-                            If (ts.Name.Contains("Post ")) Then
-                                Dim tsNum As Int32 'Current test stage drop/tumble number
-                                Dim num As Int32 = 0 'Loop test stage drop/tumble number
+                        Dim processOrder As Int32 = 0
 
-                                Int32.TryParse(testStage.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), tsNum)  'Gets the current test stage drop/tumble number
-                                Int32.TryParse(ts.Name.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), num)      'Gets the loop test stage drop/tumble number
-
-                                If (num > tsNum) Then ' If current drop/tumble number is 5 and the first drop/tumble number is 10 then set the processorder equal to this test stages processorder
-                                    processOrder = ts.ProcessOrder
-                                    Exit For
-                                End If
-                            End If
-                        Next
-                    End If
-
-                    Dim tr As TestRecord = b.TestRecords.FindByTestStageTest(b.JobName, testStage, test).FirstOrDefault()
-
-                    If tr Is Nothing Then
-                        If (testStageRecord Is Nothing) Then
-                            tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, Nothing)
+                        If (testStageRecord IsNot Nothing) Then
+                            processOrder = testStageRecord.ProcessOrder
                         Else
-                            tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, testStageRecord.ID)
+                            For Each ts As TestStage In (From tsttsg In b.Job.TestStages Where tsttsg.IsArchived = False Select tsttsg Order By tsttsg.ProcessOrder)
+                                If (ts.Name.Contains("Post ")) Then
+                                    Dim tsNum As Int32 'Current test stage drop/tumble number
+                                    Dim num As Int32 = 0 'Loop test stage drop/tumble number
+
+                                    Int32.TryParse(testStage.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), tsNum)  'Gets the current test stage drop/tumble number
+                                    Int32.TryParse(ts.Name.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), num)      'Gets the loop test stage drop/tumble number
+
+                                    If (num > tsNum) Then ' If current drop/tumble number is 5 and the first drop/tumble number is 10 then set the processorder equal to this test stages processorder
+                                        processOrder = ts.ProcessOrder
+                                        Exit For
+                                    End If
+                                End If
+                            Next
+                        End If
+
+                        Dim tr As TestRecord = b.TestRecords.FindByTestStageTest(b.JobName, testStage, test).FirstOrDefault()
+
+                        If tr Is Nothing Then
+                            If (testStageRecord Is Nothing) Then
+                                tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, Nothing)
+                            Else
+                                tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, testStageRecord.ID)
+                            End If
+                        End If
+
+                        If result = FinalTestResult.Fail Then
+                            returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.CompleteFail, "Unit was removed from test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
+                        Else
+                            returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.Complete, "Unit was added back to test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
                         End If
                     End If
-
-                    If result = FinalTestResult.Fail Then
-                        returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.CompleteFail, "Unit was removed from test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
-                    Else
-                        returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.Complete, "Unit was added back to test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
-                    End If
                 End If
-            End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
 
             Return returnValue
         End Function
 
         Private Shared Function UpdateSingleTestRecordStatus(ByVal tr As TestRecord, ByVal status As TestRecordStatus, ByVal comments As String) As NotificationCollection
-            Dim oldStatus As String
+            Try
+                Dim oldStatus As String
 
-            If tr IsNot Nothing Then
-                'set the status
-                oldStatus = tr.Status.ToString
-                tr.SetStatus(status, comments, UserManager.GetCurrentValidUserLDAPName)
+                If tr IsNot Nothing Then
+                    'set the status
+                    oldStatus = tr.Status.ToString
+                    tr.SetStatus(status, comments, UserManager.GetCurrentValidUserLDAPName)
 
-                If Save(tr) > 0 Then
-                    tr.Notifications.AddWithMessage(String.Format("Status for {0}-{1:d3} set to: {2} (Was: {3})", tr.QRANumber, tr.BatchUnitNumber, status.ToString, oldStatus), NotificationType.Information)
+                    If Save(tr) > 0 Then
+                        tr.Notifications.AddWithMessage(String.Format("Status for {0}-{1:d3} set to: {2} (Was: {3})", tr.QRANumber, tr.BatchUnitNumber, status.ToString, oldStatus), NotificationType.Information)
+                    End If
                 End If
-            End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
 
             Return tr.Notifications
         End Function
 
         Private Shared Function AddCaterDocumentSingleTestRecord(ByVal tr As TestRecord, ByVal docNumber As String, ByVal comments As String) As NotificationCollection
-            If tr IsNot Nothing Then
-                'add any new docs
-                Dim failDoc As Dictionary(Of String, String) = RequestDB.GetExternalRequestNotLinked(docNumber, "Oracle")
+            Try
+                If tr IsNot Nothing Then
+                    'add any new docs
+                    Dim failDoc As Dictionary(Of String, String) = RequestDB.GetExternalRequestNotLinked(docNumber, "Oracle")
 
-                If failDoc IsNot Nothing AndAlso Not tr.FailDocs.Contains(failDoc) Then
-                    tr.AddFailDoc(failDoc, comments, UserManager.GetCurrentValidUserLDAPName)
-                    Save(tr)
-                    tr.Notifications.AddWithMessage(tr.QRANumber + " assigned to test record for " + tr.TestIdentificationString + ".", NotificationType.Information)
-                Else
-                    tr.Notifications.AddWithMessage(docNumber + " cannot be loaded or is already assigned.", NotificationType.Information)
+                    If failDoc IsNot Nothing AndAlso Not tr.FailDocs.Contains(failDoc) Then
+                        tr.AddFailDoc(failDoc, comments, UserManager.GetCurrentValidUserLDAPName)
+                        Save(tr)
+                        tr.Notifications.AddWithMessage(tr.QRANumber + " assigned to test record for " + tr.TestIdentificationString + ".", NotificationType.Information)
+                    Else
+                        tr.Notifications.AddWithMessage(docNumber + " cannot be loaded or is already assigned.", NotificationType.Information)
+                    End If
                 End If
-            End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
 
             Return tr.Notifications
         End Function
 
         Private Shared Function RemoveCaterDocumentSingleTestRecord(ByVal tr As TestRecord, ByVal docNumber As String, ByVal comments As String) As NotificationCollection
-            If tr IsNot Nothing Then
-                'add any new docs
-                tr.RemoveFailDoc(docNumber, UserManager.GetCurrentValidUserLDAPName, comments)
-                Save(tr)
-                tr.Notifications.AddWithMessage(docNumber + " removed from to test record for " + tr.TestIdentificationString + ".", NotificationType.Information)
-            End If
+            Try
+                If tr IsNot Nothing Then
+                    'add any new docs
+                    tr.RemoveFailDoc(docNumber, UserManager.GetCurrentValidUserLDAPName, comments)
+                    Save(tr)
+                    tr.Notifications.AddWithMessage(docNumber + " removed from to test record for " + tr.TestIdentificationString + ".", NotificationType.Information)
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
 
             Return tr.Notifications
         End Function
 
         Public Shared Function CheckBatchForResultUpdates(ByVal b As Batch, ByVal ignoreCurrentBatchStatus As Boolean) As Integer
-            If b IsNot Nothing Then
-                If ((b.Status = BatchStatus.InProgress OrElse b.Status = BatchStatus.Received) Or ignoreCurrentBatchStatus) AndAlso (b.TestStage IsNot Nothing) AndAlso b.Job IsNot Nothing Then
-                    Dim bcoll As New BatchCollection
-                    bcoll.Add(b)
-                    Return TestRecordDB.SetResultsForBatchCollection(bcoll, UserManager.GetCurrentValidUserLDAPName)
+            Try
+                If b IsNot Nothing Then
+                    If ((b.Status = BatchStatus.InProgress OrElse b.Status = BatchStatus.Received) Or ignoreCurrentBatchStatus) AndAlso (b.TestStage IsNot Nothing) AndAlso b.Job IsNot Nothing Then
+                        Dim bcoll As New BatchCollection
+                        bcoll.Add(b)
+                        Return TestRecordDB.SetResultsForBatchCollection(bcoll, UserManager.GetCurrentValidUserLDAPName)
+                    End If
                 End If
-            End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
 
             Return 0
         End Function

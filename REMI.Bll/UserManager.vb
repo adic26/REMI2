@@ -96,23 +96,23 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function Save(ByVal u As User, ByVal saveTraining As Boolean) As Integer
-            If RIM.ReliabilityEngineering.ActiveDirectoryServices.RIMAuthenticationProvider.UserOrGroupExistsInGAL(u.LDAPName) Then
-                u.LastUser = UserManager.GetCurrentValidUserLDAPName
+            Try
+                If RIM.ReliabilityEngineering.ActiveDirectoryServices.RIMAuthenticationProvider.UserOrGroupExistsInGAL(u.LDAPName) Then
+                    u.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                If u.Validate Then
-                    'save the user
-                    Try
+                    If u.Validate Then
+                        'save the user
                         Dim userID As Integer = UserDB.Save(u)
                         Dim instance = New REMI.Dal.Entities().Instance()
 
                         'Get existing set of UserDetails for user
                         Dim userDetails As List(Of Int32) = (From ud In instance.UserDetails _
-                                   Where ud.User.ID = u.ID _
-                                   Select ProductID = ud.LookupID).ToList()
+                                    Where ud.User.ID = u.ID _
+                                    Select ProductID = ud.LookupID).ToList()
 
                         'Get new set of UserDetails for user
                         Dim userDetailsNew As List(Of Int32) = (From ud In u.UserDetails _
-                             Select DirectCast(ud.Item("LookupID"), Int32)).ToList()
+                                Select DirectCast(ud.Item("LookupID"), Int32)).ToList()
 
                         ''Gets the list of UserDetails that are missing for user
                         Dim missingUserDetails = userDetailsNew.Except(userDetails)
@@ -141,12 +141,12 @@ Namespace REMI.Bll
 
                         'Get existing set of products for user
                         Dim userProducts As List(Of Int32) = (From pm In instance.UsersProducts _
-                                   Where pm.User.ID = u.ID _
-                                   Select ProductID = pm.Product.ID).ToList()
+                                    Where pm.User.ID = u.ID _
+                                    Select ProductID = pm.Product.ID).ToList()
 
                         'Get new set of products for user
                         Dim userProductsNew As List(Of Int32) = (From p In u.ProductGroups _
-                             Select DirectCast(p.Item("ID"), Int32)).ToList()
+                                Select DirectCast(p.Item("ID"), Int32)).ToList()
 
                         ''Gets the list of products that are missing for user
                         Dim missingProducts = userProductsNew.Except(userProducts)
@@ -184,7 +184,7 @@ Namespace REMI.Bll
 
                         If (saveTraining) Then
                             Dim newTraining = (From t In u.Training Where t.Item("ID") IsNot Nothing And t.Item("ID") IsNot DBNull.Value _
-                                 Select New With _
+                                    Select New With _
                                         { _
                                             .ID = If(t.Item("ID") Is Nothing Or t.Item("ID") Is DBNull.Value, 0, CType(t.Item("ID"), Integer)), _
                                             .LevelLookupID = If(t.Item("LevelLookupID") Is Nothing Or t.Item("LevelLookupID") Is DBNull.Value, 0, CType(t.Item("LevelLookupID"), Integer)), _
@@ -199,14 +199,14 @@ Namespace REMI.Bll
                             Dim training = (From ut In instance.UserTrainings.Include("Lookup").Include("Lookup1").Include("User") _
                                             Where ut.User.ID = u.ID _
                                             Select New With _
-                                                   { _
-                                                       .ID = ut.ID, _
-                                                       .LevelLookupID = If(ut.Lookup1 Is Nothing, 0, CType(ut.Lookup1.LookupID, Integer)), _
-                                                       .LookupID = ut.Lookup.LookupID, _
-                                                       .DateAdded = ut.DateAdded, _
-                                                       .TrainingOption = ut.Lookup.Values, _
-                                                       .UserID = ut.User.ID, _
-                                                       .UserAssigned = CType(ut.UserAssigned, String) _
+                                                    { _
+                                                        .ID = ut.ID, _
+                                                        .LevelLookupID = If(ut.Lookup1 Is Nothing, 0, CType(ut.Lookup1.LookupID, Integer)), _
+                                                        .LookupID = ut.Lookup.LookupID, _
+                                                        .DateAdded = ut.DateAdded, _
+                                                        .TrainingOption = ut.Lookup.Values, _
+                                                        .UserID = ut.User.ID, _
+                                                        .UserAssigned = CType(ut.UserAssigned, String) _
                                                     }).ToList()
 
                             For Each t In newTraining
@@ -256,25 +256,28 @@ Namespace REMI.Bll
                         End If
 
                         Return userID
-                    Catch sqlEx As SqlClient.SqlException When sqlEx.Number = 2601
-                        u.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e5", NotificationType.Errors, sqlEx))
-                        Return 0
-                    Catch ex As Exception
-                        u.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex))
-                        Return 0
-                    End Try
+                    End If
+                Else
+                    u.Notifications.Add("w35", NotificationType.Warning)
                 End If
-            Else
-                u.Notifications.Add("w35", NotificationType.Warning)
-            End If
+            Catch sqlEx As SqlClient.SqlException When sqlEx.Number = 2601
+                u.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e5", NotificationType.Errors, sqlEx))
+            Catch ex As Exception
+                u.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex))
+            End Try
+
             Return 0
         End Function
 
         Public Shared Function UserExists(ByVal userName As String) As Boolean
-            Dim u As User = UserDB.GetItem(userName.ToLower, Contracts.Enumerations.SearchType.UserName)
-            If u IsNot Nothing Then
-                Return True
-            End If
+            Try
+                Dim u As User = UserDB.GetItem(userName.ToLower, Contracts.Enumerations.SearchType.UserName)
+                If u IsNot Nothing Then
+                    Return True
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
             Return False
         End Function
 
@@ -325,54 +328,58 @@ Namespace REMI.Bll
         Public Shared Function ConfirmUserCredentialsAndSave(ByVal username As String, ByVal password As String, ByVal badgenumber As Integer, ByVal testCenterID As Int32, ByVal hasPasswordRequirement As Boolean, ByVal departmentID As Int32) As NotificationCollection
             Dim returnNotifications As New NotificationCollection
 
-            If (hasPasswordRequirement) Then
-                hasPasswordRequirement = RIMAuthenticationProvider.AuthenticateCredentials(username, password)
-            Else
-                hasPasswordRequirement = True
-            End If
-
-            If hasPasswordRequirement Then
-                Dim u As User = UserManager.GetItem(username.ToLower, SearchType.UserName)
-                u.BadgeNumber = badgenumber
-                u.ByPassProduct = 1
-
-                Dim userDetails As New DataTable
-                userDetails.Columns.Add("Name", Type.GetType("System.String"))
-                userDetails.Columns.Add("Values", Type.GetType("System.String"))
-                userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
-                userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
-
-                Dim newRow As DataRow = userDetails.NewRow
-                newRow("LookupID") = testCenterID
-                newRow("Values") = String.Empty
-                newRow("Name") = "TestCenter"
-                newRow("IsDefault") = 1
-                userDetails.Rows.Add(newRow)
-
-                Dim newRow2 As DataRow = userDetails.NewRow
-                newRow2("LookupID") = departmentID
-                newRow2("Values") = String.Empty
-                newRow2("Name") = "Department"
-                newRow2("IsDefault") = 1
-                userDetails.Rows.Add(newRow2)
-
-                u.UserDetails = userDetails
-
-                If (Not u.RolesList.Contains("Relab")) Then
-                    u.RolesList.Add("Relab")
-                    Roles.AddUserToRole(u.LDAPName, "Relab")
-                End If
-
-                u.ID = Save(u, False)
-
-                If u.ID > 0 Then 'if the user was saved then
-                    HttpContext.Current.Session.Add(_userSessionVariableName, u) 'save it to the session
+            Try
+                If (hasPasswordRequirement) Then
+                    hasPasswordRequirement = RIMAuthenticationProvider.AuthenticateCredentials(username, password)
                 Else
-                    returnNotifications.AddWithMessage("User verified ok but there was a database error. Unable to save.", NotificationType.Information)
+                    hasPasswordRequirement = True
                 End If
-            Else
-                returnNotifications.Add(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, username)
-            End If
+
+                If hasPasswordRequirement Then
+                    Dim u As User = UserManager.GetItem(username.ToLower, SearchType.UserName)
+                    u.BadgeNumber = badgenumber
+                    u.ByPassProduct = 1
+
+                    Dim userDetails As New DataTable
+                    userDetails.Columns.Add("Name", Type.GetType("System.String"))
+                    userDetails.Columns.Add("Values", Type.GetType("System.String"))
+                    userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
+                    userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
+
+                    Dim newRow As DataRow = userDetails.NewRow
+                    newRow("LookupID") = testCenterID
+                    newRow("Values") = String.Empty
+                    newRow("Name") = "TestCenter"
+                    newRow("IsDefault") = 1
+                    userDetails.Rows.Add(newRow)
+
+                    Dim newRow2 As DataRow = userDetails.NewRow
+                    newRow2("LookupID") = departmentID
+                    newRow2("Values") = String.Empty
+                    newRow2("Name") = "Department"
+                    newRow2("IsDefault") = 1
+                    userDetails.Rows.Add(newRow2)
+
+                    u.UserDetails = userDetails
+
+                    If (Not u.RolesList.Contains("Relab")) Then
+                        u.RolesList.Add("Relab")
+                        Roles.AddUserToRole(u.LDAPName, "Relab")
+                    End If
+
+                    u.ID = Save(u, False)
+
+                    If u.ID > 0 Then 'if the user was saved then
+                        HttpContext.Current.Session.Add(_userSessionVariableName, u) 'save it to the session
+                    Else
+                        returnNotifications.AddWithMessage("User verified ok but there was a database error. Unable to save.", NotificationType.Information)
+                    End If
+                Else
+                    returnNotifications.Add(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, username)
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
 
             Return returnNotifications
         End Function
@@ -514,29 +521,32 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function GetUser(ByVal userIdentification As String, Optional ByVal userID As Int32 = 0) As User
-            If Not String.IsNullOrEmpty(userIdentification) Then
-                Dim badgeNumber As Integer
+            Try
+                If Not String.IsNullOrEmpty(userIdentification) Then
+                    Dim badgeNumber As Integer
 
-                'try to parse it as an integer - badge scan
-                If Integer.TryParse(userIdentification.ToLower, badgeNumber) Then
-                    If badgeNumber > 0 Then
-                        Return UserManager.GetItem(badgeNumber.ToString(), SearchType.Badge)
-                    End If
-                Else
-                    'its most likely a string
-                    Dim username As String = userIdentification
-                    If userIdentification.ToLower.Contains("@"c) Then
-                        'this is an email address type username so try to get the user using it
-                        'the dta/tta application sends email addresses rather than badge numbers.
-                        username = userIdentification.ToLower.Split("@"c)(0)
-                    End If
+                    'try to parse it as an integer - badge scan
+                    If Integer.TryParse(userIdentification.ToLower, badgeNumber) Then
+                        If badgeNumber > 0 Then
+                            Return UserManager.GetItem(badgeNumber.ToString(), SearchType.Badge)
+                        End If
+                    Else
+                        'its most likely a string
+                        Dim username As String = userIdentification
+                        If userIdentification.ToLower.Contains("@"c) Then
+                            'this is an email address type username so try to get the user using it
+                            'the dta/tta application sends email addresses rather than badge numbers.
+                            username = userIdentification.ToLower.Split("@"c)(0)
+                        End If
 
-                    Return UserManager.GetItem(username, SearchType.UserName)
+                        Return UserManager.GetItem(username, SearchType.UserName)
+                    End If
+                ElseIf userID > 0 Then
+                    Return UserManager.GetItem(userID.ToString(), SearchType.UserID)
                 End If
-            ElseIf userID > 0 Then
-                Return UserManager.GetItem(userID.ToString(), SearchType.UserID)
-            End If
-
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
             Return Nothing
         End Function
 

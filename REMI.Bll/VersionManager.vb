@@ -8,23 +8,28 @@ Namespace REMI.Bll
         Inherits REMIManagerBase
 
         Public Shared Function GetProductConfigXMLByAppVersion(ByVal application As String, ByVal versionNumber As String, ByVal productID As Int32, ByVal testID As Int32, ByVal pcName As String) As Int32
-            Dim instance = New REMI.Dal.Entities().Instance()
-            Dim tstId As Int32 = (From t In instance.Tests Where t.TestName = application Select t.ID).FirstOrDefault()
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim tstId As Int32 = (From t In instance.Tests Where t.TestName = application Select t.ID).FirstOrDefault()
 
-            If (tstId > 0) Then
-                Dim appID As Int32 = (From a In instance.Applications Where a.ApplicationName = application Select a.ID).FirstOrDefault()
-                Dim appVersion As Int32 = (From a In instance.ApplicationVersions Where a.Application.ID = appID And a.VerNum = versionNumber Select a.ID).FirstOrDefault()
+                If (tstId > 0) Then
+                    Dim appID As Int32 = (From a In instance.Applications Where a.ApplicationName = application Select a.ID).FirstOrDefault()
+                    Dim appVersion As Int32 = (From a In instance.ApplicationVersions Where a.Application.ID = appID And a.VerNum = versionNumber Select a.ID).FirstOrDefault()
 
-                If (appVersion = 0) Then
-                    appVersion = (From a In instance.ApplicationVersions Where a.Application.ID = appID And a.ApplicableToAll = True Order By a.ID Descending Select a.ID).FirstOrDefault()
+                    If (appVersion = 0) Then
+                        appVersion = (From a In instance.ApplicationVersions Where a.Application.ID = appID And a.ApplicableToAll = True Order By a.ID Descending Select a.ID).FirstOrDefault()
+                    End If
+
+                    Dim pvs As Int32 = (From pv In instance.ApplicationProductVersions Where pv.ApplicationVersion.ID = appVersion And pv.ProductConfigurationVersion.ProductConfigurationUpload.PCName = pcName Select pv.ProductConfigurationVersion.ID).FirstOrDefault()
+
+                    Return pvs
+                Else
+                    Return -1
                 End If
-
-                Dim pvs As Int32 = (From pv In instance.ApplicationProductVersions Where pv.ApplicationVersion.ID = appVersion And pv.ProductConfigurationVersion.ProductConfigurationUpload.PCName = pcName Select pv.ProductConfigurationVersion.ID).FirstOrDefault()
-
-                Return pvs
-            Else
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
                 Return -1
-            End If
+            End Try
         End Function
 
         Public Shared Function SaveVersion(ByVal id As Int32, ByVal versionNumber As String, ByVal applicableToAll As Int32) As Boolean

@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[JobAccess](
+	[JobAccessID] [int] IDENTITY(1,1) NOT NULL,
+	[JobID] [int] NOT NULL,
+	[LookupID] [int] NOT NULL,
+ CONSTRAINT [PK_JobAccess] PRIMARY KEY CLUSTERED 
+(
+	[JobAccessID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[JobAccess]  WITH CHECK ADD  CONSTRAINT [FK_JobAccess_Jobs] FOREIGN KEY([JobID])
+REFERENCES [dbo].[Jobs] ([ID])
+GO
+
+ALTER TABLE [dbo].[JobAccess] CHECK CONSTRAINT [FK_JobAccess_Jobs]
+GO
+
+ALTER TABLE [dbo].[JobAccess]  WITH CHECK ADD  CONSTRAINT [FK_JobAccess_Lookups] FOREIGN KEY([LookupID])
+REFERENCES [dbo].[Lookups] ([LookupID])
+GO
+
+ALTER TABLE [dbo].[JobAccess] CHECK CONSTRAINT [FK_JobAccess_Lookups]
+GO

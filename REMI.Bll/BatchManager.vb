@@ -113,58 +113,62 @@ Namespace REMI.Bll
         ''' </summary>
         ''' <remarks></remarks>
         Private Shared Sub AddNewBatchToREMI(ByVal bc As DeviceBarcodeNumber, ByRef b As Batch)
-            If b IsNot Nothing Then
-                If b.NeedsToBeSaved Then
-                    b.LastUser = UserManager.GetCurrentValidUserLDAPName
+            Try
+                If b IsNot Nothing Then
+                    If b.NeedsToBeSaved Then
+                        b.LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                    If b.ID <= 0 AndAlso b.Validate Then
-                        'set the test stage to the first possible one
-                        b.Job = JobManager.GetJobByName(b.JobName)
-                        b.TestStageName = (From ts In b.Job.TestStages Where ts.ProcessOrder >= 0 And ts.IsArchived = False Order By ts.ProcessOrder Ascending Select ts.Name).FirstOrDefault()
+                        If b.ID <= 0 AndAlso b.Validate Then
+                            'set the test stage to the first possible one
+                            b.Job = JobManager.GetJobByName(b.JobName)
+                            b.TestStageName = (From ts In b.Job.TestStages Where ts.ProcessOrder >= 0 And ts.IsArchived = False Order By ts.ProcessOrder Ascending Select ts.Name).FirstOrDefault()
 
-                        'check if this is a legacy batch, remstar inventory from pre remi days
-                        b.SetNewBatchStatus()
+                            'check if this is a legacy batch, remstar inventory from pre remi days
+                            b.SetNewBatchStatus()
 
-                        'indicate if batch is really old
-                        If b.IsForDisposal Then
-                            b.Notifications.AddWithMessage("This batch is older than three years and can be disposed of.", NotificationType.Information)
+                            'indicate if batch is really old
+                            If b.IsForDisposal Then
+                                b.Notifications.AddWithMessage("This batch is older than three years and can be disposed of.", NotificationType.Information)
+                            End If
+
+                            'save it
+                            Try
+                                b.ID = Save(b)
+                                'the following method adds this batch to the remstar table. This will be parsed by the remstar application and the
+                                'batch will get added to remstar automatically.
+                                b.Notifications.Add(AddNewBatchAsMaterialToRemstar(b.GetRemstarMaterial()))
+                            Catch ex As Exception
+                                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, b.QRANumber))
+                            End Try
                         End If
+                    End If
+                    'If the batch was saved OK then we need to add all of the test units to the batch or add any missing units.
 
-                        'save it
-                        Try
-                            b.ID = Save(b)
-                            'the following method adds this batch to the remstar table. This will be parsed by the remstar application and the
-                            'batch will get added to remstar automatically.
-                            b.Notifications.Add(AddNewBatchAsMaterialToRemstar(b.GetRemstarMaterial()))
-                        Catch ex As Exception
-                            b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, b.QRANumber))
-                        End Try
+                    If b.ID > 0 Then
+                        'add the correct number of units.
+
+                        For i As Integer = 1 To b.NumberOfUnitsExpected
+                            Dim tu As TestUnit = b.GetUnit(i)
+                            If tu IsNot Nothing AndAlso Not tu.IsSavedInREMI Then
+                                tu.LastUser = UserManager.GetCurrentValidUserLDAPName
+                                If tu.Validate Then
+                                    TestUnitManager.Save(tu)
+                                    b.NumberOfUnits += 1
+                                Else
+                                    b.Notifications.AddWithMessage("Unable to save test unit " + i.ToString, NotificationType.Warning)
+                                End If
+                            Else
+                                b.Notifications.Add(tu.Notifications)
+                            End If
+
+                        Next
+                    Else
+                        b.Notifications.AddWithMessage("Unable to save batch.", NotificationType.Errors)
                     End If
                 End If
-                'If the batch was saved OK then we need to add all of the test units to the batch or add any missing units.
-
-                If b.ID > 0 Then
-                    'add the correct number of units.
-
-                    For i As Integer = 1 To b.NumberOfUnitsExpected
-                        Dim tu As TestUnit = b.GetUnit(i)
-                        If tu IsNot Nothing AndAlso Not tu.IsSavedInREMI Then
-                            tu.LastUser = UserManager.GetCurrentValidUserLDAPName
-                            If tu.Validate Then
-                                TestUnitManager.Save(tu)
-                                b.NumberOfUnits += 1
-                            Else
-                                b.Notifications.AddWithMessage("Unable to save test unit " + i.ToString, NotificationType.Warning)
-                            End If
-                        Else
-                            b.Notifications.Add(tu.Notifications)
-                        End If
-
-                    Next
-                Else
-                    b.Notifications.AddWithMessage("Unable to save batch.", NotificationType.Errors)
-                End If
-            End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
         End Sub
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
@@ -503,15 +507,21 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function GetViewBatch(ByVal batchQRANumber As String) As IBatch
-            'becuase we are running two batch models side by side
-            'If the batch is not already in remi, I must use the older type batch getitem method
-            'so as to got through the initial batch setup process.
-            Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser)
-            If b IsNot Nothing Then
-                Return b
-            End If
-            'ok we don't have this in the database so get the 'full' older model.
-            Return GetItem(batchQRANumber)
+            Try
+                'becuase we are running two batch models side by side
+                'If the batch is not already in remi, I must use the older type batch getitem method
+                'so as to got through the initial batch setup process.
+                Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser)
+                If b IsNot Nothing Then
+                    Return b
+                End If
+                'ok we don't have this in the database so get the 'full' older model.
+                Return GetItem(batchQRANumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
+
+            Return Nothing
         End Function
 
         ''' <summary>
