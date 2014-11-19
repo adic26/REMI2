@@ -22,6 +22,7 @@ Namespace REMI.BusinessEntities
         Private _name As String
         Private _fieldType As String
         Private _fieldValidation As String
+        Private _category As String
         Private _intField As String
         Private _extField As String
         Private _requestNumber As String
@@ -120,12 +121,21 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Property Name() As String Implements IRequestFields.Name
+        Public Property Name() As String Implements IRequestFields.Category
             Get
                 Return _name
             End Get
             Set(ByVal value As String)
                 _name = value
+            End Set
+        End Property
+
+        Public Property Category() As String Implements IRequestFields.Name
+            Get
+                Return _category
+            End Get
+            Set(ByVal value As String)
+                _category = value
             End Set
         End Property
 

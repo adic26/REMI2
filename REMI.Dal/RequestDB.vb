@@ -489,6 +489,7 @@ Namespace REMI.Dal
             myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
             myFields.RequestNumber = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestNumber"))
             myFields.NewRequest = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("NewRequest"))
+            myFields.Category = myDataRecord.GetString(myDataRecord.GetOrdinal("Category"))
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Value")) Then
                 myFields.Value = myDataRecord.GetString(myDataRecord.GetOrdinal("Value"))
