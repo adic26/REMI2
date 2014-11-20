@@ -180,7 +180,7 @@ Partial Class ScanForInfo_Default
                     grdTrackingLog.DataBind()
 
                     If (b.Orientation IsNot Nothing) Then
-                        lblOrientation.Text = String.Format("Orientation: {0}", b.Orientation.Name)
+                        lblOrientation.Text = String.Format("Orientation/Sequence: {0}", b.Orientation.Name)
                     Else
                         lblOrientation.Text = String.Empty
                     End If
@@ -448,7 +448,7 @@ Partial Class ScanForInfo_Default
             gvwStressingSummary.DataBind()
 
             If (b.Orientation IsNot Nothing) Then
-                lblOrientation.Text = String.Format("Orientation: {0}", b.Orientation.Name)
+                lblOrientation.Text = String.Format("Orientation/Sequence: {0}", b.Orientation.Name)
             Else
                 lblOrientation.Text = String.Empty
             End If
