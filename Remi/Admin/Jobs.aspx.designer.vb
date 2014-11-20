@@ -563,6 +563,51 @@ Partial Public Class Admin_TestStages
     Protected WithEvents txtDefinition As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''acpAccess control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents acpAccess As Global.AjaxControlToolkit.AccordionPane
+
+    '''<summary>
+    '''lblAccess control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblAccess As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''grdAccess control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdAccess As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''pnlAccessAdd control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlAccessAdd As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''ddlDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
     '''pnlAddEditTestStage control.
     '''</summary>
     '''<remarks>

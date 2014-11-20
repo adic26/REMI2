@@ -592,6 +592,17 @@ Public Class RemiAPI
         Return New DataTable("JobOrientation")
     End Function
 
+    <WebMethod(Description:="Given a job id this function returns all orientations for this job.")> _
+    Public Function GetJobAccess(ByVal jobID As Int32) As DataTable
+        Try
+            Return JobManager.GetJobAccess(jobID)
+        Catch ex As Exception
+            JobManager.LogIssue("REMI API GetJobAccess", "e3", NotificationType.Errors, ex, "jobID: " + jobID)
+        End Try
+
+        Return New DataTable("JobAccess")
+    End Function
+
     <WebMethod(Description:="Get all TRS jobs.")> _
     Public Function GetTRSJobs() As String()
         Try

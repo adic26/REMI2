@@ -98,6 +98,7 @@ Partial Class Admin_TestStages
         JobEnvSetup.DataBind()
 
         BindOrientations()
+        BindAccess()
     End Sub
 
     Protected Sub FillFormFieldsforTestStage(ByVal tmpTestStage As TestStage)
@@ -332,6 +333,23 @@ Partial Class Admin_TestStages
             Else
                 notMain.Add("Orientation Can't Be Created. Please ensure you have entered product type and definition!", NotificationType.Warning)
             End If
+        ElseIf (pnlAccessAdd.Visible) Then
+            Dim departmentID As Int32
+            Int32.TryParse(ddlDepartments.SelectedValue, departmentID)
+
+            If (departmentID > 0) Then
+                Dim success As Boolean = JobManager.SaveAccess(hdnJobID.Value, departmentID)
+
+                If (success) Then
+                    pnlAccessAdd.Visible = False
+
+                    notMain.Add("Successfully Created New Access", NotificationType.Information)
+                Else
+                    notMain.Add("Failed To Create New Access", NotificationType.Errors)
+                End If
+            Else
+                notMain.Add("Please ensure you have selected a department!", NotificationType.Warning)
+            End If
         End If
 
         If Not notMain.HasErrors Then
@@ -401,6 +419,19 @@ Partial Class Admin_TestStages
         Helpers.MakeAccessable(gdvOrientations)
     End Sub
 
+    Protected Sub grdAccessGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdAccess.PreRender
+        Helpers.MakeAccessable(grdAccess)
+    End Sub
+
+    Protected Sub grdAccess_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles grdAccess.RowCommand
+        Select Case e.CommandName.ToLower()
+            Case "deleteaccess"
+                JobManager.DeleteAccess(Convert.ToInt32(e.CommandArgument))
+        End Select
+
+        BindAccess()
+    End Sub
+
     Protected Sub gdvOrientations_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs) Handles gdvOrientations.RowCommand
         Dim xmlstr As String = e.CommandArgument
 
@@ -464,7 +495,7 @@ Partial Class Admin_TestStages
         BindOrientations()
     End Sub
 
-    Sub BindOrientations()
+    Protected Sub BindOrientations()
         gdvOrientations.DataSource = JobManager.GetJobOrientationLists(hdnJobID.Value, String.Empty)
         gdvOrientations.DataBind()
 
@@ -473,10 +504,21 @@ Partial Class Admin_TestStages
         End If
     End Sub
 
+    Protected Sub BindAccess()
+        grdAccess.DataSource = JobManager.GetJobAccess(hdnJobID.Value)
+        grdAccess.DataBind()
+    End Sub
+
     Protected Sub btnAddOrientation_Click(ByVal sender As Object, ByVal e As EventArgs)
         pnlOrientationAdd.Visible = True
         ddlPT.DataSource = LookupsManager.GetLookups(LookupType.ProductType, 0, 0, 0)
         ddlPT.DataBind()
+    End Sub
+
+    Protected Sub btnAddAccess_Click(ByVal sender As Object, ByVal e As EventArgs)
+        pnlAccessAdd.Visible = True
+        ddlDepartments.DataSource = LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
+        ddlDepartments.DataBind()
     End Sub
 
     Protected Sub gdvOrientations_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gdvOrientations.RowCreated

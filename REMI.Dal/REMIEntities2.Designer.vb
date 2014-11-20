@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("ba2fbc7e-7514-4437-bad2-11998ebddcff")>
+<Assembly: EdmSchemaAttribute("eca5862d-76a8-4380-82a1-c345b9641109")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -117,6 +117,8 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestTypeAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "RequestTypeAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestTypeAccess), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestTypeAccess_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "RequestTypeAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestTypeAccess), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobAccess_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Job), "JobAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobAccess), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "JobAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobAccess), True)>
 
 #End Region
 
@@ -1230,6 +1232,20 @@ Namespace REMI.Entities
         End Property
     
         Private _RequestTypeAccesses As ObjectSet(Of RequestTypeAccess)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property JobAccesses() As ObjectSet(Of JobAccess)
+            Get
+                If (_JobAccesses Is Nothing) Then
+                    _JobAccesses = MyBase.CreateObjectSet(Of JobAccess)("JobAccesses")
+                End If
+                Return _JobAccesses
+            End Get
+        End Property
+    
+        Private _JobAccesses As ObjectSet(Of JobAccess)
 
         #End Region
 
@@ -1765,6 +1781,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToRequestTypeAccesses(ByVal requestTypeAccess As RequestTypeAccess)
             MyBase.AddObject("RequestTypeAccesses", requestTypeAccess)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the JobAccesses EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToJobAccesses(ByVal jobAccess As JobAccess)
+            MyBase.AddObject("JobAccesses", jobAccess)
         End Sub
 
         #End Region
@@ -7183,6 +7206,199 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobAccess_Jobs", "JobAccess")>
+         Public Property JobAccesses() As EntityCollection(Of JobAccess)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of JobAccess)("REMI.Entities.FK_JobAccess_Jobs", "JobAccess")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of JobAccess)("REMI.Entities.FK_JobAccess_Jobs", "JobAccess", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="JobAccess")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class JobAccess
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new JobAccess object.
+        ''' </summary>
+        ''' <param name="jobAccessID">Initial value of the JobAccessID property.</param>
+        ''' <param name="jobID">Initial value of the JobID property.</param>
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        Public Shared Function CreateJobAccess(jobAccessID As Global.System.Int32, jobID As Global.System.Int32, lookupID As Global.System.Int32) As JobAccess
+            Dim jobAccess as JobAccess = New JobAccess
+            jobAccess.JobAccessID = jobAccessID
+            jobAccess.JobID = jobID
+            jobAccess.LookupID = lookupID
+            Return jobAccess
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property JobAccessID() As Global.System.Int32
+            Get
+                Return _JobAccessID
+            End Get
+            Set
+                If (_JobAccessID <> Value) Then
+                    OnJobAccessIDChanging(value)
+                    ReportPropertyChanging("JobAccessID")
+                    _JobAccessID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("JobAccessID")
+                    OnJobAccessIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _JobAccessID As Global.System.Int32
+        Private Partial Sub OnJobAccessIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnJobAccessIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property JobID() As Global.System.Int32
+            Get
+                Return _JobID
+            End Get
+            Set
+                OnJobIDChanging(value)
+                ReportPropertyChanging("JobID")
+                _JobID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("JobID")
+                OnJobIDChanged()
+            End Set
+        End Property
+    
+        Private _JobID As Global.System.Int32
+        Private Partial Sub OnJobIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnJobIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Global.System.Int32
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobAccess_Jobs", "Job")>
+        Public Property Job() As Job
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Job)("REMI.Entities.FK_JobAccess_Jobs", "Job").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Job)("REMI.Entities.FK_JobAccess_Jobs", "Job").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property JobReference() As EntityReference(Of Job)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Job)("REMI.Entities.FK_JobAccess_Jobs", "Job")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Job)("REMI.Entities.FK_JobAccess_Jobs", "Job", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobAccess_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_JobAccess_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_JobAccess_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_JobAccess_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_JobAccess_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -8177,6 +8393,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestTypeAccess)("REMI.Entities.FK_RequestTypeAccess_Lookups", "RequestTypeAccess", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobAccess_Lookups", "JobAccess")>
+         Public Property JobAccesses() As EntityCollection(Of JobAccess)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of JobAccess)("REMI.Entities.FK_JobAccess_Lookups", "JobAccess")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of JobAccess)("REMI.Entities.FK_JobAccess_Lookups", "JobAccess", value)
                 End If
             End Set
         End Property
@@ -11092,7 +11326,8 @@ Namespace REMI.Entities
         ''' <param name="isRequired">Initial value of the IsRequired property.</param>
         ''' <param name="displayOrder">Initial value of the DisplayOrder property.</param>
         ''' <param name="columnOrder">Initial value of the ColumnOrder property.</param>
-        Public Shared Function CreateReqFieldSetup(reqFieldSetupID As Global.System.Int32, requestTypeID As Global.System.Int32, name As Global.System.String, fieldTypeID As Global.System.Int32, archived As Global.System.Boolean, isRequired As Global.System.Boolean, displayOrder As Global.System.Int32, columnOrder As Global.System.Int32) As ReqFieldSetup
+        ''' <param name="category">Initial value of the Category property.</param>
+        Public Shared Function CreateReqFieldSetup(reqFieldSetupID As Global.System.Int32, requestTypeID As Global.System.Int32, name As Global.System.String, fieldTypeID As Global.System.Int32, archived As Global.System.Boolean, isRequired As Global.System.Boolean, displayOrder As Global.System.Int32, columnOrder As Global.System.Int32, category As Global.System.String) As ReqFieldSetup
             Dim reqFieldSetup as ReqFieldSetup = New ReqFieldSetup
             reqFieldSetup.ReqFieldSetupID = reqFieldSetupID
             reqFieldSetup.RequestTypeID = requestTypeID
@@ -11102,6 +11337,7 @@ Namespace REMI.Entities
             reqFieldSetup.IsRequired = isRequired
             reqFieldSetup.DisplayOrder = displayOrder
             reqFieldSetup.ColumnOrder = columnOrder
+            reqFieldSetup.Category = category
             Return reqFieldSetup
         End Function
 
@@ -11384,6 +11620,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnColumnOrderChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Category() As Global.System.String
+            Get
+                Return _Category
+            End Get
+            Set
+                OnCategoryChanging(value)
+                ReportPropertyChanging("Category")
+                _Category = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Category")
+                OnCategoryChanged()
+            End Set
+        End Property
+    
+        Private _Category As Global.System.String
+        Private Partial Sub OnCategoryChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnCategoryChanged()
         End Sub
 
         #End Region

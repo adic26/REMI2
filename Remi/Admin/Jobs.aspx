@@ -299,6 +299,37 @@
                             </asp:Panel>
                         </Content>
                     </asp:AccordionPane>
+                    <asp:AccordionPane runat="server" ID="acpAccess">
+                        <Header>
+                            <h2><asp:Label runat="server" ID="lblAccess" Text="Access"></asp:Label></h2>
+                        </Header>
+                        <Content>
+                            <asp:GridView runat="server" ID="grdAccess" ShowFooter="true" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="JobAccessID">
+                                <Columns>
+                                    <asp:BoundField DataField="JobAccessID" HeaderText="JobAccessID" ReadOnly="true" SortExpression="JobAccessID" />
+                                    <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
+                                    <asp:BoundField DataField="Department" HeaderText="Department" SortExpression="Department" />
+                                    <asp:TemplateField ShowHeader="False">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("JobAccessID")%>' onclientclick="return confirm('Are you sure you want to delete this department?');" CommandName="DeleteAccess" CausesValidation="false">Delete</asp:LinkButton>
+                                        </ItemTemplate>
+                                        <FooterTemplate>
+                                         <asp:Button ID="btnAddAccess" CssClass="buttonSmall" runat="server" Text="Add Access" OnClick="btnAddAccess_Click" CausesValidation="true" />
+                                        </FooterTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                            <br /><br />
+                            <asp:Panel runat="server" ID="pnlAccessAdd" Visible="false">
+                                <table>
+                                    <tr>
+                                        <td class="HorizTableFirstcolumn">Department:</td>
+                                        <td class="HorizTableSecondColumn"><asp:DropDownList runat="server" ID="ddlDepartments" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList></td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </Content>
+                    </asp:AccordionPane>
                 </Panes>
             </asp:Accordion>
         </div>

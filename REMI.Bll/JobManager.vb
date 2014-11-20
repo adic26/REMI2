@@ -97,6 +97,53 @@ Namespace REMI.Bll
             End Try
         End Function
 
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetJobAccess(ByVal jobID As Int32) As DataTable
+            Try
+                Return JobDB.GetJobAccess(jobID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                Return Nothing
+            End Try
+        End Function
+
+        Public Shared Function DeleteAccess(ByVal jobAccessID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim ja As Entities.JobAccess = (From a In instance.JobAccesses Where a.JobAccessID = jobAccessID Select a).FirstOrDefault()
+                instance.DeleteObject(ja)
+
+                instance.SaveChanges()
+
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        Public Shared Function SaveAccess(ByVal jobID As Int32, ByVal departmentID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim ja As Entities.JobAccess = (From a In instance.JobAccesses Where a.JobID = jobID And a.LookupID = departmentID Select a).FirstOrDefault()
+
+                If (ja Is Nothing) Then
+                    Dim a As New REMI.Entities.JobAccess()
+                    a.Lookup = (From l In instance.Lookups Where l.LookupID = departmentID Select l).FirstOrDefault()
+                    a.Job = (From j In instance.Jobs Where j.ID = jobID Select j).FirstOrDefault()
+                    instance.AddToJobAccesses(a)
+                End If
+
+                instance.SaveChanges()
+
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return False
+        End Function
+
         Public Shared Function SaveOrientation(ByVal jobID As Int32, ByVal id As Int32, ByVal name As String, ByVal productTypeID As Int32, ByVal description As String, ByVal isActive As Boolean, ByVal xml As String) As Boolean
             Try
                 Return JobDB.SaveOrientation(jobID, id, name, productTypeID, description, isActive, xml)

@@ -2410,4 +2410,7 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\JobAccess.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetJobAccess.sql" />
+  </ItemGroup>
 </Project>

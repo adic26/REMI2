@@ -104,6 +104,25 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetJobAccess(ByVal jobID As Int32) As DataTable
+            Dim dt As New DataTable
+            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetJobAccess", MyConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+
+                    If (jobID > 0) Then
+                        myCommand.Parameters.AddWithValue("@JobID", jobID)
+                    End If
+
+                    MyConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "JobAccess"
+                End Using
+            End Using
+            Return dt
+        End Function
+
         Public Shared Function SaveOrientation(ByVal jobID As Int32, ByVal id As Int32, ByVal name As String, ByVal productTypeID As Int32, ByVal description As String, ByVal isActive As Boolean, ByVal xml As String) As Boolean
             Dim Result As Integer = 0
 
