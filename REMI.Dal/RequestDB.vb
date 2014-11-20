@@ -480,7 +480,7 @@ Namespace REMI.Dal
                 Dim options As New List(Of String)
 
                 If (myFields.InternalField = 0) Then
-                    options.Add(" ")
+                    options.Add("Not Set")
                 End If
 
                 options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
