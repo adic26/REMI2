@@ -77,7 +77,6 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        <XmlIgnore()> _
         Public Property HostID() As Int32
             Get
                 Return _hostID
@@ -97,7 +96,6 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        <XmlIgnore()> _
         Public Property HostName() As String
             Get
                 If Not String.IsNullOrEmpty(_hostName) Then
