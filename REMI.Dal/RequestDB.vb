@@ -431,6 +431,7 @@ Namespace REMI.Dal
         End Function
 
         Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord, ByVal user As User) As BusinessEntities.RequestFields
+            Dim instance = New REMI.Dal.Entities().Instance()
             Dim myFields As RequestFields = New BusinessEntities.RequestFields()
 
             myFields.FieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldSetupID"))
@@ -477,8 +478,12 @@ Namespace REMI.Dal
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
-                options.Add(" ")
-                options.AddRange((From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
+
+                If (myFields.InternalField = 0) Then
+                    options.Add(" ")
+                End If
+
+                options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
 
                 myFields.OptionsType = options
             Else
@@ -500,7 +505,7 @@ Namespace REMI.Dal
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "ProductGroup"
-                        myFields.OptionsType = (From p In New REMI.Dal.Entities().Instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
+                        myFields.OptionsType = (From p In instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
                     Case "RequestedTest"
                         myFields.OptionsType = (From j In JobDB.GetJobListDT(user).AsEnumerable() Select j.Name).ToList()
                 End Select
