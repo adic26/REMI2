@@ -282,6 +282,23 @@ Namespace REMI.Dal
 
         Public Shared Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
             Dim dtReq As New DataTable("Requests")
+            dtReq.Columns.Add("RequestID", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("RequestNumber", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("STATUS", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCT", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCTTYPE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("ACCESSORYGROUPNAME", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("TESTCENTER", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("DEPARTMENT", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("SAMPLESIZE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("Job", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PURPOSE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("CPR", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("Report Required By", System.Type.GetType("System.DateTime"))
+            dtReq.Columns.Add("PRIORITY", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("REQUESTOR", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("CRE_DATE", System.Type.GetType("System.DateTime"))
+
             Dim lastRequestConnectName As String = String.Empty
             Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Order By r.RequestConnectName Select r).ToList()
 
