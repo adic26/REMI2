@@ -365,11 +365,13 @@ Partial Class Admin_Users
                 Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
 
                 If Request.Form(chkTestCenter.UniqueID) = "on" Then
+                    Dim isDefault As Boolean = False
+                    Boolean.TryParse(hdnTCIsDefault.Value, isDefault)
                     Dim newRow As DataRow = userDetails.NewRow
                     newRow("LookupID") = hdnTestCenterID.Value
                     newRow("Values") = chkTestCenter.Text
                     newRow("Name") = "TestCenter"
-                    newRow("IsDefault") = hdnTCIsDefault.Value
+                    newRow("IsDefault") = isDefault
                     userDetails.Rows.Add(newRow)
                 End If
             End If
@@ -416,6 +418,24 @@ Partial Class Admin_Users
 
     Protected Sub lnkAddNewUser_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddNewUser.Click
         SetupPageAddEditUser(Nothing)
+    End Sub
+
+    Protected Sub dlstTestCenter_Item_Bound(sender As Object, e As DataListItemEventArgs) Handles dlstTestCenter.ItemDataBound
+        Dim hdnTCIsDefault As HiddenField = DirectCast(e.Item.FindControl("hdnTCIsDefault"), HiddenField)
+        Dim chkTestCenter As CheckBox = DirectCast(e.Item.FindControl("chkTestCenter"), CheckBox)
+
+        If hdnUserID.Value.Trim().Length = 0 Or hdnUserID.Value = "-1" Then
+            chkTestCenter.InputAttributes.Add("onclick", "chkTestCenter_click('" & chkTestCenter.ClientID & "', '" & hdnTCIsDefault.ClientID & "');")
+        End If
+    End Sub
+
+    Protected Sub dlstDepartments_Item_Bound(sender As Object, e As DataListItemEventArgs) Handles dlstDepartments.ItemDataBound
+        Dim hdnDIsDefault As HiddenField = DirectCast(e.Item.FindControl("hdnDIsDefault"), HiddenField)
+        Dim chkDepartment As CheckBox = DirectCast(e.Item.FindControl("chkDepartment"), CheckBox)
+
+        If hdnUserID.Value.Trim().Length = 0 Or hdnUserID.Value = "-1" Then
+            chkDepartment.InputAttributes.Add("onclick", "chkDepartment_click('" & chkDepartment.ClientID & "', '" & hdnDIsDefault.ClientID & "');")
+        End If
     End Sub
 
     Protected Sub gvwTraining_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwTraining.RowDataBound

@@ -18,6 +18,49 @@
         catch (ex) { alert(ex) }
     }
 
+    var departmentdefaultset = false;
+    var testcenterdefaultset = false;
+
+    function chkTestCenter_click(chk, hdn) {
+        if (document.getElementById(chk).checked == true && testcenterdefaultset == false) {
+            var r = confirm("Set As Default?");
+
+            if (r == true) {
+                testcenterdefaultset = true;
+                document.getElementById(hdn).innerText = "true";
+            }
+            else {
+                document.getElementById(hdn).innerText = "false";
+            }
+        }
+        else if (document.getElementById(hdn).value == "true" && document.getElementById(chk).checked == false) {
+            document.getElementById(chk).checked = true;
+        }
+        else {
+            document.getElementById(hdn).innerText = "false";
+        }
+    }
+
+    function chkDepartment_click(chk, hdn) {
+        if (document.getElementById(chk).checked == true && departmentdefaultset == false) {
+            var r = confirm("Set As Default?");
+
+            if (r == true) {
+                departmentdefaultset = true;
+                document.getElementById(hdn).innerText = "true";
+            }
+            else {
+                document.getElementById(hdn).innerText = "false";
+            }
+        }
+        else if (document.getElementById(hdn).value == "true" && document.getElementById(chk).checked == false) {
+            document.getElementById(chk).checked = true;
+        }
+        else {
+            document.getElementById(hdn).innerText = "false";
+        }
+    }
+
     function EnableDisableCheckbox_Click(ddl, chk, userName, lbl) {
         try {
 
