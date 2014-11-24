@@ -192,6 +192,10 @@ Namespace REMI.BusinessEntities
             Return DirectCast(System.Web.HttpRuntime.Cache.Get("MenuAccess-" + departmentID.ToString()), DataTable)
         End Function
 
+        Public Shared Sub RemoveMenuAccess(ByVal departmentID As Int32)
+            System.Web.HttpRuntime.Cache.Remove("MenuAccess-" + departmentID.ToString())
+        End Sub
+
         Public Shared Function GetExtReqData(ByVal rqNumber As String) As Dictionary(Of String, String)
             Return DirectCast(System.Web.HttpRuntime.Cache.Get("ExtReqData-" + rqNumber), Dictionary(Of String, String))
         End Function

@@ -18,6 +18,7 @@ Partial Class Admin_TrackingLocation
                 HyperLink7.Enabled = False
                 Hyperlink5.Enabled = False
                 Hyperlink8.Enabled = False
+                HyperLink9.Enabled = False
             End If
         End If
     End Sub

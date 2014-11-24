@@ -103,7 +103,7 @@ Public Class Admin_Lookups
         ApplicationBindData()
     End Sub
 
-    Sub ApplicationBindData()
+    Protected Sub ApplicationBindData()
         gdvApplications.DataSource = (From a In New REMI.Dal.Entities().Instance.ApplicationVersions.Include("Application") Order By a.Application.ApplicationName Select New With {.ID = a.Application.ID, .ApplicationName = a.Application.ApplicationName, .VersionNumber = a.VerNum, .ApplicableToAll = a.ApplicableToAll}).ToList()
         gdvApplications.DataBind()
     End Sub

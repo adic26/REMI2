@@ -1,7 +1,7 @@
 ﻿ALTER PROCEDURE remispMenuAccessByDepartment @Name NVARCHAR(150) = NULL, @DepartmentID INT = NULL
 AS
 BEGIN
-	SELECT m.Name, l.[Values] AS Department, m.Url
+	SELECT m.Name, l.[Values] AS Department, m.Url, m.MenuID, md.MenuDepartmentID
 	FROM Menu m
 		INNER JOIN MenuDepartment md ON m.MenuID=md.MenuID
 		INNER JOIN Lookups l ON l.LookupID=md.DepartmentID

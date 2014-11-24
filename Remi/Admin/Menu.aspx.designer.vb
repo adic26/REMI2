@@ -11,7 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class Admin_Lookups
+Partial Public Class Menu
 
     '''<summary>
     '''AjaxScriptManager1 control.
@@ -122,6 +122,24 @@ Partial Public Class Admin_Lookups
     Protected WithEvents Hyperlink2 As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''Image9 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Image9 As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''Hyperlink8 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Hyperlink8 As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''Image2 control.
     '''</summary>
     '''<remarks>
@@ -176,146 +194,38 @@ Partial Public Class Admin_Lookups
     Protected WithEvents hypTestStages As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
-    '''Image9 control.
+    '''grdMenu control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents Image9 As Global.System.Web.UI.WebControls.Image
+    Protected WithEvents grdMenu As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''HyperLink9 control.
+    '''ddlDepartments control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents HyperLink9 As Global.System.Web.UI.WebControls.HyperLink
+    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''pnlLeftMenuActions control.
+    '''grdMenuAccess control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlLeftMenuActions As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents grdMenuAccess As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''imgAddTestStageAction control.
+    '''odsMenus control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents imgAddTestStageAction As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''lnkAddLookupAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lnkAddLookupAction As Global.System.Web.UI.WebControls.LinkButton
-
-    '''<summary>
-    '''imgCancelAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgCancelAction As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''lnkCancelAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lnkCancelAction As Global.System.Web.UI.WebControls.LinkButton
-
-    '''<summary>
-    '''ddlLookupList control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlLookupList As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
-    '''txtValue control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtValue As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''gdvLookups control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents gdvLookups As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''gdvTargetAccess control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents gdvTargetAccess As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''txtTargetName control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtTargetName As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''txtWorkStationname control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtWorkStationname As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''chkDeny control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents chkDeny As Global.System.Web.UI.WebControls.CheckBox
-
-    '''<summary>
-    '''btnAddTarget control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnAddTarget As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''gdvApplications control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents gdvApplications As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents odsMenus As Global.System.Web.UI.WebControls.ObjectDataSource
 End Class

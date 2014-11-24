@@ -62,6 +62,9 @@
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="Image7" runat="server" />
                 <asp:HyperLink ID="HyperLink5" runat="Server" Text="Tests" NavigateUrl="~/Admin/tests.aspx" /></li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="Image9" runat="server" />
+                <asp:HyperLink ID="HyperLink9" runat="Server" Text="Menu" NavigateUrl="~/Admin/Menu.aspx" /></li>
         </ul>
     </asp:Panel>
 </asp:Content>

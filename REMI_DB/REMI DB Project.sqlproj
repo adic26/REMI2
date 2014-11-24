@@ -2413,4 +2413,7 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetJobAccess.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMenu.sql" />
+  </ItemGroup>
 </Project>

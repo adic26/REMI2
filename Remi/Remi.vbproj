@@ -149,6 +149,13 @@
       <DependentUpon>Lookups.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
+    <Compile Include="Admin\Menu.aspx.designer.vb">
+      <DependentUpon>Menu.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Menu.aspx.vb">
+      <DependentUpon>Menu.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
     <Compile Include="Admin\Results.aspx.designer.vb">
       <DependentUpon>Results.aspx</DependentUpon>
     </Compile>
@@ -572,6 +579,7 @@
   <ItemGroup>
     <Content Include="Admin\Developer\default.aspx" />
     <Content Include="Admin\Lookups.aspx" />
+    <Content Include="Admin\Menu.aspx" />
     <Content Include="Admin\Results.aspx" />
     <Content Include="Admin\Security.aspx" />
     <Content Include="Admin\Tools\ClearCache.aspx" />

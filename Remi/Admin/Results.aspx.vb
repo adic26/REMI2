@@ -20,6 +20,7 @@ Public Class Admin_Results
                 Hyperlink6.Enabled = False
                 hypTestStages.Enabled = False
                 Hyperlink7.Enabled = False
+                HyperLink9.Enabled = False
             End If
         End If
 

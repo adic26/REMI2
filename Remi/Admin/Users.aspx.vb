@@ -27,6 +27,7 @@ Partial Class Admin_Users
                 HyperLink5.Enabled = False
                 Hyperlink7.Enabled = False
                 Hyperlink8.Enabled = False
+                HyperLink9.Enabled = False
             End If
         End If
     End Sub

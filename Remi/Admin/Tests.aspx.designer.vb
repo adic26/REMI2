@@ -167,6 +167,24 @@ Partial Public Class Admin_Tests
     Protected WithEvents Hyperlink6 As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''Image7 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Image7 As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''HyperLink9 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents HyperLink9 As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''imgViewTests control.
     '''</summary>
     '''<remarks>
