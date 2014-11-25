@@ -496,7 +496,7 @@ Namespace REMI.Dal
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
 
-                If (myFields.InternalField = 0) Then
+                If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
                     options.Add("Not Set")
                 End If
 
@@ -517,6 +517,10 @@ Namespace REMI.Dal
                 myFields.Value = myDataRecord.GetString(myDataRecord.GetOrdinal("Value"))
             Else
                 myFields.Value = String.Empty
+            End If
+
+            If (myFields.IntField = "Requestor" And myFields.Value = String.Empty) Then
+                myFields.Value = user.FullName
             End If
 
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
