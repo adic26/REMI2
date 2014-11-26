@@ -70,64 +70,68 @@
             </asp:DropDownList>
             <br /><br />
     
-            <h2>Overall Summary</h2>
-            <font size="1">Use "*" in filter box as wildcard</font>
-            <asp:UpdateProgress ID="UpdateProgress2" runat="server" DynamicLayout="true" DisplayAfter="100" AssociatedUpdatePanelID="updOverallSummary">
+            <h2>Test/Stage/Unit Summary</h2>
+            <font size="1">Use "*" in filter box as wildcard</font><br />
+            <asp:UpdateProgress ID="UpdateProgress1" runat="server" DynamicLayout="true" DisplayAfter="100" AssociatedUpdatePanelID="updTestStageUnit">
                 <ProgressTemplate>
                     <div class="LoadingModal"></div>
                     <div class="LoadingGif"></div>
                 </ProgressTemplate>
             </asp:UpdateProgress>
+
             <script type="text/javascript">
                 var prm = Sys.WebForms.PageRequestManager.getInstance();
-                prm.add_pageLoaded(EndRequestOverall);
+                prm.add_pageLoaded(EndRequestSummary);
 
                 function EndRequestOverall(sender, args) {
                     if (prm._postBackSettings != null) {
                         if (prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlBatches' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlYear') {
-                            $('table#ctl00_Content_grdOverallSummary').columnFilters(
+                            $('table#ctl00_Content_grdResultSummary').columnFilters(
                             {
                                 caseSensitive: false,
                                 underline: true,
                                 wildCard: '*',
-                                excludeColumns: [0],
+                                excludeColumns: [4],
                                 alternateRowClassNames: ['evenrow', 'oddrow']
                             });
                         }
                     }
                     else {
-                        $('table#ctl00_Content_grdOverallSummary').columnFilters(
+                        $('table#ctl00_Content_grdResultSummary').columnFilters(
                         {
                             caseSensitive: false,
                             underline: true,
                             wildCard: '*',
-                            excludeColumns: [0],
+                            excludeColumns: [4],
                             alternateRowClassNames: ['evenrow', 'oddrow']
                         });
                     }
                 }
             </script>
-            <asp:GridView ID="grdOverallSummary" runat="server" HeaderStyle-Wrap="false" AllowPaging="False" EmptyDataText="There were no result found for this batch." AllowSorting="False" EnableViewState="false" RowStyle-Wrap="false" AutoGenerateColumns="True" DataKeyNames="TestID" CssClass="FilterableTable">
+
+            <asp:GridView ID="grdResultSummary" runat="server" EmptyDataText="There were no result found for this batch." DataKeyNames="ID" CssClass="FilterableTable"
+                HeaderStyle-Wrap="false" AllowPaging="False" AllowSorting="False" EnableViewState="false" RowStyle-Wrap="false" DataSourceID="odsResultSummary" AutoGenerateColumns="false">
                 <RowStyle CssClass="evenrow" />
                 <HeaderStyle Wrap="False" />
                 <AlternatingRowStyle CssClass="oddrow" />
                 <Columns>
-                    <asp:TemplateField HeaderText="XML" SortExpression="" ItemStyle-Width="4%">
+                    <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True"  Visible="false" />
+                    <asp:BoundField DataField="TestStageName" HeaderText="Test Stage" SortExpression="TestStageName" />
+                    <asp:BoundField DataField="TestName" HeaderText="Test Name" SortExpression="TestName" />
+                    <asp:BoundField DataField="BatchUnitNumber" HeaderText="Unit" SortExpression="BatchUnitNumber" />
+                    <asp:BoundField DataField="PassFail" HeaderText="Pass/Fail" SortExpression="PassFail" />   
+                    <asp:TemplateField HeaderText="View Measurements" SortExpression="">
                         <ItemTemplate>
-                            <asp:HyperLink ID="hplVersions" runat="server" ToolTip="XML" ImageUrl="\Design\Icons\png\24x24\xml_file.png" Target="_self"></asp:HyperLink>
+                            <asp:HyperLink ID="hplDetail" runat="server" Text="View" Target="_self" Visible='<%# Eval("HasMeasurements") %>'></asp:HyperLink>
                         </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
+                    </asp:TemplateField>  
+                </Columns>           
             </asp:GridView>
-
-            <font size="1">
-                <ul>
-                    <li>(?) is for how many DNP's their are for the specific unit at that test.</li>
-                    <li>N/A: Not Applicable</li>
-                    <li>N/S: Not Started</li>
-                    <li>XML: Is to link to the XML (version) files used in processing that test.</li>
-                </ul>
-            </font>
+            <asp:ObjectDataSource ID="odsResultSummary" runat="server" EnablePaging="False" SelectMethod="ResultSummary" TypeName="REMI.Bll.RelabManager">
+                <SelectParameters>
+                    <asp:ControlParameter ControlID="ddlBatches" DefaultValue="0" Name="batchID" PropertyName="SelectedValue" Type="Int32"/>
+                </SelectParameters>
+            </asp:ObjectDataSource>
 
             <asp:UpdatePanel ID="updFailureAnalysis" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
                 <Triggers>
@@ -195,76 +199,76 @@
                     </asp:ObjectDataSource>
                 </ContentTemplate>
             </asp:UpdatePanel>
-
+            
             <asp:UpdatePanel ID="updTestStageUnit" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
                 <Triggers>
                     <asp:AsyncPostBackTrigger ControlID="chkTestStageSummary" EventName="CheckedChanged" />
                 </Triggers>
                 <ContentTemplate>
-                    <h2>Test/Stage/Unit Summary</h2>
-                    <font size="1">Use "*" in filter box as wildcard</font><br />
+                    <h2>Overall Summary</h2>
                     Toggle Visible: <asp:CheckBox runat="server" Visible="true" ID="chkTestStageSummary" OnCheckedChanged="chkTestStageSummary_SelectedCheckChanged" AutoPostBack="true" />
-                    <asp:UpdateProgress ID="UpdateProgress1" runat="server" DynamicLayout="true" DisplayAfter="100" AssociatedUpdatePanelID="updTestStageUnit">
+                    <asp:UpdateProgress ID="UpdateProgress2" runat="server" DynamicLayout="true" DisplayAfter="100" AssociatedUpdatePanelID="updOverallSummary">
                         <ProgressTemplate>
                             <div class="LoadingModal"></div>
                             <div class="LoadingGif"></div>
                         </ProgressTemplate>
                     </asp:UpdateProgress>
-
                     <script type="text/javascript">
                         var prm = Sys.WebForms.PageRequestManager.getInstance();
-                        prm.add_pageLoaded(EndRequestSummary);
+                        prm.add_pageLoaded(EndRequestOverall);
 
                         function EndRequestSummary(sender, args) {
                             if (prm._postBackSettings != null) {
-                                if (prm._postBackSettings.sourceElement.id == 'ctl00_Content_chkTestStageSummary' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlBatches' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlYear') {
-                                    $('table#ctl00_Content_grdResultSummary').columnFilters(
+                                if (prm._postBackSettings.sourceElement.id == 'ctl00_Content_pnlTestStageSummary' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlBatches' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlYear') {
+                                    $('table#ctl00_Content_grdOverallSummary').columnFilters(
                                     {
                                         caseSensitive: false,
                                         underline: true,
                                         wildCard: '*',
-                                        excludeColumns: [4],
+                                        excludeColumns: [0],
                                         alternateRowClassNames: ['evenrow', 'oddrow']
                                     });
                                 }
                             }
                             else {
-                                $('table#ctl00_Content_grdResultSummary').columnFilters(
+                                $('table#ctl00_Content_grdOverallSummary').columnFilters(
                                 {
                                     caseSensitive: false,
                                     underline: true,
                                     wildCard: '*',
-                                    excludeColumns: [4],
+                                    excludeColumns: [0],
                                     alternateRowClassNames: ['evenrow', 'oddrow']
                                 });
                             }
                         }
                     </script>
-
                     <asp:Panel Visible="false" ID="pnlTestStageSummary" runat="server">
-                        <asp:GridView ID="grdResultSummary" runat="server" EmptyDataText="There were no result found for this batch." DataKeyNames="ID" CssClass="FilterableTable"
-                            HeaderStyle-Wrap="false" AllowPaging="False" AllowSorting="False" EnableViewState="false" RowStyle-Wrap="false" DataSourceID="odsResultSummary" AutoGenerateColumns="false">
+                        <asp:GridView ID="grdOverallSummary" runat="server" DataSourceID="odsOverview" HeaderStyle-Wrap="false" AllowPaging="False" EmptyDataText="There were no result found for this batch." AllowSorting="False" EnableViewState="false" RowStyle-Wrap="false" AutoGenerateColumns="True" DataKeyNames="TestID" CssClass="FilterableTable">
                             <RowStyle CssClass="evenrow" />
                             <HeaderStyle Wrap="False" />
                             <AlternatingRowStyle CssClass="oddrow" />
                             <Columns>
-                                <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True"  Visible="false" />
-                                <asp:BoundField DataField="TestStageName" HeaderText="Test Stage" SortExpression="TestStageName" />
-                                <asp:BoundField DataField="TestName" HeaderText="Test Name" SortExpression="TestName" />
-                                <asp:BoundField DataField="BatchUnitNumber" HeaderText="Unit" SortExpression="BatchUnitNumber" />
-                                <asp:BoundField DataField="PassFail" HeaderText="Pass/Fail" SortExpression="PassFail" />   
-                                <asp:TemplateField HeaderText="View Measurements" SortExpression="">
+                                <asp:TemplateField HeaderText="XML" SortExpression="" ItemStyle-Width="4%">
                                     <ItemTemplate>
-                                        <asp:HyperLink ID="hplDetail" runat="server" Text="View" Target="_self" Visible='<%# Eval("HasMeasurements") %>'></asp:HyperLink>
+                                        <asp:HyperLink ID="hplVersions" runat="server" ToolTip="XML" ImageUrl="\Design\Icons\png\24x24\xml_file.png" Target="_self"></asp:HyperLink>
                                     </ItemTemplate>
-                                </asp:TemplateField>  
-                            </Columns>           
+                                </asp:TemplateField>
+                            </Columns>
                         </asp:GridView>
-                        <asp:ObjectDataSource ID="odsResultSummary" runat="server" EnablePaging="False" SelectMethod="ResultSummary" TypeName="REMI.Bll.RelabManager">
+                        <asp:ObjectDataSource ID="odsOverview" runat="server" EnablePaging="False" SelectMethod="OverallResultSummary" TypeName="REMI.Bll.RelabManager">
                             <SelectParameters>
                                 <asp:ControlParameter ControlID="ddlBatches" DefaultValue="0" Name="batchID" PropertyName="SelectedValue" Type="Int32"/>
                             </SelectParameters>
                         </asp:ObjectDataSource>
+
+                        <font size="1">
+                            <ul>
+                                <li>(?) is for how many DNP's their are for the specific unit at that test.</li>
+                                <li>N/A: Not Applicable</li>
+                                <li>N/S: Not Started</li>
+                                <li>XML: Is to link to the XML (version) files used in processing that test.</li>
+                            </ul>
+                        </font>
                     </asp:Panel>
                 </ContentTemplate>
             </asp:UpdatePanel>
