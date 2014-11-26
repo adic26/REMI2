@@ -311,26 +311,33 @@
                                 <Columns>
                                     <asp:BoundField DataField="JobAccessID" HeaderText="JobAccessID" ReadOnly="true" SortExpression="JobAccessID" />
                                     <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
-                                    <asp:BoundField DataField="Department" HeaderText="Department" SortExpression="Department" />
+                                    <asp:TemplateField HeaderText="Department" SortExpression="">
+                                        <ItemTemplate>
+                                                <asp:Label runat="server" ID="lblDepartment" Text='<%# Eval("Department")%>' Visible="true" />
+                                        </ItemTemplate>
+                                        <FooterStyle HorizontalAlign="Right" />
+                                        <FooterTemplate>
+                                            <asp:DropDownList runat="server" ID="ddlDepartments" DataTextField="LookupType" DataSourceID="odsDepartments" DataValueField="LookupID"></asp:DropDownList>
+                                        </FooterTemplate>
+                                    </asp:TemplateField>
                                     <asp:TemplateField ShowHeader="False">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("JobAccessID")%>' onclientclick="return confirm('Are you sure you want to delete this department?');" CommandName="DeleteAccess" CausesValidation="false">Delete</asp:LinkButton>
                                         </ItemTemplate>
                                         <FooterTemplate>
-                                         <asp:Button ID="btnAddAccess" CssClass="buttonSmall" runat="server" Text="Add Access" OnClick="btnAddAccess_Click" CausesValidation="true" />
+                                            <asp:Button ID="btnAddAccess" CssClass="buttonSmall" runat="server" Text="Add Access" OnClick="btnAddAccess_Click" CausesValidation="true" />
                                         </FooterTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
-                            <br /><br />
-                            <asp:Panel runat="server" ID="pnlAccessAdd" Visible="false">
-                                <table>
-                                    <tr>
-                                        <td class="HorizTableFirstcolumn">Department:</td>
-                                        <td class="HorizTableSecondColumn"><asp:DropDownList runat="server" ID="ddlDepartments" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList></td>
-                                    </tr>
-                                </table>
-                            </asp:Panel>
+                            <asp:ObjectDataSource ID="odsDepartments" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookups" TypeName="REMI.Bll.LookupsManager">
+                                <SelectParameters>
+                                    <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
+                                    <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                                    <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                                    <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+                                </SelectParameters>
+                            </asp:ObjectDataSource>
                         </Content>
                     </asp:AccordionPane>
                 </Panes>

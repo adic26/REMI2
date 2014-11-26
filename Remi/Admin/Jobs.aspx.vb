@@ -334,23 +334,6 @@ Partial Class Admin_TestStages
             Else
                 notMain.Add("Orientation Can't Be Created. Please ensure you have entered product type and definition!", NotificationType.Warning)
             End If
-        ElseIf (pnlAccessAdd.Visible) Then
-            Dim departmentID As Int32
-            Int32.TryParse(ddlDepartments.SelectedValue, departmentID)
-
-            If (departmentID > 0) Then
-                Dim success As Boolean = JobManager.SaveAccess(hdnJobID.Value, departmentID)
-
-                If (success) Then
-                    pnlAccessAdd.Visible = False
-
-                    notMain.Add("Successfully Created New Access", NotificationType.Information)
-                Else
-                    notMain.Add("Failed To Create New Access", NotificationType.Errors)
-                End If
-            Else
-                notMain.Add("Please ensure you have selected a department!", NotificationType.Warning)
-            End If
         End If
 
         If Not notMain.HasErrors Then
@@ -382,7 +365,6 @@ Partial Class Admin_TestStages
         Helpers.MakeAccessable(gvwMain)
     End Sub
 #End Region
-
 
     Protected Sub btnAddTLType_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddTLType.Click
         Dim li As ListItem = lstAllTLTypes.SelectedItem
@@ -517,9 +499,20 @@ Partial Class Admin_TestStages
     End Sub
 
     Protected Sub btnAddAccess_Click(ByVal sender As Object, ByVal e As EventArgs)
-        pnlAccessAdd.Visible = True
-        ddlDepartments.DataSource = LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
-        ddlDepartments.DataBind()
+        Dim departmentID As Int32 = 0
+        Int32.TryParse(Request.Form(grdAccess.FooterRow.FindControl("ddlDepartments").UniqueID), departmentID)
+
+        If (departmentID > 0) Then
+            Dim success As Boolean = JobManager.SaveAccess(hdnJobID.Value, departmentID)
+
+            If (success) Then
+                notMain.Add("Successfully Created New Access", NotificationType.Information)
+            Else
+                notMain.Add("Failed To Create New Access", NotificationType.Errors)
+            End If
+        Else
+            notMain.Add("Please ensure you have selected a department!", NotificationType.Warning)
+        End If
     End Sub
 
     Protected Sub gdvOrientations_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gdvOrientations.RowCreated
