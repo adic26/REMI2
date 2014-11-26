@@ -113,7 +113,6 @@
           <s:extension base="tns:BatchBase">
             <s:sequence>
               <s:element minOccurs="0" maxOccurs="1" name="TestUnits" type="tns:ArrayOfTestUnit" />
-              <s:element minOccurs="0" maxOccurs="1" name="RequestFields" type="tns:ArrayOfRequestFields" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -122,23 +121,15 @@
         <s:complexContent mixed="false">
           <s:extension base="tns:LoggedItemBase">
             <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="ActiveTaskAssignee" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="EstJobCompletionTime" type="s:double" />
               <s:element minOccurs="1" maxOccurs="1" name="OutOfDate" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="OrientationID" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="OrientationXML" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="EstTSCompletionTime" type="s:double" />
               <s:element minOccurs="1" maxOccurs="1" name="TestStageID" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="ContinueOnFailures" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="JobID" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="TestStageName" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="HasBatchSpecificExceptions" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="Status" type="tns:BatchStatus" />
-              <s:element minOccurs="1" maxOccurs="1" name="HasUnitsNotReturnedToRequestor" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="NumberOfUnits" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="JobWILocation" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="TestStageCompletion" type="tns:TestStageCompletionStatus" />
               <s:element minOccurs="1" maxOccurs="1" name="ProductID" type="s:int" />
               <s:element minOccurs="1" maxOccurs="1" name="ProductTypeID" type="s:int" />
               <s:element minOccurs="1" maxOccurs="1" name="AccessoryGroupID" type="s:int" />
@@ -146,10 +137,10 @@
               <s:element minOccurs="1" maxOccurs="1" name="PriorityID" type="s:int" />
               <s:element minOccurs="1" maxOccurs="1" name="TestCenterLocationID" type="s:int" />
               <s:element minOccurs="1" maxOccurs="1" name="DepartmentID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="ReqData" type="tns:ArrayOfRequestFields" />
               <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="ProductGroup" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="CPRNumber" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="ExecutiveSummary" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="ProductType" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="AccessoryGroup" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="RequestPurpose" type="s:string" />
@@ -160,9 +151,6 @@
               <s:element minOccurs="0" maxOccurs="1" name="RequestLink" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="NumberOfUnitsExpected" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="Requestor" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="DateCreated" type="s:dateTime" />
-              <s:element minOccurs="1" maxOccurs="1" name="ReportRequiredBy" type="s:dateTime" />
-              <s:element minOccurs="1" maxOccurs="1" name="ReportApprovedDate" type="s:dateTime" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -237,42 +225,6 @@
             </s:sequence>
           </s:extension>
         </s:complexContent>
-      </s:complexType>
-      <s:complexType name="RequestFields">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:LoggedItemBase">
-            <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="RequestTypeID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="RequestType" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="RequestID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="RequestNumber" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="InternalField" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="FieldSetupID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="DisplayOrder" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="ColumnOrder" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="IsRequired" type="s:boolean" />
-              <s:element minOccurs="1" maxOccurs="1" name="FieldTypeID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="FieldType" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="FieldValidationID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="FieldValidation" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="OptionsTypeID" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="OptionsType" type="tns:ArrayOfString" />
-              <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
-              <s:element minOccurs="0" maxOccurs="1" name="IntField" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="ExtField" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="IsFromExternalSystem" type="s:boolean" />
-              <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="NewRequest" type="s:boolean" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="ArrayOfString">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
-        </s:sequence>
       </s:complexType>
       <s:complexType name="TrackingLocationType">
         <s:complexContent mixed="false">
@@ -367,23 +319,51 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:simpleType name="TestStageCompletionStatus">
-        <s:restriction base="s:string">
-          <s:enumeration value="NotSet" />
-          <s:enumeration value="InProgress" />
-          <s:enumeration value="TestingComplete" />
-          <s:enumeration value="ReadyForNextStage" />
-          <s:enumeration value="ProcessComplete" />
-        </s:restriction>
-      </s:simpleType>
-      <s:complexType name="ArrayOfTestUnit">
+      <s:complexType name="RequestFields">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LoggedItemBase">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="RequestTypeID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="RequestType" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="RequestID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="RequestNumber" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="InternalField" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="FieldSetupID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Category" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="DisplayOrder" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="ColumnOrder" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsRequired" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="FieldTypeID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="FieldType" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="FieldValidationID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="FieldValidation" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="OptionsTypeID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="OptionsType" type="tns:ArrayOfString" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="IntField" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ExtField" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsFromExternalSystem" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="NewRequest" type="s:boolean" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="TestUnit" nillable="true" type="tns:TestUnit" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="ArrayOfRequestFields">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="unbounded" name="RequestFields" nillable="true" type="tns:RequestFields" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTestUnit">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TestUnit" nillable="true" type="tns:TestUnit" />
         </s:sequence>
       </s:complexType>
       <s:element name="AddUnitException">
@@ -631,41 +611,16 @@
             <s:sequence>
               <s:element minOccurs="0" maxOccurs="1" name="TrackingLocationType" type="tns:TrackingLocationType" />
               <s:element minOccurs="1" maxOccurs="1" name="IsMultiDeviceZone" type="s:boolean" />
-              <s:element minOccurs="1" maxOccurs="1" name="Decommissioned" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="HostID" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:boolean" />
               <s:element minOccurs="0" maxOccurs="1" name="HostName" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="CurrentTestName" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="GeoLocationName" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="GeoLocationID" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="Status" type="tns:TrackingLocationStatus" />
-              <s:element minOccurs="1" maxOccurs="1" name="LocationStatus" type="tns:TrackingStatus" />
-              <s:element minOccurs="1" maxOccurs="1" name="CurrentUnitCount" type="s:int" />
-              <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="TrackingLocationTypeID" type="s:int" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:simpleType name="TrackingLocationStatus">
-        <s:restriction base="s:string">
-          <s:enumeration value="NotSet" />
-          <s:enumeration value="Available" />
-          <s:enumeration value="UnderMaintenance" />
-          <s:enumeration value="UnAvailable" />
-          <s:enumeration value="Unknown" />
-        </s:restriction>
-      </s:simpleType>
-      <s:simpleType name="TrackingStatus">
-        <s:restriction base="s:string">
-          <s:enumeration value="NotSet" />
-          <s:enumeration value="Functional" />
-          <s:enumeration value="NotFunctional" />
-          <s:enumeration value="Disabled" />
-          <s:enumeration value="UnderRepair" />
-        </s:restriction>
-      </s:simpleType>
       <s:element name="GetSpecificLocationForCurrentUsersTestCenter">
         <s:complexType>
           <s:sequence>
@@ -1092,6 +1047,27 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetOrientationsByJobResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetJobAccess">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="jobID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetJobAccessResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetJobAccessResult">
               <s:complexType>
                 <s:sequence>
                   <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
@@ -2540,6 +2516,12 @@
   <wsdl:message name="GetOrientationsByJobSoapOut">
     <wsdl:part name="parameters" element="tns:GetOrientationsByJobResponse" />
   </wsdl:message>
+  <wsdl:message name="GetJobAccessSoapIn">
+    <wsdl:part name="parameters" element="tns:GetJobAccess" />
+  </wsdl:message>
+  <wsdl:message name="GetJobAccessSoapOut">
+    <wsdl:part name="parameters" element="tns:GetJobAccessResponse" />
+  </wsdl:message>
   <wsdl:message name="GetTRSJobsSoapIn">
     <wsdl:part name="parameters" element="tns:GetTRSJobs" />
   </wsdl:message>
@@ -3140,6 +3122,12 @@
     <wsdl:part name="JobName" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetOrientationsByJobHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetJobAccessHttpGetIn">
+    <wsdl:part name="jobID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetJobAccessHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetTRSJobsHttpGetIn" />
@@ -3770,6 +3758,12 @@
   <wsdl:message name="GetOrientationsByJobHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
+  <wsdl:message name="GetJobAccessHttpPostIn">
+    <wsdl:part name="jobID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetJobAccessHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
   <wsdl:message name="GetTRSJobsHttpPostIn" />
   <wsdl:message name="GetTRSJobsHttpPostOut">
     <wsdl:part name="Body" element="tns:ArrayOfString" />
@@ -4344,6 +4338,11 @@
       <wsdl:input message="tns:GetOrientationsByJobSoapIn" />
       <wsdl:output message="tns:GetOrientationsByJobSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetJobAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all orientations for this job.</wsdl:documentation>
+      <wsdl:input message="tns:GetJobAccessSoapIn" />
+      <wsdl:output message="tns:GetJobAccessSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetTRSJobs">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get all TRS jobs.</wsdl:documentation>
       <wsdl:input message="tns:GetTRSJobsSoapIn" />
@@ -4831,6 +4830,11 @@
       <wsdl:input message="tns:GetOrientationsByJobHttpGetIn" />
       <wsdl:output message="tns:GetOrientationsByJobHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetJobAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all orientations for this job.</wsdl:documentation>
+      <wsdl:input message="tns:GetJobAccessHttpGetIn" />
+      <wsdl:output message="tns:GetJobAccessHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetTRSJobs">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get all TRS jobs.</wsdl:documentation>
       <wsdl:input message="tns:GetTRSJobsHttpGetIn" />
@@ -5307,6 +5311,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job name this function returns all orientations for this job.</wsdl:documentation>
       <wsdl:input message="tns:GetOrientationsByJobHttpPostIn" />
       <wsdl:output message="tns:GetOrientationsByJobHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetJobAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all orientations for this job.</wsdl:documentation>
+      <wsdl:input message="tns:GetJobAccessHttpPostIn" />
+      <wsdl:output message="tns:GetJobAccessHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTRSJobs">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get all TRS jobs.</wsdl:documentation>
@@ -5948,6 +5957,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetOrientationsByJob">
       <soap:operation soapAction="http://go/remi/GetOrientationsByJob" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetJobAccess">
+      <soap:operation soapAction="http://go/remi/GetJobAccess" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -6840,6 +6858,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetJobAccess">
+      <soap12:operation soapAction="http://go/remi/GetJobAccess" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetTRSJobs">
       <soap12:operation soapAction="http://go/remi/GetTRSJobs" style="document" />
       <wsdl:input>
@@ -7716,6 +7743,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetJobAccess">
+      <http:operation location="/GetJobAccess" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetTRSJobs">
       <http:operation location="/GetTRSJobs" />
       <wsdl:input>
@@ -8563,6 +8599,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetOrientationsByJob">
       <http:operation location="/GetOrientationsByJob" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetJobAccess">
+      <http:operation location="/GetJobAccess" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>

@@ -201,4 +201,14 @@ GRANT EXECUTE ON remispMenuAccessByDepartment TO REMI
 GO
 update Req.ReqFieldSetup set category='Scan' where Name like '%requested%'
 GO
-ROLLBACK TRAN
+INSERT INTO Jobs (JobName, WILocation, Comment,LastUser,OperationsTest,MechanicalTest,TechnicalOperationsTest,ProcedureLocation,IsActive,NoBSN,ContinueOnFailures)
+values ('WLAN', NULL, NULL, 'ogaudreault',0,0,0, NULL,1,0,0)
+go
+DECLARE @RFLookupID INT
+SELECT @RFLookupID=LookupID FROM Lookups WHERE LookupTypeID IN (SELECT LookupTypeID FROM LookupType WHERE Name='Department') AND [Values]='RF Engineering'
+insert into JobAccess (JobID, LookupID)
+select id, @RFLookupID
+from jobs
+WHERE JobName='WLAN'
+go
+rollback TRAN

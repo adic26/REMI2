@@ -115,6 +115,8 @@ Namespace RemiAPI
         
         Private GetOrientationsByJobOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetJobAccessOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetTRSJobsOperationCompleted As System.Threading.SendOrPostCallback
         
         Private SaveJobOperationCompleted As System.Threading.SendOrPostCallback
@@ -389,6 +391,9 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetOrientationsByJobCompleted As GetOrientationsByJobCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetJobAccessCompleted As GetJobAccessCompletedEventHandler
         
         '''<remarks/>
         Public Event GetTRSJobsCompleted As GetTRSJobsCompletedEventHandler
@@ -1732,6 +1737,33 @@ Namespace RemiAPI
             If (Not (Me.GetOrientationsByJobCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetOrientationsByJobCompleted(Me, New GetOrientationsByJobCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetJobAccess", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetJobAccess(ByVal jobID As Integer) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetJobAccess", New Object() {jobID})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetJobAccessAsync(ByVal jobID As Integer)
+            Me.GetJobAccessAsync(jobID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetJobAccessAsync(ByVal jobID As Integer, ByVal userState As Object)
+            If (Me.GetJobAccessOperationCompleted Is Nothing) Then
+                Me.GetJobAccessOperationCompleted = AddressOf Me.OnGetJobAccessOperationCompleted
+            End If
+            Me.InvokeAsync("GetJobAccess", New Object() {jobID}, Me.GetJobAccessOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetJobAccessOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetJobAccessCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetJobAccessCompleted(Me, New GetJobAccessCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -3442,8 +3474,6 @@ Namespace RemiAPI
         
         Private testUnitsField() As TestUnit
         
-        Private requestFieldsField() As RequestFields
-        
         '''<remarks/>
         Public Property TestUnits() As TestUnit()
             Get
@@ -3451,16 +3481,6 @@ Namespace RemiAPI
             End Get
             Set
                 Me.testUnitsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property RequestFields() As RequestFields()
-            Get
-                Return Me.requestFieldsField
-            End Get
-            Set
-                Me.requestFieldsField = value
             End Set
         End Property
     End Class
@@ -3734,11 +3754,11 @@ Namespace RemiAPI
      System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
      System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -3787,11 +3807,11 @@ Namespace RemiAPI
      System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
      System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -4391,11 +4411,11 @@ Namespace RemiAPI
      System.Xml.Serialization.XmlIncludeAttribute(GetType(User)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Job)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocation)),  _
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TrackingLocationType)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(Test)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestStage)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(TestUnit)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(RequestFields)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchBase)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BatchView)),  _
      System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -5498,29 +5518,15 @@ Namespace RemiAPI
         
         Private isMultiDeviceZoneField As Boolean
         
-        Private decommissionedField As Boolean
-        
         Private hostIDField As Integer
         
-        Private canDeleteField As Boolean
-        
         Private hostNameField As String
-        
-        Private currentTestNameField As String
         
         Private nameField As String
         
         Private geoLocationNameField As String
         
         Private geoLocationIDField As Integer
-        
-        Private statusField As TrackingLocationStatus
-        
-        Private locationStatusField As TrackingStatus
-        
-        Private currentUnitCountField As Integer
-        
-        Private commentField As String
         
         Private trackingLocationTypeIDField As Integer
         
@@ -5545,16 +5551,6 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property Decommissioned() As Boolean
-            Get
-                Return Me.decommissionedField
-            End Get
-            Set
-                Me.decommissionedField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property HostID() As Integer
             Get
                 Return Me.hostIDField
@@ -5565,32 +5561,12 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property CanDelete() As Boolean
-            Get
-                Return Me.canDeleteField
-            End Get
-            Set
-                Me.canDeleteField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property HostName() As String
             Get
                 Return Me.hostNameField
             End Get
             Set
                 Me.hostNameField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CurrentTestName() As String
-            Get
-                Return Me.currentTestNameField
-            End Get
-            Set
-                Me.currentTestNameField = value
             End Set
         End Property
         
@@ -5625,46 +5601,6 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property Status() As TrackingLocationStatus
-            Get
-                Return Me.statusField
-            End Get
-            Set
-                Me.statusField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property LocationStatus() As TrackingStatus
-            Get
-                Return Me.locationStatusField
-            End Get
-            Set
-                Me.locationStatusField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CurrentUnitCount() As Integer
-            Get
-                Return Me.currentUnitCountField
-            End Get
-            Set
-                Me.currentUnitCountField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property Comment() As String
-            Get
-                Return Me.commentField
-            End Get
-            Set
-                Me.commentField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property TrackingLocationTypeID() As Integer
             Get
                 Return Me.trackingLocationTypeIDField
@@ -5674,50 +5610,6 @@ Namespace RemiAPI
             End Set
         End Property
     End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum TrackingLocationStatus
-        
-        '''<remarks/>
-        NotSet
-        
-        '''<remarks/>
-        Available
-        
-        '''<remarks/>
-        UnderMaintenance
-        
-        '''<remarks/>
-        UnAvailable
-        
-        '''<remarks/>
-        Unknown
-    End Enum
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum TrackingStatus
-        
-        '''<remarks/>
-        NotSet
-        
-        '''<remarks/>
-        Functional
-        
-        '''<remarks/>
-        NotFunctional
-        
-        '''<remarks/>
-        Disabled
-        
-        '''<remarks/>
-        UnderRepair
-    End Enum
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -5741,6 +5633,8 @@ Namespace RemiAPI
         Private fieldSetupIDField As Integer
         
         Private nameField As String
+        
+        Private categoryField As String
         
         Private displayOrderField As Integer
         
@@ -5841,6 +5735,16 @@ Namespace RemiAPI
             End Get
             Set
                 Me.nameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Category() As String
+            Get
+                Return Me.categoryField
+            End Get
+            Set
+                Me.categoryField = value
             End Set
         End Property
         
@@ -6015,11 +5919,7 @@ Namespace RemiAPI
     Partial Public Class BatchBase
         Inherits LoggedItemBase
         
-        Private activeTaskAssigneeField As String
-        
         Private qRANumberField As String
-        
-        Private estJobCompletionTimeField As Double
         
         Private outOfDateField As Boolean
         
@@ -6027,27 +5927,15 @@ Namespace RemiAPI
         
         Private orientationXMLField As String
         
-        Private estTSCompletionTimeField As Double
-        
         Private testStageIDField As Integer
-        
-        Private continueOnFailuresField As Boolean
         
         Private jobIDField As Integer
         
         Private testStageNameField As String
         
-        Private hasBatchSpecificExceptionsField As Boolean
-        
         Private statusField As BatchStatus
         
-        Private hasUnitsNotReturnedToRequestorField As Boolean
-        
         Private numberOfUnitsField As Integer
-        
-        Private jobWILocationField As String
-        
-        Private testStageCompletionField As TestStageCompletionStatus
         
         Private productIDField As Integer
         
@@ -6063,13 +5951,13 @@ Namespace RemiAPI
         
         Private departmentIDField As Integer
         
+        Private reqDataField() As RequestFields
+        
         Private jobNameField As String
         
         Private productGroupField As String
         
         Private cPRNumberField As String
-        
-        Private executiveSummaryField As String
         
         Private productTypeField As String
         
@@ -6091,22 +5979,6 @@ Namespace RemiAPI
         
         Private requestorField As String
         
-        Private dateCreatedField As Date
-        
-        Private reportRequiredByField As Date
-        
-        Private reportApprovedDateField As Date
-        
-        '''<remarks/>
-        Public Property ActiveTaskAssignee() As String
-            Get
-                Return Me.activeTaskAssigneeField
-            End Get
-            Set
-                Me.activeTaskAssigneeField = value
-            End Set
-        End Property
-        
         '''<remarks/>
         Public Property QRANumber() As String
             Get
@@ -6114,16 +5986,6 @@ Namespace RemiAPI
             End Get
             Set
                 Me.qRANumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property EstJobCompletionTime() As Double
-            Get
-                Return Me.estJobCompletionTimeField
-            End Get
-            Set
-                Me.estJobCompletionTimeField = value
             End Set
         End Property
         
@@ -6158,32 +6020,12 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property EstTSCompletionTime() As Double
-            Get
-                Return Me.estTSCompletionTimeField
-            End Get
-            Set
-                Me.estTSCompletionTimeField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property TestStageID() As Integer
             Get
                 Return Me.testStageIDField
             End Get
             Set
                 Me.testStageIDField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ContinueOnFailures() As Boolean
-            Get
-                Return Me.continueOnFailuresField
-            End Get
-            Set
-                Me.continueOnFailuresField = value
             End Set
         End Property
         
@@ -6208,16 +6050,6 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property HasBatchSpecificExceptions() As Boolean
-            Get
-                Return Me.hasBatchSpecificExceptionsField
-            End Get
-            Set
-                Me.hasBatchSpecificExceptionsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property Status() As BatchStatus
             Get
                 Return Me.statusField
@@ -6228,42 +6060,12 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property HasUnitsNotReturnedToRequestor() As Boolean
-            Get
-                Return Me.hasUnitsNotReturnedToRequestorField
-            End Get
-            Set
-                Me.hasUnitsNotReturnedToRequestorField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property NumberOfUnits() As Integer
             Get
                 Return Me.numberOfUnitsField
             End Get
             Set
                 Me.numberOfUnitsField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property JobWILocation() As String
-            Get
-                Return Me.jobWILocationField
-            End Get
-            Set
-                Me.jobWILocationField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property TestStageCompletion() As TestStageCompletionStatus
-            Get
-                Return Me.testStageCompletionField
-            End Get
-            Set
-                Me.testStageCompletionField = value
             End Set
         End Property
         
@@ -6338,6 +6140,16 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
+        Public Property ReqData() As RequestFields()
+            Get
+                Return Me.reqDataField
+            End Get
+            Set
+                Me.reqDataField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
         Public Property JobName() As String
             Get
                 Return Me.jobNameField
@@ -6364,16 +6176,6 @@ Namespace RemiAPI
             End Get
             Set
                 Me.cPRNumberField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ExecutiveSummary() As String
-            Get
-                Return Me.executiveSummaryField
-            End Get
-            Set
-                Me.executiveSummaryField = value
             End Set
         End Property
         
@@ -6476,59 +6278,7 @@ Namespace RemiAPI
                 Me.requestorField = value
             End Set
         End Property
-        
-        '''<remarks/>
-        Public Property DateCreated() As Date
-            Get
-                Return Me.dateCreatedField
-            End Get
-            Set
-                Me.dateCreatedField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ReportRequiredBy() As Date
-            Get
-                Return Me.reportRequiredByField
-            End Get
-            Set
-                Me.reportRequiredByField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property ReportApprovedDate() As Date
-            Get
-                Return Me.reportApprovedDateField
-            End Get
-            Set
-                Me.reportApprovedDateField = value
-            End Set
-        End Property
     End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
-     System.SerializableAttribute(),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
-    Public Enum TestStageCompletionStatus
-        
-        '''<remarks/>
-        NotSet
-        
-        '''<remarks/>
-        InProgress
-        
-        '''<remarks/>
-        TestingComplete
-        
-        '''<remarks/>
-        ReadyForNextStage
-        
-        '''<remarks/>
-        ProcessComplete
-    End Enum
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
@@ -8158,6 +7908,33 @@ Namespace RemiAPI
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class GetOrientationsByJobCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetJobAccessCompletedEventHandler(ByVal sender As Object, ByVal e As GetJobAccessCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetJobAccessCompletedEventArgs
         Inherits System.ComponentModel.AsyncCompletedEventArgs
         
         Private results() As Object

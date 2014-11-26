@@ -25,9 +25,9 @@ Namespace REMI.Bll
         Public Shared Function GetJobByName(ByVal jobName As String) As Job
             Try
                 Dim tmpjob As Job = Nothing
-                If JobManager.GetJobList.Contains(jobName) Then 'check if this is a valid job name (exists in trs)
-                    tmpjob = JobDB.GetItem(jobName) 'try to get it from remi
-                End If
+                'If JobManager.GetJobList.Contains(jobName) Then 'check if this is a valid job name (exists in trs)
+                tmpjob = JobDB.GetItem(jobName) 'try to get it from remi
+                'End If
 
                 If tmpjob Is Nothing Then
                     'if we cant get this job from the trs then  return a job with no info and error
