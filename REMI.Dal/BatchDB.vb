@@ -125,7 +125,7 @@ Namespace REMI.Dal
 #End Region
 
 #Region "New Slim Batch Methods"
-        Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal userIdentification As String, Optional ByVal cacheRetrievedData As Boolean = True) As BatchView
+        Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, Optional ByVal cacheRetrievedData As Boolean = True) As BatchView
             Dim batch As BatchView = Nothing
 
             Using sqlConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -150,10 +150,10 @@ Namespace REMI.Dal
                             '5. Test Unit Data
                             If myReader.HasRows Then
                                 batch = New BatchView(bc.BatchNumber)
-                                batch.ReqData = RequestDB.GetRequest(bc.BatchNumber, userIdentification)
+                                batch.ReqData = RequestDB.GetRequest(bc.BatchNumber, user)
 
                                 While myReader.Read()
-                                    FillBaseBatchFields(myReader, batch, False, False, True)
+                                    FillBaseBatchFields(myReader, batch, False, False, True, user)
                                 End While
 
                                 myReader.NextResult()
@@ -196,7 +196,7 @@ Namespace REMI.Dal
         ''' <returns>
         ''' A BatchCollection.
         ''' </returns> 
-        Public Shared Function GetListInChambers(ByVal testCentreLocation As Int32, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String, ByVal byPass As Boolean, ByVal userID As Int32) As BatchCollection
+        Public Shared Function GetListInChambers(ByVal testCentreLocation As Int32, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String, ByVal byPass As Boolean, ByVal user As User) As BatchCollection
             Dim tmpList As BatchCollection = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -230,7 +230,7 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
                     End If
 
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
+                    myCommand.Parameters.AddWithValue("@UserID", user.ID)
 
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
@@ -240,7 +240,7 @@ Namespace REMI.Dal
 
                             While myReader.Read()
                                 Dim myBatch As Batch = New BusinessEntities.Batch()
-                                FillBaseBatchFields(myReader, myBatch, False, False, False)
+                                FillBaseBatchFields(myReader, myBatch, False, False, False, user)
 
                                 tmpList.Add(myBatch)
                             End While
@@ -288,7 +288,7 @@ Namespace REMI.Dal
         ''' <returns> 
         ''' A BatchCollection.
         ''' </returns> 
-        Public Shared Function GetListAtLocation(ByVal trackingLocationID As Integer, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String) As BatchCollection
+        Public Shared Function GetListAtLocation(ByVal trackingLocationID As Integer, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String, ByVal user As User) As BatchCollection
             Dim tmpList As BatchCollection = Nothing
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispBatchesSelectListAtTrackingLocation", myConnection)
@@ -317,7 +317,7 @@ Namespace REMI.Dal
                             tmpList = New BatchCollection()
                             While myReader.Read()
                                 Dim myBatch As Batch = New BusinessEntities.Batch()
-                                FillBaseBatchFields(myReader, myBatch, False, False, False)
+                                FillBaseBatchFields(myReader, myBatch, False, False, False, User)
 
                                 tmpList.Add(myBatch)
                             End While
@@ -333,12 +333,11 @@ Namespace REMI.Dal
             End If
         End Function
 
-        Public Shared Function GetBatchByQRANumber(ByVal qraNumber As String, Optional ByVal cacheRetrievedData As Boolean = True) As Batch
+        Public Shared Function GetBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, Optional ByVal cacheRetrievedData As Boolean = True) As Batch
             Dim batchData As Batch = Nothing
 
             Using sqlConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 If batchData Is Nothing Then
-                    batchData = New Batch(qraNumber)
 
                     Using myCommand As New SqlCommand("remispBatchesSelectByQRANumber", sqlConnection)
                         myCommand.CommandType = CommandType.StoredProcedure
@@ -350,8 +349,10 @@ Namespace REMI.Dal
 
                         Using myReader As SqlDataReader = myCommand.ExecuteReader()
                             If myReader.HasRows Then
+                                batchData = New Batch(qraNumber)
+
                                 While myReader.Read()
-                                    FillBaseBatchFields(myReader, batchData, True, False, False)
+                                    FillBaseBatchFields(myReader, batchData, True, False, False, User)
                                 End While
 
                                 myReader.NextResult()
@@ -364,13 +365,15 @@ Namespace REMI.Dal
                     End Using
                 End If
 
-                FillFullBatchFields(batchData, sqlConnection, cacheRetrievedData, True, True, True, True, False, True)
+                If (batchData IsNot Nothing) Then
+                    FillFullBatchFields(batchData, sqlConnection, cacheRetrievedData, True, True, True, True, False, True)
+                End If
             End Using
 
             Return batchData
         End Function
 
-        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean) As BatchCollection
+        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User) As BatchCollection
             Dim tmpList As New BatchCollection()
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispBatchesSearch", myConnection)
@@ -409,7 +412,7 @@ Namespace REMI.Dal
                             tmpList = New BatchCollection()
                             While myReader.Read()
                                 Dim myBatch As Batch = New BusinessEntities.Batch()
-                                FillBaseBatchFields(myReader, myBatch, loadTSRemaining, False, False)
+                                FillBaseBatchFields(myReader, myBatch, loadTSRemaining, False, False, user)
 
                                 tmpList.Add(myBatch)
                             End While
@@ -520,7 +523,7 @@ Namespace REMI.Dal
         ''' <summary> 
         ''' This method returns a list of batches where the status is not complete or rejected.
         ''' </summary> 
-        Public Shared Function GetActiveBatches(ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal isRemiTimedServiceCall As Boolean) As BatchCollection
+        Public Shared Function GetActiveBatches(ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal isRemiTimedServiceCall As Boolean, ByVal user As User) As BatchCollection
             Dim tmpList As New BatchCollection()
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispBatchesGetActiveBatches", myConnection)
@@ -538,9 +541,9 @@ Namespace REMI.Dal
                                 Dim myBatch As Batch = New BusinessEntities.Batch()
 
                                 If (isRemiTimedServiceCall) Then
-                                    FillBaseBatchFields(myReader, myBatch, False, True, False)
+                                    FillBaseBatchFields(myReader, myBatch, False, True, False, user)
                                 Else
-                                    FillBaseBatchFields(myReader, myBatch, True, False, False)
+                                    FillBaseBatchFields(myReader, myBatch, True, False, False, user)
                                 End If
 
                                 tmpList.Add(myBatch)
@@ -556,7 +559,7 @@ Namespace REMI.Dal
             Return tmpList
         End Function
 
-        Public Shared Function GetActiveBatches(ByVal requestor As String, ByVal startRowIndex As Integer, ByVal maximumRows As Integer) As BatchCollection
+        Public Shared Function GetActiveBatches(ByVal requestor As String, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal user As User) As BatchCollection
             Dim tmpList As New BatchCollection()
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispBatchesGetActiveBatchesByRequestor", myConnection)
@@ -574,7 +577,7 @@ Namespace REMI.Dal
                         If myReader.HasRows Then
                             While myReader.Read()
                                 Dim myBatch As Batch = New BusinessEntities.Batch()
-                                FillBaseBatchFields(myReader, myBatch, False, False, False)
+                                FillBaseBatchFields(myReader, myBatch, False, False, False, user)
 
                                 tmpList.Add(myBatch)
                             End While
@@ -910,10 +913,10 @@ Namespace REMI.Dal
             End If
         End Sub
 
-        Private Shared Sub FillBaseBatchFields(ByVal dataRecord As IDataRecord, ByVal batchData As BatchView, ByVal getTSRemaining As Boolean, ByVal isRemiTimedServiceCall As Boolean, ByVal loadOrientation As Boolean)
+        Private Shared Sub FillBaseBatchFields(ByVal dataRecord As IDataRecord, ByVal batchData As BatchView, ByVal getTSRemaining As Boolean, ByVal isRemiTimedServiceCall As Boolean, ByVal loadOrientation As Boolean, ByVal user As User)
             batchData.QRANumber = dataRecord.GetString(dataRecord.GetOrdinal("QRANumber"))
 
-            batchData.ReqData = RequestDB.GetRequest(batchData.QRANumber, "remi")
+            batchData.ReqData = RequestDB.GetRequest(batchData.QRANumber, user)
 
             batchData.Status = DirectCast(dataRecord.GetInt32(dataRecord.GetOrdinal("BatchStatus")), BatchStatus)
             batchData.PriorityID = dataRecord.GetInt32(dataRecord.GetOrdinal("PriorityID"))

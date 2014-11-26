@@ -22,7 +22,8 @@ namespace REMI.Contracts
         String FieldValidation { get; set; }
         String IntField { get; set; }
         String ExtField  { get; set; }
-        String RequestNumber  { get; set; }
+        String RequestNumber { get; set; }
+        String Category { get; set; }
         String Value { get; set; }
         String Description { get; set; }
         bool IsRequired  { get; set; }

@@ -12,6 +12,7 @@ Public Class TrackingLocationTests
             If (REMI.Bll.UserManager.GetCurrentUser.HasAdminReadOnlyAuthority) Then
                 Hyperlink1.Enabled = False
                 Hyperlink3.Enabled = False
+                HyperLink9.Enabled = False
             End If
 
             ddlTestType.DataSource = Helpers.GetTestTypes()

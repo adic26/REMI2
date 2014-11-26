@@ -26,7 +26,7 @@ Partial Class ManageTestStations_TrackingLocation
 
                 grdDetail.DataSource = tlColl
                 grdDetail.DataBind()
-                grdDetail.Columns(9).Visible = UserManager.GetCurrentUser.HasDocumentAuthority()
+                grdDetail.Columns(8).Visible = UserManager.GetCurrentUser.HasDocumentAuthority()
 
                 Dim litTitle As Literal = Master.FindControl("litPageTitle")
 

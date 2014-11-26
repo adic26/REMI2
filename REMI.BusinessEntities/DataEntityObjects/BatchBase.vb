@@ -99,6 +99,7 @@ Namespace REMI.BusinessEntities
                 Me.Notifications.AddWithMessage("Unable to locate request.", NotificationType.Errors)
             End If
             Me.ReqData = reqData
+            _requestNumber = reqData(0).RequestNumber
             If Status = BatchStatus.NotSet Then
                 Status = BatchStatus.NotSavedToREMI
             End If
@@ -288,9 +289,11 @@ Namespace REMI.BusinessEntities
         <EnumerationSet(Key:="w13")> _
         Public Property Status() As BatchStatus Implements IBatch.Status
             Get
-                If (_status = BatchStatus.Received And RequestStatus = "Assigned") Then
+                If (_status = BatchStatus.NotSet) Then
+                    _status = BatchStatus.NotSavedToREMI
+                ElseIf (_status = BatchStatus.Received And RequestStatus = "Assigned") Then
                     _status = BatchStatus.InProgress
-                ElseIf (RequestStatus = "Assigned") Then
+                ElseIf (RequestStatus = "Assigned" And Not (_status = BatchStatus.NotSet Or _status = BatchStatus.NotSavedToREMI)) Then
                     _status = BatchStatus.InProgress
                 End If
 

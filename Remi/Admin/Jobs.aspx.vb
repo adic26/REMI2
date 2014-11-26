@@ -24,6 +24,7 @@ Partial Class Admin_TestStages
                 If (Not UserManager.GetCurrentUser.HasAdminReadOnlyAuthority) Then
                     Hyperlink5.Enabled = False
                     Hyperlink7.Enabled = False
+                    HyperLink9.Enabled = False
                 End If
             End If
 
@@ -98,6 +99,7 @@ Partial Class Admin_TestStages
         JobEnvSetup.DataBind()
 
         BindOrientations()
+        BindAccess()
     End Sub
 
     Protected Sub FillFormFieldsforTestStage(ByVal tmpTestStage As TestStage)
@@ -364,7 +366,6 @@ Partial Class Admin_TestStages
     End Sub
 #End Region
 
-
     Protected Sub btnAddTLType_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddTLType.Click
         Dim li As ListItem = lstAllTLTypes.SelectedItem
         lstAddedTLTypes.ClearSelection()
@@ -399,6 +400,19 @@ Partial Class Admin_TestStages
 
     Protected Sub gdvOrientationsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gdvOrientations.PreRender
         Helpers.MakeAccessable(gdvOrientations)
+    End Sub
+
+    Protected Sub grdAccessGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdAccess.PreRender
+        Helpers.MakeAccessable(grdAccess)
+    End Sub
+
+    Protected Sub grdAccess_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles grdAccess.RowCommand
+        Select Case e.CommandName.ToLower()
+            Case "deleteaccess"
+                JobManager.DeleteAccess(Convert.ToInt32(e.CommandArgument))
+        End Select
+
+        BindAccess()
     End Sub
 
     Protected Sub gdvOrientations_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs) Handles gdvOrientations.RowCommand
@@ -464,7 +478,7 @@ Partial Class Admin_TestStages
         BindOrientations()
     End Sub
 
-    Sub BindOrientations()
+    Protected Sub BindOrientations()
         gdvOrientations.DataSource = JobManager.GetJobOrientationLists(hdnJobID.Value, String.Empty)
         gdvOrientations.DataBind()
 
@@ -473,10 +487,32 @@ Partial Class Admin_TestStages
         End If
     End Sub
 
+    Protected Sub BindAccess()
+        grdAccess.DataSource = JobManager.GetJobAccess(hdnJobID.Value)
+        grdAccess.DataBind()
+    End Sub
+
     Protected Sub btnAddOrientation_Click(ByVal sender As Object, ByVal e As EventArgs)
         pnlOrientationAdd.Visible = True
         ddlPT.DataSource = LookupsManager.GetLookups(LookupType.ProductType, 0, 0, 0)
         ddlPT.DataBind()
+    End Sub
+
+    Protected Sub btnAddAccess_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Dim departmentID As Int32 = 0
+        Int32.TryParse(Request.Form(grdAccess.FooterRow.FindControl("ddlDepartments").UniqueID), departmentID)
+
+        If (departmentID > 0) Then
+            Dim success As Boolean = JobManager.SaveAccess(hdnJobID.Value, departmentID)
+
+            If (success) Then
+                notMain.Add("Successfully Created New Access", NotificationType.Information)
+            Else
+                notMain.Add("Failed To Create New Access", NotificationType.Errors)
+            End If
+        Else
+            notMain.Add("Please ensure you have selected a department!", NotificationType.Warning)
+        End If
     End Sub
 
     Protected Sub gdvOrientations_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gdvOrientations.RowCreated

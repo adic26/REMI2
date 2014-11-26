@@ -123,7 +123,7 @@ Namespace REMI.Dal
         ''' <summary>Saves an instance of the <see cref="User" /> in the database.</summary> 
         ''' <param name="myUser">The User instance to save.</param> 
         ''' <returns>Returns true when the object was saved successfully, or false otherwise.</returns> 
-        Public Shared Function Save(ByVal MyUser As User) As Integer
+        Public Shared Function Save(ByRef MyUser As User) As Integer
             If Not MyUser.Validate() Then
                 Throw New InvalidSaveOperationException("Can't save a User in an Invalid state. Make sure that IsValid() returns true before you call Save().")
             End If
@@ -151,6 +151,8 @@ Namespace REMI.Dal
 
                     MyUser.ConcurrencyID = Helpers.GetConcurrencyId(myCommand)
                     Result = Helpers.GetBusinessBaseId(myCommand)
+
+                    MyUser.ID = Result
                 End Using
             End Using
 

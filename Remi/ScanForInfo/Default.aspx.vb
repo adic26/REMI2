@@ -180,7 +180,7 @@ Partial Class ScanForInfo_Default
                     grdTrackingLog.DataBind()
 
                     If (b.Orientation IsNot Nothing) Then
-                        lblOrientation.Text = String.Format("Orientation: {0}", b.Orientation.Name)
+                        lblOrientation.Text = String.Format("Orientation/Sequence: {0}", b.Orientation.Name)
                     Else
                         lblOrientation.Text = String.Empty
                     End If
@@ -388,11 +388,6 @@ Partial Class ScanForInfo_Default
             liModifyStatus.Visible = True
             liModifyTestDurations.Visible = True
         End If
-
-        If UserManager.GetCurrentUser.DepartmentID <> departmentID Then
-            txtNewCommentText.Enabled = False
-            btnAddComment.Enabled = False
-        End If
     End Sub
 
     Protected Sub ddlTime_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTime.SelectedIndexChanged
@@ -453,7 +448,7 @@ Partial Class ScanForInfo_Default
             gvwStressingSummary.DataBind()
 
             If (b.Orientation IsNot Nothing) Then
-                lblOrientation.Text = String.Format("Orientation: {0}", b.Orientation.Name)
+                lblOrientation.Text = String.Format("Orientation/Sequence: {0}", b.Orientation.Name)
             Else
                 lblOrientation.Text = String.Empty
             End If

@@ -23,7 +23,7 @@ BEGIN
 		FROM TestRecords tr
 			INNER JOIN TestUnits tu ON tu.ID=tr.TestUnitID
 			INNER JOIN Batches b ON b.ID=tu.BatchID
-		WHERE tu.ID=@UnitID AND b.QRANumber=tsk.qranumber AND tr.Status IN (1,2,3,4,6,7))
+		WHERE tu.ID=@UnitID AND b.QRANumber=tsk.qranumber AND tr.Status IN (1,2,3,4,6,7, 8))
 		ORDER BY tsk.processorder
 		
 		SELECT @UnitID = MIN(ID) FROM #units WHERE ID > @UnitID

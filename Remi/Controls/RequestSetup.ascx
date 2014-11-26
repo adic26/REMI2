@@ -21,7 +21,7 @@
         <uc1:NotificationList ID="notMain" runat="server" />
 
         <asp:Panel runat="server" ID="Orientation" Visible="false">
-            Select Orientation: 
+            Select Orientation/Sequence: 
             <asp:DropDownList runat="server" ID="ddlOrientations" DataTextField="Name" DataValueField="ID" AppendDataBoundItems="true">
             </asp:DropDownList>
         </asp:Panel>

@@ -34,7 +34,7 @@ BEGIN
 			rfs.ColumnOrder, ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, @RequestTypeID AS RequestTypeID,
 			@RequestNumber AS RequestNumber, @RequestID AS RequestID, rfd.Value, rfm.IntField, rfm.ExtField,
 			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
-			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem
+			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category
 	FROM Req.RequestType
 		INNER JOIN Lookups lrt ON lrt.LookupID=Req.RequestType.TypeID
 		INNER JOIN Req.ReqFieldSetup rfs ON rfs.RequestTypeID=Req.RequestType.RequestTypeID                  
@@ -50,7 +50,7 @@ BEGIN
 			OR
 			(@IncludeArchived = 0 AND ISNULL(rfs.Archived, 0) = 0)
 		)
-	ORDER BY ISNULL(rfs.DisplayOrder, 0) ASC
+	ORDER BY Category, ISNULL(rfs.DisplayOrder, 0) ASC
 END
 GO
 GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI

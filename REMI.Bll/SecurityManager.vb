@@ -25,13 +25,84 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function GetMenuAccessByDepartment(ByVal name As String, ByVal departmentID As Int32) As DataTable
+        Public Shared Function GetMenuAccessByDepartment(ByVal pageName As String, ByVal departmentID As Int32) As DataTable
             Try
-                Return SecurityDB.GetMenuAccessByDepartment(name, departmentID)
+                Return SecurityDB.GetMenuAccessByDepartment(pageName, departmentID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New DataTable("MenuAccess")
+        End Function
+
+        Public Shared Function GetMenu() As DataTable
+            Try
+                Return SecurityDB.GetMenu()
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("Menu")
+        End Function
+
+        Public Shared Function DeleteAccess(ByVal menuDepartmentID As Int32) As Boolean
+            Try
+                If (UserManager.GetCurrentUser.IsAdmin And menuDepartmentID > 0) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim md As REMI.Entities.MenuDepartment = (From a In instance.MenuDepartments Where a.MenuDepartmentID = menuDepartmentID Select a).FirstOrDefault()
+
+                    If (md IsNot Nothing) Then
+                        instance.DeleteObject(md)
+                    End If
+
+                    instance.SaveChanges()
+                    Return True
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return False
+        End Function
+
+        Public Shared Function AddMenuAccess(ByVal menuID As Int32, ByVal departmentID As Int32) As Boolean
+            Try
+                If (UserManager.GetCurrentUser.IsAdmin And menuID > 0) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim md As REMI.Entities.MenuDepartment = (From a In instance.MenuDepartments Where a.MenuID = menuID And a.DepartmentID = departmentID Select a).FirstOrDefault()
+
+                    If (md Is Nothing) Then
+                        Dim newAccess As New REMI.Entities.MenuDepartment()
+                        newAccess.Menu = (From em In instance.Menus Where em.MenuID = menuID Select em).FirstOrDefault()
+                        newAccess.DepartmentID = departmentID
+
+                        instance.AddToMenuDepartments(newAccess)
+                    End If
+
+                    instance.SaveChanges()
+                    Return True
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return False
+        End Function
+
+        Public Shared Function EditMenu(ByVal menuID As Int32, ByVal pageName As String, ByVal url As String) As Boolean
+            Try
+                If (UserManager.GetCurrentUser.IsAdmin And menuID > 0) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim m As REMI.Entities.Menu = (From r In instance.Menus Where r.MenuID = menuID Select r).FirstOrDefault()
+
+                    If (m IsNot Nothing) Then
+                        m.Name = pageName
+                        m.Url = url
+                    End If
+
+                    instance.SaveChanges()
+                    Return True
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return False
         End Function
 
         Public Shared Function GetRolesPermissionsGrid() As DataTable

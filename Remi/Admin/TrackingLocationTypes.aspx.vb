@@ -20,6 +20,7 @@ Partial Class Admin_TrackingLocationTypes
                 lnkAddTT.Enabled = False
                 Hyperlink6.Enabled = False
                 Hyperlink5.Enabled = False
+                HyperLink9.Enabled = False
             End If
 
             ddlFunction.DataSource = Helpers.GetTrackingLocationFunctions

@@ -491,10 +491,12 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (hasPerm) Then
-                    Dim departments As List(Of Int32) = (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" And ud.Field(Of Boolean)("IsDefault") = True Select ud.Field(Of Int32)("LookupID")).ToList()
+                    Dim departments As List(Of Int32) = (From ud In UserDetails.AsEnumerable() Where ud.Field(Of String)("Name") = "Department" Select ud.Field(Of Int32)("LookupID")).ToList()
 
-                    If (Not (departments.Contains(batchDepartmentID) And batchDepartmentID > 0) And Not IsAdmin And Not IsTestCenterAdmin) Then
-                        hasPerm = False
+                    If (batchDepartmentID > 0) Then
+                        If (Not (departments.Contains(batchDepartmentID)) And Not IsAdmin And Not IsTestCenterAdmin) Then
+                            hasPerm = False
+                        End If
                     End If
 
                     Exit For

@@ -96,113 +96,113 @@ Public Class REMIBatchTasks
         Dim sb As New System.Text.StringBuilder
         Dim currentQRA As String = String.Empty
         Try
-            Dim forceSync As Boolean = False
-            forceSync = remi.GetInstance().HasAccess("RemiTimedServiceForceSync")
+            'Dim forceSync As Boolean = False
+            'forceSync = remi.GetInstance().HasAccess("RemiTimedServiceForceSync")
 
             sb.AppendLine(String.Format("{0} - Service Running On: {1}", DateTime.Now, System.Environment.MachineName))
             sb.AppendLine(String.Format("{0} - Check Interval: {1}", DateTime.Now, _configIntervalMinutes.ToString()))
             sb.AppendLine(String.Format("{0} - WebService URL: {1}", DateTime.Now, _webServiceURL))
-            sb.AppendLine(String.Format("{0} - Force Sync: {1}", DateTime.Now, forceSync.ToString()))
+            'sb.AppendLine(String.Format("{0} - Force Sync: {1}", DateTime.Now, forceSync.ToString()))
 
-            If ((_sync Or forceSync) And _syncCount = 0) Then 'Sync oracle to Remi
-                Try
-                    sb.AppendLine(String.Format("Beginning Syncing Of Lookups & Products"))
+            'If ((_sync Or forceSync) And _syncCount = 0) Then 'Sync oracle to Remi
+            '    Try
+            '        sb.AppendLine(String.Format("Beginning Syncing Of Lookups & Products"))
 
-                    Dim testCenterCount As Int32 = 0
-                    Dim accessoryCount As Int32 = 0
-                    Dim jobCount As Int32 = 0
-                    Dim productTypeCount As Int32 = 0
-                    Dim remiProductTypes As New DataTable
-                    Dim remiAccessoryTypes As New DataTable
-                    Dim remiTestCenters As New DataTable
-                    Dim remiProducts As IEnumerable(Of String)
-                    Dim remiJobs As IEnumerable(Of String)
+            '        Dim testCenterCount As Int32 = 0
+            '        Dim accessoryCount As Int32 = 0
+            '        Dim jobCount As Int32 = 0
+            '        Dim productTypeCount As Int32 = 0
+            '        Dim remiProductTypes As New DataTable
+            '        Dim remiAccessoryTypes As New DataTable
+            '        Dim remiTestCenters As New DataTable
+            '        Dim remiProducts As IEnumerable(Of String)
+            '        Dim remiJobs As IEnumerable(Of String)
 
-                    Dim oracleProducts As IEnumerable(Of String)
-                    Dim oracleAccessoryTypes As IEnumerable(Of String)
-                    Dim oracleProductTypes As IEnumerable(Of String)
-                    Dim oracleTestCenters As IEnumerable(Of String)
-                    Dim oracleJobs As IEnumerable(Of String)
+            '        Dim oracleProducts As IEnumerable(Of String)
+            '        Dim oracleAccessoryTypes As IEnumerable(Of String)
+            '        Dim oracleProductTypes As IEnumerable(Of String)
+            '        Dim oracleTestCenters As IEnumerable(Of String)
+            '        Dim oracleJobs As IEnumerable(Of String)
 
-                    'Get the remi database lists
-                    remiProductTypes = remi.GetInstance().GetLookups(3)
-                    remiAccessoryTypes = remi.GetInstance().GetLookups(2)
-                    remiTestCenters = remi.GetInstance().GetLookups(4)
-                    remiProducts = (From p In remi.GetInstance().GetProductGroups() _
-                        Select p)
-                    remiJobs = (From j In remi.GetInstance().GetJobs() _
-                        Select j)
+            '        'Get the remi database lists
+            '        remiProductTypes = remi.GetInstance().GetLookups(3)
+            '        remiAccessoryTypes = remi.GetInstance().GetLookups(2)
+            '        remiTestCenters = remi.GetInstance().GetLookups(4)
+            '        remiProducts = (From p In remi.GetInstance().GetProductGroups() _
+            '            Select p)
+            '        remiJobs = (From j In remi.GetInstance().GetJobs() _
+            '            Select j)
 
-                    'Get the oracle database lists
-                    oracleProducts = (From p In remi.GetInstance().GetProductOracleList() _
-                        Select p)
-                    oracleAccessoryTypes = (From a In remi.GetInstance().GetOracleAccessoryTypes() _
-                        Select a)
-                    oracleProductTypes = (From p In remi.GetInstance().GetOracleProductTypes() _
-                        Select p)
-                    oracleTestCenters = (From t In remi.GetInstance().GetOracleTestCenters() _
-                        Select t)
-                    oracleJobs = (From j In remi.GetInstance().GetTRSJobs() _
-                        Select j)
+            '        'Get the oracle database lists
+            '        oracleProducts = (From p In remi.GetInstance().GetProductOracleList() _
+            '            Select p)
+            '        oracleAccessoryTypes = (From a In remi.GetInstance().GetOracleAccessoryTypes() _
+            '            Select a)
+            '        oracleProductTypes = (From p In remi.GetInstance().GetOracleProductTypes() _
+            '            Select p)
+            '        oracleTestCenters = (From t In remi.GetInstance().GetOracleTestCenters() _
+            '            Select t)
+            '        oracleJobs = (From j In remi.GetInstance().GetTRSJobs() _
+            '            Select j)
 
-                    'Sync the oracle list to remi list
-                    For Each str As String In oracleAccessoryTypes
-                        Dim dr() As DataRow = remiAccessoryTypes.Select("LookupType = '" & str + "'")
-                        If (dr.Length = 0) Then
-                            accessoryCount += 1
-                            remi.GetInstance().SaveLookup("AccessoryType", str, 1, Nothing, 0)
-                        End If
-                    Next
+            '        'Sync the oracle list to remi list
+            '        For Each str As String In oracleAccessoryTypes
+            '            Dim dr() As DataRow = remiAccessoryTypes.Select("LookupType = '" & str + "'")
+            '            If (dr.Length = 0) Then
+            '                accessoryCount += 1
+            '                remi.GetInstance().SaveLookup("AccessoryType", str, 1, Nothing, 0)
+            '            End If
+            '        Next
 
-                    For Each str As String In oracleProductTypes
-                        Dim dr() As DataRow = remiProductTypes.Select("LookupType = '" & str + "'")
-                        If (dr.Length = 0) Then
-                            productTypeCount += 1
-                            remi.GetInstance().SaveLookup("ProductType", str, 1, Nothing, 0)
-                        End If
-                    Next
+            '        For Each str As String In oracleProductTypes
+            '            Dim dr() As DataRow = remiProductTypes.Select("LookupType = '" & str + "'")
+            '            If (dr.Length = 0) Then
+            '                productTypeCount += 1
+            '                remi.GetInstance().SaveLookup("ProductType", str, 1, Nothing, 0)
+            '            End If
+            '        Next
 
-                    For Each str As String In oracleTestCenters
-                        Dim dr() As DataRow = remiTestCenters.Select("LookupType = '" & str + "'")
-                        If (dr.Length = 0) Then
-                            testCenterCount += 1
-                            remi.GetInstance().SaveLookup("ProductType", str, 1, Nothing, 0)
-                        End If
-                    Next
+            '        For Each str As String In oracleTestCenters
+            '            Dim dr() As DataRow = remiTestCenters.Select("LookupType = '" & str + "'")
+            '            If (dr.Length = 0) Then
+            '                testCenterCount += 1
+            '                remi.GetInstance().SaveLookup("ProductType", str, 1, Nothing, 0)
+            '            End If
+            '        Next
 
-                    For Each str As String In remiProducts
-                        If (Not (oracleProducts.Contains(str))) Then
-                            remi.GetInstance().UpdateProduct(str.Trim(), 0, 0)
-                        End If
-                    Next
+            '        For Each str As String In remiProducts
+            '            If (Not (oracleProducts.Contains(str))) Then
+            '                remi.GetInstance().UpdateProduct(str.Trim(), 0, 0)
+            '            End If
+            '        Next
 
-                    For Each str As String In oracleProducts
-                        If (Not (remiProducts.Contains(str))) Then
-                            remi.GetInstance().UpdateProduct(str.Trim(), 1, 0)
-                        End If
-                    Next
+            '        For Each str As String In oracleProducts
+            '            If (Not (remiProducts.Contains(str))) Then
+            '                remi.GetInstance().UpdateProduct(str.Trim(), 1, 0)
+            '            End If
+            '        Next
 
-                    For Each str As String In oracleJobs
-                        If (Not (remiJobs.Contains(str))) Then
-                            Dim job As New remiAPI.Job
-                            job.IsActive = 1
-                            job.Name = str.Trim()
-                            jobCount += 1
+            '        For Each str As String In oracleJobs
+            '            If (Not (remiJobs.Contains(str))) Then
+            '                Dim job As New remiAPI.Job
+            '                job.IsActive = 1
+            '                job.Name = str.Trim()
+            '                jobCount += 1
 
-                            remi.GetInstance().SaveJob(job, ConfigurationManager.AppSettings("AdminName").ToString())
-                        End If
-                    Next
+            '                remi.GetInstance().SaveJob(job, ConfigurationManager.AppSettings("AdminName").ToString())
+            '            End If
+            '        Next
 
-                    sb.AppendLine(String.Format("Inserted {0} Product Types", productTypeCount))
-                    sb.AppendLine(String.Format("Inserted {0} Accessory Types", accessoryCount))
-                    sb.AppendLine(String.Format("Inserted {0} Test Centers", testCenterCount))
-                    sb.AppendLine(String.Format("Inserted {0} Jobs", jobCount))
-                Catch ex As Exception
-                    SendMailHighPriority("Oracle Sync Update Failed.", ex.Message + Environment.NewLine + ex.StackTrace)
-                End Try
+            '        sb.AppendLine(String.Format("Inserted {0} Product Types", productTypeCount))
+            '        sb.AppendLine(String.Format("Inserted {0} Accessory Types", accessoryCount))
+            '        sb.AppendLine(String.Format("Inserted {0} Test Centers", testCenterCount))
+            '        sb.AppendLine(String.Format("Inserted {0} Jobs", jobCount))
+            '    Catch ex As Exception
+            '        SendMailHighPriority("Oracle Sync Update Failed.", ex.Message + Environment.NewLine + ex.StackTrace)
+            '    End Try
 
-                _syncCount += 1
-            End If
+            '    _syncCount += 1
+            'End If
 
             sb.AppendLine(DateTime.Now + " - Batch check starting...")
             sb.AppendLine(DateTime.Now + " - Retrieving Active Jobs...")

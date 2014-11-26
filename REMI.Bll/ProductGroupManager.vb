@@ -12,6 +12,7 @@ Namespace REMI.Bll
     <DataObjectAttribute()> _
     Public Class ProductGroupManager
         Inherits REMIManagerBase
+
         ''' <summary>
         ''' Gets a list of Products from the database.
         ''' </summary>
@@ -109,7 +110,12 @@ Namespace REMI.Bll
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function InventoryReport(ByVal startDate As DateTime, ByVal endDate As DateTime, ByVal filterByQRANumber As Boolean, ByVal geoLocation As Int32) As InventoryReportData
-            Return ProductGroupDB.RetrieveInventoryReport(startDate, endDate, filterByQRANumber, geoLocation)
+            Try
+                Return ProductGroupDB.RetrieveInventoryReport(startDate, endDate, filterByQRANumber, geoLocation)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
+            Return Nothing
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _

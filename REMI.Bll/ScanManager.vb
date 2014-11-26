@@ -44,7 +44,7 @@ Namespace REMI.Bll
                     Dim reqStatus As String = String.Empty
 
                     Try
-                        reqStatus = (From rf In RequestDB.GetRequest(barcode.BatchNumber, UserManager.GetCurrentUser.UserName) Where rf.IntField = "RequestStatus" Select rf.Value).FirstOrDefault()
+                        reqStatus = (From rf In RequestDB.GetRequest(barcode.BatchNumber, UserManager.GetCurrentUser) Where rf.IntField = "RequestStatus" Select rf.Value).FirstOrDefault()
                     Catch
                     End Try
 
@@ -86,8 +86,8 @@ Namespace REMI.Bll
 
             Return ReturnData
         End Function
-        Private Shared Sub EmailScanData(ByVal qraNumber As String, ByVal testStageName As String, _
-                                    ByVal testName As String, ByVal overallTestResult As String, _
+
+        Private Shared Sub EmailScanData(ByVal qraNumber As String, ByVal testStageName As String, ByVal testName As String, ByVal overallTestResult As String, _
                                     ByVal userIdentification As String, ByVal userName As String, ByVal returnData As ScanReturnData, ByVal trackingLocationname As String)
             Dim str As New System.Text.StringBuilder
             str.Append(String.Format("RequestNumber: {0}", qraNumber))
@@ -153,6 +153,7 @@ Namespace REMI.Bll
             str.AppendLine(String.Format("Passed-in trackingLocationname: {0}", trackingLocationname))
             REMI.Core.Emailer.SendErrorEMail("Scan Attempted", str.ToString, REMI.Validation.NotificationType.Information, Nothing)
         End Sub
+
         Public Shared Function ScanUnitForRemstarThroughREMI(ByVal batchQRANumber As String, ByVal UnitNumber As Integer, ByVal IsCompleteInTRS As Boolean, ByVal userName As String, ByVal binType As String) As NotificationCollection
             Dim nc As New NotificationCollection
             Try

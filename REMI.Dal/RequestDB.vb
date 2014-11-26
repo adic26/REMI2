@@ -60,18 +60,18 @@ Namespace REMI.Dal
             Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
         End Function
 
-        Public Shared Function GetRequest(ByVal reqNumber As String, ByVal useridentification As String) As RequestFieldsCollection
+        Public Shared Function GetRequest(ByVal reqNumber As String, ByVal user As User) As RequestFieldsCollection
             Dim reqNum As New RequestNumber(reqNumber)
             Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = reqNum.Type Select r).FirstOrDefault()
 
             Dim rf As RequestFieldsCollection = REMIAppCache.GetReqData(reqNum.Number)
 
             If (rf Is Nothing) Then
-                rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number)
+                rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number, user)
 
                 If (requestType.IsExternal) Then
                     If (rf.Count > 0) Then
-                        LinkExternalRequest(reqNumber, rf, useridentification, requestType.DBType)
+                        LinkExternalRequest(reqNumber, rf, user.UserName, requestType.DBType)
                     End If
                 End If
 
@@ -282,8 +282,25 @@ Namespace REMI.Dal
 
         Public Shared Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
             Dim dtReq As New DataTable("Requests")
+            dtReq.Columns.Add("RequestID", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("RequestNumber", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("STATUS", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCT", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCTTYPE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("ACCESSORYGROUPNAME", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("TESTCENTER", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("DEPARTMENT", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("SAMPLESIZE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("Job", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PURPOSE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("CPR", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("Report Required By", System.Type.GetType("System.DateTime"))
+            dtReq.Columns.Add("PRIORITY", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("REQUESTOR", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("CRE_DATE", System.Type.GetType("System.DateTime"))
+
             Dim lastRequestConnectName As String = String.Empty
-            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Select r).ToList()
+            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Order By r.RequestConnectName Select r).ToList()
 
             For Each r In requestType
                 If (r.RequestConnectName <> lastRequestConnectName) Then
@@ -351,11 +368,10 @@ Namespace REMI.Dal
             End If
         End Sub
 
-        Public Shared Function SaveRequest(ByVal requestName As String, ByVal request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+        Public Shared Function SaveRequest(ByVal requestName As String, ByRef request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
             Dim instance = New REMI.Dal.Entities().Instance()
-            Dim val = (From rfc In request Select rfc.FieldSetupID, rfc.Value, rfc.RequestID, rfc.RequestNumber)
             Dim reqID As Int32 = 0
-            Dim reqNumber As String = val(0).RequestNumber
+            Dim reqNumber As String = request(0).RequestNumber
 
             Dim req = (From r In instance.Requests Where r.RequestNumber = reqNumber).FirstOrDefault()
 
@@ -363,15 +379,14 @@ Namespace REMI.Dal
                 Dim rq As New REMI.Entities.Request()
                 rq.RequestNumber = reqNumber
                 instance.AddToRequests(rq)
+                instance.SaveChanges()
+
+                reqID = (From r In instance.Requests Where r.RequestNumber = reqNumber Select r.RequestID).FirstOrDefault()
             Else
                 reqID = req.RequestID
             End If
 
-            instance.SaveChanges()
-
-            reqID = (From r In instance.Requests Where r.RequestNumber = reqNumber Select r.RequestID).FirstOrDefault()
-
-            For Each rec In val
+            For Each rec In request
                 Dim fieldData = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID).FirstOrDefault()
 
                 If (fieldData Is Nothing) Then
@@ -394,7 +409,7 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
+        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String, ByVal user As User) As RequestFieldsCollection
             Dim rtID As Int32
             Dim fieldData As RequestFieldsCollection = Nothing
 
@@ -421,7 +436,7 @@ Namespace REMI.Dal
                                 fieldData = New RequestFieldsCollection()
 
                                 While myReader.Read()
-                                    fieldData.Add(FillFieldData(myReader))
+                                    fieldData.Add(FillFieldData(myReader, user))
                                 End While
                             End If
                         End Using
@@ -432,7 +447,8 @@ Namespace REMI.Dal
             Return fieldData
         End Function
 
-        Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord) As BusinessEntities.RequestFields
+        Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord, ByVal user As User) As BusinessEntities.RequestFields
+            Dim instance = New REMI.Dal.Entities().Instance()
             Dim myFields As RequestFields = New BusinessEntities.RequestFields()
 
             myFields.FieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldSetupID"))
@@ -479,8 +495,12 @@ Namespace REMI.Dal
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
-                options.Add(" ")
-                options.AddRange((From lo In New REMI.Dal.Entities().Instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
+
+                If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
+                    options.Add("Not Set")
+                End If
+
+                options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
 
                 myFields.OptionsType = options
             Else
@@ -491,6 +511,7 @@ Namespace REMI.Dal
             myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
             myFields.RequestNumber = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestNumber"))
             myFields.NewRequest = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("NewRequest"))
+            myFields.Category = myDataRecord.GetString(myDataRecord.GetOrdinal("Category"))
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Value")) Then
                 myFields.Value = myDataRecord.GetString(myDataRecord.GetOrdinal("Value"))
@@ -498,12 +519,16 @@ Namespace REMI.Dal
                 myFields.Value = String.Empty
             End If
 
+            If (myFields.IntField = "Requestor" And myFields.Value = String.Empty) Then
+                myFields.Value = user.FullName
+            End If
+
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "ProductGroup"
-                        myFields.OptionsType = (From p In New REMI.Dal.Entities().Instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
+                        myFields.OptionsType = (From p In instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
                     Case "RequestedTest"
-                        myFields.OptionsType = (From j In New REMI.Dal.Entities().Instance.Jobs Where j.IsActive = True Order By j.JobName Select j.JobName).ToList
+                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user).AsEnumerable() Select j.Name).ToList()
                 End Select
             End If
 

@@ -102,7 +102,13 @@ Namespace REMI.Bll
         ''' <remarks></remarks>
         <DataObjectMethod(DataObjectMethodType.Select, False)> _
         Public Shared Function GetUsersUnits(ByVal userID As Int32, Optional ByVal includeCompletedQRA As Boolean = False) As TestUnitCollection
-            Return TestUnitDB.GetUsersUnits(userID, includeCompletedQRA)
+            Try
+                Return TestUnitDB.GetUsersUnits(userID, includeCompletedQRA)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
+
+            Return Nothing
         End Function
 
         <DataObjectMethod(DataObjectMethodType.Select, False)> _

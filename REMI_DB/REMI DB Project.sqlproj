@@ -212,7 +212,9 @@
     <Folder Include="Scripts\October202014" />
     <Folder Include="Scripts\October282014" />
     <Folder Include="Scripts\November032014" />
-    <Folder Include="Scripts\November202014" />
+    <Folder Include="Scripts\November172014" />
+    <Folder Include="Scripts\November182014" />
+    <Folder Include="Scripts\November262014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -1395,6 +1397,7 @@
     <None Include="Scripts\August132014\4.sql" />
     <None Include="Scripts\November032014\3.sql" />
     <None Include="Scripts\November032014\4.sql" />
+    <None Include="Scripts\November262014\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -2371,7 +2374,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\November202014\1.sql" />
+    <None Include="Scripts\November172014\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUserDetails.sql" />
@@ -2383,11 +2386,11 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestGet.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\November202014\2_RequestQRASetup.sql" />
-    <None Include="Scripts\November202014\3_DataMigration.sql" />
+    <None Include="Scripts\November172014\2_RequestQRASetup.sql" />
+    <None Include="Scripts\November172014\3_DataMigration.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\November202014\4.sql" />
+    <None Include="Scripts\November172014\4.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldDataAudit.sql" />
@@ -2400,5 +2403,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.remispGetRequestTypes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\November182014\RFCRequestSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\JobAccess.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetJobAccess.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMenu.sql" />
   </ItemGroup>
 </Project>

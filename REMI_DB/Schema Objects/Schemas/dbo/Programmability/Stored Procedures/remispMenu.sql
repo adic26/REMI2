@@ -1,0 +1,10 @@
+﻿ALTER PROCEDURE remispMenu
+AS
+BEGIN
+	SELECT m.Name, m.Url, m.MenuID
+	FROM Menu m
+	ORDER BY m.Name
+END
+GO
+GRANT EXECUTE ON remispMenu TO REMI
+GO

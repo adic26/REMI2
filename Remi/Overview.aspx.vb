@@ -137,7 +137,19 @@ Public Class Overview
             If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("gvwTRS") Or postBackID.Contains("chkShowTRS"))) Then
                 If (chkShowTRS.Checked) Then
                     pnlShowTRS.Visible = True
-                    gvwTRS.DataSource = RequestManager.GetRequestsNotInREMI(ddlDepartment.SelectedItem.Text)
+                    Dim dt As New DataTable("Requests")
+
+                    If (ddlDepartment.SelectedItem.Value = 0) Then
+                        For Each l As ListItem In ddlDepartment.Items
+                            If (l.Value > 0) Then
+                                dt.Merge(RequestManager.GetRequestsNotInREMI(l.Text), True)
+                            End If
+                        Next
+                    Else
+                        dt.Merge(RequestManager.GetRequestsNotInREMI(ddlDepartment.SelectedItem.Text), True)
+                    End If
+
+                    gvwTRS.DataSource = dt
                     gvwTRS.DataBind()
                 Else
                     pnlShowTRS.Visible = False

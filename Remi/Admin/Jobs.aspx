@@ -53,6 +53,9 @@
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="Image1" runat="server" />
                 <asp:HyperLink ID="hypTestStages" runat="Server" Text="Tests" NavigateUrl="~/Admin/tests.aspx" /></li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="Image9" runat="server" />
+                <asp:HyperLink ID="HyperLink9" runat="Server" Text="Menu" NavigateUrl="~/Admin/Menu.aspx" /></li>
         </ul>
         <h3>Test Stages</h3>
         <ul>         
@@ -297,6 +300,44 @@
                                     </tr>
                                 </table>
                             </asp:Panel>
+                        </Content>
+                    </asp:AccordionPane>
+                    <asp:AccordionPane runat="server" ID="acpAccess">
+                        <Header>
+                            <h2><asp:Label runat="server" ID="lblAccess" Text="Access"></asp:Label></h2>
+                        </Header>
+                        <Content>
+                            <asp:GridView runat="server" ID="grdAccess" ShowFooter="true" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="JobAccessID">
+                                <Columns>
+                                    <asp:BoundField DataField="JobAccessID" HeaderText="JobAccessID" ReadOnly="true" SortExpression="JobAccessID" />
+                                    <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
+                                    <asp:TemplateField HeaderText="Department" SortExpression="">
+                                        <ItemTemplate>
+                                                <asp:Label runat="server" ID="lblDepartment" Text='<%# Eval("Department")%>' Visible="true" />
+                                        </ItemTemplate>
+                                        <FooterStyle HorizontalAlign="Right" />
+                                        <FooterTemplate>
+                                            <asp:DropDownList runat="server" ID="ddlDepartments" DataTextField="LookupType" DataSourceID="odsDepartments" DataValueField="LookupID"></asp:DropDownList>
+                                        </FooterTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField ShowHeader="False">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("JobAccessID")%>' onclientclick="return confirm('Are you sure you want to delete this department?');" CommandName="DeleteAccess" CausesValidation="false">Delete</asp:LinkButton>
+                                        </ItemTemplate>
+                                        <FooterTemplate>
+                                            <asp:Button ID="btnAddAccess" CssClass="buttonSmall" runat="server" Text="Add Access" OnClick="btnAddAccess_Click" CausesValidation="true" />
+                                        </FooterTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                            <asp:ObjectDataSource ID="odsDepartments" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookups" TypeName="REMI.Bll.LookupsManager">
+                                <SelectParameters>
+                                    <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
+                                    <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                                    <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                                    <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+                                </SelectParameters>
+                            </asp:ObjectDataSource>
                         </Content>
                     </asp:AccordionPane>
                 </Panes>

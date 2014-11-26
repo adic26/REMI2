@@ -49,6 +49,9 @@
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="Image8" runat="server" />
                 <asp:HyperLink ID="Hyperlink8" runat="Server" Text="Tracking Tests" NavigateUrl="~/Admin/TrackingLocationTests.aspx" /></li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="Image9" runat="server" />
+                <asp:HyperLink ID="HyperLink9" runat="Server" Text="Menu" NavigateUrl="~/Admin/Menu.aspx" /></li>
         </ul>
         <h3>
             Tracking Location</h3>
