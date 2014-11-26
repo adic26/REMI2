@@ -158,22 +158,31 @@ Partial Public Class Results
     Protected WithEvents ddlYear As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''UpdateProgress2 control.
+    '''UpdateProgress1 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents UpdateProgress2 As Global.System.Web.UI.UpdateProgress
+    Protected WithEvents UpdateProgress1 As Global.System.Web.UI.UpdateProgress
 
     '''<summary>
-    '''grdOverallSummary control.
+    '''grdResultSummary control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents grdOverallSummary As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents grdResultSummary As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''odsResultSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsResultSummary As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''updFailureAnalysis control.
@@ -239,13 +248,13 @@ Partial Public Class Results
     Protected WithEvents chkTestStageSummary As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''UpdateProgress1 control.
+    '''UpdateProgress2 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents UpdateProgress1 As Global.System.Web.UI.UpdateProgress
+    Protected WithEvents UpdateProgress2 As Global.System.Web.UI.UpdateProgress
 
     '''<summary>
     '''pnlTestStageSummary control.
@@ -257,20 +266,20 @@ Partial Public Class Results
     Protected WithEvents pnlTestStageSummary As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
-    '''grdResultSummary control.
+    '''grdOverallSummary control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents grdResultSummary As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents grdOverallSummary As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''odsResultSummary control.
+    '''odsOverview control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents odsResultSummary As Global.System.Web.UI.WebControls.ObjectDataSource
+    Protected WithEvents odsOverview As Global.System.Web.UI.WebControls.ObjectDataSource
 End Class

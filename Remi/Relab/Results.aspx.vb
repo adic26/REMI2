@@ -38,8 +38,8 @@ Public Class Results
             Next
             ddlYear.SelectedIndex = ddlYear.Items.IndexOf(ddlYear.Items.FindByValue(year))
         Else
-            grdOverallSummary.DataSource = RelabManager.OverallResultSummary(ddlBatches.SelectedValue)
-            grdOverallSummary.DataBind()
+            'grdOverallSummary.DataSource = RelabManager.OverallResultSummary(ddlBatches.SelectedValue)
+            'grdOverallSummary.DataBind()
 
             Dim notValidBindControls As String() = New String() {"ddlYear"}
             If (REMI.Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
