@@ -199,4 +199,6 @@ END
 GO
 GRANT EXECUTE ON remispMenuAccessByDepartment TO REMI
 GO
+update Req.ReqFieldSetup set category='Scan' where Name like '%requested%'
+GO
 ROLLBACK TRAN
