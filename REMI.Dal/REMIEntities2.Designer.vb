@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("eca5862d-76a8-4380-82a1-c345b9641109")>
+<Assembly: EdmSchemaAttribute("51d21823-85f0-4373-9b23-3dba9fe99415")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -30,9 +30,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ApplicationProductVersion_ApplicationVersions", "ApplicationVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ApplicationVersion), "ApplicationProductVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ApplicationProductVersion), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ApplicationProductVersion_ProductConfigurationVersion", "ProductConfigurationVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ProductConfigurationVersion), "ApplicationProductVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ApplicationProductVersion), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ApplicationVersions_Applications", "Application", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Application), "ApplicationVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ApplicationVersion), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK__aspnet_Ro__Appli__40058253", "aspnet_Applications", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Applications), "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Applications), "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Users), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_aspnet_Permissions_aspnet_Applications", "aspnet_Applications", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.aspnet_Applications), "aspnet_Permissions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Permissions), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK__aspnet_Pr__UserI__3F115E1A", "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Users), "aspnet_Profile", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.aspnet_Profile), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "BatchSpecificTestDuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchSpecificTestDuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
@@ -71,8 +68,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHostsConfiguration_TrackingLocationsPlugin", "TrackingLocationsPlugin", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.TrackingLocationsPlugin), "TrackingLocationsHostsConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHostsConfiguration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration", "TrackingLocationsHostsConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationsHostsConfiguration), "TrackingLocationsHostsConfigValue", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHostsConfigValue), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationTypePermissions_TrackingLocationTypes", "TrackingLocationType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationType), "TrackingLocationTypePermission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationTypePermission), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_PermissionsInRoles", "aspnet_Permissions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Permissions), "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles))>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_UsersInRoles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles), "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Users))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchComments_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchComment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchComment), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_JobOrientation", "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.JobOrientation), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
@@ -98,7 +93,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_LookupsLevel", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestType_TypeID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestType), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Roles), "ReqFieldSetupRole", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupRole), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetup_FieldTypeID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetup_FieldValidationID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
@@ -119,6 +113,14 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestTypeAccess_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "RequestTypeAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestTypeAccess), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobAccess_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Job), "JobAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobAccess), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "JobAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobAccess), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ServicesAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ServicesAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ServicesAccess), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ServicesAccess_Services", "Service", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Service), "ServicesAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ServicesAccess), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Applications), "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Users), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK__aspnet_Ro__Appli__40058253", "aspnet_Applications", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Applications), "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Roles), "ReqFieldSetupRole", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupRole), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_aspnet_Permissions_aspnet_Applications", "aspnet_Applications", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.aspnet_Applications), "aspnet_Permissions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Permissions), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_PermissionsInRoles", "aspnet_Permissions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Permissions), "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles))>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_UsersInRoles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles), "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Users))>
 
 #End Region
 
@@ -424,34 +426,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property aspnet_Applications() As ObjectSet(Of aspnet_Applications)
-            Get
-                If (_aspnet_Applications Is Nothing) Then
-                    _aspnet_Applications = MyBase.CreateObjectSet(Of aspnet_Applications)("aspnet_Applications")
-                End If
-                Return _aspnet_Applications
-            End Get
-        End Property
-    
-        Private _aspnet_Applications As ObjectSet(Of aspnet_Applications)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property aspnet_Permissions() As ObjectSet(Of aspnet_Permissions)
-            Get
-                If (_aspnet_Permissions Is Nothing) Then
-                    _aspnet_Permissions = MyBase.CreateObjectSet(Of aspnet_Permissions)("aspnet_Permissions")
-                End If
-                Return _aspnet_Permissions
-            End Get
-        End Property
-    
-        Private _aspnet_Permissions As ObjectSet(Of aspnet_Permissions)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property aspnet_Profile() As ObjectSet(Of aspnet_Profile)
             Get
                 If (_aspnet_Profile Is Nothing) Then
@@ -462,20 +436,6 @@ Namespace REMI.Entities
         End Property
     
         Private _aspnet_Profile As ObjectSet(Of aspnet_Profile)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property aspnet_Roles() As ObjectSet(Of aspnet_Roles)
-            Get
-                If (_aspnet_Roles Is Nothing) Then
-                    _aspnet_Roles = MyBase.CreateObjectSet(Of aspnet_Roles)("aspnet_Roles")
-                End If
-                Return _aspnet_Roles
-            End Get
-        End Property
-    
-        Private _aspnet_Roles As ObjectSet(Of aspnet_Roles)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -1246,6 +1206,76 @@ Namespace REMI.Entities
         End Property
     
         Private _JobAccesses As ObjectSet(Of JobAccess)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property Services() As ObjectSet(Of Service)
+            Get
+                If (_Services Is Nothing) Then
+                    _Services = MyBase.CreateObjectSet(Of Service)("Services")
+                End If
+                Return _Services
+            End Get
+        End Property
+    
+        Private _Services As ObjectSet(Of Service)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ServicesAccesses() As ObjectSet(Of ServicesAccess)
+            Get
+                If (_ServicesAccesses Is Nothing) Then
+                    _ServicesAccesses = MyBase.CreateObjectSet(Of ServicesAccess)("ServicesAccesses")
+                End If
+                Return _ServicesAccesses
+            End Get
+        End Property
+    
+        Private _ServicesAccesses As ObjectSet(Of ServicesAccess)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property aspnet_Applications() As ObjectSet(Of aspnet_Applications)
+            Get
+                If (_aspnet_Applications Is Nothing) Then
+                    _aspnet_Applications = MyBase.CreateObjectSet(Of aspnet_Applications)("aspnet_Applications")
+                End If
+                Return _aspnet_Applications
+            End Get
+        End Property
+    
+        Private _aspnet_Applications As ObjectSet(Of aspnet_Applications)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property aspnet_Roles() As ObjectSet(Of aspnet_Roles)
+            Get
+                If (_aspnet_Roles Is Nothing) Then
+                    _aspnet_Roles = MyBase.CreateObjectSet(Of aspnet_Roles)("aspnet_Roles")
+                End If
+                Return _aspnet_Roles
+            End Get
+        End Property
+    
+        Private _aspnet_Roles As ObjectSet(Of aspnet_Roles)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property aspnet_Permissions() As ObjectSet(Of aspnet_Permissions)
+            Get
+                If (_aspnet_Permissions Is Nothing) Then
+                    _aspnet_Permissions = MyBase.CreateObjectSet(Of aspnet_Permissions)("aspnet_Permissions")
+                End If
+                Return _aspnet_Permissions
+            End Get
+        End Property
+    
+        Private _aspnet_Permissions As ObjectSet(Of aspnet_Permissions)
 
         #End Region
 
@@ -1378,31 +1408,10 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the aspnet_Applications EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToaspnet_Applications(ByVal aspnet_Applications As aspnet_Applications)
-            MyBase.AddObject("aspnet_Applications", aspnet_Applications)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the aspnet_Permissions EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToaspnet_Permissions(ByVal aspnet_Permissions As aspnet_Permissions)
-            MyBase.AddObject("aspnet_Permissions", aspnet_Permissions)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the aspnet_Profile EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToaspnet_Profile(ByVal aspnet_Profile As aspnet_Profile)
             MyBase.AddObject("aspnet_Profile", aspnet_Profile)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the aspnet_Roles EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToaspnet_Roles(ByVal aspnet_Roles As aspnet_Roles)
-            MyBase.AddObject("aspnet_Roles", aspnet_Roles)
         End Sub
     
         ''' <summary>
@@ -1788,6 +1797,41 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToJobAccesses(ByVal jobAccess As JobAccess)
             MyBase.AddObject("JobAccesses", jobAccess)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the Services EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToServices(ByVal service As Service)
+            MyBase.AddObject("Services", service)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ServicesAccesses EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToServicesAccesses(ByVal servicesAccess As ServicesAccess)
+            MyBase.AddObject("ServicesAccesses", servicesAccess)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the aspnet_Applications EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToaspnet_Applications(ByVal aspnet_Applications As aspnet_Applications)
+            MyBase.AddObject("aspnet_Applications", aspnet_Applications)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the aspnet_Roles EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToaspnet_Roles(ByVal aspnet_Roles As aspnet_Roles)
+            MyBase.AddObject("aspnet_Roles", aspnet_Roles)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the aspnet_Permissions EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToaspnet_Permissions(ByVal aspnet_Permissions As aspnet_Permissions)
+            MyBase.AddObject("aspnet_Permissions", aspnet_Permissions)
         End Sub
 
         #End Region
@@ -2621,14 +2665,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK__aspnet_Ro__Appli__40058253", "aspnet_Roles")>
-         Public Property aspnet_Roles() As EntityCollection(Of aspnet_Roles)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK__aspnet_Us__Appli__40F9A68C", "aspnet_Users")>
+         Public Property aspnet_Users() As EntityCollection(Of aspnet_Users)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of aspnet_Roles)("REMI.Entities.FK__aspnet_Ro__Appli__40058253", "aspnet_Roles")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of aspnet_Users)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Users")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of aspnet_Roles)("REMI.Entities.FK__aspnet_Ro__Appli__40058253", "aspnet_Roles", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of aspnet_Users)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Users", value)
                 End If
             End Set
         End Property
@@ -2639,14 +2683,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK__aspnet_Us__Appli__40F9A68C", "aspnet_Users")>
-         Public Property aspnet_Users() As EntityCollection(Of aspnet_Users)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK__aspnet_Ro__Appli__40058253", "aspnet_Roles")>
+         Public Property aspnet_Roles() As EntityCollection(Of aspnet_Roles)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of aspnet_Users)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Users")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of aspnet_Roles)("REMI.Entities.FK__aspnet_Ro__Appli__40058253", "aspnet_Roles")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of aspnet_Users)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Users", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of aspnet_Roles)("REMI.Entities.FK__aspnet_Ro__Appli__40058253", "aspnet_Roles", value)
                 End If
             End Set
         End Property
@@ -3254,6 +3298,24 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetupRole_aspnet_Roles", "ReqFieldSetupRole")>
+         Public Property ReqFieldSetupRoles() As EntityCollection(Of ReqFieldSetupRole)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ReqFieldSetupRole)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "ReqFieldSetupRole")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldSetupRole)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "ReqFieldSetupRole", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "aspnet_PermissionsInRoles", "aspnet_Permissions")>
          Public Property aspnet_Permissions() As EntityCollection(Of aspnet_Permissions)
             Get
@@ -3280,24 +3342,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of aspnet_Users)("REMI.Entities.aspnet_UsersInRoles", "aspnet_Users", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetupRole_aspnet_Roles", "ReqFieldSetupRole")>
-         Public Property ReqFieldSetupRoles() As EntityCollection(Of ReqFieldSetupRole)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ReqFieldSetupRole)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "ReqFieldSetupRole")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldSetupRole)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "ReqFieldSetupRole", value)
                 End If
             End Set
         End Property
@@ -3638,37 +3682,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications")>
-        Public Property aspnet_Applications() As aspnet_Applications
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property aspnet_ApplicationsReference() As EntityReference(Of aspnet_Applications)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK__aspnet_Pr__UserI__3F115E1A", "aspnet_Profile")>
         Public Property aspnet_Profile() As aspnet_Profile
             Get
@@ -3690,6 +3703,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of aspnet_Profile)("REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A", "aspnet_Profile", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications")>
+        Public Property aspnet_Applications() As aspnet_Applications
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property aspnet_ApplicationsReference() As EntityReference(Of aspnet_Applications)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of aspnet_Applications)("REMI.Entities.FK__aspnet_Us__Appli__40F9A68C", "aspnet_Applications", value)
                 End If
             End Set
         End Property
@@ -8414,6 +8458,24 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ServicesAccess_Lookups", "ServicesAccess")>
+         Public Property ServicesAccesses() As EntityCollection(Of ServicesAccess)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ServicesAccess)("REMI.Entities.FK_ServicesAccess_Lookups", "ServicesAccess")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ServicesAccess)("REMI.Entities.FK_ServicesAccess_Lookups", "ServicesAccess", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -11899,37 +11961,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles")>
-        Public Property aspnet_Roles() As aspnet_Roles
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property aspnet_RolesReference() As EntityReference(Of aspnet_Roles)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetupRole_ReqFieldSetup", "ReqFieldSetup")>
         Public Property ReqFieldSetup() As ReqFieldSetup
             Get
@@ -11951,6 +11982,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup", "ReqFieldSetup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles")>
+        Public Property aspnet_Roles() As aspnet_Roles
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property aspnet_RolesReference() As EntityReference(Of aspnet_Roles)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles", value)
                 End If
             End Set
         End Property
@@ -15070,6 +15132,312 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ResultsMeasurement)("REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsMeasurement", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="Service")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class Service
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new Service object.
+        ''' </summary>
+        ''' <param name="serviceID">Initial value of the ServiceID property.</param>
+        ''' <param name="serviceName">Initial value of the ServiceName property.</param>
+        ''' <param name="isActive">Initial value of the IsActive property.</param>
+        Public Shared Function CreateService(serviceID As Global.System.Int32, serviceName As Global.System.String, isActive As Global.System.Boolean) As Service
+            Dim service as Service = New Service
+            service.ServiceID = serviceID
+            service.ServiceName = serviceName
+            service.IsActive = isActive
+            Return service
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ServiceID() As Global.System.Int32
+            Get
+                Return _ServiceID
+            End Get
+            Set
+                If (_ServiceID <> Value) Then
+                    OnServiceIDChanging(value)
+                    ReportPropertyChanging("ServiceID")
+                    _ServiceID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ServiceID")
+                    OnServiceIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ServiceID As Global.System.Int32
+        Private Partial Sub OnServiceIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnServiceIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ServiceName() As Global.System.String
+            Get
+                Return _ServiceName
+            End Get
+            Set
+                OnServiceNameChanging(value)
+                ReportPropertyChanging("ServiceName")
+                _ServiceName = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("ServiceName")
+                OnServiceNameChanged()
+            End Set
+        End Property
+    
+        Private _ServiceName As Global.System.String
+        Private Partial Sub OnServiceNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnServiceNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property IsActive() As Global.System.Boolean
+            Get
+                Return _IsActive
+            End Get
+            Set
+                OnIsActiveChanging(value)
+                ReportPropertyChanging("IsActive")
+                _IsActive = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsActive")
+                OnIsActiveChanged()
+            End Set
+        End Property
+    
+        Private _IsActive As Global.System.Boolean
+        Private Partial Sub OnIsActiveChanging(value As Global.System.Boolean)
+        End Sub
+    
+        Private Partial Sub OnIsActiveChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ServicesAccess_Services", "ServicesAccess")>
+         Public Property ServicesAccesses() As EntityCollection(Of ServicesAccess)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ServicesAccess)("REMI.Entities.FK_ServicesAccess_Services", "ServicesAccess")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ServicesAccess)("REMI.Entities.FK_ServicesAccess_Services", "ServicesAccess", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="ServicesAccess")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class ServicesAccess
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new ServicesAccess object.
+        ''' </summary>
+        ''' <param name="serviceAccessID">Initial value of the ServiceAccessID property.</param>
+        ''' <param name="serviceID">Initial value of the ServiceID property.</param>
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        Public Shared Function CreateServicesAccess(serviceAccessID As Global.System.Int32, serviceID As Global.System.Int32, lookupID As Global.System.Int32) As ServicesAccess
+            Dim servicesAccess as ServicesAccess = New ServicesAccess
+            servicesAccess.ServiceAccessID = serviceAccessID
+            servicesAccess.ServiceID = serviceID
+            servicesAccess.LookupID = lookupID
+            Return servicesAccess
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ServiceAccessID() As Global.System.Int32
+            Get
+                Return _ServiceAccessID
+            End Get
+            Set
+                If (_ServiceAccessID <> Value) Then
+                    OnServiceAccessIDChanging(value)
+                    ReportPropertyChanging("ServiceAccessID")
+                    _ServiceAccessID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ServiceAccessID")
+                    OnServiceAccessIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ServiceAccessID As Global.System.Int32
+        Private Partial Sub OnServiceAccessIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnServiceAccessIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ServiceID() As Global.System.Int32
+            Get
+                Return _ServiceID
+            End Get
+            Set
+                OnServiceIDChanging(value)
+                ReportPropertyChanging("ServiceID")
+                _ServiceID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ServiceID")
+                OnServiceIDChanged()
+            End Set
+        End Property
+    
+        Private _ServiceID As Global.System.Int32
+        Private Partial Sub OnServiceIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnServiceIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Global.System.Int32
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ServicesAccess_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ServicesAccess_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ServicesAccess_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ServicesAccess_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_ServicesAccess_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ServicesAccess_Services", "Service")>
+        Public Property Service() As Service
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Service)("REMI.Entities.FK_ServicesAccess_Services", "Service").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Service)("REMI.Entities.FK_ServicesAccess_Services", "Service").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property ServiceReference() As EntityReference(Of Service)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Service)("REMI.Entities.FK_ServicesAccess_Services", "Service")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Service)("REMI.Entities.FK_ServicesAccess_Services", "Service", value)
                 End If
             End Set
         End Property

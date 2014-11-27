@@ -34,6 +34,14 @@ AS
 	EXEC remispProductManagersSelectList @UserID
 
 	EXEC Req.remispGetRequestTypes @UserName
+	
+	SELECT s.ServiceID, s.ServiceName, l.[Values] AS Department
+	FROM UserDetails ud
+		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
+		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
+		INNER JOIN ServicesAccess sa ON sa.LookupID=l.LookupID
+		INNER JOIN Services s ON sa.ServiceID=s.ServiceID 
+	WHERE ud.UserID=@UserID AND lt.Name='Department' AND ISNULL(s.IsActive, 0) = 1
 GO
 GRANT EXECUTE ON remispGetUser TO Remi
 GO

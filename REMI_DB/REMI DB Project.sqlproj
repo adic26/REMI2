@@ -2416,4 +2416,19 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMenu.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Services.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\ServicesAccess.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetServicesAccessByID.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetServices.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetPermissions.sql" />
+  </ItemGroup>
 </Project>

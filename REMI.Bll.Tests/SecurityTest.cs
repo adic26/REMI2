@@ -36,7 +36,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void AddRemoveRolePermission()
         {
-            Assert.True(SecurityManager.AddNewRole("Test"));
+            Assert.True(SecurityManager.AddNewRole("Test", ""));
             Assert.True(SecurityManager.AddRemovePermission("HasDocumentAuthority", "Test"));
             Assert.True(SecurityManager.AddRemovePermission("HasDocumentAuthority", "Test"));
             Assert.True(SecurityManager.RemoveRole("Test"));

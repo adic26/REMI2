@@ -642,7 +642,7 @@ Public Class RemiAPI
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 UserDetails.UserName = UserManager.GetCurrentValidUserLDAPName()
-                UserDetails.user = UserManager.GetCurrentUser
+                userDetails.user = UserManager.GetUser(userIdentification, 0)
 
                 Dim userPermissions As Integer = TrackingLocationManager.GetUserPermission(UserDetails.UserName, trackingLocationHostName, trackingLocationName)
                 UserDetails.HasBasicAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
@@ -861,7 +861,7 @@ Public Class RemiAPI
                         Dim us As New UserSearch()
                         us.TestCenterID = batch.TestCenterLocationID
 
-                        Dim emails As List(Of String) = (From u In UserManager.UserSearchList(us, False, False, False, False, False, False) Where u.IsProjectManager = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
+                        Dim emails As List(Of String) = (From u In UserManager.UserSearchList(us, False, False, False, False, True, False) Where u.IsProjectManager = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
 
                         Remi.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", qraNumber), String.Format("Please assign this batch as soon as possible in the Request <a href=""{0}"">{1}</a>", batch.RequestLink, qraNumber), True)
 
@@ -1533,6 +1533,19 @@ Public Class RemiAPI
         End Try
 
         Return Nothing
+    End Function
+#End Region
+
+#Region "Security"
+    <WebMethod(Description:="Gets The Services Associated With A Department")> _
+    Public Function GetServicesAccess(ByVal departmentID As Int32) As DataTable
+        Try
+            Return SecurityManager.GetServicesAccess(departmentID)
+        Catch ex As Exception
+            RequestManager.LogIssue("GetServicesAccess", "e3", NotificationType.Errors, ex, String.Format("DepartmentID: {0}", departmentID))
+        End Try
+
+        Return New DataTable("ServicesAccess")
     End Function
 #End Region
 

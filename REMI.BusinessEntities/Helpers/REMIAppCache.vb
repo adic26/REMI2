@@ -176,14 +176,6 @@ Namespace REMI.BusinessEntities
             End While
         End Sub
 
-        'Public Shared Sub SetFieldMapping(ByVal type As String, ByVal fieldMapping As Dictionary(Of String, String))
-        '    System.Web.HttpRuntime.Cache.Add(type, fieldMapping, Nothing, DateTime.Now.Add(TimeSpan.FromDays(1)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
-        'End Sub
-
-        'Public Shared Function GetFieldMapping(ByVal type As String) As Dictionary(Of String, String)
-        '    Return DirectCast(System.Web.HttpRuntime.Cache.Get(type), Dictionary(Of String, String))
-        'End Function
-
         Public Shared Sub SetMenuAccess(ByVal departmentID As Int32, ByVal dtMenuAccess As DataTable)
             System.Web.HttpRuntime.Cache.Add("MenuAccess-" + departmentID.ToString(), dtMenuAccess, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
         End Sub
@@ -206,6 +198,18 @@ Namespace REMI.BusinessEntities
 
         Public Shared Sub RemoveExtReqData(ByVal rqNumber As String)
             System.Web.HttpRuntime.Cache.Remove("ExtReqData-" + rqNumber)
+        End Sub
+
+        Public Shared Sub SetServiceAccess(ByVal departmentID As Int32, ByVal dtServiceAccess As DataTable)
+            System.Web.HttpRuntime.Cache.Add("ServiceAccess-" + departmentID.ToString(), dtServiceAccess, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
+        End Sub
+
+        Public Shared Function GetServiceAccess(ByVal departmentID As Int32) As DataTable
+            Return DirectCast(System.Web.HttpRuntime.Cache.Get("ServiceAccess-" + departmentID.ToString()), DataTable)
+        End Function
+
+        Public Shared Sub RemoveServiceAccess(ByVal departmentID As Int32)
+            System.Web.HttpRuntime.Cache.Remove("ServiceAccess-" + departmentID.ToString())
         End Sub
     End Class
 End Namespace

@@ -113,8 +113,7 @@
     Workstation Name: <asp:TextBox runat="server" ID="txtWorkStationname"></asp:TextBox><label style="color:Red;font-size:8pt;">Leave blank for all workstations</label><br />
     Deny Access: <asp:CheckBox runat="server" ID="chkDeny" /><br />
     <asp:Button runat="server" ID="btnAddTarget" Text="Add Target" OnClick="btnAddTarget_OnClick" />
-
-
+    
     <h1>Application Versions</h1>
 
     <asp:GridView runat="server" ID="gdvApplications" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="ID" OnRowEditing="gdvApplications_OnRowEditing" AutoGenerateEditButton="true" OnRowCancelingEdit="gdvApplications_OnRowCancelingEdit" OnRowUpdating="gdvApplications_RowUpdating">

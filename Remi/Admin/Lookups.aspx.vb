@@ -36,7 +36,7 @@ Public Class Admin_Lookups
         Helpers.MakeAccessable(gdvApplications)
     End Sub
 
-    Sub BindLookups(ByVal type As String, ByVal removeFirst As Int32)
+    Protected Sub BindLookups(ByVal type As String, ByVal removeFirst As Int32)
         gdvLookups.DataSource = LookupsManager.GetLookups([Enum].Parse(GetType(REMI.Contracts.LookupType), type), 0, 0, removeFirst)
         gdvLookups.DataBind()
     End Sub
