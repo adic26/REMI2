@@ -46,12 +46,6 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetJobListForTestStations()
-        {
-            Assert.That(JobManager.GetJobListForTestStations().Count > 0);
-        }
-
-        [Test]
         public void GetJobListDT()
         {
             Assert.That(JobManager.GetJobListDT().Count > 0);

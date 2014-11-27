@@ -39,11 +39,11 @@ namespace REMI.Bll.Tests
             Assert.That(ProductGroupManager.GetProductTestReady(526, "M3").Rows.Count > 0);
         }
 
-        [Test]
-        public void GetProductOracleList()
-        {
-            Assert.That(ProductGroupManager.GetProductOracleList().Count> 0);
-        }
+        //[Test]
+        //public void GetProductOracleList()
+        //{
+        //    Assert.That(ProductGroupManager.GetProductOracleList().Count> 0);
+        //}
 
         [Test]
         public void GetProductNameByID()

@@ -519,54 +519,54 @@ Public Class RemiAPI
         Return False
     End Function
 
-#Region "Oracle"
-    <WebMethod(Description:="Returns a full list of the oracle Accessory Types currently being worked on.")> _
-    Public Function GetOracleAccessoryTypes() As String()
-        Try
-            Return LookupsManager.GetOracleAccessoryGroupList.ToArray
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API Get oracle Accessory Types", "e3", NotificationType.Errors, ex)
-        End Try
-        Return Nothing
-    End Function
+    '#Region "Oracle"
+    '    <WebMethod(Description:="Returns a full list of the oracle Accessory Types currently being worked on.")> _
+    '    Public Function GetOracleAccessoryTypes() As String()
+    '        Try
+    '            Return LookupsManager.GetOracleAccessoryGroupList.ToArray
+    '        Catch ex As Exception
+    '            LookupsManager.LogIssue("REMI API Get oracle Accessory Types", "e3", NotificationType.Errors, ex)
+    '        End Try
+    '        Return Nothing
+    '    End Function
 
-    <WebMethod(Description:="Returns a full list of the oracle Test Centers.")> _
-    Public Function GetOracleTestCenters() As String()
-        Try
-            Return LookupsManager.GetOracleTestCentersList.ToArray
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API Get oracle test center", "e3", NotificationType.Errors, ex)
-        End Try
-        Return Nothing
-    End Function
+    '    <WebMethod(Description:="Returns a full list of the oracle Test Centers.")> _
+    '    Public Function GetOracleTestCenters() As String()
+    '        Try
+    '            Return LookupsManager.GetOracleTestCentersList.ToArray
+    '        Catch ex As Exception
+    '            LookupsManager.LogIssue("REMI API Get oracle test center", "e3", NotificationType.Errors, ex)
+    '        End Try
+    '        Return Nothing
+    '    End Function
 
-    <WebMethod(Description:="Returns a full list of the oracle Product Types currently being worked on.")> _
-    Public Function GetOracleProductTypes() As String()
-        Try
-            Return LookupsManager.GetOracleProductTypeList.ToArray
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API Get oracle Product Types", "e3", NotificationType.Errors, ex)
-        End Try
-        Return Nothing
-    End Function
+    '    <WebMethod(Description:="Returns a full list of the oracle Product Types currently being worked on.")> _
+    '    Public Function GetOracleProductTypes() As String()
+    '        Try
+    '            Return LookupsManager.GetOracleProductTypeList.ToArray
+    '        Catch ex As Exception
+    '            LookupsManager.LogIssue("REMI API Get oracle Product Types", "e3", NotificationType.Errors, ex)
+    '        End Try
+    '        Return Nothing
+    '    End Function
 
-    <WebMethod(Description:="Returns a full list of the oracle departments.")> _
-    Public Function GetOracleDepartmentList() As String()
-        Try
-            Return LookupsManager.GetOracleDepartmentList.ToArray
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API Get oracle departments", "e3", NotificationType.Errors, ex)
-        End Try
-        Return Nothing
-    End Function
-#End Region
+    '    <WebMethod(Description:="Returns a full list of the oracle departments.")> _
+    '    Public Function GetOracleDepartmentList() As String()
+    '        Try
+    '            Return LookupsManager.GetOracleDepartmentList.ToArray
+    '        Catch ex As Exception
+    '            LookupsManager.LogIssue("REMI API Get oracle departments", "e3", NotificationType.Errors, ex)
+    '        End Try
+    '        Return Nothing
+    '    End Function
+    '#End Region
 #End Region
 
 #Region "Job"
     <WebMethod(Description:="Returns a list of the Jobs (Test Types) available. Represented as a list of strings. This method can be used to populate lists.")> _
     Public Function GetJobs() As String()
         Try
-            Return JobManager.GetJobListForTestStations().ToArray
+            Return JobManager.GetJobList().ToArray
         Catch ex As Exception
             JobManager.LogIssue("REMI API Get jobs", "e3", NotificationType.Errors, ex)
         End Try
@@ -605,15 +605,15 @@ Public Class RemiAPI
         Return New DataTable("JobAccess")
     End Function
 
-    <WebMethod(Description:="Get all TRS jobs.")> _
-    Public Function GetTRSJobs() As String()
-        Try
-            Return JobManager.GetJobList().ToArray
-        Catch ex As Exception
-            JobManager.LogIssue("REMI API GetTRSJobs", "e3", NotificationType.Errors, ex)
-        End Try
-        Return Nothing
-    End Function
+    '<WebMethod(Description:="Get all TRS jobs.")> _
+    'Public Function GetTRSJobs() As String()
+    '    Try
+    '        Return JobManager.GetJobList().ToArray
+    '    Catch ex As Exception
+    '        JobManager.LogIssue("REMI API GetTRSJobs", "e3", NotificationType.Errors, ex)
+    '    End Try
+    '    Return Nothing
+    'End Function
 
     <WebMethod(EnableSession:=True, Description:="Update Job.")> _
     Public Function SaveJob(ByVal job As Job, ByVal userIdentification As String) As Boolean
@@ -679,15 +679,15 @@ Public Class RemiAPI
 #End Region
 
 #Region "Product"
-    <WebMethod(Description:="Returns a full list of the oracle Product Groups currently being worked on.")> _
-    Public Function GetProductOracleList() As String()
-        Try
-            Return ProductGroupManager.GetProductOracleList.ToArray
-        Catch ex As Exception
-            ProductGroupManager.LogIssue("REMI API Get ProductOracleGroups", "e3", NotificationType.Errors, ex)
-        End Try
-        Return Nothing
-    End Function
+    '<WebMethod(Description:="Returns a full list of the oracle Product Groups currently being worked on.")> _
+    'Public Function GetProductOracleList() As String()
+    '    Try
+    '        Return ProductGroupManager.GetProductOracleList.ToArray
+    '    Catch ex As Exception
+    '        ProductGroupManager.LogIssue("REMI API Get ProductOracleGroups", "e3", NotificationType.Errors, ex)
+    '    End Try
+    '    Return Nothing
+    'End Function
 
     <WebMethod(EnableSession:=True, Description:="Update Product.")> _
     Public Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32) As Boolean

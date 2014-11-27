@@ -57,20 +57,20 @@ Namespace REMI.Bll
             Return String.Empty
         End Function
 
-        ''' <summary>
-        ''' Gets all known jobs
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobList() As List(Of String)
-            Try
-                Return JobDB.GetTRSJobList()
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return New List(Of String)
-            End Try
-        End Function
+        ' ''' <summary>
+        ' ''' Gets all known jobs
+        ' ''' </summary>
+        ' ''' <returns></returns>
+        ' ''' <remarks></remarks>
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetJobList() As List(Of String)
+        '    Try
+        '        Return JobDB.GetTRSJobList()
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+        '        Return New List(Of String)
+        '    End Try
+        'End Function
 
         ''' <summary>
         ''' Gets the current list of active jobs from the TRS database.
@@ -78,7 +78,7 @@ Namespace REMI.Bll
         ''' <returns></returns>
         ''' <remarks></remarks>
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobListForTestStations() As List(Of String)
+        Public Shared Function GetJobList() As List(Of String)
             Try
                 Return JobDB.GetREMIJobList
             Catch ex As Exception

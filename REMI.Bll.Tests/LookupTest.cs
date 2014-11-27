@@ -37,29 +37,29 @@ namespace REMI.Bll.Tests
             Assert.That(LookupsManager.GetLookupID(Contracts.LookupType.Priority, "low", 0) > 0);
         }
 
-        [Test]
-        public void GetOracleProductTypeList()
-        {
-            Assert.That(LookupsManager.GetOracleProductTypeList().Count > 0);
-        }
+        //[Test]
+        //public void GetOracleProductTypeList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleProductTypeList().Count > 0);
+        //}
 
-        [Test]
-        public void GetOracleDepartmentList()
-        {
-            Assert.That(LookupsManager.GetOracleDepartmentList().Count > 0);
-        }
+        //[Test]
+        //public void GetOracleDepartmentList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleDepartmentList().Count > 0);
+        //}
 
-        [Test]
-        public void GetOracleAccessoryGroupList()
-        {
-            Assert.That(LookupsManager.GetOracleAccessoryGroupList().Count > 0);
-        }
+        //[Test]
+        //public void GetOracleAccessoryGroupList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleAccessoryGroupList().Count > 0);
+        //}
 
-        [Test]
-        public void GetOracleTestCentersList()
-        {
-            Assert.That(LookupsManager.GetOracleTestCentersList().Count > 0);
-        }
+        //[Test]
+        //public void GetOracleTestCentersList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleTestCentersList().Count > 0);
+        //}
 
         [Test]
         public void SaveLookup()
