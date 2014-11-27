@@ -93,7 +93,7 @@
                         AutoPostBack="True">
                     </asp:DropDownList>
                     <asp:ObjectDataSource ID="odsJobsList" runat="server" OldValuesParameterFormatString="original_{0}"
-                        SelectMethod="GetJobListForTestStations" TypeName="REMI.Bll.JobManager" DeleteMethod="DeleteJob">
+                        SelectMethod="GetJobList" TypeName="REMI.Bll.JobManager" DeleteMethod="DeleteJob">
                         <DeleteParameters>
                             <asp:Parameter Name="ID" Type="Int32" />
                         </DeleteParameters>
