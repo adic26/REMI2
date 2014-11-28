@@ -265,6 +265,113 @@ END
 GO
 GRANT EXECUTE ON [Req].RequestForDashboard TO REMI
 GO
+ALTER PROCEDURE [Req].[RequestGet] @RequestTypeID INT, @Department NVARCHAR(150)
+AS
+BEGIN
+	DECLARE @Count INT
+	DECLARE @rows VARCHAR(8000)
+	DECLARE @sql VARCHAR(8000)
+	SELECT @rows=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + rfm.IntField
+		FROM Req.ReqFieldSetup rfs
+			INNER JOIN Req.ReqFieldMapping rfm ON rfm.ExtField = rfs.Name AND rfm.RequestTypeID=@RequestTypeID
+		WHERE rfs.RequestTypeID=@RequestTypeID
+		ORDER BY '],[' +  rfm.IntField
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
+		
+	SELECT @Count = COUNT(*)
+	FROM Req.Request r
+		INNER JOIN Req.ReqFieldData rfd ON rfd.RequestID=r.RequestID
+		INNER JOIN Req.ReqFieldSetup rfs ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
+		INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID
+	WHERE rt.RequestTypeID=@RequestTypeID
+
+	IF (@Count > 0)
+	BEGIN
+		SET @sql = 'SELECT ''http://go/reqapp/'' + CONVERT(VARCHAR, RequestNumber) AS RequestID, RequestNumber AS RequestNumber, [RequestStatus] AS STATUS, [ProductGroup] AS PRODUCT, [ProductType] AS PRODUCTTYPE,
+			[AccessoryGroup] AS ACCESSORYGROUPNAME, [TestCenterLocation] AS TESTCENTER, [Department] AS DEPARTMENT, [SampleSize] AS SAMPLESIZE,
+			[RequestedTest] AS Job, [RequestPurpose] AS PURPOSE, [CPRNumber] AS CPR, CONVERT(DateTime, REPLACE([ReportRequiredBy], ''-'','' '')) AS [Report Required By],
+			[Priority] AS PRIORITY, [Requestor] AS REQUESTOR, CONVERT(DateTime, REPLACE([DateCreated], ''-'','' '')) AS CRE_DATE
+			FROM 
+				(
+				SELECT r.RequestID, r.RequestNumber, rfd.Value, rfm.IntField
+				FROM Req.Request r
+					INNER JOIN Req.ReqFieldData rfd ON rfd.RequestID=r.RequestID
+					INNER JOIN Req.ReqFieldSetup rfs ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
+					INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID
+					INNER JOIN Req.ReqFieldMapping rfm ON rfm.ExtField = rfs.Name
+				WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID) + '
+				) req PIVOT (MAX(Value) FOR IntField IN (' + @rows + ')) AS pvt
+			WHERE [Department] = ''' + @Department + ''' AND
+				[RequestStatus] IN (''Submitted'',''PM Review'',''Assigned'') '
+
+		PRINT @sql
+		EXEC (@sql)
+	END
+END
+GO
+GRANT EXECUTE ON [Req].[RequestGet] TO REMI
+GO
+ALTER PROCEDURE [Req].[RequestFieldSetup] @RequestTypeID INT, @IncludeArchived BIT = 0, @RequestNumber NVARCHAR(12) = NULL
+AS
+BEGIN
+	DECLARE @RequestID INT
+	DECLARE @RequestType NVARCHAR(150)
+	SET @RequestID = 0
+	SET @IncludeArchived=0
+
+	SELECT @RequestType=lrt.[values] FROM Req.RequestType rt INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID WHERE rt.RequestTypeID=@RequestTypeID
+
+	IF (@RequestNumber IS NOT NULL)
+		BEGIN
+			SELECT @RequestID = RequestID FROM Req.Request WHERE RequestNumber=@RequestNumber
+		END
+	ELSE
+		BEGIN
+			SELECT @RequestNumber = REPLACE(RequestNumber, @RequestType + '-' + Right(Year(getDate()),2) + '-', '') + 1 
+			FROM Req.Request 
+			WHERE RequestNumber LIKE @RequestType + '-' + Right(Year(getDate()),2) + '-%'
+			
+			IF (LEN(@RequestNumber) < 4)
+			BEGIN
+				SET @RequestNumber = REPLICATE('0', 4-LEN(@RequestNumber)) + @RequestNumber
+			END
+		
+			IF (@RequestNumber IS NULL)
+				SET @RequestNumber = '0001'
+		
+			SET @RequestNumber = @RequestType + '-' + Right(Year(getDate()),2) + '-' + @RequestNumber
+		END
+
+	SELECT rfs.ReqFieldSetupID, @RequestType AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
+			lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, rfs.DisplayOrder, 
+			rfs.ColumnOrder, ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, @RequestTypeID AS RequestTypeID,
+			@RequestNumber AS RequestNumber, @RequestID AS RequestID, 
+			CASE WHEN rfm.IntField = 'RequestLink' AND Value IS NULL THEN 'http://go/reqapp/' + @RequestNumber ELSE rfd.Value END AS Value, 
+			rfm.IntField, rfm.ExtField,
+			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
+			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category
+	FROM Req.RequestType
+		INNER JOIN Lookups lrt ON lrt.LookupID=Req.RequestType.TypeID
+		INNER JOIN Req.ReqFieldSetup rfs ON rfs.RequestTypeID=Req.RequestType.RequestTypeID                  
+		INNER JOIN Lookups lft ON lft.LookupID=rfs.FieldTypeID
+		LEFT OUTER JOIN Lookups lvt ON lvt.LookupID=rfs.FieldValidationID
+		LEFT OUTER JOIN Req.ReqFieldSetupRole ON Req.ReqFieldSetupRole.ReqFieldSetupID=rfs.ReqFieldSetupID
+		LEFT OUTER JOIN Req.Request ON RequestNumber=@RequestNumber
+		LEFT OUTER JOIN Req.ReqFieldData rfd ON rfd.ReqFieldSetupID=rfs.ReqFieldSetupID AND rfd.RequestID=Req.Request.RequestID
+		LEFT OUTER JOIN Req.ReqFieldMapping rfm ON rfm.RequestTypeID=Req.RequestType.RequestTypeID AND rfm.ExtField=rfs.Name AND ISNULL(rfm.IsActive, 0) = 1
+	WHERE (lrt.[Values] = @RequestType) AND
+		(
+			(@IncludeArchived = 1)
+			OR
+			(@IncludeArchived = 0 AND ISNULL(rfs.Archived, 0) = 0)
+		)
+	ORDER BY Category, ISNULL(rfs.DisplayOrder, 0) ASC
+END
+GO
+GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI
+GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
