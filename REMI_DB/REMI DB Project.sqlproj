@@ -2438,4 +2438,7 @@
   <ItemGroup>
     <None Include="Scripts\December022014\1.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\LookupsHierarchy.sql" />
+  </ItemGroup>
 </Project>

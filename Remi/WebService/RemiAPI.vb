@@ -436,37 +436,47 @@ Public Class RemiAPI
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupIDByTypeString", "e3", NotificationType.Errors, ex, String.Format("Type: {0} lookup: {1} ParentID: {2}", type, lookup, parentID))
         End Try
-        Return Nothing
+        Return -1
     End Function
 
     <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProduct(ByVal type As String, ByVal productID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, 0)
+            Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsTypeStringByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type, productID))
         End Try
-        Return Nothing
+        Return New DataTable("Lookups")
     End Function
 
     <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProductParent(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, parentID, 1)
+            Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, 1)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsTypeStringByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1} ParentID: {2}", type, productID, parentID))
         End Try
-        Return Nothing
+        Return New DataTable("Lookups")
+    End Function
+
+    <WebMethod(Description:="Returns a list of Lookups based on type.")> _
+    Public Function GetLookupsAdvanced(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Int32, ByVal removeFirstAllRecord As Int32) As DataTable
+        Try
+            Return LookupsManager.GetLookups(type, productID, parentID, parentLookupType, parentLookupValue, requestTypeID, removeFirstAllRecord)
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API GetLookupsAdvanced", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type))
+        End Try
+        Return New DataTable("Lookups")
     End Function
 
     <WebMethod(Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookupsByTypeString(ByVal type As String) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, 0, 0, 0)
+            Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsByTypeString", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type))
         End Try
-        Return Nothing
+        Return New DataTable("Lookups")
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Save A New Lookup.")> _
@@ -495,7 +505,7 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsByProduct(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, 0)
+            Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type.ToString(), productID))
         End Try
@@ -506,7 +516,7 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsByProductParent(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, parentID, 1)
+            Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, 1)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1} ParentID: {2}", type.ToString(), productID, parentID))
         End Try
@@ -517,55 +527,13 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookups(ByVal type As Remi.Contracts.LookupType) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, 0, 0, 0)
+            Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookups", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type.ToString()))
         End Try
         Return Nothing
     End Function
 #End Region
-
-    '#Region "Oracle"
-    '    <WebMethod(Description:="Returns a full list of the oracle Accessory Types currently being worked on.")> _
-    '    Public Function GetOracleAccessoryTypes() As String()
-    '        Try
-    '            Return LookupsManager.GetOracleAccessoryGroupList.ToArray
-    '        Catch ex As Exception
-    '            LookupsManager.LogIssue("REMI API Get oracle Accessory Types", "e3", NotificationType.Errors, ex)
-    '        End Try
-    '        Return Nothing
-    '    End Function
-
-    '    <WebMethod(Description:="Returns a full list of the oracle Test Centers.")> _
-    '    Public Function GetOracleTestCenters() As String()
-    '        Try
-    '            Return LookupsManager.GetOracleTestCentersList.ToArray
-    '        Catch ex As Exception
-    '            LookupsManager.LogIssue("REMI API Get oracle test center", "e3", NotificationType.Errors, ex)
-    '        End Try
-    '        Return Nothing
-    '    End Function
-
-    '    <WebMethod(Description:="Returns a full list of the oracle Product Types currently being worked on.")> _
-    '    Public Function GetOracleProductTypes() As String()
-    '        Try
-    '            Return LookupsManager.GetOracleProductTypeList.ToArray
-    '        Catch ex As Exception
-    '            LookupsManager.LogIssue("REMI API Get oracle Product Types", "e3", NotificationType.Errors, ex)
-    '        End Try
-    '        Return Nothing
-    '    End Function
-
-    '    <WebMethod(Description:="Returns a full list of the oracle departments.")> _
-    '    Public Function GetOracleDepartmentList() As String()
-    '        Try
-    '            Return LookupsManager.GetOracleDepartmentList.ToArray
-    '        Catch ex As Exception
-    '            LookupsManager.LogIssue("REMI API Get oracle departments", "e3", NotificationType.Errors, ex)
-    '        End Try
-    '        Return Nothing
-    '    End Function
-    '#End Region
 #End Region
 
 #Region "Job"
@@ -685,16 +653,6 @@ Public Class RemiAPI
 #End Region
 
 #Region "Product"
-    '<WebMethod(Description:="Returns a full list of the oracle Product Groups currently being worked on.")> _
-    'Public Function GetProductOracleList() As String()
-    '    Try
-    '        Return ProductGroupManager.GetProductOracleList.ToArray
-    '    Catch ex As Exception
-    '        ProductGroupManager.LogIssue("REMI API Get ProductOracleGroups", "e3", NotificationType.Errors, ex)
-    '    End Try
-    '    Return Nothing
-    'End Function
-
     <WebMethod(EnableSession:=True, Description:="Update Product.")> _
     Public Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32) As Boolean
         Try
@@ -726,7 +684,8 @@ Public Class RemiAPI
         Catch ex As Exception
             ProductGroupManager.LogIssue("REMI API GetProductGroupsDataTable", "e3", NotificationType.Errors, ex)
         End Try
-        Return New DataTable
+
+        Return New DataTable("Products")
     End Function
 
     <WebMethod(Description:="Returns the productID for a given product group name.")> _
@@ -987,7 +946,8 @@ Public Class RemiAPI
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatchComments", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", QRANumber))
         End Try
-        Return Nothing
+
+        Return New DataTable("Comments")
     End Function
 
     <WebMethod(Description:="Given a qra number this method will return the Hardware Revision of a batch.")> _

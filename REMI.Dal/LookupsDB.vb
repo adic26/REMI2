@@ -5,7 +5,7 @@ Imports REMI.BusinessEntities
 
 Namespace REMI.Dal
     Public Class LookupsDB
-        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetLookups", MyConnection)
@@ -18,6 +18,18 @@ Namespace REMI.Dal
 
                     If (parentID > 0) Then
                         myCommand.Parameters.AddWithValue("@ParentID", parentID)
+                    End If
+
+                    If (ParentLookupType.Trim().Length > 0) Then
+                        myCommand.Parameters.AddWithValue("@ParentLookupType", ParentLookupType)
+                    End If
+
+                    If (ParentLookupValue.Trim().Length > 0) Then
+                        myCommand.Parameters.AddWithValue("@ParentLookup", ParentLookupValue)
+                    End If
+
+                    If (RequestTypeID > 0) Then
+                        myCommand.Parameters.AddWithValue("@RequestTypeID", RequestTypeID)
                     End If
 
                     MyConnection.Open()

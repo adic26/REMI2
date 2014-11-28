@@ -983,11 +983,11 @@ Partial Class Search
         lblTopInfo.Visible = False
         Dim val As String = DirectCast(sender, System.Web.UI.WebControls.RadioButtonList).SelectedValue
 
-        Dim dtProductType As DataTable = LookupsManager.GetLookups("ProductType", 0, 0)
+        Dim dtProductType As DataTable = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0)
         Dim drProductType() As DataRow = dtProductType.Select("LookupType = ''")
         drProductType.ElementAt(0).Item("LookupType") = "ALL"
 
-        Dim dtAccessoryType As DataTable = LookupsManager.GetLookups("AccessoryType", 0, 0)
+        Dim dtAccessoryType As DataTable = LookupsManager.GetLookups("AccessoryType", 0, 0, String.Empty, String.Empty, 0)
         Dim drAccessoryType() As DataRow = dtAccessoryType.Select("LookupType = ''")
         drAccessoryType.ElementAt(0).Item("LookupType") = "ALL"
 
@@ -1018,11 +1018,11 @@ Partial Class Search
                 ddlAccessoryGroup.DataBind()
 
                 ddlPriority.Items.Clear()
-                ddlPriority.DataSource = LookupsManager.GetLookups("Priority", Nothing, Nothing, 0)
+                ddlPriority.DataSource = LookupsManager.GetLookups("Priority", Nothing, Nothing, String.Empty, String.Empty, 0, 0)
                 ddlPriority.DataBind()
 
                 ddlDepartment.Items.Clear()
-                ddlDepartment.DataSource = LookupsManager.GetLookups("Department", Nothing, Nothing, 0)
+                ddlDepartment.DataSource = LookupsManager.GetLookups("Department", Nothing, Nothing, String.Empty, String.Empty, 0, 0)
                 ddlDepartment.DataBind()
 
                 Dim ld As ListItem = New ListItem(UserManager.GetCurrentUser.Department, UserManager.GetCurrentUser.DepartmentID)
@@ -1071,14 +1071,14 @@ Partial Class Search
 
                 ddlRequestReason.Items.Clear()
                 ddlRequestReason.Items.Add("ALL")
-                ddlRequestReason.DataSource = LookupsManager.GetLookups("RequestPurpose", 0, 0, 0)
+                ddlRequestReason.DataSource = LookupsManager.GetLookups("RequestPurpose", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlRequestReason.DataBind()
 
                 txtStart.Text = DateTime.Now.Subtract(TimeSpan.FromDays(7)).ToShortDateString()
                 txtEnd.Text = DateTime.Now.ToShortDateString()
 
                 ddlTestCenters.Items.Clear()
-                ddlTestCenters.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, 0)
+                ddlTestCenters.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCenters.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1115,7 +1115,7 @@ Partial Class Search
 
                 ddlRequestReasonException.Items.Clear()
                 ddlRequestReasonException.Items.Add("ALL")
-                ddlRequestReasonException.DataSource = LookupsManager.GetLookups("RequestPurpose", 0, 0, 0)
+                ddlRequestReasonException.DataSource = LookupsManager.GetLookups("RequestPurpose", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlRequestReasonException.DataBind()
             Case "3"
                 'User
@@ -1133,11 +1133,11 @@ Partial Class Search
                 ddlProductFilterUser.DataBind()
 
                 ddlTestCentersUser.Items.Clear()
-                ddlTestCentersUser.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, 0)
+                ddlTestCentersUser.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCentersUser.DataBind()
 
                 ddlDepartmentUser.Items.Clear()
-                ddlDepartmentUser.DataSource = Remi.Bll.LookupsManager.GetLookups("Department", 0, 0, 0)
+                ddlDepartmentUser.DataSource = Remi.Bll.LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlDepartmentUser.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1173,7 +1173,7 @@ Partial Class Search
                 chkJobsRQ.DataBind()
                 chkJobsRQ.SelectedValue = "All"
 
-                ddlTestCenterRQ.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, 0)
+                ddlTestCenterRQ.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCenterRQ.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1194,7 +1194,7 @@ Partial Class Search
                 pnlKPI.Visible = False
 
                 ddlTestCentersENV.Items.Clear()
-                ddlTestCentersENV.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, 0)
+                ddlTestCentersENV.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCentersENV.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1225,7 +1225,7 @@ Partial Class Search
                 pnlKPI.Visible = True
 
                 ddlTestCenterKPI.Items.Clear()
-                ddlTestCenterKPI.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, 0)
+                ddlTestCenterKPI.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCenterKPI.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1246,7 +1246,7 @@ Partial Class Search
                 pnlTraining.Visible = True
 
                 ddlTestCenterTraining.Items.Clear()
-                ddlTestCenterTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, 0)
+                ddlTestCenterTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCenterTraining.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1256,7 +1256,7 @@ Partial Class Search
                 End If
 
                 ddlSearchTraining.Items.Clear()
-                ddlSearchTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("Training", 0, 0, 0)
+                ddlSearchTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("Training", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlSearchTraining.DataBind()
             Case Else
                 pnlTraining.Visible = False

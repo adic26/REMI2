@@ -8,9 +8,9 @@ Namespace REMI.Bll
         Inherits REMIManagerBase
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
+        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
             Try
-                Return GetLookups(type.ToString(), productID, parentID, RemoveFirst)
+                Return GetLookups(type.ToString(), productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, RemoveFirst)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
             End Try
@@ -19,10 +19,10 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], True)> _
-        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
             Try
                 'All Test Centers
-                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID)
+                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID)
 
                 If (type = "TestCenter") Then
                     dt.Rows(0).Item("LookupType") = "All Test Centers"

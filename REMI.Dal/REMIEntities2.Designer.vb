@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("51d21823-85f0-4373-9b23-3dba9fe99415")>
+<Assembly: EdmSchemaAttribute("236f020d-e28a-4c4d-8905-7c3efb6ab801")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -121,6 +121,11 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_aspnet_Permissions_aspnet_Applications", "aspnet_Applications", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.aspnet_Applications), "aspnet_Permissions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Permissions), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_PermissionsInRoles", "aspnet_Permissions", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Permissions), "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_UsersInRoles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles), "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Users))>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups1", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType1", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
 
 #End Region
 
@@ -1276,6 +1281,20 @@ Namespace REMI.Entities
         End Property
     
         Private _aspnet_Permissions As ObjectSet(Of aspnet_Permissions)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property LookupsHierarchies() As ObjectSet(Of LookupsHierarchy)
+            Get
+                If (_LookupsHierarchies Is Nothing) Then
+                    _LookupsHierarchies = MyBase.CreateObjectSet(Of LookupsHierarchy)("LookupsHierarchies")
+                End If
+                Return _LookupsHierarchies
+            End Get
+        End Property
+    
+        Private _LookupsHierarchies As ObjectSet(Of LookupsHierarchy)
 
         #End Region
 
@@ -1832,6 +1851,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToaspnet_Permissions(ByVal aspnet_Permissions As aspnet_Permissions)
             MyBase.AddObject("aspnet_Permissions", aspnet_Permissions)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the LookupsHierarchies EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToLookupsHierarchies(ByVal lookupsHierarchy As LookupsHierarchy)
+            MyBase.AddObject("LookupsHierarchies", lookupsHierarchy)
         End Sub
 
         #End Region
@@ -8476,6 +8502,391 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups", "LookupsHierarchy")>
+         Public Property LookupsHierarchies() As EntityCollection(Of LookupsHierarchy)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_Lookups", "LookupsHierarchy")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_Lookups", "LookupsHierarchy", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups1", "LookupsHierarchy")>
+         Public Property LookupsHierarchies1() As EntityCollection(Of LookupsHierarchy)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_Lookups1", "LookupsHierarchy")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_Lookups1", "LookupsHierarchy", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="LookupsHierarchy")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class LookupsHierarchy
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new LookupsHierarchy object.
+        ''' </summary>
+        ''' <param name="lookupsHierarchyID">Initial value of the LookupsHierarchyID property.</param>
+        ''' <param name="parentLookupTypeID">Initial value of the ParentLookupTypeID property.</param>
+        ''' <param name="childLookupTypeID">Initial value of the ChildLookupTypeID property.</param>
+        ''' <param name="parentLookupID">Initial value of the ParentLookupID property.</param>
+        ''' <param name="childLookupID">Initial value of the ChildLookupID property.</param>
+        ''' <param name="requestTypeID">Initial value of the RequestTypeID property.</param>
+        Public Shared Function CreateLookupsHierarchy(lookupsHierarchyID As Global.System.Int32, parentLookupTypeID As Global.System.Int32, childLookupTypeID As Global.System.Int32, parentLookupID As Global.System.Int32, childLookupID As Global.System.Int32, requestTypeID As Global.System.Int32) As LookupsHierarchy
+            Dim lookupsHierarchy as LookupsHierarchy = New LookupsHierarchy
+            lookupsHierarchy.LookupsHierarchyID = lookupsHierarchyID
+            lookupsHierarchy.ParentLookupTypeID = parentLookupTypeID
+            lookupsHierarchy.ChildLookupTypeID = childLookupTypeID
+            lookupsHierarchy.ParentLookupID = parentLookupID
+            lookupsHierarchy.ChildLookupID = childLookupID
+            lookupsHierarchy.RequestTypeID = requestTypeID
+            Return lookupsHierarchy
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property LookupsHierarchyID() As Global.System.Int32
+            Get
+                Return _LookupsHierarchyID
+            End Get
+            Set
+                If (_LookupsHierarchyID <> Value) Then
+                    OnLookupsHierarchyIDChanging(value)
+                    ReportPropertyChanging("LookupsHierarchyID")
+                    _LookupsHierarchyID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("LookupsHierarchyID")
+                    OnLookupsHierarchyIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _LookupsHierarchyID As Global.System.Int32
+        Private Partial Sub OnLookupsHierarchyIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnLookupsHierarchyIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ParentLookupTypeID() As Global.System.Int32
+            Get
+                Return _ParentLookupTypeID
+            End Get
+            Set
+                OnParentLookupTypeIDChanging(value)
+                ReportPropertyChanging("ParentLookupTypeID")
+                _ParentLookupTypeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ParentLookupTypeID")
+                OnParentLookupTypeIDChanged()
+            End Set
+        End Property
+    
+        Private _ParentLookupTypeID As Global.System.Int32
+        Private Partial Sub OnParentLookupTypeIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnParentLookupTypeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ChildLookupTypeID() As Global.System.Int32
+            Get
+                Return _ChildLookupTypeID
+            End Get
+            Set
+                OnChildLookupTypeIDChanging(value)
+                ReportPropertyChanging("ChildLookupTypeID")
+                _ChildLookupTypeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ChildLookupTypeID")
+                OnChildLookupTypeIDChanged()
+            End Set
+        End Property
+    
+        Private _ChildLookupTypeID As Global.System.Int32
+        Private Partial Sub OnChildLookupTypeIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnChildLookupTypeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ParentLookupID() As Global.System.Int32
+            Get
+                Return _ParentLookupID
+            End Get
+            Set
+                OnParentLookupIDChanging(value)
+                ReportPropertyChanging("ParentLookupID")
+                _ParentLookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ParentLookupID")
+                OnParentLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _ParentLookupID As Global.System.Int32
+        Private Partial Sub OnParentLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnParentLookupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ChildLookupID() As Global.System.Int32
+            Get
+                Return _ChildLookupID
+            End Get
+            Set
+                OnChildLookupIDChanging(value)
+                ReportPropertyChanging("ChildLookupID")
+                _ChildLookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ChildLookupID")
+                OnChildLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _ChildLookupID As Global.System.Int32
+        Private Partial Sub OnChildLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnChildLookupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property RequestTypeID() As Global.System.Int32
+            Get
+                Return _RequestTypeID
+            End Get
+            Set
+                OnRequestTypeIDChanging(value)
+                ReportPropertyChanging("RequestTypeID")
+                _RequestTypeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("RequestTypeID")
+                OnRequestTypeIDChanged()
+            End Set
+        End Property
+    
+        Private _RequestTypeID As Global.System.Int32
+        Private Partial Sub OnRequestTypeIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnRequestTypeIDChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups1", "Lookup")>
+        Public Property Lookup1() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups1", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups1", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property Lookup1Reference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups1", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_LookupsHierarchy_Lookups1", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType", "LookupType")>
+        Public Property LookupType() As LookupType
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType", "LookupType").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType", "LookupType").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupTypeReference() As EntityReference(Of LookupType)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType", "LookupType")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType", "LookupType", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType1", "LookupType")>
+        Public Property LookupType1() As LookupType
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType1", "LookupType").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType1", "LookupType").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupType1Reference() As EntityReference(Of LookupType)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType1", "LookupType")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType1", "LookupType", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "RequestType")>
+        Public Property RequestType() As RequestType
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property RequestTypeReference() As EntityReference(Of RequestType)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -8577,6 +8988,42 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Lookup)("REMI.Entities.FK_Lookups_LookupType", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType", "LookupsHierarchy")>
+         Public Property LookupsHierarchies() As EntityCollection(Of LookupsHierarchy)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_LookupType", "LookupsHierarchy")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_LookupType", "LookupsHierarchy", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType1", "LookupsHierarchy")>
+         Public Property LookupsHierarchies1() As EntityCollection(Of LookupsHierarchy)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_LookupType1", "LookupsHierarchy")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_LookupType1", "LookupsHierarchy", value)
                 End If
             End Set
         End Property
@@ -12818,6 +13265,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestTypeAccess)("REMI.Entities.FK_RequestTypeAccess_RequestType", "RequestTypeAccess", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "LookupsHierarchy")>
+         Public Property LookupsHierarchies() As EntityCollection(Of LookupsHierarchy)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_RequestType", "LookupsHierarchy")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of LookupsHierarchy)("REMI.Entities.FK_LookupsHierarchy_RequestType", "LookupsHierarchy", value)
                 End If
             End Set
         End Property

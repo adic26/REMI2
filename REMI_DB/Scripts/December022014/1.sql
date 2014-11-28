@@ -1,17 +1,3 @@
-/*
-Run this script on:
-
-        SQLQA10YKF\HAQA1.RemiQA    -  This database will be modified
-
-to synchronize it with:
-
-        (local).REMILocal
-
-You are recommended to back up your database before running this script
-
-Script created by SQL Compare version 10.2.0 from Red Gate Software Ltd at 11/27/2014 11:50:21 AM
-
-*/
 SET NUMERIC_ROUNDABORT OFF
 GO
 SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
@@ -67,6 +53,55 @@ GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+CREATE TABLE [dbo].[LookupsHierarchy](
+	[LookupsHierarchyID] [int] IDENTITY(1,1) NOT NULL,
+	[ParentLookupTypeID] [int] NOT NULL,
+	[ChildLookupTypeID] [int] NOT NULL,
+	[ParentLookupID] [int] NOT NULL,
+	[ChildLookupID] [int] NOT NULL,
+	[RequestTypeID] [int] NOT NULL,
+ CONSTRAINT [PK_LookupsHierarchy] PRIMARY KEY CLUSTERED 
+(
+	[LookupsHierarchyID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy]  WITH CHECK ADD  CONSTRAINT [FK_LookupsHierarchy_Lookups] FOREIGN KEY([ParentLookupID])
+REFERENCES [dbo].[Lookups] ([LookupID])
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy] CHECK CONSTRAINT [FK_LookupsHierarchy_Lookups]
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy]  WITH CHECK ADD  CONSTRAINT [FK_LookupsHierarchy_Lookups1] FOREIGN KEY([ChildLookupID])
+REFERENCES [dbo].[Lookups] ([LookupID])
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy] CHECK CONSTRAINT [FK_LookupsHierarchy_Lookups1]
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy]  WITH CHECK ADD  CONSTRAINT [FK_LookupsHierarchy_LookupType] FOREIGN KEY([ParentLookupTypeID])
+REFERENCES [dbo].[LookupType] ([LookupTypeID])
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy] CHECK CONSTRAINT [FK_LookupsHierarchy_LookupType]
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy]  WITH CHECK ADD  CONSTRAINT [FK_LookupsHierarchy_LookupType1] FOREIGN KEY([ChildLookupTypeID])
+REFERENCES [dbo].[LookupType] ([LookupTypeID])
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy] CHECK CONSTRAINT [FK_LookupsHierarchy_LookupType1]
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy]  WITH CHECK ADD  CONSTRAINT [FK_LookupsHierarchy_RequestType] FOREIGN KEY([RequestTypeID])
+REFERENCES [Req].[RequestType] ([RequestTypeID])
+GO
+
+ALTER TABLE [dbo].[LookupsHierarchy] CHECK CONSTRAINT [FK_LookupsHierarchy_RequestType]
 GO
 PRINT N'Creating [dbo].[remispGetServicesAccessByID]'
 GO
@@ -371,6 +406,74 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI
+GO
+ALTER PROCEDURE remispGetLookups @Type NVARCHAR(150), @ProductID INT = NULL, @ParentID INT = NULL, @ParentLookupType NVARCHAR(150) = NULL, @ParentLookup NVARCHAR(150) = NULL, @RequestTypeID INT = NULL
+AS
+BEGIN
+	DECLARE @LookupTypeID INT
+	DECLARE @ParentLookupTypeID INT
+	DECLARE @HierarchyExists BIT
+	SET @HierarchyExists = CONVERT(BIT, 0)
+	DECLARE @ParentLookupID INT
+	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@Type
+	SELECT @ParentLookupTypeID = LookupTypeID FROM LookupType WHERE Name=@ParentLookupType
+	SELECT @ParentLookupID = LookupID FROM Lookups WHERE LookupTypeID=@ParentLookupTypeID AND Lookups.[Values]=@ParentLookup
+	
+	SET @HierarchyExists = ISNULL((SELECT TOP 1 CONVERT(BIT, 1) 
+	FROM LookupsHierarchy lh
+	WHERE lh.ParentLookupTypeID=@ParentLookupTypeID AND lh.ChildLookupTypeID=@LookupTypeID
+		AND lh.ParentLookupID=@ParentLookupID AND lh.RequestTypeID=@RequestTypeID), CONVERT(BIT, 0))
+
+	SELECT l.LookupID, @Type AS [Type], l.[Values] As LookupType, CASE WHEN pl.ID IS NOT NULL THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END As HasAccess, 
+		l.Description, ISNULL(l.ParentID, 0) AS ParentID, p.[Values] AS Parent
+	INTO #type
+	FROM Lookups l
+		LEFT OUTER JOIN ProductLookups pl ON pl.ProductID=@ProductID AND l.LookupID=pl.LookupID
+		LEFT OUTER JOIN Lookups p ON p.LookupID=l.ParentID
+	WHERE l.LookupTypeID=@LookupTypeID AND l.IsActive=1 AND 
+		(
+			(@ParentID IS NOT NULL AND ISNULL(@ParentID, 0) <> 0 AND ISNULL(l.ParentID, 0) = ISNULL(@ParentID, 0))
+			OR
+			(@ParentID IS NULL OR ISNULL(@ParentID, 0) = 0)
+		)
+		AND
+		(
+			(l.LookupID IN (SELECT ChildLookupID 
+						FROM LookupsHierarchy lh 
+						WHERE lh.ParentLookupTypeID=@ParentLookupTypeID AND lh.ChildLookupTypeID=@LookupTypeID
+							AND lh.ParentLookupID=@ParentLookupID AND lh.RequestTypeID=@RequestTypeID
+						)
+			) 
+			OR
+			@HierarchyExists = CONVERT(BIT, 0)
+		)
+		
+	; WITH cte AS
+	(
+		SELECT LookupID, [Type], LookupType, HasAccess, Description, ISNULL(ParentID, 0) AS ParentID, Parent,
+			cast(row_number()over(partition by ParentID order by LookupType) as varchar(max)) as [path],
+			0 as level,
+			row_number()over(partition by ParentID order by LookupType) / power(10.0,0) as x
+		FROM #type
+		WHERE ISNULL(ParentID, 0) = 0
+		UNION ALL
+		SELECT t.LookupID, t.[Type], t.LookupType, t.HasAccess, t.Description, t.ParentID, t.Parent,
+		[path] +'-'+ cast(row_number() over(partition by t.ParentID order by t.LookupType) as varchar(max)),
+		level+1,
+		x + row_number()over(partition by t.ParentID order by t.LookupType) / power(10.0,level+1)
+		FROM cte
+			INNER JOIN #type t on cte.LookupID = t.ParentID
+	)
+	select LookupID, [Type], LookupType, HasAccess, Description, ParentID, (CONVERT(NVARCHAR, ParentID) + '-' + Parent) AS Parent, x, (CONVERT(NVARCHAR, LookupID) + '-' + LookupType) AS DisplayText
+	FROM cte
+	UNION ALL
+	SELECT 0 AS LookupID, @Type AS [Type], '' As LookupType, CONVERT(BIT, 0) As HasAccess, NULL AS Description, 0 AS ParentID, NULL AS Parent, NULL AS x, '' AS DisplayText
+	ORDER BY x		
+		
+	DROP TABLE #type
+END
+GO
+GRANT EXECUTE ON remispGetLookups TO REMI
 GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO

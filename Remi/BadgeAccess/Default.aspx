@@ -60,6 +60,9 @@
                             <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
                             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
                         </SelectParameters>
                     </asp:ObjectDataSource>
@@ -76,6 +79,9 @@
                             <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
                             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
                         </SelectParameters>
                     </asp:ObjectDataSource>

@@ -10,7 +10,7 @@ Partial Class ManageProducts_EditProductConfig
     Inherits System.Web.UI.Page
 
     Protected isEditMode As Boolean
-    Dim dtConfig As DataTable = LookupsManager.GetLookups("Configuration", 0, 0, 0)
+    Dim dtConfig As DataTable = LookupsManager.GetLookups("Configuration", 0, 0, String.Empty, String.Empty, 0, 0)
 
 #Region "Page Events"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
