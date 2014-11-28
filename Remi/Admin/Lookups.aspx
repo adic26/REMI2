@@ -60,17 +60,29 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <h1>Lookups</h1>
-    Select A Lookup Type: <asp:DropDownList ID="ddlLookupList" runat="server" AutoPostBack="True"></asp:DropDownList> Add A New Lookup Value: <asp:TextBox ID="txtValue" runat="server"></asp:TextBox>
+    Select A Lookup Type: <asp:DropDownList ID="ddlLookupList" runat="server" AutoPostBack="True"></asp:DropDownList> 
     
-    <asp:GridView runat="server" ID="gdvLookups" AutoGenerateColumns="false" EnableViewState="true" OnRowEditing="gdvLookups_OnRowEditing" DataKeyNames="LookupType" AutoGenerateEditButton="true" OnRowCancelingEdit="gdvLookups_OnRowCancelingEdit" OnRowUpdating="gdvLookups_RowUpdating">
+    <asp:GridView runat="server" ID="gdvLookups" AutoGenerateColumns="false" ShowFooter="true" EnableViewState="true" OnRowEditing="gdvLookups_OnRowEditing" DataKeyNames="LookupType" AutoGenerateEditButton="true" OnRowCancelingEdit="gdvLookups_OnRowCancelingEdit" OnRowUpdating="gdvLookups_RowUpdating">
         <Columns>
             <asp:BoundField DataField="LookupID" HeaderText="LookupID" ReadOnly="true" SortExpression="LookupID" />
-            <asp:BoundField DataField="LookupType" HeaderText="Value" ReadOnly="true" SortExpression="LookupType" />
+            <asp:TemplateField HeaderText="Description" SortExpression="Description">
+                <ItemTemplate>
+                    <asp:Label runat="server" ID="lblValue" Text='<%# Eval("LookupType")%>' Visible="true" ReadOnly="true" />
+                </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtValue" Visible="true" />
+                </FooterTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Description" SortExpression="Description">
                 <ItemTemplate>
                     <asp:Label runat="server" ID="lblDescription" Text='<%# Eval("Description")%>' Visible="true" />
                     <asp:TextBox runat="server" ID="txtDescription" Text='<%# Eval("Description")%>' Visible="false" EnableViewState="true" />
                 </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtDescription" Visible="true" />
+                </FooterTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Parent" SortExpression="Parent">
                 <ItemTemplate>
@@ -78,6 +90,10 @@
                     <asp:Label runat="server" ID="lblParent" Text='<%# Eval("Parent")%>' Visible="true" />
                     <asp:DropDownList runat="server" ID="ddlParentID" DataTextField="DisplayText" DataValueField="LookupID" Visible="false"></asp:DropDownList>
                 </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:DropDownList runat="server" ID="ddlFooterParentID" DataTextField="DisplayText" DataSourceID="odsLookups" DataValueField="LookupID" Visible="true"></asp:DropDownList>
+                </FooterTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Active" SortExpression="Active">
                 <ItemTemplate>
@@ -86,6 +102,15 @@
             </asp:TemplateField>
         </Columns>
     </asp:GridView>
+    
+    <asp:ObjectDataSource ID="odsLookups" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookups" TypeName="REMI.Bll.LookupsManager">
+        <SelectParameters>
+            <asp:ControlParameter ControlID="ctl00$Content$ddlLookupList" Name="Type" PropertyName="SelectedValue" Type="String" />
+            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+        </SelectParameters>
+    </asp:ObjectDataSource>
 
     <h1>Target Access</h1>
 

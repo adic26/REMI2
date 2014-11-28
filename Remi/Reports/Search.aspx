@@ -482,7 +482,7 @@
 
     <asp:ObjectDataSource ID="odsTraining" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
         <SelectParameters>
-            <asp:Parameter Type="Int32" Name="Type" DefaultValue="5" />
+            <asp:Parameter Type="String" Name="Type" DefaultValue="Training" />
             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
@@ -491,7 +491,7 @@
     
     <asp:ObjectDataSource ID="odsTrainingLevel" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
         <SelectParameters>
-            <asp:Parameter Type="Int32" Name="Type" DefaultValue="6" />
+            <asp:Parameter Type="String" Name="Type" DefaultValue="Level" />
             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
@@ -509,7 +509,7 @@
         
     <asp:ObjectDataSource ID="odsTestCenters" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
         <SelectParameters>
-            <asp:Parameter Type="Int32" Name="Type" DefaultValue="4" />
+            <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />

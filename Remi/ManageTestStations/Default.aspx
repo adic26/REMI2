@@ -67,7 +67,7 @@
                         AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsDepartments"></asp:DropDownList>
                     <asp:ObjectDataSource ID="odsDepartments" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                         <SelectParameters>
-                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
+                    <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
                             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />

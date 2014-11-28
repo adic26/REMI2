@@ -248,15 +248,6 @@ Partial Public Class Admin_Lookups
     Protected WithEvents ddlLookupList As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''txtValue control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtValue As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
     '''gdvLookups control.
     '''</summary>
     '''<remarks>
@@ -264,6 +255,15 @@ Partial Public Class Admin_Lookups
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gdvLookups As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''odsLookups control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsLookups As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''gdvTargetAccess control.

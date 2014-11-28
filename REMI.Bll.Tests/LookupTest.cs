@@ -32,9 +32,21 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
+        public void GetLookupsTypeString()
+        {
+            Assert.That(LookupsManager.GetLookups("Priority", 0, 0, 0).Rows.Count > 0);
+        }
+
+        [Test]
         public void GetLookupID()
         {
             Assert.That(LookupsManager.GetLookupID(Contracts.LookupType.Priority, "low", 0) > 0);
+        }
+
+        [Test]
+        public void GetLookupIDByTypeString()
+        {
+            Assert.That(LookupsManager.GetLookupID("Priority", "low", 0) > 0);
         }
 
         //[Test]

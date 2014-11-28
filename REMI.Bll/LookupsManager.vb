@@ -7,14 +7,26 @@ Namespace REMI.Bll
     Public Class LookupsManager
         Inherits REMIManagerBase
 
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
+            Try
+                Return GetLookups(type.ToString(), productID, parentID, RemoveFirst)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("Lookups")
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
             Try
                 'All Test Centers
                 Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID)
 
-                If (type = Contracts.LookupType.TestCenter) Then
+                If (type = "TestCenter") Then
                     dt.Rows(0).Item("LookupType") = "All Test Centers"
-                ElseIf (type = Contracts.LookupType.Department) Then
+                ElseIf (type = "Department") Then
                     dt.Rows(0).Item("LookupType") = "All Departments"
                 End If
 
@@ -30,7 +42,7 @@ Namespace REMI.Bll
             Return New DataTable("Lookups")
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
         Public Shared Function SaveLookup(ByVal lookupType As String, ByVal value As String, ByVal isActive As Int32, ByVal description As String, ByVal parentID As Int32) As Boolean
             Try
                 Return LookupsDB.SaveLookup(lookupType, value, isActive, description, parentID)
@@ -42,6 +54,11 @@ Namespace REMI.Bll
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
+            Return GetLookupID(type.ToString(), lookup, parentID)
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
+        Public Shared Function GetLookupID(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32
             Try
                 Return LookupsDB.GetLookupID(type, lookup, parentID)
             Catch ex As Exception

@@ -41,15 +41,15 @@ Public Class RemiAPI
                 End If
 
                 If (Not String.IsNullOrEmpty(AccessoryGroup)) Then
-                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.AccessoryType, AccessoryGroup, 0), accessoryGroupID)
+                    Int32.TryParse(LookupsManager.GetLookupID("AccessoryType", AccessoryGroup, 0), accessoryGroupID)
                 End If
 
                 If (Not String.IsNullOrEmpty(department)) Then
-                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.Department, department, 0), departmentID)
+                    Int32.TryParse(LookupsManager.GetLookupID("Department", department, 0), departmentID)
                 End If
 
                 If (Not String.IsNullOrEmpty(Priority)) Then
-                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.Priority, Priority, 0), priorityID)
+                    Int32.TryParse(LookupsManager.GetLookupID("Priority", Priority, 0), priorityID)
                 End If
 
                 If (Not String.IsNullOrEmpty(Product)) Then
@@ -57,11 +57,11 @@ Public Class RemiAPI
                 End If
 
                 If (Not String.IsNullOrEmpty(ProductType)) Then
-                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.ProductType, ProductType, 0), productTypeID)
+                    Int32.TryParse(LookupsManager.GetLookupID("ProductType", ProductType, 0), productTypeID)
                 End If
 
                 If (Not String.IsNullOrEmpty(TestCenter)) Then
-                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.TestCenter, TestCenter, 0), geoLocationID)
+                    Int32.TryParse(LookupsManager.GetLookupID("TestCenter", TestCenter, 0), geoLocationID)
                 End If
 
                 If (Not String.IsNullOrEmpty(UserName)) Then
@@ -69,7 +69,7 @@ Public Class RemiAPI
                 End If
 
                 If (Not String.IsNullOrEmpty(RequestReason)) Then
-                    Int32.TryParse(LookupsManager.GetLookupID(LookupType.RequestPurpose, RequestReason, 0), requestReasonID)
+                    Int32.TryParse(LookupsManager.GetLookupID("RequestPurpose", RequestReason, 0), requestReasonID)
                 End If
 
                 If (Not String.IsNullOrEmpty(TrackingLocationName) And geoLocationID > 0) Then
@@ -432,19 +432,9 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns an ID of Lookup based on type.")> _
     Public Function GetLookupIDByTypeString(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32
         Try
-            Return GetLookupID([Enum].Parse(GetType(Remi.Contracts.LookupType), type), lookup, parentID)
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API GetLookupIDByTypeString", "e3", NotificationType.Errors, ex, String.Format("Type: {0} lookup: {1} ParentID: {2}", type, lookup, parentID))
-        End Try
-        Return Nothing
-    End Function
-
-    <WebMethod(Description:="Returns an ID of Lookup based on type.")> _
-    Public Function GetLookupID(ByVal type As Remi.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
-        Try
             Return LookupsManager.GetLookupID(type, lookup, parentID)
         Catch ex As Exception
-            LookupsManager.LogIssue("REMI API GetLookupID", "e3", NotificationType.Errors, ex, String.Format("Lookup: {0} ParentID: {1} Type: {2}", lookup, parentID, type.ToString()))
+            LookupsManager.LogIssue("REMI API GetLookupIDByTypeString", "e3", NotificationType.Errors, ex, String.Format("Type: {0} lookup: {1} ParentID: {2}", type, lookup, parentID))
         End Try
         Return Nothing
     End Function
@@ -452,7 +442,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProduct(ByVal type As String, ByVal productID As Int32) As DataTable
         Try
-            Return GetLookupsByProduct([Enum].Parse(GetType(Remi.Contracts.LookupType), type), productID)
+            Return LookupsManager.GetLookups(type, productID, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsTypeStringByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type, productID))
         End Try
@@ -460,29 +450,9 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
-    Public Function GetLookupsByProduct(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32) As DataTable
-        Try
-            Return LookupsManager.GetLookups(type, productID, 0)
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type.ToString(), productID))
-        End Try
-        Return Nothing
-    End Function
-
-    <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
-    Public Function GetLookupsByProductParent(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
-        Try
-            Return LookupsManager.GetLookups(type, productID, parentID, 1)
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1} ParentID: {2}", type.ToString(), productID, parentID))
-        End Try
-        Return Nothing
-    End Function
-
-    <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProductParent(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
         Try
-            Return GetLookupsByProductParent([Enum].Parse(GetType(Remi.Contracts.LookupType), type), productID, parentID)
+            Return LookupsManager.GetLookups(type, productID, parentID, 1)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsTypeStringByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1} ParentID: {2}", type, productID, parentID))
         End Try
@@ -492,19 +462,9 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookupsByTypeString(ByVal type As String) As DataTable
         Try
-            Return GetLookups([Enum].Parse(GetType(Remi.Contracts.LookupType), type))
-        Catch ex As Exception
-            LookupsManager.LogIssue("REMI API GetLookupsByTypeString", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type))
-        End Try
-        Return Nothing
-    End Function
-
-    <WebMethod(Description:="Returns a list of Lookups based on type.")> _
-    Public Function GetLookups(ByVal type As Remi.Contracts.LookupType) As DataTable
-        Try
             Return LookupsManager.GetLookups(type, 0, 0, 0)
         Catch ex As Exception
-            LookupsManager.LogIssue("REMI API GetLookups", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type.ToString()))
+            LookupsManager.LogIssue("REMI API GetLookupsByTypeString", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type))
         End Try
         Return Nothing
     End Function
@@ -518,6 +478,52 @@ Public Class RemiAPI
         End Try
         Return False
     End Function
+
+#Region "Obsolete"
+    <Obsolete("Don't use this routine any more. Use GetLookupIDByTypeString instead."), _
+    WebMethod(Description:="Returns an ID of Lookup based on type.")> _
+    Public Function GetLookupID(ByVal type As Remi.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
+        Try
+            Return LookupsManager.GetLookupID(type, lookup, parentID)
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API GetLookupID", "e3", NotificationType.Errors, ex, String.Format("Lookup: {0} ParentID: {1} Type: {2}", lookup, parentID, type.ToString()))
+        End Try
+        Return Nothing
+    End Function
+
+    <Obsolete("Don't use this routine any more. Use GetLookupsTypeStringByProduct instead."), _
+    WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
+    Public Function GetLookupsByProduct(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32) As DataTable
+        Try
+            Return LookupsManager.GetLookups(type, productID, 0)
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type.ToString(), productID))
+        End Try
+        Return Nothing
+    End Function
+
+    <Obsolete("Don't use this routine any more. Use GetLookupsTypeStringByProductParent instead."), _
+    WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
+    Public Function GetLookupsByProductParent(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
+        Try
+            Return LookupsManager.GetLookups(type, productID, parentID, 1)
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1} ParentID: {2}", type.ToString(), productID, parentID))
+        End Try
+        Return Nothing
+    End Function
+
+    <Obsolete("Don't use this routine any more. Use GetLookupsByTypeString instead."), _
+    WebMethod(Description:="Returns a list of Lookups based on type.")> _
+    Public Function GetLookups(ByVal type As Remi.Contracts.LookupType) As DataTable
+        Try
+            Return LookupsManager.GetLookups(type, 0, 0, 0)
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API GetLookups", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type.ToString()))
+        End Try
+        Return Nothing
+    End Function
+#End Region
 
     '#Region "Oracle"
     '    <WebMethod(Description:="Returns a full list of the oracle Accessory Types currently being worked on.")> _

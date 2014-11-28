@@ -37,7 +37,7 @@ Public Class Admin_Lookups
     End Sub
 
     Protected Sub BindLookups(ByVal type As String, ByVal removeFirst As Int32)
-        gdvLookups.DataSource = LookupsManager.GetLookups([Enum].Parse(GetType(REMI.Contracts.LookupType), type), 0, 0, removeFirst)
+        gdvLookups.DataSource = LookupsManager.GetLookups(type, 0, 0, removeFirst)
         gdvLookups.DataBind()
     End Sub
 
@@ -51,7 +51,7 @@ Public Class Admin_Lookups
         Dim hdnParentID As HiddenField = gdvLookups.Rows(e.NewEditIndex).FindControl("hdnParentID")
         Dim chkActive As CheckBox = gdvLookups.Rows(e.NewEditIndex).FindControl("chkActive")
 
-        ddlParentID.DataSource = LookupsManager.GetLookups([Enum].Parse(GetType(REMI.Contracts.LookupType), ddlLookupList.SelectedValue), 0, 0, 0)
+        ddlParentID.DataSource = LookupsManager.GetLookups(ddlLookupList.SelectedValue, 0, 0, 0)
         ddlParentID.DataBind()
 
         chkActive.Enabled = True
@@ -143,7 +143,12 @@ Public Class Admin_Lookups
     End Sub
 
     Protected Sub lnkAddLookupAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddLookupAction.Click
-        REMI.Bll.LookupsManager.SaveLookup(ddlLookupList.SelectedItem.Value, txtValue.Text, 1, Nothing, 0)
+        Dim value As String = Request.Form(gdvLookups.FooterRow.FindControl("txtValue").UniqueID)
+        Dim description As String = Request.Form(gdvLookups.FooterRow.FindControl("txtDescription").UniqueID)
+        Dim parentID As Int32 = 0
+        Int32.TryParse(Request.Form(gdvLookups.FooterRow.FindControl("ddlFooterParentID").UniqueID), parentID)
+
+        REMI.Bll.LookupsManager.SaveLookup(ddlLookupList.SelectedItem.Value, value, 1, description, parentID)
         Response.Redirect("/Admin/Lookups.aspx")
     End Sub
 

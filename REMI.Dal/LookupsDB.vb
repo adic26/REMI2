@@ -5,12 +5,12 @@ Imports REMI.BusinessEntities
 
 Namespace REMI.Dal
     Public Class LookupsDB
-        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetLookups", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@Type", type.ToString())
+                    myCommand.Parameters.AddWithValue("@Type", type)
 
                     If (productID > 0) Then
                         myCommand.Parameters.AddWithValue("@ProductID", productID)
@@ -47,12 +47,12 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
+        Public Shared Function GetLookupID(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32
             Dim lookupID As Int32
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetLookup", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@Type", type.ToString())
+                    myCommand.Parameters.AddWithValue("@Type", type)
                     myCommand.Parameters.AddWithValue("@Lookup", lookup)
                     myCommand.Parameters.AddWithValue("@ParentID", parentID)
                     MyConnection.Open()

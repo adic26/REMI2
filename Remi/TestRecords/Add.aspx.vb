@@ -290,17 +290,17 @@ Partial Class TestRecords_Add
                                 End If
 
                                 If (passFail > -1) Then
-                                    Dim type As Remi.Contracts.LookupType
+                                    Dim type As String
 
                                     Select Case rblMFISFIAcc.SelectedValue
                                         Case 1
-                                            type = LookupType.SFIFunctionalMatrix
+                                            type = "SFIFunctionalMatrix"
                                         Case 2
-                                            type = LookupType.MFIFunctionalMatrix
+                                            type = "MFIFunctionalMatrix"
                                         Case 3
-                                            type = LookupType.AccFunctionalMatrix
+                                            type = "AccFunctionalMatrix"
                                         Case Else
-                                            type = LookupType.SFIFunctionalMatrix
+                                            type = "SFIFunctionalMatrix"
                                     End Select
 
                                     TestRecordManager.InsertRelabRecordMeasurement(testID, testStageID, (From tu In b.TestUnits Where tu.BatchUnitNumber = testUnitNum Select tu.ID).FirstOrDefault(), LookupsManager.GetLookupID(type, lookup, 0), IIf(passFail = 0, False, True), rblMFISFIAcc.Enabled)
