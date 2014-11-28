@@ -23,7 +23,18 @@ BEGIN
 	IF (@Count > 0)
 	BEGIN
 		SET @sql = 'SELECT RequestNumber AS RequestNumber, [RequestedTest] AS RequestedTest, [SampleSize] AS SAMPLESIZE, [ProductGroup] AS PRODUCT,
-			[RequestStatus] AS STATUS, [RequestPurpose] AS PURPOSE, [ExecutiveSummary] AS ExecutiveSummary, [CPRNumber] AS CPR
+			[ProductType] AS PRODUCTTYPE, [AccessoryGroup] AS ACCESSORYGROUPNAME, [RequestStatus] AS STATUS, [RequestPurpose] AS PURPOSE, '
+		
+		IF (@rows LIKE '[ExecutiveSummary]')
+		BEGIN
+			SET @sql += ' [ExecutiveSummary] AS ExecutiveSummary, '
+		END
+		ELSE
+		BEGIN
+			SET @sql += ' NULL AS ExecutiveSummary, '
+		END
+			 
+		SET @sql += ' [CPRNumber] AS CPR
 			FROM 
 				(
 				SELECT r.RequestID, r.RequestNumber, rfd.Value, rfm.IntField

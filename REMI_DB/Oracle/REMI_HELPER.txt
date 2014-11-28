@@ -675,10 +675,12 @@ FUNCTION get_Requests_For_Dashboard (p_search in trs.request_info.Text%type)
         max(case when rf_id = 542 then text else null end) as "RequestedTest",
         max(case when rf_id = 12 then text else null end) as SAMPLESIZE,
         max(case when rf_id = 6 then text else null end) as PRODUCT,
+        max(case when rf_id = 15396 then text else null end) as ProductType,
+        max(case when rf_id = 24895 then text else null end) as AccessoryGroupName,
         sf.description as STATUS,
         max(case when rf_id = 294 then text else null end) as PURPOSE,
-        max(case when rf_id = 706 then text else null end) as ExecutiveSummary,
-        max(case when rf_id = 657 then text else null end) as CPR
+        max(case when rf_id = 657 then text else null end) as ExecutiveSummary,
+        max(case when rf_id = 706 then text else null end) as CPR
         from trs.request_header rh, trs.request_info ri, trs.time_user_stamp t1, trs.time_user_stamp t,
           trs.request_status rs, trs.status_fields sf, trs.time_user_stamp ts
         where rf_id in (6, 15396, 24895, 5755, 12, 542, 294, 706, 589, 387,2, 657)

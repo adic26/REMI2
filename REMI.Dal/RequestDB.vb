@@ -354,6 +354,8 @@ Namespace REMI.Dal
             dtReq.Columns.Add("RequestedTest", System.Type.GetType("System.String"))
             dtReq.Columns.Add("SAMPLESIZE", System.Type.GetType("System.String"))
             dtReq.Columns.Add("PRODUCT", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCTTYPE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("ACCESSORYGROUPNAME", System.Type.GetType("System.String"))
             dtReq.Columns.Add("STATUS", System.Type.GetType("System.String"))
             dtReq.Columns.Add("PURPOSE", System.Type.GetType("System.String"))
             dtReq.Columns.Add("ExecutiveSummary", System.Type.GetType("System.String"))
