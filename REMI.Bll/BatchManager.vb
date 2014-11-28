@@ -226,17 +226,17 @@ Namespace REMI.Bll
                 Select Case Number.Length
                     Case 4
                         Number = String.Format("{0}-{1}", DateTime.Now.Year.ToString().Substring(2), Number)
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault()
                     Case 7
                         If (isValid) Then
-                            Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number) Select b.QRANumber).FirstOrDefault()
+                            Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault()
                         Else
-                            Return Number
+                            Return Number.Trim()
                         End If
                     Case 11
-                        Return Number
+                        Return Number.Trim()
                     Case Else
-                        Return Number
+                        Return Number.Trim()
                 End Select
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, Number.ToString())
@@ -353,7 +353,7 @@ Namespace REMI.Bll
                 Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
                 If bc.Validate Then
                     Dim instance = New REMI.Dal.Entities().Instance()
-                    Dim batch As REMI.Entities.Batch = (From b In instance.Batches.Include("TestCenter").Include("AccessoryGroup").Include("ProductType").Include("Purpose") Where b.QRANumber = bc.BatchNumber Select b).FirstOrDefault()
+                    Dim batch As REMI.Entities.Batch = (From b In instance.Batches.Include("TestCenter").Include("AccessoryGroup").Include("ProductType").Include("Purpose").Include("Department") Where b.QRANumber = bc.BatchNumber Select b).FirstOrDefault()
 
                     Return batch
                 Else

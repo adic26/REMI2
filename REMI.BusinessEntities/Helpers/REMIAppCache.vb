@@ -211,5 +211,17 @@ Namespace REMI.BusinessEntities
         Public Shared Sub RemoveServiceAccess(ByVal departmentID As Int32)
             System.Web.HttpRuntime.Cache.Remove("ServiceAccess-" + departmentID.ToString())
         End Sub
+
+        Public Shared Sub SetUserServiceAccess(ByVal userID As Int32, ByVal dtServiceAccess As DataTable)
+            System.Web.HttpRuntime.Cache.Add("UserServiceAccess-" + userID.ToString(), dtServiceAccess, Nothing, DateTime.Now.Add(TimeSpan.FromMinutes(20)), System.Web.Caching.Cache.NoSlidingExpiration, Web.Caching.CacheItemPriority.Low, Nothing)
+        End Sub
+
+        Public Shared Function GetUserServiceAccess(ByVal userID As Int32) As DataTable
+            Return DirectCast(System.Web.HttpRuntime.Cache.Get("UserServiceAccess-" + userID.ToString()), DataTable)
+        End Function
+
+        Public Shared Sub RemoveUserServiceAccess(ByVal userID As Int32)
+            System.Web.HttpRuntime.Cache.Remove("UserServiceAccess-" + userID.ToString())
+        End Sub
     End Class
 End Namespace
