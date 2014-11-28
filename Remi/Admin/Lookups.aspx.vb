@@ -153,7 +153,16 @@ Public Class Admin_Lookups
     End Sub
 
     Protected Sub btnAddTarget_OnClick(ByVal sender As Object, ByVal e As System.EventArgs)
-        TargetAccessManager.AddTargetAccess(txtTargetName.Text, txtWorkStationname.Text, chkDeny.Checked)
+        Dim target As String = Request.Form(gdvTargetAccess.FooterRow.FindControl("txtTargetName").UniqueID)
+        Dim workstation As String = Request.Form(gdvTargetAccess.FooterRow.FindControl("txtWorkStationname").UniqueID)
+        Dim deny As String = Request.Form(gdvTargetAccess.FooterRow.FindControl("chkDeny").UniqueID)
+        Dim isDeny As Boolean = False
+
+        If (deny = "on") Then
+            isDeny = True
+        End If
+
+        TargetAccessManager.AddTargetAccess(target, workstation, isDeny)
         gdvTargetAccess.DataSource = (From ta In New REMI.Dal.Entities().Instance.TargetAccesses Select ta).ToList()
         gdvTargetAccess.DataBind()
     End Sub
