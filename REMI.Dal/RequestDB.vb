@@ -347,6 +347,66 @@ Namespace REMI.Dal
 
             Return dtReq
         End Function
+
+        Public Shared Function GetRequestsForDashBoard(ByVal searchStr As String) As DataTable
+            Dim dtReq As New DataTable("RequestsDashboard")
+            dtReq.Columns.Add("RequestNumber", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("RequestedTest", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("SAMPLESIZE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCT", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("STATUS", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PURPOSE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("ExecutiveSummary", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("CPR", System.Type.GetType("System.String"))
+
+            Dim lastRequestConnectName As String = String.Empty
+            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Order By r.RequestConnectName Select r).ToList()
+
+            For Each r In requestType
+                If (r.RequestConnectName <> lastRequestConnectName) Then
+
+                    lastRequestConnectName = r.RequestConnectName
+
+                    If (r.DBType = "Oracle") Then
+                        Using myOracleConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(r.RequestConnectName))
+                            myOracleConnection.Open()
+
+                            Using myCommand As New OracleCommand("REMI_HELPER.get_Requests_For_Dashboard", myOracleConnection)
+                                myCommand.CommandTimeout = 40
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.Add(New OracleParameter("p_search", OracleType.VarChar)).Value = searchStr
+                                myCommand.Parameters.Add(New OracleParameter("C_REF_RET", OracleType.Cursor)).Direction = ParameterDirection.ReturnValue
+                                Dim myReader As OracleDataReader = myCommand.ExecuteReader
+                                Dim dt As New DataTable("RequestsDashboard")
+                                dt.Load(myReader)
+
+                                If (dt.Rows.Count > 0) Then
+                                    dtReq.Merge(dt, True)
+                                End If
+                            End Using
+                        End Using
+                    ElseIf (r.DBType = "SQL") Then
+                        Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringReq(r.RequestConnectName))
+                            Using myCommand As New SqlCommand("Req.RequestForDashboard", myConnection)
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.AddWithValue("@RequestTypeID", r.RequestTypeID)
+                                myCommand.Parameters.AddWithValue("@SearchStr", searchStr)
+                                myConnection.Open()
+                                Dim dt2 As New DataTable("RequestsDashboard")
+                                Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                                da.Fill(dt2)
+
+                                If (dt2.Rows.Count > 0) Then
+                                    dtReq.Merge(dt2, True)
+                                End If
+                            End Using
+                        End Using
+                    End If
+                End If
+            Next
+
+            Return dtReq
+        End Function
 #End Region
 
         Private Shared Sub LinkExternalRecord(ByVal extFields As Dictionary(Of String, String), ByVal reqNum As RequestNumber, ByRef rf As RequestFieldsCollection, ByVal useridentification As String)

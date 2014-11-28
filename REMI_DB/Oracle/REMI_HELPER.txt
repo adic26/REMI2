@@ -662,50 +662,41 @@ FUNCTION get_Requests_By_Search (p_search in trs.request_info.Text%type)
       --929 PM Review
       return o_cur;
     END;
+--------------------------------------------------------------------------------
 
+FUNCTION get_Requests_For_Dashboard (p_search in trs.request_info.Text%type)
+    RETURN sys_refcursor
+    IS
+        o_cur sys_refcursor;
+    BEGIN
+        open o_cur for
+        Select * from       
+		(select distinct rh.reqnum as RequestNumber, 
+        max(case when rf_id = 542 then text else null end) as "RequestedTest",
+        max(case when rf_id = 12 then text else null end) as SAMPLESIZE,
+        max(case when rf_id = 6 then text else null end) as PRODUCT,
+        sf.description as STATUS,
+        max(case when rf_id = 294 then text else null end) as PURPOSE,
+        max(case when rf_id = 706 then text else null end) as ExecutiveSummary,
+        max(case when rf_id = 657 then text else null end) as CPR
+        from trs.request_header rh, trs.request_info ri, trs.time_user_stamp t1, trs.time_user_stamp t,
+          trs.request_status rs, trs.status_fields sf, trs.time_user_stamp ts
+        where rf_id in (6, 15396, 24895, 5755, 12, 542, 294, 706, 589, 387,2, 657)
+          and rh.rq_id = ri.rq_id
+          and rs.rq_id = rh.rq_id
+          and rs.sf_id = sf.sf_id
+          and ri.stamp_id = t1.stamp_id
+          and rh.stamp_id = t.stamp_id
+          and rs.stamp_id = ts.stamp_id
+          and sysdate between t1.cre_date and nvl( t1.term_date, sysdate + 1 )
+          and sysdate between t.cre_date and nvl( t.term_date, sysdate + 1 )
+          and sysdate between ts.cre_date and nvl( ts.term_date, sysdate + 1 )
+          and rh.rt_id = 1 
+        group by rh.reqnum, rh.rq_id, rh.req_by, sf.description, t.cre_date)
+        where PRODUCT = p_search
+        order by RequestNumber desc;
+      
+      return o_cur;
+    END;
 
-FUNCTION   SET_STATUS(p_qra_num in job_header.description%type, p_status in status_fields.description%type, p_userName in USERINFO.user_data.UserName%type)
-	RETURN sys_refcursor
-	is
-	o_cur sys_refcursor;
-	v_uid  USERINFO.user_data.User_ID%type;
-	v_SF_ID trs.status_fields.SF_ID%type;
-	v_rq_id job_header.rq_id%type;
-	v_current_status trs.status_fields.description%type;
-	v_new_sf_id trs.status_fields.description%type;
-	v_current_stamp_id trs.time_user_stamp.stamp_id%type;
-	v_new_stamp_id trs.time_user_stamp.stamp_id%type;
-	begin
-		select rq_id into v_rq_id  from trs.request_header where reqnum= :p_qra_num;
-			select User_ID into v_uid from USERINFO.user_data where username = :p_userName;
-    
-		select rs.sf_id, tus.stamp_id into v_SF_ID, v_current_stamp_id
-			from trs.request_status rs, trs.time_user_stamp tus
-			where rs.rq_id=v_rq_id And rs.stamp_id=tus.stamp_id And tus.Term_User is null;
-    
-			select description into v_current_status from trs.status_fields where sf_id=v_SF_ID;
-    
-		if v_current_status = 'Submitted' Then
-		  v_new_sf_id := '131';
-		End If;
-        
-		if v_current_status = 'Received' Then
-		  v_new_sf_id := '124';
-		End If;
-		
-		select max(stamp_id)+1 into v_new_stamp_id from trs.time_user_stamp;
-        
-		update trs.time_user_stamp set term_date=sysdate, term_user=v_uid where stamp_id=v_current_stamp_id;
-    
-		insert into trs.time_user_stamp (stamp_id, cre_date,cre_user, upd_date, term_date, term_user)
-		values (v_new_stamp_id, sysdate, v_uid, sysdate, null, null)
-    
-		insert into trs.request_status (rq_id, sf_id, stamp_ID) values (v_rq_id, v_new_sf_id, v_new_stamp_id);
-    
-		--dbms_output.put_line('RQ_ID: ' || v_rq_id);
-		--dbms_output.put_line('v_uid: ' || v_uid);
-		--dbms_output.put_line('v_SF_ID: ' || v_SF_ID);
-		--dbms_output.put_line('v_current_stamp_id: ' || v_current_stamp_id);
-		--dbms_output.put_line('v_new_sf_id: ' || v_new_sf_id);
-		--dbms_output.put_line('v_new_stamp_id: ' || v_new_stamp_id);
-	end;
+END;

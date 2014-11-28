@@ -1161,6 +1161,17 @@ Public Class RemiAPI
         Return New DataTable("Requests")
     End Function
 
+    <WebMethod(EnableSession:=True, Description:="Returns a list of the Request's for dashboard")> _
+    Public Function GetRequestsForDashBoard(ByVal searchStr As String) As DataTable
+        Try
+            Return RequestManager.GetRequestsForDashBoard(searchStr)
+        Catch ex As Exception
+            BatchManager.LogIssue("GetRequestsForDashBoard", "e3", NotificationType.Errors, ex, String.Format("SearchStr: {0}", searchStr))
+        End Try
+
+        Return New DataTable("RequestsDashboard")
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Checks if batch is ready to be moved to a different status.")> _
     Public Function CheckBatchForStatusUpdates(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
         Try
