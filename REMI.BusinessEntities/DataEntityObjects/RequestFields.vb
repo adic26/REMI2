@@ -33,10 +33,12 @@ Namespace REMI.BusinessEntities
         Private _isFromExternalSystem As Boolean
         Private _optionsType As List(Of String)
         Private _newRequest As Boolean
+        Private _customLookupHierarchy As DataTable
 #End Region
 
 #Region "Construcor(s)"
         Public Sub New()
+            _customLookupHierarchy = New DataTable("LookupHierarchy")
         End Sub
 
         Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean)
@@ -63,6 +65,7 @@ Namespace REMI.BusinessEntities
             _intField = intField
             _newRequest = newRequest
             _isFromExternalSystem = isFromExternalSystem
+            _customLookupHierarchy = New DataTable("LookupHierarchy")
         End Sub
 #End Region
 
@@ -226,6 +229,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As List(Of String))
                 _optionsType = value
+            End Set
+        End Property
+
+        Public Property CustomLookupHierarchy() As DataTable Implements IRequestFields.CustomLookupHierarchy
+            Get
+                Return _customLookupHierarchy
+            End Get
+            Set(value As DataTable)
+                _customLookupHierarchy = value
             End Set
         End Property
 

@@ -45,7 +45,6 @@ Public Class Helpers
         Return [String].Empty
     End Function
 
-
     Public Shared Function GetPostBackControl(page As Page) As Control
         Dim control As Control = Nothing
         Dim ctrlname As String = page.Request.Params.[Get]("__EVENTTARGET")

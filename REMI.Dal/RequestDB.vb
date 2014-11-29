@@ -563,11 +563,14 @@ Namespace REMI.Dal
                 End If
 
                 options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
-
                 myFields.OptionsType = options
+
+                myFields.CustomLookupHierarchy = Helpers.ConvertToDataTable((From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
+                        Select New With {lh.RequestTypeID, lh.ParentLookupID, lh.ChildLookupID, lh.ParentLookupTypeID, lh.ChildLookupTypeID, .ParentLookup = lh.Lookup.Values, .ChildLookup = lh.Lookup1.Values, .ParentLookupType = lh.LookupType.Name, .ChildLookupType = lh.LookupType1.Name}).ToList(), "LookupHierarchy")
             Else
                 myFields.OptionsTypeID = 0
                 myFields.OptionsType = New List(Of String)()
+                myFields.CustomLookupHierarchy = New DataTable("LookupHierarchy")
             End If
 
             myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
