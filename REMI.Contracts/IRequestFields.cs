@@ -32,5 +32,6 @@ namespace REMI.Contracts
         List<String> OptionsType  { get; set; }
         System.Data.DataTable CustomLookupHierarchy { get; set; }
         bool NewRequest { get; set; }
+        Int32 ParentFieldSetupID { get; set; }
     }
 }

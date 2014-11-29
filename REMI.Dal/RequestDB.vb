@@ -588,6 +588,10 @@ Namespace REMI.Dal
                 myFields.Value = user.FullName
             End If
 
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ParentReqFieldSetupID")) Then
+                myFields.ParentFieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ParentReqFieldSetupID"))
+            End If
+
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "ProductGroup"
