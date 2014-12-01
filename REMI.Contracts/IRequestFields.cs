@@ -30,7 +30,6 @@ namespace REMI.Contracts
         bool IsArchived { get; set; }
         bool IsFromExternalSystem  { get; set; }
         List<String> OptionsType  { get; set; }
-        System.Data.DataTable CustomLookupHierarchy { get; set; }
         bool NewRequest { get; set; }
         Int32 ParentFieldSetupID { get; set; }
     }

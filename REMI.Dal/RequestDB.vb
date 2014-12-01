@@ -484,7 +484,9 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@RequestTypeID", rtID)
 
                         If (includeArchived) Then
-                            myCommand.Parameters.AddWithValue("@IncludeArchived", 1)
+                            myCommand.Parameters.AddWithValue("@IncludeArchived", True)
+                        Else
+                            myCommand.Parameters.AddWithValue("@IncludeArchived", False)
                         End If
 
                         If (requestNumber.Trim().Length > 0) Then
@@ -565,12 +567,18 @@ Namespace REMI.Dal
                 options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
                 myFields.OptionsType = options
 
-                myFields.CustomLookupHierarchy = Helpers.ConvertToDataTable((From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
-                        Select New With {lh.RequestTypeID, lh.ParentLookupID, lh.ChildLookupID, lh.ParentLookupTypeID, lh.ChildLookupTypeID, .ParentLookup = lh.Lookup.Values, .ChildLookup = lh.Lookup1.Values, .ParentLookupType = lh.LookupType.Name, .ChildLookupType = lh.LookupType1.Name}).ToList(), "LookupHierarchy")
+                Dim lookups = (From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
+                        Select New With {lh.RequestTypeID, lh.ParentLookupID, lh.ChildLookupID, lh.ParentLookupTypeID, lh.ChildLookupTypeID, .ParentLookup = lh.Lookup.Values, .ChildLookup = lh.Lookup1.Values, .ParentLookupType = lh.LookupType.Name, .ChildLookupType = lh.LookupType1.Name}).ToList()
+                Dim rfob As New List(Of RequestFieldObjectHeirarchy)
+
+                For Each rec In lookups
+                    rfob.Add(New RequestFieldObjectHeirarchy(rec.RequestTypeID, rec.ParentLookupID, rec.ChildLookupID, rec.ParentLookupTypeID, rec.ChildLookupTypeID, rec.ParentLookup, rec.ChildLookup, rec.ParentLookupType, rec.ChildLookupType))
+                Next
+
+                myFields.CustomLookupHierarchy = rfob
             Else
                 myFields.OptionsTypeID = 0
                 myFields.OptionsType = New List(Of String)()
-                myFields.CustomLookupHierarchy = New DataTable("LookupHierarchy")
             End If
 
             myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))

@@ -411,9 +411,12 @@ ALTER PROCEDURE [Req].[RequestFieldSetup] @RequestTypeID INT, @IncludeArchived B
 AS
 BEGIN
 	DECLARE @RequestID INT
+	DECLARE @TrueBit BIT
+	DECLARE @FalseBit BIT
 	DECLARE @RequestType NVARCHAR(150)
 	SET @RequestID = 0
-	SET @IncludeArchived=0
+	SET @TrueBit = CONVERT(BIT, 1)
+	SET @FalseBit = CONVERT(BIT, 0)
 
 	SELECT @RequestType=lrt.[values] FROM Req.RequestType rt INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID WHERE rt.RequestTypeID=@RequestTypeID
 
@@ -458,9 +461,11 @@ BEGIN
 		LEFT OUTER JOIN Req.ReqFieldMapping rfm ON rfm.RequestTypeID=Req.RequestType.RequestTypeID AND rfm.ExtField=rfs.Name AND ISNULL(rfm.IsActive, 0) = 1
 	WHERE (lrt.[Values] = @RequestType) AND
 		(
-			(@IncludeArchived = 1)
+			(@IncludeArchived = @TrueBit)
 			OR
-			(@IncludeArchived = 0 AND ISNULL(rfs.Archived, 0) = 0)
+			(@IncludeArchived = @FalseBit AND ISNULL(rfs.Archived, @FalseBit) = @FalseBit)
+			OR
+			(@IncludeArchived = @FalseBit AND rfd.Value IS NOT NULL AND ISNULL(rfs.Archived, @FalseBit) = @TrueBit)
 		)
 	ORDER BY Category, ISNULL(rfs.DisplayOrder, 0) ASC
 END
