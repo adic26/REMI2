@@ -300,7 +300,7 @@ Namespace REMI.BusinessEntities
                 Return _parentFieldSetupID
             End Get
             Set(ByVal value As Int32)
-                _fieldSetupID = value
+                _parentFieldSetupID = value
             End Set
         End Property
 #End Region
