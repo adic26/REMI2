@@ -559,16 +559,35 @@ Namespace REMI.Dal
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
+                Dim filteredOptions As New List(Of String)
+                Dim onlylh As List(Of String) = (From l In instance.LookupsHierarchies.Include("Lookup1") Where l.ChildLookupTypeID = myFields.OptionsTypeID And l.ParentLookupTypeID = myFields.OptionsTypeID Select l.Lookup1.Values).ToList()
 
-                If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
-                    options.Add("Not Set")
+                options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 _
+                     Order By lo.Values Select lo.Values).ToList)
+
+                If (onlylh.Count > 0) Then
+                    If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
+                        filteredOptions.Add("Not Set")
+                    End If
+
+                    For Each rec In options
+                        If (onlylh.Contains(rec)) Then
+                            filteredOptions.Add(rec)
+                        End If
+                    Next
+                Else
+                    If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
+                        filteredOptions.Add("Not Set")
+                    End If
+
+                    filteredOptions.AddRange(options)
                 End If
 
-                options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
-                myFields.OptionsType = options
+                myFields.OptionsType = filteredOptions
 
-                Dim lookups = (From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
+                Dim lookups = (From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.ParentLookupTypeID <> myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
                         Select New With {lh.RequestTypeID, lh.ParentLookupID, lh.ChildLookupID, lh.ParentLookupTypeID, lh.ChildLookupTypeID, .ParentLookup = lh.Lookup.Values, .ChildLookup = lh.Lookup1.Values, .ParentLookupType = lh.LookupType.Name, .ChildLookupType = lh.LookupType1.Name}).ToList()
+
                 Dim rfob As New List(Of RequestFieldObjectHeirarchy)
 
                 For Each rec In lookups
