@@ -536,69 +536,6 @@ Partial Public Class Search
     Protected WithEvents valQRANumber As Global.System.Web.UI.WebControls.CustomValidator
 
     '''<summary>
-    '''pnlEnvReport control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pnlEnvReport As Global.System.Web.UI.WebControls.Panel
-
-    '''<summary>
-    '''txtStartENV control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtStartENV As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''CalendarExtender1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents CalendarExtender1 As Global.AjaxControlToolkit.CalendarExtender
-
-    '''<summary>
-    '''txtEndENV control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtEndENV As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''CalendarExtender2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents CalendarExtender2 As Global.AjaxControlToolkit.CalendarExtender
-
-    '''<summary>
-    '''ddlReportBasedOn control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlReportBasedOn As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
-    '''ddlTestCentersENV control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlTestCentersENV As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
     '''pnlSearchResults control.
     '''</summary>
     '''<remarks>
@@ -822,15 +759,6 @@ Partial Public Class Search
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gvwUsers As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''gvwENVReport control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents gvwENVReport As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''gvwRQResultsTrend control.

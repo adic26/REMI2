@@ -6,26 +6,6 @@
     <script type="text/javascript" src="../design/scripts/jquery.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     <script type="text/javascript">        
-        function gvrowtoggle(row) {
-            try {
-                row_num = row;
-                ctl_row = row - 1;
-                rows = document.getElementById('<%= gvwENVReport.ClientID %>').rows;
-                rowElement = rows[ctl_row];
-                img = rowElement.cells[0].firstChild;
-
-                if (rows[row_num].className !== 'hidden') {
-                    rows[row_num].className = 'hidden';
-                    img.src = '/Design/Icons/png/16x16/link.png';
-                }
-                else {
-                    rows[row_num].className = '';
-                    img.src = '/Design/Icons/png/16x16/link.png';
-                }
-            }
-            catch (ex) { alert(ex) }
-        }
-
         function ClearTextBoxes() {
             document.getElementById('<%= txtStart.ClientID %>').value = '';
             document.getElementById('<%= txtEnd.ClientID %>').value = '';
@@ -61,7 +41,7 @@
         <asp:ListItem Text="Exceptions" Value="2" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="3" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Results" Value="4" Enabled="false"></asp:ListItem>
-        <asp:ListItem Text="Environment Report" Value="5" Enabled="false"></asp:ListItem>
+        <%--<asp:ListItem Text="Environment Report" Value="5" Enabled="false"></asp:ListItem>--%>
         <asp:ListItem Value="7" Enabled="false">KPI <img src="../Design/beta.jpg" /></asp:ListItem>
         <asp:ListItem Text="Training" Value="8"></asp:ListItem>
     </asp:RadioButtonList><br />
@@ -196,7 +176,7 @@
         <br /><br />
     </asp:Panel>
 
-    <asp:Panel Visible="false" runat="server" ID="pnlEnvReport">
+    <%--<asp:Panel Visible="false" runat="server" ID="pnlEnvReport">
         Start: <asp:TextBox ID="txtStartENV" runat="server" DefaultValue="12am"></asp:TextBox>
         <asp:CalendarExtender ID="CalendarExtender1" runat="server" Enabled="True" TargetControlID="txtStartENV"></asp:CalendarExtender>
         <br />
@@ -212,7 +192,7 @@
         Test Centers: <asp:DropDownList ID="ddlTestCentersENV" runat="server" AppendDataBoundItems="True" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
         <br /><br />
         <h4>If you cannot see the paperclip or the counts don't match it is because the units that were done at that item were not scanned in using automation. Test Records were manually done.</h4>
-    </asp:Panel>
+    </asp:Panel>--%>
 
     <asp:Panel Visible="false" runat="server" ID="pnlSearchResults">
         <asp:UpdatePanel ID="updResults" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
@@ -376,8 +356,8 @@
                 </Columns>
             </asp:GridView>
 
-            <asp:GridView runat="server" ID="gvwENVReport" Visible="false" AutoGenerateColumns="True" EmptyDataText="No Data Available" EnableViewState="True">
-            </asp:GridView>
+           <%-- <asp:GridView runat="server" ID="gvwENVReport" Visible="false" AutoGenerateColumns="True" EmptyDataText="No Data Available" EnableViewState="True">
+            </asp:GridView>--%>
 
             <asp:GridView ID="gvwRQResultsTrend" runat="server" Visible="false" AutoGenerateColumns="false" DataKeyNames="" EmptyDataText="No Data Available" EnableViewState="True">
                 <Columns>

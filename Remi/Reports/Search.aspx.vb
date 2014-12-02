@@ -27,9 +27,9 @@ Partial Class Search
                 rblSearchBy.Items(4).Enabled = True 'Results
             End If
 
-            If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin Or testCenterAdmin) Then
-                rblSearchBy.Items(5).Enabled = True 'ENV Report
-            End If
+            'If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin Or testCenterAdmin) Then
+            '    rblSearchBy.Items(5).Enabled = True 'ENV Report
+            'End If
 
             If (UserManager.GetCurrentUser.IsLabTechOpsManager Or UserManager.GetCurrentUser.IsLabTestCoordinator Or testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
                 rblSearchBy.Items(6).Enabled = True 'KPI
@@ -130,7 +130,7 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
                 pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
@@ -151,7 +151,7 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
                 pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
@@ -174,7 +174,7 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
                 pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
@@ -201,7 +201,7 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
                 pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
@@ -243,19 +243,19 @@ Partial Class Search
                     gvwUsers.DataBind()
 
                     Helpers.MakeAccessable(gvwUsers)
-                ElseIf (pnlEnvReport.Visible) Then
-                    Dim startDate As DateTime = txtStartENV.Text
-                    Dim endDate As DateTime = txtEndENV.Text
-                    Dim years As Int32 = DateDiff(DateInterval.Year, startDate, endDate, Microsoft.VisualBasic.FirstDayOfWeek.Monday)
+                    'ElseIf (pnlEnvReport.Visible) Then
+                    '    Dim startDate As DateTime = txtStartENV.Text
+                    '    Dim endDate As DateTime = txtEndENV.Text
+                    '    Dim years As Int32 = DateDiff(DateInterval.Year, startDate, endDate, Microsoft.VisualBasic.FirstDayOfWeek.Monday)
 
-                    If (years < 2) Then
-                        envds = REMI.Bll.ProductGroupManager.GetTestCountByType(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
+                    '    If (years < 2) Then
+                    '        envds = REMI.Bll.ProductGroupManager.GetTestCountByType(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
 
-                        gvwENVReport.DataSource = REMI.Bll.ProductGroupManager.GetEnvironmentalReport(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, 1)
-                        gvwENVReport.DataBind()
+                    '        gvwENVReport.DataSource = REMI.Bll.ProductGroupManager.GetEnvironmentalReport(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, 1)
+                    '        gvwENVReport.DataBind()
 
-                        Helpers.MakeAccessable(gvwENVReport)
-                    End If
+                    '        Helpers.MakeAccessable(gvwENVReport)
+                    '    End If
                 ElseIf (pnlKPI.Visible) Then
                     Dim kpidt As New DataTable()
                     kpidt = ReportManager.GetKPI(ddlKPIType.SelectedValue, txtStartKPI.Text, txtEndKPI.Text, ddlTestCenterKPI.SelectedValue)
@@ -487,7 +487,7 @@ Partial Class Search
 
         gvwTraining.Visible = pnlTraining.Visible
         gvwUsers.Visible = pnlSearchUser.Visible
-        gvwENVReport.Visible = pnlEnvReport.Visible
+        'gvwENVReport.Visible = pnlEnvReport.Visible
         gvwRQResultsTrend.Visible = pnlSearchResults.Visible
         gvwUnits.Visible = pnlSearchUnits.Visible
         gvwKPI.Visible = pnlKPI.Visible
@@ -527,16 +527,16 @@ Partial Class Search
             us.DepartmentID = departmentID
 
             Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), REMI.Dal.UserDB.UserSearch(us, False, False, False))
-        ElseIf (pnlEnvReport.Visible) Then
-            Dim startDate As DateTime = txtStartENV.Text
-            Dim endDate As DateTime = txtEndENV.Text
-            Dim years As Int32 = DateDiff(DateInterval.Year, startDate, endDate, Microsoft.VisualBasic.FirstDayOfWeek.Monday)
+            'ElseIf (pnlEnvReport.Visible) Then
+            '    Dim startDate As DateTime = txtStartENV.Text
+            '    Dim endDate As DateTime = txtEndENV.Text
+            '    Dim years As Int32 = DateDiff(DateInterval.Year, startDate, endDate, Microsoft.VisualBasic.FirstDayOfWeek.Monday)
 
-            If (years < 2) Then
-                envds = REMI.Bll.ProductGroupManager.GetTestCountByType(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
+            '    If (years < 2) Then
+            '        envds = REMI.Bll.ProductGroupManager.GetTestCountByType(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
 
-                Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchENV", "xls"), REMI.Bll.ProductGroupManager.GetEnvironmentalReport(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, 1))
-            End If
+            '        Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchENV", "xls"), REMI.Bll.ProductGroupManager.GetEnvironmentalReport(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, 1))
+            '    End If
         ElseIf (pnlKPI.Visible) Then
             Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchKPI", "xls"), ReportManager.GetKPI(ddlKPIType.SelectedValue, txtStartKPI.Text, txtEndKPI.Text, ddlTestCenterKPI.SelectedValue))
         ElseIf (pnlSearchExceptions.Visible) Then
@@ -981,7 +981,7 @@ Partial Class Search
 
     Protected Sub rblSearchBy_OnSelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         lblTopInfo.Visible = False
-        Dim val As String = DirectCast(sender, System.Web.UI.WebControls.RadioButtonList).SelectedValue
+        Dim val As String = DirectCast(sender, System.Web.UI.WebControls.RadioButtonList).SelectedIndex
 
         Dim dtProductType As DataTable = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0)
         Dim drProductType() As DataRow = dtProductType.Select("LookupType = ''")
@@ -998,14 +998,14 @@ Partial Class Search
         prodList.Rows.InsertAt(newRow, 0)
 
         Select Case val
-            Case "1"
+            Case "0"
                 'Batch
                 pnlSearchBatch.Visible = True
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlSearchResults.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
                 pnlTraining.Visible = False
 
@@ -1032,12 +1032,12 @@ Partial Class Search
 
                 ddlBatchStatus.Items.Clear()
                 ddlBatchStatus.Items.Add("ALL")
-                ddlBatchStatus.DataSource = REMI.Helpers.GetBatchStatus()
+                ddlBatchStatus.DataSource = Remi.Helpers.GetBatchStatus()
                 ddlBatchStatus.DataBind()
 
                 chkBatchStatus.Items.Clear()
                 chkBatchStatus.Items.Add("ALL")
-                chkBatchStatus.DataSource = REMI.Helpers.GetBatchStatus()
+                chkBatchStatus.DataSource = Remi.Helpers.GetBatchStatus()
                 chkBatchStatus.DataBind()
 
                 ddlProductFilter.Items.Clear()
@@ -1061,12 +1061,12 @@ Partial Class Search
 
                 ddlLocationFunction.Items.Clear()
                 ddlLocationFunction.Items.Add("ALL")
-                ddlLocationFunction.DataSource = REMI.Helpers.GetTrackingLocationFunctions()
+                ddlLocationFunction.DataSource = Remi.Helpers.GetTrackingLocationFunctions()
                 ddlLocationFunction.DataBind()
 
                 ddlNotInLocationFunction.Items.Clear()
                 ddlNotInLocationFunction.Items.Add("ALL")
-                ddlNotInLocationFunction.DataSource = REMI.Helpers.GetTrackingLocationFunctions()
+                ddlNotInLocationFunction.DataSource = Remi.Helpers.GetTrackingLocationFunctions()
                 ddlNotInLocationFunction.DataBind()
 
                 ddlRequestReason.Items.Clear()
@@ -1093,7 +1093,7 @@ Partial Class Search
                 pnlSearchUser.Visible = False
                 pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
 
                 ddlJobs2.Items.Clear()
@@ -1124,7 +1124,7 @@ Partial Class Search
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = True
                 pnlSearchResults.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlKPI.Visible = False
 
@@ -1156,7 +1156,7 @@ Partial Class Search
                 pnlSearchUser.Visible = False
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
                 pnlSearchUnits.Visible = False
 
@@ -1182,38 +1182,38 @@ Partial Class Search
                 End If
 
                 chkJobsRQ_SelectedIndexChanged(sender, e)
-            Case "5"
-                'ENV Report
-                pnlTraining.Visible = False
-                pnlSearchResults.Visible = False
-                pnlSearchUser.Visible = False
-                pnlSearchBatch.Visible = False
-                pnlSearchExceptions.Visible = False
-                pnlEnvReport.Visible = True
-                pnlSearchUnits.Visible = False
-                pnlKPI.Visible = False
+                'Case "5"
+                '    'ENV Report
+                '    pnlTraining.Visible = False
+                '    pnlSearchResults.Visible = False
+                '    pnlSearchUser.Visible = False
+                '    pnlSearchBatch.Visible = False
+                '    pnlSearchExceptions.Visible = False
+                '    pnlEnvReport.Visible = True
+                '    pnlSearchUnits.Visible = False
+                '    pnlKPI.Visible = False
 
-                ddlTestCentersENV.Items.Clear()
-                ddlTestCentersENV.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
-                ddlTestCentersENV.DataBind()
+                '    ddlTestCentersENV.Items.Clear()
+                '    ddlTestCentersENV.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
+                '    ddlTestCentersENV.DataBind()
 
-                Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
-                If (ddlTestCentersENV.Items.Contains(l)) Then
-                    ddlTestCentersENV.SelectedValue = UserManager.GetCurrentUser.TestCentreID
-                End If
+                '    Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
+                '    If (ddlTestCentersENV.Items.Contains(l)) Then
+                '        ddlTestCentersENV.SelectedValue = UserManager.GetCurrentUser.TestCentreID
+                '    End If
 
-                txtStartENV.Text = DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToString("d")
-                txtEndENV.Text = DateTime.Today.ToString("d")
-            Case "6"
+                '    txtStartENV.Text = DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToString("d")
+                '    txtEndENV.Text = DateTime.Today.ToString("d")
+            Case "1" 'Search Units
                 pnlTraining.Visible = False
                 pnlSearchUnits.Visible = True
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchResults.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = False
-            Case "7"
+            Case "5"
                 'KPI
                 pnlTraining.Visible = False
                 pnlSearchUnits.Visible = False
@@ -1221,7 +1221,7 @@ Partial Class Search
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchResults.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlKPI.Visible = True
 
                 ddlTestCenterKPI.Items.Clear()
@@ -1235,13 +1235,13 @@ Partial Class Search
 
                 txtStartKPI.Text = DateTime.Today.Subtract(TimeSpan.FromDays(30)).ToString("d")
                 txtEndKPI.Text = DateTime.Today.ToString("d")
-            Case "8"
+            Case "6"
                 'Training
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchResults.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = True
 
@@ -1264,13 +1264,13 @@ Partial Class Search
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchResults.Visible = False
-                pnlEnvReport.Visible = False
+                'pnlEnvReport.Visible = False
                 pnlSearchUnits.Visible = False
         End Select
 
         gvwTraining.DataSource = Nothing
         gvwUsers.DataSource = Nothing
-        gvwENVReport.DataSource = Nothing
+        'gvwENVReport.DataSource = Nothing
         gvwRQResultsTrend.DataSource = Nothing
         gvwUnits.DataSource = Nothing
         gvwKPI.DataSource = Nothing
@@ -1279,7 +1279,7 @@ Partial Class Search
 
         gvwTraining.DataBind()
         gvwUsers.DataBind()
-        gvwENVReport.DataBind()
+        'gvwENVReport.DataBind()
         gvwRQResultsTrend.DataBind()
         gvwUnits.DataBind()
         gvwKPI.DataBind()
@@ -1288,7 +1288,7 @@ Partial Class Search
 
         gvwTraining.Visible = pnlTraining.Visible
         gvwUsers.Visible = pnlSearchUser.Visible
-        gvwENVReport.Visible = pnlEnvReport.Visible
+        'gvwENVReport.Visible = pnlEnvReport.Visible
         gvwRQResultsTrend.Visible = pnlSearchResults.Visible
         gvwUnits.Visible = pnlSearchUnits.Visible
         gvwKPI.Visible = pnlKPI.Visible
@@ -1368,49 +1368,49 @@ Partial Class Search
         End Select
     End Sub
 
-    Protected Sub gvwENVReport_RowDataBound(sender As Object, e As GridViewRowEventArgs) Handles gvwENVReport.RowDataBound
-        If e.Row.RowType = DataControlRowType.DataRow Then
-            Dim gvDetails As New GridView
-            Dim dt As New DataTable
+    'Protected Sub gvwENVReport_RowDataBound(sender As Object, e As GridViewRowEventArgs) Handles gvwENVReport.RowDataBound
+    '    If e.Row.RowType = DataControlRowType.DataRow Then
+    '        Dim gvDetails As New GridView
+    '        Dim dt As New DataTable
 
-            For Each table As DataTable In envds.Tables
-                If (table.Rows.Count > 0) Then
-                    If (e.Row.Cells(1).Text = table.Rows(0).Item(0).ToString()) Then
-                        dt = table
-                        Exit For
-                    End If
-                End If
-            Next
+    '        For Each table As DataTable In envds.Tables
+    '            If (table.Rows.Count > 0) Then
+    '                If (e.Row.Cells(1).Text = table.Rows(0).Item(0).ToString()) Then
+    '                    dt = table
+    '                    Exit For
+    '                End If
+    '            End If
+    '        Next
 
-            gvDetails.DataSource = dt.DefaultView
-            gvDetails.ID = "gvDetails_" & e.Row.RowIndex
-            gvDetails.AutoGenerateColumns = True
+    '        gvDetails.DataSource = dt.DefaultView
+    '        gvDetails.ID = "gvDetails_" & e.Row.RowIndex
+    '        gvDetails.AutoGenerateColumns = True
 
-            Dim btn As Web.UI.WebControls.Image = New Web.UI.WebControls.Image
-            btn.ID = "btnDetail"
-            btn.ImageUrl = "/Design/Icons/png/16x16/link.png"
-            btn.Attributes.Add("onclick", "javascript: gvrowtoggle(" & e.Row.RowIndex + (e.Row.RowIndex + 2) & ")")
+    '        Dim btn As Web.UI.WebControls.Image = New Web.UI.WebControls.Image
+    '        btn.ID = "btnDetail"
+    '        btn.ImageUrl = "/Design/Icons/png/16x16/link.png"
+    '        btn.Attributes.Add("onclick", "javascript: gvrowtoggle(" & e.Row.RowIndex + (e.Row.RowIndex + 2) & ")")
 
-            If (dt.Rows.Count = 0) Then
-                btn.Visible = False
-            End If
+    '        If (dt.Rows.Count = 0) Then
+    '            btn.Visible = False
+    '        End If
 
-            Dim tbl As Table = DirectCast(e.Row.Parent, Table)
-            Dim tr As New GridViewRow(e.Row.RowIndex + 1, -1, DataControlRowType.EmptyDataRow, DataControlRowState.Normal)
-            tr.CssClass = "hidden"
-            Dim tc As New TableCell()
-            tc.ColumnSpan = e.Row.Cells.Count
-            tc.BorderStyle = BorderStyle.None
-            tc.BackColor = Drawing.Color.AliceBlue
-            tc.Controls.Add(gvDetails)
-            tr.Cells.Add(tc)
-            tr.Cells(0).ColumnSpan = e.Row.Cells.Count
-            tbl.Rows.Add(tr)
-            e.Row.Cells(0).Controls.Add(btn)
-            gvDetails.DataBind()
-            Helpers.MakeAccessable(gvDetails)
-        End If
-    End Sub
+    '        Dim tbl As Table = DirectCast(e.Row.Parent, Table)
+    '        Dim tr As New GridViewRow(e.Row.RowIndex + 1, -1, DataControlRowType.EmptyDataRow, DataControlRowState.Normal)
+    '        tr.CssClass = "hidden"
+    '        Dim tc As New TableCell()
+    '        tc.ColumnSpan = e.Row.Cells.Count
+    '        tc.BorderStyle = BorderStyle.None
+    '        tc.BackColor = Drawing.Color.AliceBlue
+    '        tc.Controls.Add(gvDetails)
+    '        tr.Cells.Add(tc)
+    '        tr.Cells(0).ColumnSpan = e.Row.Cells.Count
+    '        tbl.Rows.Add(tr)
+    '        e.Row.Cells(0).Controls.Add(btn)
+    '        gvDetails.DataBind()
+    '        Helpers.MakeAccessable(gvDetails)
+    '    End If
+    'End Sub
 #End Region
 
 End Class
