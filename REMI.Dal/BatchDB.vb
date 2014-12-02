@@ -430,6 +430,61 @@ Namespace REMI.Dal
             End If
         End Function
 
+        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User) As List(Of BatchView)
+            Dim tmpList As New List(Of BatchView)()
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispBatchesSearch", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.CommandTimeout = 40
+
+                    If (byPass) Then
+                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
+                    Else
+                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
+                    End If
+
+                    myCommand.Parameters.AddWithValue("@ExecutingUserID", userID)
+
+                    For Each p As System.Reflection.PropertyInfo In bs.GetType().GetProperties()
+                        If p.CanRead Then
+                            If (p.GetValue(bs, Nothing) IsNot Nothing) Then
+                                Dim d As DateTime
+                                DateTime.TryParse(p.GetValue(bs, Nothing).ToString(), d)
+
+                                If (p.GetValue(bs, Nothing).ToString().ToLower() <> "all" And p.GetValue(bs, Nothing).ToString().ToLower() <> "0" And p.GetValue(bs, Nothing).ToString().ToLower() <> "notset") Then
+                                    If (p.PropertyType Is System.Type.GetType("System.DateTime") And d <> DateTime.MinValue) Then
+                                        myCommand.Parameters.AddWithValue("@" + p.Name, p.GetValue(bs, Nothing))
+                                    ElseIf p.PropertyType IsNot System.Type.GetType("System.DateTime") Then
+                                        myCommand.Parameters.AddWithValue("@" + p.Name, p.GetValue(bs, Nothing))
+                                    End If
+                                End If
+                            End If
+                        End If
+                    Next
+
+                    myConnection.Open()
+
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            tmpList = New List(Of BatchView)
+                            While myReader.Read()
+                                Dim myBatch As BatchView = New BusinessEntities.BatchView()
+                                FillBaseBatchFields(myReader, myBatch, loadTSRemaining, False, False, user)
+
+                                tmpList.Add(myBatch)
+                            End While
+                        End If
+                    End Using
+                End Using
+            End Using
+
+            If tmpList IsNot Nothing Then
+                Return tmpList
+            Else
+                Return New List(Of BatchView)
+            End If
+        End Function
+
         Public Shared Function GetBatchUnitsInStage(ByVal QRANumber As String) As DataTable
             Dim dt As New DataTable()
 
