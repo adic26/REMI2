@@ -2433,7 +2433,7 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetPermissions.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\RequestForDashboard.sql" />
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestForDashboard.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\December022014\1.sql" />

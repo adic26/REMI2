@@ -449,7 +449,7 @@ BEGIN
 			rfm.IntField, rfm.ExtField,
 			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
 			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category,
-			rfs.ParentReqFieldSetupID
+			rfs.ParentReqFieldSetupID, Req.RequestType.HasIntegration
 	FROM Req.RequestType
 		INNER JOIN Lookups lrt ON lrt.LookupID=Req.RequestType.TypeID
 		INNER JOIN Req.ReqFieldSetup rfs ON rfs.RequestTypeID=Req.RequestType.RequestTypeID                  
@@ -471,6 +471,21 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI
+GO
+ALTER PROCEDURE Req.remispGetRequestTypes @UserName NVARCHAR(255)
+AS
+BEGIN
+	SELECT lt.[Values] AS RequestType, l.[Values] AS Department, rta.IsActive, rt.HasIntegration
+	FROM Req.RequestTypeAccess rta
+		INNER JOIN Lookups l ON rta.LookupID=l.LookupID
+		INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rta.RequestTypeID
+		INNER JOIN Lookups lt ON rt.TypeID=lt.LookupID
+		INNER JOIN UserDetails ud ON ud.LookupID = l.LookupID
+		INNER JOIN Users u ON u.ID=ud.UserID
+	WHERE u.LDAPLogin=@UserName
+END
+GO
+GRANT EXECUTE ON Req.remispGetRequestTypes TO REMI
 GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO

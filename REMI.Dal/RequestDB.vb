@@ -619,6 +619,8 @@ Namespace REMI.Dal
                 myFields.ParentFieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ParentReqFieldSetupID"))
             End If
 
+            myFields.HasIntegration = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("HasIntegration"))
+
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "ProductGroup"
