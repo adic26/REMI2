@@ -64,6 +64,7 @@ Namespace REMI.Dal
             returnValue.Direction = ParameterDirection.ReturnValue
             Command.Parameters.Add(returnValue)
         End Sub
+
         ''' <summary>
         ''' This class fills the common parameters in the abstract <see cref="LoggedItemBase">LoggedItemBase</see> class. This can be used in all
         ''' DB classes that fill a data object derived from this class.
@@ -84,6 +85,34 @@ Namespace REMI.Dal
                 End If
             End If
         End Sub
+
+        Public Shared Function ConvertToDataTable(Of t)(ByVal list As IList(Of t), ByVal tableName As String) As DataTable
+            Dim table As New DataTable(tableName)
+
+            If Not list.Any Then
+                Return table
+            End If
+
+            Dim fields() = list.First.GetType.GetProperties
+
+            For Each field In fields
+                table.Columns.Add(field.Name, field.PropertyType)
+            Next
+
+            For Each item In list
+                Dim row As DataRow = table.NewRow()
+
+                For Each field In fields
+                    Dim p = item.GetType.GetProperty(field.Name)
+                    row(field.Name) = p.GetValue(item, Nothing)
+                Next
+
+                table.Rows.Add(row)
+            Next
+
+            Return table
+        End Function
+
         ''' <summary>
         ''' Gets the timestamp concurrency value from the Idatareader
         ''' </summary>

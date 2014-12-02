@@ -13,6 +13,7 @@ Option Explicit On
 
 Partial Public Class Menu
 
+    Protected WithEvents notMain As Global.REMI.Controls_Notifications
     '''<summary>
     '''AjaxScriptManager1 control.
     '''</summary>

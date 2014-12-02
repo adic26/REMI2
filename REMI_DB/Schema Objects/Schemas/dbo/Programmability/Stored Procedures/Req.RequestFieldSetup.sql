@@ -2,9 +2,12 @@
 AS
 BEGIN
 	DECLARE @RequestID INT
+	DECLARE @TrueBit BIT
+	DECLARE @FalseBit BIT
 	DECLARE @RequestType NVARCHAR(150)
 	SET @RequestID = 0
-	SET @IncludeArchived=0
+	SET @TrueBit = CONVERT(BIT, 1)
+	SET @FalseBit = CONVERT(BIT, 0)
 
 	SELECT @RequestType=lrt.[values] FROM Req.RequestType rt INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID WHERE rt.RequestTypeID=@RequestTypeID
 
@@ -32,9 +35,12 @@ BEGIN
 	SELECT rfs.ReqFieldSetupID, @RequestType AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
 			lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, rfs.DisplayOrder, 
 			rfs.ColumnOrder, ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, @RequestTypeID AS RequestTypeID,
-			@RequestNumber AS RequestNumber, @RequestID AS RequestID, rfd.Value, rfm.IntField, rfm.ExtField,
+			@RequestNumber AS RequestNumber, @RequestID AS RequestID, 
+			CASE WHEN rfm.IntField = 'RequestLink' AND Value IS NULL THEN 'http://go/reqapp/' + @RequestNumber ELSE rfd.Value END AS Value, 
+			rfm.IntField, rfm.ExtField,
 			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
-			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category
+			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category,
+			rfs.ParentReqFieldSetupID, Req.RequestType.HasIntegration
 	FROM Req.RequestType
 		INNER JOIN Lookups lrt ON lrt.LookupID=Req.RequestType.TypeID
 		INNER JOIN Req.ReqFieldSetup rfs ON rfs.RequestTypeID=Req.RequestType.RequestTypeID                  
@@ -46,9 +52,11 @@ BEGIN
 		LEFT OUTER JOIN Req.ReqFieldMapping rfm ON rfm.RequestTypeID=Req.RequestType.RequestTypeID AND rfm.ExtField=rfs.Name AND ISNULL(rfm.IsActive, 0) = 1
 	WHERE (lrt.[Values] = @RequestType) AND
 		(
-			(@IncludeArchived = 1)
+			(@IncludeArchived = @TrueBit)
 			OR
-			(@IncludeArchived = 0 AND ISNULL(rfs.Archived, 0) = 0)
+			(@IncludeArchived = @FalseBit AND ISNULL(rfs.Archived, @FalseBit) = @FalseBit)
+			OR
+			(@IncludeArchived = @FalseBit AND rfd.Value IS NOT NULL AND ISNULL(rfs.Archived, @FalseBit) = @TrueBit)
 		)
 	ORDER BY Category, ISNULL(rfs.DisplayOrder, 0) ASC
 END

@@ -21,6 +21,16 @@ Namespace REMI.Bll
             Return New DataTable("Requests")
         End Function
 
+        Public Shared Function GetRequestsForDashBoard(ByVal searchStr As String) As DataTable
+            Try
+                Return RequestDB.GetRequestsForDashBoard(searchStr)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("RequestsDashboard")
+        End Function
+
         Public Shared Function GetRequestTypes() As DataTable
             Try
                 Return RequestDB.GetRequestTypes(UserManager.GetCurrentValidUserLDAPName)

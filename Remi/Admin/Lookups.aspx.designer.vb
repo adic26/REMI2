@@ -248,15 +248,6 @@ Partial Public Class Admin_Lookups
     Protected WithEvents ddlLookupList As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''txtValue control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtValue As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
     '''gdvLookups control.
     '''</summary>
     '''<remarks>
@@ -266,6 +257,15 @@ Partial Public Class Admin_Lookups
     Protected WithEvents gdvLookups As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
+    '''odsLookups control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsLookups As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
     '''gdvTargetAccess control.
     '''</summary>
     '''<remarks>
@@ -273,42 +273,6 @@ Partial Public Class Admin_Lookups
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gdvTargetAccess As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''txtTargetName control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtTargetName As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''txtWorkStationname control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtWorkStationname As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''chkDeny control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents chkDeny As Global.System.Web.UI.WebControls.CheckBox
-
-    '''<summary>
-    '''btnAddTarget control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnAddTarget As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
     '''gdvApplications control.

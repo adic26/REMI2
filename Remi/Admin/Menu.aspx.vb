@@ -8,7 +8,7 @@ Public Class Menu
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            ddlDepartments.DataSource = LookupsManager.GetLookups(LookupType.Department, 0, 0, 1)
+            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 1)
             ddlDepartments.DataBind()
 
             MenuBindData()
@@ -60,7 +60,13 @@ Public Class Menu
         Dim menuID As Int32
         Int32.TryParse(grdMenu.DataKeys(e.RowIndex).Values(0), menuID)
 
-        SecurityManager.EditMenu(menuID, txtName.Text, txtUrl.Text)
+        Dim isSaved As Boolean = SecurityManager.EditMenu(menuID, txtName.Text, txtUrl.Text)
+
+        If (isSaved) Then
+            notMain.Notifications.Add(New Notification("i2", NotificationType.Information, "The Menu Was Updated Successfully"))
+        Else
+            notMain.Notifications.Add(New Notification("e1", NotificationType.Warning, "The Menu Was Not Updated Successfully"))
+        End If
 
         grdMenu.EditIndex = -1
         MenuBindData()
@@ -71,18 +77,33 @@ Public Class Menu
         Dim menuDepartmentID As Int32
         Int32.TryParse(grdMenuAccess.DataKeys(e.RowIndex).Values(1), menuDepartmentID)
 
-        SecurityManager.DeleteAccess(menuDepartmentID)
+        Dim isSaved As Boolean = SecurityManager.DeleteMenuAccess(menuDepartmentID)
+
+        If (isSaved) Then
+            notMain.Notifications.Add(New Notification("i2", NotificationType.Information, "The Menu Access Was Deleted Successfully"))
+        Else
+            notMain.Notifications.Add(New Notification("e1", NotificationType.Warning, "The Menu Access Was Not Deleted Successfully"))
+        End If
 
         MenuAccessBindData()
         REMIAppCache.RemoveMenuAccess(ddlDepartments.SelectedItem.Value)
+        REMIAppCache.SetMenuAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value))
     End Sub
 
     Protected Sub btnAddAccess_Click(ByVal sender As Object, ByVal e As EventArgs)
         Dim menuID As Int32 = 0
         Int32.TryParse(Request.Form(grdMenuAccess.FooterRow.FindControl("ddlMenuOptions").UniqueID), menuID)
 
-        SecurityManager.AddMenuAccess(menuID, ddlDepartments.SelectedItem.Value)
+        Dim isSaved As Boolean = SecurityManager.AddMenuAccess(menuID, ddlDepartments.SelectedItem.Value)
+
+        If (isSaved) Then
+            notMain.Notifications.Add(New Notification("i2", NotificationType.Information, "The Menu Access Was Inserted Successfully"))
+        Else
+            notMain.Notifications.Add(New Notification("e1", NotificationType.Warning, "The Menu Access Was Not Inserted Successfully"))
+        End If
 
         MenuAccessBindData()
+        REMIAppCache.RemoveMenuAccess(ddlDepartments.SelectedItem.Value)
+        REMIAppCache.SetMenuAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value))
     End Sub
 End Class

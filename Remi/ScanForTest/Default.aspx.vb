@@ -11,9 +11,6 @@ Partial Class Scanning_Default
 #Region "Main Methods"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         txtBarcodeReading.Focus()
-        ddlBinType.DataSource = REMI.Dal.RemstarDB.GetBinType()
-        ddlBinType.DataBind()
-        ddlBinType.SelectedValue = ddlBinType.Items.FindByText("SMALL-REM2").Value
 
         If Not Page.IsPostBack Then
             hdnHostname.Value = REMI.Core.REMIHttpContext.GetCurrentHostname 'set the hostname so as to fill the location list
@@ -23,36 +20,40 @@ Partial Class Scanning_Default
             If litTitle IsNot Nothing Then
                 litTitle.Text = "REMI - Scan - " + hdnHostname.Value
             End If
+
+            ddlBinType.Visible = False
+            chkPick.Visible = False
+            chkPick.Checked = False
         End If
     End Sub
 
     Protected Sub ddlPossibleLocations_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ddlPossibleLocations.SelectedIndexChanged
-        If (ddlPossibleLocations.SelectedItem.Text.Contains("REMSTAR")) Then
-            ddlBinType.Visible = True
-            chkPick.Visible = False
-            chkPick.Checked = False
-        Else
-            chkPick.Checked = False
-            chkPick.Visible = True
-            ddlBinType.Visible = False
-        End If
+        txtBarcodeReading.Text = String.Empty
+        ddlBinType.Visible = False
+        chkPick.Visible = False
+        chkPick.Checked = False
+        cblUnit.Items.Clear()
     End Sub
 
     Protected Sub ddlPossibleLocations_databound() Handles ddlPossibleLocations.DataBound
         If Not Page.IsPostBack Then
             If ddlPossibleLocations.Items.Count > 0 Then
-                Dim remstar As String() = REMI.Core.REMIConfiguration.RemStarHostNames().Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+                Dim dt As DataTable = REMIAppCache.GetUserServiceAccess(UserManager.GetCurrentUser.ID)
+                Dim hasRemStar As Boolean = If((From ma In dt.AsEnumerable() Where ma.Field(Of String)("ServiceName") = "REMSTAR").FirstOrDefault() IsNot Nothing, True, False)
 
-                'add remstar if required
-                If remstar.Contains(REMI.Core.REMIHttpContext.GetCurrentHostname) AndAlso ddlPossibleLocations.Items.FindByText("REMSTAR") Is Nothing AndAlso UserManager.GetCurrentUser.TestCentre = "Cambridge" Then
-                    ddlPossibleLocations.Items.Add(New ListItem("REMSTAR - Cambridge", 25))
-                End If
+                If (hasRemStar) Then
+                    Dim remstar As String() = REMI.Core.REMIConfiguration.RemStarHostNames().Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
 
-                'select remstar if it is in the list
-                If ddlPossibleLocations.Items.FindByText("REMSTAR - " + UserManager.GetCurrentUser.TestCentre) IsNot Nothing Then
-                    ddlPossibleLocations.SelectedValue = ddlPossibleLocations.Items.FindByText("REMSTAR - " + UserManager.GetCurrentUser.TestCentre).Value
-                    ddlBinType.Visible = True
-                    chkPick.Visible = False
+                    'add remstar if required
+                    If remstar.Contains(REMI.Core.REMIHttpContext.GetCurrentHostname) AndAlso ddlPossibleLocations.Items.FindByText("REMSTAR") Is Nothing AndAlso UserManager.GetCurrentUser.TestCentre = "Cambridge" Then
+                        ddlPossibleLocations.Items.Add(New ListItem("REMSTAR - Cambridge", 25))
+
+                        ddlPossibleLocations.SelectedValue = ddlPossibleLocations.Items.FindByText("REMSTAR - " + UserManager.GetCurrentUser.TestCentre).Value
+
+                        ddlBinType.DataSource = REMI.Dal.RemstarDB.GetBinType()
+                        ddlBinType.DataBind()
+                        ddlBinType.SelectedValue = ddlBinType.Items.FindByText("SMALL-REM2").Value
+                    End If
                 Else
                     If (ddlPossibleLocations.Items.FindByText("Lab - " + UserManager.GetCurrentUser.TestCentre) IsNot Nothing) Then
                         ddlPossibleLocations.SelectedValue = ddlPossibleLocations.Items.FindByText("Lab - " + UserManager.GetCurrentUser.TestCentre).Value
@@ -75,7 +76,6 @@ Partial Class Scanning_Default
     End Sub
 
     Protected Sub HandleScan(ByVal returnData As ScanReturnData)
-
         If returnData.ScanSuccess Then
             sciTracking.ShowSuccess(returnData.Direction)
             lblLocationDetailsTitle.Text = returnData.TrackingLocationName
@@ -105,10 +105,28 @@ Partial Class Scanning_Default
             notMain.Clear()
             sciTracking.ShowNone()
 
+            Dim dt As DataTable = REMIAppCache.GetUserServiceAccess(UserManager.GetCurrentUser.ID)
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(txtBarcodeReading.Text), 21))
             Dim units As List(Of String) = (From item In cblUnit.Items.Cast(Of ListItem)() Where item.Selected = True Select item.Value).ToList()
 
             If (bc.Validate()) Then
+                Dim hasRemStar As Boolean = If((From ma In dt.AsEnumerable() Where ma.Field(Of String)("ServiceName") = "REMSTAR" And ma.Field(Of String)("Department") = BatchManager.GetRAWBatchInformation(bc.BatchNumber).Department.Values).FirstOrDefault() IsNot Nothing, True, False)
+
+                If (hasRemStar) Then
+                    If (ddlPossibleLocations.SelectedItem.Text.ToUpper.Contains("REMSTAR")) Then
+                        ddlBinType.Visible = True
+                        chkPick.Visible = False
+                        chkPick.Checked = False
+                    Else
+                        chkPick.Visible = True
+                        ddlBinType.Visible = False
+                    End If
+                Else
+                    ddlBinType.Visible = False
+                    chkPick.Visible = False
+                    chkPick.Checked = False
+                End If
+
                 If (bc.UnitNumber = 0) Then
                     bc = New DeviceBarcodeNumber(String.Format("{0}-{1:d3}", bc.Number, 1))
                 End If

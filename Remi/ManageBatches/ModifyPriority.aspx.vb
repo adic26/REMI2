@@ -55,7 +55,7 @@ Partial Class ManageBatches_ModifyPriority
 
     Protected Sub SetupTestStageDropDownList(ByVal b As Batch)
         lblCurrentPriority.Text = b.Priority.ToString
-        ddlSelection.DataSource = LookupsManager.GetLookups(LookupType.Priority, Nothing, Nothing, 0)
+        ddlSelection.DataSource = LookupsManager.GetLookups("Priority", Nothing, Nothing, String.Empty, String.Empty, 0, 0)
         ddlSelection.DataBind()
         ddlSelection.SelectedValue = ddlSelection.Items.FindByText(b.Priority).Value
     End Sub

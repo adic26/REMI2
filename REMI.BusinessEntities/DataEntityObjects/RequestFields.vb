@@ -31,15 +31,18 @@ Namespace REMI.BusinessEntities
         Private _isRequired As Boolean
         Private _isArchived As Boolean
         Private _isFromExternalSystem As Boolean
+        Private _hasIntegration As Boolean
         Private _optionsType As List(Of String)
         Private _newRequest As Boolean
+        Private _customLookupHierarchy As List(Of RequestFieldObjectHeirarchy)
+        Private _parentFieldSetupID As Int32
 #End Region
 
 #Region "Construcor(s)"
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean)
+        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean, ByVal parentFieldSetupID As Int32, ByVal hasIntegration As Boolean)
             _fieldSetupID = fieldSetupID
             _fieldTypeID = fieldTypeID
             _fieldValidationID = fieldValidationID
@@ -63,6 +66,8 @@ Namespace REMI.BusinessEntities
             _intField = intField
             _newRequest = newRequest
             _isFromExternalSystem = isFromExternalSystem
+            _hasIntegration = hasIntegration
+            _parentFieldSetupID = parentFieldSetupID
         End Sub
 #End Region
 
@@ -229,6 +234,15 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        Public Property CustomLookupHierarchy() As List(Of RequestFieldObjectHeirarchy)
+            Get
+                Return _customLookupHierarchy
+            End Get
+            Set(value As List(Of RequestFieldObjectHeirarchy))
+                _customLookupHierarchy = value
+            End Set
+        End Property
+
         Public Property IsArchived() As Boolean Implements IRequestFields.IsArchived
             Get
                 Return _isArchived
@@ -265,6 +279,15 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        Public Property HasIntegration() As Boolean Implements IRequestFields.HasIntegration
+            Get
+                Return _hasIntegration
+            End Get
+            Set(value As Boolean)
+                _hasIntegration = value
+            End Set
+        End Property
+
         Public Property Value() As String Implements IRequestFields.Value
             Get
                 Return _value
@@ -282,10 +305,128 @@ Namespace REMI.BusinessEntities
                 _newRequest = value
             End Set
         End Property
+
+        Public Property ParentFieldSetupID() As Int32 Implements IRequestFields.ParentFieldSetupID
+            Get
+                Return _parentFieldSetupID
+            End Get
+            Set(ByVal value As Int32)
+                _parentFieldSetupID = value
+            End Set
+        End Property
 #End Region
 
         Public Overrides Function ToString() As String
             Return String.Format("{0}", Me.Name)
         End Function
+    End Class
+
+    <Serializable()> _
+    Public Class RequestFieldObjectHeirarchy
+        Private _RequestTypeID As Int32
+        Private _ParentLookupID As Int32
+        Private _ChildLookupID As Int32
+        Private _ParentLookupTypeID As Int32
+        Private _ChildLookupTypeID As Int32
+        Private _ParentLookup As String
+        Private _ChildLookup As String
+        Private _ParentLookupType As String
+        Private _ChildLookupType As String
+
+        Public Sub New(ByVal rtID As Int32, ByVal plID As Int32, ByVal clID As Int32, ByVal pltID As Int32, ByVal cltID As Int32, ByVal pl As String, ByVal cl As String, ByVal plt As String, ByVal clt As String)
+            _RequestTypeID = rtID
+            _ParentLookupID = plID
+            _ChildLookupID = clID
+            _ParentLookupTypeID = pltID
+            _ChildLookupTypeID = cltID
+            _ParentLookup = pl
+            _ChildLookup = cl
+            _ParentLookupType = plt
+            _ChildLookupType = clt
+        End Sub
+
+        Public Sub New()
+        End Sub
+
+        Public Property RequestTypeID() As Int32
+            Get
+                Return _RequestTypeID
+            End Get
+            Set(value As Int32)
+                _RequestTypeID = value
+            End Set
+        End Property
+
+        Public Property ParentLookupID() As Int32
+            Get
+                Return _ParentLookupID
+            End Get
+            Set(value As Int32)
+                _ParentLookupID = value
+            End Set
+        End Property
+
+        Public Property ChildLookupID() As Int32
+            Get
+                Return _ChildLookupID
+            End Get
+            Set(value As Int32)
+                _ChildLookupID = value
+            End Set
+        End Property
+
+        Public Property ChildLookupTypeID() As Int32
+            Get
+                Return _ChildLookupTypeID
+            End Get
+            Set(value As Int32)
+                _ChildLookupTypeID = value
+            End Set
+        End Property
+
+        Public Property ParentLookupTypeID() As Int32
+            Get
+                Return _ParentLookupTypeID
+            End Get
+            Set(value As Int32)
+                _ParentLookupTypeID = value
+            End Set
+        End Property
+
+        Public Property ParentLookup() As String
+            Get
+                Return _ParentLookup
+            End Get
+            Set(value As String)
+                _ParentLookup = value
+            End Set
+        End Property
+
+        Public Property ChildLookup() As String
+            Get
+                Return _ChildLookup
+            End Get
+            Set(value As String)
+                _ChildLookup = value
+            End Set
+        End Property
+
+        Public Property ParentLookupType() As String
+            Get
+                Return _ParentLookupType
+            End Get
+            Set(value As String)
+                _ParentLookupType = value
+            End Set
+        End Property
+
+        Public Property ChildLookupType() As String
+            Get
+                Return _ChildLookupType
+            End Get
+            Set(value As String)
+                _ChildLookupType = value
+            End Set
+        End Property
     End Class
 End Namespace

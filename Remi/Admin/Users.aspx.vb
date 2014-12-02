@@ -4,7 +4,7 @@ Imports Remi.Contracts
 
 Partial Class Admin_Users
     Inherits System.Web.UI.Page
-    Dim level As DataTable = LookupsManager.GetLookups(LookupType.Level, 0, 0, 0)
+    Dim level As DataTable = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, 0)
 
     Protected Sub Page_Load() Handles Me.Load
         If Not Page.IsPostBack AndAlso Not UserManager.GetCurrentUser.IsAdmin And Not UserManager.GetCurrentUser.IsTestCenterAdmin Then

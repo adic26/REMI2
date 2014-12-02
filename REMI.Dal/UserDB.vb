@@ -77,6 +77,11 @@ Namespace REMI.Dal
                                 myDataTable.Load(myReader)
                                 myUser.RequestTypes = myDataTable
                             End Using
+
+                            Using myDataTable As New DataTable("Services")
+                                myDataTable.Load(myReader)
+                                myUser.Services = myDataTable
+                            End Using
                         End If
                     End Using
                 End Using

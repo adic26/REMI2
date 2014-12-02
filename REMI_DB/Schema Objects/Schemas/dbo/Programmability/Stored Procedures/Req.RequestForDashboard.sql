@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [Req].[RequestGet] @RequestTypeID INT, @Department NVARCHAR(150)
+﻿ALTER PROCEDURE [Req].[RequestForDashboard] @RequestTypeID INT, @SearchStr NVARCHAR(150)
 AS
 BEGIN
 	DECLARE @Count INT
@@ -22,10 +22,19 @@ BEGIN
 
 	IF (@Count > 0)
 	BEGIN
-		SET @sql = 'SELECT ''http://go/reqapp/'' + CONVERT(VARCHAR, RequestNumber) AS RequestID, RequestNumber AS RequestNumber, [RequestStatus] AS STATUS, [ProductGroup] AS PRODUCT, [ProductType] AS PRODUCTTYPE,
-			[AccessoryGroup] AS ACCESSORYGROUPNAME, [TestCenterLocation] AS TESTCENTER, [Department] AS DEPARTMENT, [SampleSize] AS SAMPLESIZE,
-			[RequestedTest] AS Job, [RequestPurpose] AS PURPOSE, [CPRNumber] AS CPR, CONVERT(DateTime, REPLACE([ReportRequiredBy], ''-'','' '')) AS [Report Required By],
-			[Priority] AS PRIORITY, [Requestor] AS REQUESTOR, CONVERT(DateTime, REPLACE([DateCreated], ''-'','' '')) AS CRE_DATE
+		SET @sql = 'SELECT RequestNumber AS RequestNumber, [RequestedTest] AS RequestedTest, [SampleSize] AS SAMPLESIZE, [ProductGroup] AS PRODUCT,
+			[ProductType] AS PRODUCTTYPE, [AccessoryGroup] AS ACCESSORYGROUPNAME, [RequestStatus] AS STATUS, [RequestPurpose] AS PURPOSE, '
+		
+		IF (@rows LIKE '[ExecutiveSummary]')
+		BEGIN
+			SET @sql += ' [ExecutiveSummary] AS ExecutiveSummary, '
+		END
+		ELSE
+		BEGIN
+			SET @sql += ' NULL AS ExecutiveSummary, '
+		END
+			 
+		SET @sql += ' [CPRNumber] AS CPR
 			FROM 
 				(
 				SELECT r.RequestID, r.RequestNumber, rfd.Value, rfm.IntField
@@ -36,13 +45,12 @@ BEGIN
 					INNER JOIN Req.ReqFieldMapping rfm ON rfm.ExtField = rfs.Name
 				WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID) + '
 				) req PIVOT (MAX(Value) FOR IntField IN (' + @rows + ')) AS pvt
-			WHERE [Department] = ''' + @Department + ''' AND
-				[RequestStatus] IN (''Submitted'',''PM Review'',''Assigned'') '
+			WHERE [ProductGroup] = ''' + @SearchStr + ''' '
 
 		PRINT @sql
 		EXEC (@sql)
 	END
 END
 GO
-GRANT EXECUTE ON [Req].[RequestGet] TO REMI
+GRANT EXECUTE ON [Req].RequestForDashboard TO REMI
 GO

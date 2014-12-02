@@ -30,7 +30,7 @@ Public Class ProductConfiguration
                 xml = "<PC />"
             End If
         Catch ex As Exception
-            ProductGroupManager.LogIssue("Product Group Manager GetProductConfigurationXML", "e3", NotificationType.Errors, ex)
+            ProductGroupManager.LogIssue("Product Group Manager GetProductConfigurationXML", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} TestID: {1}", productID, testID))
         End Try
         Return xml
     End Function
@@ -41,7 +41,7 @@ Public Class ProductConfiguration
         Try
             hasXML = ProductGroupManager.HasProductConfigurationXML(productID, testID, String.Empty)
         Catch ex As Exception
-            ProductGroupManager.LogIssue("Product Group Manager HasProductConfigurationXML", "e3", NotificationType.Errors, ex)
+            ProductGroupManager.LogIssue("Product Group Manager HasProductConfigurationXML", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} TestID: {1}", productID, testID))
         End Try
         Return hasXML
     End Function
@@ -58,7 +58,7 @@ Public Class ProductConfiguration
                 xml = "<PC />"
             End If
         Catch ex As Exception
-            ProductGroupManager.LogIssue("Product Group Manager GetProductConfigurationXMLByName", "e3", NotificationType.Errors, ex)
+            ProductGroupManager.LogIssue("Product Group Manager GetProductConfigurationXMLByName", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} TestID: {1} Name: {2}", productID, testID, name))
         End Try
         Return xml
     End Function
@@ -69,7 +69,7 @@ Public Class ProductConfiguration
         Try
             hasXML = ProductGroupManager.HasProductConfigurationXML(productID, testID, name)
         Catch ex As Exception
-            ProductGroupManager.LogIssue("Product Group Manager HasProductConfigurationXMLByName", "e3", NotificationType.Errors, ex)
+            ProductGroupManager.LogIssue("Product Group Manager HasProductConfigurationXMLByName", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} TestID: {1} Name: {2}", productID, testID, name))
         End Try
         Return hasXML
     End Function
@@ -80,7 +80,7 @@ Public Class ProductConfiguration
         Try
             xml = ProductGroupManager.GetProductConfigurationXMLCombined(productID, testID).ToString()
         Catch ex As Exception
-            ProductGroupManager.LogIssue("Product Group Manager GetProductConfigurationXMLCombined", "e3", NotificationType.Errors, ex)
+            ProductGroupManager.LogIssue("Product Group Manager GetProductConfigurationXMLCombined", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} TestID: {1}", productID, testID))
         End Try
         Return xml
     End Function
@@ -90,7 +90,7 @@ Public Class ProductConfiguration
         Try
             Return ProductGroupManager.GetAllProductConfigurationXMLs(productID, testID, loadVersions)
         Catch ex As Exception
-            ProductGroupManager.LogIssue("Product Group Manager GetAllProductConfigurationXMLs", "e3", NotificationType.Errors, ex)
+            ProductGroupManager.LogIssue("Product Group Manager GetAllProductConfigurationXMLs", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} TestID: {1} LoadVersions: {2}", productID, testID, loadVersions))
         End Try
 
         Return New ProductConfigCollection
@@ -104,7 +104,7 @@ Public Class ProductConfiguration
         Try
             xml = GetStationConfigurationXMLProfile(hostID, String.Empty).ToString()
         Catch ex As Exception
-            TrackingLocationManager.LogIssue("Get Host Station Configuration XML", "e3", NotificationType.Errors, ex)
+            TrackingLocationManager.LogIssue("Get Host Station Configuration XML", "e3", NotificationType.Errors, ex, String.Format("HostID: {0}", hostID))
         End Try
         Return xml
     End Function
@@ -115,7 +115,7 @@ Public Class ProductConfiguration
         Try
             xml = TrackingLocationManager.GetStationConfigurationXML(hostID, profileName).ToString()
         Catch ex As Exception
-            TrackingLocationManager.LogIssue("Get Host Station Configuration XML", "e3", NotificationType.Errors, ex)
+            TrackingLocationManager.LogIssue("Get Host Station Configuration XML", "e3", NotificationType.Errors, ex, String.Format("HostID: {0} ProfileName: {1}", hostID, profileName))
         End Try
         Return xml
     End Function
@@ -153,7 +153,7 @@ Public Class ProductConfiguration
                 Next
             End If
         Catch ex As Exception
-            TrackingLocationManager.LogIssue("Get Host Station Configuration XML", "e3", NotificationType.Errors, ex)
+            TrackingLocationManager.LogIssue("Get Host Station Configuration XML", "e3", NotificationType.Errors, ex, String.Format("HostName: {0}", hostName))
         End Try
 
         Return config
@@ -168,7 +168,7 @@ Public Class ProductConfiguration
         Try
             Return CalibrationManager.GetAllCalibrationConfigurationXML(productID, hostID, testID)
         Catch ex As Exception
-            CalibrationManager.LogIssue("GetAllCalibrationConfigurationXML", "e3", NotificationType.Errors, ex)
+            CalibrationManager.LogIssue("GetAllCalibrationConfigurationXML", "e3", NotificationType.Errors, ex, String.Format("HostID: {0} ProductID: {1} TestID: {2} ", hostID, productID, testID))
         End Try
 
         Return xml
@@ -180,7 +180,7 @@ Public Class ProductConfiguration
         Try
             hasXML = CalibrationManager.HasCalibrationConfigurationXML(productID, hostID, testID)
         Catch ex As Exception
-            CalibrationManager.LogIssue("Calibration Manager HasCalibrationConfigurationXML", "e3", NotificationType.Errors, ex)
+            CalibrationManager.LogIssue("Calibration Manager HasCalibrationConfigurationXML", "e3", NotificationType.Errors, ex, String.Format("HostID: {0} ProductID: {1} TestID: {2} ", hostID, productID, testID))
         End Try
 
         Return hasXML
@@ -192,7 +192,7 @@ Public Class ProductConfiguration
         Try
             saved = CalibrationManager.SaveCalibrationConfigurationXML(productID, hostID, testID, name, xml)
         Catch ex As Exception
-            CalibrationManager.LogIssue("Calibration Manager SaveCalibrationConfigurationXML", "e3", NotificationType.Errors, ex)
+            CalibrationManager.LogIssue("Calibration Manager SaveCalibrationConfigurationXML", "e3", NotificationType.Errors, ex, String.Format("HostID: {0} ProductID: {1} TestID: {2} Name: {3}", hostID, productID, testID, name))
         End Try
 
         Return saved
@@ -207,7 +207,7 @@ Public Class ProductConfiguration
                 Return RequestManager.GetRequestFieldSetup(requestName, includeArchived, requestNumber)
             End If
         Catch ex As Exception
-            RequestManager.LogIssue("GetRequestFieldSetup", "e3", NotificationType.Errors, ex)
+            RequestManager.LogIssue("GetRequestFieldSetup", "e3", NotificationType.Errors, ex, String.Format("RequestName: {0} IncludeArchived: {1} RequestNumber: {2} User: {3}", requestName, includeArchived, requestNumber, useridentification))
         End Try
 
         Return Nothing
@@ -218,7 +218,7 @@ Public Class ProductConfiguration
         Try
             Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)
         Catch ex As Exception
-            RequestManager.LogIssue("GetBatchTestSetupInfo", "e3", NotificationType.Errors, ex)
+            RequestManager.LogIssue("GetBatchTestSetupInfo", "e3", NotificationType.Errors, ex, String.Format("BatchID: {0} JobID: {1} ProductID: {2} TestStageType: {3} BlankSelected: {4}", batchID, jobID, productID, testStageType, blankSelected))
         End Try
 
         Return New DataTable("RequestSetupInfo")
@@ -231,7 +231,7 @@ Public Class ProductConfiguration
                 Return RequestManager.GetRequestTypes()
             End If
         Catch ex As Exception
-            RequestManager.LogIssue("GetRequestTypes", "e3", NotificationType.Errors, ex)
+            RequestManager.LogIssue("GetRequestTypes", "e3", NotificationType.Errors, ex, String.Format("User: {0}", userIdentification))
         End Try
 
         Return New DataTable("RequestTypes")
@@ -244,7 +244,7 @@ Public Class ProductConfiguration
                 Return RequestManager.SaveRequest(requestName, request, userIdentification)
             End If
         Catch ex As Exception
-            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex)
+            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex, String.Format("RequestName: {0} User: {1}", requestName, userIdentification))
         End Try
 
         Return False

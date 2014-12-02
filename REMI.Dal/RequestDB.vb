@@ -347,6 +347,68 @@ Namespace REMI.Dal
 
             Return dtReq
         End Function
+
+        Public Shared Function GetRequestsForDashBoard(ByVal searchStr As String) As DataTable
+            Dim dtReq As New DataTable("RequestsDashboard")
+            dtReq.Columns.Add("RequestNumber", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("RequestedTest", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("SAMPLESIZE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCT", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PRODUCTTYPE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("ACCESSORYGROUPNAME", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("STATUS", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("PURPOSE", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("ExecutiveSummary", System.Type.GetType("System.String"))
+            dtReq.Columns.Add("CPR", System.Type.GetType("System.String"))
+
+            Dim lastRequestConnectName As String = String.Empty
+            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" Order By r.RequestConnectName Select r).ToList()
+
+            For Each r In requestType
+                If (r.RequestConnectName <> lastRequestConnectName) Then
+
+                    lastRequestConnectName = r.RequestConnectName
+
+                    If (r.DBType = "Oracle") Then
+                        Using myOracleConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq(r.RequestConnectName))
+                            myOracleConnection.Open()
+
+                            Using myCommand As New OracleCommand("REMI_HELPER.get_Requests_For_Dashboard", myOracleConnection)
+                                myCommand.CommandTimeout = 40
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.Add(New OracleParameter("p_search", OracleType.VarChar)).Value = searchStr
+                                myCommand.Parameters.Add(New OracleParameter("C_REF_RET", OracleType.Cursor)).Direction = ParameterDirection.ReturnValue
+                                Dim myReader As OracleDataReader = myCommand.ExecuteReader
+                                Dim dt As New DataTable("RequestsDashboard")
+                                dt.Load(myReader)
+
+                                If (dt.Rows.Count > 0) Then
+                                    dtReq.Merge(dt, True)
+                                End If
+                            End Using
+                        End Using
+                    ElseIf (r.DBType = "SQL") Then
+                        Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringReq(r.RequestConnectName))
+                            Using myCommand As New SqlCommand("Req.RequestForDashboard", myConnection)
+                                myCommand.CommandType = CommandType.StoredProcedure
+                                myCommand.Parameters.AddWithValue("@RequestTypeID", r.RequestTypeID)
+                                myCommand.Parameters.AddWithValue("@SearchStr", searchStr)
+                                myConnection.Open()
+                                Dim dt2 As New DataTable("RequestsDashboard")
+                                Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                                da.Fill(dt2)
+
+                                If (dt2.Rows.Count > 0) Then
+                                    dtReq.Merge(dt2, True)
+                                End If
+                            End Using
+                        End Using
+                    End If
+                End If
+            Next
+
+            Return dtReq
+        End Function
 #End Region
 
         Private Shared Sub LinkExternalRecord(ByVal extFields As Dictionary(Of String, String), ByVal reqNum As RequestNumber, ByRef rf As RequestFieldsCollection, ByVal useridentification As String)
@@ -422,7 +484,9 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@RequestTypeID", rtID)
 
                         If (includeArchived) Then
-                            myCommand.Parameters.AddWithValue("@IncludeArchived", 1)
+                            myCommand.Parameters.AddWithValue("@IncludeArchived", True)
+                        Else
+                            myCommand.Parameters.AddWithValue("@IncludeArchived", False)
                         End If
 
                         If (requestNumber.Trim().Length > 0) Then
@@ -495,14 +559,42 @@ Namespace REMI.Dal
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
+                Dim filteredOptions As New List(Of String)
+                Dim onlylh As List(Of String) = (From l In instance.LookupsHierarchies.Include("Lookup1") Where l.ChildLookupTypeID = myFields.OptionsTypeID And l.ParentLookupTypeID = myFields.OptionsTypeID Select l.Lookup1.Values).ToList()
 
-                If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
-                    options.Add("Not Set")
+                options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 _
+                     Order By lo.Values Select lo.Values).ToList)
+
+                If (onlylh.Count > 0) Then
+                    If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
+                        filteredOptions.Add("Not Set")
+                    End If
+
+                    For Each rec In options
+                        If (onlylh.Contains(rec)) Then
+                            filteredOptions.Add(rec)
+                        End If
+                    Next
+                Else
+                    If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
+                        filteredOptions.Add("Not Set")
+                    End If
+
+                    filteredOptions.AddRange(options)
                 End If
 
-                options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 Order By lo.Values Select lo.Values).ToList)
+                myFields.OptionsType = filteredOptions
 
-                myFields.OptionsType = options
+                Dim lookups = (From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.ParentLookupTypeID <> myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
+                        Select New With {lh.RequestTypeID, lh.ParentLookupID, lh.ChildLookupID, lh.ParentLookupTypeID, lh.ChildLookupTypeID, .ParentLookup = lh.Lookup.Values, .ChildLookup = lh.Lookup1.Values, .ParentLookupType = lh.LookupType.Name, .ChildLookupType = lh.LookupType1.Name}).ToList()
+
+                Dim rfob As New List(Of RequestFieldObjectHeirarchy)
+
+                For Each rec In lookups
+                    rfob.Add(New RequestFieldObjectHeirarchy(rec.RequestTypeID, rec.ParentLookupID, rec.ChildLookupID, rec.ParentLookupTypeID, rec.ChildLookupTypeID, rec.ParentLookup, rec.ChildLookup, rec.ParentLookupType, rec.ChildLookupType))
+                Next
+
+                myFields.CustomLookupHierarchy = rfob
             Else
                 myFields.OptionsTypeID = 0
                 myFields.OptionsType = New List(Of String)()
@@ -522,6 +614,12 @@ Namespace REMI.Dal
             If (myFields.IntField = "Requestor" And myFields.Value = String.Empty) Then
                 myFields.Value = user.FullName
             End If
+
+            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ParentReqFieldSetupID")) Then
+                myFields.ParentFieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ParentReqFieldSetupID"))
+            End If
+
+            myFields.HasIntegration = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("HasIntegration"))
 
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField

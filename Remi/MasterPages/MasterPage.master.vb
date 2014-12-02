@@ -78,6 +78,10 @@ Partial Class MasterPages_MasterPage
 
         Dim dtMenuAccess As DataTable = REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID)
 
+        If (REMIAppCache.GetUserServiceAccess(UserManager.GetCurrentUser.ID) Is Nothing) Then
+            REMIAppCache.SetUserServiceAccess(UserManager.GetCurrentUser.ID, UserManager.GetCurrentUser.Services)
+        End If
+
         Overview.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Overview").FirstOrDefault() IsNot Nothing, True, False)
         Search.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Search").FirstOrDefault() IsNot Nothing, True, False)
         ScanDevice.Visible = If((From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Scan Device").FirstOrDefault() IsNot Nothing, True, False)

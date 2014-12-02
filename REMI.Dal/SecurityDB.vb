@@ -28,8 +28,24 @@ Namespace REMI.Dal
             Return True
         End Function
 
+        Public Shared Function GetPermissions() As DataTable
+            Dim dt As New DataTable("Permissions")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("aspnet_GetPermissions", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@ApplicationName", "/")
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "Permissions"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
         Public Shared Function GetRolesPermissionsGrid() As DataTable
-            Dim dt As New DataTable()
+            Dim dt As New DataTable("PermissionsGrid")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispRolePermissions", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
@@ -69,6 +85,37 @@ Namespace REMI.Dal
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
                     dt.TableName = "Menu"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
+        Public Shared Function GetServices() As DataTable
+            Dim dt As New DataTable("Services")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetServices", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "Services"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
+        Public Shared Function GetServicesAccess(ByVal departmentID As Int32) As DataTable
+            Dim dt As New DataTable("ServicesAccess")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetServicesAccessByID", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@LookupID", departmentID)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "ServicesAccess"
                 End Using
             End Using
 

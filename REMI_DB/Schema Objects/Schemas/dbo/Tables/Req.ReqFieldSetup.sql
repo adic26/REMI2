@@ -11,6 +11,7 @@
 	[OptionsTypeID] [int] NULL,
 	[ColumnOrder] [int] NOT NULL,
 	[Category] [nvarchar](100) NOT NULL,
+	[ParentReqFieldSetupID] [int] NULL,
  CONSTRAINT [PK_ReqFieldSetup] PRIMARY KEY CLUSTERED 
 (
 	[ReqFieldSetupID] ASC

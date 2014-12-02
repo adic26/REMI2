@@ -28,7 +28,13 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetLookups()
         {
-            Assert.That(LookupsManager.GetLookups(Contracts.LookupType.Priority, 0, 0, 0).Rows.Count > 0);
+            Assert.That(LookupsManager.GetLookups(Contracts.LookupType.Priority, 0, 0, String.Empty, String.Empty, 0, 0).Rows.Count > 0);
+        }
+
+        [Test]
+        public void GetLookupsTypeString()
+        {
+            Assert.That(LookupsManager.GetLookups("Priority", 0, 0, String.Empty, String.Empty, 0, 0).Rows.Count > 0);
         }
 
         [Test]
@@ -38,28 +44,34 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetOracleProductTypeList()
+        public void GetLookupIDByTypeString()
         {
-            Assert.That(LookupsManager.GetOracleProductTypeList().Count > 0);
+            Assert.That(LookupsManager.GetLookupID("Priority", "low", 0) > 0);
         }
 
-        [Test]
-        public void GetOracleDepartmentList()
-        {
-            Assert.That(LookupsManager.GetOracleDepartmentList().Count > 0);
-        }
+        //[Test]
+        //public void GetOracleProductTypeList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleProductTypeList().Count > 0);
+        //}
 
-        [Test]
-        public void GetOracleAccessoryGroupList()
-        {
-            Assert.That(LookupsManager.GetOracleAccessoryGroupList().Count > 0);
-        }
+        //[Test]
+        //public void GetOracleDepartmentList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleDepartmentList().Count > 0);
+        //}
 
-        [Test]
-        public void GetOracleTestCentersList()
-        {
-            Assert.That(LookupsManager.GetOracleTestCentersList().Count > 0);
-        }
+        //[Test]
+        //public void GetOracleAccessoryGroupList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleAccessoryGroupList().Count > 0);
+        //}
+
+        //[Test]
+        //public void GetOracleTestCentersList()
+        //{
+        //    Assert.That(LookupsManager.GetOracleTestCentersList().Count > 0);
+        //}
 
         [Test]
         public void SaveLookup()

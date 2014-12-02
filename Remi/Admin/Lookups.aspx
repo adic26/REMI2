@@ -60,17 +60,29 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <h1>Lookups</h1>
-    Select A Lookup Type: <asp:DropDownList ID="ddlLookupList" runat="server" AutoPostBack="True"></asp:DropDownList> Add A New Lookup Value: <asp:TextBox ID="txtValue" runat="server"></asp:TextBox>
+    Select A Lookup Type: <asp:DropDownList ID="ddlLookupList" runat="server" AutoPostBack="True"></asp:DropDownList> 
     
-    <asp:GridView runat="server" ID="gdvLookups" AutoGenerateColumns="false" EnableViewState="true" OnRowEditing="gdvLookups_OnRowEditing" DataKeyNames="LookupType" AutoGenerateEditButton="true" OnRowCancelingEdit="gdvLookups_OnRowCancelingEdit" OnRowUpdating="gdvLookups_RowUpdating">
+    <asp:GridView runat="server" ID="gdvLookups" AutoGenerateColumns="false" ShowFooter="true" EnableViewState="true" OnRowEditing="gdvLookups_OnRowEditing" DataKeyNames="LookupType" AutoGenerateEditButton="true" OnRowCancelingEdit="gdvLookups_OnRowCancelingEdit" OnRowUpdating="gdvLookups_RowUpdating">
         <Columns>
             <asp:BoundField DataField="LookupID" HeaderText="LookupID" ReadOnly="true" SortExpression="LookupID" />
-            <asp:BoundField DataField="LookupType" HeaderText="Value" ReadOnly="true" SortExpression="LookupType" />
+            <asp:TemplateField HeaderText="Lookup" SortExpression="Lookup">
+                <ItemTemplate>
+                    <asp:Label runat="server" ID="lblValue" Text='<%# Eval("LookupType")%>' Visible="true" ReadOnly="true" />
+                </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtValue" Visible="true" />
+                </FooterTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Description" SortExpression="Description">
                 <ItemTemplate>
                     <asp:Label runat="server" ID="lblDescription" Text='<%# Eval("Description")%>' Visible="true" />
                     <asp:TextBox runat="server" ID="txtDescription" Text='<%# Eval("Description")%>' Visible="false" EnableViewState="true" />
                 </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtDescription" Visible="true" />
+                </FooterTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Parent" SortExpression="Parent">
                 <ItemTemplate>
@@ -78,6 +90,10 @@
                     <asp:Label runat="server" ID="lblParent" Text='<%# Eval("Parent")%>' Visible="true" />
                     <asp:DropDownList runat="server" ID="ddlParentID" DataTextField="DisplayText" DataValueField="LookupID" Visible="false"></asp:DropDownList>
                 </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:DropDownList runat="server" ID="ddlFooterParentID" DataTextField="DisplayText" DataSourceID="odsLookups" DataValueField="LookupID" Visible="true"></asp:DropDownList>
+                </FooterTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Active" SortExpression="Active">
                 <ItemTemplate>
@@ -86,37 +102,65 @@
             </asp:TemplateField>
         </Columns>
     </asp:GridView>
+    
+    <asp:ObjectDataSource ID="odsLookups" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookups" TypeName="REMI.Bll.LookupsManager">
+        <SelectParameters>
+            <asp:ControlParameter ControlID="ctl00$Content$ddlLookupList" Name="Type" PropertyName="SelectedValue" Type="String" />
+            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
+            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+        </SelectParameters>
+    </asp:ObjectDataSource>
 
     <h1>Target Access</h1>
 
-    <asp:GridView runat="server" ID="gdvTargetAccess" AutoGenerateColumns="false" DataKeyNames="ID" OnRowCommand="gdvTargetAccess_RowCommand">
+    <asp:GridView runat="server" ID="gdvTargetAccess" ShowFooter="true" AutoGenerateColumns="false" DataKeyNames="ID" OnRowCommand="gdvTargetAccess_RowCommand">
         <Columns>
             <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="true" SortExpression="ID" />
-            <asp:BoundField DataField="TargetName" HeaderText="Name" ReadOnly="true" SortExpression="TargetName" />
+            <asp:TemplateField HeaderText="Name" SortExpression="Name">
+                <ItemTemplate>
+                    <asp:Label runat="server" ID="lblTargetName" Text='<%# Eval("TargetName")%>' Visible="true" ReadOnly="true" />
+                </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtTargetName" Visible="true" />
+                </FooterTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Deny Access" SortExpression="DenyAccess">
                 <ItemTemplate>
                     <asp:CheckBox runat="server" ID="chkDenyAccess" Checked='<%# Eval("DenyAccess") %>' OnCheckedChanged="chkDenyAccess_OnCheckedChanged" AutoPostBack="true" />
                 </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:CheckBox runat="server" ID="chkDeny" />
+                </FooterTemplate>
             </asp:TemplateField>
-            <asp:BoundField DataField="WorkstationName" HeaderText="WorkstationName" ReadOnly="true" SortExpression="WorkstationName" /> 
+            <asp:TemplateField HeaderText="WorkstationName" SortExpression="WorkstationName">
+                <ItemTemplate>
+                    <asp:Label runat="server" ID="lblWorkstationName" Text='<%# Eval("WorkstationName")%>' Visible="true" ReadOnly="true" />
+                </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtWorkStationname" Visible="true" />
+                </FooterTemplate>
+            </asp:TemplateField>
             <asp:TemplateField ShowHeader="False">
                 <ItemTemplate>
                     <asp:LinkButton ID="lnkDelete" runat="server"  
                         CommandArgument='<%# Eval("ID") %>' onclientclick="return confirm('Are you sure you want to delete this Target Access?');" CommandName="DeleteItem">Delete</asp:LinkButton>
                 </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:Button ID="btnAddTarget" CssClass="buttonSmall" runat="server" Text="Add Target" OnClick="btnAddTarget_OnClick" CausesValidation="true" />
+                </FooterTemplate>
             </asp:TemplateField>       
         </Columns>
     </asp:GridView>
-
-    <h3>Add New Target Access:</h3>
-    Target Name: <asp:TextBox runat="server" ID="txtTargetName"></asp:TextBox><br />
-    Workstation Name: <asp:TextBox runat="server" ID="txtWorkStationname"></asp:TextBox><label style="color:Red;font-size:8pt;">Leave blank for all workstations</label><br />
-    Deny Access: <asp:CheckBox runat="server" ID="chkDeny" /><br />
-    <asp:Button runat="server" ID="btnAddTarget" Text="Add Target" OnClick="btnAddTarget_OnClick" />
-
-
+    
     <h1>Application Versions</h1>
-
     <asp:GridView runat="server" ID="gdvApplications" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="ID" OnRowEditing="gdvApplications_OnRowEditing" AutoGenerateEditButton="true" OnRowCancelingEdit="gdvApplications_OnRowCancelingEdit" OnRowUpdating="gdvApplications_RowUpdating">
         <Columns>
             <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="true" SortExpression="ID" />

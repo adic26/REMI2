@@ -1,6 +1,6 @@
 ﻿Imports System
 Imports System.Data
-Imports System.Data.OracleClient
+'Imports System.Data.OracleClient
 Imports System.Data.SqlClient
 Imports System.Data.Common
 Imports System.Linq
@@ -229,32 +229,32 @@ Namespace REMI.Dal
             Return tempList
         End Function
 
-        Public Shared Function GetOracleList() As List(Of String) 'REMITIMEDSERVICE
-            Dim tempList As New List(Of String)
-            Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
+        'Public Shared Function GetOracleList() As List(Of String) 'REMITIMEDSERVICE
+        '    Dim tempList As New List(Of String)
+        '    Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
 
-                Using myCommand As New OracleCommand("REMI_HELPER.get_product_groups", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    Dim pOut As New OracleParameter
-                    pOut.Direction = ParameterDirection.ReturnValue
-                    pOut.OracleType = OracleType.Cursor
-                    pOut.ParameterName = "C_REF_RET"
-                    myCommand.Parameters.Add(pOut)
-                    myConnection.Open()
-                    Using myReader As OracleDataReader = myCommand.ExecuteReader
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                If Not tempList.Contains(myReader.GetValue(0).ToString) Then
-                                    tempList.Add(myReader.GetValue(0).ToString)
-                                End If
-                            End While
-                        End If
+        '        Using myCommand As New OracleCommand("REMI_HELPER.get_product_groups", myConnection)
+        '            myCommand.CommandType = CommandType.StoredProcedure
+        '            Dim pOut As New OracleParameter
+        '            pOut.Direction = ParameterDirection.ReturnValue
+        '            pOut.OracleType = OracleType.Cursor
+        '            pOut.ParameterName = "C_REF_RET"
+        '            myCommand.Parameters.Add(pOut)
+        '            myConnection.Open()
+        '            Using myReader As OracleDataReader = myCommand.ExecuteReader
+        '                If myReader.HasRows Then
+        '                    While myReader.Read()
+        '                        If Not tempList.Contains(myReader.GetValue(0).ToString) Then
+        '                            tempList.Add(myReader.GetValue(0).ToString)
+        '                        End If
+        '                    End While
+        '                End If
 
-                    End Using
-                End Using
-            End Using
-            Return tempList
-        End Function
+        '            End Using
+        '        End Using
+        '    End Using
+        '    Return tempList
+        'End Function
 
         Public Shared Function GetTestCountByType(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32) As DataSet
             Dim ds As New DataSet

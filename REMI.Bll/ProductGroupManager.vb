@@ -78,15 +78,15 @@ Namespace REMI.Bll
             End Try
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetProductOracleList() As List(Of String)
-            Try
-                Return ProductGroupDB.GetOracleList()
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-                Return New List(Of String)
-            End Try
-        End Function
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetProductOracleList() As List(Of String)
+        '    Try
+        '        Return ProductGroupDB.GetOracleList()
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+        '        Return New List(Of String)
+        '    End Try
+        'End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetProductNameByID(ByVal productID As Int32) As String

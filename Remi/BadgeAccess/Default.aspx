@@ -57,9 +57,12 @@
                     <asp:ObjectDataSource ID="odsTestCentres" runat="server" SelectMethod="GetLookups"
                         TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                         <SelectParameters>
-                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="4" />
+                            <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
                             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
                         </SelectParameters>
                     </asp:ObjectDataSource>
@@ -73,9 +76,12 @@
                     <asp:DropDownList ID="ddlDepartments" runat="server" DataSourceID="odsDepartments" Width="195px" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
                     <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                         <SelectParameters>
-                            <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
+                            <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
                             <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
                         </SelectParameters>
                     </asp:ObjectDataSource>

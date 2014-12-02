@@ -13,6 +13,8 @@ Option Explicit On
 
 Partial Public Class Security
 
+    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents notMain As Global.REMI.Controls_Notifications
     '''<summary>
     '''AjaxScriptManager1 control.
     '''</summary>
@@ -219,4 +221,14 @@ Partial Public Class Security
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnAddRole As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''grdServices control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdServices As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents grdServiceAccess As Global.System.Web.UI.WebControls.GridView
 End Class

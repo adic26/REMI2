@@ -28,8 +28,10 @@ namespace REMI.Contracts
         String Description { get; set; }
         bool IsRequired  { get; set; }
         bool IsArchived { get; set; }
-        bool IsFromExternalSystem  { get; set; }
+        bool IsFromExternalSystem { get; set; }
+        bool HasIntegration { get; set; }
         List<String> OptionsType  { get; set; }
         bool NewRequest { get; set; }
+        Int32 ParentFieldSetupID { get; set; }
     }
 }

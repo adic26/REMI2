@@ -28,6 +28,7 @@
           <EntitySet Name="JobOrientation" EntityType="remiModel.Store.JobOrientation" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Jobs" EntityType="remiModel.Store.Jobs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Lookups" EntityType="remiModel.Store.Lookups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LookupsHierarchy" EntityType="remiModel.Store.LookupsHierarchy" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="LookupType" EntityType="remiModel.Store.LookupType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Menu" EntityType="remiModel.Store.Menu" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MenuDepartment" EntityType="remiModel.Store.MenuDepartment" store:Type="Tables" Schema="dbo" />
@@ -39,6 +40,8 @@
           <EntitySet Name="Products" EntityType="remiModel.Store.Products" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ProductSettings" EntityType="remiModel.Store.ProductSettings" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ProductTestReady" EntityType="remiModel.Store.ProductTestReady" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Services" EntityType="remiModel.Store.Services" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ServicesAccess" EntityType="remiModel.Store.ServicesAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="StationConfigurationUpload" EntityType="remiModel.Store.StationConfigurationUpload" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="sysdiagrams" EntityType="remiModel.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TargetAccess" EntityType="remiModel.Store.TargetAccess" store:Type="Tables" Schema="dbo" />
@@ -309,6 +312,26 @@
             <End Role="LookupType" EntitySet="LookupType" />
             <End Role="Lookups" EntitySet="Lookups" />
           </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_Lookups" Association="remiModel.Store.FK_LookupsHierarchy_Lookups">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_Lookups1" Association="remiModel.Store.FK_LookupsHierarchy_Lookups1">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_LookupType" Association="remiModel.Store.FK_LookupsHierarchy_LookupType">
+            <End Role="LookupType" EntitySet="LookupType" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_LookupType1" Association="remiModel.Store.FK_LookupsHierarchy_LookupType1">
+            <End Role="LookupType" EntitySet="LookupType" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_RequestType" Association="remiModel.Store.FK_LookupsHierarchy_RequestType">
+            <End Role="RequestType" EntitySet="RequestType" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchy" />
+          </AssociationSet>
           <AssociationSet Name="FK_MenuDepartment_Lookups" Association="remiModel.Store.FK_MenuDepartment_Lookups">
             <End Role="Lookups" EntitySet="Lookups" />
             <End Role="MenuDepartment" EntitySet="MenuDepartment" />
@@ -476,6 +499,14 @@
           <AssociationSet Name="FK_ResultXML_Results" Association="remiModel.Store.FK_ResultXML_Results">
             <End Role="Results" EntitySet="Results" />
             <End Role="ResultsXML" EntitySet="ResultsXML" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServicesAccess_Lookups" Association="remiModel.Store.FK_ServicesAccess_Lookups">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="ServicesAccess" EntitySet="ServicesAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServicesAccess_Services" Association="remiModel.Store.FK_ServicesAccess_Services">
+            <End Role="Services" EntitySet="Services" />
+            <End Role="ServicesAccess" EntitySet="ServicesAccess" />
           </AssociationSet>
           <AssociationSet Name="FK_TaskAssignment_Batches" Association="remiModel.Store.FK_TaskAssignment_Batches">
             <End Role="Batches" EntitySet="Batches" />
@@ -872,6 +903,17 @@
           <Property Name="ParentID" Type="int" />
           <Property Name="LookupTypeID" Type="int" />
         </EntityType>
+        <EntityType Name="LookupsHierarchy">
+          <Key>
+            <PropertyRef Name="LookupsHierarchyID" />
+          </Key>
+          <Property Name="LookupsHierarchyID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ParentLookupTypeID" Type="int" Nullable="false" />
+          <Property Name="ChildLookupTypeID" Type="int" Nullable="false" />
+          <Property Name="ParentLookupID" Type="int" Nullable="false" />
+          <Property Name="ChildLookupID" Type="int" Nullable="false" />
+          <Property Name="RequestTypeID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="LookupType">
           <Key>
             <PropertyRef Name="LookupTypeID" />
@@ -979,6 +1021,22 @@
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="IsNestReady" Type="int" />
           <Property Name="JIRA" Type="int" />
+        </EntityType>
+        <EntityType Name="Services">
+          <Key>
+            <PropertyRef Name="ServiceID" />
+          </Key>
+          <Property Name="ServiceID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceName" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServicesAccess">
+          <Key>
+            <PropertyRef Name="ServiceAccessID" />
+          </Key>
+          <Property Name="ServiceAccessID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceID" Type="int" Nullable="false" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="StationConfigurationUpload">
           <Key>
@@ -2000,6 +2058,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_LookupsHierarchy_Lookups">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="LookupsHierarchy" Type="remiModel.Store.LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ParentLookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_Lookups1">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="LookupsHierarchy" Type="remiModel.Store.LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ChildLookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_LookupType">
+          <End Role="LookupType" Type="remiModel.Store.LookupType" Multiplicity="1" />
+          <End Role="LookupsHierarchy" Type="remiModel.Store.LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupType">
+              <PropertyRef Name="LookupTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ParentLookupTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_LookupType1">
+          <End Role="LookupType" Type="remiModel.Store.LookupType" Multiplicity="1" />
+          <End Role="LookupsHierarchy" Type="remiModel.Store.LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupType">
+              <PropertyRef Name="LookupTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ChildLookupTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_RequestType">
+          <End Role="RequestType" Type="remiModel.Store.RequestType" Multiplicity="1" />
+          <End Role="LookupsHierarchy" Type="remiModel.Store.LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestType">
+              <PropertyRef Name="RequestTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="RequestTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MenuDepartment_Lookups">
           <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="MenuDepartment" Type="remiModel.Store.MenuDepartment" Multiplicity="*" />
@@ -2504,6 +2622,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ServicesAccess_Lookups">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="ServicesAccess" Type="remiModel.Store.ServicesAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="ServicesAccess">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServicesAccess_Services">
+          <End Role="Services" Type="remiModel.Store.Services" Multiplicity="1" />
+          <End Role="ServicesAccess" Type="remiModel.Store.ServicesAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Services">
+              <PropertyRef Name="ServiceID" />
+            </Principal>
+            <Dependent Role="ServicesAccess">
+              <PropertyRef Name="ServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TaskAssignment_Batches">
           <End Role="Batches" Type="remiModel.Store.Batches" Multiplicity="1" />
           <End Role="TaskAssignments" Type="remiModel.Store.TaskAssignments" Multiplicity="*" />
@@ -2891,10 +3033,7 @@
           <EntitySet Name="ApplicationProductVersions" EntityType="REMI.Entities.ApplicationProductVersion" />
           <EntitySet Name="Applications" EntityType="REMI.Entities.Application" />
           <EntitySet Name="ApplicationVersions" EntityType="REMI.Entities.ApplicationVersion" />
-          <EntitySet Name="aspnet_Applications" EntityType="REMI.Entities.aspnet_Applications" />
-          <EntitySet Name="aspnet_Permissions" EntityType="REMI.Entities.aspnet_Permissions" />
           <EntitySet Name="aspnet_Profile" EntityType="REMI.Entities.aspnet_Profile" />
-          <EntitySet Name="aspnet_Roles" EntityType="REMI.Entities.aspnet_Roles" />
           <EntitySet Name="aspnet_SchemaVersions" EntityType="REMI.Entities.aspnet_SchemaVersions" />
           <EntitySet Name="aspnet_Users" EntityType="REMI.Entities.aspnet_Users" />
           <EntitySet Name="BatchComments" EntityType="REMI.Entities.BatchComment" />
@@ -2945,18 +3084,6 @@
           <AssociationSet Name="FK_ApplicationVersions_Applications" Association="REMI.Entities.FK_ApplicationVersions_Applications">
             <End Role="Application" EntitySet="Applications" />
             <End Role="ApplicationVersion" EntitySet="ApplicationVersions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__aspnet_Ro__Appli__40058253" Association="REMI.Entities.FK__aspnet_Ro__Appli__40058253">
-            <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
-            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
-          </AssociationSet>
-          <AssociationSet Name="FK__aspnet_Us__Appli__40F9A68C" Association="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C">
-            <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
-            <End Role="aspnet_Users" EntitySet="aspnet_Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_aspnet_Permissions_aspnet_Applications" Association="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications">
-            <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
-            <End Role="aspnet_Permissions" EntitySet="aspnet_Permissions" />
           </AssociationSet>
           <AssociationSet Name="FK__aspnet_Pr__UserI__3F115E1A" Association="REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A">
             <End Role="aspnet_Users" EntitySet="aspnet_Users" />
@@ -3110,14 +3237,6 @@
             <End Role="TrackingLocationType" EntitySet="TrackingLocationTypes" />
             <End Role="TrackingLocationTypePermission" EntitySet="TrackingLocationTypePermissions" />
           </AssociationSet>
-          <AssociationSet Name="aspnet_PermissionsInRoles" Association="REMI.Entities.aspnet_PermissionsInRoles">
-            <End Role="aspnet_Permissions" EntitySet="aspnet_Permissions" />
-            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
-          </AssociationSet>
-          <AssociationSet Name="aspnet_UsersInRoles" Association="REMI.Entities.aspnet_UsersInRoles">
-            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
-            <End Role="aspnet_Users" EntitySet="aspnet_Users" />
-          </AssociationSet>
           <EntitySet Name="Batches" EntityType="REMI.Entities.Batch" />
           <AssociationSet Name="FK_BatchComments_Batches" Association="REMI.Entities.FK_BatchComments_Batches">
             <End Role="Batch" EntitySet="Batches" />
@@ -3225,10 +3344,6 @@
           </AssociationSet>
           <EntitySet Name="ReqFieldSetups" EntityType="REMI.Entities.ReqFieldSetup" />
           <EntitySet Name="ReqFieldSetupRoles" EntityType="REMI.Entities.ReqFieldSetupRole" />
-          <AssociationSet Name="FK_ReqFieldSetupRole_aspnet_Roles" Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles">
-            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
-            <End Role="ReqFieldSetupRole" EntitySet="ReqFieldSetupRoles" />
-          </AssociationSet>
           <AssociationSet Name="FK_ReqFieldSetup_FieldTypeID" Association="REMI.Entities.FK_ReqFieldSetup_FieldTypeID">
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
@@ -3317,6 +3432,64 @@
           <AssociationSet Name="FK_JobAccess_Lookups" Association="REMI.Entities.FK_JobAccess_Lookups">
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="JobAccess" EntitySet="JobAccesses" />
+          </AssociationSet>
+          <EntitySet Name="Services" EntityType="REMI.Entities.Service" />
+          <EntitySet Name="ServicesAccesses" EntityType="REMI.Entities.ServicesAccess" />
+          <AssociationSet Name="FK_ServicesAccess_Lookups" Association="REMI.Entities.FK_ServicesAccess_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="ServicesAccess" EntitySet="ServicesAccesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServicesAccess_Services" Association="REMI.Entities.FK_ServicesAccess_Services">
+            <End Role="Service" EntitySet="Services" />
+            <End Role="ServicesAccess" EntitySet="ServicesAccesses" />
+          </AssociationSet>
+          <EntitySet Name="aspnet_Applications" EntityType="REMI.Entities.aspnet_Applications" />
+          <AssociationSet Name="FK__aspnet_Us__Appli__40F9A68C" Association="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C">
+            <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
+            <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+          </AssociationSet>
+          <EntitySet Name="aspnet_Roles" EntityType="REMI.Entities.aspnet_Roles" />
+          <AssociationSet Name="FK__aspnet_Ro__Appli__40058253" Association="REMI.Entities.FK__aspnet_Ro__Appli__40058253">
+            <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
+            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReqFieldSetupRole_aspnet_Roles" Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles">
+            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+            <End Role="ReqFieldSetupRole" EntitySet="ReqFieldSetupRoles" />
+          </AssociationSet>
+          <EntitySet Name="aspnet_Permissions" EntityType="REMI.Entities.aspnet_Permissions" />
+          <AssociationSet Name="FK_aspnet_Permissions_aspnet_Applications" Association="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications">
+            <End Role="aspnet_Applications" EntitySet="aspnet_Applications" />
+            <End Role="aspnet_Permissions" EntitySet="aspnet_Permissions" />
+          </AssociationSet>
+          <AssociationSet Name="aspnet_PermissionsInRoles" Association="REMI.Entities.aspnet_PermissionsInRoles">
+            <End Role="aspnet_Permissions" EntitySet="aspnet_Permissions" />
+            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="aspnet_UsersInRoles" Association="REMI.Entities.aspnet_UsersInRoles">
+            <End Role="aspnet_Roles" EntitySet="aspnet_Roles" />
+            <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+          </AssociationSet>
+          <EntitySet Name="LookupsHierarchies" EntityType="REMI.Entities.LookupsHierarchy" />
+          <AssociationSet Name="FK_LookupsHierarchy_Lookups" Association="REMI.Entities.FK_LookupsHierarchy_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_Lookups1" Association="REMI.Entities.FK_LookupsHierarchy_Lookups1">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_LookupType" Association="REMI.Entities.FK_LookupsHierarchy_LookupType">
+            <End Role="LookupType" EntitySet="LookupTypes" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_LookupType1" Association="REMI.Entities.FK_LookupsHierarchy_LookupType1">
+            <End Role="LookupType" EntitySet="LookupTypes" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_RequestType" Association="REMI.Entities.FK_LookupsHierarchy_RequestType">
+            <End Role="RequestType" EntitySet="RequestTypes" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
@@ -3702,28 +3875,6 @@
           <NavigationProperty Name="ApplicationProductVersions" Relationship="REMI.Entities.FK_ApplicationProductVersion_ApplicationVersions" FromRole="ApplicationVersion" ToRole="ApplicationProductVersion" />
           <NavigationProperty Name="Application" Relationship="REMI.Entities.FK_ApplicationVersions_Applications" FromRole="ApplicationVersion" ToRole="Application" />
         </EntityType>
-        <EntityType Name="aspnet_Applications">
-          <Key>
-            <PropertyRef Name="ApplicationId" />
-          </Key>
-          <Property Type="String" Name="ApplicationName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="LoweredApplicationName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Type="Guid" Name="ApplicationId" Nullable="false" />
-          <Property Type="String" Name="Description" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.FK__aspnet_Ro__Appli__40058253" FromRole="aspnet_Applications" ToRole="aspnet_Roles" />
-          <NavigationProperty Name="aspnet_Users" Relationship="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" FromRole="aspnet_Applications" ToRole="aspnet_Users" />
-          <NavigationProperty Name="aspnet_Permissions" Relationship="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" FromRole="aspnet_Applications" ToRole="aspnet_Permissions" />
-        </EntityType>
-        <EntityType Name="aspnet_Permissions">
-          <Key>
-            <PropertyRef Name="PermissionID" />
-          </Key>
-          <Property Type="Guid" Name="PermissionID" Nullable="false" />
-          <Property Type="String" Name="Permission" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Type="Guid" Name="ApplicationId" />
-          <NavigationProperty Name="aspnet_Applications" Relationship="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" FromRole="aspnet_Permissions" ToRole="aspnet_Applications" />
-          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.aspnet_PermissionsInRoles" FromRole="aspnet_Permissions" ToRole="aspnet_Roles" />
-        </EntityType>
         <EntityType Name="aspnet_Profile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -3734,21 +3885,6 @@
           <Property Type="Binary" Name="PropertyValuesBinary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Type="DateTime" Name="LastUpdatedDate" Nullable="false" Precision="3" />
           <NavigationProperty Name="aspnet_Users" Relationship="REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A" FromRole="aspnet_Profile" ToRole="aspnet_Users" />
-        </EntityType>
-        <EntityType Name="aspnet_Roles">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Type="Guid" Name="ApplicationId" Nullable="false" />
-          <Property Type="Guid" Name="RoleId" Nullable="false" />
-          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="LoweredRoleName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Description" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="hasProductCheck" />
-          <NavigationProperty Name="aspnet_Applications" Relationship="REMI.Entities.FK__aspnet_Ro__Appli__40058253" FromRole="aspnet_Roles" ToRole="aspnet_Applications" />
-          <NavigationProperty Name="aspnet_Permissions" Relationship="REMI.Entities.aspnet_PermissionsInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Permissions" />
-          <NavigationProperty Name="aspnet_Users" Relationship="REMI.Entities.aspnet_UsersInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Users" />
-          <NavigationProperty Name="ReqFieldSetupRoles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="aspnet_Roles" ToRole="ReqFieldSetupRole" />
         </EntityType>
         <EntityType Name="aspnet_SchemaVersions">
           <Key>
@@ -3770,8 +3906,8 @@
           <Property Type="String" Name="MobileAlias" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsAnonymous" Nullable="false" />
           <Property Type="DateTime" Name="LastActivityDate" Nullable="false" Precision="3" />
-          <NavigationProperty Name="aspnet_Applications" Relationship="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" FromRole="aspnet_Users" ToRole="aspnet_Applications" />
           <NavigationProperty Name="aspnet_Profile" Relationship="REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A" FromRole="aspnet_Users" ToRole="aspnet_Profile" />
+          <NavigationProperty Name="aspnet_Applications" Relationship="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" FromRole="aspnet_Users" ToRole="aspnet_Applications" />
           <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.aspnet_UsersInRoles" FromRole="aspnet_Users" ToRole="aspnet_Roles" />
         </EntityType>
         <EntityType Name="BatchComment">
@@ -3906,6 +4042,8 @@
           <Property Type="Int32" Name="LookupTypeID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Lookups" Relationship="REMI.Entities.FK_Lookups_LookupType" FromRole="LookupType" ToRole="Lookup" />
+          <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType" FromRole="LookupType" ToRole="LookupsHierarchy" />
+          <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType1" FromRole="LookupType" ToRole="LookupsHierarchy" />
         </EntityType>
         <EntityType Name="ProductConfiguration">
           <Key>
@@ -4365,42 +4503,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__aspnet_Ro__Appli__40058253">
-          <End Type="REMI.Entities.aspnet_Applications" Role="aspnet_Applications" Multiplicity="1" />
-          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="aspnet_Applications">
-              <PropertyRef Name="ApplicationId" />
-            </Principal>
-            <Dependent Role="aspnet_Roles">
-              <PropertyRef Name="ApplicationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__aspnet_Us__Appli__40F9A68C">
-          <End Type="REMI.Entities.aspnet_Applications" Role="aspnet_Applications" Multiplicity="1" />
-          <End Type="REMI.Entities.aspnet_Users" Role="aspnet_Users" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="aspnet_Applications">
-              <PropertyRef Name="ApplicationId" />
-            </Principal>
-            <Dependent Role="aspnet_Users">
-              <PropertyRef Name="ApplicationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_aspnet_Permissions_aspnet_Applications">
-          <End Type="REMI.Entities.aspnet_Applications" Role="aspnet_Applications" Multiplicity="0..1" />
-          <End Type="REMI.Entities.aspnet_Permissions" Role="aspnet_Permissions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="aspnet_Applications">
-              <PropertyRef Name="ApplicationId" />
-            </Principal>
-            <Dependent Role="aspnet_Permissions">
-              <PropertyRef Name="ApplicationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__aspnet_Pr__UserI__3F115E1A">
           <End Type="REMI.Entities.aspnet_Users" Role="aspnet_Users" Multiplicity="1" />
           <End Type="REMI.Entities.aspnet_Profile" Role="aspnet_Profile" Multiplicity="0..1" />
@@ -4857,14 +4959,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="aspnet_PermissionsInRoles">
-          <End Type="REMI.Entities.aspnet_Permissions" Role="aspnet_Permissions" Multiplicity="*" />
-          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
-        </Association>
-        <Association Name="aspnet_UsersInRoles">
-          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
-          <End Type="REMI.Entities.aspnet_Users" Role="aspnet_Users" Multiplicity="*" />
-        </Association>
         <EntityType Name="Batch">
           <Key>
             <PropertyRef Name="ID" />
@@ -5026,6 +5120,9 @@
           <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="Lookup" ToRole="UserDetail" />
           <NavigationProperty Name="RequestTypeAccesses" Relationship="REMI.Entities.FK_RequestTypeAccess_Lookups" FromRole="Lookup" ToRole="RequestTypeAccess" />
           <NavigationProperty Name="JobAccesses" Relationship="REMI.Entities.FK_JobAccess_Lookups" FromRole="Lookup" ToRole="JobAccess" />
+          <NavigationProperty Name="ServicesAccesses" Relationship="REMI.Entities.FK_ServicesAccess_Lookups" FromRole="Lookup" ToRole="ServicesAccess" />
+          <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups" FromRole="Lookup" ToRole="LookupsHierarchy" />
+          <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups1" FromRole="Lookup" ToRole="LookupsHierarchy" />
           </EntityType>
         <Association Name="FK_Batches_AccessoryGroup">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
@@ -5280,6 +5377,7 @@
           <NavigationProperty Name="ReqFieldMappings" Relationship="REMI.Entities.FK_ReqFieldMapping_RequestType" FromRole="RequestType" ToRole="ReqFieldMapping" />
           <Property Type="Boolean" Name="IsExternal" Nullable="false" />
           <NavigationProperty Name="RequestTypeAccesses" Relationship="REMI.Entities.FK_RequestTypeAccess_RequestType" FromRole="RequestType" ToRole="RequestTypeAccess" />
+          <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_RequestType" FromRole="RequestType" ToRole="LookupsHierarchy" />
         </EntityType>
         <Association Name="FK_RequestType_TypeID">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -5322,21 +5420,9 @@
           <Property Type="Int32" Name="ReqFieldSetupRoleID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
           <Property Type="Guid" Name="RoleID" Nullable="false" />
-          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="ReqFieldSetupRole" ToRole="aspnet_Roles" />
           <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" FromRole="ReqFieldSetupRole" ToRole="ReqFieldSetup" />
+          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="ReqFieldSetupRole" ToRole="aspnet_Roles" />
         </EntityType>
-        <Association Name="FK_ReqFieldSetupRole_aspnet_Roles">
-          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="1" />
-          <End Type="REMI.Entities.ReqFieldSetupRole" Role="ReqFieldSetupRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="aspnet_Roles">
-              <PropertyRef Name="RoleId" />
-            </Principal>
-            <Dependent Role="ReqFieldSetupRole">
-              <PropertyRef Name="RoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ReqFieldSetup_FieldTypeID">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
           <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="*" />
@@ -5690,6 +5776,218 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Service">
+          <Key>
+            <PropertyRef Name="ServiceID" />
+          </Key>
+          <Property Type="Int32" Name="ServiceID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="ServiceName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <NavigationProperty Name="ServicesAccesses" Relationship="REMI.Entities.FK_ServicesAccess_Services" FromRole="Service" ToRole="ServicesAccess" />
+        </EntityType>
+        <EntityType Name="ServicesAccess">
+          <Key>
+            <PropertyRef Name="ServiceAccessID" />
+          </Key>
+          <Property Type="Int32" Name="ServiceAccessID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ServiceID" Nullable="false" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ServicesAccess_Lookups" FromRole="ServicesAccess" ToRole="Lookup" />
+          <NavigationProperty Name="Service" Relationship="REMI.Entities.FK_ServicesAccess_Services" FromRole="ServicesAccess" ToRole="Service" />
+        </EntityType>
+        <Association Name="FK_ServicesAccess_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.ServicesAccess" Role="ServicesAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="ServicesAccess">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServicesAccess_Services">
+          <End Type="REMI.Entities.Service" Role="Service" Multiplicity="1" />
+          <End Type="REMI.Entities.ServicesAccess" Role="ServicesAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Service">
+              <PropertyRef Name="ServiceID" />
+            </Principal>
+            <Dependent Role="ServicesAccess">
+              <PropertyRef Name="ServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="aspnet_Applications">
+          <Key>
+            <PropertyRef Name="ApplicationId" />
+          </Key>
+          <Property Type="String" Name="ApplicationName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LoweredApplicationName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="Guid" Name="ApplicationId" Nullable="false" />
+          <Property Type="String" Name="Description" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="aspnet_Users" Relationship="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" FromRole="aspnet_Applications" ToRole="aspnet_Users" />
+          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.FK__aspnet_Ro__Appli__40058253" FromRole="aspnet_Applications" ToRole="aspnet_Roles" />
+          <NavigationProperty Name="aspnet_Permissions" Relationship="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" FromRole="aspnet_Applications" ToRole="aspnet_Permissions" />
+        </EntityType>
+        <Association Name="FK__aspnet_Us__Appli__40F9A68C">
+          <End Type="REMI.Entities.aspnet_Applications" Role="aspnet_Applications" Multiplicity="1" />
+          <End Type="REMI.Entities.aspnet_Users" Role="aspnet_Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aspnet_Applications">
+              <PropertyRef Name="ApplicationId" />
+            </Principal>
+            <Dependent Role="aspnet_Users">
+              <PropertyRef Name="ApplicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="aspnet_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Type="Guid" Name="ApplicationId" Nullable="false" />
+          <Property Type="Guid" Name="RoleId" Nullable="false" />
+          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LoweredRoleName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="hasProductCheck" />
+          <NavigationProperty Name="aspnet_Applications" Relationship="REMI.Entities.FK__aspnet_Ro__Appli__40058253" FromRole="aspnet_Roles" ToRole="aspnet_Applications" />
+          <NavigationProperty Name="ReqFieldSetupRoles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" FromRole="aspnet_Roles" ToRole="ReqFieldSetupRole" />
+          <NavigationProperty Name="aspnet_Permissions" Relationship="REMI.Entities.aspnet_PermissionsInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Permissions" />
+          <NavigationProperty Name="aspnet_Users" Relationship="REMI.Entities.aspnet_UsersInRoles" FromRole="aspnet_Roles" ToRole="aspnet_Users" />
+        </EntityType>
+        <Association Name="FK__aspnet_Ro__Appli__40058253">
+          <End Type="REMI.Entities.aspnet_Applications" Role="aspnet_Applications" Multiplicity="1" />
+          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aspnet_Applications">
+              <PropertyRef Name="ApplicationId" />
+            </Principal>
+            <Dependent Role="aspnet_Roles">
+              <PropertyRef Name="ApplicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReqFieldSetupRole_aspnet_Roles">
+          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldSetupRole" Role="ReqFieldSetupRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aspnet_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="ReqFieldSetupRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="aspnet_Permissions">
+          <Key>
+            <PropertyRef Name="PermissionID" />
+          </Key>
+          <Property Type="Guid" Name="PermissionID" Nullable="false" />
+          <Property Type="String" Name="Permission" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="Guid" Name="ApplicationId" />
+          <NavigationProperty Name="aspnet_Applications" Relationship="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" FromRole="aspnet_Permissions" ToRole="aspnet_Applications" />
+          <NavigationProperty Name="aspnet_Roles" Relationship="REMI.Entities.aspnet_PermissionsInRoles" FromRole="aspnet_Permissions" ToRole="aspnet_Roles" />
+        </EntityType>
+        <Association Name="FK_aspnet_Permissions_aspnet_Applications">
+          <End Type="REMI.Entities.aspnet_Applications" Role="aspnet_Applications" Multiplicity="0..1" />
+          <End Type="REMI.Entities.aspnet_Permissions" Role="aspnet_Permissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aspnet_Applications">
+              <PropertyRef Name="ApplicationId" />
+            </Principal>
+            <Dependent Role="aspnet_Permissions">
+              <PropertyRef Name="ApplicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="aspnet_PermissionsInRoles">
+          <End Type="REMI.Entities.aspnet_Permissions" Role="aspnet_Permissions" Multiplicity="*" />
+          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
+        </Association>
+        <Association Name="aspnet_UsersInRoles">
+          <End Type="REMI.Entities.aspnet_Roles" Role="aspnet_Roles" Multiplicity="*" />
+          <End Type="REMI.Entities.aspnet_Users" Role="aspnet_Users" Multiplicity="*" />
+        </Association>
+        <EntityType Name="LookupsHierarchy">
+          <Key>
+            <PropertyRef Name="LookupsHierarchyID" />
+          </Key>
+          <Property Type="Int32" Name="LookupsHierarchyID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ParentLookupTypeID" Nullable="false" />
+          <Property Type="Int32" Name="ChildLookupTypeID" Nullable="false" />
+          <Property Type="Int32" Name="ParentLookupID" Nullable="false" />
+          <Property Type="Int32" Name="ChildLookupID" Nullable="false" />
+          <Property Type="Int32" Name="RequestTypeID" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups" FromRole="LookupsHierarchy" ToRole="Lookup" />
+          <NavigationProperty Name="Lookup1" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups1" FromRole="LookupsHierarchy" ToRole="Lookup" />
+          <NavigationProperty Name="LookupType" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType" FromRole="LookupsHierarchy" ToRole="LookupType" />
+          <NavigationProperty Name="LookupType1" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType1" FromRole="LookupsHierarchy" ToRole="LookupType" />
+          <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_LookupsHierarchy_RequestType" FromRole="LookupsHierarchy" ToRole="RequestType" />
+        </EntityType>
+        <Association Name="FK_LookupsHierarchy_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ParentLookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_Lookups1">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ChildLookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_LookupType">
+          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="1" />
+          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupType">
+              <PropertyRef Name="LookupTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ParentLookupTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_LookupType1">
+          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="1" />
+          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupType">
+              <PropertyRef Name="LookupTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ChildLookupTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_RequestType">
+          <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="1" />
+          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestType">
+              <PropertyRef Name="RequestTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="RequestTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5950,25 +6248,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="aspnet_Applications">
-            <EntityTypeMapping TypeName="REMI.Entities.aspnet_Applications">
-              <MappingFragment StoreEntitySet="aspnet_Applications">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
-                <ScalarProperty Name="LoweredApplicationName" ColumnName="LoweredApplicationName" />
-                <ScalarProperty Name="ApplicationName" ColumnName="ApplicationName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="aspnet_Permissions">
-            <EntityTypeMapping TypeName="REMI.Entities.aspnet_Permissions">
-              <MappingFragment StoreEntitySet="aspnet_Permissions">
-                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
-                <ScalarProperty Name="Permission" ColumnName="Permission" />
-                <ScalarProperty Name="PermissionID" ColumnName="PermissionID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="aspnet_Profile">
             <EntityTypeMapping TypeName="REMI.Entities.aspnet_Profile">
               <MappingFragment StoreEntitySet="aspnet_Profile">
@@ -5977,18 +6256,6 @@
                 <ScalarProperty Name="PropertyValuesString" ColumnName="PropertyValuesString" />
                 <ScalarProperty Name="PropertyNames" ColumnName="PropertyNames" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="aspnet_Roles">
-            <EntityTypeMapping TypeName="REMI.Entities.aspnet_Roles">
-              <MappingFragment StoreEntitySet="aspnet_Roles">
-                <ScalarProperty Name="hasProductCheck" ColumnName="hasProductCheck" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="LoweredRoleName" ColumnName="LoweredRoleName" />
-                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -6511,22 +6778,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="aspnet_PermissionsInRoles" TypeName="REMI.Entities.aspnet_PermissionsInRoles" StoreEntitySet="aspnet_PermissionsInRoles">
-            <EndProperty Name="aspnet_Roles">
-              <ScalarProperty Name="RoleId" ColumnName="RoleID" />
-            </EndProperty>
-            <EndProperty Name="aspnet_Permissions">
-              <ScalarProperty Name="PermissionID" ColumnName="PermissionID" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="aspnet_UsersInRoles" TypeName="REMI.Entities.aspnet_UsersInRoles" StoreEntitySet="aspnet_UsersInRoles">
-            <EndProperty Name="aspnet_Users">
-              <ScalarProperty Name="UserId" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="aspnet_Roles">
-              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="Batches">
             <EntityTypeMapping TypeName="REMI.Entities.Batch">
               <MappingFragment StoreEntitySet="Batches">
@@ -6747,7 +6998,84 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="Services">
+            <EntityTypeMapping TypeName="REMI.Entities.Service">
+              <MappingFragment StoreEntitySet="Services">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServicesAccesses">
+            <EntityTypeMapping TypeName="REMI.Entities.ServicesAccess">
+              <MappingFragment StoreEntitySet="ServicesAccess">
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
+                <ScalarProperty Name="ServiceAccessID" ColumnName="ServiceAccessID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="aspnet_Applications">
+            <EntityTypeMapping TypeName="REMI.Entities.aspnet_Applications">
+              <MappingFragment StoreEntitySet="aspnet_Applications">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+                <ScalarProperty Name="LoweredApplicationName" ColumnName="LoweredApplicationName" />
+                <ScalarProperty Name="ApplicationName" ColumnName="ApplicationName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="aspnet_Roles">
+            <EntityTypeMapping TypeName="REMI.Entities.aspnet_Roles">
+              <MappingFragment StoreEntitySet="aspnet_Roles">
+                <ScalarProperty Name="hasProductCheck" ColumnName="hasProductCheck" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="LoweredRoleName" ColumnName="LoweredRoleName" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="aspnet_Permissions">
+            <EntityTypeMapping TypeName="REMI.Entities.aspnet_Permissions">
+              <MappingFragment StoreEntitySet="aspnet_Permissions">
+                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+                <ScalarProperty Name="Permission" ColumnName="Permission" />
+                <ScalarProperty Name="PermissionID" ColumnName="PermissionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="aspnet_PermissionsInRoles" TypeName="REMI.Entities.aspnet_PermissionsInRoles" StoreEntitySet="aspnet_PermissionsInRoles">
+            <EndProperty Name="aspnet_Roles">
+              <ScalarProperty Name="RoleId" ColumnName="RoleID" />
+            </EndProperty>
+            <EndProperty Name="aspnet_Permissions">
+              <ScalarProperty Name="PermissionID" ColumnName="PermissionID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="aspnet_UsersInRoles" TypeName="REMI.Entities.aspnet_UsersInRoles" StoreEntitySet="aspnet_UsersInRoles">
+            <EndProperty Name="aspnet_Users">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="aspnet_Roles">
+              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="LookupsHierarchies">
+            <EntityTypeMapping TypeName="REMI.Entities.LookupsHierarchy">
+              <MappingFragment StoreEntitySet="LookupsHierarchy">
+                <ScalarProperty Name="RequestTypeID" ColumnName="RequestTypeID" />
+                <ScalarProperty Name="ChildLookupID" ColumnName="ChildLookupID" />
+                <ScalarProperty Name="ParentLookupID" ColumnName="ParentLookupID" />
+                <ScalarProperty Name="ChildLookupTypeID" ColumnName="ChildLookupTypeID" />
+                <ScalarProperty Name="ParentLookupTypeID" ColumnName="ParentLookupTypeID" />
+                <ScalarProperty Name="LookupsHierarchyID" ColumnName="LookupsHierarchyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -6773,15 +7101,15 @@
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfo" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfoCompleted" Width="1.5" PointX="0.75" PointY="5.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_TestRecordAudit" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="15.75" PointY="55.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="20.25" PointY="65" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="23.25" PointY="52" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="25.5" PointY="50.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="25.5" PointY="53.75" />
+        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="18.75" PointY="59.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="23.25" PointY="68.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="23.25" PointY="55.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="25.5" PointY="54.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="25.5" PointY="57.125" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsOrphaned" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="25.5" PointY="56.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="18" PointY="64.375" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="13.5" PointY="43" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="25.5" PointY="60.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="21" PointY="68" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="13.5" PointY="46.625" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultXML_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
@@ -6790,58 +7118,52 @@
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsFiles_ResultsMeasurements" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsParameters_ResultsMeasurements" />
         <EntityTypeShape EntityType="REMI.Entities.ApplicationLog" Width="1.5" PointX="6.75" PointY="4.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="8.25" PointY="65.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="3.75" PointY="69.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="6" PointY="69.625" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="8.25" PointY="54.875" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="8.25" PointY="58" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="18" PointY="60.75" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="1.5" PointX="10.5" PointY="55.875" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="5.25" PointY="63.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="0.75" PointY="65.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="3" PointY="65.25" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="16" PointY="75" />
         <EntityTypeShape EntityType="REMI.Entities.aspnet_SchemaVersions" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="1.5" PointX="15.75" PointY="60.375" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="13.5" PointY="52.25" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="2.5" PointX="12.75" PointY="74.625" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="13.5" PointY="55.875" />
         <EntityTypeShape EntityType="REMI.Entities.BatchesAudit" Width="1.5" PointX="8.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="16.5" PointY="43.375" />
-        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="16.5" PointY="30.25" />
-        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="15.75" PointY="51.5" />
-        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="36" />
-        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="31.5" />
-        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="43.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="1.5" PointX="6" PointY="58.375" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="3.75" PointY="58.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="1.5" PointX="6" PointY="65.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="8.25" PointY="43.375" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="5.25" PointY="47.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="9" PointY="31" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="17.25" PointY="26.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="19.5" PointY="30.25" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="13.5" PointY="51" />
+        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="16.5" PointY="33.625" />
+        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="15.75" PointY="53.125" />
+        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="38.625" />
+        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="36.25" />
+        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="47.375" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="1.5" PointX="3" PointY="57" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="0.75" PointY="56.875" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="1.5" PointX="3" PointY="61.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="51" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="8.25" PointY="43.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="6" PointY="31.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="11.25" PointY="29.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="13.5" PointY="33.5" />
         <EntityTypeShape EntityType="REMI.Entities.StationConfigurationUpload" Width="1.5" PointX="4.75" PointY="8.75" />
         <EntityTypeShape EntityType="REMI.Entities.sysdiagram" Width="1.5" PointX="10.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.TargetAccess" Width="1.5" PointX="10.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="13.5" PointY="47.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="78.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="16.5" PointY="47" />
+        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="87.875" />
         <EntityTypeShape EntityType="REMI.Entities.TestExceptionsAudit" Width="1.5" PointX="10.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="18.75" PointY="54.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="15.75" PointY="58.5" />
         <EntityTypeShape EntityType="REMI.Entities.TestRecordsAudit" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="21" PointY="54.625" />
-        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="14.25" PointY="29.125" />
-        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="11.25" PointY="30.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="8.25" PointY="46.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="17.5" PointY="40.125" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="10.5" PointY="51.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="12.75" PointY="35.875" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="15" PointY="39.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="10.5" PointY="36.25" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="8.25" PointY="51.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="6" PointY="54.125" />
-        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="15.25" PointY="35.5" />
-        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="5.25" PointY="43.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="18" PointY="56.25" />
+        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="11.25" PointY="33.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="11.25" PointY="58.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="8.25" PointY="46.375" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="13.5" PointY="43.625" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="10.5" PointY="55" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="12.75" PointY="39.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="16" PointY="43.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="10.5" PointY="39.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="8.25" PointY="59.125" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="6" PointY="58.75" />
+        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="8.25" PointY="35.625" />
+        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="5.25" PointY="54.875" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ApplicationVersions" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ProductConfigurationVersion" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationVersions_Applications" />
-        <AssociationConnector Association="REMI.Entities.FK__aspnet_Ro__Appli__40058253" />
-        <AssociationConnector Association="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" />
-        <AssociationConnector Association="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" />
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A" />
         <AssociationConnector Association="REMI.Entities.FK_BatchSpecificTestDurations_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_Calibration_Products" />
@@ -6880,16 +7202,14 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfiguration_TrackingLocationsPlugin" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationTypePermissions_TrackingLocationTypes" />
-        <AssociationConnector Association="REMI.Entities.aspnet_PermissionsInRoles" />
-        <AssociationConnector Association="REMI.Entities.aspnet_UsersInRoles" />
-        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="11.25" PointY="39.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="11.25" PointY="43" />
         <AssociationConnector Association="REMI.Entities.FK_BatchComments_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_JobOrientation" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Products" />
         <AssociationConnector Association="REMI.Entities.FK_BatchSpecificTestDurations_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_TaskAssignment_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="41.25" />
+        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="44.625" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_AccessoryGroup" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Department" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Priority" />
@@ -6907,43 +7227,61 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_LookupsLevel" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldData" Width="1.5" PointX="12.75" PointY="65.25" />
-        <EntityTypeShape EntityType="REMI.Entities.Request" Width="1.5" PointX="10.5" PointY="66.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldData" Width="1.5" PointX="12.75" PointY="68.5" />
+        <EntityTypeShape EntityType="REMI.Entities.Request" Width="1.5" PointX="10.5" PointY="74.875" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_Request" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="82.125" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="91.125" />
         <AssociationConnector Association="REMI.Entities.FK_RequestType_TypeID" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="10.5" PointY="61.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="1.5" PointX="12.75" PointY="62.375" />
-        <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="7.5" PointY="67.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="2.875" PointX="9.75" PointY="71.625" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_RequestType" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="90.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="99.75" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="6" PointY="50.75" />
-        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="8.25" PointY="40.75" />
-        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="5.25" PointY="39.625" />
-        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="3" PointY="37.125" />
+        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="3" PointY="38.5" />
+        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="5.25" PointY="44.375" />
+        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="5.25" PointY="47.25" />
+        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="3" PointY="52.75" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Menu" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UsersProducts_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Users" />
-        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="13.5" PointY="55.375" />
+        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="13.5" PointY="59" />
         <EntityTypeShape EntityType="REMI.Entities.UsersAudit" Width="1.5" PointX="8.75" PointY="10.75" />
         <AssociationConnector Association="REMI.Entities.FK_TestUnits_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecords_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_Results_TestUnits" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="7.5" PointY="62.25" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="10.5" PointY="68.625" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="5.25" PointY="36.75" />
+        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="8.25" PointY="51.375" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Jobs" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Lookups" />
-      </Diagram></edmx:Diagrams>
+        <EntityTypeShape EntityType="REMI.Entities.Service" Width="1.5" PointX="3" PointY="41.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ServicesAccess" Width="1.5" PointX="5.25" PointY="41.375" />
+        <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Services" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="4.375" PointY="73.125" />
+        <AssociationConnector Association="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="2.375" PointX="6.625" PointY="74.25" />
+        <AssociationConnector Association="REMI.Entities.FK__aspnet_Ro__Appli__40058253" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="4.375" PointY="76.25" />
+        <AssociationConnector Association="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" />
+        <AssociationConnector Association="REMI.Entities.aspnet_PermissionsInRoles" />
+        <AssociationConnector Association="REMI.Entities.aspnet_UsersInRoles" />
+        <EntityTypeShape EntityType="REMI.Entities.LookupsHierarchy" Width="1.5" PointX="10.5" PointY="64.125" />
+        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_Lookups1" />
+        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType" />
+        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType1" />
+        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_RequestType" />
+        </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -1,8 +1,19 @@
-﻿ALTER PROCEDURE remispGetLookups @Type NVARCHAR(150), @ProductID INT = NULL, @ParentID INT = NULL
+﻿ALTER PROCEDURE remispGetLookups @Type NVARCHAR(150), @ProductID INT = NULL, @ParentID INT = NULL, @ParentLookupType NVARCHAR(150) = NULL, @ParentLookup NVARCHAR(150) = NULL, @RequestTypeID INT = NULL
 AS
 BEGIN
 	DECLARE @LookupTypeID INT
+	DECLARE @ParentLookupTypeID INT
+	DECLARE @HierarchyExists BIT
+	SET @HierarchyExists = CONVERT(BIT, 0)
+	DECLARE @ParentLookupID INT
 	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@Type
+	SELECT @ParentLookupTypeID = LookupTypeID FROM LookupType WHERE Name=@ParentLookupType
+	SELECT @ParentLookupID = LookupID FROM Lookups WHERE LookupTypeID=@ParentLookupTypeID AND Lookups.[Values]=@ParentLookup
+	
+	SET @HierarchyExists = ISNULL((SELECT TOP 1 CONVERT(BIT, 1) 
+	FROM LookupsHierarchy lh
+	WHERE lh.ParentLookupTypeID=@ParentLookupTypeID AND lh.ChildLookupTypeID=@LookupTypeID
+		AND lh.ParentLookupID=@ParentLookupID AND lh.RequestTypeID=@RequestTypeID), CONVERT(BIT, 0))
 
 	SELECT l.LookupID, @Type AS [Type], l.[Values] As LookupType, CASE WHEN pl.ID IS NOT NULL THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END As HasAccess, 
 		l.Description, ISNULL(l.ParentID, 0) AS ParentID, p.[Values] AS Parent
@@ -15,6 +26,17 @@ BEGIN
 			(@ParentID IS NOT NULL AND ISNULL(@ParentID, 0) <> 0 AND ISNULL(l.ParentID, 0) = ISNULL(@ParentID, 0))
 			OR
 			(@ParentID IS NULL OR ISNULL(@ParentID, 0) = 0)
+		)
+		AND
+		(
+			(l.LookupID IN (SELECT ChildLookupID 
+						FROM LookupsHierarchy lh 
+						WHERE lh.ParentLookupTypeID=@ParentLookupTypeID AND lh.ChildLookupTypeID=@LookupTypeID
+							AND lh.ParentLookupID=@ParentLookupID AND lh.RequestTypeID=@RequestTypeID
+						)
+			) 
+			OR
+			@HierarchyExists = CONVERT(BIT, 0)
 		)
 		
 	; WITH cte AS

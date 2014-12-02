@@ -7,14 +7,26 @@ Namespace REMI.Bll
     Public Class LookupsManager
         Inherits REMIManagerBase
 
-        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
+            Try
+                Return GetLookups(type.ToString(), productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, RemoveFirst)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("Lookups")
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
             Try
                 'All Test Centers
-                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID)
+                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID)
 
-                If (type = Contracts.LookupType.TestCenter) Then
+                If (type = "TestCenter") Then
                     dt.Rows(0).Item("LookupType") = "All Test Centers"
-                ElseIf (type = Contracts.LookupType.Department) Then
+                ElseIf (type = "Department") Then
                     dt.Rows(0).Item("LookupType") = "All Departments"
                 End If
 
@@ -30,7 +42,7 @@ Namespace REMI.Bll
             Return New DataTable("Lookups")
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
         Public Shared Function SaveLookup(ByVal lookupType As String, ByVal value As String, ByVal isActive As Int32, ByVal description As String, ByVal parentID As Int32) As Boolean
             Try
                 Return LookupsDB.SaveLookup(lookupType, value, isActive, description, parentID)
@@ -42,6 +54,11 @@ Namespace REMI.Bll
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
+            Return GetLookupID(type.ToString(), lookup, parentID)
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
+        Public Shared Function GetLookupID(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32
             Try
                 Return LookupsDB.GetLookupID(type, lookup, parentID)
             Catch ex As Exception
@@ -50,59 +67,59 @@ Namespace REMI.Bll
             End Try
         End Function
 
-        ''' <summary>
-        ''' Gets a list of Product Types from the database.
-        ''' </summary>
-        ''' <returns> A collection of products.</returns>
-        ''' <remarks></remarks>
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetOracleProductTypeList() As List(Of String)
-            Try
-                Return LookupsDB.GetOracleProductTypeList()
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-                Return New List(Of String)
-            End Try
-        End Function
+        ' ''' <summary>
+        ' ''' Gets a list of Product Types from the database.
+        ' ''' </summary>
+        ' ''' <returns> A collection of products.</returns>
+        ' ''' <remarks></remarks>
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetOracleProductTypeList() As List(Of String)
+        '    Try
+        '        Return LookupsDB.GetOracleProductTypeList()
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+        '        Return New List(Of String)
+        '    End Try
+        'End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetOracleDepartmentList() As List(Of String)
-            Try
-                Return LookupsDB.GetOracleDepartmentList()
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-                Return New List(Of String)
-            End Try
-        End Function
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetOracleDepartmentList() As List(Of String)
+        '    Try
+        '        Return LookupsDB.GetOracleDepartmentList()
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+        '        Return New List(Of String)
+        '    End Try
+        'End Function
 
-        ''' <summary>
-        ''' Gets a list of AccessoryGroups from the database.
-        ''' </summary>
-        ''' <returns> A collection of Accessorys.</returns>
-        ''' <remarks></remarks>
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetOracleAccessoryGroupList() As List(Of String)
-            Try
-                Return LookupsDB.GetOracleAccessoryList()
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-                Return New List(Of String)
-            End Try
-        End Function
+        ' ''' <summary>
+        ' ''' Gets a list of AccessoryGroups from the database.
+        ' ''' </summary>
+        ' ''' <returns> A collection of Accessorys.</returns>
+        ' ''' <remarks></remarks>
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetOracleAccessoryGroupList() As List(Of String)
+        '    Try
+        '        Return LookupsDB.GetOracleAccessoryList()
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+        '        Return New List(Of String)
+        '    End Try
+        'End Function
 
-        ''' <summary>
-        ''' Gets a list of AccessoryGroups from the database.
-        ''' </summary>
-        ''' <returns> A collection of Accessorys.</returns>
-        ''' <remarks></remarks>
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetOracleTestCentersList() As List(Of String)
-            Try
-                Return LookupsDB.GetOracleTestCentersList()
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-                Return New List(Of String)
-            End Try
-        End Function
+        ' ''' <summary>
+        ' ''' Gets a list of AccessoryGroups from the database.
+        ' ''' </summary>
+        ' ''' <returns> A collection of Accessorys.</returns>
+        ' ''' <remarks></remarks>
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetOracleTestCentersList() As List(Of String)
+        '    Try
+        '        Return LookupsDB.GetOracleTestCentersList()
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+        '        Return New List(Of String)
+        '    End Try
+        'End Function
     End Class
 End Namespace

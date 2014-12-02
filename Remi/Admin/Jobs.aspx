@@ -93,7 +93,7 @@
                         AutoPostBack="True">
                     </asp:DropDownList>
                     <asp:ObjectDataSource ID="odsJobsList" runat="server" OldValuesParameterFormatString="original_{0}"
-                        SelectMethod="GetJobListForTestStations" TypeName="REMI.Bll.JobManager" DeleteMethod="DeleteJob">
+                        SelectMethod="GetJobList" TypeName="REMI.Bll.JobManager" DeleteMethod="DeleteJob">
                         <DeleteParameters>
                             <asp:Parameter Name="ID" Type="Int32" />
                         </DeleteParameters>
@@ -332,9 +332,12 @@
                             </asp:GridView>
                             <asp:ObjectDataSource ID="odsDepartments" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookups" TypeName="REMI.Bll.LookupsManager">
                                 <SelectParameters>
-                                    <asp:Parameter Type="Int32" Name="Type" DefaultValue="16" />
+                                    <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
                                     <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
                                     <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                                    <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                                    <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                                    <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                                     <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
                                 </SelectParameters>
                             </asp:ObjectDataSource>

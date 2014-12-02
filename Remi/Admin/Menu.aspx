@@ -47,6 +47,7 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
+    <uc1:Notifications runat="server" ID="notMain" EnableViewState="false" />
     <br />
     <h2>Menu Options</h2>
     <asp:GridView runat="server" ID="grdMenu" AutoGenerateEditButton="true" DataKeyNames="MenuID" OnRowEditing="grdMenu_OnRowEditing" OnRowCancelingEdit="grdMenu_OnRowCancelingEdit" OnRowUpdating="grdMenu_RowUpdating" AutoGenerateColumns="false">
