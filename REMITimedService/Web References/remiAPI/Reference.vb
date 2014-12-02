@@ -85,29 +85,23 @@ Namespace RemiAPI
         
         Private GetLookupIDByTypeStringOperationCompleted As System.Threading.SendOrPostCallback
         
-        Private GetLookupIDOperationCompleted As System.Threading.SendOrPostCallback
-        
         Private GetLookupsTypeStringByProductOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetLookupsTypeStringByProductParentOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetLookupsAdvancedOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetLookupsByTypeStringOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private SaveLookupOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetLookupIDOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetLookupsByProductOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetLookupsByProductParentOperationCompleted As System.Threading.SendOrPostCallback
         
-        Private GetLookupsTypeStringByProductParentOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private GetLookupsByTypeStringOperationCompleted As System.Threading.SendOrPostCallback
-        
         Private GetLookupsOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private SaveLookupOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private GetOracleAccessoryTypesOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private GetOracleTestCentersOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private GetOracleProductTypesOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private GetOracleDepartmentListOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetJobsOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -116,8 +110,6 @@ Namespace RemiAPI
         Private GetOrientationsByJobOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetJobAccessOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private GetTRSJobsOperationCompleted As System.Threading.SendOrPostCallback
         
         Private SaveJobOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -128,8 +120,6 @@ Namespace RemiAPI
         Private GetUserOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetFriendlyUserIDOperationCompleted As System.Threading.SendOrPostCallback
-        
-        Private GetProductOracleListOperationCompleted As System.Threading.SendOrPostCallback
         
         Private UpdateProductOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -199,6 +189,8 @@ Namespace RemiAPI
         
         Private GetRequestsNotInREMIOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetRequestsForDashBoardOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private CheckBatchForStatusUpdatesOperationCompleted As System.Threading.SendOrPostCallback
         
         Private ScanOperationCompleted As System.Threading.SendOrPostCallback
@@ -230,6 +222,8 @@ Namespace RemiAPI
         Private AddExceptionOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetRequestOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetServicesAccessOperationCompleted As System.Threading.SendOrPostCallback
         
         Private useDefaultCredentialsSetExplicitly As Boolean
         
@@ -348,10 +342,22 @@ Namespace RemiAPI
         Public Event GetLookupIDByTypeStringCompleted As GetLookupIDByTypeStringCompletedEventHandler
         
         '''<remarks/>
-        Public Event GetLookupIDCompleted As GetLookupIDCompletedEventHandler
+        Public Event GetLookupsTypeStringByProductCompleted As GetLookupsTypeStringByProductCompletedEventHandler
         
         '''<remarks/>
-        Public Event GetLookupsTypeStringByProductCompleted As GetLookupsTypeStringByProductCompletedEventHandler
+        Public Event GetLookupsTypeStringByProductParentCompleted As GetLookupsTypeStringByProductParentCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetLookupsAdvancedCompleted As GetLookupsAdvancedCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetLookupsByTypeStringCompleted As GetLookupsByTypeStringCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event SaveLookupCompleted As SaveLookupCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetLookupIDCompleted As GetLookupIDCompletedEventHandler
         
         '''<remarks/>
         Public Event GetLookupsByProductCompleted As GetLookupsByProductCompletedEventHandler
@@ -360,28 +366,7 @@ Namespace RemiAPI
         Public Event GetLookupsByProductParentCompleted As GetLookupsByProductParentCompletedEventHandler
         
         '''<remarks/>
-        Public Event GetLookupsTypeStringByProductParentCompleted As GetLookupsTypeStringByProductParentCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event GetLookupsByTypeStringCompleted As GetLookupsByTypeStringCompletedEventHandler
-        
-        '''<remarks/>
         Public Event GetLookupsCompleted As GetLookupsCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event SaveLookupCompleted As SaveLookupCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event GetOracleAccessoryTypesCompleted As GetOracleAccessoryTypesCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event GetOracleTestCentersCompleted As GetOracleTestCentersCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event GetOracleProductTypesCompleted As GetOracleProductTypesCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event GetOracleDepartmentListCompleted As GetOracleDepartmentListCompletedEventHandler
         
         '''<remarks/>
         Public Event GetJobsCompleted As GetJobsCompletedEventHandler
@@ -394,9 +379,6 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetJobAccessCompleted As GetJobAccessCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event GetTRSJobsCompleted As GetTRSJobsCompletedEventHandler
         
         '''<remarks/>
         Public Event SaveJobCompleted As SaveJobCompletedEventHandler
@@ -412,9 +394,6 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetFriendlyUserIDCompleted As GetFriendlyUserIDCompletedEventHandler
-        
-        '''<remarks/>
-        Public Event GetProductOracleListCompleted As GetProductOracleListCompletedEventHandler
         
         '''<remarks/>
         Public Event UpdateProductCompleted As UpdateProductCompletedEventHandler
@@ -519,6 +498,9 @@ Namespace RemiAPI
         Public Event GetRequestsNotInREMICompleted As GetRequestsNotInREMICompletedEventHandler
         
         '''<remarks/>
+        Public Event GetRequestsForDashBoardCompleted As GetRequestsForDashBoardCompletedEventHandler
+        
+        '''<remarks/>
         Public Event CheckBatchForStatusUpdatesCompleted As CheckBatchForStatusUpdatesCompletedEventHandler
         
         '''<remarks/>
@@ -565,6 +547,9 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetRequestCompleted As GetRequestCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetServicesAccessCompleted As GetServicesAccessCompletedEventHandler
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SearchBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
@@ -1336,33 +1321,6 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupID", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetLookupID(ByVal type As LookupType, ByVal lookup As String, ByVal parentID As Integer) As Integer
-            Dim results() As Object = Me.Invoke("GetLookupID", New Object() {type, lookup, parentID})
-            Return CType(results(0),Integer)
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetLookupIDAsync(ByVal type As LookupType, ByVal lookup As String, ByVal parentID As Integer)
-            Me.GetLookupIDAsync(type, lookup, parentID, Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetLookupIDAsync(ByVal type As LookupType, ByVal lookup As String, ByVal parentID As Integer, ByVal userState As Object)
-            If (Me.GetLookupIDOperationCompleted Is Nothing) Then
-                Me.GetLookupIDOperationCompleted = AddressOf Me.OnGetLookupIDOperationCompleted
-            End If
-            Me.InvokeAsync("GetLookupID", New Object() {type, lookup, parentID}, Me.GetLookupIDOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetLookupIDOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetLookupIDCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetLookupIDCompleted(Me, New GetLookupIDCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupsTypeStringByProduct", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function GetLookupsTypeStringByProduct(ByVal type As String, ByVal productID As Integer) As System.Data.DataTable
             Dim results() As Object = Me.Invoke("GetLookupsTypeStringByProduct", New Object() {type, productID})
@@ -1386,6 +1344,141 @@ Namespace RemiAPI
             If (Not (Me.GetLookupsTypeStringByProductCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetLookupsTypeStringByProductCompleted(Me, New GetLookupsTypeStringByProductCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupsTypeStringByProductParent", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetLookupsTypeStringByProductParent(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetLookupsTypeStringByProductParent", New Object() {type, productID, parentID})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupsTypeStringByProductParentAsync(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer)
+            Me.GetLookupsTypeStringByProductParentAsync(type, productID, parentID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupsTypeStringByProductParentAsync(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer, ByVal userState As Object)
+            If (Me.GetLookupsTypeStringByProductParentOperationCompleted Is Nothing) Then
+                Me.GetLookupsTypeStringByProductParentOperationCompleted = AddressOf Me.OnGetLookupsTypeStringByProductParentOperationCompleted
+            End If
+            Me.InvokeAsync("GetLookupsTypeStringByProductParent", New Object() {type, productID, parentID}, Me.GetLookupsTypeStringByProductParentOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetLookupsTypeStringByProductParentOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetLookupsTypeStringByProductParentCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetLookupsTypeStringByProductParentCompleted(Me, New GetLookupsTypeStringByProductParentCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupsAdvanced", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetLookupsAdvanced(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Integer, ByVal removeFirstAllRecord As Integer) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetLookupsAdvanced", New Object() {type, productID, parentID, parentLookupType, parentLookupValue, requestTypeID, removeFirstAllRecord})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupsAdvancedAsync(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Integer, ByVal removeFirstAllRecord As Integer)
+            Me.GetLookupsAdvancedAsync(type, productID, parentID, parentLookupType, parentLookupValue, requestTypeID, removeFirstAllRecord, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupsAdvancedAsync(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Integer, ByVal removeFirstAllRecord As Integer, ByVal userState As Object)
+            If (Me.GetLookupsAdvancedOperationCompleted Is Nothing) Then
+                Me.GetLookupsAdvancedOperationCompleted = AddressOf Me.OnGetLookupsAdvancedOperationCompleted
+            End If
+            Me.InvokeAsync("GetLookupsAdvanced", New Object() {type, productID, parentID, parentLookupType, parentLookupValue, requestTypeID, removeFirstAllRecord}, Me.GetLookupsAdvancedOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetLookupsAdvancedOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetLookupsAdvancedCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetLookupsAdvancedCompleted(Me, New GetLookupsAdvancedCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupsByTypeString", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetLookupsByTypeString(ByVal type As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetLookupsByTypeString", New Object() {type})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupsByTypeStringAsync(ByVal type As String)
+            Me.GetLookupsByTypeStringAsync(type, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupsByTypeStringAsync(ByVal type As String, ByVal userState As Object)
+            If (Me.GetLookupsByTypeStringOperationCompleted Is Nothing) Then
+                Me.GetLookupsByTypeStringOperationCompleted = AddressOf Me.OnGetLookupsByTypeStringOperationCompleted
+            End If
+            Me.InvokeAsync("GetLookupsByTypeString", New Object() {type}, Me.GetLookupsByTypeStringOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetLookupsByTypeStringOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetLookupsByTypeStringCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetLookupsByTypeStringCompleted(Me, New GetLookupsByTypeStringCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SaveLookup", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function SaveLookup(ByVal lookupType As String, ByVal value As String, ByVal isActive As Integer, ByVal description As String, ByVal parentID As Integer) As Boolean
+            Dim results() As Object = Me.Invoke("SaveLookup", New Object() {lookupType, value, isActive, description, parentID})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub SaveLookupAsync(ByVal lookupType As String, ByVal value As String, ByVal isActive As Integer, ByVal description As String, ByVal parentID As Integer)
+            Me.SaveLookupAsync(lookupType, value, isActive, description, parentID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SaveLookupAsync(ByVal lookupType As String, ByVal value As String, ByVal isActive As Integer, ByVal description As String, ByVal parentID As Integer, ByVal userState As Object)
+            If (Me.SaveLookupOperationCompleted Is Nothing) Then
+                Me.SaveLookupOperationCompleted = AddressOf Me.OnSaveLookupOperationCompleted
+            End If
+            Me.InvokeAsync("SaveLookup", New Object() {lookupType, value, isActive, description, parentID}, Me.SaveLookupOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSaveLookupOperationCompleted(ByVal arg As Object)
+            If (Not (Me.SaveLookupCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent SaveLookupCompleted(Me, New SaveLookupCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupID", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetLookupID(ByVal type As LookupType, ByVal lookup As String, ByVal parentID As Integer) As Integer
+            Dim results() As Object = Me.Invoke("GetLookupID", New Object() {type, lookup, parentID})
+            Return CType(results(0),Integer)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupIDAsync(ByVal type As LookupType, ByVal lookup As String, ByVal parentID As Integer)
+            Me.GetLookupIDAsync(type, lookup, parentID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetLookupIDAsync(ByVal type As LookupType, ByVal lookup As String, ByVal parentID As Integer, ByVal userState As Object)
+            If (Me.GetLookupIDOperationCompleted Is Nothing) Then
+                Me.GetLookupIDOperationCompleted = AddressOf Me.OnGetLookupIDOperationCompleted
+            End If
+            Me.InvokeAsync("GetLookupID", New Object() {type, lookup, parentID}, Me.GetLookupIDOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetLookupIDOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetLookupIDCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetLookupIDCompleted(Me, New GetLookupIDCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -1444,60 +1537,6 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupsTypeStringByProductParent", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetLookupsTypeStringByProductParent(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer) As System.Data.DataTable
-            Dim results() As Object = Me.Invoke("GetLookupsTypeStringByProductParent", New Object() {type, productID, parentID})
-            Return CType(results(0),System.Data.DataTable)
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetLookupsTypeStringByProductParentAsync(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer)
-            Me.GetLookupsTypeStringByProductParentAsync(type, productID, parentID, Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetLookupsTypeStringByProductParentAsync(ByVal type As String, ByVal productID As Integer, ByVal parentID As Integer, ByVal userState As Object)
-            If (Me.GetLookupsTypeStringByProductParentOperationCompleted Is Nothing) Then
-                Me.GetLookupsTypeStringByProductParentOperationCompleted = AddressOf Me.OnGetLookupsTypeStringByProductParentOperationCompleted
-            End If
-            Me.InvokeAsync("GetLookupsTypeStringByProductParent", New Object() {type, productID, parentID}, Me.GetLookupsTypeStringByProductParentOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetLookupsTypeStringByProductParentOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetLookupsTypeStringByProductParentCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetLookupsTypeStringByProductParentCompleted(Me, New GetLookupsTypeStringByProductParentCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookupsByTypeString", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetLookupsByTypeString(ByVal type As String) As System.Data.DataTable
-            Dim results() As Object = Me.Invoke("GetLookupsByTypeString", New Object() {type})
-            Return CType(results(0),System.Data.DataTable)
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetLookupsByTypeStringAsync(ByVal type As String)
-            Me.GetLookupsByTypeStringAsync(type, Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetLookupsByTypeStringAsync(ByVal type As String, ByVal userState As Object)
-            If (Me.GetLookupsByTypeStringOperationCompleted Is Nothing) Then
-                Me.GetLookupsByTypeStringOperationCompleted = AddressOf Me.OnGetLookupsByTypeStringOperationCompleted
-            End If
-            Me.InvokeAsync("GetLookupsByTypeString", New Object() {type}, Me.GetLookupsByTypeStringOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetLookupsByTypeStringOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetLookupsByTypeStringCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetLookupsByTypeStringCompleted(Me, New GetLookupsByTypeStringCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLookups", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function GetLookups(ByVal type As LookupType) As System.Data.DataTable
             Dim results() As Object = Me.Invoke("GetLookups", New Object() {type})
@@ -1521,141 +1560,6 @@ Namespace RemiAPI
             If (Not (Me.GetLookupsCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetLookupsCompleted(Me, New GetLookupsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SaveLookup", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function SaveLookup(ByVal lookupType As String, ByVal value As String, ByVal isActive As Integer, ByVal description As String, ByVal parentID As Integer) As Boolean
-            Dim results() As Object = Me.Invoke("SaveLookup", New Object() {lookupType, value, isActive, description, parentID})
-            Return CType(results(0),Boolean)
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub SaveLookupAsync(ByVal lookupType As String, ByVal value As String, ByVal isActive As Integer, ByVal description As String, ByVal parentID As Integer)
-            Me.SaveLookupAsync(lookupType, value, isActive, description, parentID, Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub SaveLookupAsync(ByVal lookupType As String, ByVal value As String, ByVal isActive As Integer, ByVal description As String, ByVal parentID As Integer, ByVal userState As Object)
-            If (Me.SaveLookupOperationCompleted Is Nothing) Then
-                Me.SaveLookupOperationCompleted = AddressOf Me.OnSaveLookupOperationCompleted
-            End If
-            Me.InvokeAsync("SaveLookup", New Object() {lookupType, value, isActive, description, parentID}, Me.SaveLookupOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnSaveLookupOperationCompleted(ByVal arg As Object)
-            If (Not (Me.SaveLookupCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent SaveLookupCompleted(Me, New SaveLookupCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetOracleAccessoryTypes", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetOracleAccessoryTypes() As String()
-            Dim results() As Object = Me.Invoke("GetOracleAccessoryTypes", New Object(-1) {})
-            Return CType(results(0),String())
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleAccessoryTypesAsync()
-            Me.GetOracleAccessoryTypesAsync(Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleAccessoryTypesAsync(ByVal userState As Object)
-            If (Me.GetOracleAccessoryTypesOperationCompleted Is Nothing) Then
-                Me.GetOracleAccessoryTypesOperationCompleted = AddressOf Me.OnGetOracleAccessoryTypesOperationCompleted
-            End If
-            Me.InvokeAsync("GetOracleAccessoryTypes", New Object(-1) {}, Me.GetOracleAccessoryTypesOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetOracleAccessoryTypesOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetOracleAccessoryTypesCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetOracleAccessoryTypesCompleted(Me, New GetOracleAccessoryTypesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetOracleTestCenters", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetOracleTestCenters() As String()
-            Dim results() As Object = Me.Invoke("GetOracleTestCenters", New Object(-1) {})
-            Return CType(results(0),String())
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleTestCentersAsync()
-            Me.GetOracleTestCentersAsync(Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleTestCentersAsync(ByVal userState As Object)
-            If (Me.GetOracleTestCentersOperationCompleted Is Nothing) Then
-                Me.GetOracleTestCentersOperationCompleted = AddressOf Me.OnGetOracleTestCentersOperationCompleted
-            End If
-            Me.InvokeAsync("GetOracleTestCenters", New Object(-1) {}, Me.GetOracleTestCentersOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetOracleTestCentersOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetOracleTestCentersCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetOracleTestCentersCompleted(Me, New GetOracleTestCentersCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetOracleProductTypes", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetOracleProductTypes() As String()
-            Dim results() As Object = Me.Invoke("GetOracleProductTypes", New Object(-1) {})
-            Return CType(results(0),String())
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleProductTypesAsync()
-            Me.GetOracleProductTypesAsync(Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleProductTypesAsync(ByVal userState As Object)
-            If (Me.GetOracleProductTypesOperationCompleted Is Nothing) Then
-                Me.GetOracleProductTypesOperationCompleted = AddressOf Me.OnGetOracleProductTypesOperationCompleted
-            End If
-            Me.InvokeAsync("GetOracleProductTypes", New Object(-1) {}, Me.GetOracleProductTypesOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetOracleProductTypesOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetOracleProductTypesCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetOracleProductTypesCompleted(Me, New GetOracleProductTypesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetOracleDepartmentList", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetOracleDepartmentList() As String()
-            Dim results() As Object = Me.Invoke("GetOracleDepartmentList", New Object(-1) {})
-            Return CType(results(0),String())
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleDepartmentListAsync()
-            Me.GetOracleDepartmentListAsync(Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetOracleDepartmentListAsync(ByVal userState As Object)
-            If (Me.GetOracleDepartmentListOperationCompleted Is Nothing) Then
-                Me.GetOracleDepartmentListOperationCompleted = AddressOf Me.OnGetOracleDepartmentListOperationCompleted
-            End If
-            Me.InvokeAsync("GetOracleDepartmentList", New Object(-1) {}, Me.GetOracleDepartmentListOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetOracleDepartmentListOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetOracleDepartmentListCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetOracleDepartmentListCompleted(Me, New GetOracleDepartmentListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -1764,33 +1668,6 @@ Namespace RemiAPI
             If (Not (Me.GetJobAccessCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetJobAccessCompleted(Me, New GetJobAccessCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTRSJobs", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetTRSJobs() As String()
-            Dim results() As Object = Me.Invoke("GetTRSJobs", New Object(-1) {})
-            Return CType(results(0),String())
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetTRSJobsAsync()
-            Me.GetTRSJobsAsync(Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetTRSJobsAsync(ByVal userState As Object)
-            If (Me.GetTRSJobsOperationCompleted Is Nothing) Then
-                Me.GetTRSJobsOperationCompleted = AddressOf Me.OnGetTRSJobsOperationCompleted
-            End If
-            Me.InvokeAsync("GetTRSJobs", New Object(-1) {}, Me.GetTRSJobsOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetTRSJobsOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetTRSJobsCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetTRSJobsCompleted(Me, New GetTRSJobsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -1926,33 +1803,6 @@ Namespace RemiAPI
             If (Not (Me.GetFriendlyUserIDCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetFriendlyUserIDCompleted(Me, New GetFriendlyUserIDCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
-            End If
-        End Sub
-        
-        '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetProductOracleList", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetProductOracleList() As String()
-            Dim results() As Object = Me.Invoke("GetProductOracleList", New Object(-1) {})
-            Return CType(results(0),String())
-        End Function
-        
-        '''<remarks/>
-        Public Overloads Sub GetProductOracleListAsync()
-            Me.GetProductOracleListAsync(Nothing)
-        End Sub
-        
-        '''<remarks/>
-        Public Overloads Sub GetProductOracleListAsync(ByVal userState As Object)
-            If (Me.GetProductOracleListOperationCompleted Is Nothing) Then
-                Me.GetProductOracleListOperationCompleted = AddressOf Me.OnGetProductOracleListOperationCompleted
-            End If
-            Me.InvokeAsync("GetProductOracleList", New Object(-1) {}, Me.GetProductOracleListOperationCompleted, userState)
-        End Sub
-        
-        Private Sub OnGetProductOracleListOperationCompleted(ByVal arg As Object)
-            If (Not (Me.GetProductOracleListCompletedEvent) Is Nothing) Then
-                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
-                RaiseEvent GetProductOracleListCompleted(Me, New GetProductOracleListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -2875,6 +2725,33 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetRequestsForDashBoard", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetRequestsForDashBoard(ByVal searchStr As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetRequestsForDashBoard", New Object() {searchStr})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetRequestsForDashBoardAsync(ByVal searchStr As String)
+            Me.GetRequestsForDashBoardAsync(searchStr, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetRequestsForDashBoardAsync(ByVal searchStr As String, ByVal userState As Object)
+            If (Me.GetRequestsForDashBoardOperationCompleted Is Nothing) Then
+                Me.GetRequestsForDashBoardOperationCompleted = AddressOf Me.OnGetRequestsForDashBoardOperationCompleted
+            End If
+            Me.InvokeAsync("GetRequestsForDashBoard", New Object() {searchStr}, Me.GetRequestsForDashBoardOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetRequestsForDashBoardOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetRequestsForDashBoardCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetRequestsForDashBoardCompleted(Me, New GetRequestsForDashBoardCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/CheckBatchForStatusUpdates", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function CheckBatchForStatusUpdates(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
             Dim results() As Object = Me.Invoke("CheckBatchForStatusUpdates", New Object() {qraNumber, userIdentification})
@@ -3301,6 +3178,33 @@ Namespace RemiAPI
             If (Not (Me.GetRequestCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetRequestCompleted(Me, New GetRequestCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetServicesAccess", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetServicesAccess(ByVal departmentID As Integer) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetServicesAccess", New Object() {departmentID})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetServicesAccessAsync(ByVal departmentID As Integer)
+            Me.GetServicesAccessAsync(departmentID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetServicesAccessAsync(ByVal departmentID As Integer, ByVal userState As Object)
+            If (Me.GetServicesAccessOperationCompleted Is Nothing) Then
+                Me.GetServicesAccessOperationCompleted = AddressOf Me.OnGetServicesAccessOperationCompleted
+            End If
+            Me.InvokeAsync("GetServicesAccess", New Object() {departmentID}, Me.GetServicesAccessOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetServicesAccessOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetServicesAccessCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetServicesAccessCompleted(Me, New GetServicesAccessCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -4261,6 +4165,8 @@ Namespace RemiAPI
         
         Private requestTypesField As System.Data.DataTable
         
+        Private servicesField As System.Data.DataTable
+        
         Private userDetailsField As System.Data.DataTable
         
         Private trainingField As System.Data.DataTable
@@ -4340,6 +4246,16 @@ Namespace RemiAPI
             End Get
             Set
                 Me.requestTypesField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Services() As System.Data.DataTable
+            Get
+                Return Me.servicesField
+            End Get
+            Set
+                Me.servicesField = value
             End Set
         End Property
         
@@ -5656,6 +5572,8 @@ Namespace RemiAPI
         
         Private optionsTypeField() As String
         
+        Private customLookupHierarchyField() As RequestFieldObjectHeirarchy
+        
         Private isArchivedField As Boolean
         
         Private intFieldField As String
@@ -5664,9 +5582,13 @@ Namespace RemiAPI
         
         Private isFromExternalSystemField As Boolean
         
+        Private hasIntegrationField As Boolean
+        
         Private valueField As String
         
         Private newRequestField As Boolean
+        
+        Private parentFieldSetupIDField As Integer
         
         '''<remarks/>
         Public Property RequestTypeID() As Integer
@@ -5849,6 +5771,16 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
+        Public Property CustomLookupHierarchy() As RequestFieldObjectHeirarchy()
+            Get
+                Return Me.customLookupHierarchyField
+            End Get
+            Set
+                Me.customLookupHierarchyField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
         Public Property IsArchived() As Boolean
             Get
                 Return Me.isArchivedField
@@ -5889,6 +5821,16 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
+        Public Property HasIntegration() As Boolean
+            Get
+                Return Me.hasIntegrationField
+            End Get
+            Set
+                Me.hasIntegrationField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
         Public Property Value() As String
             Get
                 Return Me.valueField
@@ -5905,6 +5847,133 @@ Namespace RemiAPI
             End Get
             Set
                 Me.newRequestField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ParentFieldSetupID() As Integer
+            Get
+                Return Me.parentFieldSetupIDField
+            End Get
+            Set
+                Me.parentFieldSetupIDField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class RequestFieldObjectHeirarchy
+        
+        Private requestTypeIDField As Integer
+        
+        Private parentLookupIDField As Integer
+        
+        Private childLookupIDField As Integer
+        
+        Private childLookupTypeIDField As Integer
+        
+        Private parentLookupTypeIDField As Integer
+        
+        Private parentLookupField As String
+        
+        Private childLookupField As String
+        
+        Private parentLookupTypeField As String
+        
+        Private childLookupTypeField As String
+        
+        '''<remarks/>
+        Public Property RequestTypeID() As Integer
+            Get
+                Return Me.requestTypeIDField
+            End Get
+            Set
+                Me.requestTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ParentLookupID() As Integer
+            Get
+                Return Me.parentLookupIDField
+            End Get
+            Set
+                Me.parentLookupIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ChildLookupID() As Integer
+            Get
+                Return Me.childLookupIDField
+            End Get
+            Set
+                Me.childLookupIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ChildLookupTypeID() As Integer
+            Get
+                Return Me.childLookupTypeIDField
+            End Get
+            Set
+                Me.childLookupTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ParentLookupTypeID() As Integer
+            Get
+                Return Me.parentLookupTypeIDField
+            End Get
+            Set
+                Me.parentLookupTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ParentLookup() As String
+            Get
+                Return Me.parentLookupField
+            End Get
+            Set
+                Me.parentLookupField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ChildLookup() As String
+            Get
+                Return Me.childLookupField
+            End Get
+            Set
+                Me.childLookupField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ParentLookupType() As String
+            Get
+                Return Me.parentLookupTypeField
+            End Get
+            Set
+                Me.parentLookupTypeField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ChildLookupType() As String
+            Get
+                Return Me.childLookupTypeField
+            End Get
+            Set
+                Me.childLookupTypeField = value
             End Set
         End Property
     End Class
@@ -7523,33 +7592,6 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetLookupIDCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupIDCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetLookupIDCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As Integer
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),Integer)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetLookupsTypeStringByProductCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupsTypeStringByProductCompletedEventArgs)
     
     '''<remarks/>
@@ -7571,6 +7613,141 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetLookupsTypeStringByProductParentCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupsTypeStringByProductParentCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetLookupsTypeStringByProductParentCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetLookupsAdvancedCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupsAdvancedCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetLookupsAdvancedCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetLookupsByTypeStringCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupsByTypeStringCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetLookupsByTypeStringCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub SaveLookupCompletedEventHandler(ByVal sender As Object, ByVal e As SaveLookupCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class SaveLookupCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetLookupIDCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupIDCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetLookupIDCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Integer
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Integer)
             End Get
         End Property
     End Class
@@ -7631,60 +7808,6 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetLookupsTypeStringByProductParentCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupsTypeStringByProductParentCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetLookupsTypeStringByProductParentCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As System.Data.DataTable
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),System.Data.DataTable)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetLookupsByTypeStringCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupsByTypeStringCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetLookupsByTypeStringCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As System.Data.DataTable
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),System.Data.DataTable)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetLookupsCompletedEventHandler(ByVal sender As Object, ByVal e As GetLookupsCompletedEventArgs)
     
     '''<remarks/>
@@ -7706,141 +7829,6 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),System.Data.DataTable)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub SaveLookupCompletedEventHandler(ByVal sender As Object, ByVal e As SaveLookupCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class SaveLookupCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As Boolean
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),Boolean)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetOracleAccessoryTypesCompletedEventHandler(ByVal sender As Object, ByVal e As GetOracleAccessoryTypesCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetOracleAccessoryTypesCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As String()
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),String())
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetOracleTestCentersCompletedEventHandler(ByVal sender As Object, ByVal e As GetOracleTestCentersCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetOracleTestCentersCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As String()
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),String())
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetOracleProductTypesCompletedEventHandler(ByVal sender As Object, ByVal e As GetOracleProductTypesCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetOracleProductTypesCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As String()
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),String())
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetOracleDepartmentListCompletedEventHandler(ByVal sender As Object, ByVal e As GetOracleDepartmentListCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetOracleDepartmentListCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As String()
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),String())
             End Get
         End Property
     End Class
@@ -7949,33 +7937,6 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),System.Data.DataTable)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetTRSJobsCompletedEventHandler(ByVal sender As Object, ByVal e As GetTRSJobsCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetTRSJobsCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As String()
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),String())
             End Get
         End Property
     End Class
@@ -8111,33 +8072,6 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),String)
-            End Get
-        End Property
-    End Class
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
-    Public Delegate Sub GetProductOracleListCompletedEventHandler(ByVal sender As Object, ByVal e As GetProductOracleListCompletedEventArgs)
-    
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
-     System.Diagnostics.DebuggerStepThroughAttribute(),  _
-     System.ComponentModel.DesignerCategoryAttribute("code")>  _
-    Partial Public Class GetProductOracleListCompletedEventArgs
-        Inherits System.ComponentModel.AsyncCompletedEventArgs
-        
-        Private results() As Object
-        
-        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
-            MyBase.New(exception, cancelled, userState)
-            Me.results = results
-        End Sub
-        
-        '''<remarks/>
-        Public ReadOnly Property Result() As String()
-            Get
-                Me.RaiseExceptionIfNecessary
-                Return CType(Me.results(0),String())
             End Get
         End Property
     End Class
@@ -9062,6 +8996,33 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetRequestsForDashBoardCompletedEventHandler(ByVal sender As Object, ByVal e As GetRequestsForDashBoardCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetRequestsForDashBoardCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub CheckBatchForStatusUpdatesCompletedEventHandler(ByVal sender As Object, ByVal e As CheckBatchForStatusUpdatesCompletedEventArgs)
     
     '''<remarks/>
@@ -9442,6 +9403,33 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),RequestFields())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetServicesAccessCompletedEventHandler(ByVal sender As Object, ByVal e As GetServicesAccessCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetServicesAccessCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
             End Get
         End Property
     End Class
