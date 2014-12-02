@@ -36,88 +36,100 @@ Public Class RemiAPI
                     bs.BatchStart = BatchStart
                 End If
 
-                If (BatchEnd <> DateTime.MinValue) Then
+                If (BatchEnd <> DateTime.MaxValue And BatchEnd <> DateTime.MinValue) Then
                     bs.BatchEnd = BatchEnd
                 End If
 
                 If (Not String.IsNullOrEmpty(AccessoryGroup)) Then
                     Int32.TryParse(LookupsManager.GetLookupID("AccessoryType", AccessoryGroup, 0), accessoryGroupID)
+                    bs.AccessoryGroupID = accessoryGroupID
                 End If
 
                 If (Not String.IsNullOrEmpty(department)) Then
                     Int32.TryParse(LookupsManager.GetLookupID("Department", department, 0), departmentID)
+                    bs.DepartmentID = departmentID
                 End If
 
                 If (Not String.IsNullOrEmpty(Priority)) Then
                     Int32.TryParse(LookupsManager.GetLookupID("Priority", Priority, 0), priorityID)
+                    bs.Priority = priorityID
                 End If
 
                 If (Not String.IsNullOrEmpty(Product)) Then
                     Int32.TryParse(ProductGroupManager.GetProductIDByName(Product), productID)
+                    bs.ProductID = productID
                 End If
 
                 If (Not String.IsNullOrEmpty(ProductType)) Then
                     Int32.TryParse(LookupsManager.GetLookupID("ProductType", ProductType, 0), productTypeID)
+                    bs.ProductTypeID = productTypeID
                 End If
 
                 If (Not String.IsNullOrEmpty(TestCenter)) Then
                     Int32.TryParse(LookupsManager.GetLookupID("TestCenter", TestCenter, 0), geoLocationID)
+                    bs.GeoLocationID = geoLocationID
                 End If
 
                 If (Not String.IsNullOrEmpty(UserName)) Then
                     Int32.TryParse(UserManager.GetUser(UserName).ID, userID)
+                    bs.UserID = userID
                 End If
 
                 If (Not String.IsNullOrEmpty(RequestReason)) Then
                     Int32.TryParse(LookupsManager.GetLookupID("RequestPurpose", RequestReason, 0), requestReasonID)
+                    bs.RequestReason = requestReasonID
                 End If
 
                 If (Not String.IsNullOrEmpty(TrackingLocationName) And geoLocationID > 0) Then
                     Int32.TryParse(TrackingLocationManager.GetTrackingLocationID(TrackingLocationName, bs.GeoLocationID), trackingLocationID)
+                    bs.TrackingLocationID = trackingLocationID
                 End If
 
                 If (Not String.IsNullOrEmpty(TestName)) Then
                     Int32.TryParse(TestManager.GetTestByName(TestName, False).ID, testID)
+                    bs.TestID = testID
                 End If
 
-                bs.AccessoryGroupID = accessoryGroupID
-                bs.DepartmentID = departmentID
-                bs.Priority = priorityID
-                bs.JobName = JobName
-                bs.ProductID = productID
-                bs.ProductTypeID = productTypeID
-                bs.GeoLocationID = geoLocationID
-                bs.Revision = Revision
-                bs.TestStage = TestStage
-                bs.UserID = userID
-                bs.TrackingLocationID = trackingLocationID
-                bs.TestID = testID
-                bs.NotInTrackingLocationFunction = NotInTrackingLocationFunction
-                bs.RequestReason = requestReasonID
+                If (Not String.IsNullOrEmpty(JobName)) Then
+                    bs.JobName = JobName
+                End If
+
+                If (Not String.IsNullOrEmpty(Revision)) Then
+                    bs.Revision = Revision
+                End If
+
+                If (Not String.IsNullOrEmpty(TestStage)) Then
+                    bs.TestStage = TestStage
+                End If
+
+                If (NotInTrackingLocationFunction <> BusinessEntities.TrackingLocationFunction.NotSet) Then
+                    bs.NotInTrackingLocationFunction = NotInTrackingLocationFunction
+                End If
+
                 bs.Status = status
-                bs.TrackingLocationFunction = TrackingLocationFunction
 
-                If (exTestStageType.Count > 0) Then
-                    bs.ExcludedTestStageType = (From t In exTestStageType Select DirectCast(System.Enum.Parse(GetType(BatchSearchTestStageType), t), Int32)).Sum()
+                If (TrackingLocationFunction <> BusinessEntities.TrackingLocationFunction.NotSet) Then
+                    bs.TrackingLocationFunction = TrackingLocationFunction
                 End If
 
-                If (exBatchStatus.Count > 0) Then
-                    bs.ExcludedStatus = (From t In exBatchStatus Select DirectCast(System.Enum.Parse(GetType(BatchSearchBatchStatus), t), Int32)).Sum()
+                If (exTestStageType IsNot Nothing) Then
+                    If (exTestStageType.Count > 0) Then
+                        bs.ExcludedTestStageType = (From t In exTestStageType Select DirectCast(System.Enum.Parse(GetType(BatchSearchTestStageType), t), Int32)).Sum()
+                    End If
+                End If
+
+                If (exBatchStatus IsNot Nothing) Then
+                    If (exBatchStatus.Count > 0) Then
+                        bs.ExcludedStatus = (From t In exBatchStatus Select DirectCast(System.Enum.Parse(GetType(BatchSearchBatchStatus), t), Int32)).Sum()
+                    End If
                 End If
 
                 bs.TestStageType = testStageType
 
-                Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False)
-                Dim batches As New List(Of BatchView)
-
-                For Each b In bc
-                    batches.Add(b)
-                Next
-
-                Return batches
+                Return BatchManager.BatchSearchBase(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False)
             End If
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API SearchBatch", "e7", NotificationType.Errors, ex, "User: " + userIdentification)
+            BatchManager.LogIssue("REMI API SearchBatch", "e3", NotificationType.Errors, ex, "User: " + userIdentification)
         End Try
 
         Return Nothing
@@ -749,7 +761,7 @@ Public Class RemiAPI
         Try
             Return BatchManager.GetBatchUnitsInStage(qraNumber)
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API GetBatchUnitsInStage", "e7", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", qraNumber))
+            BatchManager.LogIssue("REMI API GetBatchUnitsInStage", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", qraNumber))
         End Try
 
         Return New DataTable("TestingSummary")
@@ -760,7 +772,7 @@ Public Class RemiAPI
         Try
             Return BatchManager.BatchUpdateOrientation(requestNumber, orientationID)
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API BatchUpdateOrientation", "e7", NotificationType.Errors, ex, String.Format("RequestNumber: {0} OrientationID: {1}", requestNumber, orientationID))
+            BatchManager.LogIssue("REMI API BatchUpdateOrientation", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0} OrientationID: {1}", requestNumber, orientationID))
         End Try
 
         Return False
@@ -793,7 +805,7 @@ Public Class RemiAPI
                 Return b.GetParametricTestOverviewTable(False, False, rqResults, False, False)
             End If
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API GetTestingSummary", "e7", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", qraNumber, userIdentification))
+            BatchManager.LogIssue("REMI API GetTestingSummary", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", qraNumber, userIdentification))
         End Try
 
         Return New DataTable("TestingSummary")
@@ -807,7 +819,7 @@ Public Class RemiAPI
                 Return b.GetStressingOverviewTable(False, False, False, False, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             End If
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API GetStressingSummary", "e7", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", qraNumber, userIdentification))
+            BatchManager.LogIssue("REMI API GetStressingSummary", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", qraNumber, userIdentification))
         End Try
 
         Return New DataTable("StressingSummary")

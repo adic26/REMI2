@@ -341,12 +341,15 @@
               <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="OptionsTypeID" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="OptionsType" type="tns:ArrayOfString" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustomLookupHierarchy" type="tns:ArrayOfRequestFieldObjectHeirarchy" />
               <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
               <s:element minOccurs="0" maxOccurs="1" name="IntField" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="ExtField" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="IsFromExternalSystem" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="HasIntegration" type="s:boolean" />
               <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="NewRequest" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="ParentFieldSetupID" type="s:int" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -354,6 +357,24 @@
       <s:complexType name="ArrayOfString">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfRequestFieldObjectHeirarchy">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RequestFieldObjectHeirarchy" nillable="true" type="tns:RequestFieldObjectHeirarchy" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RequestFieldObjectHeirarchy">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RequestTypeID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ParentLookupID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ChildLookupID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ChildLookupTypeID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ParentLookupTypeID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ParentLookup" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChildLookup" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ParentLookupType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChildLookupType" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="ArrayOfRequestFields">
@@ -763,6 +784,117 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetLookupsTypeStringByProduct">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="productID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLookupsTypeStringByProductResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLookupsTypeStringByProductResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLookupsTypeStringByProductParent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="productID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLookupsTypeStringByProductParentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLookupsTypeStringByProductParentResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLookupsAdvanced">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="productID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="parentLookupType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="parentLookupValue" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="requestTypeID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="removeFirstAllRecord" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLookupsAdvancedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLookupsAdvancedResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLookupsByTypeString">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLookupsByTypeStringResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLookupsByTypeStringResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveLookup">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lookupType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="value" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="isActive" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveLookupResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SaveLookupResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetLookupID">
         <s:complexType>
           <s:sequence>
@@ -800,28 +932,6 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="GetLookupIDResult" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLookupsTypeStringByProduct">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="productID" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLookupsTypeStringByProductResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetLookupsTypeStringByProductResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -870,50 +980,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetLookupsTypeStringByProductParent">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="productID" type="s:int" />
-            <s:element minOccurs="1" maxOccurs="1" name="parentID" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLookupsTypeStringByProductParentResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetLookupsTypeStringByProductParentResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLookupsByTypeString">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetLookupsByTypeStringResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetLookupsByTypeStringResult">
-              <s:complexType>
-                <s:sequence>
-                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
-                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
-                </s:sequence>
-              </s:complexType>
-            </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="GetLookups">
         <s:complexType>
           <s:sequence>
@@ -932,64 +998,6 @@
                 </s:sequence>
               </s:complexType>
             </s:element>
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SaveLookup">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="lookupType" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="value" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="isActive" type="s:int" />
-            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="parentID" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SaveLookupResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="SaveLookupResult" type="s:boolean" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetOracleAccessoryTypes">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetOracleAccessoryTypesResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetOracleAccessoryTypesResult" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetOracleTestCenters">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetOracleTestCentersResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetOracleTestCentersResult" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetOracleProductTypes">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetOracleProductTypesResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetOracleProductTypesResult" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetOracleDepartmentList">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetOracleDepartmentListResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetOracleDepartmentListResult" type="tns:ArrayOfString" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1078,16 +1086,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetTRSJobs">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetTRSJobsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetTRSJobsResult" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="SaveJob">
         <s:complexType>
           <s:sequence>
@@ -1145,6 +1143,14 @@
                 </s:complexType>
               </s:element>
               <s:element minOccurs="0" maxOccurs="1" name="RequestTypes">
+                <s:complexType>
+                  <s:sequence>
+                    <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                    <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+              <s:element minOccurs="0" maxOccurs="1" name="Services">
                 <s:complexType>
                   <s:sequence>
                     <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
@@ -1217,16 +1223,6 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetFriendlyUserIDResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetProductOracleList">
-        <s:complexType />
-      </s:element>
-      <s:element name="GetProductOracleListResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetProductOracleListResult" type="tns:ArrayOfString" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1769,6 +1765,27 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetRequestsForDashBoard">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="searchStr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRequestsForDashBoardResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRequestsForDashBoardResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="CheckBatchForStatusUpdates">
         <s:complexType>
           <s:sequence>
@@ -2224,6 +2241,27 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetServicesAccess">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="departmentID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetServicesAccessResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetServicesAccessResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="Notification" nillable="true" type="tns:Notification" />
       <s:element name="boolean" type="s:boolean" />
       <s:element name="ArrayOfString" nillable="true" type="tns:ArrayOfString" />
@@ -2426,17 +2464,41 @@
   <wsdl:message name="GetLookupIDByTypeStringSoapOut">
     <wsdl:part name="parameters" element="tns:GetLookupIDByTypeStringResponse" />
   </wsdl:message>
-  <wsdl:message name="GetLookupIDSoapIn">
-    <wsdl:part name="parameters" element="tns:GetLookupID" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupIDSoapOut">
-    <wsdl:part name="parameters" element="tns:GetLookupIDResponse" />
-  </wsdl:message>
   <wsdl:message name="GetLookupsTypeStringByProductSoapIn">
     <wsdl:part name="parameters" element="tns:GetLookupsTypeStringByProduct" />
   </wsdl:message>
   <wsdl:message name="GetLookupsTypeStringByProductSoapOut">
     <wsdl:part name="parameters" element="tns:GetLookupsTypeStringByProductResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductParentSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLookupsTypeStringByProductParent" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductParentSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLookupsTypeStringByProductParentResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsAdvancedSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLookupsAdvanced" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsAdvancedSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLookupsAdvancedResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsByTypeStringSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLookupsByTypeString" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsByTypeStringSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLookupsByTypeStringResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveLookupSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveLookup" />
+  </wsdl:message>
+  <wsdl:message name="SaveLookupSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveLookupResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLookupID" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLookupIDResponse" />
   </wsdl:message>
   <wsdl:message name="GetLookupsByProductSoapIn">
     <wsdl:part name="parameters" element="tns:GetLookupsByProduct" />
@@ -2450,53 +2512,11 @@
   <wsdl:message name="GetLookupsByProductParentSoapOut">
     <wsdl:part name="parameters" element="tns:GetLookupsByProductParentResponse" />
   </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductParentSoapIn">
-    <wsdl:part name="parameters" element="tns:GetLookupsTypeStringByProductParent" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductParentSoapOut">
-    <wsdl:part name="parameters" element="tns:GetLookupsTypeStringByProductParentResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsByTypeStringSoapIn">
-    <wsdl:part name="parameters" element="tns:GetLookupsByTypeString" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsByTypeStringSoapOut">
-    <wsdl:part name="parameters" element="tns:GetLookupsByTypeStringResponse" />
-  </wsdl:message>
   <wsdl:message name="GetLookupsSoapIn">
     <wsdl:part name="parameters" element="tns:GetLookups" />
   </wsdl:message>
   <wsdl:message name="GetLookupsSoapOut">
     <wsdl:part name="parameters" element="tns:GetLookupsResponse" />
-  </wsdl:message>
-  <wsdl:message name="SaveLookupSoapIn">
-    <wsdl:part name="parameters" element="tns:SaveLookup" />
-  </wsdl:message>
-  <wsdl:message name="SaveLookupSoapOut">
-    <wsdl:part name="parameters" element="tns:SaveLookupResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleAccessoryTypesSoapIn">
-    <wsdl:part name="parameters" element="tns:GetOracleAccessoryTypes" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleAccessoryTypesSoapOut">
-    <wsdl:part name="parameters" element="tns:GetOracleAccessoryTypesResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleTestCentersSoapIn">
-    <wsdl:part name="parameters" element="tns:GetOracleTestCenters" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleTestCentersSoapOut">
-    <wsdl:part name="parameters" element="tns:GetOracleTestCentersResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleProductTypesSoapIn">
-    <wsdl:part name="parameters" element="tns:GetOracleProductTypes" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleProductTypesSoapOut">
-    <wsdl:part name="parameters" element="tns:GetOracleProductTypesResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleDepartmentListSoapIn">
-    <wsdl:part name="parameters" element="tns:GetOracleDepartmentList" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleDepartmentListSoapOut">
-    <wsdl:part name="parameters" element="tns:GetOracleDepartmentListResponse" />
   </wsdl:message>
   <wsdl:message name="GetJobsSoapIn">
     <wsdl:part name="parameters" element="tns:GetJobs" />
@@ -2521,12 +2541,6 @@
   </wsdl:message>
   <wsdl:message name="GetJobAccessSoapOut">
     <wsdl:part name="parameters" element="tns:GetJobAccessResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetTRSJobsSoapIn">
-    <wsdl:part name="parameters" element="tns:GetTRSJobs" />
-  </wsdl:message>
-  <wsdl:message name="GetTRSJobsSoapOut">
-    <wsdl:part name="parameters" element="tns:GetTRSJobsResponse" />
   </wsdl:message>
   <wsdl:message name="SaveJobSoapIn">
     <wsdl:part name="parameters" element="tns:SaveJob" />
@@ -2557,12 +2571,6 @@
   </wsdl:message>
   <wsdl:message name="GetFriendlyUserIDSoapOut">
     <wsdl:part name="parameters" element="tns:GetFriendlyUserIDResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetProductOracleListSoapIn">
-    <wsdl:part name="parameters" element="tns:GetProductOracleList" />
-  </wsdl:message>
-  <wsdl:message name="GetProductOracleListSoapOut">
-    <wsdl:part name="parameters" element="tns:GetProductOracleListResponse" />
   </wsdl:message>
   <wsdl:message name="UpdateProductSoapIn">
     <wsdl:part name="parameters" element="tns:UpdateProduct" />
@@ -2768,6 +2776,12 @@
   <wsdl:message name="GetRequestsNotInREMISoapOut">
     <wsdl:part name="parameters" element="tns:GetRequestsNotInREMIResponse" />
   </wsdl:message>
+  <wsdl:message name="GetRequestsForDashBoardSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRequestsForDashBoard" />
+  </wsdl:message>
+  <wsdl:message name="GetRequestsForDashBoardSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRequestsForDashBoardResponse" />
+  </wsdl:message>
   <wsdl:message name="CheckBatchForStatusUpdatesSoapIn">
     <wsdl:part name="parameters" element="tns:CheckBatchForStatusUpdates" />
   </wsdl:message>
@@ -2863,6 +2877,12 @@
   </wsdl:message>
   <wsdl:message name="GetRequestSoapOut">
     <wsdl:part name="parameters" element="tns:GetRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetServicesAccessSoapIn">
+    <wsdl:part name="parameters" element="tns:GetServicesAccess" />
+  </wsdl:message>
+  <wsdl:message name="GetServicesAccessSoapOut">
+    <wsdl:part name="parameters" element="tns:GetServicesAccessResponse" />
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpGetIn">
     <wsdl:part name="qraNumber" type="s:string" />
@@ -3032,6 +3052,49 @@
   <wsdl:message name="GetLookupIDByTypeStringHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductHttpGetIn">
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="productID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductParentHttpGetIn">
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="productID" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductParentHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsAdvancedHttpGetIn">
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="productID" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
+    <wsdl:part name="parentLookupType" type="s:string" />
+    <wsdl:part name="parentLookupValue" type="s:string" />
+    <wsdl:part name="requestTypeID" type="s:string" />
+    <wsdl:part name="removeFirstAllRecord" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsAdvancedHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsByTypeStringHttpGetIn">
+    <wsdl:part name="type" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsByTypeStringHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="SaveLookupHttpGetIn">
+    <wsdl:part name="lookupType" type="s:string" />
+    <wsdl:part name="value" type="s:string" />
+    <wsdl:part name="isActive" type="s:string" />
+    <wsdl:part name="description" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveLookupHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:message name="GetLookupIDHttpGetIn">
     <wsdl:part name="type" type="s:string" />
     <wsdl:part name="lookup" type="s:string" />
@@ -3039,13 +3102,6 @@
   </wsdl:message>
   <wsdl:message name="GetLookupIDHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductHttpGetIn">
-    <wsdl:part name="type" type="s:string" />
-    <wsdl:part name="productID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductHttpGetOut">
-    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetLookupsByProductHttpGetIn">
     <wsdl:part name="type" type="s:string" />
@@ -3062,51 +3118,11 @@
   <wsdl:message name="GetLookupsByProductParentHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductParentHttpGetIn">
-    <wsdl:part name="type" type="s:string" />
-    <wsdl:part name="productID" type="s:string" />
-    <wsdl:part name="parentID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductParentHttpGetOut">
-    <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsByTypeStringHttpGetIn">
-    <wsdl:part name="type" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsByTypeStringHttpGetOut">
-    <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
   <wsdl:message name="GetLookupsHttpGetIn">
     <wsdl:part name="type" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetLookupsHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
-  <wsdl:message name="SaveLookupHttpGetIn">
-    <wsdl:part name="lookupType" type="s:string" />
-    <wsdl:part name="value" type="s:string" />
-    <wsdl:part name="isActive" type="s:string" />
-    <wsdl:part name="description" type="s:string" />
-    <wsdl:part name="parentID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="SaveLookupHttpGetOut">
-    <wsdl:part name="Body" element="tns:boolean" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleAccessoryTypesHttpGetIn" />
-  <wsdl:message name="GetOracleAccessoryTypesHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleTestCentersHttpGetIn" />
-  <wsdl:message name="GetOracleTestCentersHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleProductTypesHttpGetIn" />
-  <wsdl:message name="GetOracleProductTypesHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleDepartmentListHttpGetIn" />
-  <wsdl:message name="GetOracleDepartmentListHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="GetJobsHttpGetIn" />
   <wsdl:message name="GetJobsHttpGetOut">
@@ -3129,10 +3145,6 @@
   </wsdl:message>
   <wsdl:message name="GetJobAccessHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
-  <wsdl:message name="GetTRSJobsHttpGetIn" />
-  <wsdl:message name="GetTRSJobsHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="GetUserDetailsHttpGetIn">
     <wsdl:part name="userIdentification" type="s:string" />
@@ -3160,10 +3172,6 @@
   </wsdl:message>
   <wsdl:message name="GetFriendlyUserIDHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
-  </wsdl:message>
-  <wsdl:message name="GetProductOracleListHttpGetIn" />
-  <wsdl:message name="GetProductOracleListHttpGetOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="UpdateProductHttpGetIn">
     <wsdl:part name="productGroupName" type="s:string" />
@@ -3372,6 +3380,12 @@
   <wsdl:message name="GetRequestsNotInREMIHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
+  <wsdl:message name="GetRequestsForDashBoardHttpGetIn">
+    <wsdl:part name="searchStr" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRequestsForDashBoardHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
   <wsdl:message name="CheckBatchForStatusUpdatesHttpGetIn">
     <wsdl:part name="qraNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
@@ -3497,6 +3511,12 @@
   </wsdl:message>
   <wsdl:message name="GetRequestHttpGetOut">
     <wsdl:part name="Body" element="tns:ArrayOfRequestFields" />
+  </wsdl:message>
+  <wsdl:message name="GetServicesAccessHttpGetIn">
+    <wsdl:part name="departmentID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetServicesAccessHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpPostIn">
     <wsdl:part name="qraNumber" type="s:string" />
@@ -3666,6 +3686,49 @@
   <wsdl:message name="GetLookupIDByTypeStringHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductHttpPostIn">
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="productID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductParentHttpPostIn">
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="productID" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsTypeStringByProductParentHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsAdvancedHttpPostIn">
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="productID" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
+    <wsdl:part name="parentLookupType" type="s:string" />
+    <wsdl:part name="parentLookupValue" type="s:string" />
+    <wsdl:part name="requestTypeID" type="s:string" />
+    <wsdl:part name="removeFirstAllRecord" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsAdvancedHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsByTypeStringHttpPostIn">
+    <wsdl:part name="type" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetLookupsByTypeStringHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="SaveLookupHttpPostIn">
+    <wsdl:part name="lookupType" type="s:string" />
+    <wsdl:part name="value" type="s:string" />
+    <wsdl:part name="isActive" type="s:string" />
+    <wsdl:part name="description" type="s:string" />
+    <wsdl:part name="parentID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveLookupHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:message name="GetLookupIDHttpPostIn">
     <wsdl:part name="type" type="s:string" />
     <wsdl:part name="lookup" type="s:string" />
@@ -3673,13 +3736,6 @@
   </wsdl:message>
   <wsdl:message name="GetLookupIDHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductHttpPostIn">
-    <wsdl:part name="type" type="s:string" />
-    <wsdl:part name="productID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductHttpPostOut">
-    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetLookupsByProductHttpPostIn">
     <wsdl:part name="type" type="s:string" />
@@ -3696,51 +3752,11 @@
   <wsdl:message name="GetLookupsByProductParentHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductParentHttpPostIn">
-    <wsdl:part name="type" type="s:string" />
-    <wsdl:part name="productID" type="s:string" />
-    <wsdl:part name="parentID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsTypeStringByProductParentHttpPostOut">
-    <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsByTypeStringHttpPostIn">
-    <wsdl:part name="type" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="GetLookupsByTypeStringHttpPostOut">
-    <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
   <wsdl:message name="GetLookupsHttpPostIn">
     <wsdl:part name="type" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetLookupsHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
-  <wsdl:message name="SaveLookupHttpPostIn">
-    <wsdl:part name="lookupType" type="s:string" />
-    <wsdl:part name="value" type="s:string" />
-    <wsdl:part name="isActive" type="s:string" />
-    <wsdl:part name="description" type="s:string" />
-    <wsdl:part name="parentID" type="s:string" />
-  </wsdl:message>
-  <wsdl:message name="SaveLookupHttpPostOut">
-    <wsdl:part name="Body" element="tns:boolean" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleAccessoryTypesHttpPostIn" />
-  <wsdl:message name="GetOracleAccessoryTypesHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleTestCentersHttpPostIn" />
-  <wsdl:message name="GetOracleTestCentersHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleProductTypesHttpPostIn" />
-  <wsdl:message name="GetOracleProductTypesHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
-  </wsdl:message>
-  <wsdl:message name="GetOracleDepartmentListHttpPostIn" />
-  <wsdl:message name="GetOracleDepartmentListHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="GetJobsHttpPostIn" />
   <wsdl:message name="GetJobsHttpPostOut">
@@ -3763,10 +3779,6 @@
   </wsdl:message>
   <wsdl:message name="GetJobAccessHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
-  </wsdl:message>
-  <wsdl:message name="GetTRSJobsHttpPostIn" />
-  <wsdl:message name="GetTRSJobsHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="GetUserDetailsHttpPostIn">
     <wsdl:part name="userIdentification" type="s:string" />
@@ -3794,10 +3806,6 @@
   </wsdl:message>
   <wsdl:message name="GetFriendlyUserIDHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
-  </wsdl:message>
-  <wsdl:message name="GetProductOracleListHttpPostIn" />
-  <wsdl:message name="GetProductOracleListHttpPostOut">
-    <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="UpdateProductHttpPostIn">
     <wsdl:part name="productGroupName" type="s:string" />
@@ -4006,6 +4014,12 @@
   <wsdl:message name="GetRequestsNotInREMIHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
+  <wsdl:message name="GetRequestsForDashBoardHttpPostIn">
+    <wsdl:part name="searchStr" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRequestsForDashBoardHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
   <wsdl:message name="CheckBatchForStatusUpdatesHttpPostIn">
     <wsdl:part name="qraNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
@@ -4131,6 +4145,12 @@
   </wsdl:message>
   <wsdl:message name="GetRequestHttpPostOut">
     <wsdl:part name="Body" element="tns:ArrayOfRequestFields" />
+  </wsdl:message>
+  <wsdl:message name="GetServicesAccessHttpPostIn">
+    <wsdl:part name="departmentID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetServicesAccessHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:portType name="RemiAPISoap">
     <wsdl:operation name="SearchBatch">
@@ -4263,15 +4283,35 @@
       <wsdl:input message="tns:GetLookupIDByTypeStringSoapIn" />
       <wsdl:output message="tns:GetLookupIDByTypeStringSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetLookupID">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns an ID of Lookup based on type.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupIDSoapIn" />
-      <wsdl:output message="tns:GetLookupIDSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetLookupsTypeStringByProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
       <wsdl:input message="tns:GetLookupsTypeStringByProductSoapIn" />
       <wsdl:output message="tns:GetLookupsTypeStringByProductSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsTypeStringByProductParent">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsTypeStringByProductParentSoapIn" />
+      <wsdl:output message="tns:GetLookupsTypeStringByProductParentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsAdvanced">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsAdvancedSoapIn" />
+      <wsdl:output message="tns:GetLookupsAdvancedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsByTypeString">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsByTypeStringSoapIn" />
+      <wsdl:output message="tns:GetLookupsByTypeStringSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveLookup">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save A New Lookup.</wsdl:documentation>
+      <wsdl:input message="tns:SaveLookupSoapIn" />
+      <wsdl:output message="tns:SaveLookupSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns an ID of Lookup based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupIDSoapIn" />
+      <wsdl:output message="tns:GetLookupIDSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetLookupsByProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
@@ -4283,45 +4323,10 @@
       <wsdl:input message="tns:GetLookupsByProductParentSoapIn" />
       <wsdl:output message="tns:GetLookupsByProductParentSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProductParent">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupsTypeStringByProductParentSoapIn" />
-      <wsdl:output message="tns:GetLookupsTypeStringByProductParentSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetLookupsByTypeString">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupsByTypeStringSoapIn" />
-      <wsdl:output message="tns:GetLookupsByTypeStringSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetLookups">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
       <wsdl:input message="tns:GetLookupsSoapIn" />
       <wsdl:output message="tns:GetLookupsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SaveLookup">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save A New Lookup.</wsdl:documentation>
-      <wsdl:input message="tns:SaveLookupSoapIn" />
-      <wsdl:output message="tns:SaveLookupSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleAccessoryTypes">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Accessory Types currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleAccessoryTypesSoapIn" />
-      <wsdl:output message="tns:GetOracleAccessoryTypesSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleTestCenters">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Test Centers.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleTestCentersSoapIn" />
-      <wsdl:output message="tns:GetOracleTestCentersSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleProductTypes">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Product Types currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleProductTypesSoapIn" />
-      <wsdl:output message="tns:GetOracleProductTypesSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleDepartmentList">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle departments.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleDepartmentListSoapIn" />
-      <wsdl:output message="tns:GetOracleDepartmentListSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetJobs">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the Jobs (Test Types) available. Represented as a list of strings. This method can be used to populate lists.</wsdl:documentation>
@@ -4342,11 +4347,6 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all orientations for this job.</wsdl:documentation>
       <wsdl:input message="tns:GetJobAccessSoapIn" />
       <wsdl:output message="tns:GetJobAccessSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetTRSJobs">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get all TRS jobs.</wsdl:documentation>
-      <wsdl:input message="tns:GetTRSJobsSoapIn" />
-      <wsdl:output message="tns:GetTRSJobsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SaveJob">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Job.</wsdl:documentation>
@@ -4372,11 +4372,6 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a badge number returns a user's login name.</wsdl:documentation>
       <wsdl:input message="tns:GetFriendlyUserIDSoapIn" />
       <wsdl:output message="tns:GetFriendlyUserIDSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetProductOracleList">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Product Groups currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductOracleListSoapIn" />
-      <wsdl:output message="tns:GetProductOracleListSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="UpdateProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Product.</wsdl:documentation>
@@ -4548,6 +4543,11 @@
       <wsdl:input message="tns:GetRequestsNotInREMISoapIn" />
       <wsdl:output message="tns:GetRequestsNotInREMISoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetRequestsForDashBoard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the Request's for dashboard</wsdl:documentation>
+      <wsdl:input message="tns:GetRequestsForDashBoardSoapIn" />
+      <wsdl:output message="tns:GetRequestsForDashBoardSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="CheckBatchForStatusUpdates">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks if batch is ready to be moved to a different status.</wsdl:documentation>
       <wsdl:input message="tns:CheckBatchForStatusUpdatesSoapIn" />
@@ -4627,6 +4627,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Raised Request</wsdl:documentation>
       <wsdl:input message="tns:GetRequestSoapIn" />
       <wsdl:output message="tns:GetRequestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServicesAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Services Associated With A Department</wsdl:documentation>
+      <wsdl:input message="tns:GetServicesAccessSoapIn" />
+      <wsdl:output message="tns:GetServicesAccessSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="RemiAPIHttpGet">
@@ -4755,15 +4760,35 @@
       <wsdl:input message="tns:GetLookupIDByTypeStringHttpGetIn" />
       <wsdl:output message="tns:GetLookupIDByTypeStringHttpGetOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetLookupID">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns an ID of Lookup based on type.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupIDHttpGetIn" />
-      <wsdl:output message="tns:GetLookupIDHttpGetOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetLookupsTypeStringByProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
       <wsdl:input message="tns:GetLookupsTypeStringByProductHttpGetIn" />
       <wsdl:output message="tns:GetLookupsTypeStringByProductHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsTypeStringByProductParent">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsTypeStringByProductParentHttpGetIn" />
+      <wsdl:output message="tns:GetLookupsTypeStringByProductParentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsAdvanced">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsAdvancedHttpGetIn" />
+      <wsdl:output message="tns:GetLookupsAdvancedHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsByTypeString">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsByTypeStringHttpGetIn" />
+      <wsdl:output message="tns:GetLookupsByTypeStringHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveLookup">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save A New Lookup.</wsdl:documentation>
+      <wsdl:input message="tns:SaveLookupHttpGetIn" />
+      <wsdl:output message="tns:SaveLookupHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns an ID of Lookup based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupIDHttpGetIn" />
+      <wsdl:output message="tns:GetLookupIDHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetLookupsByProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
@@ -4775,45 +4800,10 @@
       <wsdl:input message="tns:GetLookupsByProductParentHttpGetIn" />
       <wsdl:output message="tns:GetLookupsByProductParentHttpGetOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProductParent">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupsTypeStringByProductParentHttpGetIn" />
-      <wsdl:output message="tns:GetLookupsTypeStringByProductParentHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetLookupsByTypeString">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupsByTypeStringHttpGetIn" />
-      <wsdl:output message="tns:GetLookupsByTypeStringHttpGetOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetLookups">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
       <wsdl:input message="tns:GetLookupsHttpGetIn" />
       <wsdl:output message="tns:GetLookupsHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SaveLookup">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save A New Lookup.</wsdl:documentation>
-      <wsdl:input message="tns:SaveLookupHttpGetIn" />
-      <wsdl:output message="tns:SaveLookupHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleAccessoryTypes">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Accessory Types currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleAccessoryTypesHttpGetIn" />
-      <wsdl:output message="tns:GetOracleAccessoryTypesHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleTestCenters">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Test Centers.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleTestCentersHttpGetIn" />
-      <wsdl:output message="tns:GetOracleTestCentersHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleProductTypes">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Product Types currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleProductTypesHttpGetIn" />
-      <wsdl:output message="tns:GetOracleProductTypesHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleDepartmentList">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle departments.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleDepartmentListHttpGetIn" />
-      <wsdl:output message="tns:GetOracleDepartmentListHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetJobs">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the Jobs (Test Types) available. Represented as a list of strings. This method can be used to populate lists.</wsdl:documentation>
@@ -4835,11 +4825,6 @@
       <wsdl:input message="tns:GetJobAccessHttpGetIn" />
       <wsdl:output message="tns:GetJobAccessHttpGetOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetTRSJobs">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get all TRS jobs.</wsdl:documentation>
-      <wsdl:input message="tns:GetTRSJobsHttpGetIn" />
-      <wsdl:output message="tns:GetTRSJobsHttpGetOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetUserDetails">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user's login name and their permissions for accessing the test station at the hostname given.</wsdl:documentation>
       <wsdl:input message="tns:GetUserDetailsHttpGetIn" />
@@ -4859,11 +4844,6 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a badge number returns a user's login name.</wsdl:documentation>
       <wsdl:input message="tns:GetFriendlyUserIDHttpGetIn" />
       <wsdl:output message="tns:GetFriendlyUserIDHttpGetOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetProductOracleList">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Product Groups currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductOracleListHttpGetIn" />
-      <wsdl:output message="tns:GetProductOracleListHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="UpdateProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Product.</wsdl:documentation>
@@ -5035,6 +5015,11 @@
       <wsdl:input message="tns:GetRequestsNotInREMIHttpGetIn" />
       <wsdl:output message="tns:GetRequestsNotInREMIHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetRequestsForDashBoard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the Request's for dashboard</wsdl:documentation>
+      <wsdl:input message="tns:GetRequestsForDashBoardHttpGetIn" />
+      <wsdl:output message="tns:GetRequestsForDashBoardHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="CheckBatchForStatusUpdates">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks if batch is ready to be moved to a different status.</wsdl:documentation>
       <wsdl:input message="tns:CheckBatchForStatusUpdatesHttpGetIn" />
@@ -5109,6 +5094,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Raised Request</wsdl:documentation>
       <wsdl:input message="tns:GetRequestHttpGetIn" />
       <wsdl:output message="tns:GetRequestHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServicesAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Services Associated With A Department</wsdl:documentation>
+      <wsdl:input message="tns:GetServicesAccessHttpGetIn" />
+      <wsdl:output message="tns:GetServicesAccessHttpGetOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="RemiAPIHttpPost">
@@ -5237,15 +5227,35 @@
       <wsdl:input message="tns:GetLookupIDByTypeStringHttpPostIn" />
       <wsdl:output message="tns:GetLookupIDByTypeStringHttpPostOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetLookupID">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns an ID of Lookup based on type.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupIDHttpPostIn" />
-      <wsdl:output message="tns:GetLookupIDHttpPostOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetLookupsTypeStringByProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
       <wsdl:input message="tns:GetLookupsTypeStringByProductHttpPostIn" />
       <wsdl:output message="tns:GetLookupsTypeStringByProductHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsTypeStringByProductParent">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsTypeStringByProductParentHttpPostIn" />
+      <wsdl:output message="tns:GetLookupsTypeStringByProductParentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsAdvanced">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsAdvancedHttpPostIn" />
+      <wsdl:output message="tns:GetLookupsAdvancedHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsByTypeString">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupsByTypeStringHttpPostIn" />
+      <wsdl:output message="tns:GetLookupsByTypeStringHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveLookup">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save A New Lookup.</wsdl:documentation>
+      <wsdl:input message="tns:SaveLookupHttpPostIn" />
+      <wsdl:output message="tns:SaveLookupHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns an ID of Lookup based on type.</wsdl:documentation>
+      <wsdl:input message="tns:GetLookupIDHttpPostIn" />
+      <wsdl:output message="tns:GetLookupIDHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetLookupsByProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
@@ -5257,45 +5267,10 @@
       <wsdl:input message="tns:GetLookupsByProductParentHttpPostIn" />
       <wsdl:output message="tns:GetLookupsByProductParentHttpPostOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProductParent">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type/product.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupsTypeStringByProductParentHttpPostIn" />
-      <wsdl:output message="tns:GetLookupsTypeStringByProductParentHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetLookupsByTypeString">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
-      <wsdl:input message="tns:GetLookupsByTypeStringHttpPostIn" />
-      <wsdl:output message="tns:GetLookupsByTypeStringHttpPostOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetLookups">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of Lookups based on type.</wsdl:documentation>
       <wsdl:input message="tns:GetLookupsHttpPostIn" />
       <wsdl:output message="tns:GetLookupsHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SaveLookup">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Save A New Lookup.</wsdl:documentation>
-      <wsdl:input message="tns:SaveLookupHttpPostIn" />
-      <wsdl:output message="tns:SaveLookupHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleAccessoryTypes">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Accessory Types currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleAccessoryTypesHttpPostIn" />
-      <wsdl:output message="tns:GetOracleAccessoryTypesHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleTestCenters">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Test Centers.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleTestCentersHttpPostIn" />
-      <wsdl:output message="tns:GetOracleTestCentersHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleProductTypes">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Product Types currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleProductTypesHttpPostIn" />
-      <wsdl:output message="tns:GetOracleProductTypesHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleDepartmentList">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle departments.</wsdl:documentation>
-      <wsdl:input message="tns:GetOracleDepartmentListHttpPostIn" />
-      <wsdl:output message="tns:GetOracleDepartmentListHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetJobs">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the Jobs (Test Types) available. Represented as a list of strings. This method can be used to populate lists.</wsdl:documentation>
@@ -5317,11 +5292,6 @@
       <wsdl:input message="tns:GetJobAccessHttpPostIn" />
       <wsdl:output message="tns:GetJobAccessHttpPostOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetTRSJobs">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get all TRS jobs.</wsdl:documentation>
-      <wsdl:input message="tns:GetTRSJobsHttpPostIn" />
-      <wsdl:output message="tns:GetTRSJobsHttpPostOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetUserDetails">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user's login name and their permissions for accessing the test station at the hostname given.</wsdl:documentation>
       <wsdl:input message="tns:GetUserDetailsHttpPostIn" />
@@ -5341,11 +5311,6 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a badge number returns a user's login name.</wsdl:documentation>
       <wsdl:input message="tns:GetFriendlyUserIDHttpPostIn" />
       <wsdl:output message="tns:GetFriendlyUserIDHttpPostOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetProductOracleList">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a full list of the oracle Product Groups currently being worked on.</wsdl:documentation>
-      <wsdl:input message="tns:GetProductOracleListHttpPostIn" />
-      <wsdl:output message="tns:GetProductOracleListHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="UpdateProduct">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Product.</wsdl:documentation>
@@ -5517,6 +5482,11 @@
       <wsdl:input message="tns:GetRequestsNotInREMIHttpPostIn" />
       <wsdl:output message="tns:GetRequestsNotInREMIHttpPostOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetRequestsForDashBoard">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of the Request's for dashboard</wsdl:documentation>
+      <wsdl:input message="tns:GetRequestsForDashBoardHttpPostIn" />
+      <wsdl:output message="tns:GetRequestsForDashBoardHttpPostOut" />
+    </wsdl:operation>
     <wsdl:operation name="CheckBatchForStatusUpdates">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks if batch is ready to be moved to a different status.</wsdl:documentation>
       <wsdl:input message="tns:CheckBatchForStatusUpdatesHttpPostIn" />
@@ -5591,6 +5561,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Raised Request</wsdl:documentation>
       <wsdl:input message="tns:GetRequestHttpPostIn" />
       <wsdl:output message="tns:GetRequestHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServicesAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets The Services Associated With A Department</wsdl:documentation>
+      <wsdl:input message="tns:GetServicesAccessHttpPostIn" />
+      <wsdl:output message="tns:GetServicesAccessHttpPostOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="RemiAPISoap" type="tns:RemiAPISoap">
@@ -5829,8 +5804,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupID">
-      <soap:operation soapAction="http://go/remi/GetLookupID" style="document" />
+    <wsdl:operation name="GetLookupsTypeStringByProduct">
+      <soap:operation soapAction="http://go/remi/GetLookupsTypeStringByProduct" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5838,8 +5813,44 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProduct">
-      <soap:operation soapAction="http://go/remi/GetLookupsTypeStringByProduct" style="document" />
+    <wsdl:operation name="GetLookupsTypeStringByProductParent">
+      <soap:operation soapAction="http://go/remi/GetLookupsTypeStringByProductParent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsAdvanced">
+      <soap:operation soapAction="http://go/remi/GetLookupsAdvanced" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsByTypeString">
+      <soap:operation soapAction="http://go/remi/GetLookupsByTypeString" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLookup">
+      <soap:operation soapAction="http://go/remi/SaveLookup" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupID">
+      <soap:operation soapAction="http://go/remi/GetLookupID" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5865,71 +5876,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProductParent">
-      <soap:operation soapAction="http://go/remi/GetLookupsTypeStringByProductParent" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLookupsByTypeString">
-      <soap:operation soapAction="http://go/remi/GetLookupsByTypeString" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetLookups">
       <soap:operation soapAction="http://go/remi/GetLookups" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SaveLookup">
-      <soap:operation soapAction="http://go/remi/SaveLookup" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleAccessoryTypes">
-      <soap:operation soapAction="http://go/remi/GetOracleAccessoryTypes" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleTestCenters">
-      <soap:operation soapAction="http://go/remi/GetOracleTestCenters" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleProductTypes">
-      <soap:operation soapAction="http://go/remi/GetOracleProductTypes" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleDepartmentList">
-      <soap:operation soapAction="http://go/remi/GetOracleDepartmentList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5966,15 +5914,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetJobAccess">
       <soap:operation soapAction="http://go/remi/GetJobAccess" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetTRSJobs">
-      <soap:operation soapAction="http://go/remi/GetTRSJobs" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -6020,15 +5959,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <soap:operation soapAction="http://go/remi/GetFriendlyUserID" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductOracleList">
-      <soap:operation soapAction="http://go/remi/GetProductOracleList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -6342,6 +6272,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetRequestsForDashBoard">
+      <soap:operation soapAction="http://go/remi/GetRequestsForDashBoard" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="CheckBatchForStatusUpdates">
       <soap:operation soapAction="http://go/remi/CheckBatchForStatusUpdates" style="document" />
       <wsdl:input>
@@ -6479,6 +6418,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetRequest">
       <soap:operation soapAction="http://go/remi/GetRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServicesAccess">
+      <soap:operation soapAction="http://go/remi/GetServicesAccess" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -6723,8 +6671,8 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupID">
-      <soap12:operation soapAction="http://go/remi/GetLookupID" style="document" />
+    <wsdl:operation name="GetLookupsTypeStringByProduct">
+      <soap12:operation soapAction="http://go/remi/GetLookupsTypeStringByProduct" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6732,8 +6680,44 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProduct">
-      <soap12:operation soapAction="http://go/remi/GetLookupsTypeStringByProduct" style="document" />
+    <wsdl:operation name="GetLookupsTypeStringByProductParent">
+      <soap12:operation soapAction="http://go/remi/GetLookupsTypeStringByProductParent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsAdvanced">
+      <soap12:operation soapAction="http://go/remi/GetLookupsAdvanced" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsByTypeString">
+      <soap12:operation soapAction="http://go/remi/GetLookupsByTypeString" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLookup">
+      <soap12:operation soapAction="http://go/remi/SaveLookup" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupID">
+      <soap12:operation soapAction="http://go/remi/GetLookupID" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6759,71 +6743,8 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProductParent">
-      <soap12:operation soapAction="http://go/remi/GetLookupsTypeStringByProductParent" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLookupsByTypeString">
-      <soap12:operation soapAction="http://go/remi/GetLookupsByTypeString" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetLookups">
       <soap12:operation soapAction="http://go/remi/GetLookups" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SaveLookup">
-      <soap12:operation soapAction="http://go/remi/SaveLookup" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleAccessoryTypes">
-      <soap12:operation soapAction="http://go/remi/GetOracleAccessoryTypes" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleTestCenters">
-      <soap12:operation soapAction="http://go/remi/GetOracleTestCenters" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleProductTypes">
-      <soap12:operation soapAction="http://go/remi/GetOracleProductTypes" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleDepartmentList">
-      <soap12:operation soapAction="http://go/remi/GetOracleDepartmentList" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6860,15 +6781,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetJobAccess">
       <soap12:operation soapAction="http://go/remi/GetJobAccess" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetTRSJobs">
-      <soap12:operation soapAction="http://go/remi/GetTRSJobs" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6914,15 +6826,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <soap12:operation soapAction="http://go/remi/GetFriendlyUserID" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductOracleList">
-      <soap12:operation soapAction="http://go/remi/GetProductOracleList" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -7236,6 +7139,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetRequestsForDashBoard">
+      <soap12:operation soapAction="http://go/remi/GetRequestsForDashBoard" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="CheckBatchForStatusUpdates">
       <soap12:operation soapAction="http://go/remi/CheckBatchForStatusUpdates" style="document" />
       <wsdl:input>
@@ -7373,6 +7285,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetRequest">
       <soap12:operation soapAction="http://go/remi/GetRequest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServicesAccess">
+      <soap12:operation soapAction="http://go/remi/GetServicesAccess" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -7608,8 +7529,8 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupID">
-      <http:operation location="/GetLookupID" />
+    <wsdl:operation name="GetLookupsTypeStringByProduct">
+      <http:operation location="/GetLookupsTypeStringByProduct" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -7617,8 +7538,44 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProduct">
-      <http:operation location="/GetLookupsTypeStringByProduct" />
+    <wsdl:operation name="GetLookupsTypeStringByProductParent">
+      <http:operation location="/GetLookupsTypeStringByProductParent" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsAdvanced">
+      <http:operation location="/GetLookupsAdvanced" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsByTypeString">
+      <http:operation location="/GetLookupsByTypeString" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLookup">
+      <http:operation location="/SaveLookup" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupID">
+      <http:operation location="/GetLookupID" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -7644,71 +7601,8 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProductParent">
-      <http:operation location="/GetLookupsTypeStringByProductParent" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLookupsByTypeString">
-      <http:operation location="/GetLookupsByTypeString" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetLookups">
       <http:operation location="/GetLookups" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SaveLookup">
-      <http:operation location="/SaveLookup" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleAccessoryTypes">
-      <http:operation location="/GetOracleAccessoryTypes" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleTestCenters">
-      <http:operation location="/GetOracleTestCenters" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleProductTypes">
-      <http:operation location="/GetOracleProductTypes" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleDepartmentList">
-      <http:operation location="/GetOracleDepartmentList" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -7752,15 +7646,6 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetTRSJobs">
-      <http:operation location="/GetTRSJobs" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetUserDetails">
       <http:operation location="/GetUserDetails" />
       <wsdl:input>
@@ -7790,15 +7675,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <http:operation location="/GetFriendlyUserID" />
-      <wsdl:input>
-        <http:urlEncoded />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductOracleList">
-      <http:operation location="/GetProductOracleList" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -8112,6 +7988,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetRequestsForDashBoard">
+      <http:operation location="/GetRequestsForDashBoard" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="CheckBatchForStatusUpdates">
       <http:operation location="/CheckBatchForStatusUpdates" />
       <wsdl:input>
@@ -8236,6 +8121,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetRequest">
       <http:operation location="/GetRequest" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServicesAccess">
+      <http:operation location="/GetServicesAccess" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -8471,8 +8365,8 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupID">
-      <http:operation location="/GetLookupID" />
+    <wsdl:operation name="GetLookupsTypeStringByProduct">
+      <http:operation location="/GetLookupsTypeStringByProduct" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -8480,8 +8374,44 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProduct">
-      <http:operation location="/GetLookupsTypeStringByProduct" />
+    <wsdl:operation name="GetLookupsTypeStringByProductParent">
+      <http:operation location="/GetLookupsTypeStringByProductParent" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsAdvanced">
+      <http:operation location="/GetLookupsAdvanced" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupsByTypeString">
+      <http:operation location="/GetLookupsByTypeString" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLookup">
+      <http:operation location="/SaveLookup" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLookupID">
+      <http:operation location="/GetLookupID" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -8507,71 +8437,8 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLookupsTypeStringByProductParent">
-      <http:operation location="/GetLookupsTypeStringByProductParent" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetLookupsByTypeString">
-      <http:operation location="/GetLookupsByTypeString" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetLookups">
       <http:operation location="/GetLookups" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SaveLookup">
-      <http:operation location="/SaveLookup" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleAccessoryTypes">
-      <http:operation location="/GetOracleAccessoryTypes" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleTestCenters">
-      <http:operation location="/GetOracleTestCenters" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleProductTypes">
-      <http:operation location="/GetOracleProductTypes" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetOracleDepartmentList">
-      <http:operation location="/GetOracleDepartmentList" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -8615,15 +8482,6 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetTRSJobs">
-      <http:operation location="/GetTRSJobs" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="GetUserDetails">
       <http:operation location="/GetUserDetails" />
       <wsdl:input>
@@ -8653,15 +8511,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <http:operation location="/GetFriendlyUserID" />
-      <wsdl:input>
-        <mime:content type="application/x-www-form-urlencoded" />
-      </wsdl:input>
-      <wsdl:output>
-        <mime:mimeXml part="Body" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetProductOracleList">
-      <http:operation location="/GetProductOracleList" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -8975,6 +8824,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetRequestsForDashBoard">
+      <http:operation location="/GetRequestsForDashBoard" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="CheckBatchForStatusUpdates">
       <http:operation location="/CheckBatchForStatusUpdates" />
       <wsdl:input>
@@ -9099,6 +8957,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetRequest">
       <http:operation location="/GetRequest" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServicesAccess">
+      <http:operation location="/GetServicesAccess" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
