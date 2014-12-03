@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("236f020d-e28a-4c4d-8905-7c3efb6ab801")>
+<Assembly: EdmSchemaAttribute("f2e0df05-dc70-4e45-a204-6618c790d8e7")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -12154,6 +12154,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnCategoryChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ParentReqFieldSetupID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _ParentReqFieldSetupID
+            End Get
+            Set
+                OnParentReqFieldSetupIDChanging(value)
+                ReportPropertyChanging("ParentReqFieldSetupID")
+                _ParentReqFieldSetupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ParentReqFieldSetupID")
+                OnParentReqFieldSetupIDChanged()
+            End Set
+        End Property
+    
+        Private _ParentReqFieldSetupID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnParentReqFieldSetupIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnParentReqFieldSetupIDChanged()
         End Sub
 
         #End Region

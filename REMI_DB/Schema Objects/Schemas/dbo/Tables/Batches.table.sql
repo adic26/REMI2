@@ -37,3 +37,9 @@
 	[DepartmentID] INT NULL,
 );
 
+GO
+ALTER TABLE [Batches]  WITH CHECK ADD  CONSTRAINT [FK_Batches_Request] FOREIGN KEY([QRANumber])
+REFERENCES Req.Request ([RequestNumber])
+
+ALTER TABLE [Batches] CHECK CONSTRAINT [FK_Batches_Request]
+GO
