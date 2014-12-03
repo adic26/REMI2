@@ -121,16 +121,7 @@ namespace REMI.Bll.Tests
             var tln = new REMI.Entities.TrackingLocation();
             tln = (from tl in instance.TrackingLocations.Include("TrackingLocationsHosts").Include("TrackingLocationType") where tl.Decommissioned != true select tl).FirstOrDefault();
 
-           Assert.That( TrackingLocationManager.GetTrackingLocationsByHostName(tln.TrackingLocationsHosts.ElementAt(0).HostName, tln.TrackingLocationType.TrackingLocationTypeName, 1, 0).Count > 0);
-        }
-
-        [Test]
-        public void GetTrackingLocationsByHostNameAtTestCenter()
-        {
-            var tln = new REMI.Entities.TrackingLocation();
-            tln = (from tl in instance.TrackingLocations.Include("Lookup").Include("TrackingLocationsHosts") where tl.Decommissioned != true select tl).FirstOrDefault();
-
-            Assert.That(TrackingLocationManager.GetTrackingLocationsByHostNameAtTestCenter(tln.TrackingLocationsHosts.ElementAt(0).HostName, tln.Lookup.LookupID).Count > 0);
+           Assert.That( TrackingLocationManager.GetTrackingLocationsByHostName(tln.TrackingLocationsHosts.ElementAt(0).HostName, tln.TrackingLocationType.TrackingLocationTypeName, 1, 0, 0).Count > 0);
         }
 
         [Test]

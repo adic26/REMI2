@@ -232,11 +232,16 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTrackingLocationsByHostName(ByVal HostName As String, ByVal trackingLocationType As String, ByVal onlyActive As Int32, ByVal showHostsNamedAll As Int32) As TrackingLocationCollection
+        Public Shared Function GetTrackingLocationsByHostName(ByVal HostName As String, ByVal trackingLocationType As String, ByVal onlyActive As Int32, ByVal showHostsNamedAll As Int32, ByVal testCenter As Int32) As TrackingLocationCollection
             Dim tlc As New TrackingLocationCriteria
             tlc.HostName = HostName
+
             If (trackingLocationType <> String.Empty) Then
                 tlc.TrackingLocTypeName = trackingLocationType
+            End If
+
+            If (testCenter > 0) Then
+                tlc.GeoLocationID = testCenter
             End If
 
             Return TrackingLocationDB.SearchFor(tlc, onlyActive, 0, showHostsNamedAll)
@@ -244,23 +249,10 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTrackingLocationsByHostNameAtTestCenter(ByVal HostName As String, ByVal testCenter As Int32) As TrackingLocationCollection
-            Try
-                Dim tlc As New TrackingLocationCriteria
-                tlc.HostName = HostName
-                tlc.GeoLocationID = testCenter
-                Return TrackingLocationDB.SearchFor(tlc)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return Nothing
-        End Function
-
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetMultipleTrackingLocationByHostNameAndType(ByVal HostName As String, ByVal trackingLocationType As String) As TrackingLocationCollection
             Dim tlColl As TrackingLocationCollection
             Try
-                tlColl = GetTrackingLocationsByHostName(HostName, trackingLocationType, 1, 0)
+                tlColl = GetTrackingLocationsByHostName(HostName, trackingLocationType, 1, 0, 0)
 
                 Select Case tlColl.Count
                     Case Is < 1
@@ -279,7 +271,7 @@ Namespace REMI.Bll
         Public Shared Function GetMultipleTrackingLocationByHostName(ByVal HostName As String) As TrackingLocationCollection
             Dim tlColl As TrackingLocationCollection
             Try
-                tlColl = GetTrackingLocationsByHostName(HostName, String.Empty, 1, 0)
+                tlColl = GetTrackingLocationsByHostName(HostName, String.Empty, 1, 0, 0)
 
                 Select Case tlColl.Count
                     Case Is < 1
@@ -299,7 +291,7 @@ Namespace REMI.Bll
         Public Shared Function GetSingleTrackingLocationByHostName(ByVal HostName As String) As TrackingLocation
             Dim tlColl As TrackingLocationCollection
             Try
-                tlColl = GetTrackingLocationsByHostName(HostName, String.Empty, 1, 0)
+                tlColl = GetTrackingLocationsByHostName(HostName, String.Empty, 1, 0, 0)
                 'count the ones that are not hostname = 'all'
                 Select Case (From tl As TrackingLocation In tlColl Where (Not tl.HostName.ToLower.Equals("all")) Select tl).Count
                     Case Is < 1

@@ -42,18 +42,15 @@ Partial Class Scanning_Default
                 Dim hasRemStar As Boolean = If((From ma In dt.AsEnumerable() Where ma.Field(Of String)("ServiceName") = "REMSTAR").FirstOrDefault() IsNot Nothing, True, False)
 
                 If (hasRemStar) Then
-                    Dim remstar As String() = REMI.Core.REMIConfiguration.RemStarHostNames().Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+                    Dim col As TrackingLocationCollection = TrackingLocationManager.GetTrackingLocationsByHostName(hdnHostname.Value, "REMSTAR", 1, 0, UserManager.GetCurrentUser.TestCentreID)
 
-                    'add remstar if required
-                    If remstar.Contains(REMI.Core.REMIHttpContext.GetCurrentHostname) AndAlso ddlPossibleLocations.Items.FindByText("REMSTAR") Is Nothing AndAlso UserManager.GetCurrentUser.TestCentre = "Cambridge" Then
-                        ddlPossibleLocations.Items.Add(New ListItem("REMSTAR - Cambridge", 25))
-
-                        ddlPossibleLocations.SelectedValue = ddlPossibleLocations.Items.FindByText("REMSTAR - " + UserManager.GetCurrentUser.TestCentre).Value
-
-                        ddlBinType.DataSource = REMI.Dal.RemstarDB.GetBinType()
-                        ddlBinType.DataBind()
-                        ddlBinType.SelectedValue = ddlBinType.Items.FindByText("SMALL-REM2").Value
+                    If (col.Count > 0) Then
+                        ddlPossibleLocations.SelectedValue = (From pl As ListItem In ddlPossibleLocations.Items Where pl.Value = col(0).ID Select pl.Value).FirstOrDefault()
                     End If
+
+                    ddlBinType.DataSource = REMI.Dal.RemstarDB.GetBinType()
+                    ddlBinType.DataBind()
+                    ddlBinType.SelectedValue = ddlBinType.Items.FindByText("SMALL-REM2").Value
                 Else
                     If (ddlPossibleLocations.Items.FindByText("Lab - " + UserManager.GetCurrentUser.TestCentre) IsNot Nothing) Then
                         ddlPossibleLocations.SelectedValue = ddlPossibleLocations.Items.FindByText("Lab - " + UserManager.GetCurrentUser.TestCentre).Value

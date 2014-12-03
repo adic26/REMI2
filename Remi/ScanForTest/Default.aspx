@@ -56,18 +56,16 @@
                 </td>
                 <td>
                     <asp:DropDownList ID="ddlPossibleLocations" runat="server" AppendDataBoundItems="True"
-                        DataSourceID="odsLocations" Width="305px" AutoPostBack="true" DataTextField="DisplayName"
-                        DataValueField="BarcodePrefix">
+                        DataSourceID="odsLocations" Width="305px" AutoPostBack="true" DataTextField="DisplayName" DataValueField="BarcodePrefix">
                     </asp:DropDownList>
                     <asp:ObjectDataSource EnableCaching="true" CacheDuration="20" ID="odsLocations" runat="server"
-                        OldValuesParameterFormatString="{0}" SelectMethod="GetTrackingLocationsByHostName"
-                        TypeName="REMI.Bll.TrackingLocationManager">
+                        OldValuesParameterFormatString="{0}" SelectMethod="GetTrackingLocationsByHostName" TypeName="REMI.Bll.TrackingLocationManager">
                         <SelectParameters>
-                            <asp:ControlParameter ControlID="hdnHostName" Name="HostName" PropertyName="Value"
-                                Type="String" />
+                            <asp:ControlParameter ControlID="hdnHostName" Name="HostName" PropertyName="Value" Type="String" />
                             <asp:Parameter DefaultValue="" Name="trackingLocationType" Type="String" />
                             <asp:Parameter DefaultValue="0" Name="onlyActive" Type="Int32" />
                             <asp:Parameter DefaultValue="1" Name="showHostsNamedAll" Type="Int32" />
+                            <asp:Parameter DefaultValue="0" Name="testCenter" Type="Int32" />
                         </SelectParameters>
                     </asp:ObjectDataSource>
                 </td>
