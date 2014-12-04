@@ -2441,4 +2441,7 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\LookupsHierarchy.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Views\vw_GetBatchRequestResult.sql" />
+  </ItemGroup>
 </Project>
