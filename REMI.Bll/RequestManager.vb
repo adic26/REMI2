@@ -51,6 +51,66 @@ Namespace REMI.Bll
             Return New DataTable("RequestSetupInfo")
         End Function
 
+        Public Shared Function SaveRequestSetupBatchOnly(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal TestStageType As Int32, ByVal setupInfo As List(Of String)) As NotificationCollection
+            Dim nc As New NotificationCollection
+
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+
+                If (batchID > 0) Then
+                    Dim currentSetupList As New List(Of REMI.Entities.RequestSetup)
+                    Dim NewSetupList As New List(Of REMI.Entities.RequestSetup)
+                    currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Batch.ID = batchID And rs.TestStage.TestStageType = TestStageType Select rs).ToList()
+
+                    For Each rec As String In setupInfo
+                        Dim saveSetup As New REMI.Entities.RequestSetup()
+                        Dim splitNode As String() = rec.Split("/"c)
+
+                        Dim testID As Int32
+                        Dim testStageID As Int32
+                        Int32.TryParse(splitNode(1).ToString(), testID)
+                        Int32.TryParse(splitNode(0).ToString(), testStageID)
+
+                        saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Batch.ID = batchID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType).FirstOrDefault()
+
+                        If (saveSetup Is Nothing) Then
+                            saveSetup = New REMI.Entities.RequestSetup()
+                            saveSetup.Batch = (From b In instance.Batches Where b.ID = batchID Select b).FirstOrDefault()
+                            saveSetup.Test = (From t In instance.Tests Where t.ID = testID Select t).FirstOrDefault()
+                            saveSetup.TestStage = (From ts In instance.TestStages Where ts.ID = testStageID Select ts).FirstOrDefault()
+                            saveSetup.LastUser = UserManager.GetCurrentUser.UserName
+                        End If
+
+                        NewSetupList.Add(saveSetup)
+                    Next
+
+                    If (currentSetupList IsNot Nothing And currentSetupList.Count > 0) Then
+                        Dim removedSetup = currentSetupList.AsEnumerable().Except(NewSetupList.AsEnumerable())
+
+                        If (removedSetup IsNot Nothing) Then
+                            For Each sp In removedSetup
+                                Dim recordExists = (From tr In instance.TestRecords.Include("TestUnit").Include("Test").Include("TestStage") Where tr.TestUnit.Batch.ID = batchID And tr.Test.ID = sp.Test.ID And tr.TestStage.ID = sp.TestStage.ID).FirstOrDefault()
+
+                                If (recordExists Is Nothing) Then
+                                    instance.DeleteObject(sp)
+                                Else
+                                    nc.AddWithMessage(String.Format("Removal of Test '{0}' for Stage '{1}' already has test record created. It cannot be removed.", sp.Test.TestName, sp.TestStage.TestStageName), NotificationType.Warning)
+                                End If
+                            Next
+                        End If
+                    End If
+                Else
+                    nc.AddWithMessage("This Save Is Only Used For Batch Setup Save!", NotificationType.Warning)
+                End If
+
+                instance.SaveChanges()
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+            End Try
+
+            Return nc
+        End Function
+
         Public Shared Function SaveRequestSetup(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal saveOptions As List(Of Int32), ByRef tnc As Web.UI.WebControls.TreeNodeCollection, ByVal TestStageType As Int32, ByVal orientationID As Int32) As NotificationCollection
             Dim nc As New NotificationCollection
 
