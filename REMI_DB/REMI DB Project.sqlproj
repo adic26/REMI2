@@ -2444,4 +2444,25 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Views\vw_GetBatchRequestResult.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_Lookups_Values.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsInformation_XMLID_IsArchived.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsInformation_IsArchived.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ReqFieldData_ReqFieldSetupID.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsInformation_XMLID.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_Lookups_IsActive_LookupTypeID.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsMeasurements_Archived.sql" />
+  </ItemGroup>
 </Project>

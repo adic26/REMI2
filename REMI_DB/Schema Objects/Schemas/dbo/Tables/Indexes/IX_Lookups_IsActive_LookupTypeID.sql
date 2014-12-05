@@ -1,0 +1,1 @@
+﻿CREATE NONCLUSTERED INDEX [IX_Lookups_IsActive_LookupTypeID] ON dbo.[Lookups] ( [IsActive], [LookupTypeID] ) INCLUDE ([LookupID], [Values], [Description], [ParentID]);
