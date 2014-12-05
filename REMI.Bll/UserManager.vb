@@ -90,7 +90,7 @@ Namespace REMI.Bll
 
                 Return True
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -396,7 +396,7 @@ Namespace REMI.Bll
                     nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "i1", NotificationType.Information))
                 End If
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex, String.Format("userIDToDelete: {0}", userIDToDelete)))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex, String.Format("userIDToDelete: {0}", userIDToDelete)))
             End Try
             Return nc
         End Function

@@ -105,7 +105,7 @@ Namespace REMI.Bll
 
                 instance.SaveChanges()
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return nc
@@ -193,7 +193,7 @@ Namespace REMI.Bll
 
                 instance.SaveChanges()
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return nc
@@ -228,7 +228,7 @@ Namespace REMI.Bll
                     BatchManager.GetItem(request(0).RequestNumber, userIdentification, False, True, False)
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 saved = False
             End Try
 

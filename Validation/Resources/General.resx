@@ -444,4 +444,16 @@
   <data name="w81" xml:space="preserve">
     <value>Request Status Is Not Properly Set. This Batch Should not Be Started.</value>
   </data>
+  <data name="e25" xml:space="preserve">
+    <value>Could not add the batch to REMSTAR</value>
+  </data>
+  <data name="e26" xml:space="preserve">
+    <value>Could not get the batch from REMSTAR</value>
+  </data>
+  <data name="e27" xml:space="preserve">
+    <value>The Batch Comments were not updated successfully</value>
+  </data>
+  <data name="i14" xml:space="preserve">
+    <value>The batch priority was changed.</value>
+  </data>
 </root>

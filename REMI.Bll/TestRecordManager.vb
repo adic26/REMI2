@@ -33,7 +33,7 @@ Namespace REMI.Bll
                     nc.AddWithMessage("You do not have the accses to delete test records", NotificationType.Warning)
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
 
             Return nc
@@ -110,7 +110,7 @@ Namespace REMI.Bll
                     End If
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
 
             Return trsDocList
@@ -135,7 +135,7 @@ Namespace REMI.Bll
                     returnNotes.Add(AddCaterDocumentSingleTestRecord(testRec, documentNumber, comments))
                 Next
             Catch ex As Exception
-                returnNotes.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, "Docuemnt Number: " + documentNumber))
+                returnNotes.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Docuemnt Number: " + documentNumber))
             End Try
 
             Return returnNotes
@@ -160,7 +160,7 @@ Namespace REMI.Bll
                     returnNotes.Add(RemoveCaterDocumentSingleTestRecord(testRec, documentNumber, comments))
                 Next
             Catch ex As Exception
-                returnNotes.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Docuemnt Number: {0}", documentNumber)))
+                returnNotes.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex, String.Format("Docuemnt Number: {0}", documentNumber)))
             End Try
             Return returnNotes
         End Function
@@ -205,7 +205,7 @@ Namespace REMI.Bll
 
                 Return True
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function
@@ -259,7 +259,7 @@ Namespace REMI.Bll
                 End If
                 Return True
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return False
@@ -284,7 +284,7 @@ Namespace REMI.Bll
                     returnNotes.Add(UpdateSingleTestRecordStatus(testRec, status, comments))
                 Next
             Catch ex As Exception
-                returnNotes.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TestRecordID: {0} Status: {1}", trID, status.ToString())))
+                returnNotes.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("TestRecordID: {0} Status: {1}", trID, status.ToString())))
             End Try
 
             Return returnNotes
@@ -342,7 +342,7 @@ Namespace REMI.Bll
                     End If
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return returnValue
@@ -362,7 +362,7 @@ Namespace REMI.Bll
                     End If
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return tr.Notifications
@@ -383,7 +383,7 @@ Namespace REMI.Bll
                     End If
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return tr.Notifications
@@ -398,7 +398,7 @@ Namespace REMI.Bll
                     tr.Notifications.AddWithMessage(docNumber + " removed from to test record for " + tr.TestIdentificationString + ".", NotificationType.Information)
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
 
             Return tr.Notifications
@@ -414,7 +414,7 @@ Namespace REMI.Bll
                     End If
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return 0

@@ -99,7 +99,7 @@ Namespace REMI.Bll
             Try
                 Return RelabDB.UploadResults(xml, lossFile)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -146,7 +146,7 @@ Namespace REMI.Bll
                     Return False
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return False
@@ -175,7 +175,7 @@ Namespace REMI.Bll
             Try
                 Return RelabDB.UploadResultsMeasurementsFile(file, contentType, fileName)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -262,6 +262,7 @@ Namespace REMI.Bll
                 End If
                 Return True
             Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("batchID: {0} testID: {1} testStageID: {2} newTestStageID: {3}", batchID, testID, testStageID, newTestStageID))
                 Return False
             End Try
         End Function

@@ -51,7 +51,7 @@ Namespace REMI.Bll
                     Throw New Security.SecurityException("Unauthorized attempt to edit a setting.")
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return False
@@ -99,7 +99,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.GetSpecificLocationForUsersTestCenter(StationName, lastUser)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return 0
         End Function
@@ -324,7 +324,7 @@ Namespace REMI.Bll
                         instance.SaveChanges()
                     End If
                 Catch ex As Exception
-                    LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                    LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                     Return False
                 End Try
             End If
@@ -509,7 +509,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.GetStationConfigurationXML(hostID, profileName)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New XDocument()
         End Function
@@ -518,7 +518,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.GetStationConfigurationHeader(hostID, profileID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New DataTable()
         End Function
@@ -527,7 +527,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.GetStationConfigurationDetails(hostConfigID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New DataTable()
         End Function
@@ -536,7 +536,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.SaveStationConfiguration(hostConfigID, parentID, ViewOrder, NodeName, hostID, lastUser, pluginID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -545,7 +545,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.SaveStationConfigurationDetails(hostConfigID, configID, lookupID, lookupValue, hostID, lastUser, isAttribute)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -554,7 +554,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.GetSimilarStationConfigurations(hostID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New DataTable()
         End Function
@@ -563,7 +563,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.StationConfigurationProcess()
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -572,7 +572,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.CopyStationConfiguration(hostID, copyFromHostID, lastUser, profileID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -581,7 +581,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.DeleteStationConfiguration(hostID, lastUser, pluginID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -590,7 +590,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.DeleteStationConfigurationDetail(configID, lastUser)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -599,7 +599,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.DeleteStationConfigurationHeader(hostConfigID, lastUser, profileID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -608,7 +608,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationDB.StationConfigurationUpload(hostID, xml, LastUser, pluginID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -628,7 +628,7 @@ Namespace REMI.Bll
             Try
                 Return TrackingLocationTypeDB.AddRemoveTypetoTest(trackingType, testName)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function

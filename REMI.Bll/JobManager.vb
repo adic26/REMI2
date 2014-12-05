@@ -57,21 +57,6 @@ Namespace REMI.Bll
             Return String.Empty
         End Function
 
-        ' ''' <summary>
-        ' ''' Gets all known jobs
-        ' ''' </summary>
-        ' ''' <returns></returns>
-        ' ''' <remarks></remarks>
-        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        'Public Shared Function GetJobList() As List(Of String)
-        '    Try
-        '        Return JobDB.GetTRSJobList()
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-        '        Return New List(Of String)
-        '    End Try
-        'End Function
-
         ''' <summary>
         ''' Gets the current list of active jobs from the TRS database.
         ''' </summary>
@@ -117,7 +102,7 @@ Namespace REMI.Bll
 
                 Return True
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
 
             Return False
@@ -139,7 +124,7 @@ Namespace REMI.Bll
 
                 Return True
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -148,7 +133,7 @@ Namespace REMI.Bll
             Try
                 Return JobDB.SaveOrientation(jobID, id, name, productTypeID, description, isActive, xml)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function

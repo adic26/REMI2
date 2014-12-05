@@ -23,7 +23,7 @@ Public Class DataPush
                     Return RelabManager.UploadResults(xml, lossFile)
             End Select
         Catch ex As Exception
-            RelabManager.LogIssue("UploadData", "e3", NotificationType.Errors, ex)
+            RelabManager.LogIssue("UploadData", "e1", NotificationType.Errors, ex)
         End Try
         Return False
     End Function
@@ -36,7 +36,7 @@ Public Class DataPush
                     Return RelabManager.UploadResultsMeasurementsFile(file, contentType, fileName)
             End Select
         Catch ex As Exception
-            RelabManager.LogIssue("UploadDataImageFile", "e3", NotificationType.Errors, ex)
+            RelabManager.LogIssue("UploadDataImageFile", "e1", NotificationType.Errors, ex)
         End Try
         Return False
     End Function
@@ -67,7 +67,7 @@ Public Class DataPush
                 Return RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, userIdentification)
             End If
         Catch ex As Exception
-            RelabManager.LogIssue("ModifyResult", "e3", NotificationType.Errors, ex)
+            RelabManager.LogIssue("ModifyResult", "e1", NotificationType.Errors, ex)
         End Try
         Return False
     End Function
@@ -77,7 +77,7 @@ Public Class DataPush
         Try
             Return RelabManager.PollUnProcessedResults(requestNumber, unit, testStageName, testName)
         Catch ex As Exception
-            RelabManager.LogIssue("PollUnProcessedResults", "e3", NotificationType.Errors, ex)
+            RelabManager.LogIssue("PollUnProcessedResults", "e1", NotificationType.Errors, ex)
         End Try
 
         Return False

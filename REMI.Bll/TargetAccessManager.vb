@@ -15,7 +15,7 @@ Namespace REMI.Bll
             Try
                 taList = (From t In New REMI.Dal.Entities().Instance().TargetAccesses Where t.WorkstationName = workstationName Or (getGlobalAccess = True) Select t.TargetName).Distinct.ToList
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
 
             Return taList
@@ -32,7 +32,7 @@ Namespace REMI.Bll
                     Return True
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function
@@ -49,7 +49,7 @@ Namespace REMI.Bll
                     Return True
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -65,7 +65,7 @@ Namespace REMI.Bll
                     Return True
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -91,7 +91,7 @@ Namespace REMI.Bll
                     Return True
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function

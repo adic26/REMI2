@@ -103,7 +103,7 @@ Namespace REMI.Bll
                     Return TestStageDB.AddUpdateTaskAssignment(qraNumber, taskId, assignedTo, UserManager.GetCurrentValidUserLDAPName())
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
             End Try
             Return False
@@ -114,7 +114,7 @@ Namespace REMI.Bll
             Try
                 Return TestStageDB.RemoveTaskAssignment(qraNumber, taskId)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function

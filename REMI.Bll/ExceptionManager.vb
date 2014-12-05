@@ -41,7 +41,7 @@ Namespace REMI.Bll
                     Return TestExceptionDB.GetExceptionsForBatch(bc.BatchNumber)
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0}", qraNumber))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", qraNumber))
             End Try
             Return New TestExceptionCollection
         End Function
@@ -55,7 +55,7 @@ Namespace REMI.Bll
                     Return New Dictionary(Of String, Boolean)
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} TestStage: {1}", qraNumber, testStageName))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0} TestStage: {1}", qraNumber, testStageName))
                 Return New Dictionary(Of String, Boolean)
             End Try
         End Function
@@ -68,7 +68,7 @@ Namespace REMI.Bll
                     Return TestExceptionDB.GetExceptionsForBatch(bc.BatchNumber)
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0}", qraNumber))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", qraNumber))
             End Try
             Return New TestExceptionCollection
         End Function
@@ -86,7 +86,7 @@ Namespace REMI.Bll
                 End If
                 Return n
             Catch ex As Exception
-                Return LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("ExceptionID: {0}", ID))
+                Return LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex, String.Format("ExceptionID: {0}", ID))
             End Try
         End Function
 
@@ -173,7 +173,7 @@ Namespace REMI.Bll
                     nc.Type = NotificationType.Information
                 End If
             Catch ex As Exception
-                nc = LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} TestName: {1}", qraNumber, testName))
+                nc = LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex, String.Format("Request: {0} TestName: {1}", qraNumber, testName))
             End Try
             Return nc
         End Function

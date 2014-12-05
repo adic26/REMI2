@@ -27,7 +27,7 @@ Namespace REMI.Bll
                     Return -1
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return -1
             End Try
         End Function
@@ -59,7 +59,7 @@ Namespace REMI.Bll
 
                 Return True
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function
@@ -82,7 +82,7 @@ Namespace REMI.Bll
                 instance.SaveChanges()
                 Return True
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function
@@ -93,7 +93,7 @@ Namespace REMI.Bll
 
                 Return DoUpdate(VersionNumber, version)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
 
             Return 0
@@ -103,7 +103,7 @@ Namespace REMI.Bll
             Try
                 Return VersionDB.remispVersionProductLink(ApplicationName, pcNameID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New DataTable()
         End Function

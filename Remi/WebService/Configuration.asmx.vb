@@ -227,7 +227,7 @@ Public Class ProductConfiguration
         Try
             Return RequestManager.SaveRequestSetupBatchOnly(productID, jobID, batchID, testStageType, setupInfo)
         Catch ex As Exception
-            RequestManager.LogIssue("SaveBatchTestSetupInfo", "e3", NotificationType.Errors, ex, String.Format("BatchID: {0} JobID: {1} ProductID: {2} TestStageType: {3} BlankSelected: {4}", batchID, jobID, productID, testStageType))
+            RequestManager.LogIssue("SaveBatchTestSetupInfo", "e1", NotificationType.Errors, ex, String.Format("BatchID: {0} JobID: {1} ProductID: {2} TestStageType: {3} BlankSelected: {4}", batchID, jobID, productID, testStageType))
         End Try
 
         Return New NotificationCollection()
@@ -253,7 +253,7 @@ Public Class ProductConfiguration
                 Return RequestManager.SaveRequest(requestName, request, userIdentification)
             End If
         Catch ex As Exception
-            RequestManager.LogIssue("SaveRequest", "e3", NotificationType.Errors, ex, String.Format("RequestName: {0} User: {1}", requestName, userIdentification))
+            RequestManager.LogIssue("SaveRequest", "e1", NotificationType.Errors, ex, String.Format("RequestName: {0} User: {1}", requestName, userIdentification))
         End Try
 
         Return False
