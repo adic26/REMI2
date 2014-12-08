@@ -22,6 +22,7 @@ Namespace REMI.BusinessEntities
         Private _name As String
         Private _fieldType As String
         Private _fieldValidation As String
+        Private _optionsTypeName As String
         Private _category As String
         Private _intField As String
         Private _extField As String
@@ -231,6 +232,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As List(Of String))
                 _optionsType = value
+            End Set
+        End Property
+
+        Public Property OptionsTypeName() As String Implements IRequestFields.OptionsTypeName
+            Get
+                Return _optionsTypeName
+            End Get
+            Set(ByVal value As String)
+                _optionsTypeName = value
             End Set
         End Property
 

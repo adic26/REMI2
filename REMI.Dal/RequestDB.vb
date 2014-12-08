@@ -583,6 +583,7 @@ Namespace REMI.Dal
                     filteredOptions.AddRange(options)
                 End If
 
+                myFields.OptionsTypeName = (From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.LookupType.Name).FirstOrDefault()
                 myFields.OptionsType = filteredOptions
 
                 Dim lookups = (From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.ParentLookupTypeID <> myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _

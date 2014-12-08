@@ -19,6 +19,7 @@ namespace REMI.Contracts
         String RequestType  { get; set; } 
         String Name  { get; set; }
         String FieldType { get; set; }
+        String OptionsTypeName { get; set; }
         String FieldValidation { get; set; }
         String IntField { get; set; }
         String ExtField  { get; set; }
