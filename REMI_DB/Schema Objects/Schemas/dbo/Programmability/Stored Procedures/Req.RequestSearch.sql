@@ -12,7 +12,7 @@ BEGIN
 	WHERE rfs.RequestTypeID=@RequestTypeID AND t.TableType='Request'
 
 	DECLARE @ColumnName NVARCHAR(255)
-	DECLARE @whereStr NVARCHAR(MAX)
+	DECLARE @whereStr VARCHAR(MAX)
 	DECLARE @rows VARCHAR(8000)
 	DECLARE @sql VARCHAR(8000)
 	SELECT @rows=  ISNULL(STUFF(
@@ -46,15 +46,36 @@ BEGIN
 		
 		WHILE (@ID IS NOT NULL)
 		BEGIN
+			SET @sql += ' ('
+			
+			DECLARE @NOLIKE INT
+			SET @NOLIKE = 0
 			SET @ColumnName = ''
 			SET @whereStr = ''
 			SELECT @ColumnName=ColumnName FROM #temp WHERE ID = @ID AND TableType='Request'
-			
+						
 			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
 			FROM #temp
-			WHERE ID = @ID AND TableType='Request'
+			WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) NOT LIKE '*%'
 			
-			SET @sql += @ColumnName + ' IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') AND '
+			IF (LEN(LTRIM(RTRIM(@whereStr))) > 0)
+			BEGIN
+				SET @sql += @ColumnName + ' IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')  '
+				SET @NOLIKE = 1
+			END
+
+			SET @whereStr = ''
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+			FROM #temp
+			WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) LIKE '*%'
+
+			SET @whereStr = REPLACE(REPLACE(REPLACE(@whereStr, '''*', 'LIKE ''%'), ''',', '%'''), 'LIKE ', ' OR ' + @ColumnName + ' LIKE ')
+
+			IF (LEN(LTRIM(RTRIM(@whereStr))) > 0)
+				SET @sql += CASE WHEN @NOLIKE = 0 THEN SUBSTRING(@whereStr,4, LEN(@whereStr)) ELSE @whereStr END
+			
+			SET @sql += ' ) AND '
+			
 			
 			SELECT @ID = MIN(ID) FROM #temp WHERE ID > @ID AND TableType='Request'
 		END
@@ -106,7 +127,7 @@ BEGIN
 			INNER JOIN Batches b WITH(NOLOCK) ON b.QRANumber=r.RequestNumber
 			INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.BatchID=b.ID '
 
-		IF ((SELECT COUNT(*) FROM #temp WHERE TableType IN ('Test', 'Stage')) > 0)
+		IF ((SELECT COUNT(*) FROM #temp WHERE TableType IN ('Test', 'Stage', 'Measurement')) > 0)
 		BEGIN
 			DECLARE @ResultArchived INT
 			DECLARE @TestRunStartDate DATETIME
@@ -127,6 +148,18 @@ BEGIN
 				INNER JOIN Lookups mn WITH(NOLOCK) ON mn.LookupID = m.MeasurementTypeID 
 				INNER JOIN Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
 			WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) '
+			
+			IF ((SELECT COUNT(*) FROM #temp WHERE TableType = 'Measurement') > 0)
+			BEGIN				
+				SET @whereStr = ''
+				SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+				FROM #temp
+				WHERE TableType='Measurement' AND LTRIM(RTRIM(SearchTerm)) LIKE '*%'
+				
+				SET @whereStr = REPLACE(REPLACE(REPLACE(@whereStr, '''*', 'LIKE ''%'), ''',', '%'''), 'LIKE ', ' OR mn.[Values] LIKE ')
+
+				SET @sql += 'AND ( ' + SUBSTRING(@whereStr,4, LEN(@whereStr)) + ' )'
+			END
 			
 			IF (@TestRunStartDate IS NOT NULL AND @TestRunEndDate IS NOT NULL)
 			BEGIN
@@ -257,7 +290,7 @@ BEGIN
 			LEFT OUTER JOIN #parameters p ON rr.ID=p.ResultMeasurementID
 			LEFT OUTER JOIN #information i ON i.RID = rr.ResultID
 		
-		ALTER TABLE #preSelect DROP COLUMN ID, ResultMeasurementID, ResultID
+		ALTER TABLE #preSelect DROP COLUMN RequestID, ID, ResultMeasurementID, ResultID, RID
 		
 		SELECT * FROM #preSelect
 		
@@ -282,22 +315,24 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 --DECLARE @table AS dbo.SearchFields
 --INSERT INTO @table(TableType, ID, SearchTerm)
---VALUES ('Request', 51, 'Windermere B R132')
--- ,('Request', 51, 'Windermere E R135')
--- --,('Request', 51, 'Lisbon R070')
--- --,('Request', 49, 'Handheld')
----- --,('Test', 1099, 'Sensor Test')
+--VALUES --('Request', 51, '*Windermere')
+--('Request', 51, 'Windermere E R135')
+----,('Request', 51, '3G SIMs')
+---- ,('Request', 51, '*Lisbon')
+--,('Request', 49, 'Handheld')
+------ --,('Test', 1099, 'Sensor Test')
 --,('Test', 1280, 'Functional')
---, ('Test', 1020, 'Radiated RF Test')
------- --,('Test', 1103, 'Camera Front')
---,('Stage', 3218, 'Post 360hrs')
+--,('Test', 1020, 'Radiated RF Test')
+-------- --,('Test', 1103, 'Camera Front')
+----,('Stage', 3218, 'Post 360hrs')
 ----,('Stage', 3220, 'Post 720hrs')
 ----,('BSN', 0, '1151185790')
---,('Unit', 0, '5')
---,('Unit', 0, '1')
-----,('IMEI', 0, '')
+----,('Unit', 0, '5')
+----,('Unit', 0, '1')
+--------,('IMEI', 0, '')
 ----,('ResultArchived', 0, '')
-----,('ResultInfoArchived', 0, '')
---, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
---, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
+--------,('ResultInfoArchived', 0, '')
+----, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
+----, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
+--,('Measurement', 0, '*RxBER')
 --EXEC [Req].[RequestSearch] 1, @table
