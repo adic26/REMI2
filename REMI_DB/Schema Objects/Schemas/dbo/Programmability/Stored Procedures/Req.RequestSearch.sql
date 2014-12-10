@@ -77,8 +77,9 @@ BEGIN
 		IF ((SELECT COUNT(*) FROM #temp WHERE TableType IN ('Test', 'Stage')) > 0)
 		BEGIN
 			ALTER TABLE #RequestResults ADD BatchUnitNumber INT, IMEI NVARCHAR(150), BSN BIGINT, TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
-				MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), UpperLimit NVARCHAR(255),
-				LowerLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(400), DegradationVal DECIMAL(10,3), Description NVARCHAR(800), PassFail BIT, ReTestNum INT,
+				TestRunStartDate DATETIME, TestRunEndDate DATETIME, MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
+				UpperLimit NVARCHAR(255), LowerLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(400), 
+				DegradationVal DECIMAL(10,3), Description NVARCHAR(800), PassFail BIT, ReTestNum INT,
 				MeasurementUnitType NVARCHAR(150), ID INT, ResultID INT
 		END
 		ELSE
@@ -92,7 +93,7 @@ BEGIN
 		
 		IF ((SELECT COUNT(*) FROM #temp WHERE TableType IN ('Test', 'Stage')) > 0)
 		BEGIN
-			SET @sql += ', t.TestName, ts.TestStageName,
+			SET @sql += ', t.TestName, ts.TestStageName, x.StartDate AS TestRunStartDate, x.EndDate AS TestRunEndDate, 
 				mn.[Values] As MeasurementName, m.MeasurementValue, m.UpperLimit, m.LowerLimit, m.Archived, m.Comment, m.DegradationVal, m.Description, m.PassFail, m.ReTestNum, 
 				mut.[Values] As MeasurementUnitType, m.ID, rs.ID AS ResultID '
 		END
@@ -108,15 +109,29 @@ BEGIN
 		IF ((SELECT COUNT(*) FROM #temp WHERE TableType IN ('Test', 'Stage')) > 0)
 		BEGIN
 			DECLARE @ResultArchived INT
-			SELECT @ResultArchived = ID FROM #temp WHERE TableType='ResultArchived'
+			DECLARE @TestRunStartDate DATETIME
+			DECLARE @TestRunEndDate DATETIME
 			
+			SELECT @ResultArchived = ID FROM #temp WHERE TableType='ResultArchived'
+			SELECT @TestRunStartDate = SearchTerm FROM #temp WHERE TableType='TestRunStartDate'
+			SELECT @TestRunEndDate = SearchTerm FROM #temp WHERE TableType='TestRunEndDate'
+			
+			IF @ResultArchived IS NULL
+				SET @ResultArchived = 0
+				
 			SET @sql += 'INNER JOIN Relab.Results rs WITH(NOLOCK) ON rs.TestUnitID=tu.ID
+				INNER JOIN Relab.ResultsXML x ON x.ResultID = rs.ID
 				INNER JOIN Tests t WITH(NOLOCK) ON rs.TestID=t.ID
 				INNER JOIN TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
 				INNER JOIN Relab.ResultsMeasurements m WITH(NOLOCK) ON m.ResultID=rs.ID 
 				INNER JOIN Lookups mn WITH(NOLOCK) ON mn.LookupID = m.MeasurementTypeID 
 				INNER JOIN Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
 			WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) '
+			
+			IF (@TestRunStartDate IS NOT NULL AND @TestRunEndDate IS NOT NULL)
+			BEGIN
+				SET @sql += ' AND x.StartDate BETWEEN ''' + CONVERT(NVARCHAR,@TestRunStartDate) + ''' AND ''' + CONVERT(NVARCHAR,@TestRunEndDate) + ''' '
+			END
 		END
 		
 		IF ((SELECT COUNT(*) FROM #temp WHERE TableType='Unit') > 0)
@@ -205,6 +220,9 @@ BEGIN
 			DECLARE @ResultInfoArchived INT
 			SELECT @ResultInfoArchived = ID FROM #temp WHERE TableType='ResultInfoArchived'
 			
+			IF @ResultInfoArchived IS NULL
+				SET @ResultInfoArchived = 0
+				
 			SELECT @rows=  ISNULL(STUFF(
 			( 
 			SELECT DISTINCT '],[' + ri.Name
@@ -278,7 +296,8 @@ GO
 --,('Unit', 0, '5')
 --,('Unit', 0, '1')
 ----,('IMEI', 0, '')
---,('ResultArchived', 0, '')
---,('ResultInfoArchived', 0, '')
-
+----,('ResultArchived', 0, '')
+----,('ResultInfoArchived', 0, '')
+--, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
+--, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
 --EXEC [Req].[RequestSearch] 1, @table
