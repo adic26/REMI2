@@ -19,5 +19,15 @@ Namespace REMI.Bll
             End Try
             Return New DataTable
         End Function
+
+        Public Shared Function Search(ByVal requestTypeID As Int32, ByVal SearchFields As DataTable) As DataTable
+            Try
+                Return ReportDB.Search(requestTypeID, SearchFields)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("Search")
+        End Function
     End Class
 End Namespace

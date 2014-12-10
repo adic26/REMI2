@@ -18,6 +18,17 @@ Namespace REMI.Bll
             Return New DataTable("Lookups")
         End Function
 
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetLookupTypes() As DataTable
+            Try
+                Return LookupsDB.GetLookupTypes()
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("LookupTypes")
+        End Function
+
         <DataObjectMethod(DataObjectMethodType.[Select], True)> _
         Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
             Try

@@ -1,22 +1,24 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" AutoEventWireup="false"
-    Inherits="Remi.Reports" Codebehind="Reports.aspx.vb" EnableEventValidation="false" %>
-<%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" AutoEventWireup="false" Inherits="Remi.ReqDefault" CodeBehind="Default.aspx.vb" EnableEventValidation="false" EnableViewState="true" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register Src="../Controls/Notifications.ascx" TagName="Notifications" TagPrefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
-    <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
 </asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
-    <h1>Reports</h1><br />
+    <h1><asp:Label runat="server" ID="lblRequest"></asp:Label></h1>
+    <br />
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
     <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
 
-        <asp:Panel ID="pnlLeftMenuActions" runat="server">
+    <asp:Panel ID="pnlLeftMenuActions" runat="server">
         <h3>Request View</h3>
         <ul>
             <li>
                 <br /><asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID"></asp:DropDownList>
+            </li>
+            <li>
+                <asp:HyperLink runat="server" ID="hypAdmin" Enabled="true" Text="Admin" Target="_blank"></asp:HyperLink>
             </li>
         </ul>
     </asp:Panel>
@@ -26,12 +28,12 @@
     <asp:TextBox runat="server" ID="txtSearchTerm" ></asp:TextBox>
     <asp:Button runat="server" ID="btnSave" Text="Add" OnClick="btnSave_Click" />
     <br />
-    <asp:DropDownList runat="server" ID="ddlTests" Width="150px" DataTextField="TestName" DataValueField="ID" AppendDataBoundItems="true"></asp:DropDownList>
-    <br /><asp:ListBox runat="server" ID="lstSearchTerms"></asp:ListBox>
+    <asp:ListBox runat="server" ID="lstSearchTerms"></asp:ListBox>
 
     <br />
     <asp:Button runat="server" ID="btnSearch" Text="Search" OnClick="btnSearch_Click" />
 
     <asp:GridView runat="server" ID="grdRequestSearch" AutoGenerateColumns="true"></asp:GridView>
+
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>

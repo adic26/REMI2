@@ -5,6 +5,7 @@ Imports REMI.Validation
 Imports System.ComponentModel
 Imports REMI.Contracts
 Imports REMI.Core
+Imports System.Reflection
 
 Namespace REMI.Bll
     <DataObjectAttribute()> _
@@ -49,6 +50,99 @@ Namespace REMI.Bll
             End Try
 
             Return New DataTable("RequestSetupInfo")
+        End Function
+
+        Public Shared Function GetRequestParent(ByVal requestTypeID As Int32) As DataTable
+            Try
+                Dim fields = (From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).ToList()
+                Dim list2 = (From t In New String() {String.Empty} Select New With {.Name = "Select...", .ReqFieldSetupID = 0})
+                Dim union = list2.Union(fields)
+
+                Return REMI.BusinessEntities.Helpers.EQToDataTable(union.OrderBy(Function(r) r.ReqFieldSetupID), "RequestSetupParent")
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("RequestSetupParent")
+        End Function
+
+        Public Shared Function GetRequestMappingFields() As DataTable
+            Try
+                Dim list = (From t In New String() {String.Empty} Select New With {.IntField = "Select..."}).Union((From m In New REMI.Dal.Entities().Instance().ReqFieldMappings Select New With {.IntField = m.IntField}).OrderBy(Function(map) map.IntField).Distinct.ToList())
+
+                Return REMI.BusinessEntities.Helpers.EQToDataTable(list, "RequestMappingFields")
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("RequestMappingFields")
+        End Function
+
+        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal hasREMIIntegration As Boolean, ByVal intField As String, ByVal description As String) As Boolean
+            Try
+                Dim oldName As String = String.Empty
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim setup As REMI.Entities.ReqFieldSetup = (From fs In instance.ReqFieldSetups Where fs.ReqFieldSetupID = fieldSetupID Select fs).FirstOrDefault()
+
+                If (setup IsNot Nothing) Then
+                    oldName = setup.Name
+                    setup.Name = name
+                    setup.FieldTypeID = fieldTypeID
+                    setup.FieldValidationID = fieldValidationID
+                    setup.IsRequired = isRequired
+                    setup.Archived = isArchived
+                    setup.OptionsTypeID = optionsTypeID
+                    setup.Category = category
+                    setup.ParentReqFieldSetupID = parentFieldID
+                    setup.Description = description
+
+                    Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
+
+                    If requestType IsNot Nothing Then
+                        requestType.HasIntegration = hasREMIIntegration
+                    End If
+
+                    Dim requestFieldMapping As REMI.Entities.ReqFieldMapping = (From fm In instance.ReqFieldMappings Where fm.ExtField = oldName Select fm).FirstOrDefault()
+
+                    If (requestFieldMapping IsNot Nothing) Then
+                        requestFieldMapping.ExtField = name
+                        requestFieldMapping.IntField = intField
+                    End If
+                Else
+                    Dim rfs As New REMI.Entities.ReqFieldSetup()
+                    rfs.Name = name
+                    rfs.Archived = isArchived
+                    rfs.IsRequired = isRequired
+                    rfs.Category = category
+                    rfs.FieldTypeID = fieldTypeID
+                    rfs.FieldValidationID = fieldValidationID
+                    rfs.ParentReqFieldSetupID = parentFieldID
+                    rfs.OptionsTypeID = optionsTypeID
+                    rfs.RequestTypeID = requestTypeID
+                    rfs.ColumnOrder = 1
+                    rfs.DisplayOrder = 999
+                    rfs.Description = description
+
+                    instance.AddToReqFieldSetups(rfs)
+
+                    If (intField.Trim().Length > 0) Then
+                        Dim rfm As New REMI.Entities.ReqFieldMapping
+                        rfm.IntField = intField
+                        rfm.ExtField = name
+                        rfm.RequestTypeID = requestTypeID
+                        rfm.IsActive = True
+
+                        instance.AddToReqFieldMappings(rfm)
+                    End If
+                End If
+
+                instance.SaveChanges()
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+
+            Return False
         End Function
 
         Public Shared Function SaveRequestSetupBatchOnly(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal TestStageType As Int32, ByVal setupInfo As List(Of String)) As NotificationCollection

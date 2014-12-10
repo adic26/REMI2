@@ -27,6 +27,7 @@ namespace REMI.Contracts
         String Category { get; set; }
         String Value { get; set; }
         String Description { get; set; }
+        String ParentFieldSetupName { get; set; }
         bool IsRequired  { get; set; }
         bool IsArchived { get; set; }
         bool IsFromExternalSystem { get; set; }

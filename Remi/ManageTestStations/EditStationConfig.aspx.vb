@@ -100,8 +100,8 @@ Partial Class ManageStations_EditStationConfig
                     btnProcessPendingXML.Visible = False
                     lblProcessing.Visible = False
                     Dim notValidBindControls As String() = New String() {"btnEditMode", "btnViewMode", "btnUpdate", "btnSave", "btnAddDetail", "btnAddNode", "btnSaveNode", "btnDeleteSub", "imgDeleteRow", "btnUpload"}
-                    If (REMI.Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
-                        If (Not (notValidBindControls.Contains(REMI.Helpers.GetPostBackControl(Me.Page).ID))) Then
+                    If (Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
+                        If (Not (notValidBindControls.Contains(Helpers.GetPostBackControl(Me.Page).ID))) Then
                             btnAddNode.Visible = True
                             pnlAddNode.CssClass = "hidden"
 
@@ -317,7 +317,7 @@ Partial Class ManageStations_EditStationConfig
         btnViewMode.Enabled = IsInEditMode
         btnUpdate.Visible = IsInEditMode
         ddlPluginName.Enabled = IsInEditMode
-        DirectCast(DirectCast(REMI.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
         BindData()
     End Sub
 
@@ -327,7 +327,7 @@ Partial Class ManageStations_EditStationConfig
         btnViewMode.Enabled = IsInEditMode
         btnUpdate.Visible = IsInEditMode
         ddlPluginName.Enabled = IsInEditMode
-        DirectCast(DirectCast(REMI.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
         BindData()
     End Sub
 
@@ -382,10 +382,10 @@ Partial Class ManageStations_EditStationConfig
     End Sub
 
     Protected Sub btnAddNode_Click(sender As Object, e As EventArgs)
-        DirectCast(REMI.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("btnAddNode").Visible = False
-        DirectCast(DirectCast(REMI.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = ""
+        DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("btnAddNode").Visible = False
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = ""
 
-        Dim cmbParent As DropDownList = DirectCast(DirectCast(REMI.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("ddlAddParentNames"), DropDownList)
+        Dim cmbParent As DropDownList = DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("ddlAddParentNames"), DropDownList)
         If cmbParent IsNot Nothing Then
             Dim list = ((From dt1 In TrackingLocationManager.GetStationConfigurationHeader(hdnHostID.Value, ddlSwitchPlugin.SelectedValue).AsEnumerable() _
                                                   Select New With { _
@@ -409,13 +409,13 @@ Partial Class ManageStations_EditStationConfig
         Dim viewOrder As Int32
         Dim nodeName As String
 
-        nodeName = Request.Form(REMI.Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddNodeName").UniqueID)
-        Int32.TryParse(Request.Form(REMI.Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddViewOrder").UniqueID), viewOrder)
-        Int32.TryParse(Request.Form(REMI.Helpers.GetPostBackControl(Me.Page).Parent.FindControl("ddlAddParentNames").UniqueID), parentID)
+        nodeName = Request.Form(Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddNodeName").UniqueID)
+        Int32.TryParse(Request.Form(Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddViewOrder").UniqueID), viewOrder)
+        Int32.TryParse(Request.Form(Helpers.GetPostBackControl(Me.Page).Parent.FindControl("ddlAddParentNames").UniqueID), parentID)
 
         TrackingLocationManager.SaveStationConfiguration(0, parentID, viewOrder, nodeName, hdnHostID.Value, UserManager.GetCurrentValidUserLDAPName, ddlSwitchPlugin.SelectedValue)
 
-        DirectCast(DirectCast(REMI.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
         BindData()
     End Sub
 #End Region

@@ -58,6 +58,14 @@
                     End If
                 End If
             End If
+        ElseIf httpApp.Context.Request.Path.ToLower.Contains("/requests/") Then
+            Dim paths As String() = httpApp.Context.Request.Path.ToString().Split(New [Char]() {"/"c}, System.StringSplitOptions.RemoveEmptyEntries)
+            
+            If (paths.Count = 2) Then
+                httpApp.Context.Response.Redirect(String.Format("~/Request/Default.aspx?rt={0}", paths(1).ToUpper), True)
+            Else
+                httpApp.Context.Response.Redirect("~/Request/Default.aspx", True)
+            End If
         End If
     End Sub
 

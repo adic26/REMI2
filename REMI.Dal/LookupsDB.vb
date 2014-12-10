@@ -41,6 +41,20 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetLookupTypes() As DataTable
+            Dim dt As New DataTable
+            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetLookupTypes", MyConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    MyConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "LookupTypes"
+                End Using
+            End Using
+            Return dt
+        End Function
+
         Public Shared Function SaveLookup(ByVal lookupType As String, ByVal value As String, ByVal isActive As Int32, ByVal description As String, ByVal parentID As Int32) As Boolean
             Dim Result As Integer = 0
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)

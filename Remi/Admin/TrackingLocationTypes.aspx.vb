@@ -84,7 +84,7 @@ Partial Class Admin_TrackingLocationTypes
         End If
 
         If tlType IsNot Nothing Then
-            tlType.LastUser = Helpers.GetCurrentUserLDAPName
+            tlType.LastUser = UserManager.GetCurrentValidUserLDAPName
         Else
             tlType = New TrackingLocationType
         End If

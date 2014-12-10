@@ -2465,4 +2465,13 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsMeasurements_Archived.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetLookupTypes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestSearch.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Table Types\SearchFields.sql" />
+  </ItemGroup>
 </Project>

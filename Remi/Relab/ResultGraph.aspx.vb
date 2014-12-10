@@ -2,6 +2,7 @@
 Imports System.Web.UI.DataVisualization.Charting
 Imports System.IO
 Imports System.Drawing
+Imports Remi.BusinessEntities
 
 Public Class ResultGraph
     Inherits System.Web.UI.Page

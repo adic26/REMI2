@@ -1120,3 +1120,15 @@ table tr td input
     background-repeat: no-repeat; 
     background-position:center;
 }
+
+.Scrollgrid
+{ 
+    OVERFLOW: auto; BORDER-LEFT: #000000 1px; WIDTH: 100%; BORDER-BOTTOM: #000000 1px; HEIGHT: 100%;
+    scrollbar-3d-light-color: #999999;
+    scrollbar-arrow-color: #9C3842;
+    scrollbar-base-color: #003366;
+    scrollbar-dark-shadow-color: #9C3842;
+    scrollbar-face-color: #e7e7e7;
+    scrollbar-highlight-color: #ffffff;
+    scrollbar-shadow-color: #9C3842;
+} 

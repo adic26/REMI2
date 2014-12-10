@@ -11,7 +11,16 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class Reports
+Partial Public Class ReqDefault
+
+    '''<summary>
+    '''lblRequest control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblRequest As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''AjaxScriptManager1 control.
@@ -41,6 +50,15 @@ Partial Public Class Reports
     Protected WithEvents ddlRequestType As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''hypAdmin control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypAdmin As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''ddlSearchField control.
     '''</summary>
     '''<remarks>
@@ -66,15 +84,6 @@ Partial Public Class Reports
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnSave As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''ddlTests control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlTests As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''lstSearchTerms control.

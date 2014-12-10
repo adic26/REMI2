@@ -40,7 +40,7 @@ BEGIN
 			rfm.IntField, rfm.ExtField,
 			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
 			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category,
-			rfs.ParentReqFieldSetupID, Req.RequestType.HasIntegration
+			rfs.ParentReqFieldSetupID, Req.RequestType.HasIntegration, rfsp.Name As ParentFieldSetupName
 	FROM Req.RequestType
 		INNER JOIN Lookups lrt ON lrt.LookupID=Req.RequestType.TypeID
 		INNER JOIN Req.ReqFieldSetup rfs ON rfs.RequestTypeID=Req.RequestType.RequestTypeID                  
@@ -50,6 +50,7 @@ BEGIN
 		LEFT OUTER JOIN Req.Request ON RequestNumber=@RequestNumber
 		LEFT OUTER JOIN Req.ReqFieldData rfd ON rfd.ReqFieldSetupID=rfs.ReqFieldSetupID AND rfd.RequestID=Req.Request.RequestID
 		LEFT OUTER JOIN Req.ReqFieldMapping rfm ON rfm.RequestTypeID=Req.RequestType.RequestTypeID AND rfm.ExtField=rfs.Name AND ISNULL(rfm.IsActive, 0) = 1
+		LEFT OUTER JOIN Req.ReqFieldSetup rfsp ON rfsp.ReqFieldSetupID=rfs.ParentReqFieldSetupID
 	WHERE (lrt.[Values] = @RequestType) AND
 		(
 			(@IncludeArchived = @TrueBit)

@@ -182,22 +182,22 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Logged In" SortExpression="InTime">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label2" runat="server" Text='<%# Remi.Helpers.DateTimeFormat(Eval("InTime")) %>'></asp:Label>
+                                        <asp:Label ID="Label2" runat="server" Text='<%# Remi.BusinessEntities.Helpers.DateTimeformat(Eval("InTime"))%>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Logged In By" SortExpression="InUser">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label3" runat="server" Text='<%# Remi.Helpers.UserNameFormat(Eval("InUser")) %>'></asp:Label>
+                                        <asp:Label ID="Label3" runat="server" Text='<%# REMI.BusinessEntities.Helpers.UserNameformat(Eval("InUser"))%>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Logged Out" SortExpression="OutTime">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label4" runat="server" Text='<%# Remi.Helpers.DateTimeformat(Eval("OutTime")) %>'></asp:Label>
+                                        <asp:Label ID="Label4" runat="server" Text='<%# REMI.BusinessEntities.Helpers.DateTimeformat(Eval("OutTime"))%>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Logged Out By" SortExpression="OutUser">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label5" runat="server" Text='<%# Remi.Helpers.UserNameFormat(Eval("OutUser")) %>'></asp:Label>
+                                        <asp:Label ID="Label5" runat="server" Text='<%# REMI.BusinessEntities.Helpers.UserNameformat(Eval("OutUser"))%>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>

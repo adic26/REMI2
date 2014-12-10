@@ -7107,15 +7107,15 @@
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfo" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfoCompleted" Width="1.5" PointX="0.75" PointY="5.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_TestRecordAudit" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="18.75" PointY="59.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="23.25" PointY="68.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="23.25" PointY="55.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="25.5" PointY="54.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="25.5" PointY="57.125" />
+        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="18" PointY="59.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="22.5" PointY="68.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="22.5" PointY="55.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="24.75" PointY="54.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="24.75" PointY="57.125" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsOrphaned" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="25.5" PointY="60.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="21" PointY="68" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="13.5" PointY="42.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="24.75" PointY="60.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="20.25" PointY="68" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="12.75" PointY="46.625" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultXML_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
@@ -7124,48 +7124,48 @@
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsFiles_ResultsMeasurements" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsParameters_ResultsMeasurements" />
         <EntityTypeShape EntityType="REMI.Entities.ApplicationLog" Width="1.5" PointX="6.75" PointY="4.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="8.25" PointY="59.375" />
-        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="3.75" PointY="64.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="6" PointY="64.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="8.25" PointY="61.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="3.75" PointY="33.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="6" PointY="33.25" />
         <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="13" PointY="82" />
         <EntityTypeShape EntityType="REMI.Entities.aspnet_SchemaVersions" Width="1.5" PointX="8.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="2.5" PointX="9.75" PointY="81.625" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="13.5" PointY="55.875" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="12.75" PointY="55.875" />
         <EntityTypeShape EntityType="REMI.Entities.BatchesAudit" Width="1.5" PointX="8.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="13.5" PointY="47" />
-        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="15.5" PointY="34.75" />
-        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="15.75" PointY="53.125" />
-        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="41.625" />
-        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="36.25" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="15.75" PointY="48" />
+        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="17.75" PointY="52.125" />
+        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="15" PointY="51.625" />
+        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="46.625" />
+        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="57.25" />
         <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="47.375" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="1.5" PointX="3" PointY="53" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="0.75" PointY="52.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="1.5" PointX="3" PointY="59.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="47" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="1.5" PointX="3" PointY="57" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="0.75" PointY="56.875" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="1.5" PointX="3" PointY="61.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="51" />
         <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="5.25" PointY="44.375" />
-        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="3" PointY="35.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="11.25" PointY="25.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="13.5" PointY="30.625" />
+        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="3" PointY="36.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="15.5" PointY="40.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="17.75" PointY="44" />
         <EntityTypeShape EntityType="REMI.Entities.StationConfigurationUpload" Width="1.5" PointX="4.75" PointY="8.75" />
         <EntityTypeShape EntityType="REMI.Entities.sysdiagram" Width="1.5" PointX="10.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.TargetAccess" Width="1.5" PointX="10.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="16.5" PointY="47" />
+        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="12.75" PointY="51" />
         <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="87.875" />
         <EntityTypeShape EntityType="REMI.Entities.TestExceptionsAudit" Width="1.5" PointX="10.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="15.75" PointY="58.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="15" PointY="58.5" />
         <EntityTypeShape EntityType="REMI.Entities.TestRecordsAudit" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="18" PointY="56.25" />
-        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="11.25" PointY="29.25" />
-        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="11.25" PointY="55.25" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="8.25" PointY="46.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="13.5" PointY="39.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="10.5" PointY="39.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="12.75" PointY="35.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="16" PointY="42.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="10.5" PointY="35.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="8.25" PointY="62.125" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="6" PointY="56.75" />
-        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="8.25" PointY="38.625" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="17.25" PointY="56.5" />
+        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="10.5" PointY="55.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="10.5" PointY="61.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="8.25" PointY="41.375" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="12.75" PointY="43.625" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="10.5" PointY="36" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="12.75" PointY="39.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="15" PointY="44.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="10.5" PointY="39.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="8.25" PointY="34.125" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="6" PointY="36.75" />
+        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="8.25" PointY="38.125" />
         <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="8.25" PointY="54.875" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ApplicationVersions" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ProductConfigurationVersion" />
@@ -7208,7 +7208,7 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfiguration_TrackingLocationsPlugin" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationTypePermissions_TrackingLocationTypes" />
-        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="11.25" PointY="43" />
+        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="10.5" PointY="43" />
         <AssociationConnector Association="REMI.Entities.FK_BatchComments_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_JobOrientation" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Products" />
@@ -7247,17 +7247,17 @@
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" />
         <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="103.875" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="6" PointY="61.5" />
-        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="8.25" PointY="51.375" />
-        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="5.25" PointY="41.25" />
-        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="3" PointY="40.75" />
+        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="3" PointY="41.5" />
+        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="5.25" PointY="41.375" />
+        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="5.25" PointY="47.25" />
+        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="3" PointY="52.75" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Menu" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UsersProducts_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Users" />
-        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="13.5" PointY="59" />
+        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="12.75" PointY="59" />
         <EntityTypeShape EntityType="REMI.Entities.UsersAudit" Width="1.5" PointX="8.75" PointY="10.75" />
         <AssociationConnector Association="REMI.Entities.FK_TestUnits_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TestUnits" />
@@ -7266,11 +7266,11 @@
         <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="10.5" PointY="68.625" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="5.25" PointY="53.375" />
+        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="5.25" PointY="54.375" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Jobs" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Lookups" />
-        <EntityTypeShape EntityType="REMI.Entities.Service" Width="1.5" PointX="3" PointY="56.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ServicesAccess" Width="1.5" PointX="5.25" PointY="50.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Service" Width="1.5" PointX="6" PointY="62.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ServicesAccess" Width="1.5" PointX="8.25" PointY="51.375" />
         <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Services" />
         <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="4.375" PointY="81.125" />

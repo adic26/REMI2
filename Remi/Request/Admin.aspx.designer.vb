@@ -11,7 +11,16 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class Reports
+Partial Public Class ReqAdmin
+
+    '''<summary>
+    '''lblRequest control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblRequest As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''AjaxScriptManager1 control.
@@ -32,74 +41,74 @@ Partial Public Class Reports
     Protected WithEvents pnlLeftMenuActions As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
-    '''ddlRequestType control.
+    '''hdnRequestType control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlRequestType As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents hdnRequestType As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''ddlSearchField control.
+    '''hdnRequestTypeID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlSearchField As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents hdnRequestTypeID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''txtSearchTerm control.
+    '''grdRequestAdmin control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtSearchTerm As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents grdRequestAdmin As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''btnSave control.
+    '''odsParents control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnSave As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents odsParents As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''ddlTests control.
+    '''odsFieldMapping control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlTests As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents odsFieldMapping As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''lstSearchTerms control.
+    '''odsLookupTypes control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lstSearchTerms As Global.System.Web.UI.WebControls.ListBox
+    Protected WithEvents odsLookupTypes As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''btnSearch control.
+    '''odsValidation control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnSearch As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents odsValidation As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''grdRequestSearch control.
+    '''odsFieldTypes control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents grdRequestSearch As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents odsFieldTypes As Global.System.Web.UI.WebControls.ObjectDataSource
 End Class

@@ -618,6 +618,10 @@ Namespace REMI.Dal
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ParentReqFieldSetupID")) Then
                 myFields.ParentFieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ParentReqFieldSetupID"))
+
+                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ParentFieldSetupName")) Then
+                    myFields.ParentFieldSetupName = myDataRecord.GetString(myDataRecord.GetOrdinal("ParentFieldSetupName"))
+                End If
             End If
 
             myFields.HasIntegration = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("HasIntegration"))

@@ -45,7 +45,7 @@ Partial Class BadgeAccess_Default
     End Sub
 
     Sub UserNameValidation(ByVal source As Object, ByVal arguments As ServerValidateEventArgs)
-        If (Remi.Helpers.GetPostBackControl(Me.Page).ID = "btnConfirm") Then
+        If (Helpers.GetPostBackControl(Me.Page).ID = "btnConfirm") Then
             If (txtUserName.Text.Trim().Length = 0) Then
                 arguments.IsValid = False
                 DirectCast(source, CustomValidator).ErrorMessage = "You Must Enter An UserName!"
@@ -57,7 +57,7 @@ Partial Class BadgeAccess_Default
     End Sub
 
     Sub PasswordValidation(ByVal source As Object, ByVal arguments As ServerValidateEventArgs)
-        If (Remi.Helpers.GetPostBackControl(Me.Page).ID = "btnConfirm") Then
+        If (Helpers.GetPostBackControl(Me.Page).ID = "btnConfirm") Then
             If (txtPassword.Text.Trim().Length = 0) Then
                 arguments.IsValid = False
                 DirectCast(source, CustomValidator).ErrorMessage = "You Must Enter An Password!"

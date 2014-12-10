@@ -1,4 +1,5 @@
 ﻿Imports Remi.Bll
+Imports Remi.BusinessEntities
 
 Public Class Measurements
     Inherits System.Web.UI.Page

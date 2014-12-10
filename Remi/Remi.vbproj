@@ -219,7 +219,6 @@
       <DependentUpon>Users.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="App_GlobalResources\Helpers.vb" />
     <Compile Include="App_GlobalResources\HTTPModules\REMIAuthModule.vb" />
     <Compile Include="BadgeAccess\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -506,6 +505,20 @@
       <DependentUpon>Search.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
+    <Compile Include="Request\Admin.aspx.designer.vb">
+      <DependentUpon>Admin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Request\Admin.aspx.vb">
+      <DependentUpon>Admin.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Request\default.aspx.designer.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Request\default.aspx.vb">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
     <Compile Include="ScanForInfo\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -623,6 +636,8 @@
     <Content Include="Relab\Versions.aspx" />
     <Content Include="Reports\ES\default.aspx" />
     <Content Include="Reports\Search.aspx" />
+    <Content Include="Request\Admin.aspx" />
+    <Content Include="Request\default.aspx" />
     <Content Include="ScanForInfo\Default.aspx" />
     <Content Include="ScanForInfo\ProductGroup.aspx" />
     <Content Include="ScanForInfo\Unit.aspx" />

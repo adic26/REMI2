@@ -1,6 +1,7 @@
 ﻿Imports Remi.Bll
 Imports Remi.Validation
 Imports Remi.Contracts
+Imports Remi.BusinessEntities
 
 Public Class Results
     Inherits System.Web.UI.Page
@@ -38,12 +39,9 @@ Public Class Results
             Next
             ddlYear.SelectedIndex = ddlYear.Items.IndexOf(ddlYear.Items.FindByValue(year))
         Else
-            'grdOverallSummary.DataSource = RelabManager.OverallResultSummary(ddlBatches.SelectedValue)
-            'grdOverallSummary.DataBind()
-
             Dim notValidBindControls As String() = New String() {"ddlYear"}
-            If (REMI.Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
-                If (Not (notValidBindControls.Contains(REMI.Helpers.GetPostBackControl(Me.Page).ID))) Then
+            If (Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
+                If (Not (notValidBindControls.Contains(Helpers.GetPostBackControl(Me.Page).ID))) Then
                     UpdateLinks(Request.Form(ddlBatches.UniqueID))
                 End If
             End If
@@ -102,8 +100,6 @@ Public Class Results
             hypGraph.NavigateUrl = String.Format("/Relab/ResultGraph.aspx?BatchID={0}", ddlBatches.SelectedItem.Value)
             imgGraph.Visible = True
             hypGraph.Visible = True
-
-            hypReports.NavigateUrl = String.Format("/Relab/Reports.aspx?BatchID={0}", ddlBatches.SelectedItem.Value)
         End If
     End Sub
 

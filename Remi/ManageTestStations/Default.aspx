@@ -151,7 +151,7 @@
                     <asp:BoundField DataField="TestStage" HeaderText="Test Stage" Visible="True" />                                
                     <asp:TemplateField HeaderText="Scanned In">                            
                         <ItemTemplate>
-                            <asp:Label ID="Label1" runat="server" Text='<%# Remi.Helpers.DateTimeFormat(Eval("InTime")) %>'></asp:Label>
+                            <asp:Label ID="Label1" runat="server" Text='<%# REMI.BusinessEntities.Helpers.DateTimeformat(Eval("InTime"))%>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:BoundField DataField="TestLength" HeaderText="Exp. Test Time (h)" dataFormatString="{0:F2}"  />
@@ -159,7 +159,7 @@
                     <asp:BoundField DataField="RemainingTestTime" DataFormatString="{0:F2}" HeaderText="Remaining Time (h)" />
                     <asp:TemplateField HeaderText="Can Be Removed At">
                         <ItemTemplate>
-                            <asp:Label ID="lblRemoveTime" runat="server" Text='<%# Remi.Helpers.DateTimeFormat(Eval("CanBeRemovedAt")) %>'></asp:Label>
+                            <asp:Label ID="lblRemoveTime" runat="server" Text='<%# Remi.BusinessEntities.Helpers.DateTimeformat(Eval("CanBeRemovedAt"))%>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
