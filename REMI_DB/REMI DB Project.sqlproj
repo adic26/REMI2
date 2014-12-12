@@ -2474,4 +2474,7 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Table Types\SearchFields.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\UserSearchFilter.sql" />
+  </ItemGroup>
 </Project>
