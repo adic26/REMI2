@@ -102,7 +102,7 @@
                 <asp:TemplateField HeaderText="Duration" SortExpression="Duration"  >
                     <ItemTemplate>
                         <asp:Label ID="Label3" runat="server" 
-                            Text='<%# Helpers.durationformat(Eval("Duration")) %>'></asp:Label>
+                            Text='<%# REMI.BusinessEntities.Helpers.durationformat(Eval("Duration")) %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="ResultIsTimeBased" HeaderText="Time Based" 
