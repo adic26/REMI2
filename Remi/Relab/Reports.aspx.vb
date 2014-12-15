@@ -32,6 +32,7 @@ Public Class Reports
         If (ddlRequestType.Items.Count > 0 And ddlRequestType.SelectedIndex = -1) Then
             ddlRequestType.SelectedIndex = 0
         End If
+        Dim dt As DataTable = ReportManager.SearchTree(ddlRequestType.SelectedValue)
     End Sub
 
     Protected Sub SetGvwHeader() Handles grdRequestSearch.PreRender
@@ -75,5 +76,11 @@ Public Class Reports
         grdRequestSearch.DataSource = ReportManager.Search(ddlRequestType.SelectedItem.Value, searchFields)
         grdRequestSearch.DataBind()
     End Sub
+
+
+    <System.Web.Services.WebMethod()> _
+    Public Shared Function Search(ByVal requestTypeID As Int32) As DataTable
+        Return ReportManager.SearchTree(requestTypeID)
+    End Function
 
 End Class
