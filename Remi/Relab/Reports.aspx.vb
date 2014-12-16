@@ -38,22 +38,11 @@ Public Class Reports
         Helpers.MakeAccessable(grdRequestSearch)
     End Sub
 
-    Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As EventArgs)
-        If (txtSearchTerm.Text.Trim.Length > 0) Then
-            lstSearchTerms.Items.Add(New ListItem(String.Format("Request:{0} ", txtSearchTerm.Text), ddlSearchField.SelectedItem.Value))
-            txtSearchTerm.Text = String.Empty
-        End If
-
-        Dim testID As Int32
-        Int32.TryParse(ddlTests.SelectedValue.ToString(), testID)
-
-        If (testID > 0) Then
-            lstSearchTerms.Items.Add(New ListItem(String.Format("Test:{0} ", ddlTests.SelectedItem.Text), testID))
-            ddlTests.SelectedValue = 0
-        End If
+    Protected Sub lnkExportAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkExportAction.Click
+        Helpers.ExportToExcel(Helpers.GetDateTimeFileName("Search", "xls"), SearchDB())
     End Sub
 
-    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As EventArgs)
+    Protected Function SearchDB() As DataTable
         Dim searchFields As New DataTable("SearchFields")
         searchFields.Columns.Add("TableType", GetType(String))
         searchFields.Columns.Add("ID", GetType(Int32))
@@ -72,7 +61,26 @@ Public Class Reports
             searchFields.Rows.Add(dr)
         Next
 
-        grdRequestSearch.DataSource = ReportManager.Search(ddlRequestType.SelectedItem.Value, searchFields)
+        Return ReportManager.Search(ddlRequestType.SelectedItem.Value, searchFields)
+    End Function
+
+    Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As EventArgs)
+        If (txtSearchTerm.Text.Trim.Length > 0) Then
+            lstSearchTerms.Items.Add(New ListItem(String.Format("Request:{0} ", txtSearchTerm.Text), ddlSearchField.SelectedItem.Value))
+            txtSearchTerm.Text = String.Empty
+        End If
+
+        Dim testID As Int32
+        Int32.TryParse(ddlTests.SelectedValue.ToString(), testID)
+
+        If (testID > 0) Then
+            lstSearchTerms.Items.Add(New ListItem(String.Format("Test:{0} ", ddlTests.SelectedItem.Text), testID))
+            ddlTests.SelectedValue = 0
+        End If
+    End Sub
+
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As EventArgs)
+        grdRequestSearch.DataSource = SearchDB()
         grdRequestSearch.DataBind()
     End Sub
 

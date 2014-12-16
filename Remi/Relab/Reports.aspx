@@ -18,6 +18,10 @@
             <li>
                 <br /><asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID"></asp:DropDownList>
             </li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/xls_file.png" ID="imgExportAction" runat="server"  EnableViewState="false"/>
+                <asp:LinkButton ID="lnkExportAction" runat="Server" Text="Export Result" EnableViewState="false"  />
+            </li>
         </ul>
     </asp:Panel>
 </asp:Content>

@@ -41,6 +41,24 @@ Partial Public Class Reports
     Protected WithEvents ddlRequestType As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''imgExportAction control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgExportAction As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''lnkExportAction control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lnkExportAction As Global.System.Web.UI.WebControls.LinkButton
+
+    '''<summary>
     '''ddlSearchField control.
     '''</summary>
     '''<remarks>
