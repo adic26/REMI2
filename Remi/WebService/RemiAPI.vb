@@ -170,6 +170,49 @@ Public Class RemiAPI
         Return False
     End Function
 
+    <WebMethod(EnableSession:=True, Description:="Sets the IMEI for a unit. The given user badge number will override the windows login if available.")> _
+    Public Function UpdateUnitBSN(ByVal QRANumber As String, ByVal bsn As Int32, ByVal userIdentification As String) As Boolean
+        Try
+            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
+
+            If bc.Validate Then
+                If bc.HasTestUnitNumber Then
+                    Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
+                    tu.BSN = bsn
+                    tu.LastUser = userIdentification
+                    Return TestUnitManager.Save(tu) > 0
+                End If
+            End If
+
+            Return False
+        Catch ex As Exception
+            TestUnitManager.LogIssue("REMI API UpdateUnitBSN", "e1", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} BSN: {2}", userIdentification, QRANumber, bsn))
+        End Try
+        Return False
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Sets the IMEI for a unit. The given user badge number will override the windows login if available.")> _
+    Public Function UpdateUnitBSNIMEI(ByVal QRANumber As String, ByVal bsn As Int32, ByVal IMEI As String, ByVal userIdentification As String) As Boolean
+        Try
+            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
+
+            If bc.Validate Then
+                If bc.HasTestUnitNumber Then
+                    Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
+                    tu.BSN = bsn
+                    tu.IMEI = IMEI
+                    tu.LastUser = userIdentification
+                    Return TestUnitManager.Save(tu) > 0
+                End If
+            End If
+
+            Return False
+        Catch ex As Exception
+            TestUnitManager.LogIssue("REMI API UpdateUnitBSNIMEI", "e1", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} BSN: {2} IMEI: {3]", userIdentification, QRANumber, bsn, IMEI))
+        End Try
+        Return False
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Sets the BSN for a unit. The given user badge number will override the windows login if available.")> _
     Public Function AddUnit(ByVal QRANumber As String, ByVal BSN As String, ByVal userIdentification As String) As Boolean
         Try
