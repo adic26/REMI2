@@ -62,7 +62,7 @@ Namespace REMI.Bll
                     nc.Add(bc.Notifications)
                 End If
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Request:" + barcode))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e26", NotificationType.Errors, ex, "Request:" + barcode))
             End Try
 
             Return nc
@@ -101,7 +101,7 @@ Namespace REMI.Bll
                     nc.Add(bc.Notifications)
                 End If
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, "Request:" + barcode))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e25", NotificationType.Errors, ex, "Request:" + barcode))
             End Try
             Return nc
         End Function
@@ -167,7 +167,7 @@ Namespace REMI.Bll
                     End If
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e9", NotificationType.Errors, ex)
             End Try
         End Sub
 
@@ -192,7 +192,7 @@ Namespace REMI.Bll
                     Return False
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
 
             Return False
@@ -300,7 +300,7 @@ Namespace REMI.Bll
                     Return False
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request Number: {0} comment: {1}", qraNumber, comment))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request Number: {0} comment: {1}", qraNumber, comment))
                 Return False
             End Try
         End Function
@@ -329,7 +329,7 @@ Namespace REMI.Bll
                     Return False
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request Number: {0} summary: {1}", qraNumber, summary))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request Number: {0} summary: {1}", qraNumber, summary))
                 Return False
             End Try
         End Function
@@ -372,7 +372,7 @@ Namespace REMI.Bll
                     Return RemstarDB.AddCountOrder(qras, UserManager.GetCurrentValidUserLDAPName)
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e26", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -479,7 +479,7 @@ Namespace REMI.Bll
                     isSuccess = True
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, "Current Request: " + qraNumber)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Current Request: " + qraNumber)
                 isSuccess = False
             End Try
 
@@ -510,7 +510,7 @@ Namespace REMI.Bll
             Try
                 Return BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser)
             Catch ex As Exception
-
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", batchQRANumber))
             End Try
 
             Return Nothing
@@ -528,7 +528,7 @@ Namespace REMI.Bll
                 'ok we don't have this in the database so get the 'full' older model.
                 Return GetItem(batchQRANumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
 
             Return Nothing
@@ -597,6 +597,7 @@ Namespace REMI.Bll
 #Region "Manage Batches Methods"
         Public Shared Function RevertBatchSpecificTestDuration(ByVal qraNumber As String, ByVal teststageid As Integer, ByVal comment As String) As Notification
             Dim n As New Notification
+
             If BatchDB.DeleteBatchSpecificTestDuration(qraNumber, teststageid, comment, UserManager.GetCurrentValidUserLDAPName) Then
                 n.Message = "Duration reverted to default ok."
                 n.Type = NotificationType.Information
@@ -604,11 +605,13 @@ Namespace REMI.Bll
                 n.Message = "Unable to revert the duration to default. This may be the default duration for this batch."
                 n.Type = NotificationType.Errors
             End If
+
             Return n
         End Function
 
         Public Shared Function ModifyBatchSpecificTestDuration(ByVal qraNumber As String, ByVal teststageid As Integer, ByVal duration As Double, ByVal comment As String) As Notification
             Dim n As New Notification
+
             If BatchDB.ModifyBatchSpecificTestDuration(qraNumber, teststageid, duration, comment, UserManager.GetCurrentValidUserLDAPName) Then
                 n.Message = "Duration saved ok."
                 n.Type = NotificationType.Information
@@ -616,6 +619,7 @@ Namespace REMI.Bll
                 n.Message = "Unable to save duration."
                 n.Type = NotificationType.Errors
             End If
+
             Return n
         End Function
 
@@ -641,7 +645,7 @@ Namespace REMI.Bll
                         If b.Validate Then
                             BatchManager.Save(b)
                             If (REMI.Core.REMIConfiguration.Debug) Then
-                                b.Notifications.AddWithMessage("The priority was changed ok.", NotificationType.Information)
+                                b.Notifications.Add(LogIssue("SetPriority", "i14", NotificationType.Information, String.Format("Request Number: {0} Priority: {1}", qraNumber, priority)))
                             End If
                         End If
                     End If
@@ -651,7 +655,7 @@ Namespace REMI.Bll
                 End If
             Catch ex As Exception
                 b = New Batch
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", qraNumber, priority)))
+                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", qraNumber, priority)))
             End Try
             Return b.Notifications
         End Function
@@ -679,8 +683,7 @@ Namespace REMI.Bll
                 Dim b As Batch = BatchManager.GetItem(qraNumber)
                 If b IsNot Nothing Then
                     If Not BatchDB.AddBatchComment(b.ID, comment, UserManager.GetCurrentValidUserLDAPName) Then
-
-                        nc.Add(LogIssue("AddNewComment", "e18", NotificationType.Errors, String.Format("Request Number: {0} comment: {1}", qraNumber, comment)))
+                        nc.Add(LogIssue("AddNewComment", "e27", NotificationType.Errors, String.Format("Request Number: {0} comment: {1}", qraNumber, comment)))
                     End If
                 End If
             Catch ex As Exception
@@ -694,7 +697,7 @@ Namespace REMI.Bll
             Try
                 BatchDB.DeactivateBatchComment(commentId)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "comment ID:" + commentId.ToString())
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex, "comment ID:" + commentId.ToString())
             End Try
             Return nc
         End Function
@@ -708,7 +711,7 @@ Namespace REMI.Bll
             Try
                 Return BatchDB.DNPParametricForBatch(qraNumber, userIdentification, unitNumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, qraNumber.ToString())
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, qraNumber.ToString())
             End Try
             Return False
         End Function

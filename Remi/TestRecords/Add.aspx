@@ -87,7 +87,7 @@
                         DataTextField="Text" DataValueField="Value" AutoPostBack="True">
                     </asp:DropDownList>
                     <asp:ObjectDataSource ID="odsResultStatus" runat="server" SelectMethod="GetTestRecordStatusList"
-                        TypeName="Remi.Helpers" OldValuesParameterFormatString="{0}"></asp:ObjectDataSource>
+                        TypeName="Remi.BusinessEntities.Helpers" OldValuesParameterFormatString="{0}"></asp:ObjectDataSource>
                 </td>
             </tr>
             <tr>

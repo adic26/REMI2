@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("236f020d-e28a-4c4d-8905-7c3efb6ab801")>
+<Assembly: EdmSchemaAttribute("86251bda-b6ca-4e7a-afcd-0b7f869e19cd")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -126,6 +126,7 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType1", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Request_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Batch), "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Request), True)>
 
 #End Region
 
@@ -5089,6 +5090,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Request_Batches", "Request")>
+         Public Property Requests() As EntityCollection(Of Request)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Request)("REMI.Entities.FK_Request_Batches", "Request")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Request)("REMI.Entities.FK_Request_Batches", "Request", value)
                 End If
             End Set
         End Property
@@ -12155,6 +12174,31 @@ Namespace REMI.Entities
     
         Private Partial Sub OnCategoryChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ParentReqFieldSetupID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _ParentReqFieldSetupID
+            End Get
+            Set
+                OnParentReqFieldSetupIDChanging(value)
+                ReportPropertyChanging("ParentReqFieldSetupID")
+                _ParentReqFieldSetupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ParentReqFieldSetupID")
+                OnParentReqFieldSetupIDChanged()
+            End Set
+        End Property
+    
+        Private _ParentReqFieldSetupID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnParentReqFieldSetupIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnParentReqFieldSetupIDChanged()
+        End Sub
 
         #End Region
 
@@ -12543,6 +12587,31 @@ Namespace REMI.Entities
     
         Private Partial Sub OnRequestNumberChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property BatchID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _BatchID
+            End Get
+            Set
+                OnBatchIDChanging(value)
+                ReportPropertyChanging("BatchID")
+                _BatchID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("BatchID")
+                OnBatchIDChanged()
+            End Set
+        End Property
+    
+        Private _BatchID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnBatchIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnBatchIDChanged()
+        End Sub
 
         #End Region
 
@@ -12562,6 +12631,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldData)("REMI.Entities.FK_ReqFieldData_Request", "ReqFieldData", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Request_Batches", "Batch")>
+        Public Property Batch() As Batch
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property BatchReference() As EntityReference(Of Batch)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch", value)
                 End If
             End Set
         End Property

@@ -29,7 +29,7 @@
              
         <asp:TemplateField HeaderText="Report Due By" SortExpression="ReportRequestedByDate">
             <ItemTemplate>
-                <asp:Label EnableViewState="false" ID="lblReportDate" runat="server" Text='<%# Remi.Helpers.datetimeformat(Eval("ReportRequiredby")) %>'></asp:Label></ItemTemplate>
+                <asp:Label EnableViewState="false" ID="lblReportDate" runat="server" Text='<%# Remi.BusinessEntities.Helpers.DateTimeformat(Eval("ReportRequiredby"))%>'></asp:Label></ItemTemplate>
         </asp:TemplateField>
         <asp:BoundField DataField="Priority" HeaderText="Priority" SortExpression="Priority" ReadOnly="true" />
         <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" visible="false" ReadOnly="true" />

@@ -131,6 +131,7 @@
     <Compile Include="DataEntityObjects\ParameterResult.vb" />
     <Compile Include="DataEntityObjects\RequestFields.vb" />
     <Compile Include="DataEntityObjects\TrackingLocationTypePermission.vb" />
+    <Compile Include="Helpers\Helpers.vb" />
     <Compile Include="Helpers\REMIAppCache.vb" />
     <Compile Include="Enumerations\TestResultCriteria.vb" />
     <Compile Include="BusinessObjects\FastScanData.vb" />

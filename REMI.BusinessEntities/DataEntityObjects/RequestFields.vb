@@ -22,12 +22,14 @@ Namespace REMI.BusinessEntities
         Private _name As String
         Private _fieldType As String
         Private _fieldValidation As String
+        Private _optionsTypeName As String
         Private _category As String
         Private _intField As String
         Private _extField As String
         Private _requestNumber As String
         Private _value As String
         Private _description As String
+        Private _parentFieldSetupName As String
         Private _isRequired As Boolean
         Private _isArchived As Boolean
         Private _isFromExternalSystem As Boolean
@@ -42,7 +44,7 @@ Namespace REMI.BusinessEntities
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean, ByVal parentFieldSetupID As Int32, ByVal hasIntegration As Boolean)
+        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean, ByVal parentFieldSetupID As Int32, ByVal hasIntegration As Boolean, ByVal parentFieldSetupName As String)
             _fieldSetupID = fieldSetupID
             _fieldTypeID = fieldTypeID
             _fieldValidationID = fieldValidationID
@@ -68,6 +70,7 @@ Namespace REMI.BusinessEntities
             _isFromExternalSystem = isFromExternalSystem
             _hasIntegration = hasIntegration
             _parentFieldSetupID = parentFieldSetupID
+            _parentFieldSetupName = parentFieldSetupName
         End Sub
 #End Region
 
@@ -234,6 +237,15 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        Public Property OptionsTypeName() As String Implements IRequestFields.OptionsTypeName
+            Get
+                Return _optionsTypeName
+            End Get
+            Set(ByVal value As String)
+                _optionsTypeName = value
+            End Set
+        End Property
+
         Public Property CustomLookupHierarchy() As List(Of RequestFieldObjectHeirarchy)
             Get
                 Return _customLookupHierarchy
@@ -312,6 +324,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As Int32)
                 _parentFieldSetupID = value
+            End Set
+        End Property
+
+        Public Property ParentFieldSetupName() As String Implements IRequestFields.ParentFieldSetupName
+            Get
+                Return _parentFieldSetupName
+            End Get
+            Set(ByVal value As String)
+                _parentFieldSetupName = value
             End Set
         End Property
 #End Region

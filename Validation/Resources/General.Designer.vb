@@ -218,6 +218,33 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Could not add the batch to REMSTAR.
+        '''</summary>
+        Public Shared ReadOnly Property e25() As String
+            Get
+                Return ResourceManager.GetString("e25", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Could not get the batch from REMSTAR.
+        '''</summary>
+        Public Shared ReadOnly Property e26() As String
+            Get
+                Return ResourceManager.GetString("e26", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to The Batch Comments were not updated successfully.
+        '''</summary>
+        Public Shared ReadOnly Property e27() As String
+            Get
+                Return ResourceManager.GetString("e27", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Could not retrieve item. There was a database error.  REMI administrators have been notified..
         '''</summary>
         Public Shared ReadOnly Property e3() As String
@@ -331,6 +358,15 @@ Namespace My.Resources
         Public Shared ReadOnly Property i13() As String
             Get
                 Return ResourceManager.GetString("i13", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to The batch priority was changed..
+        '''</summary>
+        Public Shared ReadOnly Property i14() As String
+            Get
+                Return ResourceManager.GetString("i14", resourceCulture)
             End Get
         End Property
         

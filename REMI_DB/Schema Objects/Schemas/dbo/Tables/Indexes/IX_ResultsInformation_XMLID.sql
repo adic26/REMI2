@@ -1,0 +1,1 @@
+﻿CREATE NONCLUSTERED INDEX [IX_ResultsInformation_XMLID] ON Relab.[ResultsInformation] ( [XMLID] ) INCLUDE ([Name], [Value], [IsArchived]);

@@ -1,0 +1,1 @@
+﻿CREATE NONCLUSTERED INDEX [IX_ResultsMeasurements_Archived] ON Relab.[ResultsMeasurements] ( [Archived] ) INCLUDE ([ResultID], [MeasurementTypeID], [PassFail]);

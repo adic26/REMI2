@@ -12,10 +12,21 @@ Namespace REMI.Bll
             Try
                 Return GetLookups(type.ToString(), productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, RemoveFirst)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
 
             Return New DataTable("Lookups")
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetLookupTypes() As DataTable
+            Try
+                Return LookupsDB.GetLookupTypes()
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("LookupTypes")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], True)> _
@@ -36,7 +47,7 @@ Namespace REMI.Bll
                 End If
                 Return dt
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
 
             Return New DataTable("Lookups")
@@ -47,7 +58,7 @@ Namespace REMI.Bll
             Try
                 Return LookupsDB.SaveLookup(lookupType, value, isActive, description, parentID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
             End Try
         End Function
@@ -62,64 +73,9 @@ Namespace REMI.Bll
             Try
                 Return LookupsDB.GetLookupID(type, lookup, parentID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return -1
             End Try
         End Function
-
-        ' ''' <summary>
-        ' ''' Gets a list of Product Types from the database.
-        ' ''' </summary>
-        ' ''' <returns> A collection of products.</returns>
-        ' ''' <remarks></remarks>
-        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        'Public Shared Function GetOracleProductTypeList() As List(Of String)
-        '    Try
-        '        Return LookupsDB.GetOracleProductTypeList()
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-        '        Return New List(Of String)
-        '    End Try
-        'End Function
-
-        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        'Public Shared Function GetOracleDepartmentList() As List(Of String)
-        '    Try
-        '        Return LookupsDB.GetOracleDepartmentList()
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-        '        Return New List(Of String)
-        '    End Try
-        'End Function
-
-        ' ''' <summary>
-        ' ''' Gets a list of AccessoryGroups from the database.
-        ' ''' </summary>
-        ' ''' <returns> A collection of Accessorys.</returns>
-        ' ''' <remarks></remarks>
-        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        'Public Shared Function GetOracleAccessoryGroupList() As List(Of String)
-        '    Try
-        '        Return LookupsDB.GetOracleAccessoryList()
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-        '        Return New List(Of String)
-        '    End Try
-        'End Function
-
-        ' ''' <summary>
-        ' ''' Gets a list of AccessoryGroups from the database.
-        ' ''' </summary>
-        ' ''' <returns> A collection of Accessorys.</returns>
-        ' ''' <remarks></remarks>
-        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        'Public Shared Function GetOracleTestCentersList() As List(Of String)
-        '    Try
-        '        Return LookupsDB.GetOracleTestCentersList()
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-        '        Return New List(Of String)
-        '    End Try
-        'End Function
     End Class
 End Namespace

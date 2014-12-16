@@ -195,11 +195,6 @@ Namespace REMI.Core
                 Return ConfigurationManager.AppSettings("RemiTrackingLocationInfoLink")
             End Get
         End Property
-        Public Shared ReadOnly Property RemStarHostNames() As String
-            Get
-                Return ConfigurationManager.AppSettings("RemStarHostNames")
-            End Get
-        End Property
         Public Shared ReadOnly Property Debug() As Boolean
             Get
                 Dim debugRemi As Boolean

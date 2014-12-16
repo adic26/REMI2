@@ -78,16 +78,6 @@ Namespace REMI.Bll
             End Try
         End Function
 
-        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        'Public Shared Function GetProductOracleList() As List(Of String)
-        '    Try
-        '        Return ProductGroupDB.GetOracleList()
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e6", NotificationType.Errors, ex)
-        '        Return New List(Of String)
-        '    End Try
-        'End Function
-
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetProductNameByID(ByVal productID As Int32) As String
             Try
@@ -113,70 +103,70 @@ Namespace REMI.Bll
             Try
                 Return ProductGroupDB.RetrieveInventoryReport(startDate, endDate, filterByQRANumber, geoLocation)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return Nothing
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTestCountByType(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationName As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32) As DataSet
-            Try
-                Return ProductGroupDB.GetTestCountByType(startDate, endDate, reportBasedOn, testLocationName, ByPassProduct, userID)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return New DataSet()
-        End Function
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetTestCountByType(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationName As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32) As DataSet
+        '    Try
+        '        Return ProductGroupDB.GetTestCountByType(startDate, endDate, reportBasedOn, testLocationName, ByPassProduct, userID)
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+        '    End Try
+        '    Return New DataSet()
+        'End Function
 
-        ''' <summary>
-        ''' This method generates the environmental report from the dictionary structure returned by the data layer
-        ''' </summary>
-        ''' <param name="startDate"></param>
-        ''' <param name="endDate"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetEnvironmentalReport(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32, ByVal newWay As Int32) As DataTable
-            If (newWay = 1) Then
-                Return ProductGroupDB.GetEnvironmentalReportDT(startDate, endDate, reportBasedOn, testLocationID, ByPassProduct, userID, newWay)
-            Else
-                Dim data As Dictionary(Of String, Dictionary(Of String, Integer)) = ProductGroupDB.GetEnvironmentalReport(startDate, endDate, reportBasedOn, testLocationID, ByPassProduct, userID, newWay)
-                Dim dt As New DataTable
-                Dim s As New List(Of String)
-                'add the first column
-                dt.Columns.Add(" ")
-                dt.Columns.Add("Item")
-                'get unique product names
-                For Each key As String In data.Keys
-                    For Each dataItemKey As String In data.Item(key).Keys
-                        If Not s.Contains(dataItemKey) Then
-                            s.Add(dataItemKey)
-                        End If
-                    Next
-                Next
-                'sort them and add them as columns
-                s.Sort()
-                For Each prod As String In s
-                    dt.Columns.Add(prod)
-                Next
-                'add the last column
-                dt.Columns.Add("Total")
-                'get at each dictionary. a dictionary contains a row worth of data for the report
-                For Each key As String In data.Keys
-                    Dim dr As DataRow = dt.NewRow
-                    dr.Item("Item") = key 'the item column. this is the report item.
-                    Dim total As Integer = 0
-                    For Each dataItemKey As String In data.Item(key).Keys
-                        total += data.Item(key).Item(dataItemKey) ' sum for the last column
-                        dr.Item(dataItemKey) = data.Item(key).Item(dataItemKey) 'the actual number to the correct cell.
-                    Next
-                    dr.Item("Total") = total
+        ' ''' <summary>
+        ' ''' This method generates the environmental report from the dictionary structure returned by the data layer
+        ' ''' </summary>
+        ' ''' <param name="startDate"></param>
+        ' ''' <param name="endDate"></param>
+        ' ''' <returns></returns>
+        ' ''' <remarks></remarks>
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetEnvironmentalReport(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32, ByVal newWay As Int32) As DataTable
+        '    If (newWay = 1) Then
+        '        Return ProductGroupDB.GetEnvironmentalReportDT(startDate, endDate, reportBasedOn, testLocationID, ByPassProduct, userID, newWay)
+        '    Else
+        '        Dim data As Dictionary(Of String, Dictionary(Of String, Integer)) = ProductGroupDB.GetEnvironmentalReport(startDate, endDate, reportBasedOn, testLocationID, ByPassProduct, userID, newWay)
+        '        Dim dt As New DataTable
+        '        Dim s As New List(Of String)
+        '        'add the first column
+        '        dt.Columns.Add(" ")
+        '        dt.Columns.Add("Item")
+        '        'get unique product names
+        '        For Each key As String In data.Keys
+        '            For Each dataItemKey As String In data.Item(key).Keys
+        '                If Not s.Contains(dataItemKey) Then
+        '                    s.Add(dataItemKey)
+        '                End If
+        '            Next
+        '        Next
+        '        'sort them and add them as columns
+        '        s.Sort()
+        '        For Each prod As String In s
+        '            dt.Columns.Add(prod)
+        '        Next
+        '        'add the last column
+        '        dt.Columns.Add("Total")
+        '        'get at each dictionary. a dictionary contains a row worth of data for the report
+        '        For Each key As String In data.Keys
+        '            Dim dr As DataRow = dt.NewRow
+        '            dr.Item("Item") = key 'the item column. this is the report item.
+        '            Dim total As Integer = 0
+        '            For Each dataItemKey As String In data.Item(key).Keys
+        '                total += data.Item(key).Item(dataItemKey) ' sum for the last column
+        '                dr.Item(dataItemKey) = data.Item(key).Item(dataItemKey) 'the actual number to the correct cell.
+        '            Next
+        '            dr.Item("Total") = total
 
-                    dt.Rows.Add(dr)
-                Next
-                Return dt
-            End If
-        End Function
+        '            dt.Rows.Add(dr)
+        '        Next
+        '        Return dt
+        '    End If
+        'End Function
 
 #Region "Product Settings"
         Public Shared Function CreateSetting(ByVal productID As Int32, ByVal keyName As String, ByVal valueText As String, ByVal defaultValue As String) As Boolean
@@ -238,10 +228,12 @@ Namespace REMI.Bll
                 For Each p As ProductSetting In encoded
                     decodedDictionary.Add(System.Web.HttpUtility.HtmlDecode(p.KeyName), System.Web.HttpUtility.HtmlDecode(p.ValueText))
                 Next
+
                 Return decodedDictionary
             Catch ex As Exception
                 nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("productID: {0}", productID)))
             End Try
+
             Return New SerializableDictionary(Of String, String)
         End Function
 

@@ -189,7 +189,7 @@
                                     <asp:BoundField DataField="ProcessOrder" HeaderText="Order" ReadOnly="true" SortExpression="ProcessOrder" />
                                     <asp:TemplateField HeaderText="Duration" SortExpression="Duration">
                                         <ItemTemplate>
-                                            <asp:Label ID="lblDuration" runat="server" Text='<%# Remi.Helpers.durationformat(Eval("Duration")) %>'></asp:Label>
+                                            <asp:Label ID="lblDuration" runat="server" Text='<%# Remi.BusinessEntities.Helpers.DurationFormat(Eval("Duration"))%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField>

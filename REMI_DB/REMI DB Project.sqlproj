@@ -216,6 +216,7 @@
     <Folder Include="Scripts\November182014" />
     <Folder Include="Scripts\November262014" />
     <Folder Include="Scripts\December022014" />
+    <Folder Include="Scripts\December152014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2440,5 +2441,44 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\LookupsHierarchy.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Views\vw_GetBatchRequestResult.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_Lookups_Values.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsInformation_XMLID_IsArchived.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsInformation_IsArchived.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ReqFieldData_ReqFieldSetupID.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsInformation_XMLID.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_Lookups_IsActive_LookupTypeID.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\IX_ResultsMeasurements_Archived.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetLookupTypes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestSearch.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Table Types\SearchFields.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\UserSearchFilter.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\December152014\1.sql" />
   </ItemGroup>
 </Project>

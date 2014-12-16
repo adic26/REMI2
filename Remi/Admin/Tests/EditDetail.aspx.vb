@@ -138,7 +138,7 @@ Partial Class Admin_Tests_EditDetail
 
         tmpTest.ResultIsTimeBased = chkResultIsTimeBased.Checked
         tmpTest.TotalHours = txtHours.Text
-        tmpTest.LastUser = Helpers.GetCurrentUserLDAPName
+        tmpTest.LastUser = UserManager.GetCurrentValidUserLDAPName
         tmpTest.IsArchived = chkArchived.Checked
     End Sub
 

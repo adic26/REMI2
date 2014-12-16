@@ -1,4 +1,5 @@
 ﻿Imports REMI.Bll
+Imports REMI.BusinessEntities
 
 Public Class TrackingLocationTests
     Inherits System.Web.UI.Page

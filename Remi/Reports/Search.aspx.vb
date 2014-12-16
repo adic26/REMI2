@@ -43,8 +43,8 @@ Partial Class Search
                 End If
             End If
 
-            If (Remi.Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
-                If (Not (Remi.Helpers.GetPostBackControl(Me.Page)).ID = "btnSearch" And ddlTestCenters.SelectedValue <> String.Empty) Then
+            If (Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
+                If (Not (Helpers.GetPostBackControl(Me.Page)).ID = "btnSearch" And ddlTestCenters.SelectedValue <> String.Empty) Then
                     ddlUsers.Items.Clear()
                     Dim us As New UserSearch()
                     us.TestCenterID = ddlTestCenters.SelectedValue
@@ -1032,12 +1032,12 @@ Partial Class Search
 
                 ddlBatchStatus.Items.Clear()
                 ddlBatchStatus.Items.Add("ALL")
-                ddlBatchStatus.DataSource = Remi.Helpers.GetBatchStatus()
+                ddlBatchStatus.DataSource = Helpers.GetBatchStatus()
                 ddlBatchStatus.DataBind()
 
                 chkBatchStatus.Items.Clear()
                 chkBatchStatus.Items.Add("ALL")
-                chkBatchStatus.DataSource = Remi.Helpers.GetBatchStatus()
+                chkBatchStatus.DataSource = Helpers.GetBatchStatus()
                 chkBatchStatus.DataBind()
 
                 ddlProductFilter.Items.Clear()
@@ -1061,12 +1061,12 @@ Partial Class Search
 
                 ddlLocationFunction.Items.Clear()
                 ddlLocationFunction.Items.Add("ALL")
-                ddlLocationFunction.DataSource = Remi.Helpers.GetTrackingLocationFunctions()
+                ddlLocationFunction.DataSource = Helpers.GetTrackingLocationFunctions()
                 ddlLocationFunction.DataBind()
 
                 ddlNotInLocationFunction.Items.Clear()
                 ddlNotInLocationFunction.Items.Add("ALL")
-                ddlNotInLocationFunction.DataSource = Remi.Helpers.GetTrackingLocationFunctions()
+                ddlNotInLocationFunction.DataSource = Helpers.GetTrackingLocationFunctions()
                 ddlNotInLocationFunction.DataBind()
 
                 ddlRequestReason.Items.Clear()

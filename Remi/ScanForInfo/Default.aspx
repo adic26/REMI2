@@ -240,7 +240,7 @@
                                     </FooterTemplate>
                                     <ItemTemplate>
                                         <li><b>
-                                            <%#REMI.Helpers.DateTimeformat(DataBinder.Eval(Container.DataItem, "dateadded"))%></b>
+                                            <%# REMI.BusinessEntities.Helpers.DateTimeformat(DataBinder.Eval(Container.DataItem, "dateadded"))%></b>
                                             -
                                             <%#DataBinder.Eval(Container.DataItem, "username")%>
                                             <br />
@@ -308,7 +308,7 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Assigned On">
                                             <ItemTemplate>
-                                                <asp:Label runat="server" ID="lblTaskAssignedOn" Text='<%# Remi.Helpers.DateTimeFormat(Eval("AssignedOn")) %>'></asp:Label>
+                                                <asp:Label runat="server" ID="lblTaskAssignedOn" Text='<%# REMI.BusinessEntities.Helpers.DateTimeformat(Eval("AssignedOn"))%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                     </Columns>
@@ -353,7 +353,7 @@
                                         <asp:BoundField DataField="IMEI" HeaderText="IMEI" ReadOnly="True" SortExpression="IMEI" Visible="True" />
                                         <asp:TemplateField HeaderText="Assigned To" SortExpression="AssignedTo">
                                             <ItemTemplate>
-                                                <asp:Label ID="Label1" runat="server" Text='<%# Remi.Helpers.UserNameFormat(Eval("AssignedTo")) %>'></asp:Label>
+                                                <asp:Label ID="Label1" runat="server" Text='<%# REMI.BusinessEntities.Helpers.UserNameformat(Eval("AssignedTo"))%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Current Test Stage" SortExpression="CurrentTestStage">
@@ -556,12 +556,12 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Logged In" SortExpression="InTime">
                                             <ItemTemplate>
-                                                <asp:Label ID="Label2" runat="server" Text='<%# Remi.Helpers.DateTimeFormat(Eval("InTime")) %>'></asp:Label>
+                                                <asp:Label ID="Label2" runat="server" Text='<%# REMI.BusinessEntities.Helpers.DateTimeformat(Eval("InTime"))%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Logged In By" SortExpression="InUser">
                                             <ItemTemplate>
-                                                <asp:Label ID="Label3" runat="server" Text='<%# Remi.Helpers.UserNameFormat(Eval("InUser")) %>'></asp:Label>
+                                                <asp:Label ID="Label3" runat="server" Text='<%# REMI.BusinessEntities.Helpers.UserNameformat(Eval("InUser"))%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                     </Columns>

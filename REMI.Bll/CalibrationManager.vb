@@ -23,7 +23,7 @@ Namespace REMI.Bll
                     Return True
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return False
         End Function
@@ -32,7 +32,7 @@ Namespace REMI.Bll
             Try
                 Return CalibrationDB.GetAllCalibrationConfigurationXML(productID, hostID, testID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New CalibrationCollection
         End Function
@@ -44,7 +44,7 @@ Namespace REMI.Bll
 
                 Return CalibrationDB.SaveCalibrationConfigurationXML(productID, hostID, testID, name, xmlDoc, UserManager.GetCurrentUser.UserName)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
         End Function

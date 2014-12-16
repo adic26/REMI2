@@ -110,8 +110,8 @@ Partial Class ManageProducts_EditProductConfig
                     lblProcessing.Visible = False
                     btnProcessPendingXML.Visible = False
                     Dim notValidBindControls As String() = New String() {"btnEditMode", "btnViewMode", "btnUpdate", "btnSave", "btnAddDetail", "btnAddNode", "btnSaveNode", "btnDeleteSub", "imgDeleteRow", "btnUpload"}
-                    If (REMI.Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
-                        If (Not (notValidBindControls.Contains(REMI.Helpers.GetPostBackControl(Me.Page).ID))) Then
+                    If (Helpers.GetPostBackControl(Me.Page) IsNot Nothing) Then
+                        If (Not (notValidBindControls.Contains(Helpers.GetPostBackControl(Me.Page).ID))) Then
                             btnAddNode.Visible = pnlOverAll.Visible
                             pnlAddNode.CssClass = "hidden"
                             BindData()
@@ -324,7 +324,7 @@ Partial Class ManageProducts_EditProductConfig
         btnEditMode.Enabled = Not (IsInEditMode)
         btnViewMode.Enabled = IsInEditMode
         btnUpdate.Visible = IsInEditMode
-        DirectCast(DirectCast(Remi.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
         BindData()
     End Sub
 
@@ -333,7 +333,7 @@ Partial Class ManageProducts_EditProductConfig
         btnEditMode.Enabled = Not (IsInEditMode)
         btnViewMode.Enabled = IsInEditMode
         btnUpdate.Visible = IsInEditMode
-        DirectCast(DirectCast(Remi.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
         BindData()
     End Sub
 
@@ -390,10 +390,10 @@ Partial Class ManageProducts_EditProductConfig
     End Sub
 
     Protected Sub btnAddNode_Click(sender As Object, e As EventArgs)
-        DirectCast(Remi.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("btnAddNode").Visible = False
-        DirectCast(DirectCast(Remi.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = ""
+        DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("btnAddNode").Visible = False
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = ""
 
-        Dim cmbParent As DropDownList = DirectCast(DirectCast(Remi.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("ddlAddParentNames"), DropDownList)
+        Dim cmbParent As DropDownList = DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("ddlAddParentNames"), DropDownList)
         If cmbParent IsNot Nothing Then
             Dim list = ((From dt1 In ProductGroupManager.GetProductConfigurationHeader(Convert.ToInt32(ddlProductConfig.SelectedValue)).AsEnumerable() _
                                                   Select New With { _
@@ -417,12 +417,12 @@ Partial Class ManageProducts_EditProductConfig
         Dim viewOrder As Int32
         Dim nodeName As String
 
-        nodeName = Request.Form(Remi.Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddNodeName").UniqueID)
-        Int32.TryParse(Request.Form(Remi.Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddViewOrder").UniqueID), viewOrder)
-        Int32.TryParse(Request.Form(Remi.Helpers.GetPostBackControl(Me.Page).Parent.FindControl("ddlAddParentNames").UniqueID), parentID)
+        nodeName = Request.Form(Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddNodeName").UniqueID)
+        Int32.TryParse(Request.Form(Helpers.GetPostBackControl(Me.Page).Parent.FindControl("txtAddViewOrder").UniqueID), viewOrder)
+        Int32.TryParse(Request.Form(Helpers.GetPostBackControl(Me.Page).Parent.FindControl("ddlAddParentNames").UniqueID), parentID)
 
         ProductGroupManager.SaveProductConfiguration(0, parentID, viewOrder, nodeName, UserManager.GetCurrentValidUserLDAPName, Convert.ToInt32(ddlProductConfig.SelectedValue))
-        DirectCast(DirectCast(Remi.Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
+        DirectCast(DirectCast(Helpers.GetPostBackControl(Me.Page), System.Web.UI.WebControls.Button).Parent.FindControl("pnlAddNode"), Panel).CssClass = "hidden"
         BindData()
     End Sub
 #End Region

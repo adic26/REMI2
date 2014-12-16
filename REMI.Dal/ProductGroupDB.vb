@@ -229,132 +229,105 @@ Namespace REMI.Dal
             Return tempList
         End Function
 
-        'Public Shared Function GetOracleList() As List(Of String) 'REMITIMEDSERVICE
-        '    Dim tempList As New List(Of String)
-        '    Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
-
-        '        Using myCommand As New OracleCommand("REMI_HELPER.get_product_groups", myConnection)
+        'Public Shared Function GetTestCountByType(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32) As DataSet
+        '    Dim ds As New DataSet
+        '    Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+        '        Using myCommand As New SqlCommand("RemispGetTestCountByType", myConnection)
         '            myCommand.CommandType = CommandType.StoredProcedure
-        '            Dim pOut As New OracleParameter
-        '            pOut.Direction = ParameterDirection.ReturnValue
-        '            pOut.OracleType = OracleType.Cursor
-        '            pOut.ParameterName = "C_REF_RET"
-        '            myCommand.Parameters.Add(pOut)
-        '            myConnection.Open()
-        '            Using myReader As OracleDataReader = myCommand.ExecuteReader
-        '                If myReader.HasRows Then
-        '                    While myReader.Read()
-        '                        If Not tempList.Contains(myReader.GetValue(0).ToString) Then
-        '                            tempList.Add(myReader.GetValue(0).ToString)
-        '                        End If
-        '                    End While
-        '                End If
+        '            myCommand.Parameters.AddWithValue("@startDate", startDate)
+        '            myCommand.Parameters.AddWithValue("@endDate", endDate)
+        '            myCommand.Parameters.AddWithValue("@reportBasedOn", reportBasedOn)
+        '            myCommand.Parameters.AddWithValue("@GeoLocationID", testLocationID)
 
+        '            If (ByPassProduct) Then
+        '                myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
+        '            Else
+        '                myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
+        '            End If
+
+        '            myCommand.Parameters.AddWithValue("@UserID", userID)
+        '            myConnection.Open()
+        '            Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+        '            da.Fill(ds)
+        '        End Using
+        '    End Using
+        '    Return ds
+        'End Function
+
+        'Public Shared Function GetEnvironmentalReportDT(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32, ByVal newWay As Int32) As DataTable
+        '    Dim dt As New DataTable
+        '    Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+        '        Using myCommand As New SqlCommand("remispEnvironmentalReport", myConnection)
+        '            myCommand.CommandType = CommandType.StoredProcedure
+        '            myCommand.CommandTimeout = 120
+        '            myCommand.Parameters.AddWithValue("@startDate", startDate)
+        '            myCommand.Parameters.AddWithValue("@endDate", endDate)
+        '            myCommand.Parameters.AddWithValue("@reportBasedOn", reportBasedOn)
+        '            myCommand.Parameters.AddWithValue("@testLocationID", testLocationID)
+
+        '            If (ByPassProduct) Then
+        '                myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
+        '            Else
+        '                myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
+        '            End If
+
+        '            myCommand.Parameters.AddWithValue("@UserID", userID)
+        '            myCommand.Parameters.AddWithValue("@NewWay", newWay)
+        '            myConnection.Open()
+        '            Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+        '            da.Fill(dt)
+        '        End Using
+        '    End Using
+        '    Return dt
+        'End Function
+
+        ' ''' <summary>
+        ' ''' Returns a data table containing a report on each product
+        ' ''' </summary>
+        ' ''' <returns></returns>
+        ' ''' <remarks></remarks>
+        'Public Shared Function GetEnvironmentalReport(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32, ByVal newWay As Int32) As Dictionary(Of String, Dictionary(Of String, Integer))
+        '    Dim tmpList As New Dictionary(Of String, Dictionary(Of String, Integer))
+
+        '    Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+
+        '        Using myCommand As New SqlCommand("remispEnvironmentalReport", myConnection)
+        '            myCommand.CommandType = CommandType.StoredProcedure
+        '            myCommand.CommandTimeout = 120
+        '            myCommand.Parameters.AddWithValue("@startDate", startDate)
+        '            myCommand.Parameters.AddWithValue("@endDate", endDate)
+        '            myCommand.Parameters.AddWithValue("@reportBasedOn", reportBasedOn)
+        '            myCommand.Parameters.AddWithValue("@testLocationID", testLocationID)
+
+        '            If (ByPassProduct) Then
+        '                myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
+        '            Else
+        '                myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
+        '            End If
+
+        '            myCommand.Parameters.AddWithValue("@UserID", userID)
+        '            myCommand.Parameters.AddWithValue("@NewWay", newWay)
+        '            myConnection.Open()
+        '            Dim anotherResult As Boolean = True
+
+        '            Using myReader As SqlDataReader = myCommand.ExecuteReader
+        '                Do While anotherResult
+        '                    If myReader.HasRows Then
+        '                        Dim s As String = myReader.GetSchemaTable().Rows(0).Item(0).ToString
+        '                        Dim d As New Dictionary(Of String, Integer)
+        '                        While myReader.Read()
+        '                            d.Add(myReader.GetString(1), myReader.GetInt32(0))
+        '                        End While
+        '                        tmpList.Add(s, d)
+
+        '                    End If
+        '                    anotherResult = myReader.NextResult()
+        '                Loop
         '            End Using
         '        End Using
         '    End Using
-        '    Return tempList
+        '    Return tmpList
         'End Function
-
-        Public Shared Function GetTestCountByType(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32) As DataSet
-            Dim ds As New DataSet
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("RemispGetTestCountByType", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@startDate", startDate)
-                    myCommand.Parameters.AddWithValue("@endDate", endDate)
-                    myCommand.Parameters.AddWithValue("@reportBasedOn", reportBasedOn)
-                    myCommand.Parameters.AddWithValue("@GeoLocationID", testLocationID)
-
-                    If (ByPassProduct) Then
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
-                    Else
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
-                    End If
-
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
-                    myConnection.Open()
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(ds)
-                End Using
-            End Using
-            Return ds
-        End Function
-
-        Public Shared Function GetEnvironmentalReportDT(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32, ByVal newWay As Int32) As DataTable
-            Dim dt As New DataTable
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispEnvironmentalReport", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.CommandTimeout = 120
-                    myCommand.Parameters.AddWithValue("@startDate", startDate)
-                    myCommand.Parameters.AddWithValue("@endDate", endDate)
-                    myCommand.Parameters.AddWithValue("@reportBasedOn", reportBasedOn)
-                    myCommand.Parameters.AddWithValue("@testLocationID", testLocationID)
-
-                    If (ByPassProduct) Then
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
-                    Else
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
-                    End If
-
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
-                    myCommand.Parameters.AddWithValue("@NewWay", newWay)
-                    myConnection.Open()
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(dt)
-                End Using
-            End Using
-            Return dt
-        End Function
-
-        ''' <summary>
-        ''' Returns a data table containing a report on each product
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetEnvironmentalReport(ByVal startDate As Date, ByVal endDate As Date, ByVal reportBasedOn As Int32, ByVal testLocationID As Int32, ByVal ByPassProduct As Boolean, ByVal userID As Int32, ByVal newWay As Int32) As Dictionary(Of String, Dictionary(Of String, Integer))
-            Dim tmpList As New Dictionary(Of String, Dictionary(Of String, Integer))
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("remispEnvironmentalReport", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.CommandTimeout = 120
-                    myCommand.Parameters.AddWithValue("@startDate", startDate)
-                    myCommand.Parameters.AddWithValue("@endDate", endDate)
-                    myCommand.Parameters.AddWithValue("@reportBasedOn", reportBasedOn)
-                    myCommand.Parameters.AddWithValue("@testLocationID", testLocationID)
-
-                    If (ByPassProduct) Then
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
-                    Else
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
-                    End If
-
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
-                    myCommand.Parameters.AddWithValue("@NewWay", newWay)
-                    myConnection.Open()
-                    Dim anotherResult As Boolean = True
-
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader
-                        Do While anotherResult
-                            If myReader.HasRows Then
-                                Dim s As String = myReader.GetSchemaTable().Rows(0).Item(0).ToString
-                                Dim d As New Dictionary(Of String, Integer)
-                                While myReader.Read()
-                                    d.Add(myReader.GetString(1), myReader.GetInt32(0))
-                                End While
-                                tmpList.Add(s, d)
-
-                            End If
-                            anotherResult = myReader.NextResult()
-                        Loop
-                    End Using
-                End Using
-            End Using
-            Return tmpList
-        End Function
 
         ''' <summary>Saves a ProductGroup/User association in the database.</summary> 
         ''' <returns>Returns true when the object was saved successfully, or false otherwise.</returns> 

@@ -19,6 +19,7 @@ namespace REMI.Contracts
         String RequestType  { get; set; } 
         String Name  { get; set; }
         String FieldType { get; set; }
+        String OptionsTypeName { get; set; }
         String FieldValidation { get; set; }
         String IntField { get; set; }
         String ExtField  { get; set; }
@@ -26,6 +27,7 @@ namespace REMI.Contracts
         String Category { get; set; }
         String Value { get; set; }
         String Description { get; set; }
+        String ParentFieldSetupName { get; set; }
         bool IsRequired  { get; set; }
         bool IsArchived { get; set; }
         bool IsFromExternalSystem { get; set; }

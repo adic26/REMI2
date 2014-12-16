@@ -18,7 +18,7 @@ Namespace REMI.Bll
                     Return testUnit.AssignedTo
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
             End Try
             Return Nothing
         End Function
@@ -34,7 +34,7 @@ Namespace REMI.Bll
                     Return testUnitID
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
             End Try
             Return Nothing
         End Function
@@ -43,7 +43,7 @@ Namespace REMI.Bll
             Try
                 Return TestUnitDB.GetUnit(QRANumber, batchUnitNumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
             End Try
             Return Nothing
         End Function
@@ -56,7 +56,7 @@ Namespace REMI.Bll
                     Return testUnit.ID
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
             End Try
             Return Nothing
         End Function
@@ -90,7 +90,7 @@ Namespace REMI.Bll
             Try
                 Return TestUnitDB.GetAvailableUnits(QRANumber, excludedUnitNumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New List(Of String)
         End Function
@@ -105,7 +105,7 @@ Namespace REMI.Bll
             Try
                 Return TestUnitDB.GetUsersUnits(userID, includeCompletedQRA)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
 
             Return Nothing
@@ -116,7 +116,7 @@ Namespace REMI.Bll
             Try
                 Return TestUnitDB.GetTestUnitsNotInREMSTAR()
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New List(Of SimpleTestUnit)
         End Function
@@ -134,7 +134,7 @@ Namespace REMI.Bll
                     Return False
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
             End Try
             Return False
         End Function

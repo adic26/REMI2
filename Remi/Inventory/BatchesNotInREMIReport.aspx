@@ -49,7 +49,7 @@
                             <asp:TemplateField HeaderText="Last Date" 
                 SortExpression="LastDate">
                                 <ItemTemplate>
-                                    <asp:Label ID="lblData" runat="server" Text='<%# Remi.Helpers.datetimeformat(Eval("LastDate")) %>'></asp:Label>
+                                    <asp:Label ID="lblData" runat="server" Text='<%# Remi.BusinessEntities.Helpers.DateTimeformat(Eval("LastDate"))%>'></asp:Label>
                                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
