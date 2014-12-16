@@ -173,6 +173,11 @@
 
 		SELECT @ReturnValue = @ID
 	END
+	
+	IF EXISTS (SELECT 1 FROM Req.Request WHERE RequestNumber=@QRANumber)
+		BEGIN
+			UPDATE Req.Request SET BatchID=@ID WHERE RequestNumber=@QRANumber
+		END
 
 	SET @ConcurrencyID = (SELECT ConcurrencyID FROM Batches WITH(NOLOCK) WHERE ID = @ReturnValue)
 	SET @ID = @ReturnValue
