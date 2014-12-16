@@ -152,14 +152,16 @@ Public Class RemiAPI
     <WebMethod(EnableSession:=True, Description:="Sets the IMEI for a unit. The given user badge number will override the windows login if available.")> _
     Public Function UpdateUnitIMEI(ByVal QRANumber As String, ByVal IMEI As String, ByVal userIdentification As String) As Boolean
         Try
-            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
 
-            If bc.Validate Then
-                If bc.HasTestUnitNumber Then
-                    Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
-                    tu.IMEI = IMEI
-                    tu.LastUser = userIdentification
-                    Return TestUnitManager.Save(tu) > 0
+                If bc.Validate Then
+                    If bc.HasTestUnitNumber Then
+                        Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
+                        tu.IMEI = IMEI
+                        tu.LastUser = userIdentification
+                        Return TestUnitManager.Save(tu) > 0
+                    End If
                 End If
             End If
 
@@ -173,14 +175,16 @@ Public Class RemiAPI
     <WebMethod(EnableSession:=True, Description:="Sets the IMEI for a unit. The given user badge number will override the windows login if available.")> _
     Public Function UpdateUnitBSN(ByVal QRANumber As String, ByVal bsn As Int32, ByVal userIdentification As String) As Boolean
         Try
-            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
 
-            If bc.Validate Then
-                If bc.HasTestUnitNumber Then
-                    Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
-                    tu.BSN = bsn
-                    tu.LastUser = userIdentification
-                    Return TestUnitManager.Save(tu) > 0
+                If bc.Validate Then
+                    If bc.HasTestUnitNumber Then
+                        Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
+                        tu.BSN = bsn
+                        tu.LastUser = userIdentification
+                        Return TestUnitManager.Save(tu) > 0
+                    End If
                 End If
             End If
 
@@ -194,15 +198,17 @@ Public Class RemiAPI
     <WebMethod(EnableSession:=True, Description:="Sets the IMEI for a unit. The given user badge number will override the windows login if available.")> _
     Public Function UpdateUnitBSNIMEI(ByVal QRANumber As String, ByVal bsn As Int32, ByVal IMEI As String, ByVal userIdentification As String) As Boolean
         Try
-            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
 
-            If bc.Validate Then
-                If bc.HasTestUnitNumber Then
-                    Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
-                    tu.BSN = bsn
-                    tu.IMEI = IMEI
-                    tu.LastUser = userIdentification
-                    Return TestUnitManager.Save(tu) > 0
+                If bc.Validate Then
+                    If bc.HasTestUnitNumber Then
+                        Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
+                        tu.BSN = bsn
+                        tu.IMEI = IMEI
+                        tu.LastUser = userIdentification
+                        Return TestUnitManager.Save(tu) > 0
+                    End If
                 End If
             End If
 
@@ -216,23 +222,25 @@ Public Class RemiAPI
     <WebMethod(EnableSession:=True, Description:="Sets the BSN for a unit. The given user badge number will override the windows login if available.")> _
     Public Function AddUnit(ByVal QRANumber As String, ByVal BSN As String, ByVal userIdentification As String) As Boolean
         Try
-            'this used to add a unit but now all units are created and this only changes the 
-            'bsn of the unit if it exists
-            Dim BSNConverted As Long
-            If String.IsNullOrEmpty(BSN) Then
-                BSNConverted = 0
-            Else
-                Long.TryParse(BSN, BSNConverted)
-            End If
+            If UserManager.SetUserToSession(userIdentification) Then
+                'this used to add a unit but now all units are created and this only changes the 
+                'bsn of the unit if it exists
+                Dim BSNConverted As Long
+                If String.IsNullOrEmpty(BSN) Then
+                    BSNConverted = 0
+                Else
+                    Long.TryParse(BSN, BSNConverted)
+                End If
 
-            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
+                Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(QRANumber), 30))
 
-            If bc.Validate Then
-                If bc.HasTestUnitNumber Then
-                    Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
-                    tu.BSN = BSNConverted
-                    tu.LastUser = userIdentification
-                    Return TestUnitManager.Save(tu) > 0
+                If bc.Validate Then
+                    If bc.HasTestUnitNumber Then
+                        Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
+                        tu.BSN = BSNConverted
+                        tu.LastUser = userIdentification
+                        Return TestUnitManager.Save(tu) > 0
+                    End If
                 End If
             End If
 
