@@ -143,18 +143,18 @@ BEGIN
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
 
-		CREATE TABLE dbo.#RequestResults (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, IMEI NVARCHAR(150), BSN BIGINT, ID INT, ResultID INT, XMLID INT)
-		CREATE TABLE dbo.#parameters (ResultMeasurementID INT)
-		CREATE TABLE dbo.#information (RID INT, ResultInfoArchived BIT)
+		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, IMEI NVARCHAR(150), BSN BIGINT, ID INT, ResultID INT, XMLID INT)
+		CREATE TABLE dbo.#RRParameters (ResultMeasurementID INT)
+		CREATE TABLE dbo.#RRInformation (RID INT, ResultInfoArchived BIT)
 		
 		CREATE INDEX [Request_BatchID] ON dbo.#Request([BatchID])
 
-		SET @SQL = 'ALTER TABLE dbo.#RequestResults ADD ' + replace(@rows, ']', '] NVARCHAR(4000)')
+		SET @SQL = 'ALTER TABLE dbo.#RR ADD ' + replace(@rows, ']', '] NVARCHAR(4000)')
 		EXEC sp_executesql @SQL
 
 		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage')) > 0)
 		BEGIN
-			ALTER TABLE dbo.#RequestResults ADD TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
+			ALTER TABLE dbo.#RR ADD TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
 				TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
 				MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
 				UpperLimit NVARCHAR(255), LowerLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(400), 
@@ -165,7 +165,7 @@ BEGIN
 		SET @rows = REPLACE(@rows, '[', 'r.[')
 
 		INSERT INTO #executeSQL (sqlvar)
-		VALUES ('INSERT INTO dbo.#RequestResults 
+		VALUES ('INSERT INTO dbo.#RR 
 		SELECT r.RequestID, r.BatchID, r.RequestNumber, tu.BatchUnitNumber, tu.IMEI, tu.BSN, ')
 
 		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage')) > 0)
@@ -308,7 +308,7 @@ BEGIN
 			SELECT @ParameterColumnNames=  ISNULL(STUFF(
 			( 
 			SELECT DISTINCT '],[' + rp.ParameterName
-			FROM dbo.#RequestResults rr WITH(NOLOCK)
+			FROM dbo.#RR rr WITH(NOLOCK)
 				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
 			WHERE rp.ParameterName <> 'Command'
 			ORDER BY '],[' +  rp.ParameterName
@@ -316,13 +316,13 @@ BEGIN
 
 			IF (@ParameterColumnNames <> '[na]')
 			BEGIN
-				SET @SQL = 'ALTER TABLE dbo.#parameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
+				SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
 				EXEC sp_executesql @SQL
 
-				SET @SQL = 'INSERT INTO dbo.#parameters SELECT *
+				SET @SQL = 'INSERT INTO dbo.#RRParameters SELECT *
 				FROM (
 					SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
-					FROM dbo.#RequestResults rr WITH(NOLOCK)
+					FROM dbo.#RR rr WITH(NOLOCK)
 						INNER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
 					) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt'
 
@@ -342,7 +342,7 @@ BEGIN
 			SELECT @InformationColumnNames=  ISNULL(STUFF(
 			( 
 			SELECT DISTINCT '],[' + ri.Name
-			FROM dbo.#RequestResults rr WITH(NOLOCK)
+			FROM dbo.#RR rr WITH(NOLOCK)
 				INNER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ResultID = rr.ResultID
 				LEFT OUTER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON x.ID=ri.XMLID
 			WHERE ri.Name NOT IN ('Start UTC','Start','End', 'STEF Plugin Version')
@@ -352,13 +352,13 @@ BEGIN
 
 			IF (@InformationColumnNames <> '[na]')
 			BEGIN
-				SET @SQL = 'ALTER TABLE dbo.#information ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
+				SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
 				EXEC sp_executesql @SQL
 
-				SET @SQL = N'INSERT INTO dbo.#information SELECT *
+				SET @SQL = N'INSERT INTO dbo.#RRInformation SELECT *
 				FROM (
 					SELECT rr.ResultID AS RID, ri.IsArchived AS ResultInfoArchived, ri.Name, ri.Value
-					FROM dbo.#RequestResults rr WITH(NOLOCK)
+					FROM dbo.#RR rr WITH(NOLOCK)
 						INNER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON rr.XMLID=ri.XMLID
 						WHERE ri.Name NOT IN (''Start UTC'',''Start'',''End'', ''STEF Plugin Version'') AND
 							((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1)) 
@@ -390,18 +390,21 @@ BEGIN
 		BEGIN
 			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + COLUMN_NAME + '],' 
 			FROM tempdb.INFORMATION_SCHEMA.COLUMNS 
-			WHERE (TABLE_NAME like '#RequestResults%' OR TABLE_NAME LIKE '#parameters%' OR TABLE_NAME LIKE '#information%')
+			WHERE (TABLE_NAME like '#RR%' OR TABLE_NAME LIKE '#RRParameters%' OR TABLE_NAME LIKE '#RRInformation%')
 				AND COLUMN_NAME NOT IN ('RequestID', 'XMLID', 'ID', 'BatchID', 'ResultMeasurementID', 'ResultID', 'RID')
+			ORDER BY TABLE_NAME
 		END
 
-		SET @SQL = 'SELECT DISTINCT ' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#RequestResults rr 
-			LEFT OUTER JOIN dbo.#parameters p ON rr.ID=p.ResultMeasurementID
-			LEFT OUTER JOIN dbo.#information i ON i.RID = rr.ResultID '
+		SET @SQL = 'SELECT DISTINCT ' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#RR rr 
+			LEFT OUTER JOIN dbo.#RRParameters p ON rr.ID=p.ResultMeasurementID
+			LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID '
+		
+		print @SQL
 		EXEC sp_executesql @SQL
 
-		DROP TABLE dbo.#parameters
-		DROP TABLE dbo.#information
-		DROP TABLE dbo.#RequestResults
+		DROP TABLE dbo.#RRParameters
+		DROP TABLE dbo.#RRInformation
+		DROP TABLE dbo.#RR
 	END
 	ELSE
 	BEGIN
@@ -419,8 +422,8 @@ BEGIN
 		BEGIN
 			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + COLUMN_NAME + '],' 
 			FROM tempdb.INFORMATION_SCHEMA.COLUMNS 
-			WHERE (TABLE_NAME like '#Request%')
-				AND COLUMN_NAME NOT IN ('RequestID', 'BatchID')
+			WHERE (TABLE_NAME like '#Request%') AND COLUMN_NAME NOT IN ('RequestID', 'BatchID')
+			ORDER BY TABLE_NAME
 		END
 
 		SET @SQL = 'SELECT DISTINCT ' +  SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#Request r '
