@@ -26,12 +26,12 @@ function jsonRequest(url, requestData) {
     return $.ajax({
         url: url,
         type: "POST",
+        //contentType: "text/plain",
         contentType: "application/json; charset=utf-8",
         data: (requestData === null ? "{}" : requestData),
         converters: {
             "text json": function (data) {
                 var msg = JSON.parse(data);
-
                 return (msg.hasOwnProperty("d") ? msg.d : msg);
             }
         }

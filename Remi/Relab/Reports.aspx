@@ -4,63 +4,26 @@
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <link href="../Design/jQueryCSS/bootstrap-select.css" rel="Stylesheet" type="text/css" />
-    <script type="text/javascript" src="../Design/scripts/jquery-1.4.2.js"></script>
-    <script  type="text/javascript" src="../Design/scripts/bootstrap-select.js"></script>
-    <script type="text/javascript" src="../Design/scripts/bootstrap.js"></script>
-    <link href="../Design/jQueryCSS/bootstrap.css" rel="Stylesheet" type="text/css" />
-    <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
+    <link type="text/css" href="../Design/jQueryCSS/Bootstrap CSS/bootstrap-select.css" rel="Stylesheet"  />
+    <link type="text/css" href="../Design/jQueryCSS/Bootstrap CSS/bootstrap.css" rel="Stylesheet" />
+    <link type="text/css" href="../Design/jQueryCSS/Bootstrap CSS/jquery.taginput.css" rel="Stylesheet" />
+    <link type="text/css" href="../Design/jQueryCSS/jQueryUI/jquery-ui-1.10.4.css" rel="Stylesheet" />
+    <script type="text/javascript" src="../Design/scripts/jQuery/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="../Design/scripts/Bootstrap/jquery.taginput.src.js"></script>
+    <script type="text/javascript" src="../Design/scripts/Bootstrap/bootstrap-select.js"></script>
+    <script type="text/javascript" src="../Design/scripts/Bootstrap/bootstrap.js"></script>
+    <script type="text/javascript" src="../Design/scripts/jQuery/jquery-ui-1.10.4.min.js"></script>
+    <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
+    <script type="text/javascript" src="../Design/scripts/ReportScript.js"></script>
 
-    
 
     <script type="text/javascript">
-
-
         $('.selectpicker').selectpicker({
           style: 'btn-info',
           size: 4
         });
-        
-
-        $(document).ready(function () {
-            var rtID = $('#<%=ddlRequestType.ClientID%>');
-            //console.log(rtID[0].value);
-            var temp = searchFields(rtID[0].value);
-            console.log(temp);
-
-            });
-
-        function searchFields(rtID) {
-            
-            $.ajax({
-                type: "POST",
-                url: "Reports.aspx/Search",
-                data: {requestTypeID: rtID},
-                //data: 'requestTypeID: "' + rtID + '" }',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    /*if (response.d == true) {
-                        console.log(response.data);
-                    }*/
-                    alert("hi");
-                },
-                failure: function (response) {
-                    console.log(response.data);
-                }
-            });
-
-
-            //$.get("Reports.aspx/Search",'requestTypeID: "' + rtID + '" }',function(response) {
-            //    console.log(response);
-            //});
-            
-        }
-
     </script>
-
-
 </asp:Content>
 
 
@@ -82,14 +45,27 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
    
-            <select id="bs_ddlSearchField" class="selectpicker show-tick" title="select a condiment" multiple data-selected-text-format="count">
-                <option>Mustard</option>
-                <option>Ketchup</option>
-                <option>Relish</option>
-            </select>
+            
 
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="input-group input-group-sm">
+                <div class="input-group-btn">
+                    <!-- Button and dropdown menu -->
+                    <select id="bs_StagesField" class="selectpicker" title="Select Jobs..." multiple data-size="15" data-selected-text-format="count"></select>
+                    <select id="bs_ddlSearchField" class="selectpicker" title="Select Request..." multiple data-size="15" data-selected-text-format="count"></select>
+                    <select id="bs_TestField" class="selectpicker" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
+                    <button id="bs_OKayButton" type="button" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">ADD</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    <asp:DropDownList runat="server" ID="ddlSearchField" DataTextField="Name" DataValueField="ReqFieldSetupID" AppendDataBoundItems="false" EnableViewState="true"></asp:DropDownList>
+        
+    <ul id="FinalItemsList" class="list-group">
+    </ul>
+    
+    
 
 
     <asp:TextBox runat="server" ID="txtSearchTerm" ></asp:TextBox>

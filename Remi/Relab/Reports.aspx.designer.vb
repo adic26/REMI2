@@ -41,15 +41,6 @@ Partial Public Class Reports
     Protected WithEvents ddlRequestType As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''ddlSearchField control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlSearchField As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
     '''txtSearchTerm control.
     '''</summary>
     '''<remarks>

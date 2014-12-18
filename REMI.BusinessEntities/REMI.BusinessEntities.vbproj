@@ -117,6 +117,7 @@
     <Compile Include="DataEntityCollections\CalibrationCollection.vb" />
     <Compile Include="DataEntityCollections\ProductConfigCollection.vb" />
     <Compile Include="DataEntityCollections\RequestFieldsCollection.vb" />
+    <Compile Include="DataEntityCollections\SearchFieldResponse.vb" />
     <Compile Include="DataEntityCollections\TrackingLocationTypePermissionCollection.vb" />
     <Compile Include="DataEntityCollections\ParameterResultCollection.vb" />
     <Compile Include="DataEntityCollections\TestResultCollection.vb" />

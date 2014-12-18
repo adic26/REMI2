@@ -12,6 +12,7 @@ Imports System.Web.Script.Services
 <System.Web.Services.WebService(Name:="RemiAPI", Namespace:="http://go/remi/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
 <ToolboxItem(False)> _
+<ScriptService()> _
 Public Class RemiAPI
     Inherits System.Web.Services.WebService
 
@@ -267,7 +268,7 @@ Public Class RemiAPI
 
 #Region "DTATTA"
     <WebMethod(EnableSession:=True, Description:="Attempts to mark a unit as fail for functional test or SFI Functional in remi for the given set of drops.")> _
-    Public Function DTATTAAddRemoveUnit(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As Remi.BusinessEntities.FinalTestResult) As Boolean
+    Public Function DTATTAAddRemoveUnit(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As REMI.BusinessEntities.FinalTestResult) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Return TestRecordManager.DTATTAUpdateUnitTestStatus(qranumber, testStage, test, userIdentification, result)
@@ -504,7 +505,7 @@ Public Class RemiAPI
 #Region "Obsolete"
     <Obsolete("Don't use this routine any more. Use GetLookupIDByTypeString instead."), _
     WebMethod(Description:="Returns an ID of Lookup based on type.")> _
-    Public Function GetLookupID(ByVal type As Remi.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
+    Public Function GetLookupID(ByVal type As REMI.Contracts.LookupType, ByVal lookup As String, ByVal parentID As Int32) As Int32
         Try
             Return LookupsManager.GetLookupID(type, lookup, parentID)
         Catch ex As Exception
@@ -515,7 +516,7 @@ Public Class RemiAPI
 
     <Obsolete("Don't use this routine any more. Use GetLookupsTypeStringByProduct instead."), _
     WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
-    Public Function GetLookupsByProduct(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32) As DataTable
+    Public Function GetLookupsByProduct(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32) As DataTable
         Try
             Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0)
         Catch ex As Exception
@@ -526,7 +527,7 @@ Public Class RemiAPI
 
     <Obsolete("Don't use this routine any more. Use GetLookupsTypeStringByProductParent instead."), _
     WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
-    Public Function GetLookupsByProductParent(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
+    Public Function GetLookupsByProductParent(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
         Try
             Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, 1)
         Catch ex As Exception
@@ -537,7 +538,7 @@ Public Class RemiAPI
 
     <Obsolete("Don't use this routine any more. Use GetLookupsByTypeString instead."), _
     WebMethod(Description:="Returns a list of Lookups based on type.")> _
-    Public Function GetLookups(ByVal type As Remi.Contracts.LookupType) As DataTable
+    Public Function GetLookups(ByVal type As REMI.Contracts.LookupType) As DataTable
         Try
             Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, 0)
         Catch ex As Exception
@@ -617,13 +618,13 @@ Public Class RemiAPI
 
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                UserDetails.UserName = UserManager.GetCurrentValidUserLDAPName()
+                userDetails.UserName = UserManager.GetCurrentValidUserLDAPName()
                 userDetails.user = UserManager.GetUser(userIdentification, 0)
 
-                Dim userPermissions As Integer = TrackingLocationManager.GetUserPermission(UserDetails.UserName, trackingLocationHostName, trackingLocationName)
-                UserDetails.HasBasicAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
-                UserDetails.HasCalibrationAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.CalibrationAccess) = TrackingLocationUserAccessPermission.CalibrationAccess
-                UserDetails.HasModifiedAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.ModifiedTestAccess) = TrackingLocationUserAccessPermission.ModifiedTestAccess
+                Dim userPermissions As Integer = TrackingLocationManager.GetUserPermission(userDetails.UserName, trackingLocationHostName, trackingLocationName)
+                userDetails.HasBasicAccess = (userPermissions And REMI.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
+                userDetails.HasCalibrationAccess = (userPermissions And REMI.Contracts.TrackingLocationUserAccessPermission.CalibrationAccess) = TrackingLocationUserAccessPermission.CalibrationAccess
+                userDetails.HasModifiedAccess = (userPermissions And REMI.Contracts.TrackingLocationUserAccessPermission.ModifiedTestAccess) = TrackingLocationUserAccessPermission.ModifiedTestAccess
             End If
         Catch ex As Exception
             UserManager.LogIssue("REMI API GetUserDetails2", "e3", NotificationType.Errors, ex, String.Format("User: {0} trackingLocationHostName: {1} trackingLocationName: {2}", userIdentification, trackingLocationHostName, trackingLocationName))
@@ -773,7 +774,7 @@ Public Class RemiAPI
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Dim b As BatchView = Me.GetBatch(qraNumber)
-                Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
+                Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
                                           Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                           Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
 
@@ -850,7 +851,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets Default Request Number.")> _
     Public Function GetDefaultReqNum() As String
         Try
-            Return Remi.Core.REMIConfiguration.DefaultRequestNumber()
+            Return REMI.Core.REMIConfiguration.DefaultRequestNumber()
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetDefaultReqNum", "e3", NotificationType.Errors, ex)
         End Try
@@ -860,7 +861,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets Default Request Number With Unit.")> _
     Public Function GetDefaultReqNumWithUnit() As String
         Try
-            Return String.Format("{0}-001", Remi.Core.REMIConfiguration.DefaultRequestNumber())
+            Return String.Format("{0}-001", REMI.Core.REMIConfiguration.DefaultRequestNumber())
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetDefaultReqNum", "e3", NotificationType.Errors, ex)
         End Try
@@ -870,7 +871,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets product type Information.")> _
     Public Function GetProductTypeID(ByVal qraNumber As String) As Int32
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(qraNumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(qraNumber)
 
             If batch IsNot Nothing And batch.ProductType IsNot Nothing Then
                 Return batch.ProductType.LookupID
@@ -884,7 +885,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets Test Center Information.")> _
     Public Function GetTestCenterID(ByVal qraNumber As String) As Int32
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(qraNumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(qraNumber)
 
             If batch IsNot Nothing And batch.TestCenter IsNot Nothing Then
                 Return batch.TestCenter.LookupID
@@ -898,7 +899,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets accessory Information.")> _
     Public Function GetAccessoryTypeID(ByVal qraNumber As String) As Int32
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(qraNumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(qraNumber)
 
             If batch IsNot Nothing And batch.AccessoryGroup IsNot Nothing Then
                 Return batch.AccessoryGroup.LookupID
@@ -960,7 +961,7 @@ Public Class RemiAPI
     WebMethod(Description:="Given a qra number this method will return the Hardware Revision of a batch.")> _
     Public Function GetHardwareRevision(ByVal QRANumber As String) As String
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(QRANumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(QRANumber)
 
             If batch IsNot Nothing Then
                 If batch.HWRevision IsNot Nothing Then
@@ -978,7 +979,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a QRA Number this method returns the CPR Number.")> _
     Public Function GetCPRNumber(ByVal QRANumber As String) As String
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(QRANumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(QRANumber)
 
             If batch IsNot Nothing Then
                 If batch.CPRNumber IsNot Nothing Then
@@ -1010,7 +1011,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Get's All Batch Stages Name.")> _
     Public Function GetTestStagesNameByBatch(ByVal requestNumber As String) As List(Of String)
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
 
             If batch IsNot Nothing Then
                 Return (From s In TestStageManager.GetTestStagesNameByBatch(batch.ID) Select s.Value).ToList
@@ -1050,7 +1051,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Get's All Batch Tests By Stage.")> _
     Public Function GetTestsByBatchStage(ByVal requestNumber As String, ByVal testStageName As String) As List(Of String)
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
 
             If batch IsNot Nothing Then
                 Return (From s In TestManager.GetTestsByBatchStage(batch.ID, testStageName, False) Select s.Value).ToList
@@ -1064,7 +1065,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Get's All Batch Tests.")> _
     Public Function GetTestsByBatch(ByVal requestNumber As String) As DataTable
         Try
-            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+            Dim batch As REMI.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
 
             If batch IsNot Nothing Then
                 Return TestManager.GetTestsByBatch(batch.ID)
@@ -1275,7 +1276,7 @@ Public Class RemiAPI
     <WebMethod(EnableSession:=True, Description:="Sends an email via smtp. Comma delimit destinations.")> _
     Public Sub SendMail(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String)
         Try
-            Remi.Core.Emailer.SendMail(destinations, sender, subject, messageBody, False)
+            REMI.Core.Emailer.SendMail(destinations, sender, subject, messageBody, False)
         Catch ex As Exception
             UserManager.LogIssue("Email could not be sent via API.", "e3", NotificationType.Errors, ex, "Dest: " + destinations + "Sender: " + sender)
         End Try
@@ -1284,7 +1285,7 @@ Public Class RemiAPI
     <WebMethod(EnableSession:=True, Description:="Sends an email via smtp. Comma delimit destinations.")> _
     Public Sub SendMailAdvanced(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean)
         Try
-            Remi.Core.Emailer.SendMail(destinations, sender, subject, messageBody, isHTML)
+            REMI.Core.Emailer.SendMail(destinations, sender, subject, messageBody, isHTML)
         Catch ex As Exception
             UserManager.LogIssue("Email could not be sent via API.", "e3", NotificationType.Errors, ex, "Dest: " + destinations + "Sender: " + sender)
         End Try
