@@ -16,14 +16,6 @@
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
     <script type="text/javascript" src="../Design/scripts/ReportScript.js"></script>
-
-
-    <script type="text/javascript">
-        $('.selectpicker').selectpicker({
-          style: 'btn-info',
-          size: 4
-        });
-    </script>
 </asp:Content>
 
 
@@ -52,19 +44,20 @@
             <div class="input-group input-group-sm">
                 <div class="input-group-btn">
                     <!-- Button and dropdown menu -->
-                    <select id="bs_StagesField" class="selectpicker" title="Select Jobs..." multiple data-size="15" data-selected-text-format="count"></select>
-                    <select id="bs_ddlSearchField" class="selectpicker" title="Select Request..." multiple data-size="15" data-selected-text-format="count"></select>
-                    <select id="bs_TestField" class="selectpicker" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
-                    <button id="bs_OKayButton" type="button" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">ADD</button>
+                    <select id="bs_StagesField" class="selectpicker show-tick" title="Select Jobs..." multiple data-size="15" data-selected-text-format="count"></select>
+                    <select id="bs_ddlSearchField" class="selectpicker show-tick" title="Select Request..." multiple data-size="15" data-selected-text-format="count"></select>
+                    <select id="bs_TestField" class="selectpicker show-tick" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
+                    <select id="bs_RealStages" class="selectpicker show-tick" data-style="btn-success" title="Select Stages..." multiple data-max-options="1" data-size="15"></select>
+                    <button id="bs_OKayButton" type="button" class="btn btn-primary" autocomplete="off">ADD</button>
                 </div>
             </div>
         </div>
     </div>
     
         
-    <ul id="FinalItemsList" class="list-group">
-    </ul>
-    
+    <ul id="FinalItemsList" class="list-group"></ul>
+    <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
+     
     
 
 

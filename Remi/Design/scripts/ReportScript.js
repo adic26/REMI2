@@ -1,6 +1,13 @@
 ﻿$(function () { //ready function
 
+    $('.selectpicker').selectpicker({
+        //style: 'btn-info',
+        size: 4
+    });
+
     $(FinalItemsList).hide();
+    $(bs_searchButton).hide();
+    $(bs_RealStages).selectpicker('hide');
 
     //var rtID = $('#<%=ddlRequestType.ClientID%>');
     var rtID = $("[id$='ddlRequestType']");
@@ -9,18 +16,53 @@
     var jobs = $(bs_StagesField);
     var req = $(bs_ddlSearchField);
     var tests = $(bs_TestField);
+    var stages = $(bs_RealStages);
 
     $('#bs_list').hide()
-
     $('#bs_OKayButton').on('click', function () {
         //$('.selectpicker').selectpicker('hide');
         var myList = $(FinalItemsList);
+        var fullList = [];
+
+        if (jobs.val() != null)
+            fullList = jobs.val();
+        if (req.val()!= null) {
+            fullList = $.merge(fullList, req.val());
+        }
+        if (tests.val()!=null) {
+            fullList = $.merge(fullList, tests.val());
+        }
         
-        $.each(jobs.val(), function (index, element) {
-            $('.list-group').append($('<li class="list-group-item">' + element + '</li>'))
+        $.each(fullList, function (index, element) {
+            $('.list-group').append($('<li class="list-group-item">' +
+                element +
+                '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
         });
 
+        //$('.form-inline').effects({ float: 'right' });
         myList.show();
+        $(bs_searchButton).show();
+        
+    });
+
+    var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
+
+    selectpicker.data('open', false);
+
+    selectpicker.click(function () {
+        if (selectpicker.data('open')) {
+            selectpicker.data('open', false);
+            console.log("close!");
+            //Insert all your stages at this point
+            if (jobs.val() != null) {
+                addStagesViaJobs(jobs.val(), stages);
+            }
+
+        } else {
+            console.log("open");
+            selectpicker.data('open', true);
+
+        }
         
     });
 
@@ -160,6 +202,42 @@ function populateStage(rtID, model) {
 
 function refreshAllSelectPickers() {
     $('.selectpicker').selectpicker('refresh');
+}
+
+function addStagesViaJobs(data,model) {
+
+    model.empty();
+    //where data is all the values from the Job
+    $.each(data, function (index, element) {
+        //call web service function
+        stagesWebService(element,model);
+    });
+    refreshAllSelectPickers();
+    $(bs_RealStages).selectpicker('show');
+}
+
+function stagesWebService(jobName,model) {
+    
+    var requestParams = JSON.stringify({
+        "jobName": jobName
+    });
+
+    var myRequest = jsonRequest("../webservice/RemiAPI.asmx/GetJobStages", requestParams).success(function (data) {
+        var results = data;
+        var rslt = $(results);
+        var cb = '';
+
+        cb = '<optgroup label=\"' + jobName + '">';
+        $.each(rslt, function (index, element) {
+            cb += "<option>" + element.Name + "</option>";
+        });
+        cb += '</optgroup>';
+
+        model.append(cb);
+        $('.selectpicker').selectpicker('refresh');
+
+
+    });
 }
 
 });
