@@ -605,17 +605,25 @@
     <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.css" />
     <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.icon-large.css" />
     <Content Include="Design\jQueryCSS\Bootstrap CSS\jquery.taginput.css" />
-    <Content Include="Design\jQueryCSS\jquery-ui-1.10.4.css" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.10.4.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.11.2.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.8.2.custom.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.structure.css" />
     <Content Include="Design\scripts\Bootstrap\bootstrap-select.js" />
     <Content Include="Design\scripts\Bootstrap\bootstrap.js" />
     <Content Include="Design\scripts\Bootstrap\jquery.taginput.src.js" />
     <Content Include="Design\scripts\gridviewScroll.min.js" />
-    <Content Include="Design\scripts\jquery-1.4.2.js" />
-    <Content Include="Design\scripts\jquery-1.8.0.js" />
-    <Content Include="Design\scripts\jquery-2.1.1.js" />
-    <Content Include="Design\scripts\jquery-ui-1.10.4.min.js" />
-    <Content Include="Design\scripts\jquery-ui.min.js" />
-    <Content Include="Design\scripts\jquery.min.js" />
+    <Content Include="Design\scripts\i18n\defaults-en_US.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui-1.10.4.min.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui-1.11.2.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui-1.8.2.custom.min.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui.min.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.11.1.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.4.2.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.8.0.js" />
+    <Content Include="Design\scripts\jQuery\jquery-2.1.1.js" />
+    <Content Include="Design\scripts\jQuery\jquery.min.js" />
     <Content Include="Design\scripts\ReportScript.js" />
     <Content Include="Design\scripts\ToolBox.js" />
     <Content Include="Global.asax" />
@@ -2780,13 +2788,11 @@
     <Content Include="Design\jQueryCSS\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Design\jQueryCSS\images\ui-icons_d8e7f3_256x240.png" />
     <Content Include="Design\jQueryCSS\images\ui-icons_f9bd01_256x240.png" />
-    <Content Include="Design\jQueryCSS\jquery-ui-1.8.2.custom.css" />
     <Content Include="Design\layout_grid.gif" />
     <Content Include="Design\left.gif" />
     <Content Include="Design\leftMenuHeader.gif" />
     <Content Include="Design\rightMenuHeader.gif" />
     <Content Include="Design\ruler_add.png" />
-    <Content Include="Design\scripts\jquery-ui-1.8.2.custom.min.js" />
     <Content Include="Design\scripts\jquery-vsdoc.js" />
     <Content Include="Design\scripts\jquery.columnfilters.js" />
     <Content Include="Design\scripts\menuScript.js" />
@@ -2821,6 +2827,9 @@
     <Content Include="Images\expand_blue.jpg" />
     <Content Include="MasterPages\MasterPage.master" />
     <None Include="Design\Graphic.psd" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.woff" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

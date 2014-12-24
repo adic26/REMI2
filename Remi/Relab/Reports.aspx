@@ -47,7 +47,7 @@
                     <select id="bs_StagesField" class="selectpicker show-tick" title="Select Jobs..." multiple data-size="15" data-selected-text-format="count"></select>
                     <select id="bs_ddlSearchField" class="selectpicker show-tick" title="Select Request..." multiple data-size="15" data-selected-text-format="count"></select>
                     <select id="bs_TestField" class="selectpicker show-tick" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
-                    <select id="bs_RealStages" class="selectpicker show-tick" data-style="btn-success" title="Select Stages..." multiple data-max-options="1" data-size="15"></select>
+                    <select id="bs_RealStages" class="selectpicker show-tick" multiple data-size="15" data-selected-text-format="count"></select>
                     <button id="bs_OKayButton" type="button" class="btn btn-primary" autocomplete="off">ADD</button>
                 </div>
             </div>

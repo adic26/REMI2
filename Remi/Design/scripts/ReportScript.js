@@ -24,8 +24,21 @@
         var myList = $(FinalItemsList);
         var fullList = [];
 
-        if (jobs.val() != null)
-            fullList = jobs.val();
+        if (jobs.val() != null) {
+            //Finding full list with stages.val() that gives the entire array
+            //finding the jobname, id and value of stage
+            summary = [];
+            //jobname
+            getGroups = stages.next().find('li.selected').find('a.opt ');
+            $.each(getGroups, function (index, element) {
+                OptGroup = element.getAttribute('data-optgroup'); //gives you optiongroup number
+                currentJob = stages.children()[OptGroup - 1].getAttribute("label");
+                currentStages = element.text;
+                summary[summary.length] = currentJob + " : " + currentStages;
+            });
+            
+            fullList = summary;
+        }
         if (req.val()!= null) {
             fullList = $.merge(fullList, req.val());
         }
@@ -44,9 +57,46 @@
         $(bs_searchButton).show();
         
     });
+    $('#bs_searchButton').on('click', function () {
+
+        var selectedRequests = req.next().find('li.selected').find('a.opt ');
+        var selectedTests = tests.next().find('li.selected').find('a.opt ');
+        var selectedStages = stages.next().find('li.selected').find('a.opt ');
+
+        $.each(selectedRequests, function (index, element) {
+            var requestName = element.text;
+            var originalIndex = element.parentNode.getAttribute('data-original-index');
+            var testID = $('#bs_ddlSearchField optgroup > option')[originalIndex].getAttribute('testid');
+            console.log(element.text + testID);
+        });
+
+        $.each(selectedTests, function (index, element) {
+            var originalIndex = element.parentNode.getAttribute('data-original-index');
+            var testID = $('#bs_TestField optgroup > option')[originalIndex].getAttribute('testid');
+            console.log(element.text + testID);
+        });
+
+        $.each(selectedStages, function (index, element) {
+            OptGroup = element.getAttribute('data-optgroup'); //gives you optiongroup number
+            //var realGroupName = stages.next().find('li')[0].textContent;
+            //var realGroupElementWithChildren = $('#bs_RealStages optgroup[label=/"' + realGroupName + '"]');
+            //x = stages.next().find('li')[0].textContent
+            //$('#bs_RealStages optgroup[label="T077 Other"]')
+
+            var firstGroupLength = $('#bs_RealStages optgroup')[0].childNodes.length;
+            var originalIndex = element.parentNode.getAttribute('data-original-index');
+            if ((OptGroup - 1) > 0) {
+                var testID = $('#bs_RealStages optgroup')[OptGroup - 1].childNodes[originalIndex - firstGroupLength].getAttribute('testid');
+            } else {
+                var testID = $('#bs_RealStages optgroup')[OptGroup - 1].childNodes[originalIndex].getAttribute('testid');
+            }
+            console.log(element.text + testID);
+        });
+
+
+    });
 
     var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
-
     selectpicker.data('open', false);
 
     selectpicker.click(function () {
@@ -172,7 +222,7 @@ function populateFields(data, model, type) {
     cb = '<optgroup label=\"' + type + '">';
     $.each(rslt, function (index, element) {
         if (element.Type == type) {
-            cb += "<option>" + element.Name + "</option>";
+            cb += '<option testID=\"' + element.TestID + '">' + element.Name + '</option>';
         }
     });
     cb += '</optgroup>';
@@ -207,7 +257,9 @@ function refreshAllSelectPickers() {
 function addStagesViaJobs(data,model) {
 
     model.empty();
-    //where data is all the values from the Job
+
+    //where data is all the values from the Job.
+    //send multiple jobs inside stagesWebservice and process it
     $.each(data, function (index, element) {
         //call web service function
         stagesWebService(element,model);
@@ -218,6 +270,7 @@ function addStagesViaJobs(data,model) {
 
 function stagesWebService(jobName,model) {
     
+    //Re-assess the web service , so it takes multiple job names
     var requestParams = JSON.stringify({
         "jobName": jobName
     });
@@ -228,15 +281,14 @@ function stagesWebService(jobName,model) {
         var cb = '';
 
         cb = '<optgroup label=\"' + jobName + '">';
+        cb += '<option> </option>';
         $.each(rslt, function (index, element) {
-            cb += "<option>" + element.Name + "</option>";
+            cb += '<option testID=\"' + element.ID + '" JobName=\"' + element.JobName + '">' + element.Name + '</option>';
         });
         cb += '</optgroup>';
 
         model.append(cb);
-        $('.selectpicker').selectpicker('refresh');
-
-
+        refreshAllSelectPickers();
     });
 }
 
