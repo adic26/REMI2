@@ -116,18 +116,18 @@ Public Class Measurements
     End Sub
 
     Protected Sub grdResultMeasurements_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultMeasurements.DataBound
-        grdResultMeasurements.HeaderRow.Cells(2).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(3).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(9).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(11).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(12).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(13).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(14).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(15).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(16).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(17).Visible = False
-        grdResultMeasurements.HeaderRow.Cells(19).Visible = UserManager.GetCurrentUser.IsDeveloper() ' XML Version
-        grdResultMeasurements.HeaderRow.Cells(20).Visible = False
+        grdResultMeasurements.HeaderRow.Cells(2).Visible = False 'ID
+        grdResultMeasurements.HeaderRow.Cells(3).Visible = False 'Measurement (non template field)
+        grdResultMeasurements.HeaderRow.Cells(9).Visible = False 'MeasurementTypeID
+        grdResultMeasurements.HeaderRow.Cells(11).Visible = False 'Archived
+        grdResultMeasurements.HeaderRow.Cells(12).Visible = False 'XMLID
+        grdResultMeasurements.HeaderRow.Cells(13).Visible = False 'MaxVersion
+        grdResultMeasurements.HeaderRow.Cells(14).Visible = False 'Comment
+        grdResultMeasurements.HeaderRow.Cells(15).Visible = False 'Description
+        grdResultMeasurements.HeaderRow.Cells(16).Visible = False 'WasChanged
+        grdResultMeasurements.HeaderRow.Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
+        grdResultMeasurements.HeaderRow.Cells(19).Visible = False 'HasFiles
+        grdResultMeasurements.HeaderRow.Cells(20).Visible = False 'ResultMeasurementID
         grdResultMeasurements.HeaderRow.Cells(4).Width = 10
         grdResultMeasurements.HeaderRow.Cells(5).Width = 10
         grdResultMeasurements.HeaderRow.Cells(6).Width = 10
@@ -143,24 +143,24 @@ Public Class Measurements
 
         If (grdResultMeasurements.Rows.Count > 0) Then
             For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
-                grdResultMeasurements.Rows(i).Cells(2).Visible = False
-                grdResultMeasurements.Rows(i).Cells(3).Visible = False
-                grdResultMeasurements.Rows(i).Cells(9).Visible = False
+                grdResultMeasurements.Rows(i).Cells(2).Visible = False 'ID
+                grdResultMeasurements.Rows(i).Cells(3).Visible = False 'Measurement (non template field)
+                grdResultMeasurements.Rows(i).Cells(9).Visible = False 'MeasurementTypeID
                 grdResultMeasurements.Rows(i).Cells(11).Visible = False 'Archived
                 grdResultMeasurements.Rows(i).Cells(12).Visible = False 'XMLID
                 grdResultMeasurements.Rows(i).Cells(13).Visible = False 'MaxVersion
                 grdResultMeasurements.Rows(i).Cells(14).Visible = False 'Comment
-                grdResultMeasurements.Rows(i).Cells(15).Visible = False 'Image
-                grdResultMeasurements.Rows(i).Cells(16).Visible = False 'ContentType
-                grdResultMeasurements.Rows(i).Cells(17).Visible = False 'Description
-                grdResultMeasurements.Rows(i).Cells(19).Visible = UserManager.GetCurrentUser.IsDeveloper() ' XML Version
-                grdResultMeasurements.Rows(i).Cells(20).Visible = False 'WasChanged
+                grdResultMeasurements.Rows(i).Cells(15).Visible = False 'Description
+                grdResultMeasurements.Rows(i).Cells(16).Visible = False 'WasChanged
+                grdResultMeasurements.Rows(i).Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
+                grdResultMeasurements.Rows(i).Cells(19).Visible = False 'HasFiles
+                grdResultMeasurements.Rows(i).Cells(20).Visible = False 'ResultMeasurementID
                 grdResultMeasurements.Rows(i).Cells(6).ControlStyle.CssClass = "removeStyleWithCenter" 'Result
                 grdResultMeasurements.Rows(i).Cells(6).Wrap = True 'Result
                 grdResultMeasurements.Rows(i).Cells(6).HorizontalAlign = HorizontalAlign.Center 'Result
+                grdResultMeasurements.Rows(i).Cells(6).ControlStyle.Width = 220 'Result
                 grdResultMeasurements.Rows(i).Cells(4).ControlStyle.Width = 60 'LL
                 grdResultMeasurements.Rows(i).Cells(5).ControlStyle.Width = 60 'UL
-                grdResultMeasurements.Rows(i).Cells(6).ControlStyle.Width = 220 'Result
                 grdResultMeasurements.Rows(i).Cells(7).ControlStyle.Width = 50 'Unit
                 grdResultMeasurements.Rows(i).Cells(8).ControlStyle.Width = 50 'Pass/Fail
                 grdResultMeasurements.Rows(i).Cells(10).ControlStyle.Width = 50 'Test Num
@@ -198,24 +198,17 @@ Public Class Measurements
             End If
 
             Dim popupString As String = String.Format("<textarea id=&quot;txtComment" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + "&quot;>" + Server.HtmlDecode(e.Row.Cells(14).Text).Trim().Replace(vbCr, "\n").Replace(vbLf, "") + "</textarea><input type=&quot;checkbox&quot; id=&quot;chkPassFail{1}&quot; {3}>{0}<br/><input type=&quot;button&quot; id=&quot;btnSave&quot; value=&quot;Save Comment&quot; onclick=&quot;SaveComment(txtComment" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + "," + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + ", chkPassFail" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + ", {2}, \'{0}\')&quot; />", If(e.Row.Cells(8).Text = "Pass", "Fail", "Pass"), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), If(e.Row.Cells(8).Text = "Pass", "true", "false"), If(UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin, "", "disabled"))
-
             e.Row.Cells(8).Text = String.Format("<label onmouseover=""Tip('{1}',STICKY,'true',null,'true',CLOSEBTN,'true',WIDTH,'',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()"">{0}</label>", e.Row.Cells(8).Text, popupString)
 
             If (DataBinder.Eval(e.Row.DataItem, "WasChanged").ToString() = 1) Then
                 e.Row.Cells(8).BackColor = Drawing.Color.Yellow
             End If
 
-            Dim hdnImgStr As HiddenField = DirectCast(e.Row.FindControl("hdnImgStr"), HiddenField)
-            If (Not (String.IsNullOrEmpty(hdnImgStr.Value))) Then
-                If (Not (hdnImgStr.Value.Contains(";base64,AAAAAA=="))) Then
-                    Dim img As Image = DirectCast(e.Row.FindControl("img"), Image)
-                    img.Visible = True
-                    img.ImageUrl = hdnImgStr.Value
-                    img.Width = 30
-                    img.Height = 30
-                    img.Attributes.Add("onmouseover", String.Format("Tip('<img src=""{0}""/>',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'',TITLEBGCOLOR,'#6494C8')", hdnImgStr.Value))
-                    img.Attributes.Add("onmouseout", "UnTip()")
-                End If
+            If (e.Row.Cells(19).Text = "1") Then
+                Dim img As ImageButton = DirectCast(e.Row.FindControl("img"), ImageButton)
+                img.Visible = True
+                img.Width = 30
+                img.Height = 30
             End If
 
             Dim hplMeasurementType As HyperLink = DirectCast(e.Row.FindControl("hplMeasurementType"), HyperLink)
@@ -235,6 +228,52 @@ Public Class Measurements
             End If
         End If
     End Sub
+
+    Protected Sub imgbtn_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim btndetails As ImageButton = DirectCast(sender, ImageButton)
+        Dim gvrow As GridViewRow = DirectCast(btndetails.NamingContainer, GridViewRow)
+
+        hdnMeasurementID.Value = gvrow.Cells(2).Text
+        sseImages.ContextKey = hdnMeasurementID.Value.ToString()
+        ModalPopupExtender1.Show()
+    End Sub
+
+    <System.Web.Services.WebMethod()> _
+    Public Shared Function GetSlides(ByVal contextKey As String) As AjaxControlToolkit.Slide()
+        Dim dt As DataTable = RelabManager.MeasurementFiles(contextKey)
+        Dim photos(dt.Rows.Count) As AjaxControlToolkit.Slide
+
+        For i = 0 To dt.Rows.Count - 1
+            Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
+            Dim downloadURL As String = String.Format("http://{0}:{1}/Handlers/Download.ashx?img={2}", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
+            Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)
+
+            If (Helpers.IsRecognisedImageFile(fileName)) Then
+                photos(i) = New AjaxControlToolkit.Slide(imageDataURL, fileName, "<a href='" + downloadURL + "'>Download</a>")
+            Else
+                Select Case (IO.Path.GetExtension(fileName).ToUpper)
+                    Case "CSV"
+                        photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/csv_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    Case "XLS"
+                    Case "XLSX"
+                        photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xls_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    Case "XML"
+                        photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xml_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    Case "PPT"
+                    Case "PPTX"
+                        photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/ppt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    Case "PDF"
+                        photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/pdf_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    Case "TXT"
+                        photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    Case Else
+                        photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                End Select
+            End If
+        Next
+
+        Return photos
+    End Function
 
     Protected Sub lnkExportAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkExportAction.Click
         Dim resultID As Int32

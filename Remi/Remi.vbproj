@@ -251,12 +251,18 @@
     <Compile Include="Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\Download.ashx.vb">
+      <DependentUpon>Download.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Help\default.aspx.designer.vb">
       <DependentUpon>default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Help\default.aspx.vb">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Handlers\ImageHandler.ashx.vb">
+      <DependentUpon>ImageHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="Incoming\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -2808,6 +2814,8 @@
     <Content Include="Images\expand_blue.jpg" />
     <Content Include="MasterPages\MasterPage.master" />
     <None Include="Design\Graphic.psd" />
+    <Content Include="Handlers\ImageHandler.ashx" />
+    <Content Include="Handlers\Download.ashx" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

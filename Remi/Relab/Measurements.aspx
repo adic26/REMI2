@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="false" MaintainScrollPositionOnPostback="true" AutoEventWireup="false" Inherits="Remi.Measurements" Codebehind="Measurements.aspx.vb" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="false" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.Measurements" Codebehind="Measurements.aspx.vb" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script type="text/javascript" src="../design/scripts/jquery.js"></script>
@@ -84,6 +84,23 @@
     <asp:Label runat="server" ID="lblNoResults" Visible="false"><h2>No Measurements For Selected Criteria</h2></asp:Label>
     <asp:Panel runat="server" ID="pnlMeasurements">
         <asp:HiddenField runat="server" ID="hdnUnit" />
+        
+        <asp:Button ID="btnShowPopup" runat="server" style="display:none" />
+        <asp:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup" PopupControlID="pnlpopup" CancelControlID="btnCancel" BackgroundCssClass="ModalBackground"></asp:ModalPopupExtender> 
+        
+        <asp:Panel ID="pnlpopup" runat="server" BackColor="White" style="display:none;" Width="1050" Height="850" HorizontalAlign="Center" CssClass="ModalPopup">
+            <asp:HiddenField runat="server" ID="hdnMeasurementID" />
+            
+            <asp:Label runat="server" ID="lblTitle"></asp:Label><br />
+            <asp:Image ID="imgslides" runat="server" /><br />
+            <asp:Button ID="btnPrevious" runat="server" Text="Prev" CssClass="buttonSmall"/>
+            <asp:Button ID="btnPlay" runat="server" Text="Play" CssClass="buttonSmall"/>
+            <asp:Button ID="btnNext" runat="server" Text="Next" CssClass="buttonSmall"/>
+            <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="buttonSmall" /><br />
+            <asp:Label ID="lblDesc" runat="server"></asp:Label>
+
+            <asp:SlideShowExtender runat="server" ID="sseImages" TargetControlID="imgslides" ImageTitleLabelID="lblTitle" ImageDescriptionLabelID="lblDesc" PlayInterval="2000" Loop="true" SlideShowServicePath="Measurements.aspx" SlideShowServiceMethod="GetSlides" NextButtonID="btnNext" PreviousButtonID="btnPrevious" PlayButtonID="btnPlay" ></asp:SlideShowExtender>
+        </asp:Panel>
 
         <b><asp:CheckBox ID="chkOnlyFails" runat="server" Text="Show Fails Only" AutoPostBack="true" /></b>
         <b><asp:CheckBox ID="chkIncludeArchived" runat="server" Text="Include Archived" AutoPostBack="true" /></b>
@@ -93,8 +110,7 @@
             <Columns>
                 <asp:TemplateField HeaderText="Image" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
                     <ItemTemplate>
-                        <asp:Image Visible="false" runat="server" ImageUrl="" ID="img" />
-                        <asp:HiddenField runat="server" ID="hdnImgStr" Value='<%# "data:image/" + Eval("ContentType") + ";base64," + Convert.ToBase64String(Eval("Image")) %>' />
+                        <asp:ImageButton ID="img" runat="server" ImageUrl="../Design/Icons/png/24x24/png_file.png" Height="30px" Width="30px" OnClick="imgbtn_Click" />
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Measurement" SortExpression="Measurement" ItemStyle-Width="250px" ItemStyle-HorizontalAlign="Left" ItemStyle-Wrap="true" ItemStyle-CssClass="removeStyle">

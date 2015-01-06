@@ -17,6 +17,8 @@ Imports System.Web.UI.HtmlControls
 Imports REMI.Contracts
 Imports System.Text
 Imports System.Text.RegularExpressions
+Imports System.Drawing
+Imports System.Drawing.Imaging
 
 Namespace REMI.BusinessEntities
     Public Class Helpers
@@ -217,6 +219,25 @@ Namespace REMI.BusinessEntities
                 i = (i + 1)
             Loop
         End Sub
+
+        Public Shared Function IsRecognisedImageFile(ByVal fileName As String) As Boolean
+            Dim targetExtension As String = System.IO.Path.GetExtension(fileName)
+            If String.IsNullOrEmpty(targetExtension) Then
+                Return False
+            Else
+                targetExtension = ("*" + targetExtension.ToLowerInvariant)
+            End If
+            Dim recognisedImageExtensions As List(Of String) = New List(Of String)
+            For Each imageCodec As ImageCodecInfo In ImageCodecInfo.GetImageEncoders
+                recognisedImageExtensions.AddRange(imageCodec.FilenameExtension.ToLowerInvariant.Split(";".ToCharArray))
+            Next
+            For Each extension As String In recognisedImageExtensions
+                If extension.Equals(targetExtension) Then
+                    Return True
+                End If
+            Next
+            Return False
+        End Function
 
         ''' <summary>
         ''' This function gets the current filename of the aspx web page used for creating links back to the current page to refresh the page.
