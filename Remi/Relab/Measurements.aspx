@@ -110,7 +110,7 @@
             <Columns>
                 <asp:TemplateField HeaderText="Image" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
                     <ItemTemplate>
-                        <asp:ImageButton ID="img" runat="server" ImageUrl="../Design/Icons/png/24x24/png_file.png" Height="30px" Width="30px" OnClick="imgbtn_Click" />
+                        <asp:ImageButton ID="img" runat="server" Visible="false" ImageUrl="../Design/Icons/png/24x24/png_file.png" Height="30px" Width="30px" OnClick="imgbtn_Click" />
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Measurement" SortExpression="Measurement" ItemStyle-Width="250px" ItemStyle-HorizontalAlign="Left" ItemStyle-Wrap="true" ItemStyle-CssClass="removeStyle">

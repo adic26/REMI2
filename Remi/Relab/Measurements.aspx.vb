@@ -223,8 +223,8 @@ Public Class Measurements
                 lblMeasurementType.Visible = True
             End If
 
-            If (Not String.IsNullOrEmpty(e.Row.Cells(16).Text) And e.Row.Cells(16).Text <> "&nbsp;") Then
-                e.Row.Cells(6).Text += String.Format(" <img src='\Design\Icons\png\16x16\cloud_comment.png' onmouseover=""Tip('{0}','true',null,'true','true',WIDTH,'',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()""/>", e.Row.Cells(16).Text)
+            If (Not String.IsNullOrEmpty(e.Row.Cells(15).Text) And e.Row.Cells(15).Text <> "&nbsp;") Then
+                e.Row.Cells(6).Text += String.Format(" <img src='\Design\Icons\png\16x16\cloud_comment.png' onmouseover=""Tip('{0}','true',null,'true','true',WIDTH,'',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()""/>", e.Row.Cells(15).Text)
             End If
         End If
     End Sub
