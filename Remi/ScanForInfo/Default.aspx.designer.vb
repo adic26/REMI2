@@ -329,6 +329,15 @@ Partial Public Class ScanForInfo_Default
     Protected WithEvents btnSubmit As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
+    '''lblResult control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblResult As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''bscMain control.
     '''</summary>
     '''<remarks>

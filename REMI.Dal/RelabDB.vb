@@ -29,6 +29,21 @@ Namespace REMI.Dal
 
             Return dt
         End Function
+        Public Shared Function GetOverAllPassFail(ByVal BatchID As Int32) As DataSet
+            Dim ds As New DataSet("PassFail")
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("Relab.remispResultsStatus", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@BatchID", BatchID)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(ds)
+                End Using
+            End Using
+
+            Return ds
+        End Function
 
         Public Shared Function ResultInformation(ByVal resultID As Int32, ByVal includeArchived As Boolean) As DataTable
             Dim dt As New DataTable("ResultsInformation")

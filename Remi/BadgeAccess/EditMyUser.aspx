@@ -25,14 +25,6 @@
         <li> <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgRefresh" runat="server" />
             <asp:HyperLink ID="hypRefresh" runat="server" NavigateUrl="./EditmyUser.aspx">Refresh</asp:HyperLink>
         </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgManageUnits" runat="server" />
-            <asp:HyperLink ID="hypManageUnits" runat="server" NavigateUrl="../manageuser/default.aspx">View Your Units</asp:HyperLink>
-        </li>
-        <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgRequestedBatches" runat="server" />
-            <asp:HyperLink ID="hypRequestedBatches" runat="server" NavigateUrl="../manageuser/BatchesByRequestor.aspx">Requested Batches</asp:HyperLink>
-        </li>
     </ul>
     <h3>Filter</h3>
     <ul>

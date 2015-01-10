@@ -50,256 +50,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents pnlHead As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
-    '''Overview control.
+    '''menuHeader control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents Overview As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A11 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A11 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''Search control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Search As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A16 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A16 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''ScanDevice control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ScanDevice As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A2 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''BatchInfo control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents BatchInfo As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A4 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A4 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''ProductInfo control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ProductInfo As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A6 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A6 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''TrackingLocation control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents TrackingLocation As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A5 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A5 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''Timeline control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Timeline As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A9 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A9 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''Incoming control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Incoming As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A10 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A10 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''Inventory control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Inventory As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A8 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A8 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''User control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents User As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A3 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A3 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''Results control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Results As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A17 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A17 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''adminLink control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents adminLink As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A7 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A7 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''HelpLink control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents HelpLink As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A18 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A18 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-
-    '''<summary>
-    '''logLink control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents logLink As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''A15 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents A15 As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    Protected WithEvents menuHeader As Global.System.Web.UI.WebControls.Menu
 
     '''<summary>
     '''pnlLogged control.
@@ -309,6 +66,15 @@ Partial Public Class MasterPages_MasterPage
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents pnlLogged As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''leftSidebar control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents leftSidebar As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''pnlLeftMenuActions control.

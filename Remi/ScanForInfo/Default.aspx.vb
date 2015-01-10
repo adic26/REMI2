@@ -168,6 +168,17 @@ Partial Class ScanForInfo_Default
                     Dim bcol As New BatchCollection
                     bcol.Add(b)
 
+                    lblResult.Text = RelabManager.GetOverAllPassFail(b.ID).Tables(2).Rows(0)(0).ToString()
+
+                    Select Case lblResult.Text.ToLower
+                        Case "pass"
+                            lblResult.CssClass = "ESPass"
+                        Case "fail"
+                            lblResult.CssClass = "ESFail"
+                        Case "no result"
+                            lblResult.CssClass = "ESNoResult"
+                    End Select
+
                     rptBatchComments.DataSource = b.Comments
                     rptBatchComments.DataBind()
                     bscMain.SetBatches(bcol)
@@ -250,6 +261,11 @@ Partial Class ScanForInfo_Default
                     hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
                     hypTRSLink.NavigateUrl = b.RequestLink()
                     hypRefresh.NavigateUrl = b.BatchInfoLink
+                    hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
+                    hypRelabLink.NavigateUrl = b.RelabResultLink
+                    hypProductGroupLink.NavigateUrl = b.ProductGroupLink
+                    hypTestRecords.NavigateUrl = b.TestRecordsLink
+
                     txtExecutiveSummary.Text = b.ExecutiveSummary
                     Dim isExternal As Boolean = (From rd In b.ReqData Select rd.IsFromExternalSystem).FirstOrDefault()
 
@@ -257,8 +273,6 @@ Partial Class ScanForInfo_Default
                         txtExecutiveSummary.Enabled = True
                         btnExecutiveSummary.Visible = True
                     End If
-
-                    hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
 
                     'You are a relab role or your role has permission to view relab
                     If (UserManager.GetCurrentUser.HasRelabAuthority Or UserManager.GetCurrentUser.HasRelabAccess()) Then
@@ -273,10 +287,6 @@ Partial Class ScanForInfo_Default
                             hypRelabLink.Enabled = False
                         End If
                     End If
-
-                    hypRelabLink.NavigateUrl = b.RelabResultLink
-                    hypProductGroupLink.NavigateUrl = b.ProductGroupLink
-                    hypTestRecords.NavigateUrl = b.TestRecordsLink
 
                     gvwTaskAssignments.DataSource = LoadAssignments(b.QRANumber)
                     gvwTaskAssignments.DataBind()
@@ -294,7 +304,7 @@ Partial Class ScanForInfo_Default
                     accMain.SelectedIndex = 6
 
                     updComments.Update()
-                    SetupMenuItems(b.ProductGroup, b.DepartmentID)
+                    SetupMenuItems(b)
                 End If
             Else
                 notMain.Notifications.AddWithMessage(String.Format("{0} could not be found in REMI.", bc.ToString), NotificationType.Errors)
@@ -377,16 +387,69 @@ Partial Class ScanForInfo_Default
         acpDocuments.Visible = UserManager.GetCurrentUser.HasDocumentAuthority()
     End Sub
 
-    Protected Sub SetupMenuItems(ByVal productGroup As String, ByVal departmentID As Int32)
-        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, departmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(departmentID) Then
+    Protected Sub SetupMenuItems(ByVal b As BatchView)
+        Dim myMenu As WebControls.Menu
+        Dim mi As New MenuItem
+        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+        mi = New MenuItem
+        mi.Text = "Request Link"
+        mi.NavigateUrl = b.RequestLink()
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        mi = New MenuItem
+        mi.Text = "Executive Summary"
+        mi.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        mi = New MenuItem
+        mi.Text = "Product Info"
+        mi.NavigateUrl = b.ProductGroupLink
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        mi = New MenuItem
+        mi.Text = "Test Records"
+        mi.NavigateUrl = b.TestRecordsLink
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        mi = New MenuItem
+        mi.Text = "Results"
+        mi.NavigateUrl = b.RelabResultLink
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID) Then
+            mi = New MenuItem
+            mi.Text = "Exceptions"
+            mi.NavigateUrl = b.ExceptionManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
             liEditExceptions.Visible = True
         End If
 
-        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, departmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+        If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
             liModifyPriority.Visible = True
             liModifyStage.Visible = True
             liModifyStatus.Visible = True
             liModifyTestDurations.Visible = True
+
+            mi = New MenuItem
+            mi.Text = "Modify Status"
+            mi.NavigateUrl = b.SetStatusManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Priority"
+            mi.NavigateUrl = b.SetPriorityManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Durations"
+            mi.NavigateUrl = b.SetTestDurationsManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Stage"
+            mi.NavigateUrl = b.SetTestStageManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
         End If
     End Sub
 

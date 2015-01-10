@@ -161,7 +161,10 @@
             &nbsp;<asp:TextBox ID="txtBarcodeReading" runat="server" CssClass="ScanDeviceTextEntryHint"
                 value="Enter Request Number..." onfocus="if (this.className=='ScanDeviceTextEntryHint') { this.className = 'ScanDeviceTextEntry'; this.value = ''; }"
                 onblur="if (this.value == '') { this.className = 'ScanDeviceTextEntryHint'; this.value = 'Enter Request Number...'; }"></asp:TextBox><asp:Button
-                    ID="btnSubmit" runat="server" CssClass="ScanDeviceButton" Text="Submit" /></asp:Panel>
+                    ID="btnSubmit" runat="server" CssClass="ScanDeviceButton" Text="Submit" />
+
+            &nbsp&nbsp;<asp:Label runat="server" ID="lblResult"></asp:Label>
+        </asp:Panel>
         <uc3:BatchSelectControl ID="bscMain" runat="server" DisplayMode="BatchInfoDisplay" />
         <asp:Accordion ID="accMain" runat="server" CssClass="Accordion" HeaderCssClass="AccordionHeader"
             ContentCssClass="AccordionContent" FadeTransitions="false" RequireOpenedPane="false" AutoSize="None" SuppressHeaderPostbacks="true">

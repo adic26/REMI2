@@ -54,6 +54,19 @@ Partial Class TestRecords_Default
                     grdTestRecords.DataSource = b.TestRecords(bc.BatchNumber, hdnTestName.Value, hdnTestStageName.Value, hdnJobName.Value, testUnitID)
                     grdTestRecords.DataBind()
 
+                    Dim myMenu As WebControls.Menu
+                    Dim mi As New MenuItem
+                    myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+                    mi.Text = "Batch Info"
+                    mi.NavigateUrl = b.BatchInfoLink
+                    myMenu.Items(0).ChildItems.Add(mi)
+
+                    mi = New MenuItem
+                    mi.Text = "Add New Record"
+                    mi.NavigateUrl = b.TestRecordsAddNewLink
+                    myMenu.Items(0).ChildItems.Add(mi)
+
                     hypAddTR.Enabled = UserManager.GetCurrentUser.DepartmentID = b.DepartmentID
                     hypAddTR.NavigateUrl = b.TestRecordsAddNewLink
                 End If

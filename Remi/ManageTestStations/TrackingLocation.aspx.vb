@@ -38,9 +38,18 @@ Partial Class ManageTestStations_TrackingLocation
                 bscBatches.DataBind()
                 grdTrackingLog.DataBind()
 
+                Dim myMenu As WebControls.Menu
+                Dim mi As New MenuItem
+                myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
                 If UserManager.GetCurrentUser.HasUploadConfigXML() Then
                     liEditConfig.Visible = True
                     HypEditStationConfiguration.NavigateUrl = REMIWebLinks.GetSetStationConfigurationLink(tl.ID)
+
+                    mi = New MenuItem
+                    mi.Text = "Edit Config"
+                    mi.NavigateUrl = REMIWebLinks.GetSetStationConfigurationLink(tl.ID)
+                    myMenu.Items(0).ChildItems.Add(mi)
                 End If
             Else
                 notMain.Notifications.AddWithMessage("Select a tracking location from the menu.", NotificationType.Information)
@@ -102,5 +111,4 @@ Partial Class ManageTestStations_TrackingLocation
         grdTrackingLog.DataBind()
     End Sub
 #End Region
-
 End Class

@@ -88,6 +88,7 @@
       FROM [Relab].[ResultsOrphaned] AS [ResultsOrphaned]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ResultsParameters" EntityType="remiModel.Store.ResultsParameters" store:Type="Tables" Schema="Relab" />
+          <EntitySet Name="ResultsStatus" EntityType="remiModel.Store.ResultsStatus" store:Type="Tables" Schema="Relab" />
           <EntitySet Name="ResultsXML" EntityType="remiModel.Store.ResultsXML" store:Type="Tables" Schema="Relab" />
           <EntitySet Name="ReqFieldData" EntityType="remiModel.Store.ReqFieldData" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldMapping" EntityType="remiModel.Store.ReqFieldMapping" store:Type="Tables" Schema="Req" />
@@ -499,6 +500,10 @@
           <AssociationSet Name="FK_ResultsParameters_ResultsMeasurements" Association="remiModel.Store.FK_ResultsParameters_ResultsMeasurements">
             <End Role="ResultsMeasurements" EntitySet="ResultsMeasurements" />
             <End Role="ResultsParameters" EntitySet="ResultsParameters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultsStatus_Batches" Association="remiModel.Store.FK_ResultsStatus_Batches">
+            <End Role="Batches" EntitySet="Batches" />
+            <End Role="ResultsStatus" EntitySet="ResultsStatus" />
           </AssociationSet>
           <AssociationSet Name="FK_ResultXML_Results" Association="remiModel.Store.FK_ResultXML_Results">
             <End Role="Results" EntitySet="Results" />
@@ -1442,6 +1447,16 @@
           <Property Name="ResultMeasurementID" Type="int" Nullable="false" />
           <Property Name="ParameterName" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="Value" Type="nvarchar" Nullable="false" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="ResultsStatus">
+          <Key>
+            <PropertyRef Name="ResultStatusID" />
+          </Key>
+          <Property Name="ResultStatusID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BatchID" Type="int" Nullable="false" />
+          <Property Name="PassFail" Type="int" />
+          <Property Name="ApprovedBy" Type="nvarchar" MaxLength="255" />
+          <Property Name="ApprovedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="ResultsXML">
           <Key>
@@ -2628,6 +2643,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ResultsStatus_Batches">
+          <End Role="Batches" Type="remiModel.Store.Batches" Multiplicity="1" />
+          <End Role="ResultsStatus" Type="remiModel.Store.ResultsStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ResultsStatus">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ResultXML_Results">
           <End Role="Results" Type="remiModel.Store.Results" Multiplicity="1" />
           <End Role="ResultsXML" Type="remiModel.Store.ResultsXML" Multiplicity="*" />
@@ -3512,6 +3539,11 @@
           <AssociationSet Name="FK_Request_Batches" Association="REMI.Entities.FK_Request_Batches">
             <End Role="Batch" EntitySet="Batches" />
             <End Role="Request" EntitySet="Requests" />
+          </AssociationSet>
+          <EntitySet Name="ResultsStatus" EntityType="REMI.Entities.ResultsStatu" />
+          <AssociationSet Name="FK_ResultsStatus_Batches" Association="REMI.Entities.FK_ResultsStatus_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="ResultsStatu" EntitySet="ResultsStatus" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
@@ -5036,6 +5068,7 @@
           <NavigationProperty Name="TestCenter" Relationship="REMI.Entities.FK_Batches_TestCenterLocation" FromRole="Batch" ToRole="Lookup" />
           <NavigationProperty Name="TestUnits" Relationship="REMI.Entities.FK_TestUnits_Batches" FromRole="Batch" ToRole="TestUnit" />
           <NavigationProperty Name="Requests" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Batch" ToRole="Request" />
+          <NavigationProperty Name="ResultsStatus" Relationship="REMI.Entities.FK_ResultsStatus_Batches" FromRole="Batch" ToRole="ResultsStatu" />
         </EntityType>
         <Association Name="FK_BatchComments_Batches">
           <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
@@ -6022,6 +6055,29 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Request">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ResultsStatu">
+          <Key>
+            <PropertyRef Name="ResultStatusID" />
+          </Key>
+          <Property Type="Int32" Name="ResultStatusID" Nullable="false" />
+          <Property Type="Int32" Name="BatchID" Nullable="false" />
+          <Property Type="Int32" Name="PassFail" />
+          <Property Type="String" Name="ApprovedBy" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ApprovedDate" Precision="3" />
+          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_ResultsStatus_Batches" FromRole="ResultsStatu" ToRole="Batch" />
+        </EntityType>
+        <Association Name="FK_ResultsStatus_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.ResultsStatu" Role="ResultsStatu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ResultsStatu">
               <PropertyRef Name="BatchID" />
             </Dependent>
           </ReferentialConstraint>
@@ -7115,6 +7171,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ResultsStatus">
+            <EntityTypeMapping TypeName="REMI.Entities.ResultsStatu">
+              <MappingFragment StoreEntitySet="ResultsStatus">
+                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="PassFail" ColumnName="PassFail" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="ResultStatusID" ColumnName="ResultStatusID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7323,6 +7390,8 @@
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType1" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_RequestType" />
         <AssociationConnector Association="REMI.Entities.FK_Request_Batches" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsStatu" Width="1.5" PointX="11.033305333477122" PointY="22.83750132789719" />
+        <AssociationConnector Association="REMI.Entities.FK_ResultsStatus_Batches" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

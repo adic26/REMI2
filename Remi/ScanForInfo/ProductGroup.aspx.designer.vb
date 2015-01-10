@@ -68,33 +68,6 @@ Partial Public Class ScanForInfo_ProductGroup
     Protected WithEvents chkShowArchived As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''liEditExceptions control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents liEditExceptions As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''imgExceptions control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgExceptions As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypExceptions control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypExceptions As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
     '''liEditSettings control.
     '''</summary>
     '''<remarks>

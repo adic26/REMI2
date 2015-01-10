@@ -47,10 +47,6 @@
             <asp:CheckBox runat="server" Text=" Show Archived" ID="chkShowArchived" ToolTip="Show Archived"
                 TextAlign="Right" AutoPostBack="true" CausesValidation="true" />
         </li>
-        <li id="liEditExceptions" runat="server" visible="false">
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/delete.png" ID="imgExceptions" runat="server" />
-            <asp:HyperLink ID="hypExceptions" runat="Server" Text="Edit Exceptions" ToolTip="Click to edit the product exceptions" />
-        </li>
         <li id="liEditSettings" runat="server" visible="false">
             <asp:Image ImageUrl="../Design/Icons/png/24x24/tools.png" ID="imgeditSettings" runat="server" />
             <asp:HyperLink ID="hypEditSettings" runat="Server" Text="Edit Product" ToolTip="Click to edit the product settings" /><br />

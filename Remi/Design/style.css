@@ -11,14 +11,6 @@ body
     display: none;
 }
 
-.executiveSummaryQRALeft
-{
-    background: #050505;
-    text-align: left;
-    font-weight:bold;
-    color: #FFF;
-}
-
 .slantHeader div
 { 
     filter: flipH() flipV();
@@ -286,59 +278,6 @@ img.right
     border-bottom: 0px dotted #FFFFFF;
 }
 
-/***************************
-/******** MAIN MENU  *******
-****************************/
-#mainMenu
-{
-    /*float: left;*/
-    width: 1500px;
-    font-size: 93%;
-    padding-bottom: 1px;
-    margin-bottom: 15px;
-    border-bottom: 3px solid #362d2d;
-}
-#mainMenu ul
-{
-    margin: 0;
-    padding: 0px 10px 26px 50px;
-    list-style: none;
-}
-#mainMenu li
-{
-    display: inline;
-    margin: 0;
-    padding: 0;
-}
-#mainMenu a
-{
-    float: left;
-    /*background: url("tableft10.gif") no-repeat left top;*/
-    margin: 0;
-    padding: 0 0 0 2px;
-    text-decoration: none;
-}
-#mainMenu a span
-{
-    float: left;
-    display: block;
-    background: url("leftMenuHeader.gif") repeat right top;
-    /*background: url("tabright10.gif") no-repeat right top;*/
-    padding: 5px 15px 4px 6px;
-    color: #FFF;
-}
-#mainMenu a span
-{
-    float: none;
-}
-#mainMenu a:hover
-{
-    background-position: 0% -42px;
-}
-#mainMenu a:hover span
-{
-    background-position: 100% -42px;
-}
 /*###################################################*/
 /******************* Sidebar Styles ********************/
 /*###################################################*/
@@ -364,17 +303,7 @@ img.right
     text-align: justify;
 }
 
-/*#leftSidebar.td, #leftSidebar.tr
-{
-    white-space: nowrap;
-    padding: 0.3em;
-    border-width: 0px;
-    text-align: left;
-    color: #362d2d;
-    font-size: 11px;
-}*/
-
-#leftSidebar
+.leftSidebar
 {
     width: 185px;
     padding: 0px 0px 0px 0px;
@@ -382,7 +311,7 @@ img.right
     float: left;
 }
 
-#leftSidebar h3
+.leftSidebar h3
 {
     margin: 0px 0px 0px 5px;
     padding: 2px 0px 2px 5px;
@@ -395,14 +324,14 @@ img.right
     text-align: left;
     width: 163px;
 }
-#leftSidebar ul
+.leftSidebar ul
 {
     padding: 0px 0px 0px 0px;
     margin: 0px 10px 10px 5px;
     border-bottom: 1px solid #362d2d;
     list-style: none;
 }
-#leftSidebar li
+.leftSidebar li
 {
     margin: 0px;
     padding: 0px 0px 5px 0px;
@@ -414,7 +343,7 @@ img.right
     font-weight: bold;
     text-decoration: none;
 }
-#leftSidebar li a
+.leftSidebar li a
 {
     padding: 5px 0px 5px 5px;
     color: #362d2d;
@@ -422,14 +351,14 @@ img.right
     text-decoration: none;
     width: 165px;
 }
-#leftSidebar ul li img
+.leftSidebar ul li img
 {
     margin-bottom: -4px;
     padding-left: 2px;
     padding-top: 2px;
 }
 
-#leftSidebar li a:hover
+.leftSidebar li a:hover
 {
     text-decoration: underline;
 }
@@ -1149,4 +1078,111 @@ table tr td input
     padding-top: 10px;
     padding-left: 10px;
     text-align:center;
+}
+
+.CollapseHeader
+{
+    color: black;
+    font: bold 28px auto "Trebuchet MS", Sans-Serif;
+    border: 2px rgb(0,124,186) groove;
+    cursor: pointer;
+    padding: 4px;  
+}
+ 
+.CollapseBody
+{
+    font: normal 11px auto Verdana, Arial;
+    border: 1px gray; 
+    padding: 4px;
+    padding-top: 7px;
+}
+
+.TableNoBorders, .TableNoBorders tr, .TableNoBorders th, .TableNoBorders td { 
+    border: none;
+    text-align:left;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.RequestNumber
+{
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.ESPass
+{
+    color: rgb(100,139, 26);
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.ESFail
+{
+    color: rgb(244, 36, 52);
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.ESNoResult
+{
+    color: rgb(255,198,39);
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.MenuESHeader, .MenuESHeader tr, .MenuESHeader th, .MenuESHeader td
+{ 
+    border: none;
+    text-align:left;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.MenuESItem, .MenuESItem tr, .MenuESItem th, .MenuESItem td
+{ 
+    border: none;
+    text-align:left;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+
+.leftSidebarES
+{
+    top:100px;
+    width: 85px;
+    padding: 0px 0px 0px 0px;
+    margin: 00px 0px 0px 0px;
+    float: left;
+}
+
+.menuHeader
+{
+    width: 1500px;
+    font-size: 93%;
+    padding-bottom: 1px;
+    margin-bottom: 15px;
+    border-bottom: 3px solid #362d2d;
+}
+
+.menuItemLevel1
+{
+    background: url("leftMenuHeader.gif") repeat right top;
+    width:90px;
+    padding-top: 5px;
+    text-align:center;
+    padding-bottom: 5px;
+    color: #FFF;
+}
+
+.menuItemLevel2
+{
+    background: url("leftMenuHeader.gif") repeat right top;
+    width:130px;
+    padding-top: 5px;
+    text-align:left;
+    padding-bottom: 5px;
+    padding-left:5px;
+    color: #FFF;
 }

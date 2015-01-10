@@ -200,6 +200,19 @@ Partial Class TestRecords_EditDetail
             hdnBatchID.Value = BatchManager.GetItem(tr.QRANumber).ID
             lblReTestCount.Text = tr.CurrentRelabResultVersion
 
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+            mi.Text = "Batch Info"
+            mi.NavigateUrl = tr.BatchInfoLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Test Records"
+            mi.NavigateUrl = tr.TestRecordsLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
             Dim functionalID As Int32 = (From tlt In TestManager.GetTest(tr.TestID).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
 
             If (functionalID > 0) Then

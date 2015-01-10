@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("86251bda-b6ca-4e7a-afcd-0b7f869e19cd")>
+<Assembly: EdmSchemaAttribute("8137b57d-da67-430d-9dd8-d465615136e7")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -127,6 +127,7 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType1", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Request_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Batch), "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Request), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsStatus_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "ResultsStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsStatu), True)>
 
 #End Region
 
@@ -1296,6 +1297,20 @@ Namespace REMI.Entities
         End Property
     
         Private _LookupsHierarchies As ObjectSet(Of LookupsHierarchy)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ResultsStatus() As ObjectSet(Of ResultsStatu)
+            Get
+                If (_ResultsStatus Is Nothing) Then
+                    _ResultsStatus = MyBase.CreateObjectSet(Of ResultsStatu)("ResultsStatus")
+                End If
+                Return _ResultsStatus
+            End Get
+        End Property
+    
+        Private _ResultsStatus As ObjectSet(Of ResultsStatu)
 
         #End Region
 
@@ -1859,6 +1874,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToLookupsHierarchies(ByVal lookupsHierarchy As LookupsHierarchy)
             MyBase.AddObject("LookupsHierarchies", lookupsHierarchy)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ResultsStatus EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToResultsStatus(ByVal resultsStatu As ResultsStatu)
+            MyBase.AddObject("ResultsStatus", resultsStatu)
         End Sub
 
         #End Region
@@ -5108,6 +5130,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Request)("REMI.Entities.FK_Request_Batches", "Request", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ResultsStatus_Batches", "ResultsStatu")>
+         Public Property ResultsStatus() As EntityCollection(Of ResultsStatu)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ResultsStatu)("REMI.Entities.FK_ResultsStatus_Batches", "ResultsStatu")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ResultsStatu)("REMI.Entities.FK_ResultsStatus_Batches", "ResultsStatu", value)
                 End If
             End Set
         End Property
@@ -15340,6 +15380,198 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of ResultsMeasurement)("REMI.Entities.FK_ResultsParameters_ResultsMeasurements", "ResultsMeasurement", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="ResultsStatu")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class ResultsStatu
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new ResultsStatu object.
+        ''' </summary>
+        ''' <param name="resultStatusID">Initial value of the ResultStatusID property.</param>
+        ''' <param name="batchID">Initial value of the BatchID property.</param>
+        Public Shared Function CreateResultsStatu(resultStatusID As Global.System.Int32, batchID As Global.System.Int32) As ResultsStatu
+            Dim resultsStatu as ResultsStatu = New ResultsStatu
+            resultsStatu.ResultStatusID = resultStatusID
+            resultsStatu.BatchID = batchID
+            Return resultsStatu
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ResultStatusID() As Global.System.Int32
+            Get
+                Return _ResultStatusID
+            End Get
+            Set
+                If (_ResultStatusID <> Value) Then
+                    OnResultStatusIDChanging(value)
+                    ReportPropertyChanging("ResultStatusID")
+                    _ResultStatusID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ResultStatusID")
+                    OnResultStatusIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ResultStatusID As Global.System.Int32
+        Private Partial Sub OnResultStatusIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnResultStatusIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property BatchID() As Global.System.Int32
+            Get
+                Return _BatchID
+            End Get
+            Set
+                OnBatchIDChanging(value)
+                ReportPropertyChanging("BatchID")
+                _BatchID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("BatchID")
+                OnBatchIDChanged()
+            End Set
+        End Property
+    
+        Private _BatchID As Global.System.Int32
+        Private Partial Sub OnBatchIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnBatchIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property PassFail() As Nullable(Of Global.System.Int32)
+            Get
+                Return _PassFail
+            End Get
+            Set
+                OnPassFailChanging(value)
+                ReportPropertyChanging("PassFail")
+                _PassFail = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("PassFail")
+                OnPassFailChanged()
+            End Set
+        End Property
+    
+        Private _PassFail As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnPassFailChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnPassFailChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ApprovedBy() As Global.System.String
+            Get
+                Return _ApprovedBy
+            End Get
+            Set
+                OnApprovedByChanging(value)
+                ReportPropertyChanging("ApprovedBy")
+                _ApprovedBy = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("ApprovedBy")
+                OnApprovedByChanged()
+            End Set
+        End Property
+    
+        Private _ApprovedBy As Global.System.String
+        Private Partial Sub OnApprovedByChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnApprovedByChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ApprovedDate() As Nullable(Of Global.System.DateTime)
+            Get
+                Return _ApprovedDate
+            End Get
+            Set
+                OnApprovedDateChanging(value)
+                ReportPropertyChanging("ApprovedDate")
+                _ApprovedDate = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ApprovedDate")
+                OnApprovedDateChanged()
+            End Set
+        End Property
+    
+        Private _ApprovedDate As Nullable(Of Global.System.DateTime)
+        Private Partial Sub OnApprovedDateChanging(value As Nullable(Of Global.System.DateTime))
+        End Sub
+    
+        Private Partial Sub OnApprovedDateChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ResultsStatus_Batches", "Batch")>
+        Public Property Batch() As Batch
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_ResultsStatus_Batches", "Batch").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_ResultsStatus_Batches", "Batch").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property BatchReference() As EntityReference(Of Batch)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_ResultsStatus_Batches", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_ResultsStatus_Batches", "Batch", value)
                 End If
             End Set
         End Property

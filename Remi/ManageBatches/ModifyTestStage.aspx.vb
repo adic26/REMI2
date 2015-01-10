@@ -38,6 +38,29 @@ Partial Class ManageBatches_ModifyTestStage
                 liModifyTestDurations.Visible = True
             End If
 
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+            mi.Text = "Batch Info"
+            mi.NavigateUrl = b.BatchInfoLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Duration"
+            mi.NavigateUrl = b.SetTestDurationsManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Status"
+            mi.NavigateUrl = b.SetStatusManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Priority"
+            mi.NavigateUrl = b.SetPriorityManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
             pnlEditExceptions.Visible = True
             pnlLeftMenuActions.Visible = True
         Else

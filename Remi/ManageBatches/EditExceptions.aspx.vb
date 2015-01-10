@@ -80,6 +80,14 @@ Partial Class ManageBatches_EditExceptions
             hypCancel.NavigateUrl = b.BatchInfoLink
             hypRefresh.NavigateUrl = b.ExceptionManagerLink
 
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+            mi.Text = "Batch Info"
+            mi.NavigateUrl = b.BatchInfoLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
             ddlTestStageSelection.Items.Clear()
             ddlTestStageSelection.Items.Add("All")
             ddlTestStageSelection.DataSource = (From t In b.Tasks Where t.ProcessOrder > -1 And t.IsArchived <> True Select t.TestStageID, t.TestStageName Distinct).ToList()

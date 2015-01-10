@@ -32,42 +32,6 @@ Partial Public Class BadgeAccess_EditMyUser
     Protected WithEvents hypRefresh As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
-    '''imgManageUnits control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgManageUnits As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypManageUnits control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypManageUnits As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
-    '''imgRequestedBatches control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgRequestedBatches As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypRequestedBatches control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypRequestedBatches As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
     '''btnSave control.
     '''</summary>
     '''<remarks>

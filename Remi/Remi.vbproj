@@ -232,6 +232,13 @@
     <Compile Include="Controls\BatchSelectControl.ascx.designer.vb">
       <DependentUpon>BatchSelectControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FAControl.ascx.designer.vb">
+      <DependentUpon>FAControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FAControl.ascx.vb">
+      <DependentUpon>FAControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Controls\IBatchListControl.ascx.designer.vb">
       <DependentUpon>IBatchListControl.ascx</DependentUpon>
     </Compile>
@@ -603,10 +610,13 @@
     <Content Include="Admin\Security.aspx" />
     <Content Include="Admin\Tools\ClearCache.aspx" />
     <Content Include="Admin\TrackingLocationTests.aspx" />
+    <Content Include="Controls\FAControl.ascx" />
     <Content Include="Controls\RequestSetup.ascx" />
     <Content Include="Default.aspx" />
     <Content Include="Design\bbLogo.png" />
     <Content Include="Design\beta.jpg" />
+    <Content Include="Design\Icons\ic_overflow_tab.png" />
+    <Content Include="Design\Icons\menu.png" />
     <Content Include="Design\scripts\gridviewScroll.min.js" />
     <Content Include="Design\scripts\jquery-ui.min.js" />
     <Content Include="Design\scripts\jquery.min.js" />
