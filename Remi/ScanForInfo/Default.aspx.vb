@@ -341,7 +341,7 @@ Partial Class ScanForInfo_Default
         BatchManager.SaveExecutiveSummary(hdnQRANumber.Value, UserManager.GetCurrentUser.UserName, txtExecutiveSummary.Text)
     End Sub
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+    Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
         If Not Page.IsPostBack Then
             notMain.Clear()
             Dim tmpStr As String = Request.QueryString.Get("QRA")

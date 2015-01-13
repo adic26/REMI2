@@ -15,26 +15,25 @@ Partial Class ES_Default
             Dim b As BatchView
 
             If bc.Validate Then
+                Dim bcol As New BatchCollection
                 b = BatchManager.GetViewBatch(bc.BatchNumber)
+                bcol.Add(b)
+
                 hdnPartName.Value = (From rd In b.ReqData Where rd.Name.ToLower = "part name under test" Select rd.Value).FirstOrDefault()
                 hdnBatchID.Value = b.ID
                 hdnRequestNumber.Value = b.QRANumber
                 lblRequestNumber.Text = b.QRANumber
-                lblESText.Text = b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>")
+                lblESText.Text = If(b.ExecutiveSummary Is Nothing, String.Empty, b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))
 
                 gvwRequestInfo.DataSource = b.ReqData
                 gvwRequestInfo.DataBind()
-
-                Dim bcol As New BatchCollection
-                bcol.Add(b)
-
                 rptRequestSummary.DataSource = bcol
                 rptRequestSummary.DataBind()
 
                 Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
                 grdApproval.DataSource = ds.Tables(1)
                 grdApproval.DataBind()
-                
+
                 SetStatus(ds.Tables(2).Rows(0)(0).ToString())
 
                 For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Select New With {tr.ID, tr.FailDocDS})

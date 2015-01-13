@@ -23,6 +23,13 @@ Public Class TrackingLocationTests
             ddlTrackType.DataSource = Helpers.GetTrackingLocationFunctions
             ddlTrackType.DataBind()
         End If
+
+        Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
+
+        If (asm.IsInAsyncPostBack) Then
+            gvwTypeTests.DataSource = TrackingLocationManager.GetTrackingTypeTestsGrid(ddlTestType.SelectedValue, chkArchived.Checked, ddlTrackType.SelectedValue)
+            gvwTypeTests.DataBind()
+        End If
     End Sub
 
     Protected Sub SetGvwHeader() Handles gvwTypeTests.PreRender

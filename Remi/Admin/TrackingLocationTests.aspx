@@ -41,6 +41,15 @@
                 alternateRowClassNames: ['evenrow', 'oddrow']
             });
         });
+
+        var _isInitialLoad = true;
+
+        function pageLoad(sender, args) {
+            if (_isInitialLoad) {
+                _isInitialLoad = false;
+                __doPostBack('<%= ddlTestType.ClientID %>', '');
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
@@ -90,19 +99,26 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
 <br />
-    Test Type: <asp:DropDownList runat="server" ID="ddlTestType" AutoPostBack="true"></asp:DropDownList><br />
-    Tracking Type: <asp:DropDownList runat="server" ID="ddlTrackType" AutoPostBack="true" AppendDataBoundItems="true"></asp:DropDownList>
-    <asp:GridView ID="gvwTypeTests" AutoGenerateColumns="true" runat="server" DataSourceID="odsTests" CssClass="FilterableTable" EnableViewState="False" EmptyDataText="There are no tracking types for tests.">
-        <RowStyle CssClass="evenrow" />
-        <AlternatingRowStyle CssClass="oddrow" />
-    </asp:GridView>
-    <asp:ObjectDataSource ID="odsTests" runat="server" SelectMethod="GetTrackingTypeTestsGrid" TypeName="REMI.Bll.TrackingLocationManager">
-            <SelectParameters>
-                <asp:ControlParameter ControlID="ddlTestType" Name="testType" PropertyName="SelectedValue" Type="String" />
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$chkArchived" DefaultValue="false" Name="includeArchived" PropertyName="Checked" Type="Boolean" />
-                <asp:ControlParameter ControlID="ddlTrackType" Name="trackType" PropertyName="SelectedValue" Type="String" />
-            </SelectParameters>
-        </asp:ObjectDataSource>
+    <asp:UpdatePanel ID="upTTT" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="ddlTestType" />
+            <asp:AsyncPostBackTrigger ControlID="ddlTrackType" />
+        </Triggers>
+        <ContentTemplate>
+            <asp:UpdateProgress runat="server" ID="udpTTT" DynamicLayout="true" DisplayAfter="10" AssociatedUpdatePanelID="upTTT">
+                <ProgressTemplate>
+                    <div class="LoadingModal"></div>
+                    <div class="LoadingGif"></div>
+                </ProgressTemplate>
+            </asp:UpdateProgress>
+            Test Type: <asp:DropDownList runat="server" ID="ddlTestType" AutoPostBack="true"></asp:DropDownList><br />
+            Tracking Type: <asp:DropDownList runat="server" ID="ddlTrackType" AutoPostBack="true" AppendDataBoundItems="true"></asp:DropDownList>
+            <asp:GridView ID="gvwTypeTests" AutoGenerateColumns="true" runat="server" CssClass="FilterableTable" EnableViewState="False" EmptyDataText="There are no tracking types for tests.">
+                <RowStyle CssClass="evenrow" />
+                <AlternatingRowStyle CssClass="oddrow" />
+            </asp:GridView>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server">
 </asp:Content>
