@@ -72,8 +72,6 @@
         </tr>
     </table>
     <uc1:notifications ID="notMain" runat="server" />
-    <asp:ToolkitScriptManager ID="ScriptManager1" runat="server"></asp:ToolkitScriptManager>
-        
     QAP URL: <asp:TextBox ID="txtQAPLocation" runat="server" Width="507px" Rows="3"></asp:TextBox><br />
 
     <asp:AutoCompleteExtender runat="server" ID="aceTxtOwner" TargetControlID="txtTSDContact"

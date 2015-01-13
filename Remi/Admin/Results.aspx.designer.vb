@@ -14,15 +14,6 @@ Option Explicit On
 Partial Public Class Admin_Results
 
     '''<summary>
-    '''AjaxScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''pnlLeftMenuviews control.
     '''</summary>
     '''<remarks>

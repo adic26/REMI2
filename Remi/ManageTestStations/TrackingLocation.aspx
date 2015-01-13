@@ -28,8 +28,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="Server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
     <h1>
       <asp:Label ID="lblTrackingLocation" runat="server" Text="Tracking Location Information"></asp:Label>
     </h1>

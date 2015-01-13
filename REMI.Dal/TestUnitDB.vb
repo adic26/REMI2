@@ -585,6 +585,8 @@ Namespace REMI.Dal
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("BSN")) Then
                 myTestUnit.BSN = myDataRecord.GetInt64(myDataRecord.GetOrdinal("BSN"))
+            Else
+                myTestUnit.BSN = 0
             End If
 
             If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("CurrentTestName")) Then
@@ -636,7 +638,11 @@ Namespace REMI.Dal
             If Helpers.HasColumn(myDataRecord, "IMEI") Then
                 If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("IMEI")) Then
                     myTestUnit.IMEI = myDataRecord.GetString(myDataRecord.GetOrdinal("IMEI"))
+                Else
+                    myTestUnit.IMEI = String.Empty
                 End If
+            Else
+                myTestUnit.IMEI = String.Empty
             End If
 
             'get the std records

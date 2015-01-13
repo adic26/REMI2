@@ -30,8 +30,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="Server">
     <h1>
         <asp:Label runat="server" ID="lblProductGroupName" Text="Product Information"></asp:Label>
-        <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-        </asp:ToolkitScriptManager>
     </h1>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" runat="Server">

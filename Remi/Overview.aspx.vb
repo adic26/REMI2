@@ -11,7 +11,9 @@ Public Class Overview
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If (Me.AjaxScriptManager1.IsInAsyncPostBack) Then
+        Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
+
+        If (asm.IsInAsyncPostBack) Then
             Dim asyncPostBackID As String = Helpers.GetAsyncPostBackControlID(Me)
             Dim postBackID As String = String.Empty
             Dim Control As Control = Helpers.GetPostBackControl(Me)

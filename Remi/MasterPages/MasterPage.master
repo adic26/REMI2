@@ -1,20 +1,27 @@
 ﻿<%@ Master Language="VB" AutoEventWireup="false" Inherits="Remi.MasterPages_MasterPage" Codebehind="MasterPage.master.vb" %>
+<%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>
-        <asp:Literal ID="litPageTitle" runat="server" Text="REMI"></asp:Literal></title>
-        <meta http-equiv="X-UA-Compatible" content="IE=8" />
-    <asp:ContentPlaceHolder ID="head" runat="server">
-    </asp:ContentPlaceHolder>
+        <asp:Literal ID="litPageTitle" runat="server"></asp:Literal>
+    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
     <link href="../Design/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body onload="document.getElementById('div_Menu').style.visibility='visible'">
     <form id="form1" runat="server">
+    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <div id="siteContainer">
-        <div id="header">
+        <div class="header">
             <h1><img src="/Design/bbLogo.png" alt="BlackBerry" />REMI</h1>
+        </div>
+        <div class="headerLogout">
+            <asp:Image ImageUrl="../Design/Icons/png/24x24/lock.png" ID="imgUserName" runat="server" CssClass="Pass" />
+            <asp:HyperLink ID="hlUser" runat="server" NavigateUrl="/Badgeaccess/EditmyUser.aspx" Target="_self"></asp:HyperLink>
+            <asp:LinkButton runat="server" ID="lnkLogout" Visible="true">(Logout)</asp:LinkButton>
         </div>
         <asp:Panel runat="server" ID="pnlHead">
             <div id="div_Menu" style="visibility: hidden;height:30px;">
@@ -61,35 +68,33 @@
                 </asp:Menu>
             </div>
         </asp:Panel>
-        <div id="pageContainer">
-            <asp:Panel runat="server" ID="pnlLogged">
-                <div runat="server" class="leftSidebar" id="leftSidebar">
-                    <asp:Panel ID="pnlLeftMenuActions" runat="server">
-                        <h3>Logged In As</h3>
-                        <ul>
-                            <li id="UserNameLI">
-                                <asp:Image ImageUrl="../Design/Icons/png/24x24/lock.png" ID="imgUserName" runat="server" CssClass="Pass" />
-                                <asp:HyperLink ID="hlUser" runat="server" NavigateUrl="/Badgeaccess/EditmyUser.aspx" Target="_self"></asp:HyperLink>
-                                <asp:LinkButton runat="server" ID="lnkLogout" Visible="true">(Logout)</asp:LinkButton>
-                            </li>
-                        </ul>
-                    </asp:Panel>
+        <br /><br />
+        <asp:Panel runat="server" ID="pnlPageContainer" CssClass="pageContainer">
+            <asp:CollapsiblePanelExtender runat="server" ID="cpeln" CollapsedImage="..\Design\Icons\png\24x24\next.png" 
+                ExpandedImage="..\Design\Icons\png\24x24\back.png" ImageControlID="imgExpCol" 
+                TargetControlID="pnlLeftNav" ExpandedSize="185" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
+                CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal"></asp:CollapsiblePanelExtender>
+
+            <div runat="server" id="leftSidebar" class="leftSidebar">
+                <asp:Panel runat="server" ID="pnlExpColLefNav">
+                    <asp:Image runat="server" ID="imgExpCol" />
+                </asp:Panel>
+
+                <asp:Panel runat="server" ID="pnlLeftNav">
                     <asp:ContentPlaceHolder ID="leftSidebarContent" runat="server"></asp:ContentPlaceHolder>
-                </div>
-            </asp:Panel>
-            <div id="content">
+                </asp:Panel>
+            </div>
+            <div id="content" class="content">
                 <div id="pageTitle">
-                    <asp:ContentPlaceHolder ID="pageTitleContent" runat="server">
-                    </asp:ContentPlaceHolder>
+                    <asp:ContentPlaceHolder ID="pageTitleContent" runat="server"></asp:ContentPlaceHolder>
                 </div>
-                <asp:ContentPlaceHolder ID="Content" runat="server">
-                </asp:ContentPlaceHolder>
+                <asp:ContentPlaceHolder ID="Content" runat="server"></asp:ContentPlaceHolder>
             </div>
             <div id="rightSidebar">
-                <asp:ContentPlaceHolder ID="rightSidebarContent" runat="server">
+                <asp:ContentPlaceHolder ID="rightSidebarContent" runat="server" Visible="false">
                 </asp:ContentPlaceHolder>
             </div>
-        </div>
+        </asp:Panel>
         <div id="footer">
             <p>BlackBerry | Contact <a href="mailto:reltsdsupport@blackberry.com">reltsdsupport@blackberry.com</a> for support.</p>
         </div>

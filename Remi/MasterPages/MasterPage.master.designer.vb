@@ -41,49 +41,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''pnlHead control.
+    '''AjaxScriptManager1 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlHead As Global.System.Web.UI.WebControls.Panel
-
-    '''<summary>
-    '''menuHeader control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents menuHeader As Global.System.Web.UI.WebControls.Menu
-
-    '''<summary>
-    '''pnlLogged control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pnlLogged As Global.System.Web.UI.WebControls.Panel
-
-    '''<summary>
-    '''leftSidebar control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents leftSidebar As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''pnlLeftMenuActions control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pnlLeftMenuActions As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
 
     '''<summary>
     '''imgUserName control.
@@ -111,6 +75,78 @@ Partial Public Class MasterPages_MasterPage
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lnkLogout As Global.System.Web.UI.WebControls.LinkButton
+
+    '''<summary>
+    '''pnlHead control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlHead As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''menuHeader control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents menuHeader As Global.System.Web.UI.WebControls.Menu
+
+    '''<summary>
+    '''pnlPageContainer control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlPageContainer As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''cpeln control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeln As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
+    '''leftSidebar control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents leftSidebar As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+
+    '''<summary>
+    '''pnlExpColLefNav control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlExpColLefNav As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''imgExpCol control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgExpCol As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''pnlLeftNav control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlLeftNav As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
     '''leftSidebarContent control.

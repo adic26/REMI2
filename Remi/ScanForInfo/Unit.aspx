@@ -55,8 +55,6 @@
                 ID="btnSubmit" runat="server" CssClass="ScanDeviceButton" Text="Submit" />
         <br />
         <asp:HiddenField ID="hdnQRANumber" runat="server" Value="0" />
-        <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-        </asp:ToolkitScriptManager>
         <asp:GridView ID="grdDetail" runat="server" AutoGenerateColumns="False" DataKeyNames="ID"
             Width="866px"  EmptyDataText="No Unit Information Available." EnableViewState="false" >
             <RowStyle CssClass="evenrow" />

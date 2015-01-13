@@ -1367,50 +1367,6 @@ Partial Class Search
                 gvwTestExceptions.DataBind()
         End Select
     End Sub
-
-    'Protected Sub gvwENVReport_RowDataBound(sender As Object, e As GridViewRowEventArgs) Handles gvwENVReport.RowDataBound
-    '    If e.Row.RowType = DataControlRowType.DataRow Then
-    '        Dim gvDetails As New GridView
-    '        Dim dt As New DataTable
-
-    '        For Each table As DataTable In envds.Tables
-    '            If (table.Rows.Count > 0) Then
-    '                If (e.Row.Cells(1).Text = table.Rows(0).Item(0).ToString()) Then
-    '                    dt = table
-    '                    Exit For
-    '                End If
-    '            End If
-    '        Next
-
-    '        gvDetails.DataSource = dt.DefaultView
-    '        gvDetails.ID = "gvDetails_" & e.Row.RowIndex
-    '        gvDetails.AutoGenerateColumns = True
-
-    '        Dim btn As Web.UI.WebControls.Image = New Web.UI.WebControls.Image
-    '        btn.ID = "btnDetail"
-    '        btn.ImageUrl = "/Design/Icons/png/16x16/link.png"
-    '        btn.Attributes.Add("onclick", "javascript: gvrowtoggle(" & e.Row.RowIndex + (e.Row.RowIndex + 2) & ")")
-
-    '        If (dt.Rows.Count = 0) Then
-    '            btn.Visible = False
-    '        End If
-
-    '        Dim tbl As Table = DirectCast(e.Row.Parent, Table)
-    '        Dim tr As New GridViewRow(e.Row.RowIndex + 1, -1, DataControlRowType.EmptyDataRow, DataControlRowState.Normal)
-    '        tr.CssClass = "hidden"
-    '        Dim tc As New TableCell()
-    '        tc.ColumnSpan = e.Row.Cells.Count
-    '        tc.BorderStyle = BorderStyle.None
-    '        tc.BackColor = Drawing.Color.AliceBlue
-    '        tc.Controls.Add(gvDetails)
-    '        tr.Cells.Add(tc)
-    '        tr.Cells(0).ColumnSpan = e.Row.Cells.Count
-    '        tbl.Rows.Add(tr)
-    '        e.Row.Cells(0).Controls.Add(btn)
-    '        gvDetails.DataBind()
-    '        Helpers.MakeAccessable(gvDetails)
-    '    End If
-    'End Sub
 #End Region
 
 End Class

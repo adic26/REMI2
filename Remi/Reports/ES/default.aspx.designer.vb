@@ -50,15 +50,6 @@ Partial Public Class ES_Default
     Protected WithEvents ESMenu As Global.System.Web.UI.WebControls.Menu
 
     '''<summary>
-    '''AjaxScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''cpeRequestInfo control.
     '''</summary>
     '''<remarks>

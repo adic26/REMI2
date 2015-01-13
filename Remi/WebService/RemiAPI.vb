@@ -271,6 +271,20 @@ Public Class RemiAPI
         Return New List(Of String)
     End Function
 
+    <WebMethod(Description:="Get IMEI for unit.")> _
+    Public Function GetUnitIMEI(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As Int32
+        Try
+            Dim unit As Remi.Entities.TestUnit = TestUnitManager.GetRAWUnitInformation(requestNumber, batchUnitNumber)
+
+            If unit IsNot Nothing And unit.IMEI IsNot Nothing Then
+                Return unit.IMEI
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetUnitIMEI", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
+        End Try
+        Return String.Empty
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Gets Unit BSN.")> _
     Public Function GetUnitBSN(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As Int32
         Try

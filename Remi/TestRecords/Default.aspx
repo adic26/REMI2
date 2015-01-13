@@ -52,8 +52,6 @@
     </ul>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
     <uc1:NotificationList ID="notMain" runat="server" />
     <asp:GridView ID="grdTestRecords" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" OnRowCommand="grdTestRecords_RowCommand"
         EnableViewState="true" cssclass="FilterableTable" EmptyDataText="There are no test records available for the given criteria.">

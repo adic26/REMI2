@@ -26,9 +26,7 @@
 </ul>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="pageTitleContent" Runat="Server">
-    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-</asp:ToolkitScriptManager><h1>
-        Inventory Report</h1>
+    <h1>Inventory Report</h1>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" Runat="Server">
     <uc1:Notifications ID="notMain" runat="server" />

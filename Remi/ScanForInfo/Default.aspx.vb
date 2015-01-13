@@ -1,7 +1,7 @@
 ﻿Imports REMI.BusinessEntities
 Imports REMI.Bll
 Imports REMI.Validation
-Imports Remi.Contracts
+Imports REMI.Contracts
 
 Partial Class ScanForInfo_Default
     Inherits System.Web.UI.Page
@@ -254,38 +254,12 @@ Partial Class ScanForInfo_Default
                         btnEditStressing.Visible = False
                     End If
 
-                    hypEditExceptions.NavigateUrl = b.ExceptionManagerLink
-                    hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
-                    hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
-                    hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
-                    hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
-                    hypTRSLink.NavigateUrl = b.RequestLink()
-                    hypRefresh.NavigateUrl = b.BatchInfoLink
-                    hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
-                    hypRelabLink.NavigateUrl = b.RelabResultLink
-                    hypProductGroupLink.NavigateUrl = b.ProductGroupLink
-                    hypTestRecords.NavigateUrl = b.TestRecordsLink
-
                     txtExecutiveSummary.Text = b.ExecutiveSummary
                     Dim isExternal As Boolean = (From rd In b.ReqData Select rd.IsFromExternalSystem).FirstOrDefault()
 
                     If ((UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin) And Not (isExternal)) Then
                         txtExecutiveSummary.Enabled = True
                         btnExecutiveSummary.Visible = True
-                    End If
-
-                    'You are a relab role or your role has permission to view relab
-                    If (UserManager.GetCurrentUser.HasRelabAuthority Or UserManager.GetCurrentUser.HasRelabAccess()) Then
-                        hypRelabLink.Visible = True
-                        imgRelabLink.Visible = True
-
-                        Dim record As Int32 = (From r In New Remi.Dal.Entities().Instance().Results _
-                                      Where r.TestUnit.Batch.ID = b.ID _
-                                      Take 1 _
-                                      Select r.ID).FirstOrDefault()
-                        If (record < 1) Then
-                            hypRelabLink.Enabled = False
-                        End If
                     End If
 
                     gvwTaskAssignments.DataSource = LoadAssignments(b.QRANumber)
@@ -394,32 +368,71 @@ Partial Class ScanForInfo_Default
 
         mi = New MenuItem
         mi.Text = "Request Link"
+        mi.Target = "_blank"
         mi.NavigateUrl = b.RequestLink()
         myMenu.Items(0).ChildItems.Add(mi)
 
         mi = New MenuItem
         mi.Text = "Executive Summary"
+        mi.Target = "_blank"
         mi.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
         myMenu.Items(0).ChildItems.Add(mi)
 
         mi = New MenuItem
         mi.Text = "Product Info"
+        mi.Target = "_blank"
         mi.NavigateUrl = b.ProductGroupLink
         myMenu.Items(0).ChildItems.Add(mi)
 
         mi = New MenuItem
         mi.Text = "Test Records"
+        mi.Target = "_blank"
         mi.NavigateUrl = b.TestRecordsLink
         myMenu.Items(0).ChildItems.Add(mi)
 
         mi = New MenuItem
         mi.Text = "Results"
+        mi.Target = "_blank"
         mi.NavigateUrl = b.RelabResultLink
         myMenu.Items(0).ChildItems.Add(mi)
+
+        hypEditExceptions.NavigateUrl = b.ExceptionManagerLink
+        hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
+        hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
+        hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
+        hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
+        hypTRSLink.NavigateUrl = b.RequestLink()
+        hypRefresh.NavigateUrl = b.BatchInfoLink
+        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
+        hypRelabLink.NavigateUrl = b.RelabResultLink
+        hypProductGroupLink.NavigateUrl = b.ProductGroupLink
+        hypTestRecords.NavigateUrl = b.TestRecordsLink
+
+        'You are a relab role or your role has permission to view relab
+        If (UserManager.GetCurrentUser.HasRelabAuthority Or UserManager.GetCurrentUser.HasRelabAccess()) Then
+            hypRelabLink.Visible = True
+            imgRelabLink.Visible = True
+
+            Dim record As Int32 = (From r In New REMI.Dal.Entities().Instance().Results _
+                          Where r.TestUnit.Batch.ID = b.ID _
+                          Take 1 _
+                          Select r.ID).FirstOrDefault()
+            If (record < 1) Then
+                hypRelabLink.Enabled = False
+            End If
+        End If
+
+        imgTestRecords.Visible = True
+        hypTestRecords.Visible = True
+        imgProductGroupLink.Visible = True
+        hypProductGroupLink.Visible = True
+        hypTRSLink.Visible = True
+        imgTRSLink.Visible = True
 
         If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID) Then
             mi = New MenuItem
             mi.Text = "Exceptions"
+            mi.Target = "_blank"
             mi.NavigateUrl = b.ExceptionManagerLink
             myMenu.Items(0).ChildItems.Add(mi)
             liEditExceptions.Visible = True
@@ -433,21 +446,25 @@ Partial Class ScanForInfo_Default
 
             mi = New MenuItem
             mi.Text = "Modify Status"
+            mi.Target = "_blank"
             mi.NavigateUrl = b.SetStatusManagerLink
             myMenu.Items(0).ChildItems.Add(mi)
 
             mi = New MenuItem
             mi.Text = "Modify Priority"
+            mi.Target = "_blank"
             mi.NavigateUrl = b.SetPriorityManagerLink
             myMenu.Items(0).ChildItems.Add(mi)
 
             mi = New MenuItem
             mi.Text = "Modify Durations"
+            mi.Target = "_blank"
             mi.NavigateUrl = b.SetTestDurationsManagerLink
             myMenu.Items(0).ChildItems.Add(mi)
 
             mi = New MenuItem
             mi.Text = "Modify Stage"
+            mi.Target = "_blank"
             mi.NavigateUrl = b.SetTestStageManagerLink
             myMenu.Items(0).ChildItems.Add(mi)
         End If

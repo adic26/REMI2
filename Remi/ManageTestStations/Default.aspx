@@ -16,8 +16,6 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" Runat="Server">
     <h3>Filter</h3>
-    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
 
     <script type="text/javascript">
         var prm = Sys.WebForms.PageRequestManager.getInstance();

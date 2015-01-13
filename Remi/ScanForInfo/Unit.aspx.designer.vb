@@ -149,15 +149,6 @@ Partial Public Class ScanUnit
     Protected WithEvents hdnQRANumber As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''ToolkitScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ToolkitScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''grdDetail control.
     '''</summary>
     '''<remarks>

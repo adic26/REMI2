@@ -23,15 +23,6 @@ Partial Public Class ReqAdmin
     Protected WithEvents lblRequest As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''AjaxScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''pnlLeftMenuActions control.
     '''</summary>
     '''<remarks>

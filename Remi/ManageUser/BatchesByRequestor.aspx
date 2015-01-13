@@ -6,8 +6,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="leftSidebarContent" runat="Server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
     <h3>Menu</h3>
     <ul>
         <li>

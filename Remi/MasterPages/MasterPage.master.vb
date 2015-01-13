@@ -18,13 +18,14 @@ Partial Class MasterPages_MasterPage
             hlUser.Text = UserManager.GetCurrentUser.UserName
 
             If (s.ToLower.Contains("es/default.aspx") Or s.ToLower.Contains("badgeaccess/default.aspx")) Then
-                pnlLogged.Visible = Not s.ToLower.Contains("badgeaccess/default.aspx")
-                pnlLeftMenuActions.Visible = False
+                imgUserName.Visible = Not s.ToLower.Contains("badgeaccess/default.aspx")
+                hlUser.Visible = False
+                lnkLogout.Visible = False
 
                 If (s.ToLower.Contains("es/default.aspx")) Then
                     leftSidebar.Attributes.Add("class", "leftSidebarES")
                 End If
-                
+
                 menuHeader.Enabled = False
             End If
 

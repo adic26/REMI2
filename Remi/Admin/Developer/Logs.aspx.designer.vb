@@ -50,15 +50,6 @@ Partial Public Class Admin_Logs
     Protected WithEvents txtStart As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''ToolkitScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ToolkitScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''txtStart_CalendarExtender control.
     '''</summary>
     '''<remarks>

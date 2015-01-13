@@ -101,8 +101,7 @@
         });
     </script>
 
-    <script type="text/javascript" src='<%= ResolveUrl("~/Design/scripts/wz_tooltip.js")%>'></script>    
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
+    <script type="text/javascript" src='<%= ResolveUrl("~/Design/scripts/wz_tooltip.js")%>'></script>
     <h3>Menu</h3>
     <ul>
         <li>
@@ -133,16 +132,16 @@
             <asp:HyperLink ID="hypChangePriority" runat="server" ToolTip="Click to change the priority for this batch">Modify Priority</asp:HyperLink>
         </li>
         <li id="li" runat="server">
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTestRecords" runat="server" />
-            <asp:HyperLink ID="hypTestRecords" runat="server" ToolTip="Click to view the test records for this batch" Target="_blank">Test Records</asp:HyperLink>
+            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTestRecords" runat="server" Visible="false" />
+            <asp:HyperLink ID="hypTestRecords" runat="server" Visible="false" ToolTip="Click to view the test records for this batch" Target="_blank">Test Records</asp:HyperLink>
         </li>
         <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/mobile_phone.png" ID="imgProductGroupLink" runat="server" />
-            <asp:HyperLink ID="hypProductGroupLink" runat="server" ToolTip="Click to view the product group information for this batch" Text="Product Info" Target="_blank">Product Info</asp:HyperLink>
+            <asp:Image ImageUrl="../Design/Icons/png/24x24/mobile_phone.png" ID="imgProductGroupLink" runat="server" Visible="false" />
+            <asp:HyperLink ID="hypProductGroupLink" runat="server" Visible="false" ToolTip="Click to view the product group information for this batch" Text="Product Info" Target="_blank">Product Info</asp:HyperLink>
         </li>
         <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTRSLink" runat="server" />
-            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to view the TRS for this batch" Target="_blank">Request Link</asp:HyperLink>
+            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTRSLink" runat="server" Visible="false" />
+            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to view the TRS for this batch" Target="_blank" Visible="false">Request Link</asp:HyperLink>
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgRelabLink" runat="server" Visible="false" />

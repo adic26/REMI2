@@ -26,7 +26,6 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestInfo" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgExpCol" TargetControlID="pnlRequestInfo" ExpandedSize="600" TextLabelID="lblText" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlRequestInfoHeader" ExpandControlID="pnlRequestInfoHeader"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestSummary" CollapseControlID="pnlRequestSummaryHeader" TargetControlID="pnlRequestSummary" TextLabelID="lblSummary" ExpandControlID="pnlRequestSummaryHeader" ImageControlID="imgRequestSummaryExpCol" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="false" CollapsedSize="0" ScrollContents="false"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeFA" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgFA" TargetControlID="pnlFAInfo" TextLabelID="lblFA" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlFA" ExpandControlID="pnlFA"></asp:CollapsiblePanelExtender>

@@ -13,16 +13,6 @@ Option Explicit On
 
 Partial Public Class Menu
 
-    Protected WithEvents notMain As Global.REMI.Controls_Notifications
-    '''<summary>
-    '''AjaxScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
     '''<summary>
     '''pnlLeftMenuviews control.
     '''</summary>
@@ -193,6 +183,15 @@ Partial Public Class Menu
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hypTestStages As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
+    '''notMain control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents notMain As Global.Remi.Controls_Notifications
 
     '''<summary>
     '''grdMenu control.

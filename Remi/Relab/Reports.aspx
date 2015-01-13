@@ -10,9 +10,7 @@
     <h1>Reports</h1><br />
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
-
-        <asp:Panel ID="pnlLeftMenuActions" runat="server">
+    <asp:Panel ID="pnlLeftMenuActions" runat="server">
         <h3>Request View</h3>
         <ul>
             <li>
