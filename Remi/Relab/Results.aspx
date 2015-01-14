@@ -13,7 +13,7 @@
     <script type="text/javascript">
         var _isInitialLoad = true;
 
-        function pageLoad(sender, args) {
+        function contentPageLoad(sender, args) {
             if (_isInitialLoad) {
                 _isInitialLoad = false;
                 __doPostBack('<%= ddlBatches.ClientID %>', '');

@@ -13,6 +13,29 @@
 </head>
 <body onload="document.getElementById('div_Menu').style.visibility='visible'">
     <form id="form1" runat="server">
+    <script language="javascript" type="text/javascript">
+        function pageLoad(sender, args) {
+            $find("collapsibleBehavior").add_expandComplete(expandHandler);
+            $find("collapsibleBehavior").add_collapseComplete(collapseHandler);
+
+            if (typeof contentPageLoad == 'function')
+                contentPageLoad();
+        }
+
+        function expandHandler(sender, args) {
+            document.getElementById("content").className = "contentExpanded"
+
+            var nav = document.getElementById('<%=pnlLeftNav.ClientID%>');
+            nav.style.display = "block";
+        }
+
+        function collapseHandler(sender, args) {
+            document.getElementById("content").className = "contentCollapse"
+
+            var nav = document.getElementById('<%=pnlLeftNav.ClientID%>');
+            nav.style.display = "none";
+        }
+    </script>
     <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <div id="siteContainer">
         <div class="header">
@@ -73,9 +96,9 @@
             <asp:CollapsiblePanelExtender runat="server" ID="cpeln" CollapsedImage="..\Design\Icons\png\24x24\next.png" 
                 ExpandedImage="..\Design\Icons\png\24x24\back.png" ImageControlID="imgExpCol" 
                 TargetControlID="pnlLeftNav" ExpandedSize="185" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
-                CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal"></asp:CollapsiblePanelExtender>
+                CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal" BehaviorId="collapsibleBehavior"></asp:CollapsiblePanelExtender>
 
-            <div runat="server" id="leftSidebar" class="leftSidebar">
+            <div runat="server" id="leftSidebar" class="leftSidebarExpanded">
                 <asp:Panel runat="server" ID="pnlExpColLefNav">
                     <asp:Image runat="server" ID="imgExpCol" />
                 </asp:Panel>
@@ -84,7 +107,7 @@
                     <asp:ContentPlaceHolder ID="leftSidebarContent" runat="server"></asp:ContentPlaceHolder>
                 </asp:Panel>
             </div>
-            <div id="content" class="content">
+            <div id="content" class="contentExpanded">
                 <div id="pageTitle">
                     <asp:ContentPlaceHolder ID="pageTitleContent" runat="server"></asp:ContentPlaceHolder>
                 </div>
