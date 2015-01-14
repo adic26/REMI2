@@ -122,12 +122,12 @@
                 $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
                 $(bs_export).show();
 
-                $(bs_export).click(function () {
-                    CSVExportDataTable(oTable, $(this).val());
-                });
+                
             });
     });
-
+    $(bs_export).click(function () {
+        CSVExportDataTable("", $(this).val());
+    });
 
     // Handle Export Button Click
     function CSVExportDataTable(oTable, exportMode) {
