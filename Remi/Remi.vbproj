@@ -235,6 +235,13 @@
     <Compile Include="Controls\BatchSelectControl.ascx.designer.vb">
       <DependentUpon>BatchSelectControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FAControl.ascx.designer.vb">
+      <DependentUpon>FAControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FAControl.ascx.vb">
+      <DependentUpon>FAControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Controls\IBatchListControl.ascx.designer.vb">
       <DependentUpon>IBatchListControl.ascx</DependentUpon>
     </Compile>
@@ -253,6 +260,12 @@
     </Compile>
     <Compile Include="Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\Download.ashx.vb">
+      <DependentUpon>Download.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\ImageHandler.ashx.vb">
+      <DependentUpon>ImageHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="Help\default.aspx.designer.vb">
       <DependentUpon>default.aspx</DependentUpon>
@@ -600,10 +613,13 @@
     <Content Include="Admin\Security.aspx" />
     <Content Include="Admin\Tools\ClearCache.aspx" />
     <Content Include="Admin\TrackingLocationTests.aspx" />
+    <Content Include="Controls\FAControl.ascx" />
     <Content Include="Controls\RequestSetup.ascx" />
     <Content Include="Default.aspx" />
     <Content Include="Design\bbLogo.png" />
     <Content Include="Design\beta.jpg" />
+    <Content Include="Design\Icons\ic_overflow_tab.png" />
+    <Content Include="Design\Icons\Menu.png" />
     <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap-select.css" />
     <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.css" />
     <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.icon-large.css" />
@@ -2851,6 +2867,8 @@
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Design\jQueryCSS\images\Sorting icons.psd" />
+    <Content Include="Handlers\Download.ashx" />
+    <Content Include="Handlers\ImageHandler.ashx" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
