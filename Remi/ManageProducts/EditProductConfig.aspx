@@ -5,7 +5,7 @@
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-<script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="leftSidebarContent" runat="Server">
 <asp:Panel ID="pnlLeftMenuViews" runat="server">

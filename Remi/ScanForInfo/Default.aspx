@@ -12,9 +12,9 @@
     </h1>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="leftSidebarContent" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
-    <script type="text/javascript" src="../design/scripts/jquery.min.js"></script> 
-    <script type="text/javascript" src="../design/scripts/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery.min.js"></script> 
+    <script type="text/javascript" src="../design/scripts/jQueryUI/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../design/scripts/gridviewScroll.min.js"></script>
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js"></script>
     

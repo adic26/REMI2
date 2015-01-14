@@ -44,7 +44,7 @@ Partial Class MasterPages_MasterPage
             End If
 
             'You are a relab role or your role has permission to view relab
-            If Not UserManager.GetCurrentUser.HasRelabAuthority() Or UserManager.GetCurrentUser.HasRelabAccess() Then
+            If Not (UserManager.GetCurrentUser.HasRelabAuthority() And UserManager.GetCurrentUser.HasRelabAccess()) Then
                 menuHeader.Items.Remove(menuHeader.FindItem("results"))
             End If
 
