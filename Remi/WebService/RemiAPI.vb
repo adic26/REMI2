@@ -407,6 +407,16 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(Description:="Returns All tracking Locations Types By Function.")> _
+    Public Function GetTrackingLocationTypesByFunction(ByVal tlf As TrackingLocationFunction) As TrackingLocationTypeCollection
+        Try
+            Return TrackingLocationManager.GetTrackingLocationTypesByFunction(tlf)
+        Catch ex As Exception
+            TrackingLocationManager.LogIssue("REMI API GetTrackingLocationTypesByFunction", "e3", NotificationType.Errors, ex, String.Format("tlf: {0", tlf))
+        End Try
+        Return Nothing
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge & Lab - Bochum. If you want a specific location id for a given user use ""Lab"" and their username with this method.")> _
     Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String, ByVal userIdentification As String) As Integer
         Try
@@ -417,6 +427,31 @@ Public Class RemiAPI
             TrackingLocationManager.LogIssue("Could not location specific location for the given details.", "e3", NotificationType.Errors, ex, String.Format("User: {0} StationName: {1}", userIdentification, stationName))
         End Try
         Return 0
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Adds A New Trackign Location.")> _
+    Public Function SaveTrackingLocation(ByVal hostName As String, ByVal tlt As TrackingLocationType, ByVal name As String, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim tl As New TrackingLocation()
+                tl.Name = name
+                tl.HostName = hostName
+                tl.TrackingLocationType = tlt
+                tl.Status = TrackingLocationStatus.Available
+                tl.Decommissioned = False
+                tl.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                tl.GeoLocationName = UserManager.GetCurrentUser.TestCentre
+
+                Dim tlc As New TrackingLocationCollection()
+                tlc.Add(tl)
+
+                Return TrackingLocationManager.SaveTrackingLocation(tlc)
+            End If
+        Catch ex As Exception
+            TrackingLocationManager.LogIssue("REMI API GetTrackingLocationTypesByFunction", "e3", NotificationType.Errors, ex, String.Format("tlt: {0", tlt))
+        End Try
+
+        Return False
     End Function
 #End Region
 
