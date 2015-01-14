@@ -9,6 +9,7 @@ Imports Newtonsoft.Json
 
 Public Class Reports
     Inherits System.Web.UI.Page
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
             ddlRequestType.DataSource = RequestManager.GetRequestTypes()
@@ -19,9 +20,6 @@ Public Class Reports
             If (requestType.Trim().Length > 0) Then
                 ddlRequestType.Items.FindByText(requestType).Selected = True
             End If
-
-            'ddlSearchField.DataSource = RequestManager.GetRequestParent(ddlRequestType.SelectedItem.Value)
-            'ddlSearchField.DataBind()
 
             ddlTests.Items.Clear()
             Dim tests As List(Of Test) = TestManager.GetTestsByType(TestType.Parametric, False)
@@ -43,7 +41,6 @@ Public Class Reports
 
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As EventArgs)
         If (txtSearchTerm.Text.Trim.Length > 0) Then
-            'lstSearchTerms.Items.Add(New ListItem(String.Format("Request:{0} ", txtSearchTerm.Text), ddlSearchField.SelectedItem.Value))
             txtSearchTerm.Text = String.Empty
         End If
 
@@ -86,7 +83,6 @@ Public Class Reports
         searchFields.Columns.Add("SearchTerm", GetType(String))
         searchFields.Columns.Add("ColumnName", GetType(String))
 
-
         For Each field As String In fields
             Dim dr As DataRow = searchFields.NewRow
 
@@ -107,9 +103,7 @@ Public Class Reports
         grdRequestSearch.DataBind()
     End Sub
 
-
     Public Shared Function Search_FieldResponse(ByVal requestTypeID As Int32, ByVal type As String) As List(Of SearchFieldResponse)
-        'Return ReportManager.SearchTree(requestTypeID)
         Dim st As DataTable = ReportManager.SearchTree(requestTypeID)
         Dim myQuery As New List(Of SearchFieldResponse)()
         Dim myList As New List(Of SearchFieldResponse)()
@@ -123,9 +117,9 @@ Public Class Reports
             myList.Add(searchfieldResponse)
         Next
 
-            q = From x In myList
-                  Where x.Type = type
-                  Select x
+        q = From x In myList
+              Where x.Type = type
+              Select x
 
         For Each item In q
             myQuery.Add(CType(item, SearchFieldResponse))
@@ -135,9 +129,7 @@ Public Class Reports
     End Function
 
     Public Shared Function Search_FieldResponse(ByVal requestTypeID As Int32) As List(Of SearchFieldResponse)
-        'Return ReportManager.SearchTree(requestTypeID)
         Dim st As DataTable = ReportManager.SearchTree(requestTypeID)
-
         Dim myList As New List(Of SearchFieldResponse)()
 
         For Each row As DataRow In st.Rows
@@ -149,9 +141,6 @@ Public Class Reports
         Next
 
         Return myList
-        'Return myList.GetRange(0, myList.Count - 1)
-        'Return myList
-
     End Function
 
     <System.Web.Services.WebMethod()> _
@@ -175,8 +164,6 @@ Public Class Reports
             dt.Rows.Add(r)
         Next
 
-
-
         Dim results As DataTable = ReportManager.Search(requestTypeID, dt)
         Dim tableTags As New StringBuilder()
 
@@ -185,10 +172,8 @@ Public Class Reports
         For Each dc As DataColumn In results.Columns
             tableTags.Append("<th>" + dc.ColumnName + "</th>")
         Next
+
         tableTags.Append("</tr></thead>")
-
-
-
         tableTags.Append("<tbody>")
 
         For Each dr As DataRow In results.Rows
@@ -225,8 +210,6 @@ Public Class Reports
             dt.Rows.Add(r)
         Next
 
-
-
         Dim results As DataTable = ReportManager.Search(requestTypeID, dt)
         Dim theads As New StringBuilder()
 
@@ -252,7 +235,6 @@ Public Class Reports
         End Try
 
         Return response
-        'Return True
     End Function
 
     <System.Web.Services.WebMethod()> _
@@ -277,10 +259,6 @@ Public Class Reports
 
         Return responseBuilder.ToString()
     End Function
-
-
-
-
 
     Protected Sub postback_Click(sender As Object, e As EventArgs) Handles postback.Click
         'If (Not ClientScript.IsClientScriptBlockRegistered("postback") And Not IsPostBack) Then

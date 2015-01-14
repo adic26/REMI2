@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../Design/scripts/Bootstrap/jquery.taginput.src.js"></script>
     <script type="text/javascript" src="../Design/scripts/Bootstrap/bootstrap-select.js"></script>
     <script type="text/javascript" src="../Design/scripts/Bootstrap/bootstrap.js"></script>
-    <script type="text/javascript" src="../Design/scripts/jQuery/jquery-ui-1.10.4.min.js"></script>
+    <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery-ui-1.10.4.min.js"></script>
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
     <script type="text/javascript" src="../Design/scripts/ReportScript.js"></script>
