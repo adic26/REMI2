@@ -201,6 +201,8 @@ var check = function (r) {
 					addClassToColumn(iColCount, '_filterCol' + iColCount);
 				}
 			);
+
+
 				
 			$(filterRow).addClass('filterColumns');
 			$('thead:first', obj).append(filterRow);
@@ -208,5 +210,5 @@ var check = function (r) {
 			settings.notCharacter = regexEscape(settings.notCharacter || '');
 		});
 	};
-
+    
 })(jQuery);

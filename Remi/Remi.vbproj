@@ -71,6 +71,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Dependencies\json.net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -232,13 +235,6 @@
     <Compile Include="Controls\BatchSelectControl.ascx.designer.vb">
       <DependentUpon>BatchSelectControl.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FAControl.ascx.designer.vb">
-      <DependentUpon>FAControl.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\FAControl.ascx.vb">
-      <DependentUpon>FAControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Controls\IBatchListControl.ascx.designer.vb">
       <DependentUpon>IBatchListControl.ascx</DependentUpon>
     </Compile>
@@ -258,18 +254,12 @@
     <Compile Include="Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Handlers\Download.ashx.vb">
-      <DependentUpon>Download.ashx</DependentUpon>
-    </Compile>
     <Compile Include="Help\default.aspx.designer.vb">
       <DependentUpon>default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Help\default.aspx.vb">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
-    </Compile>
-    <Compile Include="Handlers\ImageHandler.ashx.vb">
-      <DependentUpon>ImageHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="Incoming\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -610,16 +600,52 @@
     <Content Include="Admin\Security.aspx" />
     <Content Include="Admin\Tools\ClearCache.aspx" />
     <Content Include="Admin\TrackingLocationTests.aspx" />
-    <Content Include="Controls\FAControl.ascx" />
     <Content Include="Controls\RequestSetup.ascx" />
     <Content Include="Default.aspx" />
     <Content Include="Design\bbLogo.png" />
     <Content Include="Design\beta.jpg" />
-    <Content Include="Design\Icons\ic_overflow_tab.png" />
-    <Content Include="Design\Icons\menu.png" />
+    <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap-select.css" />
+    <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.css" />
+    <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.icon-large.css" />
+    <Content Include="Design\jQueryCSS\Bootstrap CSS\jquery.taginput.css" />
+    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables.css" />
+    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables.min.css" />
+    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables_themeroller.css" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Design\jQueryCSS\images\back_disabled.png" />
+    <Content Include="Design\jQueryCSS\images\back_enabled.png" />
+    <Content Include="Design\jQueryCSS\images\back_enabled_hover.png" />
+    <Content Include="Design\jQueryCSS\images\favicon.ico" />
+    <Content Include="Design\jQueryCSS\images\forward_disabled.png" />
+    <Content Include="Design\jQueryCSS\images\forward_enabled.png" />
+    <Content Include="Design\jQueryCSS\images\forward_enabled_hover.png" />
+    <Content Include="Design\jQueryCSS\images\glyphicons.png" />
+    <Content Include="Design\jQueryCSS\images\sort_asc.png" />
+    <Content Include="Design\jQueryCSS\images\sort_asc_disabled.png" />
+    <Content Include="Design\jQueryCSS\images\sort_both.png" />
+    <Content Include="Design\jQueryCSS\images\sort_desc.png" />
+    <Content Include="Design\jQueryCSS\images\sort_desc_disabled.png" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.10.4.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.11.2.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.8.2.custom.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.structure.css" />
+    <Content Include="Design\scripts\Bootstrap\bootstrap-select.js" />
+    <Content Include="Design\scripts\Bootstrap\bootstrap.js" />
+    <Content Include="Design\scripts\Bootstrap\jquery.taginput.src.js" />
+    <Content Include="Design\scripts\DataTables\jquery.dataTables.js" />
     <Content Include="Design\scripts\gridviewScroll.min.js" />
-    <Content Include="Design\scripts\jquery-ui.min.js" />
-    <Content Include="Design\scripts\jquery.min.js" />
+    <Content Include="Design\scripts\i18n\defaults-en_US.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui-1.10.4.min.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui-1.11.2.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui-1.8.2.custom.min.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui.min.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.11.1.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.4.2.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.8.0.js" />
+    <Content Include="Design\scripts\jQuery\jquery-2.1.1.js" />
+    <Content Include="Design\scripts\jQuery\jquery.min.js" />
+    <Content Include="Design\scripts\ReportScript.js" />
+    <Content Include="Design\scripts\ToolBox.js" />
     <Content Include="Global.asax" />
     <Content Include="Help\default.aspx" />
     <Content Include="Images\Help\StressingTestingSuspended.jpg" />
@@ -2782,16 +2808,13 @@
     <Content Include="Design\jQueryCSS\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Design\jQueryCSS\images\ui-icons_d8e7f3_256x240.png" />
     <Content Include="Design\jQueryCSS\images\ui-icons_f9bd01_256x240.png" />
-    <Content Include="Design\jQueryCSS\jquery-ui-1.8.2.custom.css" />
     <Content Include="Design\layout_grid.gif" />
     <Content Include="Design\left.gif" />
     <Content Include="Design\leftMenuHeader.gif" />
     <Content Include="Design\rightMenuHeader.gif" />
     <Content Include="Design\ruler_add.png" />
-    <Content Include="Design\scripts\jquery-ui-1.8.2.custom.min.js" />
     <Content Include="Design\scripts\jquery-vsdoc.js" />
     <Content Include="Design\scripts\jquery.columnfilters.js" />
-    <Content Include="Design\scripts\jquery.js" />
     <Content Include="Design\scripts\menuScript.js" />
     <Content Include="Design\scripts\pngfix.js" />
     <Content Include="Design\scripts\supersleight-min.js" />
@@ -2824,8 +2847,10 @@
     <Content Include="Images\expand_blue.jpg" />
     <Content Include="MasterPages\MasterPage.master" />
     <None Include="Design\Graphic.psd" />
-    <Content Include="Handlers\ImageHandler.ashx" />
-    <Content Include="Handlers\Download.ashx" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Design\jQueryCSS\images\Sorting icons.psd" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
