@@ -4,6 +4,9 @@ BEGIN
 	SET NOCOUNT ON
 	CREATE TABLE dbo.#executeSQL (ID INT IDENTITY(1,1), sqlvar NTEXT)
 	CREATE TABLE dbo.#Request (RequestID INT PRIMARY KEY, BatchID INT, RequestNumber NVARCHAR(11))
+	CREATE TABLE dbo.#InfoName (Name NVARCHAR(150))
+	CREATE TABLE dbo.#InfoValue (Val NVARCHAR(150))
+	CREATE TABLE dbo.#Params (Name NVARCHAR(150), Val NVARCHAR(250))
 
 	SELECT * INTO dbo.#temp FROM @tv
 
@@ -305,6 +308,14 @@ BEGIN
 
 		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage', 'Measurement')) > 0)
 		BEGIN
+			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Param:%') > 0)
+			BEGIN
+				INSERT INTO dbo.#Params (Name, Val)
+				SELECT REPLACE(TableType, 'Param:', ''), SearchTerm
+				FROM dbo.#temp
+				WHERE TableType LIKE 'Param:%'
+			END
+		
 			SELECT @ParameterColumnNames=  ISNULL(STUFF(
 			( 
 			SELECT DISTINCT '],[' + rp.ParameterName
@@ -318,14 +329,23 @@ BEGIN
 			BEGIN
 				SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
 				EXEC sp_executesql @SQL
-
+				
+				SET @whereStr = ''
+				
+				IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
+				BEGIN
+					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + Name + '] = ''' + Val + '''' + ' AND ' FROM dbo.#Params
+					SET @whereStr = ' WHERE ' +  SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+				END
+				
 				SET @SQL = 'INSERT INTO dbo.#RRParameters SELECT *
 				FROM (
 					SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
 					FROM dbo.#RR rr WITH(NOLOCK)
 						INNER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
-					) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt'
-
+					) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt
+				 ' + @whereStr
+					
 				EXEC sp_executesql @SQL
 			END
 			ELSE
@@ -338,6 +358,22 @@ BEGIN
 
 			IF @ResultInfoArchived IS NULL
 				SET @ResultInfoArchived = 0
+				
+			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='InfoName') > 0)
+			BEGIN
+				INSERT INTO dbo.#InfoName (Name)
+				SELECT SearchTerm
+				FROM dbo.#temp
+				WHERE TableType = 'InfoName'
+			END
+				
+			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='InfoValue') > 0)
+			BEGIN
+				INSERT INTO dbo.#InfoValue (Val)
+				SELECT SearchTerm
+				FROM dbo.#temp
+				WHERE TableType = 'InfoValue'
+			END
 
 			SELECT @InformationColumnNames=  ISNULL(STUFF(
 			( 
@@ -347,6 +383,7 @@ BEGIN
 				LEFT OUTER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON x.ID=ri.XMLID
 			WHERE ri.Name NOT IN ('Start UTC','Start','End', 'STEF Plugin Version')
 				AND ((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1))
+				AND (ri.Name IN (SELECT Name FROM dbo.#InfoName) OR (SELECT COUNT(*) FROM dbo.#InfoName) = 0)
 			ORDER BY '],[' +  ri.Name
 			FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
@@ -362,6 +399,7 @@ BEGIN
 						INNER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON rr.XMLID=ri.XMLID
 						WHERE ri.Name NOT IN (''Start UTC'',''Start'',''End'', ''STEF Plugin Version'') AND
 							((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1)) 
+							AND (ri.Value IN (SELECT Val FROM dbo.#InfoValue) OR (SELECT COUNT(*) FROM dbo.#InfoValue) = 0)
 					) te PIVOT (MAX(Value) FOR Name IN ('+ @InformationColumnNames +')) AS pvt'
 
 				EXEC sp_executesql @SQL, N'@ResultInfoArchived int', @ResultInfoArchived
@@ -381,6 +419,17 @@ BEGIN
 			WHERE UserID=@UserID AND RequestTypeID=@RequestTypeID
 			ORDER BY SortOrder
 		END
+		
+		DECLARE @LimitedByInfo INT
+		DECLARE @LimitedByParam INT
+		SET @LimitedByParam = 0
+		SET @LimitedByInfo = 0
+		
+		IF ((SELECT COUNT(*) FROM dbo.#InfoValue) > 0 OR (SELECT COUNT(*) FROM dbo.#InfoName) > 0)
+			SET @LimitedByInfo = 1
+		
+		IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
+			SET @LimitedByParam = 1
 
 		SET @whereStr = REPLACE(REPLACE(@whereStr 
 				, 'Params', CASE WHEN (SELECT 1 FROM UserSearchFilter WHERE FilterType=3) = 1 THEN @ParameterColumnNames ELSE '' END)
@@ -391,13 +440,15 @@ BEGIN
 			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + COLUMN_NAME + '],' 
 			FROM tempdb.INFORMATION_SCHEMA.COLUMNS 
 			WHERE (TABLE_NAME like '#RR%' OR TABLE_NAME LIKE '#RRParameters%' OR TABLE_NAME LIKE '#RRInformation%')
-				AND COLUMN_NAME NOT IN ('RequestID', 'XMLID', 'ID', 'BatchID', 'ResultMeasurementID', 'ResultID', 'RID')
+				AND COLUMN_NAME NOT IN ('RequestID', 'XMLID', 'ID', 'BatchID', 'ResultID', 'RID')--, 'ResultMeasurementID')
 			ORDER BY TABLE_NAME
 		END
 
 		SET @SQL = 'SELECT DISTINCT ' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#RR rr 
 			LEFT OUTER JOIN dbo.#RRParameters p ON rr.ID=p.ResultMeasurementID
-			LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID '
+			LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID 
+			WHERE ((' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 1 AND i.RID IS NOT NULL ))
+				AND ((' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 1 AND p.ResultMeasurementID IS NOT NULL ))'
 		
 		print @SQL
 		EXEC sp_executesql @SQL
@@ -434,33 +485,40 @@ BEGIN
 	DROP TABLE dbo.#executeSQL
 	DROP TABLE dbo.#temp
 	DROP TABLE dbo.#Request
+	DROP TABLE dbo.#InfoValue
+	DROP TABLE dbo.#InfoName
+	DROP TABLE dbo.#Params
 	SET NOCOUNT OFF
 END
 GO
 GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
---DECLARE @table AS dbo.SearchFields
---INSERT INTO @table(TableType, ID, SearchTerm)
---VALUES ('Request', 51, '*Windermere')
-----,('Request', 51, '-Windermere E R135')
-----,('Request', 51, '3G SIMs')
----- ,('Request', 51, '*Lisbon')
-----,('Request', 49, 'Handheld')
-----,('Request', 49, '*Accessory')
--- --,('Test', 1099, 'Sensor Test')
-----,('Test', 1280, 'Functional')
---,('Test', 1020, 'Radiated RF Test')
------- --,('Test', 1103, 'Camera Front')
-----,('Stage', 3218, 'Post 360hrs')
-----,('Stage', 2246, 'Analysis')
-----,('Stage', 3220, 'Post 720hrs')
-----,('BSN', 0, '1151185790')
-----,('Unit', 0, '5')
-----,('Unit', 0, '1')
---------,('IMEI', 0, '')
-----,('ResultArchived', 0, '')
---------,('ResultInfoArchived', 0, '')
-----, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
-----, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
-----,('Measurement', 0, '*RxBER')
---EXEC [Req].[RequestSearch] 1, @table--, 251
+DECLARE @table AS dbo.SearchFields
+INSERT INTO @table(TableType, ID, SearchTerm)
+VALUES ('Request', 51, '*Windermere')
+--,('Request', 51, '-Windermere E R135')
+--,('Request', 51, '3G SIMs')
+-- ,('Request', 51, '*Lisbon')
+--,('Request', 49, 'Handheld')
+--,('Request', 49, '*Accessory')
+--,('Test', 1099, 'Sensor Test')
+--,('Test', 1280, 'Functional')
+,('Test', 1020, 'Radiated RF Test')
+--,('Test', 1103, 'Camera Front')
+--,('Stage', 3218, 'Post 360hrs')
+--,('Stage', 2246, 'Analysis')
+--,('Stage', 3220, 'Post 720hrs')
+--,('BSN', 0, '1151185790')
+--,('Unit', 0, '5')
+--,('Unit', 0, '1')
+--,('IMEI', 0, '')
+--,('ResultArchived', 0, '')
+--,('Param:Band', 0, 'LTE17')
+--,('Param:Channel', 0, '5800')
+--,('ResultInfoArchived', 0, '')
+--,('InfoName', 0, 'HardwareID')
+--,('InfoValue', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
+--, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
+--, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
+--,('Measurement', 0, '*RxBER')
+EXEC [Req].[RequestSearch] 1, @table--, 251

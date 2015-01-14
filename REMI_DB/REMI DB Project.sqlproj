@@ -235,6 +235,8 @@
     <Folder Include="Schema Objects\Schemas\Req\Tables\Constraints" />
     <Folder Include="Schema Objects\Schemas\Req\Tables\Keys" />
     <Folder Include="Schema Objects\Schemas\Relab\Tables\Keys" />
+    <Folder Include="Schema Objects\Schemas\Req\Programmability\Types" />
+    <Folder Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2296,9 +2298,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetLookupTypes.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Table Types\SearchFields.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\UserSearchFilter.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -2605,5 +2604,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsStatus.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types\SearchFields.sql" />
   </ItemGroup>
 </Project>
