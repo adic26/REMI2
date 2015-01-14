@@ -7,16 +7,21 @@
 
     $(FinalItemsList).hide();
     $(bs_searchButton).hide();
-    $(bs_RealStages).selectpicker('hide');
+    $(bs_export).hide();
 
     //var rtID = $('#<%=ddlRequestType.ClientID%>');
     var rtID = $("[id$='ddlRequestType']");
+    var grdID = $("[id$='grdRequestSearch']");
+    var searchterms1 = $("[id$='lstSearchTerms']");
     var request = searchAll(rtID[0].value, "");
+
 
     var jobs = $(bs_StagesField);
     var req = $(bs_ddlSearchField);
     var tests = $(bs_TestField);
     var stages = $(bs_RealStages);
+
+    
 
     $('#bs_list').hide()
     $('#bs_OKayButton').on('click', function () {
@@ -37,14 +42,13 @@
                 summary[summary.length] = currentJob + " : " + currentStages;
             });
             
-            fullList = summary;
         }
         if (req.val()!= null) {
             fullList = $.merge(fullList, req.val());
         }
-        if (tests.val()!=null) {
-            fullList = $.merge(fullList, tests.val());
-        }
+        //if (tests.val()!=null) {
+        //    fullList = $.merge(fullList, tests.val());
+        //}
         
         $.each(fullList, function (index, element) {
             $('.list-group').append($('<li class="list-group-item">' +
@@ -52,37 +56,44 @@
                 '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
         });
 
-        //$('.form-inline').effects({ float: 'right' });
         myList.show();
         $(bs_searchButton).show();
         
     });
     $('#bs_searchButton').on('click', function () {
 
+        var fullList = [];
         var selectedRequests = req.next().find('li.selected').find('a.opt ');
+        var searchTermRequests = $('#FinalItemsList li');
         var selectedTests = tests.next().find('li.selected').find('a.opt ');
         var selectedStages = stages.next().find('li.selected').find('a.opt ');
+        var myTable = $('#searchResults');
 
         $.each(selectedRequests, function (index, element) {
             var requestName = element.text;
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             var testID = $('#bs_ddlSearchField optgroup > option')[originalIndex].getAttribute('testid');
-            console.log(element.text + testID);
+            $.each(searchTermRequests, function (s_index, s_element) {
+                //console.log($(this).text());
+                var searchTerm = s_element.innerText
+                if (searchTerm == element.text) {
+                    var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
+                    console.log(request);
+                    fullList.push(request);
+                }
+            });
         });
 
         $.each(selectedTests, function (index, element) {
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             var testID = $('#bs_TestField optgroup > option')[originalIndex].getAttribute('testid');
-            console.log(element.text + testID);
+            var tests = 'Test' + ',' + testID + ',' + element.text;
+            console.log(tests);
+            fullList.push(tests);
         });
 
         $.each(selectedStages, function (index, element) {
             OptGroup = element.getAttribute('data-optgroup'); //gives you optiongroup number
-            //var realGroupName = stages.next().find('li')[0].textContent;
-            //var realGroupElementWithChildren = $('#bs_RealStages optgroup[label=/"' + realGroupName + '"]');
-            //x = stages.next().find('li')[0].textContent
-            //$('#bs_RealStages optgroup[label="T077 Other"]')
-
             var firstGroupLength = $('#bs_RealStages optgroup')[0].childNodes.length;
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             if ((OptGroup - 1) > 0) {
@@ -90,11 +101,68 @@
             } else {
                 var testID = $('#bs_RealStages optgroup')[OptGroup - 1].childNodes[originalIndex].getAttribute('testid');
             }
-            console.log(element.text + testID);
+            var stage = 'Stage' + ',' + testID + ',' + element.text;
+            console.log(stage);
+            fullList.push(stage);
         });
 
+        var requestParams = JSON.stringify({
+            "requestTypeID": rtID[0].value,
+            "fields": fullList
+        });
 
+        var myTable = jsonRequest("Reports.aspx/customSearch", requestParams).success(
+            function (d) {
+                $('#searchResults').empty();
+                $('#searchResults').append(d);
+                var oTable = $('#searchResults').DataTable({
+                    destroy: true
+                });
+                $('#searchResults').find('th.sorting').css('background-color', 'black');
+                $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
+                $(bs_export).show();
+
+                $(bs_export).click(function () {
+                    CSVExportDataTable(oTable, $(this).val());
+                });
+            });
     });
+
+
+    // Handle Export Button Click
+    function CSVExportDataTable(oTable, exportMode) {
+        // Init
+        var csv = '';
+        var headers = [];
+        var rows = [];
+        var dataSeparator = ',';
+
+        oTable = $('#searchResults').dataTable();
+        // Get table header names
+        $(oTable).find('thead th').each(function () {
+            var text = $(this).text();
+            if (text != "") headers.push(text);
+        });
+        csv += headers.join(dataSeparator) + "\r\n";
+
+
+        // Get table body data
+        var totalRows = oTable.fnSettings().fnRecordsTotal();
+        for (var i = 0; i < totalRows; i++) {
+            var row = oTable.fnGetData(i);
+            rows.push(row.join(dataSeparator));
+        }
+        
+        csv += rows.join("\r\n");
+
+        // Proceed if csv data was loaded
+        if (csv.length > 0) {
+            downloadFile('data.csv', 'data:text/csv;charset=UTF-8,' + encodeURIComponent(csv));
+            console.log(window.location.href);
+        }
+    }
+    
+    
 
     var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
     selectpicker.data('open', false);
@@ -113,6 +181,8 @@
             selectpicker.data('open', true);
 
         }
+        $('.selectpicker').selectpicker('refresh');
+
         
     });
 
@@ -155,6 +225,16 @@ function search(rtID, type, model) {
 
     return myRequest;
 
+}
+
+function downloadFile(fileName, urlData) {
+
+    var aLink = document.createElement('a');
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent("click");
+    aLink.download = fileName;
+    aLink.href = urlData;
+    aLink.dispatchEvent(evt);
 }
 
 function searchAll(rtID, type) {
@@ -256,6 +336,7 @@ function refreshAllSelectPickers() {
 
 function addStagesViaJobs(data,model) {
 
+
     model.empty();
 
     //where data is all the values from the Job.
@@ -264,8 +345,7 @@ function addStagesViaJobs(data,model) {
         //call web service function
         stagesWebService(element,model);
     });
-    refreshAllSelectPickers();
-    $(bs_RealStages).selectpicker('show');
+
 }
 
 function stagesWebService(jobName,model) {
@@ -288,7 +368,7 @@ function stagesWebService(jobName,model) {
         cb += '</optgroup>';
 
         model.append(cb);
-        refreshAllSelectPickers();
+        $('.selectpicker').selectpicker('refresh');
     });
 }
 

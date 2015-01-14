@@ -71,6 +71,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\fsg52ykf\ReliabilityTSD\DLL\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Dependencies\json.net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -605,7 +608,23 @@
     <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.css" />
     <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.icon-large.css" />
     <Content Include="Design\jQueryCSS\Bootstrap CSS\jquery.taginput.css" />
+    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables.css" />
+    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables.min.css" />
+    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables_themeroller.css" />
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Design\jQueryCSS\images\back_disabled.png" />
+    <Content Include="Design\jQueryCSS\images\back_enabled.png" />
+    <Content Include="Design\jQueryCSS\images\back_enabled_hover.png" />
+    <Content Include="Design\jQueryCSS\images\favicon.ico" />
+    <Content Include="Design\jQueryCSS\images\forward_disabled.png" />
+    <Content Include="Design\jQueryCSS\images\forward_enabled.png" />
+    <Content Include="Design\jQueryCSS\images\forward_enabled_hover.png" />
+    <Content Include="Design\jQueryCSS\images\glyphicons.png" />
+    <Content Include="Design\jQueryCSS\images\sort_asc.png" />
+    <Content Include="Design\jQueryCSS\images\sort_asc_disabled.png" />
+    <Content Include="Design\jQueryCSS\images\sort_both.png" />
+    <Content Include="Design\jQueryCSS\images\sort_desc.png" />
+    <Content Include="Design\jQueryCSS\images\sort_desc_disabled.png" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.10.4.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.11.2.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.8.2.custom.css" />
@@ -613,6 +632,7 @@
     <Content Include="Design\scripts\Bootstrap\bootstrap-select.js" />
     <Content Include="Design\scripts\Bootstrap\bootstrap.js" />
     <Content Include="Design\scripts\Bootstrap\jquery.taginput.src.js" />
+    <Content Include="Design\scripts\DataTables\jquery.dataTables.js" />
     <Content Include="Design\scripts\gridviewScroll.min.js" />
     <Content Include="Design\scripts\i18n\defaults-en_US.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.10.4.min.js" />
@@ -2830,6 +2850,7 @@
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Design\jQueryCSS\images\Sorting icons.psd" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
