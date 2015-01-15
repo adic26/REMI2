@@ -19,9 +19,6 @@
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
     <script type="text/javascript" src="../Design/scripts/ReportScript.js"></script>
 </asp:Content>
-
-
-
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
     <h1>Reports</h1><br />
 </asp:Content>
@@ -32,17 +29,10 @@
             <li>
                 <br /><asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID"></asp:DropDownList>
             </li>
-            <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/xls_file.png" ID="imgExportAction" runat="server"  EnableViewState="false"/>
-                <asp:LinkButton ID="lnkExportAction" runat="Server" Text="Export Result" EnableViewState="false"  />
-            </li>
         </ul>
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
-   
-            
-
     <div class="row">
         <div class="col-lg-6">
             <div class="input-group input-group-sm">
@@ -57,35 +47,15 @@
             </div>
         </div>
     </div>
-    
         
+    <div class="LoadingModal" id="LoadingModal" style="display:none;"></div>
+    <div class="LoadingGif" id="LoadingGif" style="display:none;"></div>
+            
     <ul id="FinalItemsList" class="list-group"></ul>
     <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
-     
-    
-    <table id="searchResults">
-    </table>
-
+         
+    <table id="searchResults"></table>
     <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
-
-
-    <asp:TextBox runat="server" ID="txtSearchTerm" style="display:none;" ></asp:TextBox>
-    <asp:Button runat="server" ID="btnSave" Text="Add" OnClick="btnSave_Click" style="display:none;" />
-    <br />
-    <asp:DropDownList runat="server" ID="ddlTests" Width="150px" style="display:none;" DataTextField="TestName" DataValueField="ID" AppendDataBoundItems="true"></asp:DropDownList>
-
-    <br /><asp:ListBox runat="server" ID="lstSearchTerms" style="display:none;">
-    </asp:ListBox>
-
-    <br />
-    <asp:Button runat="server" ID="btnSearch" Text="Search" OnClick="btnSearch_Click" style="display:none;"></asp:Button>
-
-
-    <asp:Button ID="postback" runat="server" Text="Search" style="display:none;" />
-
-
-    <asp:GridView runat="server" ID="grdRequestSearch" AutoGenerateColumns="true" CssClass="myGrid"></asp:GridView>
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>
-
