@@ -5,9 +5,14 @@
         size: 4
     });
 
-    $(FinalItemsList).hide();
-    $(bs_searchButton).hide();
-    $(bs_export).hide();
+    //IE Tags
+    if (typeof (UserAgentInfo) != 'undefined' && !window.addEventListener) {
+        UserAgentInfo.strBrowser = 1;
+    }
+
+    $('#FinalItemsList').hide();
+    $('#bs_searchButton').hide();
+    $('#bs_export').hide();
 
     //var rtID = $('#<%=ddlRequestType.ClientID%>');
     var rtID = $("[id$='ddlRequestType']");
@@ -16,10 +21,10 @@
     var request = searchAll(rtID[0].value, "");
 
 
-    var jobs = $(bs_StagesField);
-    var req = $(bs_ddlSearchField);
-    var tests = $(bs_TestField);
-    var stages = $(bs_RealStages);
+    var jobs = $('#bs_StagesField');
+    var req = $('#bs_ddlSearchField');
+    var tests = $('#bs_TestField');
+    var stages = $('#bs_RealStages');
 
     
 
@@ -57,7 +62,7 @@
         });
 
         myList.show();
-        $(bs_searchButton).show();
+        $('#bs_searchButton').show();
         
     });
     $('#bs_searchButton').on('click', function () {
@@ -76,7 +81,7 @@
             $.each(searchTermRequests, function (s_index, s_element) {
                 //console.log($(this).text());
                 var searchTerm = s_element.innerText
-                if (searchTerm == element.text) {
+                if (searchTerm == element.innerText) {
                     var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
                     console.log(request);
                     fullList.push(request);
@@ -87,7 +92,7 @@
         $.each(selectedTests, function (index, element) {
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             var testID = $('#bs_TestField optgroup > option')[originalIndex].getAttribute('testid');
-            var tests = 'Test' + ',' + testID + ',' + element.text;
+            var tests = 'Test' + ',' + testID + ',' + element.innerText;
             console.log(tests);
             fullList.push(tests);
         });
@@ -101,36 +106,63 @@
             } else {
                 var testID = $('#bs_RealStages optgroup')[OptGroup - 1].childNodes[originalIndex].getAttribute('testid');
             }
-            var stage = 'Stage' + ',' + testID + ',' + element.text;
+            var stage = 'Stage' + ',' + testID + ',' + element.innerText;
             console.log(stage);
             fullList.push(stage);
         });
 
-        var requestParams = JSON.stringify({
-            "requestTypeID": rtID[0].value,
-            "fields": fullList
-        });
+        if (fullList.length > 0) {
 
-        var myTable = jsonRequest("Reports.aspx/customSearch", requestParams).success(
-            function (d) {
-                $('#searchResults').empty();
-                $('#searchResults').append(d);
-                var oTable = $('#searchResults').DataTable({
-                    destroy: true
-                });
-                $('#searchResults').find('th.sorting').css('background-color', 'black');
-                $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
-                $(bs_export).show();
-
-                
+            var requestParams = JSON.stringify({
+                "requestTypeID": rtID[0].value,
+                "fields": fullList
             });
+
+            var myTable = jsonRequest("Reports.aspx/customSearch", requestParams).success(
+                function (d) {
+                    $('#searchResults').empty();
+                    $('#searchResults').append(d);
+                    var oTable = $('#searchResults').DataTable({
+                        destroy: true
+                    });
+                    $('#searchResults').find('th.sorting').css('background-color', 'black');
+                    $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
+                    $('#bs_export').show();
+
+
+                });
+        } else {
+            alert("Please enter a search field");
+        }
     });
-    $(bs_export).click(function () {
+    $('#bs_export').click(function () {
         CSVExportDataTable("", $(this).val());
     });
 
-    // Handle Export Button Click
-    function CSVExportDataTable(oTable, exportMode) {
+
+    var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
+    selectpicker.data('open', false);
+    selectpicker.click(function () {
+        if (selectpicker.data('open')) {
+            selectpicker.data('open', false);
+            console.log("close!");
+            //Insert all your stages at this point
+            if (jobs.val() != null) {
+                addStagesViaJobs(jobs.val(), stages);
+            }
+
+        } else {
+            console.log("open");
+            selectpicker.data('open', true);
+
+        }
+        $('.selectpicker').selectpicker('refresh');
+
+        
+    });
+
+
+function CSVExportDataTable(oTable, exportMode) {
         // Init
         var csv = '';
         var headers = [];
@@ -152,7 +184,7 @@
             var row = oTable.fnGetData(i);
             rows.push(row.join(dataSeparator));
         }
-        
+
         csv += rows.join("\r\n");
 
         // Proceed if csv data was loaded
@@ -161,30 +193,7 @@
             console.log(window.location.href);
         }
     }
-    
-    
 
-    var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
-    selectpicker.data('open', false);
-
-    selectpicker.click(function () {
-        if (selectpicker.data('open')) {
-            selectpicker.data('open', false);
-            console.log("close!");
-            //Insert all your stages at this point
-            if (jobs.val() != null) {
-                addStagesViaJobs(jobs.val(), stages);
-            }
-
-        } else {
-            console.log("open");
-            selectpicker.data('open', true);
-
-        }
-        $('.selectpicker').selectpicker('refresh');
-
-        
-    });
 
 function search(rtID, type, model) {
 
@@ -248,16 +257,13 @@ function searchAll(rtID, type) {
         if (data.Success == true) {
 
             //Request Information here
-            populateFields(data.Results, $(bs_ddlSearchField), "Request");
-
-            //Stages Information Here
-            //populateStage(rtID, $(bs_StagesField));
+            populateFields(data.Results, $('#bs_ddlSearchField'), "Request");
             
             //Test Information here
-            populateFields(data.Results, $(bs_TestField), "Test");
+            populateFields(data.Results, $('#bs_TestField'), "Test");
 
             //job Search
-            jobSearch($(bs_StagesField));
+            jobSearch($('#bs_StagesField'));
 
 
         }
