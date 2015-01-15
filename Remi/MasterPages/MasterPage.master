@@ -18,7 +18,7 @@
         TargetControlID="pnlLeftNavContent" ExpandedSize="185" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
         CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal" BehaviorId="collapsibleBehavior"></asp:CollapsiblePanelExtender>
     <script language="javascript" type="text/javascript">
-        document.getElementById('<%=pnlHead.ClientID%>').style.visibility = 'hidden';
+        //document.getElementById('<%=pnlHead.ClientID%>').style.visibility = 'hidden';
 
         function pageLoad(sender, args) {
             $find("collapsibleBehavior").add_expandComplete(expandHandler);
@@ -74,7 +74,9 @@
                         <asp:MenuItem Text="Me" NavigateUrl="~/BadgeAccess/EditMyUser.aspx"></asp:MenuItem>
                         <asp:MenuItem Text="Batches Requested" NavigateUrl="~/ManageUser/BatchesByRequestor.aspx"></asp:MenuItem>
                     </asp:MenuItem>
-                    <asp:MenuItem Text="Results" NavigateUrl="~/Relab/Results.aspx" Value="results"></asp:MenuItem>
+                    <asp:MenuItem Text="Results" NavigateUrl="~/Relab/Results.aspx" Value="results">
+                        <asp:MenuItem Text="Reports" NavigateUrl="~/Relab/Reports.aspx"></asp:MenuItem>
+                    </asp:MenuItem>
                     <asp:MenuItem Text="Admin" NavigateUrl="~/Admin/Jobs.aspx" Value="admin">
                         <asp:MenuItem Text="Jobs" NavigateUrl="~/Admin/Jobs.aspx"></asp:MenuItem>
                         <asp:MenuItem Text="Lookups/Access" NavigateUrl="~/Admin/Lookups.aspx"></asp:MenuItem>
