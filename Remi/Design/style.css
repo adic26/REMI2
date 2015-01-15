@@ -285,6 +285,23 @@ img.right
     text-align: justify;
 }
 
+.contentExpandedES
+{
+    margin: 0px;
+    padding: 0px 10px 0px 10px;
+    width: 1400px;
+    height: 750px;
+    overflow-y : scroll;
+    overflow-x:auto;
+    display:inline-block;
+    vertical-align:top;
+}
+
+.contentExpandedES p
+{
+    padding-bottom: 10px;
+}
+
 .contentExpanded
 {
     margin: 0px;
@@ -321,6 +338,15 @@ img.right
 .leftSidebarCollapse
 {
     display:none;
+}
+
+.leftSidebarES
+{
+    width: 75px;
+    padding: 0px 0px 0px 0px;
+    margin: 00px 0px 0px 0px;
+    display:inline-block;
+    vertical-align:top;
 }
 
 .leftSidebar
@@ -1168,16 +1194,6 @@ table tr td input
     text-align:left;
     font-size: 9px;
     font-weight: bold;
-}
-
-
-.leftSidebarES
-{
-    top:100px;
-    width: 85px;
-    padding: 0px 0px 0px 0px;
-    margin: 00px 0px 0px 0px;
-    float: left;
 }
 
 .menuHeader

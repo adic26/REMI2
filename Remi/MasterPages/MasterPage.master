@@ -18,6 +18,8 @@
         TargetControlID="pnlLeftNavContent" ExpandedSize="185" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
         CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal" BehaviorId="collapsibleBehavior"></asp:CollapsiblePanelExtender>
     <script language="javascript" type="text/javascript">
+        document.getElementById('<%=pnlHead.ClientID%>').style.visibility = 'hidden';
+
         function pageLoad(sender, args) {
             $find("collapsibleBehavior").add_expandComplete(expandHandler);
             $find("collapsibleBehavior").add_collapseComplete(collapseHandler);
@@ -47,7 +49,7 @@
                 <asp:LinkButton runat="server" ID="lnkLogout" Visible="true">(Logout)</asp:LinkButton>
             </span>
         </asp:Panel>
-        <asp:Panel runat="server" ID="pnlHead" style="visibility: hidden;" CssClass="menuHeader">
+        <asp:Panel runat="server" ID="pnlHead" CssClass="menuHeader">
             <asp:Menu runat="server" ID="menuHeader" Orientation="Horizontal" RenderingMode="List" CssClass="" StaticEnableDefaultPopOutImage="false" DynamicEnableDefaultPopOutImage="false">
                 <LevelMenuItemStyles>
                     <asp:MenuItemStyle CssClass="menuItemLevel1" />

@@ -14,16 +14,19 @@ Partial Class MasterPages_MasterPage
     Protected Sub page_prerender() Handles Me.PreRender
         If (Not Page.IsPostBack) Then
             Dim s As String = HttpContext.Current.Request.FilePath.ToLower
-
             hlUser.Text = UserManager.GetCurrentUser.UserName
 
             If (s.ToLower.Contains("es/default.aspx") Or s.ToLower.Contains("badgeaccess/default.aspx")) Then
-                imgUserName.Visible = Not s.ToLower.Contains("badgeaccess/default.aspx")
+                imgUserName.Visible = False
                 hlUser.Visible = False
                 lnkLogout.Visible = False
 
                 If (s.ToLower.Contains("es/default.aspx")) Then
+                    pnlHead.Enabled = False
                     pnlLeftNav.CssClass = "leftSidebarES"
+                    pnlContent.CssClass = "contentExpandedES"
+                    pnlExpColLefNav.Visible = False
+                    pnlLeftNavContent.Width = 75
                 End If
 
                 menuHeader.Enabled = False
