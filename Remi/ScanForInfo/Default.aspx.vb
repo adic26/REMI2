@@ -168,16 +168,19 @@ Partial Class ScanForInfo_Default
                     Dim bcol As New BatchCollection
                     bcol.Add(b)
 
-                    lblResult.Text = RelabManager.GetOverAllPassFail(b.ID).Tables(2).Rows(0)(0).ToString()
+                    If (b.Status = BatchStatus.Complete) Then
+                        lblResult.Visible = True
+                        lblResult.Text = RelabManager.GetOverAllPassFail(b.ID).Tables(2).Rows(0)(0).ToString()
 
-                    Select Case lblResult.Text.ToLower
-                        Case "pass"
-                            lblResult.CssClass = "ESPass"
-                        Case "fail"
-                            lblResult.CssClass = "ESFail"
-                        Case "no result"
-                            lblResult.CssClass = "ESNoResult"
-                    End Select
+                        Select Case lblResult.Text.ToLower
+                            Case "pass"
+                                lblResult.CssClass = "ESPass"
+                            Case "fail"
+                                lblResult.CssClass = "ESFail"
+                            Case "no result"
+                                lblResult.CssClass = "ESNoResult"
+                        End Select
+                    End If
 
                     rptBatchComments.DataSource = b.Comments
                     rptBatchComments.DataBind()
@@ -196,7 +199,7 @@ Partial Class ScanForInfo_Default
                         lblOrientation.Text = String.Empty
                     End If
 
-                    Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
+                    Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
                                       Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                       Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
 
@@ -271,7 +274,7 @@ Partial Class ScanForInfo_Default
                     Dim es As New ExceptionSearch()
                     es.QRANumber = b.QRANumber
                     es.IncludeBatches = 1
-                    gvwTestExceptions.DataSource = Remi.Dal.TestExceptionDB.ExceptionSearch(es)
+                    gvwTestExceptions.DataSource = REMI.Dal.TestExceptionDB.ExceptionSearch(es)
                     gvwTestExceptions.DataBind()
 
                     'sets the accordion open pane

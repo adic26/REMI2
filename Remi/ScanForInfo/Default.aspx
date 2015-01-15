@@ -162,7 +162,7 @@
                 onblur="if (this.value == '') { this.className = 'ScanDeviceTextEntryHint'; this.value = 'Enter Request Number...'; }"></asp:TextBox><asp:Button
                     ID="btnSubmit" runat="server" CssClass="ScanDeviceButton" Text="Submit" />
 
-            &nbsp&nbsp;<asp:Label runat="server" ID="lblResult"></asp:Label>
+            &nbsp&nbsp;<asp:Label runat="server" ID="lblResult" Visible="false"></asp:Label>
         </asp:Panel>
         <uc3:BatchSelectControl ID="bscMain" runat="server" DisplayMode="BatchInfoDisplay" />
         <asp:Accordion ID="accMain" runat="server" CssClass="Accordion" HeaderCssClass="AccordionHeader"
