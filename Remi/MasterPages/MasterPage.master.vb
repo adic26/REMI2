@@ -23,7 +23,7 @@ Partial Class MasterPages_MasterPage
                 lnkLogout.Visible = False
 
                 If (s.ToLower.Contains("es/default.aspx")) Then
-                    leftSidebar.Attributes.Add("class", "leftSidebarES")
+                    pnlLeftNav.CssClass = "leftSidebarES"
                 End If
 
                 menuHeader.Enabled = False
