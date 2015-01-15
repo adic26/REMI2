@@ -183,6 +183,7 @@ img.right
     float: right;
     margin: 0px 0px 5px 12px;
 }
+
 #siteContainer
 {
     width: 1500px;
@@ -191,12 +192,6 @@ img.right
     line-height: 1.6em;
     background-color: #FFFFFF;
     float:left;
-}
-
-.pageContainer
-{
-    padding-bottom: 3px; /*border-bottom: 2px solid #362d2d;*/
-    margin-bottom: 2px;
 }
 
 #pageTitle
@@ -209,26 +204,27 @@ img.right
     font-family: "Trebuchet MS" ,Verdana, Arial, Helvetica, sans-serif;
 }
 
-/* HEADER */
-.header
+.TopHeader
 {
-    float: left;
-    width: 1000px;
+    width:1500px;
+}
+
+.headerImg
+{
+    font-size: 16px;
+    width:1300px;
     border: 0px;
     padding-bottom: 10px;
     padding-top: 5px;
-    clear: both; /* ensures no elements can float next to the header title*/
-}
-.header h1
-{
+    clear: both;
     margin: 0px 0px 5px 0px;
-    padding: 0;
-    font-size: 16px;
 }
 
 .headerLogout
 {
-    float: right;
+    vertical-align:top;
+    width: 200px;
+    float:right;
 }
 
 /* FOOTER */
@@ -236,7 +232,7 @@ img.right
 {
     padding: 0px 2px 0px 2px;
     clear: both;
-    width: 1496px;
+    width: 1500px;
     background-color: #362d2d;
 }
 
@@ -293,11 +289,12 @@ img.right
 {
     margin: 0px;
     padding: 0px 10px 0px 10px;
-    float: left;
-    width: 1295px;
+    width: 1250px;
     height: 750px;
     overflow-y : scroll;
     overflow-x:auto;
+    display:inline-block;
+    vertical-align:top;
 }
 
 .contentExpanded p
@@ -309,11 +306,11 @@ img.right
 {
     margin: 0px;
     padding: 0px 10px 0px 10px;
-    float: left;
-    width: 1447px;
+    width: 1450px;
     height: 750px;
     overflow-y : scroll;
     overflow-x:auto;
+    display:inline-block;
 }
 
 .contentCollapse p
@@ -321,15 +318,23 @@ img.right
     padding-bottom: 10px;
 }
 
-.leftSidebarExpanded
+.leftSidebarCollapse
+{
+    display:none;
+}
+
+.leftSidebar
 {
     padding: 0px 0px 0px 0px;
     margin: 00px 0px 0px 0px;
-    float: left;
     border: 10px;
+    width: 195px;
+    height: 750px;
+    display:inline-block;
+    vertical-align:top;
 }
 
-.leftSidebarExpanded h3
+.leftSidebar h3
 {
     margin: 0px 0px 0px 5px;
     padding: 2px 0px 2px 5px;
@@ -342,14 +347,14 @@ img.right
     text-align: left;
     width: 163px;
 }
-.leftSidebarExpanded ul
+.leftSidebar ul
 {
     padding: 0px 0px 0px 0px;
     margin: 0px 10px 10px 5px;
     border-bottom: 1px solid #362d2d;
     list-style: none;
 }
-.leftSidebarExpanded li
+.leftSidebar li
 {
     margin: 0px;
     padding: 0px 0px 5px 0px;
@@ -361,7 +366,7 @@ img.right
     font-weight: bold;
     text-decoration: none;
 }
-.leftSidebarExpanded li a
+.leftSidebar li a
 {
     padding: 5px 0px 5px 5px;
     color: #362d2d;
@@ -369,14 +374,14 @@ img.right
     text-decoration: none;
     width: 165px;
 }
-.leftSidebarExpanded ul li img
+.leftSidebar ul li img
 {
     margin-bottom: -4px;
     padding-left: 2px;
     padding-top: 2px;
 }
 
-.leftSidebarExpanded li a:hover
+.leftSidebar li a:hover
 {
     text-decoration: underline;
 }
@@ -1182,6 +1187,7 @@ table tr td input
     padding-bottom: 1px;
     margin-bottom: 15px;
     border-bottom: 3px solid #362d2d;
+    height: 30px;
 }
 
 .menuItemLevel1

@@ -41,6 +41,15 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
+    '''cpeln control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeln As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
     '''AjaxScriptManager1 control.
     '''</summary>
     '''<remarks>
@@ -48,6 +57,15 @@ Partial Public Class MasterPages_MasterPage
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
+
+    '''<summary>
+    '''pnlHeader control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlHeader As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
     '''imgUserName control.
@@ -95,31 +113,13 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents menuHeader As Global.System.Web.UI.WebControls.Menu
 
     '''<summary>
-    '''pnlPageContainer control.
+    '''pnlBody control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlPageContainer As Global.System.Web.UI.WebControls.Panel
-
-    '''<summary>
-    '''cpeln control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cpeln As Global.AjaxControlToolkit.CollapsiblePanelExtender
-
-    '''<summary>
-    '''leftSidebar control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents leftSidebar As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    Protected WithEvents pnlBody As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
     '''pnlExpColLefNav control.
@@ -149,6 +149,15 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents pnlLeftNav As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
+    '''pnlLeftNavContent control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlLeftNavContent As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
     '''leftSidebarContent control.
     '''</summary>
     '''<remarks>
@@ -156,6 +165,15 @@ Partial Public Class MasterPages_MasterPage
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents leftSidebarContent As Global.System.Web.UI.WebControls.ContentPlaceHolder
+
+    '''<summary>
+    '''pnlContent control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlContent As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
     '''pageTitleContent control.
