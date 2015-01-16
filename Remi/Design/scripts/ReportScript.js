@@ -17,6 +17,7 @@
     var rtID = $("[id$='ddlRequestType']");
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
+    var additional = $('#bs_Additional');
     var tests = $('#bs_TestField');
     var stages = $('#bs_RealStages');
 
@@ -37,9 +38,13 @@
                 currentJob = stages.children()[OptGroup - 1].getAttribute("label");
                 currentStages = element.text;
                 summary[summary.length] = currentJob + " : " + currentStages;
-            });
-            
+            });   
         }
+
+        if (additional.val() != null) {
+            fullList = $.merge(fullList, additional.val());
+        }
+
         if (req.val()!= null) {
             fullList = $.merge(fullList, req.val());
         }
@@ -48,15 +53,22 @@
         //}
         
         $.each(fullList, function (index, element) {
-            $('.list-group').append($('<li class="list-group-item">' +
-                element +
-                '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
+            if (element == "Param") {
+                $('.list-group').append($('<li class="list-group-item">' +
+                    element +
+                    '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria Name"><input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
+            }
+            else {
+                $('.list-group').append($('<li class="list-group-item">' +
+                    element +
+                    '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
+            }
         });
 
         myList.show();
-        $('#bs_searchButton').show();
-        
+        $('#bs_searchButton').show(); 
     });
+
     $('#bs_searchButton').on('click', function () {
         document.getElementById('LoadingGif').style.display = "block";
         document.getElementById('LoadingModal').style.display = "block";
@@ -66,6 +78,7 @@
         var searchTermRequests = $('#FinalItemsList li');
         var selectedTests = tests.next().find('li.selected').find('a.opt ');
         var selectedStages = stages.next().find('li.selected').find('a.opt ');
+        var selectedAdditional = additional.next().find('li.selected');
         var myTable = $('#searchResults');
 
         $.each(selectedRequests, function (index, element) {
@@ -79,6 +92,24 @@
                     var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
                     //console.log(request);
                     fullList.push(request);
+                }
+            });
+        });
+
+        $.each(selectedAdditional, function (index, element) {
+            $.each(searchTermRequests, function (s_index, s_element) {
+                //console.log($(this).text());
+                
+                
+                if (s_element.innerText == "Param") {
+                    var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
+                    //console.log(additionalVals);
+                    fullList.push(additionalVals);
+                }
+                else {
+                    var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+                    //console.log(additionalVals);
+                    fullList.push(additionalVals);
                 }
             });
         });
