@@ -167,15 +167,6 @@ Partial Public Class ManageProducts_EditProductSettings
     Protected WithEvents notMain As Global.Remi.Controls_Notifications
 
     '''<summary>
-    '''ScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''txtQAPLocation control.
     '''</summary>
     '''<remarks>

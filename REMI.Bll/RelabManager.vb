@@ -77,6 +77,17 @@ Namespace REMI.Bll
             Return New DataTable("ResultsSummaryExport")
         End Function
 
+        Public Shared Function MeasurementFiles(ByVal MeasurementID As Int32) As DataTable
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+
+                Return BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultMeasurementID = MeasurementID Select mf).ToList(), "MeasurementFiles")
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("MeasurementFiles")
+        End Function
+
         Public Shared Function ResultMeasurements(ByVal resultID As Integer, ByVal onlyFails As Boolean, ByVal includeArchived As Boolean) As DataTable
             Try
                 Return RelabDB.ResultMeasurements(resultID, onlyFails, includeArchived)
@@ -243,6 +254,40 @@ Namespace REMI.Bll
             Return New DataTable("ResultParamas")
         End Function
 
+        Public Shared Function SaveOverAllResult(ByVal batchID As Int32, ByVal PassFailID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim rs As New Entities.ResultsStatu
+
+                If (PassFailID > 0) Then
+                    rs.PassFail = PassFailID
+                End If
+
+                rs.BatchID = batchID
+                rs.ApprovedBy = UserManager.GetCurrentUser.UserName
+                rs.ApprovedDate = DateTime.Now
+
+                instance.AddToResultsStatus(rs)
+                instance.SaveChanges()
+
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        Public Shared Function GetOverAllPassFail(ByVal BatchID As Int32) As DataSet
+            Try
+                Return RelabDB.GetOverAllPassFail(BatchID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataSet("PassFail")
+        End Function
+
         Public Shared Function ReassignTestStage(ByVal batchID As Int32, ByVal testID As Int32, ByVal testStageID As Int32, ByVal unitID As Int32, ByVal newTestStageID As Int32) As Boolean
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
@@ -260,6 +305,7 @@ Namespace REMI.Bll
 
                     instance.SaveChanges()
                 End If
+
                 Return True
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("batchID: {0} testID: {1} testStageID: {2} newTestStageID: {3}", batchID, testID, testStageID, newTestStageID))

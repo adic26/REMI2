@@ -3,7 +3,7 @@
 <%@ Register Src="../Controls/Notifications.ascx" TagName="Notifications" TagPrefix="uc1" %>
 <%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     <script type="text/javascript">        
         function ClearTextBoxes() {
@@ -33,15 +33,12 @@
     </ul>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
-
     <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="3" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
         <asp:ListItem Text="Batchs" Selected="True" Value="1"></asp:ListItem>
         <asp:ListItem Text="Units" Value="6"></asp:ListItem>
         <asp:ListItem Text="Exceptions" Value="2" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="3" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Results" Value="4" Enabled="false"></asp:ListItem>
-        <%--<asp:ListItem Text="Environment Report" Value="5" Enabled="false"></asp:ListItem>--%>
         <asp:ListItem Value="7" Enabled="false">KPI <img src="../Design/beta.jpg" /></asp:ListItem>
         <asp:ListItem Text="Training" Value="8"></asp:ListItem>
     </asp:RadioButtonList><br />
@@ -175,24 +172,6 @@
 
         <br /><br />
     </asp:Panel>
-
-    <%--<asp:Panel Visible="false" runat="server" ID="pnlEnvReport">
-        Start: <asp:TextBox ID="txtStartENV" runat="server" DefaultValue="12am"></asp:TextBox>
-        <asp:CalendarExtender ID="CalendarExtender1" runat="server" Enabled="True" TargetControlID="txtStartENV"></asp:CalendarExtender>
-        <br />
-        End:
-        <asp:TextBox ID="txtEndENV" runat="server" DefaultValue="12pm"></asp:TextBox>
-        <asp:CalendarExtender ID="CalendarExtender2" runat="server" Enabled="True" TargetControlID="txtEndENV"></asp:CalendarExtender>
-        <br />
-        Report Based On #: <asp:DropDownList ID="ddlReportBasedOn" runat="server">
-            <asp:ListItem Value="1" Text="Batches" Selected="True"/>
-            <asp:ListItem Value="2" Text="Units" Selected="False"/>
-        </asp:DropDownList>
-        <br />
-        Test Centers: <asp:DropDownList ID="ddlTestCentersENV" runat="server" AppendDataBoundItems="True" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
-        <br /><br />
-        <h4>If you cannot see the paperclip or the counts don't match it is because the units that were done at that item were not scanned in using automation. Test Records were manually done.</h4>
-    </asp:Panel>--%>
 
     <asp:Panel Visible="false" runat="server" ID="pnlSearchResults">
         <asp:UpdatePanel ID="updResults" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">

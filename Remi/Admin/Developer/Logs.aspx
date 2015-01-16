@@ -19,9 +19,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     Start:
-    <asp:TextBox ID="txtStart" runat="server" DefaultValue="12am"></asp:TextBox><asp:ToolkitScriptManager
-        ID="ToolkitScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
+    <asp:TextBox ID="txtStart" runat="server" DefaultValue="12am"></asp:TextBox>
     <asp:CalendarExtender ID="txtStart_CalendarExtender" runat="server" Enabled="True" TargetControlID="txtStart" >
     </asp:CalendarExtender>
     <br />

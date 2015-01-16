@@ -10,7 +10,7 @@
     </h1>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="leftSidebarContent" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js"></script>
     <script type="text/javascript">
     $(document).ready(function () {
@@ -55,8 +55,6 @@
                 ID="btnSubmit" runat="server" CssClass="ScanDeviceButton" Text="Submit" />
         <br />
         <asp:HiddenField ID="hdnQRANumber" runat="server" Value="0" />
-        <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-        </asp:ToolkitScriptManager>
         <asp:GridView ID="grdDetail" runat="server" AutoGenerateColumns="False" DataKeyNames="ID"
             Width="866px"  EmptyDataText="No Unit Information Available." EnableViewState="false" >
             <RowStyle CssClass="evenrow" />

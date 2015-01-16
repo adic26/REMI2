@@ -9,10 +9,7 @@
     <br />
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
-
-    <asp:Panel ID="pnlLeftMenuActions" runat="server">
-    </asp:Panel>
+    <asp:Panel ID="pnlLeftMenuActions" runat="server"></asp:Panel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <asp:HiddenField runat="server" ID="hdnRequestType" />

@@ -214,11 +214,10 @@ Partial Class ScanForInfo_ProductGroup
                 Me.hdnProductID.Value = id
             End If
 
-            hypExceptions.NavigateUrl = REMIWebLinks.GetSetProductExceptionsLink(id)
             hypEditSettings.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(id)
             HypEditTestConfiguration.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
 
-            SetupMenuItems(ddlProductGroup.Items.FindByValue(id.ToString()).Text)
+            SetupMenuItems(ddlProductGroup.Items.FindByValue(id.ToString()).Text, id)
             accMain.SelectedIndex = 1
             BindTargetData()
 
@@ -237,6 +236,28 @@ Partial Class ScanForInfo_ProductGroup
         Catch ex As Exception
             notMain.Notifications = Helpers.GetExceptionMessages(ex)
         End Try
+    End Sub
+
+    Protected Sub SetupMenuItems(ByVal productGroup As String, ByVal id As Int32)
+        Dim myMenu As WebControls.Menu
+        Dim mi As New MenuItem
+        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+            liEditSettings.Visible = True
+
+            mi.Text = "Edit Product"
+            mi.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(id)
+            myMenu.Items(0).ChildItems.Add(mi)
+        End If
+
+        If (UserManager.GetCurrentUser.HasUploadConfigXML() Or UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0)) Then
+            liEditConfigSettings.Visible = True
+            mi = New MenuItem
+            mi.Text = "Edit Config"
+            mi.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
+            myMenu.Items(0).ChildItems.Add(mi)
+        End If
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -258,16 +279,6 @@ Partial Class ScanForInfo_ProductGroup
                 ddlProductGroup.SelectedValue = id
                 btnSubmit_Click(sender, e)
             End If
-        End If
-    End Sub
-
-    Protected Sub SetupMenuItems(ByVal productGroup As String)
-        If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-            liEditSettings.Visible = True
-        End If
-
-        If (UserManager.GetCurrentUser.HasUploadConfigXML() Or UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0)) Then
-            liEditConfigSettings.Visible = True
         End If
     End Sub
 

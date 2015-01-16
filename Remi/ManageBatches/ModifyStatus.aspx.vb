@@ -33,6 +33,29 @@ Partial Class ManageBatches_ModifyStatus
             hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
             hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
 
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+            mi.Text = "Batch Info"
+            mi.NavigateUrl = b.BatchInfoLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Duration"
+            mi.NavigateUrl = b.SetTestDurationsManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Stage"
+            mi.NavigateUrl = b.SetTestStageManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Modify Priority"
+            mi.NavigateUrl = b.SetPriorityManagerLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
             If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
                 liModifyPriority.Visible = True
                 liModifyStage.Visible = True

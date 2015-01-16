@@ -1,5 +1,6 @@
-﻿
-Imports REMI.Validation
+﻿Imports REMI.Validation
+Imports System.Xml.Serialization
+
 Namespace REMI.BusinessEntities
     ''' <summary>
     ''' This class represents a tracking location type. 
@@ -17,13 +18,14 @@ Namespace REMI.BusinessEntities
         Private _unitCapacity As Integer
         Private _canDelete As Int32
 #End Region
+
 #Region "constructor"
         Public Sub New()
             _TrackingLocationFunction = TrackingLocationFunction.NotSet
         End Sub
 #End Region
-#Region "Public Properties"
 
+#Region "Public Properties"
         ''' <summary>
         ''' Gets or sets the name of the test station type.
         ''' </summary>
@@ -40,6 +42,8 @@ Namespace REMI.BusinessEntities
                 _name = value
             End Set
         End Property
+
+        <XmlIgnore()> _
         Public Property Comment() As String
             Get
                 Return _comment
@@ -48,6 +52,8 @@ Namespace REMI.BusinessEntities
                 _comment = value
             End Set
         End Property
+
+        <XmlIgnore()> _
         Public Property WILocation() As String
             Get
                 Return _WILocation
@@ -56,6 +62,7 @@ Namespace REMI.BusinessEntities
                 _WILocation = value
             End Set
         End Property
+
         <ValidRange(Key:="w3", Max:=99999, Min:=0)> _
         Public Property UnitCapacity() As Integer
             Get
@@ -66,6 +73,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <XmlIgnore()> _
         Public Property CanDelete() As Int32
             Get
                 Return _canDelete

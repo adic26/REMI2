@@ -13,17 +13,6 @@ Option Explicit On
 
 Partial Public Class Security
 
-    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
-    Protected WithEvents notMain As Global.REMI.Controls_Notifications
-    '''<summary>
-    '''AjaxScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
     '''<summary>
     '''pnlLeftMenuviews control.
     '''</summary>
@@ -196,6 +185,15 @@ Partial Public Class Security
     Protected WithEvents HyperLink9 As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''notMain control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents notMain As Global.Remi.Controls_Notifications
+
+    '''<summary>
     '''gvwSecurity control.
     '''</summary>
     '''<remarks>
@@ -205,24 +203,6 @@ Partial Public Class Security
     Protected WithEvents gvwSecurity As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''txtNewRole control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtNewRole As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''btnAddRole control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnAddRole As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
     '''grdServices control.
     '''</summary>
     '''<remarks>
@@ -230,5 +210,31 @@ Partial Public Class Security
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents grdServices As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''ddlDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlDepartments As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''grdServiceAccess control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
     Protected WithEvents grdServiceAccess As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''odsServiceAccess control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsServiceAccess As Global.System.Web.UI.WebControls.ObjectDataSource
 End Class

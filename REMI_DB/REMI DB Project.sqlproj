@@ -217,6 +217,27 @@
     <Folder Include="Scripts\November262014" />
     <Folder Include="Scripts\December022014" />
     <Folder Include="Scripts\December152014" />
+    <Folder Include="Schema Objects\Schemas\Req" />
+    <Folder Include="Schema Objects\Schemas\Relab" />
+    <Folder Include="Schema Objects\Schemas\Relab\Tables" />
+    <Folder Include="Schema Objects\Schemas\Req\Tables" />
+    <Folder Include="Schema Objects\Schemas\Relab\Programmability" />
+    <Folder Include="Schema Objects\Schemas\Req\Programmability" />
+    <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures" />
+    <Folder Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures" />
+    <Folder Include="Schema Objects\Schemas\Relab\Programmability\Functions" />
+    <Folder Include="Schema Objects\Schemas\Req\Programmability\Functions" />
+    <Folder Include="Schema Objects\Schemas\Relab\Tables\Triggers" />
+    <Folder Include="Schema Objects\Schemas\Req\Tables\Triggers" />
+    <Folder Include="Schema Objects\Schemas\Req\Tables\Indexes" />
+    <Folder Include="Schema Objects\Schemas\Relab\Tables\Indexes" />
+    <Folder Include="Schema Objects\Schemas\Relab\Tables\Constraints" />
+    <Folder Include="Schema Objects\Schemas\Req\Tables\Constraints" />
+    <Folder Include="Schema Objects\Schemas\Req\Tables\Keys" />
+    <Folder Include="Schema Objects\Schemas\Relab\Tables\Keys" />
+    <Folder Include="Schema Objects\Schemas\Req\Programmability\Types" />
+    <Folder Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types" />
+    <Folder Include="Scripts\January162015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -1778,21 +1799,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchDNPParametric.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsFileUpload.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsFileProcessing.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsSummary.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Functions\Relab.ResultsParametersComma.function.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsSummaryExport.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\UsersProducts.table.sql">
       <SubType>Code</SubType>
     </None>
@@ -1814,9 +1820,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispYourBatchesGetActiveBatches.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultMeasurements.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\aspnet_Permissions.table.sql">
       <SubType>Code</SubType>
     </None>
@@ -1835,9 +1838,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetPermissionsByRole.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispOverallResultsSummary.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSearch.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -1848,18 +1848,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispRolePermissions.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.ResultsParameters.IX_ParameterNameVal.index.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetUnitsByTestMeasurementParameters.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetMeasurementsByTest.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsGraph.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsAvailable.proc.sql">
@@ -1901,24 +1889,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeleteStationConfiguration.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Functions\Relab.ResultsXMLParametersComma.function.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultVersions.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetTestsByBatches.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetParametersByMeasurementTest.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Functions\Relab.ResultsParametersNameComma.function.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetMeasurementParameterCommaSeparated.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Functions\remifnTestStageCanDelete.function.sql">
       <SubType>Code</SubType>
     </None>
@@ -1940,76 +1910,10 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\TestRecords..IX_TestRecords_TestID.index.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsMeasurementFileUpload.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Functions\Split.function.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispGetAllResultsByQRAStage.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.FunctionalMatrixByTestRecord.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsXML.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Relab.Results.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsMeasurements.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsMeasurementsFiles.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsParameters.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsParameters.FK_ResultsParameters_ResultsMeasurements.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurementsFiles.FK_ResultsMeasurementsFiles_ResultsMeasurements.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_ResultsXML_XMLID.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\Relab.ResultsMeasurements.DF__ResultsMe__Archi__7F8BD5E2.defconst.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Results.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Lookups_UnitType.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Lookups_MeasurementType.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.Results.FK_Results_TestUnits.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.Results.FK_Results_TestStages.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.Results.FK_Results_Tests.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Relab.ResultsXML.FK_ResultXML_Results.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\Relab.ResultsXML.DF__ResultsXM__isPro__7DA38D70.defconst.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\TestStages.DF_TestStages_IsArchived.defconst.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsSearch.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsFailureAnalysis.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesByProductView.proc.sql">
@@ -2129,22 +2033,10 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductTestReady.pkey.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.DBA_ResultsMeasurements_ResultID.index.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.DBA_ResultsMeasurements_ResultID_PassFail_Archived.index.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Relab.DBA_ResultsMeasurements_Archived.index.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\DBA_TestRecordsAudit_TestRecordId.index.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\DBA_TestStages_TestID.index.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.GetRequestSetupInfo.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetContacts.proc.sql">
@@ -2169,24 +2061,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestExceptionsInsertProductGroupException.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.RequestSetup.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_TestStages.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Tests.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Products.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Jobs.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Req.FK_RequestSetup_Batches.fkey.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectDailyList.proc.sql">
@@ -2255,15 +2129,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\ProductConfigurationVersion.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Relab.ResultsMeasurementsAudit.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.RequestType.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldMapping.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispJobOrientationSave.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -2293,9 +2158,6 @@
     <None Include="Scripts\September222014\3.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispMeasurementsByReq_Test.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Scripts\September302014\1.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -2321,9 +2183,6 @@
     <None Include="Scripts\October202014\1.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Relab.remispResultsInformation.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Scripts\October282014\1.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -2335,21 +2194,6 @@
   <ItemGroup>
     <None Include="Scripts\November032014\1.sql" />
     <None Include="Scripts\November032014\2.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldSetup.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldSetupRole.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestFieldSetup.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldData.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.Request.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMenuAccessByDepartment.sql" />
@@ -2385,9 +2229,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\UserDetails.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestGet.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Scripts\November172014\2_RequestQRASetup.sql" />
     <None Include="Scripts\November172014\3_DataMigration.sql" />
   </ItemGroup>
@@ -2395,16 +2236,7 @@
     <None Include="Scripts\November172014\4.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Req.ReqFieldDataAudit.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Req.ReqFieldDataAuditInsertUpdate.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTests.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.remispGetRequestTypes.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\November182014\RFCRequestSetup.sql" />
@@ -2432,9 +2264,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetPermissions.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestForDashboard.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\December022014\1.sql" />
@@ -2470,15 +2299,317 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetLookupTypes.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Req.RequestSearch.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Table Types\SearchFields.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\UserSearchFilter.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\December152014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldDataAudit.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldMapping.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldSetupRole.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.Request.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.RequestSetup.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.RequestType.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.Results.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsMeasurements.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsMeasurementsAudit.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsMeasurementsFiles.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsParameters.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsXML.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Functions\Relab.ResultsParametersComma.function.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Functions\Relab.ResultsParametersNameComma.function.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Functions\Relab.ResultsXMLParametersComma.function.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.remispGetRequestTypes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.RequestFieldSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.RequestForDashboard.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.RequestGet.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.RequestSearch.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.GetRequestSetupInfo.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.FunctionalMatrixByTestRecord.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetAllResultsByQRAStage.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetMeasurementParameterCommaSeparated.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetMeasurementsByTest.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetParametersByMeasurementTest.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetTestsByBatches.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetUnitsByTestMeasurementParameters.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispMeasurementsByReq_Test.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispOverallResultsSummary.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultMeasurements.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsFailureAnalysis.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsFileProcessing.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsFileUpload.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsGraph.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsMeasurementFileUpload.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsSearch.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsSummary.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsSummaryExport.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultVersions.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Triggers\Req.ReqFieldDataAuditInsertUpdate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Indexes\Relab.DBA_ResultsMeasurements_Archived.index.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Indexes\Relab.DBA_ResultsMeasurements_ResultID.index.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Indexes\Relab.DBA_ResultsMeasurements_ResultID_PassFail_Archived.index.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Indexes\Relab.ResultsParameters.IX_ParameterNameVal.index.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Constraints\Relab.ResultsMeasurements.DF__ResultsMe__Archi__7F8BD5E2.defconst.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Constraints\Relab.ResultsXML.DF__ResultsXM__isPro__7DA38D70.defconst.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.Results.FK_Results_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.Results.FK_Results_TestStages.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.Results.FK_Results_TestUnits.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Lookups_MeasurementType.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Lookups_UnitType.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_Results.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.ResultsMeasurements.FK_ResultsMeasurements_ResultsXML_XMLID.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.ResultsMeasurementsFiles.FK_ResultsMeasurementsFiles_ResultsMeasurements.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.ResultsParameters.FK_ResultsParameters_ResultsMeasurements.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.ResultsXML.FK_ResultXML_Results.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Keys\Req.FK_RequestSetup_Batches.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Keys\Req.FK_RequestSetup_Jobs.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Keys\Req.FK_RequestSetup_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Keys\Req.FK_RequestSetup_Tests.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Keys\Req.FK_RequestSetup_TestStages.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsStatus.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Keys\Relab.FK_ResultsStatus_Batches.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsStatus.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types\SearchFields.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\January162015\1.sql" />
   </ItemGroup>
 </Project>

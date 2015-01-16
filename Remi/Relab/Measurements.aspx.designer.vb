@@ -14,15 +14,6 @@ Option Explicit On
 Partial Public Class Measurements
 
     '''<summary>
-    '''AjaxScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''lblHeader control.
     '''</summary>
     '''<remarks>
@@ -147,6 +138,114 @@ Partial Public Class Measurements
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnUnit As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''btnShowPopup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnShowPopup As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''ModalPopupExtender1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ModalPopupExtender1 As Global.AjaxControlToolkit.ModalPopupExtender
+
+    '''<summary>
+    '''pnlpopup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlpopup As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''hdnMeasurementID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnMeasurementID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''lblTitle control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblTitle As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgslides control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgslides As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''btnPrevious control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnPrevious As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnPlay control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnPlay As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnNext control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnNext As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnCancel control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnCancel As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''lblDesc control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblDesc As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''sseImages control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents sseImages As Global.AjaxControlToolkit.SlideShowExtender
 
     '''<summary>
     '''chkOnlyFails control.

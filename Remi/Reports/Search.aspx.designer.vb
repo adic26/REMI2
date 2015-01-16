@@ -50,15 +50,6 @@ Partial Public Class Search
     Protected WithEvents btnIncoming As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''ToolkitScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ToolkitScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''rblSearchBy control.
     '''</summary>
     '''<remarks>

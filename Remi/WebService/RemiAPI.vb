@@ -12,6 +12,7 @@ Imports System.Web.Script.Services
 <System.Web.Services.WebService(Name:="RemiAPI", Namespace:="http://go/remi/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
 <ToolboxItem(False)> _
+<ScriptService()> _
 Public Class RemiAPI
     Inherits System.Web.Services.WebService
 
@@ -271,6 +272,20 @@ Public Class RemiAPI
         Return New List(Of String)
     End Function
 
+    <WebMethod(Description:="Get IMEI for unit.")> _
+    Public Function GetUnitIMEI(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As Int32
+        Try
+            Dim unit As Remi.Entities.TestUnit = TestUnitManager.GetRAWUnitInformation(requestNumber, batchUnitNumber)
+
+            If unit IsNot Nothing And unit.IMEI IsNot Nothing Then
+                Return unit.IMEI
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetUnitIMEI", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
+        End Try
+        Return String.Empty
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Gets Unit BSN.")> _
     Public Function GetUnitBSN(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As Int32
         Try
@@ -393,6 +408,16 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(Description:="Returns All tracking Locations Types By Function.")> _
+    Public Function GetTrackingLocationTypesByFunction(ByVal tlf As TrackingLocationFunction) As TrackingLocationTypeCollection
+        Try
+            Return TrackingLocationManager.GetTrackingLocationTypesByFunction(tlf)
+        Catch ex As Exception
+            TrackingLocationManager.LogIssue("REMI API GetTrackingLocationTypesByFunction", "e3", NotificationType.Errors, ex, String.Format("tlf: {0", tlf))
+        End Try
+        Return Nothing
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge & Lab - Bochum. If you want a specific location id for a given user use ""Lab"" and their username with this method.")> _
     Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String, ByVal userIdentification As String) As Integer
         Try
@@ -403,6 +428,31 @@ Public Class RemiAPI
             TrackingLocationManager.LogIssue("Could not location specific location for the given details.", "e3", NotificationType.Errors, ex, String.Format("User: {0} StationName: {1}", userIdentification, stationName))
         End Try
         Return 0
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Adds A New Trackign Location.")> _
+    Public Function SaveTrackingLocation(ByVal hostName As String, ByVal tlt As TrackingLocationType, ByVal name As String, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Dim tl As New TrackingLocation()
+                tl.Name = name
+                tl.HostName = hostName
+                tl.TrackingLocationType = tlt
+                tl.Status = TrackingLocationStatus.Available
+                tl.Decommissioned = False
+                tl.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
+                tl.GeoLocationName = UserManager.GetCurrentUser.TestCentre
+
+                Dim tlc As New TrackingLocationCollection()
+                tlc.Add(tl)
+
+                Return TrackingLocationManager.SaveTrackingLocation(tlc)
+            End If
+        Catch ex As Exception
+            TrackingLocationManager.LogIssue("REMI API GetTrackingLocationTypesByFunction", "e3", NotificationType.Errors, ex, String.Format("tlt: {0", tlt))
+        End Try
+
+        Return False
     End Function
 #End Region
 
@@ -668,13 +718,13 @@ Public Class RemiAPI
 
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                UserDetails.UserName = UserManager.GetCurrentValidUserLDAPName()
+                userDetails.UserName = UserManager.GetCurrentValidUserLDAPName()
                 userDetails.user = UserManager.GetUser(userIdentification, 0)
 
-                Dim userPermissions As Integer = TrackingLocationManager.GetUserPermission(UserDetails.UserName, trackingLocationHostName, trackingLocationName)
-                UserDetails.HasBasicAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
-                UserDetails.HasCalibrationAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.CalibrationAccess) = TrackingLocationUserAccessPermission.CalibrationAccess
-                UserDetails.HasModifiedAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.ModifiedTestAccess) = TrackingLocationUserAccessPermission.ModifiedTestAccess
+                Dim userPermissions As Integer = TrackingLocationManager.GetUserPermission(userDetails.UserName, trackingLocationHostName, trackingLocationName)
+                userDetails.HasBasicAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.BasicTestAccess) = TrackingLocationUserAccessPermission.BasicTestAccess
+                userDetails.HasCalibrationAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.CalibrationAccess) = TrackingLocationUserAccessPermission.CalibrationAccess
+                userDetails.HasModifiedAccess = (userPermissions And Remi.Contracts.TrackingLocationUserAccessPermission.ModifiedTestAccess) = TrackingLocationUserAccessPermission.ModifiedTestAccess
             End If
         Catch ex As Exception
             UserManager.LogIssue("REMI API GetUserDetails2", "e3", NotificationType.Errors, ex, String.Format("User: {0} trackingLocationHostName: {1} trackingLocationName: {2}", userIdentification, trackingLocationHostName, trackingLocationName))
@@ -882,7 +932,7 @@ Public Class RemiAPI
                         Dim emails As List(Of String) = (From u In UserManager.UserSearchList(us, False, False, False, False, True, False) Where u.IsProjectManager = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
 
                         If (emails.Count > 0) Then
-                            REMI.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", qraNumber), String.Format("Please assign this batch as soon as possible in the Request <a href=""{0}"">{1}</a>", batch.RequestLink, qraNumber), True)
+                            Remi.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", qraNumber), String.Format("Please assign this batch as soon as possible in the Request <a href=""{0}"">{1}</a>", batch.RequestLink, qraNumber), True)
 
                             Return True
                         Else

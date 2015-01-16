@@ -4,12 +4,12 @@
 <%@ Register Src="/Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     <script type="text/javascript">
         var _isInitialLoad = true;
 
-        function pageLoad(sender, args) {
+        function contentPageLoad(sender, args) {
             if (_isInitialLoad) {
                 _isInitialLoad = false;
                 __doPostBack('<%= ddlDepartment.ClientID %>', '');
@@ -21,7 +21,6 @@
     <h1>Overview</h1>
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     
     <asp:UpdatePanel ID="updOverview" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
         <Triggers>

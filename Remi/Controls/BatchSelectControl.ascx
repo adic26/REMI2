@@ -55,6 +55,7 @@
                 <asp:Label EnableViewState="true" ID="lblTestStageName" runat="server" Text='<%# Eval("teststagename") %>'></asp:Label>
             </ItemTemplate>
         </asp:TemplateField>
+        <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" Visible="True" ReadOnly="true" />
         <asp:TemplateField HeaderText="CPR" SortExpression="CPRNumber">
             <ItemTemplate>
                 <asp:Label EnableViewState="true" ID="lblCPR" runat="server" Text='<%# Eval("CPRNumber") %>'></asp:Label>
@@ -80,7 +81,6 @@
             <ItemTemplate>
                 <asp:Label EnableViewState="true" ID="lblReportDate" runat="server" Text='<%# REMI.BusinessEntities.Helpers.DateTimeformat(Eval("ReportRequiredby"))%>'></asp:Label></ItemTemplate>
         </asp:TemplateField>
-        <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" Visible="True" ReadOnly="true" />
         <asp:TemplateField HeaderText="RTR">
             <ItemTemplate>              
                <asp:Label EnableViewState="true" ID="lblRTR" runat="server" Text='<%# Eval("HasUnitsRequiredToBeReturnedToRequestorString") %>'></asp:Label>

@@ -14,15 +14,6 @@ Option Explicit On
 Partial Public Class TrackingLocationTests
 
     '''<summary>
-    '''AjaxScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''pnlLeftMenuviews control.
     '''</summary>
     '''<remarks>
@@ -203,6 +194,24 @@ Partial Public Class TrackingLocationTests
     Protected WithEvents chkArchived As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
+    '''upTTT control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents upTTT As Global.System.Web.UI.UpdatePanel
+
+    '''<summary>
+    '''udpTTT control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents udpTTT As Global.System.Web.UI.UpdateProgress
+
+    '''<summary>
     '''ddlTestType control.
     '''</summary>
     '''<remarks>
@@ -228,13 +237,4 @@ Partial Public Class TrackingLocationTests
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gvwTypeTests As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''odsTests control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsTests As Global.System.Web.UI.WebControls.ObjectDataSource
 End Class

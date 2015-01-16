@@ -1,69 +1,119 @@
 ﻿<%@ Master Language="VB" AutoEventWireup="false" Inherits="Remi.MasterPages_MasterPage" Codebehind="MasterPage.master.vb" %>
+<%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>
-        <asp:Literal ID="litPageTitle" runat="server" Text="REMI"></asp:Literal></title>
-        <meta http-equiv="X-UA-Compatible" content="IE=8" />
-    <asp:ContentPlaceHolder ID="head" runat="server">
-    </asp:ContentPlaceHolder>
+        <asp:Literal ID="litPageTitle" runat="server"></asp:Literal>
+    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
     <link href="../Design/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <form id="form1" runat="server">
+    <asp:CollapsiblePanelExtender runat="server" ID="cpeln" CollapsedImage="..\Design\Icons\png\24x24\next.png" 
+        ExpandedImage="..\Design\Icons\png\24x24\back.png" ImageControlID="imgExpCol" 
+        TargetControlID="pnlLeftNavContent" ExpandedSize="185" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
+        CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal" BehaviorId="collapsibleBehavior"></asp:CollapsiblePanelExtender>
+    <script language="javascript" type="text/javascript">
+        //document.getElementById('<%=pnlHead.ClientID%>').style.visibility = 'hidden';
+
+        function pageLoad(sender, args) {
+            $find("collapsibleBehavior").add_expandComplete(expandHandler);
+            $find("collapsibleBehavior").add_collapseComplete(collapseHandler);
+            document.getElementById('<%=pnlHead.ClientID%>').style.visibility = 'visible';
+
+            if (typeof contentPageLoad == 'function')
+                contentPageLoad();
+        }
+
+        function expandHandler(sender, args) {
+            document.getElementById('<%= pnlContent.ClientID%>').className = "contentExpanded";
+            document.getElementById('<%= pnlLeftNav.ClientID%>').className = "leftSidebar";
+        }
+
+        function collapseHandler(sender, args) {
+            document.getElementById('<%= pnlContent.ClientID%>').className = "contentCollapse";
+            document.getElementById('<%= pnlLeftNav.ClientID%>').className = "leftSidebarCollapse";
+        }
+    </script>
+    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <div id="siteContainer">
-        <div id="header">
-            <h1><img src="/Design/bbLogo.png" alt="BlackBerry" />REMI</h1>            
-        </div>
-        <asp:Panel runat="server" ID="pnlHead">
-        <div id="mainMenu">
-            <ul>
-                <li id="Overview" runat="server"><a id="A11" href="~/Overview.aspx" title="Overview" runat="server"><span>Overview</span></a></li>
-                <li id="Search" runat="server"><a id="A16" href="~/Reports/Search.aspx" title="Search" runat="server"><span>Search</span></a></li>
-                <li id="ScanDevice" runat="server"><a id="A2" href="~/ScanForTest/Default.aspx" title="Scan a device for testing" runat="server"><span>Scan Device</span></a></li>
-                <li id="BatchInfo" runat="server"><a id="A4" href="~/ScanForInfo/Default.aspx" title="Get Information on a batch" runat="server"><span>Batch Info</span> </a></li>
-                <li id="ProductInfo" runat="server"><a id="A6" href="~/ScanForInfo/productgroup.aspx" title="Get Information on a product group" runat="server"><span>Product Info</span> </a></li>
-                <li id="TrackingLocation" runat="server"><a id="A5" href="~/ManageTestStations/TrackingLocation.aspx" title="View information about a specific tracking location." runat="server"><span>Tracking Location</span></a></li>
-                <li id="Timeline" runat="server"><a id="A9" href="~/ManageTestStations/default.aspx" title="Lab Timeline." runat="server"><span>Timeline</span></a></li>
-                <li id="Incoming" runat="server"><a id="A10" href="~/Incoming/default.aspx" title="Incoming Functions." runat="server"><span>Incoming</span></a></li>                
-                <li id="Inventory" runat="server"><a id="A8" href="~/Inventory/Default.aspx" title="Inventory Maangement" runat="server"><span>Inventory</span> </a></li>
-                <li id="User" runat="server"><a id="A3" href="~/ManageUser/Default.aspx" title="View your profile." runat="server"><span>User</span></a></li>
-                <li id="Results" runat="server"><a id="A17" href="~/Relab/Results.aspx" title="Results" runat="server"><span>Results</span></a></li>
-                <li id="adminLink" runat="server"><a id="A7" href="~/Admin/Default.aspx" title="Administration Panel" runat="server"><span>Admin</span></a></li>
-                <li id="HelpLink" runat="server"><a id="A18" href="~/Help/Default.aspx" title="Help" runat="server"><span>Help</span></a></li>
-                <li id="logLink" runat="server"><a id="A15" href="~/Admin/Developer/Default.aspx" title="Developer" runat="server"><span>Developer</span></a></li>
-            </ul>
-        </div>
+        <asp:Panel runat="server" ID="pnlHeader" CssClass="TopHeader">
+            <span class="headerImg"><img src="/Design/bbLogo.png" alt="BlackBerry" />REMI</span>
+            <span class="headerLogout">
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/lock.png" ID="imgUserName" runat="server" CssClass="Pass" />
+                <asp:HyperLink ID="hlUser" runat="server" NavigateUrl="/Badgeaccess/EditmyUser.aspx" Target="_self"></asp:HyperLink>
+                <asp:LinkButton runat="server" ID="lnkLogout" Visible="true">(Logout)</asp:LinkButton>
+            </span>
         </asp:Panel>
-        <div id="pageContainer">
-            <asp:Panel runat="server" ID="pnlLogged">
-                <div id="leftSidebar">
-                    <asp:Panel ID="pnlLeftMenuActions" runat="server">
-                        <h3>Logged In As</h3>
-                        <ul>
-                            <li id="UserNameLI">
-                                <asp:Image ImageUrl="../Design/Icons/png/24x24/lock.png" ID="imgUserName" runat="server" />
-                                <asp:HyperLink ID="hlUser" runat="server" NavigateUrl="/Badgeaccess/EditmyUser.aspx" Target="_self"></asp:HyperLink>
-                                <asp:LinkButton runat="server" ID="lnkLogout">(Logout)</asp:LinkButton>
-                            </li>
-                        </ul>
-                    </asp:Panel>
-                    <asp:ContentPlaceHolder ID="leftSidebarContent" runat="server"></asp:ContentPlaceHolder>
-                </div>
+        <asp:Panel runat="server" ID="pnlHead" CssClass="menuHeader">
+            <asp:Menu runat="server" ID="menuHeader" Orientation="Horizontal" RenderingMode="List" CssClass="" StaticEnableDefaultPopOutImage="false" DynamicEnableDefaultPopOutImage="false">
+                <LevelMenuItemStyles>
+                    <asp:MenuItemStyle CssClass="menuItemLevel1" />
+                    <asp:MenuItemStyle CssClass="menuItemLevel2" />
+                </LevelMenuItemStyles>
+                <Items>
+                    <asp:MenuItem ImageUrl="../Design/Icons/ic_overflow_tab.png"></asp:MenuItem>
+                    <asp:MenuItem Text="Overview" NavigateUrl="~/Overview.aspx" Value="Overview"></asp:MenuItem>
+                    <asp:MenuItem Text="Search" NavigateUrl="~/Reports/Search.aspx" Value="Search"></asp:MenuItem>
+                    <asp:MenuItem Text="Scan Device" NavigateUrl="~/ScanForTest/Default.aspx" Value="Scan"></asp:MenuItem>
+                    <asp:MenuItem Text="Batch Info" NavigateUrl="~/ScanForInfo/Default.aspx" Value="Batch"></asp:MenuItem>
+                    <asp:MenuItem Text="Product Info" NavigateUrl="~/ScanForInfo/productgroup.aspx" Value="Product"></asp:MenuItem>
+                    <asp:MenuItem Text="Tracking" NavigateUrl="~/ManageTestStations/TrackingLocation.aspx" Value="Tracking"></asp:MenuItem>
+                    <asp:MenuItem Text="Timeline" NavigateUrl="~/ManageTestStations/default.aspx" Value="Timeline"></asp:MenuItem>
+                    <asp:MenuItem Text="Incoming" NavigateUrl="~/Incoming/default.aspx" Value="incoming"></asp:MenuItem>
+                    <asp:MenuItem Text="Inventory" NavigateUrl="~/Inventory/Default.aspx" Value="Inventory">
+                        <asp:MenuItem Text="Inventory Report" NavigateUrl="~/Inventory/InventoryReport.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Count Orders" NavigateUrl="~/Inventory/CountOrders.aspx"></asp:MenuItem>
+                    </asp:MenuItem>
+                    <asp:MenuItem Text="User" NavigateUrl="~/ManageUser/Default.aspx" Value="User">
+                        <asp:MenuItem Text="My Units" NavigateUrl="~/ManageUser/Default.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Me" NavigateUrl="~/BadgeAccess/EditMyUser.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Batches Requested" NavigateUrl="~/ManageUser/BatchesByRequestor.aspx"></asp:MenuItem>
+                    </asp:MenuItem>
+                    <asp:MenuItem Text="Results" NavigateUrl="~/Relab/Results.aspx" Value="results">
+                        <asp:MenuItem Text="Reports" NavigateUrl="~/Relab/Reports.aspx"></asp:MenuItem>
+                    </asp:MenuItem>
+                    <asp:MenuItem Text="Admin" NavigateUrl="~/Admin/Jobs.aspx" Value="admin">
+                        <asp:MenuItem Text="Jobs" NavigateUrl="~/Admin/Jobs.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Lookups/Access" NavigateUrl="~/Admin/Lookups.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Menus" NavigateUrl="~/Admin/Menu.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Results" NavigateUrl="~/Admin/Results.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Security" NavigateUrl="~/Admin/Security.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Tests" NavigateUrl="~/Admin/Tests.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Tracking Locations" NavigateUrl="~/Admin/TrackingLocations.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Tracking Types" NavigateUrl="~/Admin/TrackingLocationTypes.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Tracking Tests" NavigateUrl="~/Admin/TrackingLocationTests.aspx"></asp:MenuItem>
+                        <asp:MenuItem Text="Users" NavigateUrl="~/Admin/Users.aspx"></asp:MenuItem>
+                    </asp:MenuItem>
+                    <asp:MenuItem Text="Help" NavigateUrl="~/Help/Default.aspx" Value="Help"></asp:MenuItem>
+                    <asp:MenuItem Text="Developer" NavigateUrl="~/Admin/Developer/Default.aspx" Value="developer"></asp:MenuItem>
+                </Items>
+            </asp:Menu>
+        </asp:Panel>
+        <asp:Panel runat="server" ID="pnlBody">
+            <asp:Panel runat="server" ID="pnlExpColLefNav">
+                <asp:Image runat="server" ID="imgExpCol" />
             </asp:Panel>
-            <div id="content">
+            <asp:Panel runat="server" ID="pnlLeftNav" CssClass="leftSidebar">
+                <asp:Panel runat="server" ID="pnlLeftNavContent">
+                    <asp:ContentPlaceHolder ID="leftSidebarContent" runat="server"></asp:ContentPlaceHolder>
+                </asp:Panel>
+            </asp:Panel>
+            <asp:Panel runat="server" ID="pnlContent" CssClass="contentExpanded">
                 <div id="pageTitle">
-                    <asp:ContentPlaceHolder ID="pageTitleContent" runat="server">
-                    </asp:ContentPlaceHolder>
+                    <asp:ContentPlaceHolder ID="pageTitleContent" runat="server"></asp:ContentPlaceHolder>
                 </div>
-                <asp:ContentPlaceHolder ID="Content" runat="server">
-                </asp:ContentPlaceHolder>
-            </div>
-            <div id="rightSidebar">
-                <asp:ContentPlaceHolder ID="rightSidebarContent" runat="server">
-                </asp:ContentPlaceHolder>
-            </div>
+                <asp:ContentPlaceHolder ID="Content" runat="server"></asp:ContentPlaceHolder>
+            </asp:Panel>
+        </asp:Panel>
+
+        <div id="rightSidebar">
+            <asp:ContentPlaceHolder ID="rightSidebarContent" runat="server" Visible="false">
+            </asp:ContentPlaceHolder>
         </div>
         <div id="footer">
             <p>BlackBerry | Contact <a href="mailto:reltsdsupport@blackberry.com">reltsdsupport@blackberry.com</a> for support.</p>

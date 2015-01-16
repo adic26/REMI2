@@ -280,6 +280,34 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        Public ReadOnly Property FailDocDS() As DataTable
+            Get
+                Dim dt As New DataTable("FA")
+                dt.Columns.Add("Unit", GetType(String))
+                dt.Columns.Add("Test", GetType(String))
+                dt.Columns.Add("Stage", GetType(String))
+
+                For Each k In FailDocs(0).Keys
+                    dt.Columns.Add(k, GetType(String))
+                Next
+
+
+                For Each f In FailDocs
+                    Dim dr As DataRow = dt.NewRow
+                    dr("Unit") = BatchUnitNumber
+                    dr("Test") = TestName
+                    dr("Stage") = TestStageName
+
+                    For Each k In f.Keys
+                        dr(k) = f.Item(k)
+                    Next
+                    dt.Rows.Add(dr)
+                Next
+
+                Return dt
+            End Get
+        End Property
+
         Public ReadOnly Property FailDocLiteralHTMLLinkList() As String
             Get
                 Dim i As Integer = 0

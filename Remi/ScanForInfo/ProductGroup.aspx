@@ -3,7 +3,7 @@
 <%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () { //when the page has loaded
@@ -30,8 +30,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="Server">
     <h1>
         <asp:Label runat="server" ID="lblProductGroupName" Text="Product Information"></asp:Label>
-        <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-        </asp:ToolkitScriptManager>
     </h1>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" runat="Server">
@@ -46,10 +44,6 @@
                 runat="server" />
             <asp:CheckBox runat="server" Text=" Show Archived" ID="chkShowArchived" ToolTip="Show Archived"
                 TextAlign="Right" AutoPostBack="true" CausesValidation="true" />
-        </li>
-        <li id="liEditExceptions" runat="server" visible="false">
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/delete.png" ID="imgExceptions" runat="server" />
-            <asp:HyperLink ID="hypExceptions" runat="Server" Text="Edit Exceptions" ToolTip="Click to edit the product exceptions" />
         </li>
         <li id="liEditSettings" runat="server" visible="false">
             <asp:Image ImageUrl="../Design/Icons/png/24x24/tools.png" ID="imgeditSettings" runat="server" />

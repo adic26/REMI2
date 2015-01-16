@@ -4,7 +4,7 @@
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
 <%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () { //when the page has loaded
@@ -28,8 +28,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="Server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
     <h1>
       <asp:Label ID="lblTrackingLocation" runat="server" Text="Tracking Location Information"></asp:Label>
     </h1>

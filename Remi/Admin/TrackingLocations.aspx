@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" Inherits="Remi.Admin_TrackingLocation" CodeBehind="TrackingLocations.aspx.vb" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -14,16 +14,23 @@
                 alternateRowClassNames: ['evenrow', 'oddrow']
             });
         });
+
+        var _isInitialLoad = true;
+
+        function contentPageLoad(sender, args) {
+            if (_isInitialLoad) {
+                _isInitialLoad = false;
+                __doPostBack('<%= ddlTestCenters.ClientID %>', '');
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
-    <h1>
-        Tracking Locations</h1>
+    <h1>Tracking Locations</h1>
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
     <asp:Panel ID="pnlLeftMenuviews" runat="server">
-        <h3>
-            Admin Menu</h3>
+        <h3>Admin Menu</h3>
         <ul>
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/process.png" ID="Image3" runat="server" />
@@ -53,126 +60,127 @@
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="Image9" runat="server" />
                 <asp:HyperLink ID="HyperLink9" runat="Server" Text="Menu" NavigateUrl="~/Admin/Menu.aspx" /></li>
         </ul>
-        <h3>
-            Tracking Location</h3>
+        <h3>Tracking Location</h3>
         <ul>
             <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgViewTrackingLocations"
-                    runat="server" />
-                <asp:LinkButton ID="lnkViewTrackingLocations" runat="Server" Text="Refresh" /></li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgViewTrackingLocations" runat="server" />
+                <asp:LinkButton ID="lnkViewTrackingLocations" runat="Server" Text="Refresh" />
+            </li>
             <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/add.png" ID="imgAddTrackingLocation"
-                    runat="server" />
-                <asp:LinkButton ID="lnkAddTrackingLocation" runat="Server" Text="Add New TL" /></li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/add.png" ID="imgAddTrackingLocation" runat="server" />
+                <asp:LinkButton ID="lnkAddTrackingLocation" runat="Server" Text="Add New TL" />
+            </li>
         </ul>
     </asp:Panel>
     <asp:Panel ID="pnlLeftMenuActions" runat="server" Visible="False">
-        <h3>
-            Actions</h3>
+        <h3>Actions</h3>
         <ul>
             <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgAddTrackingLocationAction"
-                    runat="server" />
-                <asp:LinkButton ID="lnkAddTrackingLocationAction" runat="Server" Text="Confirm and Save" /></li><li>
-                    <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
-                    <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" />
-                </li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgAddTrackingLocationAction" runat="server" />
+                <asp:LinkButton ID="lnkAddTrackingLocationAction" runat="Server" Text="Confirm and Save" />
+            </li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
+                <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" />
+            </li>
         </ul>
     </asp:Panel>
-    <h3>
-        Filter</h3>
+    <h3>Filter</h3>
     <ul>
         <li>
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgTestCenterView"
-                runat="server" />
-            <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True"
-                DataTextField="LookupType" DataValueField="LookupID" AutoPostBack="True" Width="120px"
-                ForeColor="#0033CC" DataSourceID="odsTestCenters">
-            </asp:DropDownList>
-            <asp:ObjectDataSource ID="odsTestCenters" runat="server" SelectMethod="GetLookups"
-                TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
-                <SelectParameters>
-                    <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
-                    <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
-                    <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
-                    <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
-                    <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
-                    <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
-                    <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
-                </SelectParameters>
-            </asp:ObjectDataSource>
+            <asp:UpdatePanel ID="upTLLeftNav" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="ddlTestCenters" />
+                </Triggers>
+                <ContentTemplate>
+                    <asp:UpdateProgress runat="server" ID="upLeft" DynamicLayout="true" DisplayAfter="10" AssociatedUpdatePanelID="upTLLeftNav">
+                        <ProgressTemplate>
+                            <div class="LoadingModal"></div>
+                            <div class="LoadingGif"></div>
+                        </ProgressTemplate>
+                    </asp:UpdateProgress>
+                    <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgTestCenterView" runat="server" />
+                    <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True"
+                        DataTextField="LookupType" DataValueField="LookupID" AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsTestCenters">
+                    </asp:DropDownList>
+                    <asp:ObjectDataSource ID="odsTestCenters" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
+                        <SelectParameters>
+                            <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
+                            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
+                            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+                        </SelectParameters>
+                    </asp:ObjectDataSource>
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </li>
     </ul>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
-    <uc1:NotificationList ID="notMain" runat="server" />
-    <asp:Panel ID="pnlViewAllTrackingLocations" runat="server">
-        <asp:GridView ID="gvMain" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CssClass="FilterableTable"
-            OnRowCommand="gvMain_RowCommand" DataSourceID="odsTrackingLocations" EmptyDataText="There are no tracking locations in the system.">
-            <RowStyle CssClass="evenrow" />
-            <Columns>
-                <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True"
-                    SortExpression="ID" Visible="False" />
-                <asp:TemplateField HeaderText="Name" SortExpression="Name">
-                    <ItemTemplate>
-                        <asp:HyperLink ID="hypName" runat="server" Text='<%# Eval("DisplayName") %>' NavigateUrl='<%# Eval("TrackingLocationLink") %>'></asp:HyperLink>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:BoundField DataField="BarcodePrefix" HeaderText="Barcode Prefix" SortExpression="BarcodePrefix"
-                    ReadOnly="True" />
-                <asp:BoundField DataField="GeoLocationName" ReadOnly="true" HeaderText="Location"
-                    SortExpression="GeoLocationName" />
-                <asp:BoundField DataField="HostName" HeaderText="HostName" ReadOnly="True" SortExpression="HostName" />
-                <asp:BoundField DataField="UnitCapacity" HeaderText="Unit Capacity" SortExpression="UnitCapacity" ReadOnly="True" />
-                <asp:BoundField DataField="TrackingLocationTypeName" HeaderText="Function Type" ReadOnly="True" />
-                <asp:BoundField DataField="TrackingLocationFunction" HeaderText="Function" ReadOnly="True" />
-                <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status" />
-                <asp:TemplateField HeaderText="WI">
-                    <ItemTemplate>
-                        <asp:HyperLink ID="hypWILocation" runat="server" NavigateUrl='<%# Eval("WILocation") %>'
-                            Target="_blank" Text="Click"></asp:HyperLink>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Program">
-                    <ItemTemplate>
-                        <asp:HyperLink ID="hypProgram" runat="server" NavigateUrl='<%# Eval("ProgrammingLink") %>'
-                            Target="_blank" Text="Click"></asp:HyperLink>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField>
-                    <ItemTemplate>
-                        <asp:LinkButton ID="lnkEdit" runat="server" CommandName="Edit" CommandArgument='<%# Eval("ID") %>'>Edit</asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField ShowHeader="False">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="lnkDelete" runat="server" CausesValidation="False" CommandName="DeleteItem"
-                            Visible='<%# Eval("CanDelete") %>' CommandArgument='<%# Eval("ID") %>' OnClientClick="return confirm('Are you sure you want to delete this Tracking Location?');"
-                            Text="Delete"></asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField ShowHeader="False">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="lnkAvailable" runat="server" CausesValidation="False" CommandName="CheckAvailability"
-                            CommandArgument='<%# Eval("HostName") %>' Text="Check Availability"></asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-            <AlternatingRowStyle CssClass="oddrow" />
-        </asp:GridView>
-        <asp:ObjectDataSource ID="odsTrackingLocations" runat="server" DeleteMethod="Delete"
-            SelectMethod="GetList" TypeName="REMI.Bll.TrackingLocationManager" OldValuesParameterFormatString="{0}">
-            <DeleteParameters>
-                <asp:Parameter Name="ID" Type="Int32" />
-            </DeleteParameters>
-            <SelectParameters>
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$ddlTestCenters" DefaultValue="0"
-                    Name="TestCenterLocationID" PropertyName="SelectedValue" Type="Int32" />
-                <asp:Parameter Type="Int32" Name="onlyActive" DefaultValue="0" />
-            </SelectParameters>
-        </asp:ObjectDataSource>
-        <asp:HiddenField ID="hdnSelectedTrackingLocationID" runat="server" />
-    </asp:Panel>
+    <asp:UpdatePanel runat="server" ID="upLoad" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
+        <ContentTemplate>
+            <uc1:NotificationList ID="notMain" runat="server" />
+            <asp:Panel ID="pnlViewAllTrackingLocations" runat="server">
+                <asp:GridView ID="gvMain" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CssClass="FilterableTable"
+                    OnRowCommand="gvMain_RowCommand" EmptyDataText="There are no tracking locations in the system.">
+                    <RowStyle CssClass="evenrow" />
+                    <Columns>
+                        <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True"
+                            SortExpression="ID" Visible="False" />
+                        <asp:TemplateField HeaderText="Name" SortExpression="Name">
+                            <ItemTemplate>
+                                <asp:HyperLink ID="hypName" runat="server" Text='<%# Eval("DisplayName") %>' NavigateUrl='<%# Eval("TrackingLocationLink") %>'></asp:HyperLink>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="BarcodePrefix" HeaderText="Barcode Prefix" SortExpression="BarcodePrefix"
+                            ReadOnly="True" />
+                        <asp:BoundField DataField="GeoLocationName" ReadOnly="true" HeaderText="Location"
+                            SortExpression="GeoLocationName" />
+                        <asp:BoundField DataField="HostName" HeaderText="HostName" ReadOnly="True" SortExpression="HostName" />
+                        <asp:BoundField DataField="UnitCapacity" HeaderText="Unit Capacity" SortExpression="UnitCapacity" ReadOnly="True" />
+                        <asp:BoundField DataField="TrackingLocationTypeName" HeaderText="Function Type" ReadOnly="True" />
+                        <asp:BoundField DataField="TrackingLocationFunction" HeaderText="Function" ReadOnly="True" />
+                        <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status" />
+                        <asp:TemplateField HeaderText="WI">
+                            <ItemTemplate>
+                                <asp:HyperLink ID="hypWILocation" runat="server" NavigateUrl='<%# Eval("WILocation") %>'
+                                    Target="_blank" Text="Click"></asp:HyperLink>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Program">
+                            <ItemTemplate>
+                                <asp:HyperLink ID="hypProgram" runat="server" NavigateUrl='<%# Eval("ProgrammingLink") %>'
+                                    Target="_blank" Text="Click"></asp:HyperLink>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField>
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkEdit" runat="server" CommandName="Edit" CommandArgument='<%# Eval("ID") %>'>Edit</asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField ShowHeader="False">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkDelete" runat="server" CausesValidation="False" CommandName="DeleteItem"
+                                    Visible='<%# Eval("CanDelete") %>' CommandArgument='<%# Eval("ID") %>' OnClientClick="return confirm('Are you sure you want to delete this Tracking Location?');"
+                                    Text="Delete"></asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField ShowHeader="False">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkAvailable" runat="server" CausesValidation="False" CommandName="CheckAvailability"
+                                    CommandArgument='<%# Eval("HostName") %>' Text="Check Availability"></asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <AlternatingRowStyle CssClass="oddrow" />
+                </asp:GridView>
+                <asp:HiddenField ID="hdnSelectedTrackingLocationID" runat="server" />
+            </asp:Panel>
+        </ContentTemplate>
+    </asp:UpdatePanel>
     <asp:Panel ID="pnlAddEditTrackingLocation" runat="server" Visible="False">
         <h2><asp:Label ID="lblAddEditTitle" runat="server" Text="Add a new Tracking Location"></asp:Label></h2>
         <table style="width: 52%;">

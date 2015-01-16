@@ -5,7 +5,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     
     <script type="text/javascript">
@@ -52,8 +52,6 @@
     </ul>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
     <uc1:NotificationList ID="notMain" runat="server" />
     <asp:GridView ID="grdTestRecords" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" OnRowCommand="grdTestRecords_RowCommand"
         EnableViewState="true" cssclass="FilterableTable" EmptyDataText="There are no test records available for the given criteria.">

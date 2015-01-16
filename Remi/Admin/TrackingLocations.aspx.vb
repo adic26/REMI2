@@ -21,6 +21,17 @@ Partial Class Admin_TrackingLocation
                 HyperLink9.Enabled = False
             End If
         End If
+
+        Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
+
+        If (asm.IsInAsyncPostBack) Then
+            gvMain.DataSource = TrackingLocationManager.GetList(ddlTestCenters.SelectedValue, 0)
+            gvMain.DataBind()
+        End If
+    End Sub
+
+    Protected Sub upTLLeftNav_PreRender() Handles upTLLeftNav.PreRender
+        upLoad.Update()
     End Sub
 
     Protected Sub Page_PreRender() Handles Me.PreRender
@@ -68,6 +79,8 @@ Partial Class Admin_TrackingLocation
                 Exit Select
             Case "deleteitem"
                 notMain.Notifications.Add(TrackingLocationManager.Delete(ID))
+
+                gvMain.DataSource = TrackingLocationManager.GetList(ddlTestCenters.SelectedValue, 0)
                 gvMain.DataBind()
                 Exit Select
             Case "checkavailability"

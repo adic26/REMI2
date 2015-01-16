@@ -50,6 +50,25 @@ Partial Class ScanUnit
             hdnQRANumber.Value = bc.ToString
             hdnTestUnitID.Value = b.GetUnit(bc.UnitNumber).ID
             grdTrackingLog.DataBind()
+
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+            mi = New MenuItem
+            mi.Text = "Batch Info"
+            mi.NavigateUrl = b.BatchInfoLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Test Records"
+            mi.NavigateUrl = REMIWebLinks.GetTestRecordsLink(bc.ToString, String.Empty, String.Empty, String.Empty, 0)
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "MfgWeb History"
+            mi.NavigateUrl = b.GetUnit(bc.UnitNumber).MfgWebLink
+            myMenu.Items(0).ChildItems.Add(mi)
         Else
             notMain.Notifications.AddWithMessage(String.Format("{0} could not be found in REMI.", bc.ToString), NotificationType.Warning)
         End If

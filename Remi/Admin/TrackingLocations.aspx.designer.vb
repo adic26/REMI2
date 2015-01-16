@@ -266,6 +266,24 @@ Partial Public Class Admin_TrackingLocation
     Protected WithEvents lnkCancelAction As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
+    '''upTLLeftNav control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents upTLLeftNav As Global.System.Web.UI.UpdatePanel
+
+    '''<summary>
+    '''upLeft control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents upLeft As Global.System.Web.UI.UpdateProgress
+
+    '''<summary>
     '''imgTestCenterView control.
     '''</summary>
     '''<remarks>
@@ -293,6 +311,15 @@ Partial Public Class Admin_TrackingLocation
     Protected WithEvents odsTestCenters As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
+    '''upLoad control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents upLoad As Global.System.Web.UI.UpdatePanel
+
+    '''<summary>
     '''notMain control.
     '''</summary>
     '''<remarks>
@@ -318,15 +345,6 @@ Partial Public Class Admin_TrackingLocation
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gvMain As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''odsTrackingLocations control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsTrackingLocations As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''hdnSelectedTrackingLocationID control.

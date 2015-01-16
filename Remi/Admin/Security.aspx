@@ -4,7 +4,7 @@
 <%@ Register Src="../Controls/Notifications.ascx" TagName="Notifications" TagPrefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script type="text/javascript">
         function EnableDisablePermission_Click(permission, role)
         {
@@ -28,7 +28,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <h1>Security</h1>
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">

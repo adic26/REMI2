@@ -2,8 +2,8 @@
 <%@ Register Assembly="DayPilot" Namespace="DayPilot.Web.Ui" TagPrefix="DayPilot" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 <%@ Register Src="../Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">    
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     
     <script type="text/javascript">
@@ -16,8 +16,6 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" Runat="Server">
     <h3>Filter</h3>
-    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
-    </asp:ToolkitScriptManager>
 
     <script type="text/javascript">
         var prm = Sys.WebForms.PageRequestManager.getInstance();
@@ -44,7 +42,7 @@
         
         var _isInitialLoad = true;
 
-        function pageLoad(sender, args) {
+        function contentPageLoad(sender, args) {
             if (_isInitialLoad) {
                 _isInitialLoad = false;
                 __doPostBack('<%= ddlDepartments.ClientID%>', '');

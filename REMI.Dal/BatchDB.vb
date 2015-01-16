@@ -411,6 +411,7 @@ Namespace REMI.Dal
 
         Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User) As BatchCollection
             Dim tmpList As New BatchCollection()
+
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myReader As SqlDataReader = BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user)
                     If myReader.HasRows Then
@@ -423,6 +424,8 @@ Namespace REMI.Dal
                         End While
                     End If
                 End Using
+
+                FillFullBatchFields(tmpList, myConnection, False, loadDurations, True, False, False, False, loadTestRecords)
             End Using
 
             If tmpList IsNot Nothing Then

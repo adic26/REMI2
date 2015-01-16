@@ -68,15 +68,6 @@ Partial Public Class Inventory_CountOrders
     Protected WithEvents hypGenerateCountOrder As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
-    '''ToolkitScriptManager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ToolkitScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
-
-    '''<summary>
     '''notMain control.
     '''</summary>
     '''<remarks>

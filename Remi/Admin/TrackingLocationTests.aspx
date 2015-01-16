@@ -2,7 +2,7 @@
 <%@ Register Assembly="System.Web.Ajax" Namespace="System.Web.UI" TagPrefix="asp" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../design/scripts/jquery.js"></script>
+    <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
 
     <script type="text/javascript">
@@ -41,10 +41,18 @@
                 alternateRowClassNames: ['evenrow', 'oddrow']
             });
         });
+
+        var _isInitialLoad = true;
+
+        function contentPageLoad(sender, args) {
+            if (_isInitialLoad) {
+                _isInitialLoad = false;
+                __doPostBack('<%= ddlTestType.ClientID %>', '');
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <h1>Tracking Location Types Tests</h1>
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
@@ -91,19 +99,26 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
 <br />
-    Test Type: <asp:DropDownList runat="server" ID="ddlTestType" AutoPostBack="true"></asp:DropDownList><br />
-    Tracking Type: <asp:DropDownList runat="server" ID="ddlTrackType" AutoPostBack="true" AppendDataBoundItems="true"></asp:DropDownList>
-    <asp:GridView ID="gvwTypeTests" AutoGenerateColumns="true" runat="server" DataSourceID="odsTests" CssClass="FilterableTable" EnableViewState="False" EmptyDataText="There are no tracking types for tests.">
-        <RowStyle CssClass="evenrow" />
-        <AlternatingRowStyle CssClass="oddrow" />
-    </asp:GridView>
-    <asp:ObjectDataSource ID="odsTests" runat="server" SelectMethod="GetTrackingTypeTestsGrid" TypeName="REMI.Bll.TrackingLocationManager">
-            <SelectParameters>
-                <asp:ControlParameter ControlID="ddlTestType" Name="testType" PropertyName="SelectedValue" Type="String" />
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$chkArchived" DefaultValue="false" Name="includeArchived" PropertyName="Checked" Type="Boolean" />
-                <asp:ControlParameter ControlID="ddlTrackType" Name="trackType" PropertyName="SelectedValue" Type="String" />
-            </SelectParameters>
-        </asp:ObjectDataSource>
+    <asp:UpdatePanel ID="upTTT" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="ddlTestType" />
+            <asp:AsyncPostBackTrigger ControlID="ddlTrackType" />
+        </Triggers>
+        <ContentTemplate>
+            <asp:UpdateProgress runat="server" ID="udpTTT" DynamicLayout="true" DisplayAfter="10" AssociatedUpdatePanelID="upTTT">
+                <ProgressTemplate>
+                    <div class="LoadingModal"></div>
+                    <div class="LoadingGif"></div>
+                </ProgressTemplate>
+            </asp:UpdateProgress>
+            Test Type: <asp:DropDownList runat="server" ID="ddlTestType" AutoPostBack="true"></asp:DropDownList><br />
+            Tracking Type: <asp:DropDownList runat="server" ID="ddlTrackType" AutoPostBack="true" AppendDataBoundItems="true"></asp:DropDownList>
+            <asp:GridView ID="gvwTypeTests" AutoGenerateColumns="true" runat="server" CssClass="FilterableTable" EnableViewState="False" EmptyDataText="There are no tracking types for tests.">
+                <RowStyle CssClass="evenrow" />
+                <AlternatingRowStyle CssClass="oddrow" />
+            </asp:GridView>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server">
 </asp:Content>

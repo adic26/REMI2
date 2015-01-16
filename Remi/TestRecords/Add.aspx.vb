@@ -71,6 +71,19 @@ Partial Class TestRecords_Add
             hdnTestRecordLink.Value = b.TestRecordsLink
             hypTestRecords.NavigateUrl = b.TestRecordsLink
 
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+            mi.Text = "Batch Info"
+            mi.NavigateUrl = b.BatchInfoLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = New MenuItem
+            mi.Text = "Test Records"
+            mi.NavigateUrl = b.TestRecordsLink
+            myMenu.Items(0).ChildItems.Add(mi)
+
             rblMFISFIAcc.SelectedValue = 1
         End If
     End Sub

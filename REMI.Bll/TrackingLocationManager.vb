@@ -380,25 +380,25 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Insert], False)> _
         Public Shared Function SaveTrackingLocation(ByVal trackingCollection As TrackingLocationCollection) As Integer
             Try
-                If UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-                    trackingCollection(0).LastUser = UserManager.GetCurrentValidUserLDAPName
+                'If UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+                trackingCollection(0).LastUser = UserManager.GetCurrentValidUserLDAPName
 
-                    If trackingCollection.Validate Then
-                        Using tr As New TransactionScope
-                            trackingCollection(0).ID = TrackingLocationDB.Save(trackingCollection(0))
+                If trackingCollection.Validate Then
+                    Using tr As New TransactionScope
+                        trackingCollection(0).ID = TrackingLocationDB.Save(trackingCollection(0))
 
-                            For Each tl In trackingCollection
-                                TrackingLocationDB.SaveHost(tl.ID, tl.HostName, UserManager.GetCurrentValidUserLDAPName, CheckStatus(tl.HostName))
-                            Next
-                            tr.Complete()
-                        End Using
+                        For Each tl In trackingCollection
+                            TrackingLocationDB.SaveHost(tl.ID, tl.HostName, UserManager.GetCurrentValidUserLDAPName, CheckStatus(tl.HostName))
+                        Next
+                        tr.Complete()
+                    End Using
 
-                        trackingCollection(0).Notifications.Add("i2", NotificationType.Information)
-                        Return trackingCollection(0).ID
-                    End If
-                Else
-                    Throw New Security.SecurityException("Unauthorized attempt to edit a Tracking Location.")
+                    trackingCollection(0).Notifications.Add("i2", NotificationType.Information)
+                    Return trackingCollection(0).ID
                 End If
+                'Else
+                'Throw New Security.SecurityException("Unauthorized attempt to edit a Tracking Location.")
+                'End If
             Catch sqlEx As SqlClient.SqlException When sqlEx.Number = 2601
                 trackingCollection(0).Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e5", NotificationType.Errors, sqlEx, String.Format("TrackingLocationID: {0}", trackingCollection(0).ID)))
             Catch ex As Exception

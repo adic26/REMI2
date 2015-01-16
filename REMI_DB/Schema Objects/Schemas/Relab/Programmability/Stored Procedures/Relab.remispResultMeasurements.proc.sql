@@ -43,20 +43,22 @@ BEGIN
 	SELECT CASE WHEN rm.Archived = 1 THEN 
 	(SELECT MIN(ID) FROM relab.ResultsMeasurements rm2 WHERE rm2.ResultID=rm.ResultID AND rm2.MeasurementTypeID=rm.MeasurementTypeID 
 		and isnull(Relab.ResultsParametersComma(rm.ID),'') = isnull(Relab.ResultsParametersComma(rm2.ID),'') and rm2.Archived=0)
-	ELSE rm.ID END AS ID, ISNULL(ISNULL(ISNULL(lt.[Values], ltsf.[Values]), ltmf.[Values]), ltacc.[Values]) As Measurement, LowerLimit AS [Lower Limit], UpperLimit AS [Upper Limit], MeasurementValue AS Result, lu.[Values] As Unit, 
+	ELSE rm.ID END AS ID, ISNULL(ISNULL(ISNULL(lt.[Values], ltsf.[Values]), ltmf.[Values]), ltacc.[Values]) As Measurement, 
+	LowerLimit AS [Lower Limit], UpperLimit AS [Upper Limit], MeasurementValue AS Result, lu.[Values] As Unit, 
 		CASE WHEN PassFail=1 THEN 'Pass' ELSE 'Fail' END AS [Pass/Fail],
 		rm.MeasurementTypeID, rm.ReTestNum AS [Test Num], rm.Archived, rm.XMLID, 
-		@ReTestNum AS MaxVersion, rm.Comment, ISNULL(rmf.[File], 0) AS [Image], 
-		ISNULL(UPPER(SUBSTRING(rmf.ContentType,2,LEN(rmf.ContentType))), 'PNG') AS ContentType, rm.Description, 
+		@ReTestNum AS MaxVersion, rm.Comment, 
+		rm.Description, 
 		ISNULL((SELECT TOP 1 1 FROM Relab.ResultsMeasurementsAudit rma WHERE rma.ResultMeasurementID=rm.ID AND rma.PassFail <> rm.PassFail ORDER BY DateEntered DESC), 0) As WasChanged,
-		 ISNULL(CONVERT(NVARCHAR, rm.DegradationVal), 'N/A') AS [Degradation], x.VerNum, p.*
+		ISNULL(CONVERT(NVARCHAR, rm.DegradationVal), 'N/A') AS [Degradation], x.VerNum,		
+		(CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurementsFiles rmf WHERE rmf.ResultMeasurementID=rm.ID) > 0 THEN 1 ELSE 0 END) AS HasFiles,
+		 p.*
 	FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
 		LEFT OUTER JOIN Lookups lu WITH(NOLOCK) ON lu.LookupID=rm.MeasurementUnitTypeID
 		LEFT OUTER JOIN Lookups lt WITH(NOLOCK) ON lt.LookupID=rm.MeasurementTypeID
 		LEFT OUTER JOIN Lookups ltsf WITH(NOLOCK) ON ltsf.LookupID=rm.MeasurementTypeID
 		LEFT OUTER JOIN Lookups ltmf WITH(NOLOCK) ON ltmf.LookupID=rm.MeasurementTypeID
 		LEFT OUTER JOIN Lookups ltacc WITH(NOLOCK) ON ltacc.LookupID=rm.MeasurementTypeID
-		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) ON rmf.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN #parameters p WITH(NOLOCK) ON p.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN Relab.ResultsXML x ON x.ID = rm.XMLID
 	WHERE rm.ResultID=@ResultID AND ((@IncludeArchived = 0 AND rm.Archived=@FalseBit) OR (@IncludeArchived=1)) AND ((@OnlyFails = 1 AND PassFail=@FalseBit) OR (@OnlyFails = 0))
