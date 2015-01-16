@@ -19,14 +19,13 @@ Public Class ReqDefault
 
             ddlSearchField.DataSource = RequestManager.GetRequestParent(ddlRequestType.SelectedItem.Value)
             ddlSearchField.DataBind()
+            If (ddlRequestType.Items.Count > 0 And ddlRequestType.SelectedIndex = -1) Then
+                ddlRequestType.SelectedIndex = 0
+            End If
+
+            UpdateLinks()
         End If
 
-        If (ddlRequestType.Items.Count > 0 And ddlRequestType.SelectedIndex = -1) Then
-            ddlRequestType.SelectedIndex = 0
-        End If
-
-        lblRequest.Text = ddlRequestType.SelectedItem.Text
-        hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", ddlRequestType.SelectedItem.Text, ddlRequestType.SelectedItem.Value)
     End Sub
 
     Protected Sub SetGvwHeader() Handles grdRequestSearch.PreRender
@@ -58,5 +57,24 @@ Public Class ReqDefault
 
         grdRequestSearch.DataSource = ReportManager.Search(ddlRequestType.SelectedItem.Value, searchFields)
         grdRequestSearch.DataBind()
+    End Sub
+
+    Protected Sub ddlRequestType_SelectedIndexChanged(sender As Object, e As EventArgs)
+        UpdateLinks()
+    End Sub
+
+    Private Sub UpdateLinks()
+        Dim myMenu As WebControls.Menu
+        Dim mi As New MenuItem
+        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+        mi = New MenuItem
+        mi.Text = "Admin"
+        mi.Target = "_blank"
+        mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", ddlRequestType.SelectedItem.Text, ddlRequestType.SelectedItem.Value)
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        lblRequest.Text = ddlRequestType.SelectedItem.Text
+        hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", ddlRequestType.SelectedItem.Text, ddlRequestType.SelectedItem.Value)
     End Sub
 End Class

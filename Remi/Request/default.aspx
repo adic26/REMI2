@@ -13,7 +13,7 @@
         <h3>Request View</h3>
         <ul>
             <li>
-                <br /><asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID"></asp:DropDownList>
+                <br /><asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
             </li>
             <li>
                 <asp:HyperLink runat="server" ID="hypAdmin" Enabled="true" Text="Admin" Target="_blank"></asp:HyperLink>
