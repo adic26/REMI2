@@ -620,13 +620,13 @@
     <Content Include="Design\beta.jpg" />
     <Content Include="Design\Icons\ic_overflow_tab.png" />
     <Content Include="Design\Icons\Menu.png" />
-    <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap-select.css" />
-    <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.css" />
-    <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap.icon-large.css" />
-    <Content Include="Design\jQueryCSS\Bootstrap CSS\jquery.taginput.css" />
-    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables.css" />
-    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables.min.css" />
-    <Content Include="Design\jQueryCSS\DataTable CSS\jquery.dataTables_themeroller.css" />
+    <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap-select.css" />
+    <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.css" />
+    <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.icon-large.css" />
+    <Content Include="Design\jQueryCSS\BootstrapCSS\jquery.taginput.css" />
+    <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables.css" />
+    <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables.min.css" />
+    <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables_themeroller.css" />
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Design\jQueryCSS\fonts\glyphicons-halflings-regular.ttf" />
@@ -2869,7 +2869,7 @@
     <Content Include="Design\jQueryCSS\images\Sorting icons.psd" />
     <Content Include="Handlers\Download.ashx" />
     <Content Include="Handlers\ImageHandler.ashx" />
-    <Content Include="Design\jQueryCSS\Bootstrap CSS\bootstrap-select.css.map" />
+    <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap-select.css.map" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

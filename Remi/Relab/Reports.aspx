@@ -4,11 +4,11 @@
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <link type="text/css" href="../Design/jQueryCSS/Bootstrap CSS/bootstrap-select.css" rel="Stylesheet"  />
-    <link type="text/css" href="../Design/jQueryCSS/Bootstrap CSS/bootstrap.css" rel="Stylesheet" />
-    <link type="text/css" href="../Design/jQueryCSS/Bootstrap CSS/jquery.taginput.css" rel="Stylesheet" />
+    <link type="text/css" href="../Design/jQueryCSS/BootstrapCSS/bootstrap-select.css" rel="Stylesheet"  />
+    <link type="text/css" href="../Design/jQueryCSS/BootstrapCSS/bootstrap.css" rel="Stylesheet" />
+    <link type="text/css" href="../Design/jQueryCSS/BootstrapCSS/jquery.taginput.css" rel="Stylesheet" />
     <link type="text/css" href="../Design/jQueryCSS/jQueryUI/jquery-ui-1.10.4.css" rel="Stylesheet" />
-    <link type="text/css" href="../Design/jQueryCSS/DataTable CSS/jquery.dataTables.css" rel="Stylesheet" />
+    <link type="text/css" href="../Design/jQueryCSS/DataTableCSS/jquery.dataTables.css" rel="Stylesheet" />
     <script type="text/javascript" src="../Design/scripts/jQuery/jquery-1.11.1.js"></script>
     <script type="text/javascript" src="../Design/scripts/DataTables/jquery.dataTables.js"></script>
     <script type="text/javascript" src="../Design/scripts/Bootstrap/jquery.taginput.src.js"></script>
