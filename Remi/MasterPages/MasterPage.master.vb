@@ -32,27 +32,35 @@ Partial Class MasterPages_MasterPage
                 menuHeader.Enabled = False
             End If
 
-            If Not (UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasAdminReadOnlyAuthority) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("admin"))
-            End If
+            If (menuHeader.FindItem("admin") IsNot Nothing) Then
+                If Not (UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasAdminReadOnlyAuthority) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("admin"))
+                End If
 
-            If (UserManager.GetCurrentUser.HasAdminReadOnlyAuthority And Not (UserManager.GetCurrentUser.IsAdmin)) Then
-                menuHeader.FindItem("admin").NavigateUrl = "~/Admin/Jobs.aspx"
-            ElseIf (UserManager.GetCurrentUser.IsTestCenterAdmin And Not (UserManager.GetCurrentUser.IsAdmin)) Then
-                menuHeader.FindItem("admin").NavigateUrl = "~/Admin/TrackingLocations.aspx"
+                If (UserManager.GetCurrentUser.HasAdminReadOnlyAuthority And Not (UserManager.GetCurrentUser.IsAdmin)) Then
+                    menuHeader.FindItem("admin").NavigateUrl = "~/Admin/Jobs.aspx"
+                ElseIf (UserManager.GetCurrentUser.IsTestCenterAdmin And Not (UserManager.GetCurrentUser.IsAdmin)) Then
+                    menuHeader.FindItem("admin").NavigateUrl = "~/Admin/TrackingLocations.aspx"
+                End If
             End If
 
             If Not UserManager.GetCurrentUser.IsDeveloper Then
-                menuHeader.Items.Remove(menuHeader.FindItem("developer"))
+                If (menuHeader.FindItem("developer") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("developer"))
+                End If
             End If
 
             'You are a relab role or your role has permission to view relab
             If Not (UserManager.GetCurrentUser.HasRelabAuthority() And UserManager.GetCurrentUser.HasRelabAccess()) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("results"))
+                If (menuHeader.FindItem("results") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("results"))
+                End If
             End If
 
             If Not (UserManager.GetCurrentUser.IsIncomingSpecialist OrElse UserManager.GetCurrentUser.IsMaterialsManagementSpecialist) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("incoming"))
+                If (menuHeader.FindItem("incoming") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("incoming"))
+                End If
             End If
 
             If (REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID) Is Nothing) Then
@@ -66,47 +74,69 @@ Partial Class MasterPages_MasterPage
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Overview").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Overview"))
+                If (menuHeader.FindItem("Overview") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Overview"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Search").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Search"))
+                If (menuHeader.FindItem("Search") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Search"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Scan Device").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Scan"))
+                If (menuHeader.FindItem("Scan") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Scan"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Batch Info").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Batch"))
+                If (menuHeader.FindItem("Batch") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Batch"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Product Info").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Product"))
+                If (menuHeader.FindItem("Product") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Product"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Tracking Location").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Tracking"))
+                If (menuHeader.FindItem("Tracking") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Tracking"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Timeline").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Timeline"))
+                If (menuHeader.FindItem("Timeline") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Timeline"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Incoming").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Incoming"))
+                If (menuHeader.FindItem("Incoming") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Incoming"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Inventory").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Inventory"))
+                If (menuHeader.FindItem("Inventory") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Inventory"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "User").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("User"))
+                If (menuHeader.FindItem("User") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("User"))
+                End If
             End If
 
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Results").FirstOrDefault() IsNot Nothing) Then
-                menuHeader.Items.Remove(menuHeader.FindItem("Results"))
+                If (menuHeader.FindItem("Results") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Results"))
+                End If
             End If
         End If
     End Sub
