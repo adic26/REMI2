@@ -1,4 +1,175 @@
-﻿ALTER PROCEDURE [Req].[RequestSearch] @RequestTypeID INT, @tv dbo.SearchFields READONLY, @UserID INT = NULL
+/*
+Run this script on:
+
+        SQLQA10YKF\HAQA1.RemiQA    -  This database will be modified
+
+to synchronize it with:
+
+        (local).REMILocal
+
+You are recommended to back up your database before running this script
+
+Script created by SQL Compare version 10.2.0 from Red Gate Software Ltd at 1/13/2015 8:48:45 AM
+
+*/
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+PRINT N'Creating [Relab].[ResultsStatus]'
+GO
+CREATE TABLE [Relab].[ResultsStatus]
+(
+[ResultStatusID] [int] NOT NULL IDENTITY(1, 1),
+[BatchID] [int] NOT NULL,
+[PassFail] [int] NULL,
+[ApprovedBy] [nvarchar] (255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+[ApprovedDate] [datetime] NULL
+)
+GO
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Creating primary key [PK_ResultsStatus] on [Relab].[ResultsStatus]'
+GO
+ALTER TABLE [Relab].[ResultsStatus] ADD CONSTRAINT [PK_ResultsStatus] PRIMARY KEY CLUSTERED  ([ResultStatusID])
+GO
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Creating [Relab].[remispResultsStatus]'
+GO
+CREATE PROCEDURE [Relab].[remispResultsStatus] @BatchID INT
+AS
+BEGIN
+	DECLARE @Status NVARCHAR(15)
+	
+	SELECT CASE WHEN r.PassFail = 0 THEN 'Fail' ELSE 'Pass' END AS Result, COUNT(*) AS NumRecords
+	INTO #ResultCount
+	FROM Relab.Results r
+		INNER JOIN TestUnits tu ON tu.ID=r.TestUnitID
+	WHERE tu.BatchID=@BatchID
+	GROUP BY r.PassFail
+	
+	SELECT CASE WHEN rs.PassFail = 1 THEN 'Pass' WHEN rs.PassFail=2 THEN 'Fail' ELSE 'No Result' END AS Result, 
+		rs.ApprovedBy, rs.ApprovedDate
+	INTO #ResultOverride
+	FROM Relab.ResultsStatus rs
+	WHERE rs.BatchID=@BatchID
+	ORDER BY ResultStatusID DESC
+	
+	IF ((SELECT COUNT(*) FROM #ResultOverride) > 0)
+		BEGIN
+			SELECT TOP 1 @Status = Result FROM #ResultOverride
+		END
+	ELSE
+		BEGIN
+			IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Fail'))
+				SET @Status = 'Fail'
+			ELSE IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Pass'))
+				SET @Status = 'Pass'
+			ELSE
+				SET @Status = 'No Result'
+		END
+	
+	SELECT * FROM #ResultCount
+	SELECT * FROM #ResultOverride
+		
+	SELECT @Status AS FinalStatus
+	
+	DROP TABLE #ResultCount
+	DROP TABLE #ResultOverride
+END
+GO
+
+ALTER PROCEDURE [Relab].[remispResultMeasurements] @ResultID INT, @OnlyFails INT = 0, @IncludeArchived INT = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @FalseBit BIT
+	DECLARE @ReTestNum INT
+	CREATE TABLE #parameters (ResultMeasurementID INT)
+	SELECT @ReTestNum= MAX(Relab.ResultsMeasurements.ReTestNum) FROM Relab.ResultsMeasurements WITH(NOLOCK) WHERE Relab.ResultsMeasurements.ResultID=@ResultID
+	SET @FalseBit = CONVERT(BIT, 0)
+
+	DECLARE @rows VARCHAR(8000)
+	DECLARE @sql VARCHAR(8000)
+	SELECT @rows=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + rp.ParameterName
+		FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
+			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
+		WHERE ResultID=@ResultID AND ((@IncludeArchived = 0 AND rm.Archived=@FalseBit) OR (@IncludeArchived=1)) AND ((@OnlyFails = 1 AND PassFail=@FalseBit) OR (@OnlyFails = 0))
+			AND rp.ParameterName <> 'Command'
+		ORDER BY '],[' +  rp.ParameterName
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
+
+	SET @sql = 'ALTER TABLE #parameters ADD ' + convert(varchar(8000), replace(@rows, ']', '] NVARCHAR(250)'))
+	EXEC (@sql)
+
+	IF (@rows != '[na]')
+	BEGIN
+		EXEC ('INSERT INTO #parameters SELECT *
+		FROM (
+			SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
+			FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
+				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
+			WHERE ResultID=' + @ResultID + ' AND ((' + @IncludeArchived + ' = 0 AND rm.Archived=' + @FalseBit + ') OR (' + @IncludeArchived + '=1)) 
+				AND ((' + @OnlyFails + ' = 1 AND PassFail=' + @FalseBit + ') OR (' + @OnlyFails + ' = 0)) AND rp.ParameterName <> ''Command'' 
+			) te PIVOT (MAX(Value) FOR ParameterName IN (' + @rows + ')) AS pvt')
+	END
+	ELSE
+	BEGIN
+		EXEC ('ALTER TABLE #parameters DROP COLUMN na')
+	END
+
+	SELECT CASE WHEN rm.Archived = 1 THEN 
+	(SELECT MIN(ID) FROM relab.ResultsMeasurements rm2 WHERE rm2.ResultID=rm.ResultID AND rm2.MeasurementTypeID=rm.MeasurementTypeID 
+		and isnull(Relab.ResultsParametersComma(rm.ID),'') = isnull(Relab.ResultsParametersComma(rm2.ID),'') and rm2.Archived=0)
+	ELSE rm.ID END AS ID, ISNULL(ISNULL(ISNULL(lt.[Values], ltsf.[Values]), ltmf.[Values]), ltacc.[Values]) As Measurement, 
+	LowerLimit AS [Lower Limit], UpperLimit AS [Upper Limit], MeasurementValue AS Result, lu.[Values] As Unit, 
+		CASE WHEN PassFail=1 THEN 'Pass' ELSE 'Fail' END AS [Pass/Fail],
+		rm.MeasurementTypeID, rm.ReTestNum AS [Test Num], rm.Archived, rm.XMLID, 
+		@ReTestNum AS MaxVersion, rm.Comment, 
+		rm.Description, 
+		ISNULL((SELECT TOP 1 1 FROM Relab.ResultsMeasurementsAudit rma WHERE rma.ResultMeasurementID=rm.ID AND rma.PassFail <> rm.PassFail ORDER BY DateEntered DESC), 0) As WasChanged,
+		ISNULL(CONVERT(NVARCHAR, rm.DegradationVal), 'N/A') AS [Degradation], x.VerNum,		
+		(CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurementsFiles rmf WHERE rmf.ResultMeasurementID=rm.ID) > 0 THEN 1 ELSE 0 END) AS HasFiles,
+		 p.*
+	FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
+		LEFT OUTER JOIN Lookups lu WITH(NOLOCK) ON lu.LookupID=rm.MeasurementUnitTypeID
+		LEFT OUTER JOIN Lookups lt WITH(NOLOCK) ON lt.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN Lookups ltsf WITH(NOLOCK) ON ltsf.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN Lookups ltmf WITH(NOLOCK) ON ltmf.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN Lookups ltacc WITH(NOLOCK) ON ltacc.LookupID=rm.MeasurementTypeID
+		LEFT OUTER JOIN #parameters p WITH(NOLOCK) ON p.ResultMeasurementID=rm.ID
+		LEFT OUTER JOIN Relab.ResultsXML x ON x.ID = rm.XMLID
+	WHERE rm.ResultID=@ResultID AND ((@IncludeArchived = 0 AND rm.Archived=@FalseBit) OR (@IncludeArchived=1)) AND ((@OnlyFails = 1 AND PassFail=@FalseBit) OR (@OnlyFails = 0))
+	ORDER BY CASE WHEN rm.Archived = 1 THEN 
+	(SELECT MIN(ID) FROM relab.ResultsMeasurements rm2 WHERE rm2.ResultID=rm.ResultID AND rm2.MeasurementTypeID=rm.MeasurementTypeID 
+		and isnull(Relab.ResultsParametersComma(rm.ID),'') = isnull(Relab.ResultsParametersComma(rm2.ID),'') and rm2.Archived=0)
+	ELSE rm.ID END, rm.ReTestNum
+
+	DROP TABLE #parameters
+	SET NOCOUNT OFF
+END
+GO
+GRANT EXECUTE ON [Relab].[remispResultMeasurements] TO Remi
+GO
+ALTER PROCEDURE [Req].[RequestSearch] @RequestTypeID INT, @tv dbo.SearchFields READONLY, @UserID INT = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -493,32 +664,33 @@ END
 GO
 GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
-DECLARE @table AS dbo.SearchFields
-INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES ('Request', 51, '*Windermere')
---,('Request', 51, '-Windermere E R135')
---,('Request', 51, '3G SIMs')
--- ,('Request', 51, '*Lisbon')
---,('Request', 49, 'Handheld')
---,('Request', 49, '*Accessory')
---,('Test', 1099, 'Sensor Test')
---,('Test', 1280, 'Functional')
-,('Test', 1020, 'Radiated RF Test')
---,('Test', 1103, 'Camera Front')
---,('Stage', 3218, 'Post 360hrs')
---,('Stage', 2246, 'Analysis')
---,('Stage', 3220, 'Post 720hrs')
---,('BSN', 0, '1151185790')
---,('Unit', 0, '5')
---,('Unit', 0, '1')
---,('IMEI', 0, '')
---,('ResultArchived', 0, '')
---,('Param:Band', 0, 'LTE17')
---,('Param:Channel', 0, '5800')
---,('ResultInfoArchived', 0, '')
---,('InfoName', 0, 'HardwareID')
---,('InfoValue', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
---, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
---, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
---,('Measurement', 0, '*RxBER')
-EXEC [Req].[RequestSearch] 1, @table--, 251
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Adding foreign keys to [Relab].[ResultsStatus]'
+GO
+ALTER TABLE [Relab].[ResultsStatus] ADD CONSTRAINT [FK_ResultsStatus_Batches] FOREIGN KEY ([BatchID]) REFERENCES [dbo].[Batches] ([ID])
+GO
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Altering permissions on [Req].[RequestFieldSetup]'
+GO
+REVOKE EXECUTE ON  [Req].[RequestFieldSetup] TO [public]
+GO
+PRINT N'Altering permissions on [Relab].[remispResultsStatus]'
+GO
+GRANT EXECUTE ON  [Relab].[remispResultsStatus] TO [remi]
+GO
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'The database update succeeded'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'The database update failed'
+GO
+DROP TABLE #tmpErrors
+GO

@@ -237,6 +237,7 @@
     <Folder Include="Schema Objects\Schemas\Relab\Tables\Keys" />
     <Folder Include="Schema Objects\Schemas\Req\Programmability\Types" />
     <Folder Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types" />
+    <Folder Include="Scripts\January162015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2607,5 +2608,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types\SearchFields.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\January162015\1.sql" />
   </ItemGroup>
 </Project>
