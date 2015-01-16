@@ -49,6 +49,9 @@
             </div>
         </div>
     </div>
+        
+    <div class="LoadingModal" id="LoadingModal" style="display:none;"></div>
+    <div class="LoadingGif" id="LoadingGif" style="display:none;"></div>
 
      <ul id="FinalItemsList" class="list-group"></ul>
     <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>

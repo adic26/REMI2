@@ -32,6 +32,8 @@ $(function () { //ready function
 
     });
     $('#bs_searchButton').on('click', function () {
+        document.getElementById('LoadingGif').style.display = "block";
+        document.getElementById('LoadingModal').style.display = "block";
 
         var fullList = [];
         var selectedRequests = req.next().find('li.selected').find('a.opt ');
