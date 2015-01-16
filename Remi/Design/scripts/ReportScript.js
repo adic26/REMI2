@@ -87,31 +87,40 @@
             var testID = $('#bs_ddlSearchField optgroup > option')[originalIndex].getAttribute('testid');
             $.each(searchTermRequests, function (s_index, s_element) {
                 //console.log($(this).text());
-                var searchTerm = s_element.innerText
-                if (searchTerm == element.innerText) {
-                    var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
-                    //console.log(request);
-                    fullList.push(request);
+                if (s_element.children[0].value != '') {
+                    var searchTerm = s_element.innerText
+                    if (searchTerm == element.innerText) {
+                        var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
+                        //console.log(request);
+                        fullList.push(request);
+                    }
                 }
             });
         });
 
         $.each(selectedAdditional, function (index, element) {
             $.each(searchTermRequests, function (s_index, s_element) {
-                //console.log($(this).text());
+                //console.log($(this).text());                
                 
-                
-                if (s_element.innerText == "Param") {
-                    var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
-                    //console.log(additionalVals);
-                    fullList.push(additionalVals);
-                }
-                else {
-                    var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
-                    //console.log(additionalVals);
-                    fullList.push(additionalVals);
+                if (s_element.children[0].value != '') {
+                    if (s_element.innerText == "Param") {
+                        var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
+                        //console.log(additionalVals);
+                        fullList.push(additionalVals);
+                    }
+                    else {
+                        var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+                        //console.log(additionalVals);
+                        fullList.push(additionalVals);
+                    }
                 }
             });
+        });
+
+        $.each(searchTermRequests, function (s_index, s_element) {
+            if (s_element.children[0].value == '') {
+                s_element.outerText = '';
+            }
         });
 
         $.each(selectedTests, function (index, element) {
@@ -137,7 +146,6 @@
         });
 
         if (fullList.length > 0) {
-
             var requestParams = JSON.stringify({
                 "requestTypeID": rtID[0].value,
                 "fields": fullList

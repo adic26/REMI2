@@ -46,13 +46,21 @@ $(function () { //ready function
             var testID = $('#bs_ddlSearchField optgroup > option')[originalIndex].getAttribute('testid');
             $.each(searchTermRequests, function (s_index, s_element) {
                 //console.log($(this).text());
-                var searchTerm = s_element.innerText
-                if (searchTerm == element.innerText) {
-                    var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
-                    //console.log(request);
-                    fullList.push(request);
+                if (s_element.children[0].value != '') {
+                    var searchTerm = s_element.innerText
+                    if (searchTerm == element.innerText) {
+                        var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
+                        //console.log(request);
+                        fullList.push(request);
+                    }
                 }
             });
+        });
+
+        $.each(searchTermRequests, function (s_index, s_element) {
+            if (s_element.children[0].value == '') {
+                s_element.outerText = '';
+            }
         });
 
         if (fullList.length > 0) {

@@ -33,6 +33,7 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
+    Use "*" at beginning for LIKE and "-" at beginning for NOT LIKE
     <div class="row">
         <div class="col-lg-6">
             <div class="input-group input-group-sm">
