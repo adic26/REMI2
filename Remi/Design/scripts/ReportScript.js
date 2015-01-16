@@ -1,5 +1,4 @@
 ﻿$(function () { //ready function
-
     $('.selectpicker').selectpicker({
         //style: 'btn-info',
         size: 4
@@ -13,20 +12,13 @@
     $('#FinalItemsList').hide();
     $('#bs_searchButton').hide();
     $('#bs_export').hide();
+    $('#bs_RealStages').next().hide();
 
-    //var rtID = $('#<%=ddlRequestType.ClientID%>');
     var rtID = $("[id$='ddlRequestType']");
-    var grdID = $("[id$='grdRequestSearch']");
-    var searchterms1 = $("[id$='lstSearchTerms']");
     var request = searchAll(rtID[0].value, "");
-
-
-    var jobs = $('#bs_StagesField');
     var req = $('#bs_ddlSearchField');
     var tests = $('#bs_TestField');
     var stages = $('#bs_RealStages');
-
-    
 
     $('#bs_list').hide()
     $('#bs_OKayButton').on('click', function () {
@@ -34,7 +26,7 @@
         var myList = $(FinalItemsList);
         var fullList = [];
 
-        if (jobs.val() != null) {
+        if ($('#bs_StagesField').val() != null) {
             //Finding full list with stages.val() that gives the entire array
             //finding the jobname, id and value of stage
             summary = [];
@@ -85,7 +77,7 @@
                 var searchTerm = s_element.innerText
                 if (searchTerm == element.innerText) {
                     var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
-                    console.log(request);
+                    //console.log(request);
                     fullList.push(request);
                 }
             });
@@ -95,7 +87,7 @@
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             var testID = $('#bs_TestField optgroup > option')[originalIndex].getAttribute('testid');
             var tests = 'Test' + ',' + testID + ',' + element.innerText;
-            console.log(tests);
+            //console.log(tests);
             fullList.push(tests);
         });
 
@@ -109,7 +101,7 @@
                 var testID = $('#bs_RealStages optgroup')[OptGroup - 1].childNodes[originalIndex].getAttribute('testid');
             }
             var stage = 'Stage' + ',' + testID + ',' + element.innerText;
-            console.log(stage);
+            //console.log(stage);
             fullList.push(stage);
         });
 
@@ -138,32 +130,31 @@
         }
     });
     $('#bs_export').click(function () {
-        CSVExportDataTable("", $(this).val());
+        if (navigator.appName == 'Microsoft Internet Explorer') {
+            alert("Export Functionality Not Supported For IE. Use Chrome.");
+        }
+        else {
+            CSVExportDataTable("", $(this).val());
+        }
     });
-
-
+    
     var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
     selectpicker.data('open', false);
+
     selectpicker.click(function () {
-        if (selectpicker.data('open')) {
-            selectpicker.data('open', false);
-            console.log("close!");
-            //Insert all your stages at this point
-            if (jobs.val() != null) {
-                addStagesViaJobs(jobs.val(), stages);
-            }
-
-        } else {
-            console.log("open");
-            selectpicker.data('open', true);
-
-        }
+        selectpicker.data('open', true);
         $('.selectpicker').selectpicker('refresh');
-
-        
     });
 
+    $('#bs_StagesField').change(function () {
+        if ($('#bs_StagesField').val() != null) {
+            addStagesViaJobs($('#bs_StagesField').val(), $('#bs_RealStages'));
+        }
 
+        $('#bs_RealStages').next().show();
+        $('.selectpicker').selectpicker('refresh');
+    });
+    
 function CSVExportDataTable(oTable, exportMode) {
         // Init
         var csv = '';
@@ -179,7 +170,6 @@ function CSVExportDataTable(oTable, exportMode) {
         });
         csv += headers.join(dataSeparator) + "\r\n";
 
-
         // Get table body data
         var totalRows = oTable.fnSettings().fnRecordsTotal();
         for (var i = 0; i < totalRows; i++) {
@@ -192,13 +182,11 @@ function CSVExportDataTable(oTable, exportMode) {
         // Proceed if csv data was loaded
         if (csv.length > 0) {
             downloadFile('data.csv', 'data:text/csv;charset=UTF-8,' + encodeURIComponent(csv));
-            console.log(window.location.href);
+            //console.log(window.location.href);
         }
     }
 
-
 function search(rtID, type, model) {
-
     var requestParams = JSON.stringify({
         "requestTypeID": rtID,
         "type": type
@@ -219,11 +207,9 @@ function search(rtID, type, model) {
 
             model.append(cb);
             $('.selectpicker').selectpicker('refresh');
-
-
         }
         else if (data == true) {
-            console.log(data);
+            //console.log(data);
         }
         else if (data.Success == false) {
             return data.Results;
@@ -231,15 +217,13 @@ function search(rtID, type, model) {
     });
 
     myRequest.fail(function (responser) {
-        console.log(responser.responseText)
+        //console.log(responser.responseText)
     });
 
     return myRequest;
-
 }
 
 function downloadFile(fileName, urlData) {
-
     var aLink = document.createElement('a');
     var evt = document.createEvent("HTMLEvents");
     evt.initEvent("click");
@@ -249,7 +233,6 @@ function downloadFile(fileName, urlData) {
 }
 
 function searchAll(rtID, type) {
-
     var requestParams = JSON.stringify({
         "requestTypeID": rtID,
         "type": type
@@ -266,21 +249,17 @@ function searchAll(rtID, type) {
 
             //job Search
             jobSearch($('#bs_StagesField'));
-
-
         }
         else if (data == true) {
-            console.log(data);
+            //console.log(data);
         }
         else if (data.Success == false) {
             return data.Results;
         }
-    });
-    
+    });    
 }
 
 function jobSearch(model) {
-
     //setting up parameters from web service
     var requestParams = {};
 
@@ -296,10 +275,7 @@ function jobSearch(model) {
 
         model.append(cb);
         $('.selectpicker').selectpicker('refresh');
-
-
     });
-
 }
 
 function populateFields(data, model, type) {
@@ -317,12 +293,9 @@ function populateFields(data, model, type) {
 
     model.append(cb);
     $('.selectpicker').selectpicker('refresh');
-
 }
 
 function populateStage(rtID, model) {
-
-
     var requestParams = JSON.stringify({
         "requestTypeID": rtID
     });
@@ -334,8 +307,6 @@ function populateStage(rtID, model) {
         model.append('</optgroup>');
         $('.selectpicker').selectpicker('refresh');
     });
-
-
 }
 
 function refreshAllSelectPickers() {
@@ -343,8 +314,6 @@ function refreshAllSelectPickers() {
 }
 
 function addStagesViaJobs(data,model) {
-
-
     model.empty();
 
     //where data is all the values from the Job.
@@ -353,11 +322,9 @@ function addStagesViaJobs(data,model) {
         //call web service function
         stagesWebService(element,model);
     });
-
 }
 
-function stagesWebService(jobName,model) {
-    
+function stagesWebService(jobName,model) {    
     //Re-assess the web service , so it takes multiple job names
     var requestParams = JSON.stringify({
         "jobName": jobName
@@ -379,5 +346,4 @@ function stagesWebService(jobName,model) {
         $('.selectpicker').selectpicker('refresh');
     });
 }
-
 });

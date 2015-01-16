@@ -537,10 +537,12 @@
       if (this.options.header) menu.css('padding-top', 0);
 
       if (this.options.size == 'auto') {
-        var getSize = function () {
-          var minHeight,
-              lisVis = that.$lis.not('.hidden');
+          var getSize = function () {
 
+              if (that.$lis != null) {
+                  var minHeight,
+                      lisVis = that.$lis.not('.hidden');
+              }
           posVert();
           menuHeight = selectOffsetBot - menuExtras;
 
@@ -551,10 +553,15 @@
             menuHeight = selectOffsetTop - menuExtras;
           }
 
-          if ((lisVis.length + lisVis.filter('.dropdown-header').length) > 3) {
-            minHeight = liHeight * 3 + menuExtras - 2;
-          } else {
-            minHeight = 0;
+          if (lisVis != undefined) {
+              if ((lisVis.length + lisVis.filter('.dropdown-header').length) > 3) {
+                  minHeight = liHeight * 3 + menuExtras - 2;
+              } else {
+                  minHeight = 0;
+              }
+          }
+          else {
+              minHeight = 0;
           }
 
           menu.css({
