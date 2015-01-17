@@ -17,6 +17,7 @@
     var rtID = $("[id$='ddlRequestType']");
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
+    var additional = $('#bs_Additional');
     var tests = $('#bs_TestField');
     var stages = $('#bs_RealStages');
 
@@ -37,9 +38,13 @@
                 currentJob = stages.children()[OptGroup - 1].getAttribute("label");
                 currentStages = element.text;
                 summary[summary.length] = currentJob + " : " + currentStages;
-            });
-            
+            });   
         }
+
+        if (additional.val() != null) {
+            fullList = $.merge(fullList, additional.val());
+        }
+
         if (req.val()!= null) {
             fullList = $.merge(fullList, req.val());
         }
@@ -48,15 +53,25 @@
         //}
         
         $.each(fullList, function (index, element) {
-            $('.list-group').append($('<li class="list-group-item">' +
-                element +
-                '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
+            var isAdditional = false;
+            if (element.indexOf("--a") > -1) {
+                element = element.replace("--a", "");
+                isAdditional = true;
+            }
+
+            var builtHTML;
+            builtHTML = '<li class="list-group-item">' + element;
+            if (element == "Param") {
+                builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria Name">';
+                }
+            builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>';
+            $('.list-group').append($(builtHTML));
         });
 
         myList.show();
-        $('#bs_searchButton').show();
-        
+        $('#bs_searchButton').show(); 
     });
+
     $('#bs_searchButton').on('click', function () {
         document.getElementById('LoadingGif').style.display = "block";
         document.getElementById('LoadingModal').style.display = "block";
@@ -66,6 +81,7 @@
         var searchTermRequests = $('#FinalItemsList li');
         var selectedTests = tests.next().find('li.selected').find('a.opt ');
         var selectedStages = stages.next().find('li.selected').find('a.opt ');
+        var selectedAdditional = additional.next().find('li.selected');
         var myTable = $('#searchResults');
 
         $.each(selectedRequests, function (index, element) {
@@ -74,13 +90,40 @@
             var testID = $('#bs_ddlSearchField optgroup > option')[originalIndex].getAttribute('testid');
             $.each(searchTermRequests, function (s_index, s_element) {
                 //console.log($(this).text());
-                var searchTerm = s_element.innerText
-                if (searchTerm == element.innerText) {
-                    var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
-                    //console.log(request);
-                    fullList.push(request);
+                if (s_element.children[0].value != '') {
+                    var searchTerm = s_element.innerText
+                    if (searchTerm == element.innerText) {
+                        var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
+                        //console.log(request);
+                        fullList.push(request);
+                    }
                 }
             });
+        });
+
+        $.each(selectedAdditional, function (index, element) {
+            $.each(searchTermRequests, function (s_index, s_element) {
+                //console.log($(this).text());                
+                
+                if (s_element.children[0].value != '' && s_element.children[0].outerHTML.indexOf('addition="true"') > -1) {
+                    if (s_element.innerText == "Param") {
+                        var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
+                        //console.log(additionalVals);
+                        fullList.push(additionalVals);
+                    }
+                    else {
+                        var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+                        //console.log(additionalVals);
+                        fullList.push(additionalVals);
+                    }
+                }
+            });
+        });
+
+        $.each(searchTermRequests, function (s_index, s_element) {
+            if (s_element.children[0].value == '') {
+                s_element.outerText = '';
+            }
         });
 
         $.each(selectedTests, function (index, element) {
@@ -106,7 +149,6 @@
         });
 
         if (fullList.length > 0) {
-
             var requestParams = JSON.stringify({
                 "requestTypeID": rtID[0].value,
                 "fields": fullList
@@ -127,6 +169,8 @@
                 });
         } else {
             alert("Please enter a search field");
+            document.getElementById('LoadingGif').style.display = "none";
+            document.getElementById('LoadingModal').style.display = "none";
         }
     });
     $('#bs_export').click(function () {
