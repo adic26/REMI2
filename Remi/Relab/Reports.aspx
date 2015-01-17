@@ -44,17 +44,17 @@
                     <select id="bs_RealStages" class="selectpicker show-tick" title="Select Stages..." multiple data-size="auto" data-selected-text-format="count"></select>
                     <select id="bs_TestField" class="selectpicker show-tick" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
                     <select id="bs_Additional" class="selectpicker show-tick" title="Select Additional..." multiple data-size="15" data-selected-text-format="count">
-                        <option value="Measurement">Measurement Name</option>
-                        <option value="BSN">BSN</option>
-                        <option value="IMEI">IMEI</option>
-                        <option value="Unit">Unit</option>
-                        <option value="ResultArchived">Results Archived</option>
-                        <option value="ResultInfoArchived">Info Archived</option>
-                        <option value="InfoName">Information Name</option>
-                        <option value="InfoValue">Information Value</option>
-                        <option value="TestRunStartDate">Test Run Start Date</option>
-                        <option value="TestRunEndDate">Test Run End Date</option>
-                        <option value="Param">Parameter</option>
+                        <option value="--aMeasurement">Measurement Name</option>
+                        <option value="--aBSN">BSN</option>
+                        <option value="--aIMEI">IMEI</option>
+                        <option value="--aUnit">Unit</option>
+                        <option value="--aResultArchived">Results Archived</option>
+                        <option value="--aResultInfoArchived">Info Archived</option>
+                        <option value="--aInfoName">Information Name</option>
+                        <option value="--aInfoValue">Information Value</option>
+                        <option value="--aTestRunStartDate">Test Run Start Date</option>
+                        <option value="--aTestRunEndDate">Test Run End Date</option>
+                        <option value="--aParam">Parameter</option>
                     </select>
                     <button id="bs_OKayButton" type="button" class="btn btn-primary" autocomplete="off">ADD</button>
                 </div>

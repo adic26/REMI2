@@ -102,7 +102,7 @@
             $.each(searchTermRequests, function (s_index, s_element) {
                 //console.log($(this).text());                
                 
-                if (s_element.children[0].value != '') {
+                if (s_element.children[0].value != '' && s_element.innerText.indexOf("--a") > -1) {
                     if (s_element.innerText == "Param") {
                         var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
                         //console.log(additionalVals);
