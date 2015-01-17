@@ -53,16 +53,19 @@
         //}
         
         $.each(fullList, function (index, element) {
+            var isAdditional = false;
+            if (element.indexOf("--a") > -1) {
+                element = element.replace("--a", "");
+                isAdditional = true;
+            }
+
+            var builtHTML;
+            builtHTML = '<li class="list-group-item">' + element;
             if (element == "Param") {
-                $('.list-group').append($('<li class="list-group-item">' +
-                    element +
-                    '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria Name"><input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
-            }
-            else {
-                $('.list-group').append($('<li class="list-group-item">' +
-                    element +
-                    '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
-            }
+                builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria Name">';
+                }
+            builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>';
+            $('.list-group').append($(builtHTML));
         });
 
         myList.show();
@@ -102,7 +105,7 @@
             $.each(searchTermRequests, function (s_index, s_element) {
                 //console.log($(this).text());                
                 
-                if (s_element.children[0].value != '' && s_element.innerText.indexOf("--a") > -1) {
+                if (s_element.children[0].value != '' && s_element.children[0].outerHTML.indexOf('addition="true"') > -1) {
                     if (s_element.innerText == "Param") {
                         var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
                         //console.log(additionalVals);
@@ -166,6 +169,8 @@
                 });
         } else {
             alert("Please enter a search field");
+            document.getElementById('LoadingGif').style.display = "none";
+            document.getElementById('LoadingModal').style.display = "none";
         }
     });
     $('#bs_export').click(function () {
