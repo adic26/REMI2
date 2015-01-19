@@ -18,6 +18,8 @@
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
     <script type="text/javascript" src="../Design/scripts/ReportScript.js"></script>
+    <!--include BlockUI -->
+    <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery.blockUI.js"></script>
 </asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
     <h1>Reports</h1><br />
@@ -53,9 +55,11 @@
             
     <ul id="FinalItemsList" class="list-group"></ul>
     <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
-         
-    <table id="searchResults"></table>
-    <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
+      
+    <div class="table">
+        <table id="searchResults"></table>
+        <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
+    </div>   
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>
