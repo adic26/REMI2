@@ -61,7 +61,7 @@
 
             var builtHTML;
             builtHTML = '<li class="list-group-item">' + element;
-            if (element == "Param") {
+            if (element == "Param" || element == "Info") {
                 builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria Name">';
                 }
             builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>';
@@ -108,7 +108,7 @@
                 //console.log($(this).text());                
                 
                 if (s_element.children[0].value != '' && s_element.children[0].outerHTML.indexOf('addition="true"') > -1) {
-                    if (s_element.innerText == "Param") {
+                    if (s_element.innerText == "Param" || s_element.innerText == "Info") {
                         var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
                         //console.log(additionalVals);
                         fullList.push(additionalVals);

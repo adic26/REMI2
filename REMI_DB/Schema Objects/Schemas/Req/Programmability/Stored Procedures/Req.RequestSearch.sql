@@ -4,8 +4,7 @@ BEGIN
 	SET NOCOUNT ON
 	CREATE TABLE dbo.#executeSQL (ID INT IDENTITY(1,1), sqlvar NTEXT)
 	CREATE TABLE dbo.#Request (RequestID INT PRIMARY KEY, BatchID INT, RequestNumber NVARCHAR(11))
-	CREATE TABLE dbo.#InfoName (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS)
-	CREATE TABLE dbo.#InfoValue (Val NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS)
+	CREATE TABLE dbo.#Infos (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS)
 	CREATE TABLE dbo.#Params (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(250) COLLATE SQL_Latin1_General_CP1_CI_AS)
 
 	SELECT * INTO dbo.#temp FROM @tv
@@ -358,21 +357,13 @@ BEGIN
 
 			IF @ResultInfoArchived IS NULL
 				SET @ResultInfoArchived = 0
-				
-			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='InfoName') > 0)
+							
+			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Info:%') > 0)
 			BEGIN
-				INSERT INTO dbo.#InfoName (Name)
-				SELECT SearchTerm
+				INSERT INTO dbo.#Infos (Name, Val)
+				SELECT REPLACE(TableType, 'Info:', ''), SearchTerm
 				FROM dbo.#temp
-				WHERE TableType = 'InfoName'
-			END
-				
-			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='InfoValue') > 0)
-			BEGIN
-				INSERT INTO dbo.#InfoValue (Val)
-				SELECT SearchTerm
-				FROM dbo.#temp
-				WHERE TableType = 'InfoValue'
+				WHERE TableType LIKE 'Info:%'
 			END
 
 			SELECT @InformationColumnNames=  ISNULL(STUFF(
@@ -383,7 +374,6 @@ BEGIN
 				LEFT OUTER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON x.ID=ri.XMLID
 			WHERE ri.Name NOT IN ('Start UTC','Start','End', 'STEF Plugin Version')
 				AND ((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1))
-				AND (ri.Name IN (SELECT Name FROM dbo.#InfoName) OR (SELECT COUNT(*) FROM dbo.#InfoName) = 0)
 			ORDER BY '],[' +  ri.Name
 			FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
@@ -391,6 +381,14 @@ BEGIN
 			BEGIN
 				SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
 				EXEC sp_executesql @SQL
+				
+				SET @whereStr = ''
+				
+				IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
+				BEGIN
+					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + Name + '] = ''' + Val + '''' + ' AND ' FROM dbo.#Infos
+					SET @whereStr = ' WHERE ' +  SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+				END
 
 				SET @SQL = N'INSERT INTO dbo.#RRInformation SELECT *
 				FROM (
@@ -399,8 +397,8 @@ BEGIN
 						INNER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON rr.XMLID=ri.XMLID
 						WHERE ri.Name NOT IN (''Start UTC'',''Start'',''End'', ''STEF Plugin Version'') AND
 							((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1)) 
-							AND (ri.Value IN (SELECT Val FROM dbo.#InfoValue) OR (SELECT COUNT(*) FROM dbo.#InfoValue) = 0)
-					) te PIVOT (MAX(Value) FOR Name IN ('+ @InformationColumnNames +')) AS pvt'
+					) te PIVOT (MAX(Value) FOR Name IN ('+ @InformationColumnNames +')) AS pvt
+				' + @whereStr
 
 				EXEC sp_executesql @SQL, N'@ResultInfoArchived int', @ResultInfoArchived
 			END
@@ -425,7 +423,7 @@ BEGIN
 		SET @LimitedByParam = 0
 		SET @LimitedByInfo = 0
 		
-		IF ((SELECT COUNT(*) FROM dbo.#InfoValue) > 0 OR (SELECT COUNT(*) FROM dbo.#InfoName) > 0)
+		IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
 			SET @LimitedByInfo = 1
 		
 		IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
@@ -440,7 +438,7 @@ BEGIN
 			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + COLUMN_NAME + '],' 
 			FROM tempdb.INFORMATION_SCHEMA.COLUMNS 
 			WHERE (TABLE_NAME like '#RR%' OR TABLE_NAME LIKE '#RRParameters%' OR TABLE_NAME LIKE '#RRInformation%')
-				AND COLUMN_NAME NOT IN ('RequestID', 'XMLID', 'ID', 'BatchID', 'ResultID', 'RID')--, 'ResultMeasurementID')
+				AND COLUMN_NAME NOT IN ('RequestID', 'XMLID', 'ID', 'BatchID', 'ResultID', 'RID', 'ResultMeasurementID')
 			ORDER BY TABLE_NAME
 		END
 
@@ -485,8 +483,7 @@ BEGIN
 	DROP TABLE dbo.#executeSQL
 	DROP TABLE dbo.#temp
 	DROP TABLE dbo.#Request
-	DROP TABLE dbo.#InfoValue
-	DROP TABLE dbo.#InfoName
+	DROP TABLE dbo.#Infos
 	DROP TABLE dbo.#Params
 	SET NOCOUNT OFF
 END
@@ -516,8 +513,7 @@ VALUES ('Request', 51, '*Windermere')
 --,('Param:Band', 0, 'LTE17')
 --,('Param:Channel', 0, '5800')
 --,('ResultInfoArchived', 0, '')
---,('InfoName', 0, 'HardwareID')
---,('InfoValue', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
+,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
 --, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
 --, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
 --,('Measurement', 0, '*RxBER')
