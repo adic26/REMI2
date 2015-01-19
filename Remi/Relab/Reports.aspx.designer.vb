@@ -30,4 +30,13 @@ Partial Public Class Reports
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlRequestType As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''srcRequest control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents srcRequest As Global.Remi.Search1
 End Class
