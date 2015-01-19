@@ -14,7 +14,7 @@
     $('#bs_export').hide();
     $('#bs_RealStages').next().hide();
 
-    var rtID = $("[id$='ddlRequestType']");
+    var rtID = $("[id$='hdnRequestType']");
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
     var additional = $('#bs_Additional');
@@ -154,7 +154,7 @@
                 "fields": fullList
             });
 
-            var myTable = jsonRequest("Reports.aspx/customSearch", requestParams).success(
+            var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
                 function (d) {
                     $('#searchResults').empty();
                     $('#searchResults').append(d);
@@ -236,7 +236,7 @@ function search(rtID, type, model) {
         "type": type
     });
 
-    var myRequest = jsonRequest("Reports.aspx/Search", requestParams).success(function (data) {
+    var myRequest = jsonRequest("../webservice/REMIInternal.asmx/Search", requestParams).success(function (data) {
         if (data.Success == true) {
             var results = data.Results;
             var rslt = $(results);
@@ -282,7 +282,7 @@ function searchAll(rtID, type) {
         "type": type
     });
 
-    var myRequest = jsonRequest("Reports.aspx/Search", requestParams).success(function (data) {
+    var myRequest = jsonRequest("../webservice/REMIInternal.asmx/Search", requestParams).success(function (data) {
         if (data.Success == true) {
 
             //Request Information here
@@ -344,7 +344,7 @@ function populateStage(rtID, model) {
         "requestTypeID": rtID
     });
 
-    var myRequest = jsonRequest("Reports.aspx/GetAllStages", requestParams).success(function (data) {
+    var myRequest = jsonRequest("../webservice/REMIInternal.asmx/GetAllStages", requestParams).success(function (data) {
         model.empty();
         model.append('<optgroup label="Stages">');
         model.append(data);

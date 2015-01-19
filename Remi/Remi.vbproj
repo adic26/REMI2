@@ -258,6 +258,13 @@
     <Compile Include="Controls\ScanIndicator.ascx.designer.vb">
       <DependentUpon>ScanIndicator.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Search.ascx.designer.vb">
+      <DependentUpon>Search.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Search.ascx.vb">
+      <DependentUpon>Search.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -600,6 +607,10 @@
       <DependentUpon>RemiAPI.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WebService\REMIInternal.asmx.vb">
+      <DependentUpon>REMIInternal.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WebService\VersionCheck.vb">
       <DependentUpon>VersionCheck.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -615,6 +626,7 @@
     <Content Include="Admin\TrackingLocationTests.aspx" />
     <Content Include="Controls\FAControl.ascx" />
     <Content Include="Controls\RequestSetup.ascx" />
+    <Content Include="Controls\Search.ascx" />
     <Content Include="Default.aspx" />
     <Content Include="Design\bbLogo.png" />
     <Content Include="Design\beta.jpg" />
@@ -710,6 +722,7 @@
     <Content Include="WebService\Configuration.asmx" />
     <Content Include="WebService\DataPush.asmx" />
     <Content Include="WebService\RemiAPI.asmx" />
+    <Content Include="WebService\REMIInternal.asmx" />
     <Content Include="WebService\VersionCheck.asmx" />
     <EmbeddedResource Include="licenses.licx" />
     <EmbeddedResource Include="My Project\Resources.resx">

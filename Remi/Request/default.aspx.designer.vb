@@ -48,4 +48,13 @@ Partial Public Class ReqDefault
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hypAdmin As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
+    '''srcRequest control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents srcRequest As Global.Remi.Search1
 End Class

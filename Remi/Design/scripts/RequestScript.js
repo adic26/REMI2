@@ -5,10 +5,14 @@ $(function () { //ready function
         size: 4
     });
 
+    $('#bs_StagesField').next().hide();
+    $('#bs_RealStages').next().hide();
+    $('#bs_TestField').next().hide();
+    $('#bs_Additional').next().hide();
     $('#FinalItemsList').hide();
     $('#bs_searchButton').hide();
     $('#bs_export').hide();
-    var rtID = $("[id$='ddlRequestType']");
+    var rtID = $("[id$='hdnRequestType']");
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
 
@@ -70,7 +74,7 @@ $(function () { //ready function
                 "fields": fullList
             });
 
-            var myTable = jsonRequest("default.aspx/customSearch", requestParams).success(
+            var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
                 function (d) {
                     $('#searchResults').empty();
                     $('#searchResults').append(d);
@@ -106,7 +110,7 @@ $(function () { //ready function
             "type": type
         });
 
-        var myRequest = jsonRequest("default.aspx/Search", requestParams).success(function (data) {
+        var myRequest = jsonRequest("../webservice/REMIInternal.asmx/Search", requestParams).success(function (data) {
             if (data.Success == true) {
 
                 //Request Information here
