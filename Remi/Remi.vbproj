@@ -669,6 +669,7 @@
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.11.2.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.8.2.custom.min.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui.min.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery.blockUI.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.11.1.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.4.2.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.8.0.js" />

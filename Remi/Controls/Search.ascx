@@ -13,6 +13,9 @@
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
 
+    <!--include BlockUI -->
+    <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery.blockUI.js"></script>
+
     Use "*" at beginning for LIKE and "-" at beginning for NOT LIKE
     <div class="row">
         <div class="col-lg-6">
@@ -42,14 +45,12 @@
             </div>
         </div>
     </div>
-        
-    <div class="LoadingModal" id="LoadingModal" style="display:none;"></div>
-    <div class="LoadingGif" id="LoadingGif" style="display:none;"></div>
 
      <ul id="FinalItemsList" class="list-group"></ul>
     <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
 
-     <table id="searchResults"></table>
-    <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
-
+    <div class="table">
+        <table id="searchResults"></table>
+        <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
+    </div>
     <asp:HiddenField runat="server" ID="hdnRequestType" />

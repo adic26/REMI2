@@ -36,9 +36,6 @@ $(function () { //ready function
 
     });
     $('#bs_searchButton').on('click', function () {
-        document.getElementById('LoadingGif').style.display = "block";
-        document.getElementById('LoadingModal').style.display = "block";
-
         var fullList = [];
         var selectedRequests = req.next().find('li.selected').find('a.opt ');
         var searchTermRequests = $('#FinalItemsList li');
@@ -86,8 +83,6 @@ $(function () { //ready function
                     $('#searchResults').find('th.sorting').css('background-color', 'black');
                     $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
                     $('#bs_export').show();
-                    document.getElementById('LoadingGif').style.display = "none";
-                    document.getElementById('LoadingModal').style.display = "none";
                 });
         } else {
             alert("Please enter a search field");
