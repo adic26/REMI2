@@ -27,6 +27,7 @@
                     <select id="bs_RealStages" class="selectpicker show-tick" title="Select Stages..." multiple data-size="auto" data-selected-text-format="count"></select>
                     <select id="bs_TestField" class="selectpicker show-tick" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
                     <select id="bs_Additional" class="selectpicker show-tick" title="Select Additional..." multiple data-size="15" data-selected-text-format="count">
+                        <option value="--aReqNum">Request Number</option>
                         <option value="--aMeasurement">Measurement Name</option>
                         <option value="--aBSN">BSN</option>
                         <option value="--aIMEI">IMEI</option>

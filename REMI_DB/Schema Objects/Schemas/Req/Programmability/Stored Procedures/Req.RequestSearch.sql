@@ -6,6 +6,7 @@ BEGIN
 	CREATE TABLE dbo.#Request (RequestID INT PRIMARY KEY, BatchID INT, RequestNumber NVARCHAR(11))
 	CREATE TABLE dbo.#Infos (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS)
 	CREATE TABLE dbo.#Params (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(250) COLLATE SQL_Latin1_General_CP1_CI_AS)
+	CREATE TABLE dbo.#ReqNum (RequestNumber NVARCHAR(11))
 
 	SELECT * INTO dbo.#temp FROM @tv
 
@@ -32,20 +33,38 @@ BEGIN
 
 	SET @SQL = 'ALTER TABLE dbo.#Request ADD '+ replace(@rows, ']', '] NVARCHAR(4000)')
 	EXEC sp_executesql @SQL	
+	
+	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType = 'ReqNum') > 0)
+		BEGIN
+			INSERT INTO dbo.#ReqNum (RequestNumber)
+			SELECT SearchTerm
+			FROM dbo.#temp
+			WHERE TableType = 'ReqNum'
+		END
 
-	INSERT INTO #executeSQL (sqlvar)
-	VALUES ('INSERT INTO dbo.#Request SELECT *
+	SET @SQL = 'INSERT INTO dbo.#Request SELECT *
 		FROM 
 			(
 			SELECT r.RequestID, r.BatchID, r.RequestNumber, rfd.Value, rfs.Name 
 			FROM Req.Request r WITH(NOLOCK)
 				INNER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.RequestID=r.RequestID
 				INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
-				INNER JOIN Req.RequestType rt WITH(NOLOCK) ON rt.RequestTypeID=rfs.RequestTypeID
-			WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID) + '
+				INNER JOIN Req.RequestType rt WITH(NOLOCK) ON rt.RequestTypeID=rfs.RequestTypeID '
+			
+			IF ((SELECT COUNT(*) FROM dbo.#ReqNum) > 0)
+				BEGIN
+					SET @SQL += ' INNER JOIN dbo.#ReqNum rn WITH(NOLOCK) ON rn.RequestNumber=r.RequestNumber '
+				END
+				
+			SET @SQL += ' WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID) + '
 			) req PIVOT (MAX(Value) FOR Name IN (' + REPLACE(@rows, ',', ',
-			') + ')) AS pvt ')
+			') + ')) AS pvt '
 
+	INSERT INTO #executeSQL (sqlvar)
+	VALUES (@SQL)
+	
+	SET @SQL = ''
+	
 	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Request') > 0)
 	BEGIN
 		INSERT INTO #executeSQL (sqlvar)
@@ -134,7 +153,6 @@ BEGIN
 
 		INSERT INTO #executeSQL (sqlvar)
 		VALUES (' 1=1 ')
-		--SET @sql = SUBSTRING(@sql, 0, LEN(@sql)-2)
 	END
 
 	SET @SQL =  REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;','')
@@ -484,6 +502,7 @@ BEGIN
 	DROP TABLE dbo.#temp
 	DROP TABLE dbo.#Request
 	DROP TABLE dbo.#Infos
+	DROP TABLE dbo.#ReqNum
 	DROP TABLE dbo.#Params
 	SET NOCOUNT OFF
 END
@@ -506,6 +525,8 @@ VALUES ('Request', 51, '*Windermere')
 --,('Stage', 2246, 'Analysis')
 --,('Stage', 3220, 'Post 720hrs')
 --,('BSN', 0, '1151185790')
+--,('ReqNum', 0, 'QRA-14-0081')
+--,('ReqNum', 0, 'QRA-14-0597')
 --,('Unit', 0, '5')
 --,('Unit', 0, '1')
 --,('IMEI', 0, '')
@@ -513,7 +534,7 @@ VALUES ('Request', 51, '*Windermere')
 --,('Param:Band', 0, 'LTE17')
 --,('Param:Channel', 0, '5800')
 --,('ResultInfoArchived', 0, '')
-,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
+--,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
 --, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
 --, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
 --,('Measurement', 0, '*RxBER')
