@@ -68,7 +68,11 @@ Namespace REMI.BusinessEntities
         ''' <remarks></remarks>
         Public ReadOnly Property Type() As String
             Get
-                Return Number.Substring(0, Number.IndexOf("-"))
+                If (Number IsNot Nothing) Then
+                    Return Number.Substring(0, Number.IndexOf("-"))
+                Else
+                    Return String.Empty
+                End If
             End Get
         End Property
 

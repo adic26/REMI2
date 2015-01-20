@@ -71,7 +71,7 @@ Public Class REMIInternal
         tableTags.Append("<thead><tr>")
 
         For Each dc As DataColumn In results.Columns
-            tableTags.Append("<th>" + dc.ColumnName + "</th>")
+            tableTags.Append(String.Format("<th>{0}</th>", dc.ColumnName))
         Next
 
         tableTags.Append("</tr></thead>")
@@ -80,7 +80,16 @@ Public Class REMIInternal
         For Each dr As DataRow In results.Rows
             tableTags.Append("<tr>")
             For Each d In dr.ItemArray
-                tableTags.Append("<td>" + d.ToString() + "</td>")
+
+                If (d.ToString = dr.ItemArray(0).ToString()) Then
+                    tableTags.Append(String.Format("<td> <a href='http://go/requests/{0}' target='_blank'>{0}</a></td>", d.ToString()))
+                Else
+                    If (d.ToString().StartsWith("http") Or d.ToString().StartsWith("www")) Then
+                        tableTags.Append(String.Format("<td> <a href='{0}' target='_blank'>Link</a></td>", d.ToString()))
+                    Else
+                        tableTags.Append(String.Format("<td>{0}</td>", d.ToString()))
+                    End If
+                End If
             Next
             tableTags.Append("</tr>")
         Next
