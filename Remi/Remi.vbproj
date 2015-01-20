@@ -721,6 +721,8 @@
     <Content Include="ScanForInfo\ProductGroup.aspx" />
     <Content Include="ScanForInfo\Unit.aspx" />
     <Content Include="ScanForTest\Default.aspx" />
+    <Content Include="swf\copy_csv_xls.swf" />
+    <Content Include="swf\copy_csv_xls_pdf.swf" />
     <Content Include="TestRecords\Add.aspx" />
     <Content Include="TestRecords\Default.aspx" />
     <Content Include="TestRecords\EditDetail.aspx" />

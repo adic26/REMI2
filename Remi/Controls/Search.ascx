@@ -55,6 +55,5 @@
 <div class="info"></div>
     <div class="table"> 
         <table id="searchResults"></table>
-        <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
     </div>
     <asp:HiddenField runat="server" ID="hdnRequestType" />
