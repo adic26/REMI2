@@ -218,8 +218,8 @@ BEGIN
 		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage', 'Measurement')) > 0)
 		BEGIN
 			DECLARE @ResultArchived INT
-			DECLARE @TestRunStartDate DATETIME
-			DECLARE @TestRunEndDate DATETIME
+			DECLARE @TestRunStartDate NVARCHAR(12)
+			DECLARE @TestRunEndDate NVARCHAR(12)
 
 			SELECT @ResultArchived = ID FROM dbo.#temp WHERE TableType='ResultArchived'
 			SELECT @TestRunStartDate = SearchTerm FROM dbo.#temp WHERE TableType='TestRunStartDate'
@@ -254,7 +254,7 @@ BEGIN
 			IF (@TestRunStartDate IS NOT NULL AND @TestRunEndDate IS NOT NULL)
 			BEGIN
 				INSERT INTO #executeSQL (sqlvar)
-				VALUES (' AND x.StartDate BETWEEN ''' + CONVERT(NVARCHAR,@TestRunStartDate) + ''' AND ''' + CONVERT(NVARCHAR,@TestRunEndDate) + ''' ')
+				VALUES (' AND (x.StartDate >= ''' + CONVERT(NVARCHAR,@TestRunStartDate) + ' 00:00:00.000'' AND x.EndDate <= ''' + CONVERT(NVARCHAR,@TestRunEndDate) + ' 23:59:59'') ')
 			END
 		END
 
@@ -318,7 +318,7 @@ BEGIN
 			VALUES (' AND ts.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
 		END
 
-		SET @SQL =  REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' > ')
+		SET @SQL =  REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <')
 		EXEC sp_executesql @SQL
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
@@ -511,7 +511,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES ('Request', 51, '*Windermere')
+VALUES --('Request', 51, '*Windermere')
 --,('Request', 51, '-Windermere E R135')
 --,('Request', 51, '3G SIMs')
 -- ,('Request', 51, '*Lisbon')
@@ -519,7 +519,8 @@ VALUES ('Request', 51, '*Windermere')
 --,('Request', 49, '*Accessory')
 --,('Test', 1099, 'Sensor Test')
 --,('Test', 1280, 'Functional')
-,('Test', 1020, 'Radiated RF Test')
+--,('Test', 1020, 'Radiated RF Test')
+('Test', 1561, 'Display Test')
 --,('Test', 1103, 'Camera Front')
 --,('Stage', 3218, 'Post 360hrs')
 --,('Stage', 2246, 'Analysis')
@@ -535,7 +536,10 @@ VALUES ('Request', 51, '*Windermere')
 --,('Param:Channel', 0, '5800')
 --,('ResultInfoArchived', 0, '')
 --,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
---, ('TestRunStartDate', 0, '2014-04-11 08:56:12.000')
---, ('TestRunEndDate', 0, '2014-06-13 12:48:08.000')
+,('Info:hoursintest', 0, '10')
+, ('TestRunStartDate', 0, '2015-01-19')
+, ('TestRunEndDate', 0, '2015-01-19')
 --,('Measurement', 0, '*RxBER')
 EXEC [Req].[RequestSearch] 1, @table--, 251
+
+
