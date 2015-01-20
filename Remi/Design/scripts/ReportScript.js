@@ -171,11 +171,11 @@
                     $('#searchResults').append(d);
 
                     oTable = $('#searchResults').DataTable({
-                        destroy: true
-                        //dom: 'T<"clear">lfrtip',
-                        //TableTools: {
-                        //    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                        //}
+                        destroy: true,
+                        dom: 'T<"clear">lfrtip',
+                        TableTools: {
+                            "sSwfPath": "../Design/scripts/swf/copy_csv_xls_pdf.swf"
+                        }
                     });
 
                     $('#searchResults').find('th.sorting').css('background-color', 'black');
