@@ -20,6 +20,9 @@
     var additional = $('#bs_Additional');
     var tests = $('#bs_TestField');
     var stages = $('#bs_RealStages');
+    var oTable;
+
+    $.fn.dataTable.TableTools.defaults.aButtons = ["copy", "csv", "xls"];
 
     $('#bs_list').hide()
     $('#bs_OKayButton').on('click', function () {
@@ -85,6 +88,11 @@
         var selectedStages = stages.next().find('li.selected').find('a.opt ');
         var selectedAdditional = additional.next().find('li.selected');
         var myTable = $('#searchResults');
+
+
+        if (oTable != null) {
+            oTable.destroy();
+        }
 
         $.each(selectedRequests, function (index, element) {
             var requestName = element.text;
@@ -158,11 +166,18 @@
 
             var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
                 function (d) {
+                   
                     $('#searchResults').empty();
                     $('#searchResults').append(d);
-                    var oTable = $('#searchResults').DataTable({
+
+                    oTable = $('#searchResults').DataTable({
                         destroy: true
+                        //dom: 'T<"clear">lfrtip',
+                        //TableTools: {
+                        //    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                        //}
                     });
+
                     $('#searchResults').find('th.sorting').css('background-color', 'black');
                     $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
                     $('#bs_export').show();
