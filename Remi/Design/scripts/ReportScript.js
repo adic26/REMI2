@@ -177,6 +177,7 @@
 
                             oTable = $('#searchResults').DataTable({
                                 destroy: true,
+                                "scrollX": true,
                                 dom: 'T<"clear">lfrtip',
                                 TableTools: {
                                     "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
@@ -190,6 +191,7 @@
                             if (oTable == null) {
                                 oTable = $('#searchResults').DataTable({
                                     destroy: true,
+                                    "scrollX": true,
                                     dom: 'T<"clear">lfrtip',
                                     TableTools: {
                                         "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
@@ -208,6 +210,7 @@
 
                             oTable = $('#searchResults').DataTable({
                                 destroy: true,
+                                "scrollX": true,
                                 dom: 'T<"clear">lfrtip',
                                 TableTools: {
                                     "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
