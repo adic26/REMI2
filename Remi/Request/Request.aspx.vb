@@ -26,75 +26,75 @@ Public Class Request
         End If
 
         If (rf IsNot Nothing) Then
-            Dim t As Type
-            Dim asmName As New AssemblyName("TsdDynamicAssembly")
-            Dim asmBuilder As AssemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave)
-            Dim modBuilder As ModuleBuilder = asmBuilder.DefineDynamicModule(asmName.Name, asmName.Name + ".dll")
+            'Dim t As Type
+            'Dim asmName As New AssemblyName("TsdDynamicAssembly")
+            'Dim asmBuilder As AssemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(asmName, AssemblyBuilderAccess.RunAndSave)
+            'Dim modBuilder As ModuleBuilder = asmBuilder.DefineDynamicModule(asmName.Name, asmName.Name + ".dll")
 
-            Dim tb As TypeBuilder = modBuilder.DefineType("TsdDynamicType", TypeAttributes.Public Or TypeAttributes.Class Or TypeAttributes.AutoClass Or TypeAttributes.AnsiClass)
+            'Dim tb As TypeBuilder = modBuilder.DefineType("TsdDynamicType", TypeAttributes.Public Or TypeAttributes.Class Or TypeAttributes.AutoClass Or TypeAttributes.AnsiClass)
 
-            For Each res In rf
-                Select Case res.FieldType.ToUpper()
-                    Case "RADIOBUTTON", "CHECKBOX", "DROPDOWN"
-                        PG.DynamicClass.AddNewListProperty(asmBuilder, modBuilder, tb, res.Name, False, res.OptionsType, res.FieldType, res.Category, res.Description, res.Value)
-                    Case "DATETIME"
-                        PG.DynamicClass.AddNewProperty(tb, res.Name, GetType(DateTime), res.Description, False, res.Category, res.FieldType, res.Value)
-                    Case "LINK", "TEXTBOX", "TEXTAREA"
-                        PG.DynamicClass.AddNewProperty(tb, res.Name, GetType(String), res.Description, False, res.Category, res.FieldType, res.Value)
-                    Case Else
-                        PG.DynamicClass.AddNewProperty(tb, res.Name, GetType(String), res.Description, False, res.Category, res.FieldType, res.Value)
-                End Select
-            Next
+            'For Each res In rf
+            '    Select Case res.FieldType.ToUpper()
+            '        Case "RADIOBUTTON", "CHECKBOX", "DROPDOWN"
+            '            PG.DynamicClass.AddNewListProperty(asmBuilder, modBuilder, tb, res.Name, False, res.OptionsType, res.FieldType, res.Category, res.Description, res.Value)
+            '        Case "DATETIME"
+            '            PG.DynamicClass.AddNewProperty(tb, res.Name, GetType(DateTime), res.Description, False, res.Category, res.FieldType, res.Value)
+            '        Case "LINK", "TEXTBOX", "TEXTAREA"
+            '            PG.DynamicClass.AddNewProperty(tb, res.Name, GetType(String), res.Description, False, res.Category, res.FieldType, res.Value)
+            '        Case Else
+            '            PG.DynamicClass.AddNewProperty(tb, res.Name, GetType(String), res.Description, False, res.Category, res.FieldType, res.Value)
+            '    End Select
+            'Next
 
-            t = tb.CreateType()
-            Dim myObj As Object = Activator.CreateInstance(t)
+            't = tb.CreateType()
+            'Dim myObj As Object = Activator.CreateInstance(t)
 
-            For Each res In rf
-                Dim pi As PropertyInfo
+            'For Each res In rf
+            '    Dim pi As PropertyInfo
 
-                Select Case res.FieldType.ToUpper()
-                    Case "DROPDOWN", "RADIOBUTTON", "CHECKBOX"
-                        pi = t.GetProperty(res.Name.Replace(" ", "_"))
-                        Dim o As Object = res.Value
+            '    Select Case res.FieldType.ToUpper()
+            '        Case "DROPDOWN", "RADIOBUTTON", "CHECKBOX"
+            '            pi = t.GetProperty(res.Name.Replace(" ", "_"))
+            '            Dim o As Object = res.Value
 
-                        If (pi.PropertyType.IsEnum) Then
-                            Dim enums As Array = [Enum].GetValues(pi.PropertyType)
+            '            If (pi.PropertyType.IsEnum) Then
+            '                Dim enums As Array = [Enum].GetValues(pi.PropertyType)
 
-                            If (Not res.OptionsType.ToList.Contains(o)) Then
-                                o = [Enum].Parse(pi.PropertyType, enums.GetValue(0).ToString(), True)
-                            Else
-                                If (res.Value <> String.Empty) Then
-                                    o = [Enum].Parse(pi.PropertyType, o.ToString(), True)
-                                    pi.SetValue(myObj, o, Nothing)
-                                Else
-                                    o = [Enum].Parse(pi.PropertyType, enums.GetValue(0).ToString(), True)
+            '                If (Not res.OptionsType.ToList.Contains(o)) Then
+            '                    o = [Enum].Parse(pi.PropertyType, enums.GetValue(0).ToString(), True)
+            '                Else
+            '                    If (res.Value <> String.Empty) Then
+            '                        o = [Enum].Parse(pi.PropertyType, o.ToString(), True)
+            '                        pi.SetValue(myObj, o, Nothing)
+            '                    Else
+            '                        o = [Enum].Parse(pi.PropertyType, enums.GetValue(0).ToString(), True)
 
-                                    pi.SetValue(myObj, o, Nothing)
-                                End If
-                            End If
-                        Else
-                            Dim l As New List(Of String)
+            '                        pi.SetValue(myObj, o, Nothing)
+            '                    End If
+            '                End If
+            '            Else
+            '                Dim l As New List(Of String)
 
-                            l.AddRange(res.OptionsType)
+            '                l.AddRange(res.OptionsType)
 
-                            Dim dlp As PG.DropDownListProperty = New PG.DropDownListProperty(l)
-                            dlp.SelectedItem = res.Value
-                            pi.SetValue(myObj, dlp, Nothing)
-                        End If
-                    Case "DATETIME"
-                        pi = t.GetProperty(res.Name)
-                        Dim dt As DateTime = DateTime.MinValue
-                        DateTime.TryParse(res.Value, dt)
+            '                Dim dlp As PG.DropDownListProperty = New PG.DropDownListProperty(l)
+            '                dlp.SelectedItem = res.Value
+            '                pi.SetValue(myObj, dlp, Nothing)
+            '            End If
+            '        Case "DATETIME"
+            '            pi = t.GetProperty(res.Name)
+            '            Dim dt As DateTime = DateTime.MinValue
+            '            DateTime.TryParse(res.Value, dt)
 
-                        pi.SetValue(myObj, dt, Nothing)
-                    Case "LINK", "TEXTBOX", "TEXTAREA"
-                        pi = t.GetProperty(res.Name)
-                        pi.SetValue(myObj, res.Value, Nothing)
-                    Case Else
-                        pi = t.GetProperty(res.Name)
-                        pi.SetValue(myObj, res.Value, Nothing)
-                End Select
-            Next
+            '            pi.SetValue(myObj, dt, Nothing)
+            '        Case "LINK", "TEXTBOX", "TEXTAREA"
+            '            pi = t.GetProperty(res.Name)
+            '            pi.SetValue(myObj, res.Value, Nothing)
+            '        Case Else
+            '            pi = t.GetProperty(res.Name)
+            '            pi.SetValue(myObj, res.Value, Nothing)
+            '    End Select
+            'Next
 
             'pg1.SelectedObject = myObj
         End If
