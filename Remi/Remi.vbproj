@@ -666,6 +666,7 @@
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.10.4.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.11.2.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.8.2.custom.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.structure.css" />
     <Content Include="Design\scripts\Bootstrap\bootstrap-select.js" />
     <Content Include="Design\scripts\Bootstrap\bootstrap.js" />

@@ -5,7 +5,7 @@
     <link type="text/css" href="../Design/jQueryCSS/jQueryUI/jquery-ui-1.10.4.css" rel="Stylesheet" />
     <link type="text/css" href="../Design/jQueryCSS/DataTableCSS/jquery.dataTables.css" rel="Stylesheet" />
     <link type="text/css" href="../Design/jQueryCSS/DataTableCSS/dataTables.tableTools.css" rel="Stylesheet" />
-
+    <link href="../Design/jQueryCSS/jQueryUI/jquery-ui.css" rel="stylesheet" />
 
     <script type="text/javascript" src="../Design/scripts/DataTables/jquery.dataTables.js"></script>
     <script type="text/javascript" src="../Design/scripts/Bootstrap/jquery.taginput.src.js"></script>
@@ -15,7 +15,6 @@
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
     <script type="text/javascript" src="../Design/scripts/DataTables/dataTables.tableTools.js"></script>
-
     <!--include BlockUI -->
     <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery.blockUI.js"></script>
 
