@@ -171,9 +171,17 @@
                     }
                 }
                 else {
+                    var validationPassed = true;
                     var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
-                    //console.log(additionalVals);
-                    fullList.push(additionalVals);
+
+                    if ((s_element.outerText == "Unit" || s_element.outerText == "BSN") && $.isNumeric(s_element.children[0].value) == false) {
+                        validationPassed = false;
+                    }
+
+                    if (validationPassed) {
+                        //console.log(additionalVals);
+                        fullList.push(additionalVals);
+                    }
                 }
             }
         });
