@@ -62,7 +62,12 @@
             Dim paths As String() = httpApp.Context.Request.Path.ToString().Split(New [Char]() {"/"c}, System.StringSplitOptions.RemoveEmptyEntries)
             
             If (paths.Count = 2) Then
-                httpApp.Context.Response.Redirect(String.Format("~/Request/Default.aspx?rt={0}", paths(1).ToUpper), True)
+                If (paths(1).Contains("-")) Then
+                    Dim reqSplit As String() = paths(1).Split(New [Char]() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)
+                    httpApp.Context.Response.Redirect(String.Format("~/Request/Request.aspx?type={0}&req={1}", reqSplit(0), paths(1).ToUpper), True)
+                Else
+                    httpApp.Context.Response.Redirect(String.Format("~/Request/Default.aspx?rt={0}", paths(1).ToUpper), True)
+                End If
             Else
                 httpApp.Context.Response.Redirect("~/Request/Default.aspx", True)
             End If

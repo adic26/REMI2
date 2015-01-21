@@ -2,9 +2,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Search.ascx" TagName="Search" TagPrefix="uc2" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-
-</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
     <h1><asp:Label runat="server" ID="lblRequest"></asp:Label></h1>
     <br />
@@ -18,6 +16,9 @@
             </li>
             <li>
                 <asp:HyperLink runat="server" ID="hypAdmin" Enabled="true" Text="Admin" Target="_blank"></asp:HyperLink>
+            </li>
+            <li>
+                <asp:HyperLink runat="server" ID="hypNew" Enabled="true" Text="Create Request" Target="_blank"></asp:HyperLink>
             </li>
         </ul>
     </asp:Panel>

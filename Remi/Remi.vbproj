@@ -542,6 +542,13 @@
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
+    <Compile Include="Request\Request.aspx.designer.vb">
+      <DependentUpon>Request.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Request\Request.aspx.vb">
+      <DependentUpon>Request.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
     <Compile Include="ScanForInfo\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -712,6 +719,7 @@
     <Content Include="Reports\Search.aspx" />
     <Content Include="Request\Admin.aspx" />
     <Content Include="Request\default.aspx" />
+    <Content Include="Request\Request.aspx" />
     <Content Include="ScanForInfo\Default.aspx" />
     <Content Include="ScanForInfo\ProductGroup.aspx" />
     <Content Include="ScanForInfo\Unit.aspx" />
