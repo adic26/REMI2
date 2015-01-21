@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="vb" EnableViewState="true" CodeBehind="Request.aspx.vb" Inherits="Remi.Request" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" AutoEventWireup="false" %>
-<%@ Register assembly="propertygrid" namespace="PG" tagprefix="pg" %>
+<%--<%@ Register assembly="propertygrid" namespace="PG" tagprefix="pg" %>--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
