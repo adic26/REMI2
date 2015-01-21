@@ -4,6 +4,8 @@
     <link type="text/css" href="../Design/jQueryCSS/BootstrapCSS/jquery.taginput.css" rel="Stylesheet" />
     <link type="text/css" href="../Design/jQueryCSS/jQueryUI/jquery-ui-1.10.4.css" rel="Stylesheet" />
     <link type="text/css" href="../Design/jQueryCSS/DataTableCSS/jquery.dataTables.css" rel="Stylesheet" />
+    <link type="text/css" href="../Design/jQueryCSS/DataTableCSS/dataTables.tableTools.css" rel="Stylesheet" />
+
 
     <script type="text/javascript" src="../Design/scripts/DataTables/jquery.dataTables.js"></script>
     <script type="text/javascript" src="../Design/scripts/Bootstrap/jquery.taginput.src.js"></script>
@@ -12,6 +14,7 @@
     <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery-ui-1.10.4.min.js"></script>
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
+    <script type="text/javascript" src="../Design/scripts/DataTables/dataTables.tableTools.js"></script>
 
     <!--include BlockUI -->
     <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery.blockUI.js"></script>
@@ -48,9 +51,9 @@
 
      <ul id="FinalItemsList" class="list-group"></ul>
     <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
-
-    <div class="table">
+    
+<div class="info"></div>
+    <div class="table"> 
         <table id="searchResults"></table>
-        <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
     </div>
     <asp:HiddenField runat="server" ID="hdnRequestType" />
