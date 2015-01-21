@@ -47,6 +47,6 @@ Public Class ReqDefault
         srcRequest.RequestType = ddlRequestType.SelectedItem.Value
         srcRequest.Visible = True
 
-
+        hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", ddlRequestType.SelectedItem.Text)
     End Sub
 End Class
