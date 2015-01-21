@@ -158,7 +158,7 @@ BEGIN
 	SET @SQL =  REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;','')
 	EXEC sp_executesql @SQL
 
-	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType <> 'Request') > 0)
+	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType NOT IN ('Request','ReqNum')) > 0)
 	BEGIN
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
