@@ -38,8 +38,7 @@
                         <option value="--aResultArchived">Results Archived</option>
                         <option value="--aResultInfoArchived">Info Archived</option>
                         <option value="--aInfo">Information</option>
-                        <option value="--aTestRunStartDate">Test Run Start Date</option>
-                        <option value="--aTestRunEndDate">Test Run End Date</option>
+                        <option value="--aTestRunDate">Test Run Date</option>
                         <option value="--aParam">Parameter</option>
                     </select>
 

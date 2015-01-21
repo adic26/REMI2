@@ -64,7 +64,7 @@
 
             var builtHTML;
             builtHTML = '<li class="list-group-item">' + element;
-            if (element == "Param" || element == "Info") {
+            if (element == "Param" || element == "Info" || element == "TestRunDate") {
                 builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria Name">';
                 }
             builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>';
@@ -111,23 +111,25 @@
             });
         });
 
-        $.each(selectedAdditional, function (index, element) {
-            $.each(searchTermRequests, function (s_index, s_element) {
-                //console.log($(this).text());                
+        $.each(searchTermRequests, function (s_index, s_element) {
+            //console.log($(this).text());                
                 
-                if (s_element.children[0].value != '' && s_element.children[0].outerHTML.indexOf('addition="true"') > -1) {
-                    if (s_element.innerText == "Param" || s_element.innerText == "Info") {
-                        var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
-                        //console.log(additionalVals);
-                        fullList.push(additionalVals);
-                    }
-                    else {
-                        var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
-                        //console.log(additionalVals);
-                        fullList.push(additionalVals);
-                    }
+            if (s_element.children[0].value != '' && s_element.children[0].outerHTML.indexOf('addition="true"') > -1) {
+                if (s_element.innerText == "Param" || s_element.innerText == "Info") {
+                    var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
+                    //console.log(additionalVals);
+                    fullList.push(additionalVals);
                 }
-            });
+                else if (s_element.innerText == "TestRunDate") {
+                    fullList.push('TestRunStartDate' + ',0,' + s_element.children[1].value);
+                    fullList.push('TestRunEndDate' + ',0,' + s_element.children[0].value);
+                }
+                else {
+                    var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+                    //console.log(additionalVals);
+                    fullList.push(additionalVals);
+                }
+            }
         });
 
         $.each(searchTermRequests, function (s_index, s_element) {
