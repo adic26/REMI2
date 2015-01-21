@@ -109,10 +109,10 @@
                 builtHTML += '<input type="text" id="startDate" name="startDate"addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><input type="text" id="endDate" name="endDate"addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
             }
             else if (element == "ResultArchived") {
-                builtHTML += '<select id="resultArchived' + count + '" name="resultArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="Yes">Yes</option><option value="No">No</option></select>';
+                builtHTML += '<select id="resultArchived' + count + '" name="resultArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
             }
             else if (element == "ResultInfoArchived") {
-                builtHTML += '<select id="resultInfoArchived' + count + '" name="resultInfoArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="Yes">Yes</option><option value="No">No</option></select>';
+                builtHTML += '<select id="resultInfoArchived' + count + '" name="resultInfoArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
             }
             else {
                 if (element == "Param" || element == "Info") {
