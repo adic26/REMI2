@@ -349,6 +349,16 @@ BEGIN
 				
 				SET @whereStr = ''
 				
+				DELETE p 
+				FROM dbo.#Params p
+				WHERE p.Name IN (SELECT Name
+						FROM 
+							(
+								SELECT Name
+								FROM #Params
+							) param
+						WHERE param.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@ParameterColumnNames, '[', ''), ']', ''))))))
+				
 				IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
 				BEGIN
 					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + Name + '] = ''' + Val + '''' + ' AND ' FROM dbo.#Params
@@ -402,6 +412,16 @@ BEGIN
 				
 				SET @whereStr = ''
 				
+				DELETE i 
+				FROM dbo.#infos i
+				WHERE i.Name IN (SELECT Name
+						FROM 
+							(
+								SELECT Name
+								FROM #Infos
+							) inf
+						WHERE inf.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@InformationColumnNames, '[', ''), ']', ''))))))
+
 				IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
 				BEGIN
 					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + Name + '] = ''' + Val + '''' + ' AND ' FROM dbo.#Infos
@@ -511,7 +531,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES --('Request', 51, '*Windermere')
+VALUES ('Request', 51, '*Windermere')
 --,('Request', 51, '-Windermere E R135')
 --,('Request', 51, '3G SIMs')
 -- ,('Request', 51, '*Lisbon')
@@ -519,8 +539,8 @@ VALUES --('Request', 51, '*Windermere')
 --,('Request', 49, '*Accessory')
 --,('Test', 1099, 'Sensor Test')
 --,('Test', 1280, 'Functional')
---,('Test', 1020, 'Radiated RF Test')
-('Test', 1561, 'Display Test')
+,('Test', 1020, 'Radiated RF Test')
+--('Test', 1561, 'Display Test')
 --,('Test', 1103, 'Camera Front')
 --,('Stage', 3218, 'Post 360hrs')
 --,('Stage', 2246, 'Analysis')
@@ -533,13 +553,12 @@ VALUES --('Request', 51, '*Windermere')
 --,('IMEI', 0, '')
 --,('ResultArchived', 0, '')
 --,('Param:Band', 0, 'LTE17')
---,('Param:Channel', 0, '5800')
+,('Param:Channel', 0, '5800')
 --,('ResultInfoArchived', 0, '')
 --,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
-,('Info:hoursintest', 0, '10')
-, ('TestRunStartDate', 0, '2015-01-19')
-, ('TestRunEndDate', 0, '2015-01-19')
+--,('Info:CameraID', 0, 'Not Reported')
+--,('Info:hoursintest', 0, '10')
+--, ('TestRunStartDate', 0, '2015-01-19')
+--, ('TestRunEndDate', 0, '2015-01-19')
 --,('Measurement', 0, '*RxBER')
 EXEC [Req].[RequestSearch] 1, @table--, 251
-
-
