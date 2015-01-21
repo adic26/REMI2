@@ -22,6 +22,46 @@
     var stages = $('#bs_RealStages');
     var oTable;
 
+    var o = new Option("--aReqNum", "--aReqNum");
+    $(o).html("Request Number");
+    $('#bs_Additional').append(o);
+        
+    var o = new Option("--aMeasurement", "--aMeasurement");
+    $(o).html("Measurement Name");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aBSN", "--aBSN");
+    $(o).html("BSN");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aIMEI", "--aIMEI");
+    $(o).html("IMEI");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aUnit", "--aUnit");
+    $(o).html("Unit");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aResultArchived", "--aResultArchived");
+    $(o).html("Results Archived");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aResultInfoArchived", "--aResultInfoArchived");
+    $(o).html("Info Archived");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aInfo", "--aInfo");
+    $(o).html("Information");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aTestRunDate", "--aTestRunDate");
+    $(o).html("Test Run Date");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aParam", "--aParam");
+    $(o).html("Parameter");
+    $('#bs_Additional').append(o);
+
     $.fn.dataTable.TableTools.defaults.aButtons = ["copy", "csv", "xls"];
 
     $('#bs_list').hide()
@@ -139,7 +179,12 @@
         });
 
         $.each(searchTermRequests, function (s_index, s_element) {
-            if (s_element.children[0].value == '' || s_element.children[0].value == undefined) {
+            if (s_element.outerText == "TestRunDate") {
+                if (s_element.children[1].value == "" || s_element.children[2].value == "") {
+                    s_element.outerText = '';
+                }
+            }
+            else if (s_element.children[0].value == '') {
                 s_element.outerText = '';
             }
         });

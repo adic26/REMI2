@@ -15,12 +15,10 @@ $(function () { //ready function
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
     var additional = $('#bs_Additional');
-
-    $("#bs_Additional option").each(function () {
-        if ($(this).text() != "Request Number") {
-            $(this).remove();
-        }
-    });
+    
+    var o = new Option("--aReqNum", "--aReqNum");
+    $(o).html("Request Number");
+    $('#bs_Additional').append(o);
 
     $('#bs_OKayButton').on('click', function () {
         var myList = $(FinalItemsList);
