@@ -8,16 +8,21 @@ $(function () { //ready function
     $('#bs_StagesField').next().hide();
     $('#bs_RealStages').next().hide();
     $('#bs_TestField').next().hide();
-    $('#bs_Additional').next().hide();
     $('#FinalItemsList').hide();
     $('#bs_searchButton').hide();
     $('#bs_export').hide();
     var rtID = $("[id$='hdnRequestType']");
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
+    var additional = $('#bs_Additional');
+
+    $("#bs_Additional option").each(function () {
+        if ($(this).text() != "Request Number") {
+            $(this).remove();
+        }
+    });
 
     $('#bs_OKayButton').on('click', function () {
-        //$('.selectpicker').selectpicker('hide');
         var myList = $(FinalItemsList);
         var fullList = [];
 
@@ -25,10 +30,23 @@ $(function () { //ready function
             fullList = $.merge(fullList, req.val());
         }
 
+        if (additional.val() != null) {
+            fullList = $.merge(fullList, additional.val());
+        }
+
         $.each(fullList, function (index, element) {
-            $('.list-group').append($('<li class="list-group-item">' +
-                element +
-                '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
+            var isAdditional = false;
+            if (element.indexOf("--a") > -1) {
+                element = element.replace("--a", "");
+                isAdditional = true;
+            }
+
+            var builtHTML;
+            builtHTML = '<span class="list-group-item">' + element;
+            builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+
+            builtHTML += '</span>';
+            $('.list-group').append(builtHTML);
         });
 
         myList.show();
@@ -43,8 +61,9 @@ $(function () { //ready function
 
         var fullList = [];
         var selectedRequests = req.next().find('li.selected').find('a.opt ');
-        var searchTermRequests = $('#FinalItemsList li');
+        var searchTermRequests = $('#FinalItemsList span');
         var myTable = $('#searchResults');
+        var selectedAdditional = additional.next().find('li.selected');
 
         $.each(selectedRequests, function (index, element) {
             var requestName = element.text;
@@ -61,6 +80,16 @@ $(function () { //ready function
                     }
                 }
             });
+        });
+
+        $.each(searchTermRequests, function (s_index, s_element) {
+            //console.log($(this).text());
+
+            if (s_element.children[0].value != '' && s_element.outerHTML.indexOf('addition="true"') > -1) {
+                var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+                //console.log(additionalVals);
+                fullList.push(additionalVals);
+            }
         });
 
         $.each(searchTermRequests, function (s_index, s_element) {
