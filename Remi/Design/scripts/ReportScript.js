@@ -185,10 +185,11 @@
                             });
                         } else {
                             //Enter IE
-                            $('#searchResults').empty();
-                            $('#searchResults').append(d);
-                            //1. it works if oTable is not Defined and its IE
+                            //oTable is not defined
                             if (oTable == null) {
+                                $('#searchResults').empty();
+                                $('#searchResults').append(d);
+
                                 oTable = $('#searchResults').DataTable({
                                     destroy: true,
                                     "scrollX": true,
@@ -198,10 +199,24 @@
                                     }
                                 });
                             } else {
-                                //2. it does not work Internet Explorer and OTable is defined already
-                                //oTable is defined!
-                                oTable.clear();
-                                oTable.draw();
+                                //OTable is defined already
+
+                                //(i) Destroy dataTable
+                                oTable.destroy();
+
+                                //(ii)append the data
+                                $('#searchResults').empty();
+                                $('#searchResults').append(d);
+
+                                //(iii) Re-Draw the table
+                                oTable = $('#searchResults').DataTable({
+                                    destroy: true,
+                                    "scrollX": true,
+                                    dom: 'T<"clear">lfrtip',
+                                    TableTools: {
+                                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                    }
+                                });
                             }
                         }
                     } else { //meaningful data is NOT present!

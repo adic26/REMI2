@@ -55,5 +55,6 @@
 <div class="info"></div>
     <div class="table"> 
         <table id="searchResults"></table>
+        <div class="IE_empty"></div>
     </div>
     <asp:HiddenField runat="server" ID="hdnRequestType" />
