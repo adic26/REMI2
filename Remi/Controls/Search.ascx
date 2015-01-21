@@ -41,7 +41,7 @@
     <div id="FinalItemsList" class="list-group"></div>
     <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
     
-<div class="info"></div>
+    <div class="info"></div>
     <div class="table"> 
         <table id="searchResults"></table>
         <div class="IE_empty"></div>
