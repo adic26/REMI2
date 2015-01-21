@@ -9,6 +9,8 @@
         UserAgentInfo.strBrowser = 1;
     }
 
+    var count = 0;
+
     $('#FinalItemsList').hide();
     $('#bs_searchButton').hide();
     $('#bs_export').hide();
@@ -20,6 +22,49 @@
     var additional = $('#bs_Additional');
     var tests = $('#bs_TestField');
     var stages = $('#bs_RealStages');
+    var oTable;
+
+    var o = new Option("--aReqNum", "--aReqNum");
+    $(o).html("Request Number");
+    $('#bs_Additional').append(o);
+        
+    var o = new Option("--aMeasurement", "--aMeasurement");
+    $(o).html("Measurement Name");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aBSN", "--aBSN");
+    $(o).html("BSN");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aIMEI", "--aIMEI");
+    $(o).html("IMEI");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aUnit", "--aUnit");
+    $(o).html("Unit");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aResultArchived", "--aResultArchived");
+    $(o).html("Include Results Archived");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aResultInfoArchived", "--aResultInfoArchived");
+    $(o).html("Include Info Archived");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aInfo", "--aInfo");
+    $(o).html("Information");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aTestRunDate", "--aTestRunDate");
+    $(o).html("Test Run Date");
+    $('#bs_Additional').append(o);
+    
+    var o = new Option("--aParam", "--aParam");
+    $(o).html("Parameter");
+    $('#bs_Additional').append(o);
+
+    $.fn.dataTable.TableTools.defaults.aButtons = ["copy", "csv", "xls"];
 
     $('#bs_list').hide()
     $('#bs_OKayButton').on('click', function () {
@@ -48,9 +93,6 @@
         if (req.val()!= null) {
             fullList = $.merge(fullList, req.val());
         }
-        //if (tests.val()!=null) {
-        //    fullList = $.merge(fullList, tests.val());
-        //}
         
         $.each(fullList, function (index, element) {
             var isAdditional = false;
@@ -60,18 +102,33 @@
             }
 
             var builtHTML;
-            builtHTML = '<li class="list-group-item">' + element;
-            if (element == "Param" || element == "Info") {
-                builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria Name">';
+            builtHTML = '<span class="list-group-item">' + element;
+
+            if (element == "TestRunDate") {
+                builtHTML += '<script>$(function () { $("#startDate").datepicker({}); $("#endDate").datepicker({}); });</script>';
+                builtHTML += '<input type="text" id="startDate" name="startDate"addition="' + isAdditional + '" data-datepick="rangeSelect: true" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><input type="text" id="endDate" name="endDate"addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+            }
+            else if (element == "ResultArchived") {
+                builtHTML += '<select id="resultArchived' + count + '" name="resultArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
+            }
+            else if (element == "ResultInfoArchived") {
+                builtHTML += '<select id="resultInfoArchived' + count + '" name="resultInfoArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
+            }
+            else {
+                if (element == "Param" || element == "Info") {
+                    builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
                 }
-            builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>';
-            $('.list-group').append($(builtHTML));
+                builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+            }
+            builtHTML += '</span>';
+            $('.list-group').append(builtHTML);
+            count = count + 1;
         });
 
         myList.show();
         $('#bs_searchButton').show(); 
     });
-
+    
     $('#bs_searchButton').on('click', function () {
         $('div.table').block({
             message: '<h1>Processing</h1>',
@@ -80,11 +137,15 @@
 
         var fullList = [];
         var selectedRequests = req.next().find('li.selected').find('a.opt ');
-        var searchTermRequests = $('#FinalItemsList li');
+        var searchTermRequests = $('#FinalItemsList span');
         var selectedTests = tests.next().find('li.selected').find('a.opt ');
         var selectedStages = stages.next().find('li.selected').find('a.opt ');
         var selectedAdditional = additional.next().find('li.selected');
         var myTable = $('#searchResults');
+        
+        if (oTable != null && navigator.appName != 'Microsoft Internet Explorer') {
+            oTable.destroy();
+        }
 
         $.each(selectedRequests, function (index, element) {
             var requestName = element.text;
@@ -103,27 +164,60 @@
             });
         });
 
-        $.each(selectedAdditional, function (index, element) {
-            $.each(searchTermRequests, function (s_index, s_element) {
-                //console.log($(this).text());                
-                
-                if (s_element.children[0].value != '' && s_element.children[0].outerHTML.indexOf('addition="true"') > -1) {
-                    if (s_element.innerText == "Param" || s_element.innerText == "Info") {
-                        var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
-                        //console.log(additionalVals);
-                        fullList.push(additionalVals);
+        $.each(searchTermRequests, function (s_index, s_element) {
+            //console.log($(this).text());
+
+            if (s_element.children[0].value != '' && s_element.outerHTML.indexOf('addition="true"') > -1) {
+                if (s_element.innerText == "Param" || s_element.innerText == "Info") {
+                    var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
+                    //console.log(additionalVals);
+                    fullList.push(additionalVals);
+                }
+                else if (s_element.innerText == "TestRunDate") {
+                    if (s_element.children[2].value != '' && s_element.children[1].value != '') {
+                        fullList.push('TestRunStartDate' + ',0,' + s_element.children[2].value);
+                        fullList.push('TestRunEndDate' + ',0,' + s_element.children[1].value);
+                    }
+                }
+                else if (s_element.innerText.indexOf('ResultArchived') > -1) {
+                    if (s_element.children[0].value == "Yes") {
+                        fullList.push('resultArchived,1,');
                     }
                     else {
-                        var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+                        fullList.push('resultArchived,0,');
+                    }
+                }
+                else if (s_element.innerText.indexOf('ResultInfoArchived') > -1) {
+                    if (s_element.children[0].value == "Yes") {
+                        fullList.push('resultInfoArchived,1,');
+                    }
+                    else {
+                        fullList.push('resultInfoArchived,0,');
+                    }
+                }
+                else {
+                    var validationPassed = true;
+                    var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+
+                    if ((s_element.outerText == "Unit" || s_element.outerText == "BSN") && $.isNumeric(s_element.children[0].value) == false) {
+                        validationPassed = false;
+                    }
+
+                    if (validationPassed) {
                         //console.log(additionalVals);
                         fullList.push(additionalVals);
                     }
                 }
-            });
+            }
         });
 
         $.each(searchTermRequests, function (s_index, s_element) {
-            if (s_element.children[0].value == '') {
+            if (s_element.outerText == "TestRunDate") {
+                if (s_element.children[1].value == "" || s_element.children[2].value == "") {
+                    s_element.outerText = '';
+                }
+            }
+            else if (s_element.children[0].value == '') {
                 s_element.outerText = '';
             }
         });
@@ -158,14 +252,85 @@
 
             var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
                 function (d) {
-                    $('#searchResults').empty();
-                    $('#searchResults').append(d);
-                    var oTable = $('#searchResults').DataTable({
-                        destroy: true
-                    });
+
+                    var emptySearch = "<thead><tr></tr></thead><tbody></tbody>";
+                    if (d != emptySearch) {
+                        
+                        //Meaningful data is present
+                        if (navigator.appName != 'Microsoft Internet Explorer') {
+                            $('#searchResults').empty();
+                            $('#searchResults').append(d);
+
+                            oTable = $('#searchResults').DataTable({
+                                destroy: true,
+                                "scrollX": true,
+                                dom: 'T<"clear">lfrtip',
+                                TableTools: {
+                                    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                }
+                            });
+                        } else {
+                            //Enter IE
+                            //oTable is not defined
+                            if (oTable == null) {
+                                $('#searchResults').empty();
+                                $('#searchResults').append(d);
+
+                                oTable = $('#searchResults').DataTable({
+                                    destroy: true,
+                                    "scrollX": true,
+                                    dom: 'T<"clear">lfrtip',
+                                    TableTools: {
+                                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                    }
+                                });
+                            } else {
+                                //OTable is defined already
+
+                                //(i) Destroy dataTable
+                                oTable.destroy();
+
+                                //(ii)append the data
+                                $('#searchResults').empty();
+                                $('#searchResults').append(d);
+
+                                //(iii) Re-Draw the table
+                                oTable = $('#searchResults').DataTable({
+                                    destroy: true,
+                                    "scrollX": true,
+                                    dom: 'T<"clear">lfrtip',
+                                    TableTools: {
+                                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                    }
+                                });
+                            }
+                        }
+                    } else { //meaningful data is NOT present!
+                        if (navigator.appName != 'Microsoft Internet Explorer' && oTable!=null) {
+
+
+                            oTable = $('#searchResults').DataTable({
+                                destroy: true,
+                                "scrollX": true,
+                                dom: 'T<"clear">lfrtip',
+                                TableTools: {
+                                    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                }
+                            });
+
+                            oTable.clear();
+                            oTable.draw();
+                        } else if (oTable != null) {
+                            oTable.clear();
+                            oTable.draw();
+                        }
+                       
+                        alert("Returned an empty search");
+                    }
+
                     $('#searchResults').find('th.sorting').css('background-color', 'black');
                     $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
-                    $('#bs_export').show();
+                    //$('#bs_export').show();
                     //unblocking UI
                     $('div.table').unblock();
                 });
@@ -173,14 +338,17 @@
             alert("Please enter a search field");
         }
     });
-    $('#bs_export').click(function () {
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            alert("Export Functionality Not Supported For IE. Use Chrome.");
-        }
-        else {
-            CSVExportDataTable("", $(this).val());
-        }
-    });
+
+
+    // Old export Function
+    //$('#bs_export').click(function () {
+    //    if (navigator.appName == 'Microsoft Internet Explorer') {
+    //        alert("Export Functionality Not Supported For IE. Use Chrome.");
+    //    }
+    //    else {
+    //        CSVExportDataTable("", $(this).val());
+    //    }
+    //});
     
     var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
     selectpicker.data('open', false);

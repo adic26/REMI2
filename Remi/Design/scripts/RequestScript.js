@@ -8,16 +8,24 @@ $(function () { //ready function
     $('#bs_StagesField').next().hide();
     $('#bs_RealStages').next().hide();
     $('#bs_TestField').next().hide();
-    $('#bs_Additional').next().hide();
     $('#FinalItemsList').hide();
     $('#bs_searchButton').hide();
     $('#bs_export').hide();
     var rtID = $("[id$='hdnRequestType']");
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
+    var additional = $('#bs_Additional');
+
+    var oTable;
+    var count = 0;
+    
+    var o = new Option("--aReqNum", "--aReqNum");
+    $(o).html("Request Number");
+    $('#bs_Additional').append(o);
+
+    $.fn.dataTable.TableTools.defaults.aButtons = ["copy", "csv", "xls"];
 
     $('#bs_OKayButton').on('click', function () {
-        //$('.selectpicker').selectpicker('hide');
         var myList = $(FinalItemsList);
         var fullList = [];
 
@@ -25,10 +33,24 @@ $(function () { //ready function
             fullList = $.merge(fullList, req.val());
         }
 
+        if (additional.val() != null) {
+            fullList = $.merge(fullList, additional.val());
+        }
+
         $.each(fullList, function (index, element) {
-            $('.list-group').append($('<li class="list-group-item">' +
-                element +
-                '<input type="text" class="form-inline" style="float: right;" placeholder="Input Search Criteria"></li>'))
+            var isAdditional = false;
+            if (element.indexOf("--a") > -1) {
+                element = element.replace("--a", "");
+                isAdditional = true;
+            }
+
+            var builtHTML;
+            builtHTML = '<span class="list-group-item">' + element;
+            builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+
+            builtHTML += '</span>';
+            $('.list-group').append(builtHTML);
+            count = count + 1;
         });
 
         myList.show();
@@ -43,8 +65,14 @@ $(function () { //ready function
 
         var fullList = [];
         var selectedRequests = req.next().find('li.selected').find('a.opt ');
-        var searchTermRequests = $('#FinalItemsList li');
+        var searchTermRequests = $('#FinalItemsList span');
         var myTable = $('#searchResults');
+        var selectedAdditional = additional.next().find('li.selected');
+        var myTable = $('#searchResults');
+
+        if (oTable != null && navigator.appName != 'Microsoft Internet Explorer') {
+            oTable.destroy();
+        }
 
         $.each(selectedRequests, function (index, element) {
             var requestName = element.text;
@@ -64,6 +92,16 @@ $(function () { //ready function
         });
 
         $.each(searchTermRequests, function (s_index, s_element) {
+            //console.log($(this).text());
+
+            if (s_element.children[0].value != '' && s_element.outerHTML.indexOf('addition="true"') > -1) {
+                var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
+                //console.log(additionalVals);
+                fullList.push(additionalVals);
+            }
+        });
+
+        $.each(searchTermRequests, function (s_index, s_element) {
             if (s_element.children[0].value == '') {
                 s_element.outerText = '';
             }
@@ -78,16 +116,86 @@ $(function () { //ready function
 
             var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
                 function (d) {
-                    $('#searchResults').empty();
-                    $('#searchResults').append(d);
-                    var oTable = $('#searchResults').DataTable({
-                        destroy: true
-                    });
 
+                    var emptySearch = "<thead><tr></tr></thead><tbody></tbody>";
+                    if (d != emptySearch) {
+
+                        //Meaningful data is present
+                        if (navigator.appName != 'Microsoft Internet Explorer') {
+                            $('#searchResults').empty();
+                            $('#searchResults').append(d);
+
+                            oTable = $('#searchResults').DataTable({
+                                destroy: true,
+                                "scrollX": true,
+                                dom: 'T<"clear">lfrtip',
+                                TableTools: {
+                                    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                }
+                            });
+                        } else {
+                            //Enter IE
+                            //oTable is not defined
+                            if (oTable == null) {
+                                $('#searchResults').empty();
+                                $('#searchResults').append(d);
+
+                                oTable = $('#searchResults').DataTable({
+                                    destroy: true,
+                                    "scrollX": true,
+                                    dom: 'T<"clear">lfrtip',
+                                    TableTools: {
+                                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                    }
+                                });
+                            } else {
+                                //OTable is defined already
+
+                                //(i) Destroy dataTable
+                                oTable.destroy();
+
+                                //(ii)append the data
+                                $('#searchResults').empty();
+                                $('#searchResults').append(d);
+
+                                //(iii) Re-Draw the table
+                                oTable = $('#searchResults').DataTable({
+                                    destroy: true,
+                                    "scrollX": true,
+                                    dom: 'T<"clear">lfrtip',
+                                    TableTools: {
+                                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                    }
+                                });
+                            }
+                        }
+                    } else { //meaningful data is NOT present!
+                        if (navigator.appName != 'Microsoft Internet Explorer' && oTable != null) {
+
+
+                            oTable = $('#searchResults').DataTable({
+                                destroy: true,
+                                "scrollX": true,
+                                dom: 'T<"clear">lfrtip',
+                                TableTools: {
+                                    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                                }
+                            });
+
+                            oTable.clear();
+                            oTable.draw();
+                        } else if (oTable != null) {
+                            oTable.clear();
+                            oTable.draw();
+                        }
+
+                        alert("Returned an empty search");
+                    }
 
                     $('#searchResults').find('th.sorting').css('background-color', 'black');
                     $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
-                    $('#bs_export').show();
+                    //$('#bs_export').show();
+                    //unblocking UI
                     $('div.table').unblock();
                 });
         } else {
@@ -96,14 +204,7 @@ $(function () { //ready function
 
 
     });
-    $('#bs_export').click(function () {
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            alert("Export Functionality Not Supported For IE. Use Chrome.");
-        }
-        else {
-            CSVExportDataTable("", $(this).val());
-        }
-    });
+
 
     function searchAll(rtID, type) {
         var requestParams = JSON.stringify({

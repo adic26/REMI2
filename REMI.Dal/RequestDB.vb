@@ -62,23 +62,28 @@ Namespace REMI.Dal
 
         Public Shared Function GetRequest(ByVal reqNumber As String, ByVal user As User) As RequestFieldsCollection
             Dim reqNum As New RequestNumber(reqNumber)
-            Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = reqNum.Type Select r).FirstOrDefault()
 
-            Dim rf As RequestFieldsCollection = REMIAppCache.GetReqData(reqNum.Number)
+            If (reqNum.Validate()) Then
+                Dim requestType = (From r In New REMI.Dal.Entities().Instance().RequestTypes.Include("Lookup") Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = reqNum.Type Select r).FirstOrDefault()
 
-            If (rf Is Nothing) Then
-                rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number, user)
+                Dim rf As RequestFieldsCollection = REMIAppCache.GetReqData(reqNum.Number)
 
-                If (requestType.IsExternal) Then
-                    If (rf.Count > 0) Then
-                        LinkExternalRequest(reqNumber, rf, user.UserName, requestType.DBType)
+                If (rf Is Nothing) Then
+                    rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number, user)
+
+                    If (requestType.IsExternal) Then
+                        If (rf.Count > 0) Then
+                            LinkExternalRequest(reqNumber, rf, user.UserName, requestType.DBType)
+                        End If
                     End If
+
+                    REMIAppCache.SetReqData(rf, reqNum.Number)
                 End If
 
-                REMIAppCache.SetReqData(rf, reqNum.Number)
+                Return rf
             End If
 
-            Return rf
+            Return Nothing
         End Function
 
 #Region "Oracle"

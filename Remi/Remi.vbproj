@@ -542,6 +542,13 @@
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
+    <Compile Include="Request\Request.aspx.designer.vb">
+      <DependentUpon>Request.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Request\Request.aspx.vb">
+      <DependentUpon>Request.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
     <Compile Include="ScanForInfo\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -636,6 +643,7 @@
     <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.css" />
     <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.icon-large.css" />
     <Content Include="Design\jQueryCSS\BootstrapCSS\jquery.taginput.css" />
+    <Content Include="Design\jQueryCSS\DataTableCSS\dataTables.tableTools.css" />
     <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables.css" />
     <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables.min.css" />
     <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables_themeroller.css" />
@@ -658,11 +666,14 @@
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.10.4.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.11.2.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.8.2.custom.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.structure.css" />
     <Content Include="Design\scripts\Bootstrap\bootstrap-select.js" />
     <Content Include="Design\scripts\Bootstrap\bootstrap.js" />
     <Content Include="Design\scripts\Bootstrap\jquery.taginput.src.js" />
+    <Content Include="Design\scripts\DataTables\dataTables.tableTools.js" />
     <Content Include="Design\scripts\DataTables\jquery.dataTables.js" />
+    <Content Include="Design\scripts\DataTables\ZeroClipboard.js" />
     <Content Include="Design\scripts\gridviewScroll.min.js" />
     <Content Include="Design\scripts\i18n\defaults-en_US.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.10.4.min.js" />
@@ -677,6 +688,8 @@
     <Content Include="Design\scripts\jQuery\jquery.min.js" />
     <Content Include="Design\scripts\ReportScript.js" />
     <Content Include="Design\scripts\RequestScript.js" />
+    <Content Include="Design\scripts\swf\copy_csv_xls.swf" />
+    <Content Include="Design\scripts\swf\copy_csv_xls_pdf.swf" />
     <Content Include="Design\scripts\ToolBox.js" />
     <Content Include="Global.asax" />
     <Content Include="Help\default.aspx" />
@@ -712,10 +725,13 @@
     <Content Include="Reports\Search.aspx" />
     <Content Include="Request\Admin.aspx" />
     <Content Include="Request\default.aspx" />
+    <Content Include="Request\Request.aspx" />
     <Content Include="ScanForInfo\Default.aspx" />
     <Content Include="ScanForInfo\ProductGroup.aspx" />
     <Content Include="ScanForInfo\Unit.aspx" />
     <Content Include="ScanForTest\Default.aspx" />
+    <Content Include="swf\copy_csv_xls.swf" />
+    <Content Include="swf\copy_csv_xls_pdf.swf" />
     <Content Include="TestRecords\Add.aspx" />
     <Content Include="TestRecords\Default.aspx" />
     <Content Include="TestRecords\EditDetail.aspx" />

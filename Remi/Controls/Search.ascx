@@ -4,6 +4,8 @@
     <link type="text/css" href="../Design/jQueryCSS/BootstrapCSS/jquery.taginput.css" rel="Stylesheet" />
     <link type="text/css" href="../Design/jQueryCSS/jQueryUI/jquery-ui-1.10.4.css" rel="Stylesheet" />
     <link type="text/css" href="../Design/jQueryCSS/DataTableCSS/jquery.dataTables.css" rel="Stylesheet" />
+    <link type="text/css" href="../Design/jQueryCSS/DataTableCSS/dataTables.tableTools.css" rel="Stylesheet" />
+    <link href="../Design/jQueryCSS/jQueryUI/jquery-ui.css" rel="stylesheet" />
 
     <script type="text/javascript" src="../Design/scripts/DataTables/jquery.dataTables.js"></script>
     <script type="text/javascript" src="../Design/scripts/Bootstrap/jquery.taginput.src.js"></script>
@@ -12,7 +14,7 @@
     <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery-ui-1.10.4.min.js"></script>
     <script type="text/javascript" src="../Design/scripts/jquery.columnfilters.js" ></script>
     <script type="text/javascript" src="../Design/scripts/ToolBox.js"></script>
-
+    <script type="text/javascript" src="../Design/scripts/DataTables/dataTables.tableTools.js"></script>
     <!--include BlockUI -->
     <script type="text/javascript" src="../Design/scripts/jQueryUI/jquery.blockUI.js"></script>
 
@@ -27,16 +29,6 @@
                     <select id="bs_RealStages" class="selectpicker show-tick" title="Select Stages..." multiple data-size="auto" data-selected-text-format="count"></select>
                     <select id="bs_TestField" class="selectpicker show-tick" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
                     <select id="bs_Additional" class="selectpicker show-tick" title="Select Additional..." multiple data-size="15" data-selected-text-format="count">
-                        <option value="--aMeasurement">Measurement Name</option>
-                        <option value="--aBSN">BSN</option>
-                        <option value="--aIMEI">IMEI</option>
-                        <option value="--aUnit">Unit</option>
-                        <option value="--aResultArchived">Results Archived</option>
-                        <option value="--aResultInfoArchived">Info Archived</option>
-                        <option value="--aInfo">Information</option>
-                        <option value="--aTestRunStartDate">Test Run Start Date</option>
-                        <option value="--aTestRunEndDate">Test Run End Date</option>
-                        <option value="--aParam">Parameter</option>
                     </select>
 
                     <button id="bs_OKayButton" type="button" class="btn btn-primary" autocomplete="off">ADD</button>
@@ -45,11 +37,12 @@
         </div>
     </div>
 
-     <ul id="FinalItemsList" class="list-group"></ul>
+    <div id="FinalItemsList" class="list-group"></div>
     <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
-
-    <div class="table">
+    
+    <div class="info"></div>
+    <div class="table"> 
         <table id="searchResults"></table>
-        <button id="bs_export" type="button" class="btn btn-primary" autocomplete="off">Export</button>
+        <div class="IE_empty"></div>
     </div>
     <asp:HiddenField runat="server" ID="hdnRequestType" />

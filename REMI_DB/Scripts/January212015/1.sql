@@ -1,4 +1,104 @@
-﻿ALTER PROCEDURE [Req].[RequestSearch] @RequestTypeID INT, @tv dbo.SearchFields READONLY, @UserID INT = NULL
+/*
+Run this script on:
+
+        SQLQA10YKF\HAQA1.RemiQA    -  This database will be modified
+
+to synchronize it with:
+
+        (local).REMILocal
+
+You are recommended to back up your database before running this script
+
+Script created by SQL Compare version 10.2.0 from Red Gate Software Ltd at 1/21/2015 9:40:50 AM
+
+*/
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+PRINT N'Altering [Req].[RequestFieldSetup]'
+GO
+ALTER PROCEDURE [Req].[RequestFieldSetup] @RequestTypeID INT, @IncludeArchived BIT = 0, @RequestNumber NVARCHAR(12) = NULL
+AS
+BEGIN
+	DECLARE @RequestID INT
+	DECLARE @TrueBit BIT
+	DECLARE @FalseBit BIT
+	DECLARE @RequestType NVARCHAR(150)
+	SET @RequestID = 0
+	SET @TrueBit = CONVERT(BIT, 1)
+	SET @FalseBit = CONVERT(BIT, 0)
+
+	SELECT @RequestType=lrt.[values] FROM Req.RequestType rt INNER JOIN Lookups lrt ON lrt.LookupID=rt.TypeID WHERE rt.RequestTypeID=@RequestTypeID
+
+	IF (@RequestNumber IS NOT NULL)
+		BEGIN
+			SELECT @RequestID = RequestID FROM Req.Request WHERE RequestNumber=@RequestNumber
+		END
+	ELSE
+		BEGIN
+			SELECT @RequestNumber = REPLACE(RequestNumber, @RequestType + '-' + Right(Year(getDate()),2) + '-', '') + 1 
+			FROM Req.Request 
+			WHERE RequestNumber LIKE @RequestType + '-' + Right(Year(getDate()),2) + '-%'
+			
+			IF (LEN(@RequestNumber) < 4)
+			BEGIN
+				SET @RequestNumber = REPLICATE('0', 4-LEN(@RequestNumber)) + @RequestNumber
+			END
+		
+			IF (@RequestNumber IS NULL)
+				SET @RequestNumber = '0001'
+		
+			SET @RequestNumber = @RequestType + '-' + Right(Year(getDate()),2) + '-' + @RequestNumber
+		END
+
+	SELECT rfs.ReqFieldSetupID, @RequestType AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
+			lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, rfs.DisplayOrder, 
+			rfs.ColumnOrder, ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, @RequestTypeID AS RequestTypeID,
+			@RequestNumber AS RequestNumber, @RequestID AS RequestID, 
+			CASE WHEN rfm.IntField = 'RequestLink' AND Value IS NULL THEN 'http://go/requests/' + @RequestNumber ELSE rfd.Value END AS Value, 
+			rfm.IntField, rfm.ExtField,
+			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
+			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category,
+			rfs.ParentReqFieldSetupID, Req.RequestType.HasIntegration, rfsp.Name As ParentFieldSetupName
+	FROM Req.RequestType
+		INNER JOIN Lookups lrt ON lrt.LookupID=Req.RequestType.TypeID
+		INNER JOIN Req.ReqFieldSetup rfs ON rfs.RequestTypeID=Req.RequestType.RequestTypeID                  
+		INNER JOIN Lookups lft ON lft.LookupID=rfs.FieldTypeID
+		LEFT OUTER JOIN Lookups lvt ON lvt.LookupID=rfs.FieldValidationID
+		LEFT OUTER JOIN Req.ReqFieldSetupRole ON Req.ReqFieldSetupRole.ReqFieldSetupID=rfs.ReqFieldSetupID
+		LEFT OUTER JOIN Req.Request ON RequestNumber=@RequestNumber
+		LEFT OUTER JOIN Req.ReqFieldData rfd ON rfd.ReqFieldSetupID=rfs.ReqFieldSetupID AND rfd.RequestID=Req.Request.RequestID
+		LEFT OUTER JOIN Req.ReqFieldMapping rfm ON rfm.RequestTypeID=Req.RequestType.RequestTypeID AND rfm.ExtField=rfs.Name AND ISNULL(rfm.IsActive, 0) = 1
+		LEFT OUTER JOIN Req.ReqFieldSetup rfsp ON rfsp.ReqFieldSetupID=rfs.ParentReqFieldSetupID
+	WHERE (lrt.[Values] = @RequestType) AND
+		(
+			(@IncludeArchived = @TrueBit)
+			OR
+			(@IncludeArchived = @FalseBit AND ISNULL(rfs.Archived, @FalseBit) = @FalseBit)
+			OR
+			(@IncludeArchived = @FalseBit AND rfd.Value IS NOT NULL AND ISNULL(rfs.Archived, @FalseBit) = @TrueBit)
+		)
+	ORDER BY Category, ISNULL(rfs.DisplayOrder, 0) ASC
+END
+GO
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Altering [Req].[RequestSearch]'
+GO
+ALTER PROCEDURE [Req].[RequestSearch] @RequestTypeID INT, @tv dbo.SearchFields READONLY, @UserID INT = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -6,7 +106,7 @@ BEGIN
 	CREATE TABLE dbo.#Request (RequestID INT PRIMARY KEY, BatchID INT, RequestNumber NVARCHAR(11))
 	CREATE TABLE dbo.#Infos (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS)
 	CREATE TABLE dbo.#Params (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(250) COLLATE SQL_Latin1_General_CP1_CI_AS)
-	CREATE TABLE dbo.#ReqNum (RequestNumber NVARCHAR(11) COLLATE SQL_Latin1_General_CP1_CI_AS)
+	CREATE TABLE dbo.#ReqNum (RequestNumber NVARCHAR(11))
 
 	SELECT * INTO dbo.#temp FROM @tv
 
@@ -527,38 +627,17 @@ BEGIN
 	SET NOCOUNT OFF
 END
 GO
-GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
-DECLARE @table AS dbo.SearchFields
-INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES ('Request', 51, '*Windermere')
---,('Request', 51, '-Windermere E R135')
---,('Request', 51, '3G SIMs')
--- ,('Request', 51, '*Lisbon')
---,('Request', 49, 'Handheld')
---,('Request', 49, '*Accessory')
---,('Test', 1099, 'Sensor Test')
---,('Test', 1280, 'Functional')
-,('Test', 1020, 'Radiated RF Test')
---('Test', 1561, 'Display Test')
---,('Test', 1103, 'Camera Front')
---,('Stage', 3218, 'Post 360hrs')
---,('Stage', 2246, 'Analysis')
---,('Stage', 3220, 'Post 720hrs')
---,('BSN', 0, '1151185790')
---,('ReqNum', 0, 'QRA-14-0081')
---,('ReqNum', 0, 'QRA-14-0597')
---,('Unit', 0, '5')
---,('Unit', 0, '1')
---,('IMEI', 0, '')
---,('ResultArchived', 0, '')
---,('Param:Band', 0, 'LTE17')
-,('Param:Channel', 0, '5800')
---,('ResultInfoArchived', 0, '')
---,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
---,('Info:CameraID', 0, 'Not Reported')
---,('Info:hoursintest', 0, '10')
---, ('TestRunStartDate', 0, '2015-01-19')
---, ('TestRunEndDate', 0, '2015-01-19')
---,('Measurement', 0, '*RxBER')
-EXEC [Req].[RequestSearch] 1, @table--, 251
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'The database update succeeded'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'The database update failed'
+GO
+DROP TABLE #tmpErrors
+GO

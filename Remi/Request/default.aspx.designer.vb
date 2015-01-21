@@ -50,6 +50,15 @@ Partial Public Class ReqDefault
     Protected WithEvents hypAdmin As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''hypNew control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypNew As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''srcRequest control.
     '''</summary>
     '''<remarks>
