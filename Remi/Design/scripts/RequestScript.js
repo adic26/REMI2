@@ -15,6 +15,7 @@ $(function () { //ready function
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
     var additional = $('#bs_Additional');
+    var count = 0;
     
     var o = new Option("--aReqNum", "--aReqNum");
     $(o).html("Request Number");
@@ -41,10 +42,11 @@ $(function () { //ready function
 
             var builtHTML;
             builtHTML = '<span class="list-group-item">' + element;
-            builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+            builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
 
             builtHTML += '</span>';
             $('.list-group').append(builtHTML);
+            count = count + 1;
         });
 
         myList.show();

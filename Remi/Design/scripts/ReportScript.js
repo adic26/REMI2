@@ -9,6 +9,8 @@
         UserAgentInfo.strBrowser = 1;
     }
 
+    var count = 0;
+
     $('#FinalItemsList').hide();
     $('#bs_searchButton').hide();
     $('#bs_export').hide();
@@ -43,11 +45,11 @@
     $('#bs_Additional').append(o);
     
     var o = new Option("--aResultArchived", "--aResultArchived");
-    $(o).html("Results Archived");
+    $(o).html("Include Results Archived");
     $('#bs_Additional').append(o);
     
     var o = new Option("--aResultInfoArchived", "--aResultInfoArchived");
-    $(o).html("Info Archived");
+    $(o).html("Include Info Archived");
     $('#bs_Additional').append(o);
     
     var o = new Option("--aInfo", "--aInfo");
@@ -106,14 +108,21 @@
                 builtHTML += '<script>$(function () { $("#startDate").datepicker({}); $("#endDate").datepicker({}); });</script>';
                 builtHTML += '<input type="text" id="startDate" name="startDate"addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><input type="text" id="endDate" name="endDate"addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
             }
+            else if (element == "ResultArchived") {
+                builtHTML += '<select id="resultArchived' + count + '" name="resultArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="Yes">Yes</option><option value="No">No</option></select>';
+            }
+            else if (element == "ResultInfoArchived") {
+                builtHTML += '<select id="resultInfoArchived' + count + '" name="resultInfoArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="Yes">Yes</option><option value="No">No</option></select>';
+            }
             else {
                 if (element == "Param" || element == "Info") {
-                    builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+                    builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
                 }
-                builtHTML += '<input type="text" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+                builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
             }
             builtHTML += '</span>';
             $('.list-group').append(builtHTML);
+            count = count + 1;
         });
 
         myList.show();
@@ -168,6 +177,22 @@
                     if (s_element.children[2].value != '' && s_element.children[1].value != '') {
                         fullList.push('TestRunStartDate' + ',0,' + s_element.children[2].value);
                         fullList.push('TestRunEndDate' + ',0,' + s_element.children[1].value);
+                    }
+                }
+                else if (s_element.innerText.indexOf('ResultArchived') > -1) {
+                    if (s_element.children[0].value == "Yes") {
+                        fullList.push('resultArchived,1,');
+                    }
+                    else {
+                        fullList.push('resultArchived,0,');
+                    }
+                }
+                else if (s_element.innerText.indexOf('ResultInfoArchived') > -1) {
+                    if (s_element.children[0].value == "Yes") {
+                        fullList.push('resultInfoArchived,1,');
+                    }
+                    else {
+                        fullList.push('resultInfoArchived,0,');
                     }
                 }
                 else {
