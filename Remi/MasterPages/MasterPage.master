@@ -18,8 +18,6 @@
         TargetControlID="pnlLeftNavContent" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
         CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal" BehaviorId="collapsibleBehavior"></asp:CollapsiblePanelExtender>
     <script language="javascript" type="text/javascript">
-        //document.getElementById('<%=pnlHead.ClientID%>').style.visibility = 'hidden';
-
         function pageLoad(sender, args) {
             $find("collapsibleBehavior").add_expandComplete(expandHandler);
             $find("collapsibleBehavior").add_collapseComplete(collapseHandler);
@@ -58,7 +56,9 @@
                 <Items>
                     <asp:MenuItem ImageUrl="../Design/Icons/ic_overflow_tab.png"></asp:MenuItem>
                     <asp:MenuItem Text="Overview" NavigateUrl="~/Overview.aspx" Value="Overview"></asp:MenuItem>
-                    <asp:MenuItem Text="Search" NavigateUrl="~/Reports/Search.aspx" Value="Search"></asp:MenuItem>
+                    <asp:MenuItem Text="Search" NavigateUrl="~/Reports/Search.aspx" Value="Search">
+                        <asp:MenuItem Text="Result Search" NavigateUrl="~/Relab/Reports.aspx" Value="ResultsSearch"></asp:MenuItem>
+                    </asp:MenuItem>
                     <asp:MenuItem Text="Scan Device" NavigateUrl="~/ScanForTest/Default.aspx" Value="Scan"></asp:MenuItem>
                     <asp:MenuItem Text="Batch Info" NavigateUrl="~/ScanForInfo/Default.aspx" Value="Batch"></asp:MenuItem>
                     <asp:MenuItem Text="Product Info" NavigateUrl="~/ScanForInfo/productgroup.aspx" Value="Product"></asp:MenuItem>
@@ -74,8 +74,8 @@
                         <asp:MenuItem Text="Me" NavigateUrl="~/BadgeAccess/EditMyUser.aspx"></asp:MenuItem>
                         <asp:MenuItem Text="Batches Requested" NavigateUrl="~/ManageUser/BatchesByRequestor.aspx"></asp:MenuItem>
                     </asp:MenuItem>
-                    <asp:MenuItem Text="Results" NavigateUrl="~/Relab/Results.aspx" Value="results">
-                        <asp:MenuItem Text="Reports" NavigateUrl="~/Relab/Reports.aspx"></asp:MenuItem>
+                    <asp:MenuItem Text="Results" NavigateUrl="~/Relab/Results.aspx" Value="Results">
+                        <asp:MenuItem Text="Result Search" NavigateUrl="~/Relab/Reports.aspx" Value="ResultsSearch"></asp:MenuItem>
                     </asp:MenuItem>
                     <asp:MenuItem Text="Admin" NavigateUrl="~/Admin/Jobs.aspx" Value="admin">
                         <asp:MenuItem Text="Jobs" NavigateUrl="~/Admin/Jobs.aspx"></asp:MenuItem>

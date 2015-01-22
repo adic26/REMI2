@@ -52,8 +52,16 @@ Partial Class MasterPages_MasterPage
 
             'You are a relab role or your role has permission to view relab
             If Not (UserManager.GetCurrentUser.HasRelabAuthority() And UserManager.GetCurrentUser.HasRelabAccess()) Then
-                If (menuHeader.FindItem("results") IsNot Nothing) Then
-                    menuHeader.Items.Remove(menuHeader.FindItem("results"))
+                If (menuHeader.FindItem("Results") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Results"))
+                End If
+
+                If (menuHeader.FindItem("Results") IsNot Nothing) Then
+                    menuHeader.FindItem("Results").ChildItems.Remove(menuHeader.FindItem("Results/ResultsSearch"))
+                End If
+                'ResultsSearch
+                If (menuHeader.FindItem("Search") IsNot Nothing) Then
+                    menuHeader.FindItem("Search").ChildItems.Remove(menuHeader.FindItem("Search/ResultsSearch"))
                 End If
             End If
 
@@ -136,6 +144,16 @@ Partial Class MasterPages_MasterPage
             If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Results").FirstOrDefault() IsNot Nothing) Then
                 If (menuHeader.FindItem("Results") IsNot Nothing) Then
                     menuHeader.Items.Remove(menuHeader.FindItem("Results"))
+                End If
+            End If
+
+            If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Result Search").FirstOrDefault() IsNot Nothing) Then
+                If (menuHeader.FindItem("Results") IsNot Nothing) Then
+                    menuHeader.FindItem("Results").ChildItems.Remove(menuHeader.FindItem("Results/ResultsSearch"))
+                End If
+                'ResultsSearch
+                If (menuHeader.FindItem("Search") IsNot Nothing) Then
+                    menuHeader.FindItem("Search").ChildItems.Remove(menuHeader.FindItem("Search/ResultsSearch"))
                 End If
             End If
         End If
