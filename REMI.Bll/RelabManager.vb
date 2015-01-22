@@ -236,15 +236,6 @@ Namespace REMI.Bll
             Return New DataSet
         End Function
 
-        Public Shared Function ResultSearch(ByVal measurementTypeID As Int32, ByVal testID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal productIDs As String, ByVal jobNameIDs As String, ByVal testStageIDs As String, ByVal testCenterID As Int32, ByVal showFailureOnly As Boolean) As DataSet
-            Try
-                Return RelabDB.ResultSearch(measurementTypeID, testID, parameterName, parameterValue, productIDs, jobNameIDs, testStageIDs, testCenterID, showFailureOnly)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return New DataSet
-        End Function
-
         Public Shared Function GetMeasurementParameterCommaSeparated(ByVal measurementID As Int32) As DataTable
             Try
                 Return RelabDB.GetMeasurementParameterCommaSeparated(measurementID)

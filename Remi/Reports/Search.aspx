@@ -35,12 +35,10 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
     <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="3" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
         <asp:ListItem Text="Batchs" Selected="True" Value="1"></asp:ListItem>
-        <asp:ListItem Text="Units" Value="6"></asp:ListItem>
-        <asp:ListItem Text="Exceptions" Value="2" Enabled="false"></asp:ListItem>
-        <asp:ListItem Text="Users" Value="3" Enabled="false"></asp:ListItem>
-        <asp:ListItem Text="Results" Value="4" Enabled="false"></asp:ListItem>
-        <asp:ListItem Value="7" Enabled="false">KPI <img src="../Design/beta.jpg" /></asp:ListItem>
-        <asp:ListItem Text="Training" Value="8"></asp:ListItem>
+        <asp:ListItem Text="Units" Value="2"></asp:ListItem>
+        <asp:ListItem Text="Exceptions" Value="3" Enabled="false"></asp:ListItem>
+        <asp:ListItem Text="Users" Value="4" Enabled="false"></asp:ListItem>
+        <asp:ListItem Text="Training" Value="5"></asp:ListItem>
     </asp:RadioButtonList><br />
 
     <asp:Panel Visible="false" runat="server" ID="pnlTraining">
@@ -172,84 +170,6 @@
 
         <br /><br />
     </asp:Panel>
-
-    <asp:Panel Visible="false" runat="server" ID="pnlSearchResults">
-        <asp:UpdatePanel ID="updResults" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
-            <Triggers>
-                <asp:AsyncPostBackTrigger ControlID="chkShowOnlyFailValue" EventName="CheckedChanged" />
-                <asp:AsyncPostBackTrigger ControlID="chkJobsRQ" />
-                <asp:AsyncPostBackTrigger ControlID="chkStagesRQ" />
-                <asp:AsyncPostBackTrigger ControlID="ddlTestsResults" />
-                <asp:AsyncPostBackTrigger ControlID="ddlMeasurementType" />
-                <asp:AsyncPostBackTrigger ControlID="ddlParameter" />
-                <asp:AsyncPostBackTrigger ControlID="ddlParameterValue" />
-            </Triggers>
-            <ContentTemplate>
-                <br />
-                Test Center: <asp:DropDownList ID="ddlTestCenterRQ" runat="server" AppendDataBoundItems="false" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
-                <br />
-                <asp:CheckBox runat="server" ID="chkShowOnlyFailValue" Text="Fail Options Only: " Checked="false" AutoPostBack="true" TextAlign="Left" />
-                <br />
-
-                <table cellpadding="0" cellspacing="0" border="0" class="removeStyleWithLeft">
-                    <tr>
-                        <td>
-                            Product: <div style="OVERFLOW-Y:scroll; WIDTH:200px; HEIGHT:200px"><asp:CheckBoxList runat="server" ID="chkProductFilterRQ" CssClass="removeStyleWithLeft" RepeatDirection="Vertical" AutoPostBack="false" Width="239px" AppendDataBoundItems="true" DataTextField="ProductGroupName" DataValueField="ID"></asp:CheckBoxList></div>
-                        </td>
-                        <td>
-                            Jobs: <div style="OVERFLOW-Y:scroll; WIDTH:300px; HEIGHT:200px"><asp:CheckBoxList runat="server" ID="chkJobsRQ" CssClass="removeStyleWithLeft" RepeatDirection="Vertical" AutoPostBack="true" Width="239px" AppendDataBoundItems="true" DataValueField="ID" DataTextField="Name"></asp:CheckBoxList></div>
-                        </td>
-                        <td>
-                            Stages: <div style="OVERFLOW-Y:scroll; WIDTH:300px; HEIGHT:200px"><asp:CheckBoxList runat="server" ID="chkStagesRQ" CssClass="removeStyleWithLeft" RepeatDirection="Vertical" AutoPostBack="true" Width="239px" AppendDataBoundItems="true" DataValueField="ID" DataTextField="Name"></asp:CheckBoxList></div>
-                        </td>
-                    </tr>
-                </table>
-                <br />
-                Test Name:
-                <asp:DropDownList ID="ddlTestsResults" runat="server" DataTextField="Name" DataValueField="ID" AutoPostBack="true" style="width:150px;" CausesValidation="true" AppendDataBoundItems="true">
-                    <asp:ListItem Selected="True" Text="Select A Test" Value="0"></asp:ListItem>
-                </asp:DropDownList>
-                <br />
-                Measurements: 
-                <asp:DropDownList runat="server" style="width:150px;" ID="ddlMeasurementType" Visible="true" CausesValidation="true" AutoPostBack="true" DataTextField="Measurement" AppendDataBoundItems="true" DataValueField="MeasurementTypeID">
-                    <asp:ListItem Selected="True" Text="Select A Measurement" Value="0"></asp:ListItem>
-                </asp:DropDownList>
-                <br />
-                Parameter:
-                <asp:DropDownList runat="server" style="width:150px;" ID="ddlParameter" Visible="true" CausesValidation="true" AutoPostBack="true" DataTextField="ParameterName" AppendDataBoundItems="true" DataValueField="ParameterName">
-                    <asp:ListItem Selected="True" Text="Select A Parameter" Value="0"></asp:ListItem>
-                </asp:DropDownList>
-                <br />
-                Parameter Value:
-                <asp:DropDownList runat="server" ID="ddlParameterValue" style="width:150px;" Visible="true" CausesValidation="true" AutoPostBack="false" DataTextField="ParameterName" AppendDataBoundItems="true" DataValueField="ParameterName">
-                    <asp:ListItem Selected="True" Text="Select A Value" Value="0"></asp:ListItem>
-                </asp:DropDownList>
-
-                <asp:UpdateProgress ID="upResults" runat="server" DynamicLayout="true" DisplayAfter="100" AssociatedUpdatePanelID="updResults">
-                    <ProgressTemplate>
-                        <div class="LoadingModal"></div>
-                        <div class="LoadingGif"></div>
-                    </ProgressTemplate>
-                </asp:UpdateProgress>
-            </ContentTemplate>
-        </asp:UpdatePanel>
-        <br /><br />
-    </asp:Panel>
-
-    <asp:Panel Visible="false" runat="server" ID="pnlKPI">
-        Start: <asp:TextBox ID="txtStartKPI" runat="server" DefaultValue="12am"></asp:TextBox>
-        <asp:CalendarExtender ID="CalendarExtender3" runat="server" Enabled="True" TargetControlID="txtStartKPI"></asp:CalendarExtender>
-        <br />
-        End: <asp:TextBox ID="txtEndKPI" runat="server" DefaultValue="12pm"></asp:TextBox>
-        <asp:CalendarExtender ID="CalendarExtender4" runat="server" Enabled="True" TargetControlID="txtEndKPI"></asp:CalendarExtender>
-        <br />
-        Test Centers: <asp:DropDownList ID="ddlTestCenterKPI" runat="server" AppendDataBoundItems="True" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
-        <br />
-        Type: <asp:DropDownList runat="server" ID="ddlKPIType" Width="120px">
-            <asp:ListItem Selected="true" Text="Incoming Loss" Value="1" />
-        </asp:DropDownList>
-        <br /><br />
-    </asp:Panel>
     
     <asp:UpdatePanel ID="updProcessing" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
         <Triggers>
@@ -334,47 +254,7 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
-
-           <%-- <asp:GridView runat="server" ID="gvwENVReport" Visible="false" AutoGenerateColumns="True" EmptyDataText="No Data Available" EnableViewState="True">
-            </asp:GridView>--%>
-
-            <asp:GridView ID="gvwRQResultsTrend" runat="server" Visible="false" AutoGenerateColumns="false" DataKeyNames="" EmptyDataText="No Data Available" EnableViewState="True">
-                <Columns>
-                    <asp:TemplateField HeaderText="Request">
-                        <ItemTemplate>
-                            <asp:HyperLink EnableViewState="false" ID="hypQRANumber" runat="server" NavigateUrl='<%# "/ScanForInfo/Default.aspx?QRA=" + Eval("QRANumber") %>'
-                            Text='<%# Eval("QRANumber") %>' ToolTip='<%# "Click to view the information page for this batch" %>' Target="_blank"></asp:HyperLink>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="BatchUnitNumber" HeaderText="Unit Number" />
-                    <asp:TemplateField HeaderText="Product">
-                        <ItemTemplate>
-                            <asp:HyperLink EnableViewState="false" ID="hypproduct" runat="server" NavigateUrl='<%# "/ScanForInfo/productgroup.aspx?Name=" + Eval("ProductID").ToString() %>'
-                            Text='<%# Eval("ProductGroupName") %>' ToolTip='<%# "Click to view the information page for this Product" %>' Target="_blank"></asp:HyperLink>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="TestCenter" HeaderText="Test Center" />
-                    <asp:BoundField DataField="JobName" HeaderText="Job" />
-                    <asp:BoundField DataField="TestStageName" HeaderText="Test Stage" />
-                    <asp:BoundField DataField="MeasurementName" HeaderText="Measurement" />
-                    <asp:BoundField DataField="MeasurementValue" HeaderText="Measured Value" />
-                    <asp:BoundField DataField="DegradationVal" HeaderText="Degradation" />
-                    <asp:BoundField DataField="LowerLimit" HeaderText="Lower Limit" />
-                    <asp:BoundField DataField="UpperLimit" HeaderText="Upper Limit" />
-                    <asp:BoundField DataField="PassFail" HeaderText="Pass / Fail" />
-                    <asp:BoundField DataField="Params" HeaderText="Parameters" />
-                    <asp:TemplateField HeaderText="View">
-                        <ItemTemplate>
-                            <asp:HyperLink EnableViewState="false" ID="hypViewResults" runat="server" NavigateUrl='<%# "/Relab/Measurements.aspx?ID=" + Eval("ResultID").ToString() + "&Batch=" + Eval("BatchID").ToString() %>'
-                            Text="View" ToolTip='<%# "Click to view the measurements for this." %>' Target="_blank"></asp:HyperLink>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
-            
-            <asp:GridView ID="gvwKPI" Visible="false" runat="server" AutoGenerateColumns="true" EmptyDataText="No Data Available" EnableViewState="True">
-            </asp:GridView>
-            
+                        
             <asp:GridView ID="gvwTestExceptions" Visible="false" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" EmptyDataText="No Exception Data Available" EnableViewState="True">
                 <Columns>
                     <asp:TemplateField HeaderText="ID" SortExpression="ID">
