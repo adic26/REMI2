@@ -186,7 +186,7 @@ img.right
 
 #siteContainer
 {
-    width: 1500px;
+    width: 100%;
     margin: 0px auto;
     font-size: 11px;
     line-height: 1.6em;
@@ -206,37 +206,43 @@ img.right
 
 .TopHeader
 {
-    width:1500px;
+    width:100%;
 }
 
 .headerImg
 {
     font-size: 16px;
-    width:1300px;
+    width:80%;
     border: 0px;
     padding-bottom: 10px;
     padding-top: 5px;
     clear: both;
     margin: 0px 0px 5px 0px;
+    float:left;
+    height:35px;
 }
 
 .headerLogout
 {
+    width:15%;
+    border: 0px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    margin: 0px 0px 5px 0px;
+    height:35px;
     vertical-align:top;
-    width: 200px;
-    float:right;
 }
 
 /* FOOTER */
-#footer
+.footer
 {
     padding: 0px 2px 0px 2px;
     clear: both;
-    width: 1500px;
+    width: 100%;
     background-color: #362d2d;
 }
 
-#footer p
+.footer p
 {
     color: #FFF;
     padding: 5px;
@@ -244,7 +250,7 @@ img.right
 }
 
 
-#footer p a
+.footer p a
 {
     color: #FFF;
     background-color: #362d2d;
@@ -252,7 +258,7 @@ img.right
     border-bottom: 1px dotted #FFFFFF;
 }
 
-#footer p a:hover
+.footer p a:hover
 {
     color: #FFF;
     text-decoration: none;
@@ -263,22 +269,22 @@ img.right
 /*###################################################*/
 /******************* Sidebar Styles ********************/
 /*###################################################*/
-#rightSidebar /*not used anymore*/
+.rightSidebar /*not used anymore*/
 {
     display: none;
-    width: 300px;
+    width: 0px;
     padding-left: 21px;
     padding-right: 0px;
     padding-top: 10px;
     float: left;
 }
 
-#rightSidebar h2
+.rightSidebar h2
 {
     font-size: 22px;
     border: 8px soild #666;
 }
-#rightSidebar p
+.rightSidebar p
 {
     padding-bottom: 10px;
     border-bottom: 1px solid #DDDDDD;
@@ -289,8 +295,8 @@ img.right
 {
     margin: 0px;
     padding: 0px 10px 0px 10px;
-    width: 1400px;
-    height: 750px;
+    width: 93%;
+    height: 700px;
     overflow-y : scroll;
     overflow-x:auto;
     display:inline-block;
@@ -304,12 +310,13 @@ img.right
 
 .contentExpanded
 {
+    border:2px;
     margin: 0px;
     padding: 0px 10px 0px 10px;
-    width: 1250px;
-    height: 750px;
+    width: 87%;
+    height: 700px;
     overflow-y : scroll;
-    overflow-x:auto;
+    overflow-x:scroll;
     display:inline-block;
     vertical-align:top;
 }
@@ -323,8 +330,8 @@ img.right
 {
     margin: 0px;
     padding: 0px 10px 0px 10px;
-    width: 1450px;
-    height: 750px;
+    width: 97%;
+    height: 700px;
     overflow-y : scroll;
     overflow-x:auto;
     display:inline-block;
@@ -354,15 +361,15 @@ img.right
     padding: 0px 0px 0px 0px;
     margin: 00px 0px 0px 0px;
     border: 10px;
-    width: 195px;
-    height: 750px;
+    width: 10%;
+    height: 700px;
     display:inline-block;
     vertical-align:top;
 }
 
 .leftSidebar h3
 {
-    margin: 0px 0px 0px 5px;
+    margin: 0px 0px 0px 0px;
     padding: 2px 0px 2px 5px;
     background: url("rightMenuHeader.gif") repeat-x left top;
     background-color: #362d2d;
@@ -371,12 +378,11 @@ img.right
     color: #fff;
     font-size: 10pt;
     text-align: left;
-    width: 163px;
 }
 .leftSidebar ul
 {
     padding: 0px 0px 0px 0px;
-    margin: 0px 10px 10px 5px;
+    margin: 0px 0px 10px 0px;
     border-bottom: 1px solid #362d2d;
     list-style: none;
 }
@@ -398,7 +404,7 @@ img.right
     color: #362d2d;
     font-weight: bold;
     text-decoration: none;
-    width: 165px;
+    width: 100%;
 }
 .leftSidebar ul li img
 {
@@ -1198,12 +1204,11 @@ table tr td input
 
 .menuHeader
 {
-    width: 1500px;
+    width: 100%;
     font-size: 93%;
     padding-bottom: 1px;
     margin-bottom: 15px;
     border-bottom: 3px solid #362d2d;
-    height: 30px;
 }
 
 .menuItemLevel1

@@ -15,7 +15,7 @@
     <form id="form1" runat="server">
     <asp:CollapsiblePanelExtender runat="server" ID="cpeln" CollapsedImage="..\Design\Icons\png\24x24\next.png" 
         ExpandedImage="..\Design\Icons\png\24x24\back.png" ImageControlID="imgExpCol" 
-        TargetControlID="pnlLeftNavContent" ExpandedSize="185" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
+        TargetControlID="pnlLeftNavContent" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
         CollapseControlID="pnlExpColLefNav" ExpandControlID="pnlExpColLefNav" ExpandDirection="Horizontal" BehaviorId="collapsibleBehavior"></asp:CollapsiblePanelExtender>
     <script language="javascript" type="text/javascript">
         //document.getElementById('<%=pnlHead.ClientID%>').style.visibility = 'hidden';
@@ -111,11 +111,11 @@
             </asp:Panel>
         </asp:Panel>
 
-        <div id="rightSidebar">
+        <div id="rightSidebar" class="rightSidebar">
             <asp:ContentPlaceHolder ID="rightSidebarContent" runat="server" Visible="false">
             </asp:ContentPlaceHolder>
         </div>
-        <div id="footer">
+        <div id="footer" class="footer">
             <p>BlackBerry | Contact <a href="mailto:reltsdsupport@blackberry.com">reltsdsupport@blackberry.com</a> for support.</p>
         </div>
     </div>
