@@ -21,6 +21,26 @@ Namespace REMI.Bll
             Return New DataTable("Search")
         End Function
 
+        Public Shared Function ESResultSummary(ByVal requestNumber As String) As DataTable
+            Try
+                Return ReportDB.ESResultSummary(requestNumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("ESResultSummary")
+        End Function
+
+        Public Shared Function ESResultBreakDown(ByVal requestNumber As String) As DataTable
+            Try
+                Return ReportDB.ESResultBreakDown(requestNumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("ESResultBreakDown")
+        End Function
+
         Public Shared Function SearchTree(ByVal requestTypeID As Int32) As DataTable
             Try
                 Dim dt As New DataTable("SearchTree")

@@ -13,6 +13,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
+    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeln" CollapsedImage="..\Design\Icons\png\24x24\next.png" 
         ExpandedImage="..\Design\Icons\png\24x24\back.png" ImageControlID="imgExpCol" 
         TargetControlID="pnlLeftNavContent" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
@@ -37,7 +38,6 @@
             document.getElementById('<%= pnlLeftNav.ClientID%>').className = "leftSidebarCollapse";
         }
     </script>
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <div id="siteContainer">
         <asp:Panel runat="server" ID="pnlHeader" CssClass="TopHeader">
             <span class="headerImg"><img src="/Design/bbLogo.png" alt="BlackBerry" />REMI</span>

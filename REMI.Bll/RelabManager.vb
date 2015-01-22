@@ -77,6 +77,17 @@ Namespace REMI.Bll
             Return New DataTable("ResultsSummaryExport")
         End Function
 
+        Public Shared Function MeasurementFiles(ByVal testUnitID As Int32, ByVal testID As Int32, ByVal testStageID As Int32) As DataTable
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+
+                Return BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultsMeasurement.Result.TestUnitID = testUnitID And mf.ResultsMeasurement.Result.TestID = testID And mf.ResultsMeasurement.Result.TestStageID = testStageID Select mf).ToList(), "MeasurementFiles")
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("MeasurementFiles")
+        End Function
+
         Public Shared Function MeasurementFiles(ByVal MeasurementID As Int32) As DataTable
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()

@@ -41,15 +41,6 @@ Partial Public Class MasterPages_MasterPage
     Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''cpeln control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cpeln As Global.AjaxControlToolkit.CollapsiblePanelExtender
-
-    '''<summary>
     '''AjaxScriptManager1 control.
     '''</summary>
     '''<remarks>
@@ -57,6 +48,15 @@ Partial Public Class MasterPages_MasterPage
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
+
+    '''<summary>
+    '''cpeln control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeln As Global.AjaxControlToolkit.CollapsiblePanelExtender
 
     '''<summary>
     '''pnlHeader control.

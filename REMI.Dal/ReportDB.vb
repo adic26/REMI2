@@ -34,5 +34,37 @@ Namespace REMI.Dal
 
             Return dt
         End Function
+
+        Public Shared Function ESResultSummary(ByVal requestNumber As String) As DataTable
+            Dim dt As New DataTable("ESResultSummary")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispESResultSummary", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "ESResultSummary"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
+        Public Shared Function ESResultBreakDown(ByVal requestNumber As String) As DataTable
+            Dim dt As New DataTable("ESResultBreakDown")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("Relab.remispESResultBreakDown", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "ESResultBreakDown"
+                End Using
+            End Using
+
+            Return dt
+        End Function
     End Class
 End Namespace
