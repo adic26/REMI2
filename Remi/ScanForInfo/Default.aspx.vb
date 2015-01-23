@@ -154,7 +154,7 @@ Partial Class ScanForInfo_Default
                 lnkCheckForUpdates.Enabled = True
                 ddlTime.Enabled = True
 
-                If (b.ProductID = 0) Then
+                If (b.ProductID = 0 And b.ProductGroup IsNot Nothing) Then
                     b.ProductID = ProductGroupManager.GetProductIDByName(b.ProductGroup)
                 End If
 
