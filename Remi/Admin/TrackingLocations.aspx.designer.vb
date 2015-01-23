@@ -221,6 +221,24 @@ Partial Public Class Admin_TrackingLocation
     Protected WithEvents lnkAddTrackingLocation As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
+    '''upTLLeftNav control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents upTLLeftNav As Global.System.Web.UI.UpdatePanel
+
+    '''<summary>
+    '''upLeft control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents upLeft As Global.System.Web.UI.UpdateProgress
+
+    '''<summary>
     '''pnlLeftMenuActions control.
     '''</summary>
     '''<remarks>
@@ -264,24 +282,6 @@ Partial Public Class Admin_TrackingLocation
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lnkCancelAction As Global.System.Web.UI.WebControls.LinkButton
-
-    '''<summary>
-    '''upTLLeftNav control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents upTLLeftNav As Global.System.Web.UI.UpdatePanel
-
-    '''<summary>
-    '''upLeft control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents upLeft As Global.System.Web.UI.UpdateProgress
 
     '''<summary>
     '''imgTestCenterView control.

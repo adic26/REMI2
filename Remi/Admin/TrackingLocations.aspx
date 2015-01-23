@@ -61,33 +61,33 @@
             </li>
         </ul>
     </asp:Panel>
-    <asp:Panel ID="pnlLeftMenuActions" runat="server" Visible="False">
-        <h3>Actions</h3>
-        <ul>
-            <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgAddTrackingLocationAction" runat="server" />
-                <asp:LinkButton ID="lnkAddTrackingLocationAction" runat="Server" Text="Confirm and Save" />
-            </li>
-            <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
-                <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" />
-            </li>
-        </ul>
-    </asp:Panel>
-    <h3>Filter</h3>
-    <ul>
-        <li>
-            <asp:UpdatePanel ID="upTLLeftNav" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
-                <Triggers>
-                    <asp:AsyncPostBackTrigger ControlID="ddlTestCenters" />
-                </Triggers>
-                <ContentTemplate>
-                    <asp:UpdateProgress runat="server" ID="upLeft" DynamicLayout="true" DisplayAfter="10" AssociatedUpdatePanelID="upTLLeftNav">
-                        <ProgressTemplate>
-                            <div class="LoadingModal"></div>
-                            <div class="LoadingGif"></div>
-                        </ProgressTemplate>
-                    </asp:UpdateProgress>
+    <asp:UpdatePanel ID="upTLLeftNav" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="ddlTestCenters" />
+        </Triggers>
+        <ContentTemplate>
+            <asp:UpdateProgress runat="server" ID="upLeft" DynamicLayout="true" DisplayAfter="10" AssociatedUpdatePanelID="upTLLeftNav">
+                <ProgressTemplate>
+                    <div class="LoadingModal"></div>
+                    <div class="LoadingGif"></div>
+                </ProgressTemplate>
+            </asp:UpdateProgress>
+            <asp:Panel ID="pnlLeftMenuActions" runat="server" Visible="False">
+                <h3>Actions</h3>
+                <ul>
+                    <li>
+                        <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgAddTrackingLocationAction" runat="server" />
+                        <asp:LinkButton ID="lnkAddTrackingLocationAction" runat="Server" Text="Confirm and Save" />
+                    </li>
+                    <li>
+                        <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
+                        <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" />
+                    </li>
+                </ul>
+            </asp:Panel>
+            <h3>Filter</h3>
+            <ul>
+                <li>
                     <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgTestCenterView" runat="server" />
                     <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True"
                         DataTextField="LookupType" DataValueField="LookupID" AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsTestCenters">
@@ -103,10 +103,10 @@
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
                         </SelectParameters>
                     </asp:ObjectDataSource>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-        </li>
-    </ul>
+                </li>
+            </ul>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <asp:UpdatePanel runat="server" ID="upLoad" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
@@ -163,7 +163,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField>
                             <ItemTemplate>
-                                <asp:LinkButton ID="lnkEdit" runat="server" CommandName="Edit" CommandArgument='<%# Eval("ID") %>'>Edit</asp:LinkButton>
+                                <asp:LinkButton ID="lnkEdit" runat="server" CommandName="EditRow" CommandArgument='<%# Eval("ID") %>'>Edit</asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField ShowHeader="False">
@@ -184,149 +184,145 @@
                 </asp:GridView>
                 <asp:HiddenField ID="hdnSelectedTrackingLocationID" runat="server" />
             </asp:Panel>
+            <asp:Panel ID="pnlAddEditTrackingLocation" runat="server" Visible="False">
+                <h2><asp:Label ID="lblAddEditTitle" runat="server" Text="Add a new Tracking Location"></asp:Label></h2>
+                <table style="width: 52%;">
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Name:
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:TextBox ID="txtName" runat="server" Width="208px"></asp:TextBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Host Name(s):
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:GridView ID="grdHosts" runat="server" AutoGenerateColumns="false" DataKeyNames="ID"
+                                AllowPaging="false" BackColor="white" BorderColor="#CC9966" BorderStyle="None"
+                                BorderWidth="1px" CellPadding="4" OnRowDeleting="grdHosts_RowDeleting" Visible="true">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="HostName">
+                                        <ItemTemplate>
+                                            <asp:TextBox ID="txtHostName2" runat="server" Text='<%#Eval ("HostName")%>' ReadOnly="true"></asp:TextBox>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:CommandField HeaderText="Delete" ShowDeleteButton="true" ShowHeader="true" />
+                                </Columns>
+                            </asp:GridView>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="HostNameNew" runat="server"></asp:TextBox>
+                                        <asp:Button ID="HostSubmit" runat="server" Text="Submit" OnClick="HostSubmit_Click" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Test Center:
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:DropDownList ID="ddlGeoLoc" runat="server" DataSourceID="odsGeoLocList" Width="195px"
+                                DataTextField="LookupType" DataValueField="LookupID">
+                            </asp:DropDownList>
+                            <asp:ObjectDataSource ID="odsGeoLocList" runat="server" SelectMethod="GetLookups"
+                                TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
+                                <SelectParameters>
+                                    <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
+                                    <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                                    <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                                    <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                                    <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                                    <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
+                                    <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
+                                </SelectParameters>
+                            </asp:ObjectDataSource>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Status:
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:DropDownList runat="server" ID="ddlStatus">
+                                <asp:ListItem Text="Functional" Value="1" />
+                                <asp:ListItem Text="Not Functional" Value="2" />
+                                <asp:ListItem Text="Disabled" Value="3" />
+                                <asp:ListItem Text="Under Repair" Value="4" />
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Type:
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:DropDownList ID="ddlFixtureType" runat="server" Width="196px" DataValueField="ID"
+                                DataTextField="Name" DataSourceID="odsTLTypes">
+                            </asp:DropDownList>
+                            <asp:ObjectDataSource ID="odsTLTypes" runat="server" OldValuesParameterFormatString="original_{0}"
+                                SelectMethod="GetTrackingLocationTypes" TypeName="REMI.Bll.TrackingLocationManager">
+                            </asp:ObjectDataSource>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Decommission:
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:CheckBox ID="chkRetire" runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Multi Device Zone:
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:CheckBox ID="chkIsMultiDeviceZone" runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HorizTableFirstcolumn">
+                            Plugin Name:
+                        </td>
+                        <td class="HorizTableSecondColumn">
+                            <asp:GridView ID="grdPlugin" runat="server" AutoGenerateColumns="false" DataKeyNames="ID"
+                                AllowPaging="false" BackColor="white" BorderColor="#CC9966" BorderStyle="None"
+                                BorderWidth="1px" CellPadding="4" Visible="true">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="PluginName">
+                                        <ItemTemplate>
+                                            <asp:TextBox ID="txtPluginName2" runat="server" Text='<%#Eval ("PluginName")%>' ReadOnly="true"></asp:TextBox>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField ShowHeader="False">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("ID") %>'
+                                                OnClientClick="return confirm('Are you sure you want to delete this profile?');"
+                                                CommandName="DeleteItem" Visible='<%# Eval("CanDelete") %>'>Delete</asp:LinkButton>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="txtPluginName" runat="server"></asp:TextBox>
+                                        <asp:Button ID="btnPluginAdd" runat="server" Text="Submit" OnClick="btnPluginAdd_Click" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </asp:Panel>
         </ContentTemplate>
     </asp:UpdatePanel>
-    <asp:Panel ID="pnlAddEditTrackingLocation" runat="server" Visible="False">
-        <h2><asp:Label ID="lblAddEditTitle" runat="server" Text="Add a new Tracking Location"></asp:Label></h2>
-        <table style="width: 52%;">
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Name:
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:TextBox ID="txtName" runat="server" Width="208px"></asp:TextBox>
-                </td>
-            </tr>
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Host Name(s):
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:GridView ID="grdHosts" runat="server" AutoGenerateColumns="false" DataKeyNames="ID"
-                        AllowPaging="false" BackColor="white" BorderColor="#CC9966" BorderStyle="None"
-                        BorderWidth="1px" CellPadding="4" OnRowDeleting="grdHosts_RowDeleting" Visible="true">
-                        <Columns>
-                            <asp:TemplateField HeaderText="HostName">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtHostName2" runat="server" Text='<%#Eval ("HostName")%>' ReadOnly="true"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:CommandField HeaderText="Delete" ShowDeleteButton="true" ShowHeader="true" />
-                        </Columns>
-                    </asp:GridView>
-                    <table>
-                        <tr>
-                            <td>
-                                <asp:TextBox ID="HostNameNew" runat="server"></asp:TextBox>
-                                <asp:Button ID="HostSubmit" runat="server" Text="Submit" OnClick="HostSubmit_Click" />
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Test Center:
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlGeoLoc" runat="server" DataSourceID="odsGeoLocList" Width="195px"
-                        DataTextField="LookupType" DataValueField="LookupID">
-                    </asp:DropDownList>
-                    <asp:ObjectDataSource ID="odsGeoLocList" runat="server" SelectMethod="GetLookups"
-                        TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
-                        <SelectParameters>
-                            <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
-                            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
-                            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
-                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
-                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
-                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
-                            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
-                        </SelectParameters>
-                    </asp:ObjectDataSource>
-                </td>
-            </tr>
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Status:
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:DropDownList runat="server" ID="ddlStatus">
-                        <asp:ListItem Text="Functional" Value="1" />
-                        <asp:ListItem Text="Not Functional" Value="2" />
-                        <asp:ListItem Text="Disabled" Value="3" />
-                        <asp:ListItem Text="Under Repair" Value="4" />
-                    </asp:DropDownList>
-                </td>
-            </tr>
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Type:
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlFixtureType" runat="server" Width="196px" DataValueField="ID"
-                        DataTextField="Name" DataSourceID="odsTLTypes">
-                    </asp:DropDownList>
-                    <asp:ObjectDataSource ID="odsTLTypes" runat="server" OldValuesParameterFormatString="original_{0}"
-                        SelectMethod="GetTrackingLocationTypes" TypeName="REMI.Bll.TrackingLocationManager">
-                    </asp:ObjectDataSource>
-                </td>
-            </tr>
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Decommission:
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:CheckBox ID="chkRetire" runat="server" />
-                </td>
-            </tr>
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Multi Device Zone:
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:CheckBox ID="chkIsMultiDeviceZone" runat="server" />
-                </td>
-            </tr>
-            <tr>
-                <td class="HorizTableFirstcolumn">
-                    Plugin Name:
-                </td>
-                <td class="HorizTableSecondColumn">
-                    <asp:GridView ID="grdPlugin" runat="server" AutoGenerateColumns="false" DataKeyNames="ID"
-                        AllowPaging="false" BackColor="white" BorderColor="#CC9966" BorderStyle="None"
-                        BorderWidth="1px" CellPadding="4" Visible="true">
-                        <Columns>
-                            <asp:TemplateField HeaderText="PluginName">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtPluginName2" runat="server" Text='<%#Eval ("PluginName")%>' ReadOnly="true"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField ShowHeader="False">
-                                <ItemTemplate>
-                                    <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("ID") %>'
-                                        OnClientClick="return confirm('Are you sure you want to delete this profile?');"
-                                        CommandName="DeleteItem" Visible='<%# Eval("CanDelete") %>'>Delete</asp:LinkButton>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
-                    <table>
-                        <tr>
-                            <td>
-                                <asp:TextBox ID="txtPluginName" runat="server"></asp:TextBox>
-                                <asp:Button ID="btnPluginAdd" runat="server" Text="Submit" OnClick="btnPluginAdd_Click" />
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </asp:Panel>
-    <br />
-    <br />
-    <br />
-    <br />
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server">
 </asp:Content>

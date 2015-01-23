@@ -34,7 +34,7 @@ Partial Class Admin_Tests
 
     Protected Sub gvMain_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Select Case e.CommandName.ToLower()
-            Case "edit"
+            Case "editrow"
                 Response.Redirect("~/admin/tests/editdetail.aspx?testid=" + e.CommandArgument)
 
             Case "deleteitem"

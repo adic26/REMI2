@@ -202,7 +202,7 @@ Partial Class Admin_TestStages
 #Region "Actions"
     Protected Sub gvMain_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Select Case e.CommandName.ToLower()
-            Case "edit"
+            Case "editrow"
                 notMain.Clear()
                 Dim tmpTestStage As TestStage = TestStageManager.GetTestStage(Convert.ToInt32(e.CommandArgument))
                 ShowAddEditTestStagePanel(tmpTestStage)
