@@ -109,7 +109,7 @@ Public Class REMIInternal
     End Function
 
     <System.Web.Services.WebMethod()> _
-    Public Shared Function colSearch(ByVal requestTypeID As Int32, ByVal fields As List(Of String)) As String
+    Public Function colSearch(ByVal requestTypeID As Int32, ByVal fields As List(Of String)) As String
         Dim myList As New List(Of String)()
         Dim theads As New StringBuilder()
 
@@ -153,7 +153,7 @@ Public Class REMIInternal
     End Function
 
     <System.Web.Services.WebMethod()> _
-    Public Shared Function GetAllStages(ByVal requestTypeID As Int32) As String
+    Public Function GetAllStages(ByVal requestTypeID As Int32) As String
         Dim searchField As New SearchFieldResponseDefinition()
         Try
             searchField.Results = Search_FieldResponse(requestTypeID)
@@ -175,4 +175,50 @@ Public Class REMIInternal
         Return responseBuilder.ToString()
     End Function
 
+    <System.Web.Services.WebMethod()> _
+    Public Function UpdateComment(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String) As Boolean
+        Return RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, UserManager.GetCurrentUser.UserName)
+    End Function
+
+    <System.Web.Services.WebMethod()> _
+    <System.Web.Script.Services.ScriptMethod> _
+    Public Function GetSlides(ByVal contextKey As String) As AjaxControlToolkit.Slide()
+        Dim dt As New DataTable
+        Dim photos(dt.Rows.Count) As AjaxControlToolkit.Slide
+
+        If (contextKey <> "0") Then
+            dt = RelabManager.MeasurementFiles(contextKey)
+
+            For i = 0 To dt.Rows.Count - 1
+                Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
+                Dim downloadURL As String = String.Format("http://{0}:{1}/Handlers/Download.ashx?img={2}", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
+                Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)
+
+                If (Helpers.IsRecognisedImageFile(fileName)) Then
+                    photos(i) = New AjaxControlToolkit.Slide(imageDataURL, fileName, "<a href='" + downloadURL + "'>Download</a>")
+                Else
+                    Select Case (IO.Path.GetExtension(fileName).ToUpper)
+                        Case "CSV"
+                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/csv_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                        Case "XLS"
+                        Case "XLSX"
+                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xls_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                        Case "XML"
+                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xml_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                        Case "PPT"
+                        Case "PPTX"
+                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/ppt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                        Case "PDF"
+                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/pdf_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                        Case "TXT"
+                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                        Case Else
+                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    End Select
+                End If
+            Next
+        End If
+
+        Return photos
+    End Function
 End Class
