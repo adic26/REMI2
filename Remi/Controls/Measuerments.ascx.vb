@@ -60,7 +60,7 @@ Public Class Measuerments
 
         If (pnlInformation.Visible) Then
             grdResultInformation.EmptyDataText = EmptyDataTextInformation
-            grdResultInformation.DataSource = RelabManager.ResultInformation(resultID, chkIncludeArchived.Checked)
+            grdResultInformation.DataSource = RelabManager.ResultInformation(resultID, includeArch)
             grdResultInformation.DataBind()
         End If
     End Sub
