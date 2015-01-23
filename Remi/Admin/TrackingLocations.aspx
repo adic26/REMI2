@@ -4,17 +4,6 @@
     <script type="text/javascript" src="../design/scripts/jQuery/jquery-1.4.2.js"></script>
     <script src="../Design/scripts/jquery.columnfilters.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('table#ctl00_Content_gvMain').columnFilters(
-            {
-                caseSensitive: false,
-                underline: true,
-                wildCard: '*',
-                excludeColumns: [8,9,10,11,12],
-                alternateRowClassNames: ['evenrow', 'oddrow']
-            });
-        });
-
         var _isInitialLoad = true;
 
         function contentPageLoad(sender, args) {
@@ -122,6 +111,22 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <asp:UpdatePanel runat="server" ID="upLoad" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
         <ContentTemplate>
+            <script type="text/javascript">
+                var prm = Sys.WebForms.PageRequestManager.getInstance();
+                prm.add_pageLoaded(EndRequestTracking);
+
+                function EndRequestTracking(sender, args) {
+                    $('table#ctl00_Content_gvMain').columnFilters(
+                    {
+                        caseSensitive: false,
+                        underline: true,
+                        wildCard: '*',
+                        excludeColumns: [8, 9, 10, 11, 12],
+                        alternateRowClassNames: ['evenrow', 'oddrow']
+                    });
+                }
+            </script>
+
             <uc1:NotificationList ID="notMain" runat="server" />
             <asp:Panel ID="pnlViewAllTrackingLocations" runat="server">
                 <asp:GridView ID="gvMain" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CssClass="FilterableTable"
