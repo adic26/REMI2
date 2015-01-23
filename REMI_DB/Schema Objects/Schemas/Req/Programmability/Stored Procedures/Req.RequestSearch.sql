@@ -414,21 +414,32 @@ BEGIN
 					FROM dbo.#buildparamtable 
 					WHERE Params IS NOT NULL
 					
-					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
-										
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+
 					SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
 					FROM dbo.#buildparamtable2 
 					WHERE Params IS NOT NULL
 					
 					IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
-						SET @whereStr2 = ' AND ' + @whereStr2
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr2 = ' AND ' + @whereStr2
+						ELSE
+							SET @whereStr2 = @whereStr2
+					END
 					
 					SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
 					FROM dbo.#buildparamtable3
 					WHERE Params IS NOT NULL
 					
 					IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
-						SET @whereStr3 = ' AND ' + @whereStr3
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr3 = ' AND ' + @whereStr3
+						ELSE
+							SET @whereStr3 = @whereStr3
+					END
 												
 					SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')				
 
@@ -545,21 +556,32 @@ BEGIN
 					FROM dbo.#buildinfotable 
 					WHERE info IS NOT NULL 
 					
-					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
 										
 					SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
 					FROM dbo.#buildinfotable2 
 					WHERE info IS NOT NULL 
 					
 					IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
-						SET @whereStr2 = ' AND ' + @whereStr2
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr2 = ' AND ' + @whereStr2
+						ELSE
+							SET @whereStr2 = @whereStr2
+					END						
 					
 					SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
 					FROM dbo.#buildinfotable3 
 					WHERE info IS NOT NULL 
 					
 					IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
-						SET @whereStr3 = ' AND ' + @whereStr3
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr3 = ' AND ' + @whereStr3
+						ELSE
+							SET @whereStr3 = @whereStr3
+					END
 												
 					SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')
 
