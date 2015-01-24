@@ -50,24 +50,6 @@ Partial Public Class ES_Default
     Protected WithEvents ESMenu As Global.System.Web.UI.WebControls.Menu
 
     '''<summary>
-    '''btnShowPopup control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnShowPopup As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''ModalPopupExtender1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ModalPopupExtender1 As Global.AjaxControlToolkit.ModalPopupExtender
-
-    '''<summary>
     '''cpeRequestInfo control.
     '''</summary>
     '''<remarks>
@@ -138,114 +120,6 @@ Partial Public Class ES_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnRequestNumber As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''pnlpopup control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pnlpopup As Global.System.Web.UI.WebControls.Panel
-
-    '''<summary>
-    '''hdnTestID control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnTestID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''hdnTestStageID control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnTestStageID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''hdnUnit control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnUnit As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''lblTitle control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lblTitle As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
-    '''imgslides control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgslides As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''btnPrevious control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnPrevious As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnPlay control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnPlay As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnNext control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnNext As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnCancel control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnCancel As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''lblDesc control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lblDesc As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
-    '''sseImages control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents sseImages As Global.AjaxControlToolkit.SlideShowExtender
 
     '''<summary>
     '''lblRequestNumber control.

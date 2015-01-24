@@ -59,6 +59,24 @@ Partial Public Class Measuerments
     Protected WithEvents hdnTestID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''hdnResultID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnResultID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnBatchID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnBatchID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''lblTitle control.
     '''</summary>
     '''<remarks>
@@ -131,13 +149,22 @@ Partial Public Class Measuerments
     Protected WithEvents sseImages As Global.AjaxControlToolkit.SlideShowExtender
 
     '''<summary>
-    '''pnlFilter control.
+    '''pnlMeasurements control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlFilter As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents pnlMeasurements As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''imgExport control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgExport As Global.System.Web.UI.WebControls.ImageButton
 
     '''<summary>
     '''chkOnlyFails control.
@@ -156,6 +183,15 @@ Partial Public Class Measuerments
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents chkIncludeArchived As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''lblInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblInfo As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''grdResultMeasurements control.

@@ -54,7 +54,7 @@ Public Class Measurements
             ddlTestStage.SelectedValue = dt.FirstOrDefault().TestStageID
             ddlUnits.SelectedValue = dt.FirstOrDefault().TestUnitID
 
-            msmMeasuerments.SetDataSource(resultID)
+            msmMeasuerments.SetDataSource(resultID, batchID)
         End If
     End Sub
 
@@ -77,11 +77,5 @@ Public Class Measurements
             pnlMeasurements.Visible = False
             lblNoResults.Visible = True
         End If
-    End Sub
-
-    Protected Sub lnkExportAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkExportAction.Click
-        Dim resultID As Int32
-        Int32.TryParse(Request.QueryString("ID"), resultID)
-        Helpers.ExportToExcel(Helpers.GetDateTimeFileName("ResultSummary", "xls"), RelabManager.ResultSummaryExport(Request.QueryString("Batch"), resultID))
     End Sub
 End Class

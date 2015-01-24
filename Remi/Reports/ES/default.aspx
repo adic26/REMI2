@@ -1,9 +1,23 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.ES_Default" Codebehind="default.aspx.vb" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" AutoEventWireup="true" Inherits="Remi.ES_Default" Codebehind="default.aspx.vb" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
+<%@ Register Src="~/Controls/Measuerments.ascx" TagName="Measuerments" TagPrefix="msm" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <script type="text/javascript" src="../../Design/scripts/jQuery/jquery-1.8.0.js"></script>
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="server"></asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" Runat="Server">
+    <script type="text/javascript">
+        $("[src*=zoom_in]").live("click", function () {
+            $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>")
+            $(this).attr("src", "../../Design/Icons/png/16x16/zoom_out.png");
+        });
+
+        $("[src*=zoom_out]").live("click", function () {
+            $(this).attr("src", "../../Design/Icons/png/16x16/zoom_in.png");
+            $(this).closest("tr").next().remove();
+        });
+    </script>
 
     <asp:AlwaysVisibleControlExtender runat="server" ID="ave" TargetControlID="pnlHeader" UseAnimation="true" VerticalOffset="100"></asp:AlwaysVisibleControlExtender>
 
@@ -30,9 +44,9 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:Button ID="btnShowPopup" runat="server" style="display:none" />
+  <%--  <asp:Button ID="btnShowPopup" runat="server" style="display:none" />
     <asp:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup" PopupControlID="pnlpopup" CancelControlID="btnCancel" BackgroundCssClass="ModalBackground"></asp:ModalPopupExtender> 
-        
+  --%>      
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestInfo" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgExpCol" TargetControlID="pnlRequestInfo" ExpandedSize="600" TextLabelID="lblText" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlRequestInfoHeader" ExpandControlID="pnlRequestInfoHeader"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeFA" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgFA" TargetControlID="pnlFAInfo" TextLabelID="lblFA" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlFA" ExpandControlID="pnlFA"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestSummary" CollapseControlID="pnlRequestSummaryHeader" TargetControlID="pnlRequestSummary" TextLabelID="lblSummary" ExpandControlID="pnlRequestSummaryHeader" ImageControlID="imgRequestSummaryExpCol" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="false" CollapsedSize="1" ></asp:CollapsiblePanelExtender>
@@ -43,7 +57,7 @@
     <asp:HiddenField ID="hdnBatchID" runat="server" />
     <asp:HiddenField ID="hdnRequestNumber" Value="" runat="server" />
         
-    <asp:Panel ID="pnlpopup" runat="server" BackColor="White" style="display:none;" Width="1050" Height="850" HorizontalAlign="Center" CssClass="ModalPopup">
+<%--    <asp:Panel ID="pnlpopup" runat="server" BackColor="White" style="display:none;" Width="1050" Height="850" HorizontalAlign="Center" CssClass="ModalPopup">
         <asp:HiddenField runat="server" ID="hdnTestID" />
         <asp:HiddenField runat="server" ID="hdnTestStageID" />
         <asp:HiddenField runat="server" ID="hdnUnit" />
@@ -57,7 +71,7 @@
         <asp:Label ID="lblDesc" runat="server"></asp:Label>
 
         <asp:SlideShowExtender runat="server" ID="sseImages" TargetControlID="imgslides" ImageTitleLabelID="lblTitle" ImageDescriptionLabelID="lblDesc" PlayInterval="2000" Loop="true" SlideShowServicePath="default.aspx" SlideShowServiceMethod="GetSlides" NextButtonID="btnNext" PreviousButtonID="btnPrevious" PlayButtonID="btnPlay" ></asp:SlideShowExtender>
-    </asp:Panel>
+    </asp:Panel>--%>
     
     <a name="top"></a>
     <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label>
@@ -165,21 +179,21 @@
         <asp:Label ID="lblResultBreakDown" runat="server" Text="Results<br/><font color='rgb(0,124,186)'>BreakDown</font>" /><asp:Image runat="server" ID="imgResultBreakDown" />
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlResultBreakDown" CssClass="CollapseBody">
-        <asp:GridView ID="gvwResultBreakDown" runat="server" AutoGenerateColumns="false" DataKeyNames="TestUnitID,TestID,TestStageID,HasFiles" ShowHeader="true" Width="1200">
+        <asp:GridView ID="gvwResultBreakDown" runat="server" AutoGenerateColumns="false" DataKeyNames="ID" ShowHeader="true" style="width:100%">
             <Columns>
-                <asp:BoundField DataField="TestUnitID" HeaderText="TestUnitID" Visible="false" />
-                <asp:BoundField DataField="TestID" HeaderText="TestID" Visible="false" />
-                <asp:BoundField DataField="TestStageID" HeaderText="TestStageID" Visible="false" />
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <img alt = "" style="cursor: pointer" src="../../Design/Icons/png/16x16/zoom_in.png" id="imgadd" runat="server" />
+                        <asp:Panel ID="pnlmeasureBreakdown" runat="server" Style="display: none">
+                            <msm:Measuerments runat="server" ID="msmMeasuerments" ShowExport="true" ShowFailsOnly="true" IncludeArchived="false" DisplayMode="ExecutiveSummaryDisplay" EmptyDataTextInformation="" EmptyDataTextMeasurement="There were no measurements found for this result." />
+                        </asp:Panel>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="ID" HeaderText="ID" Visible="false" />
                 <asp:BoundField DataField="BatchUnitNUmber" HeaderText="BatchUnitNUmber" />
                 <asp:BoundField DataField="TestName" HeaderText="TestName" />
                 <asp:BoundField DataField="TestStageName" HeaderText="TestStageName" />
-                <asp:BoundField DataField="Result" HeaderText="Result" />
-                <asp:BoundField DataField="HasFiles" HeaderText="HasFiles" Visible="false" />
-                <asp:TemplateField HeaderText="Images">
-                    <ItemTemplate>
-                        <asp:ImageButton ID="img" runat="server" OnClick="imgbtn_Click" ImageUrl="/Design/Icons/png/24x24/png_file.png" Visible="false" />
-                    </ItemTemplate>
-                </asp:TemplateField>
+                <asp:BoundField DataField="PassFail" HeaderText="Result" />
             </Columns>
         </asp:GridView>
     </asp:Panel>

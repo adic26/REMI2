@@ -8,6 +8,7 @@ Public Class Measuerments
     Private _emptyDataTextInfo As String
     Private _showFailsOnly As Boolean
     Private _includeArchived As Boolean
+    Private _showExport As Boolean
     Private _controlMode As ControlMode
 
     Public Enum ControlMode
@@ -19,9 +20,11 @@ Public Class Measuerments
         DisplayMode = ControlMode.RelabDisplay
     End Sub
 
-    Public Sub SetDataSource(ByVal resultID As Int32)
+    Public Sub SetDataSource(ByVal resultID As Int32, ByVal batchID As Int32)
         Dim failsOnly As Boolean = False
         Dim includeArch As Boolean = False
+        hdnResultID.Value = resultID
+        hdnBatchID.Value = batchID
 
         If (ShowFailsOnly) Then
             failsOnly = True
@@ -37,7 +40,12 @@ Public Class Measuerments
             includeArch = chkIncludeArchived.Checked
         End If
 
-        Dim dtMeasure As DataTable = RelabManager.ResultMeasurements(resultID, failsOnly, includeArch)
+        Dim dtMeasure As New DataTable
+
+        If (resultID > 0) Then
+            dtMeasure = RelabManager.ResultMeasurements(resultID, failsOnly, includeArch)
+        End If
+
         grdResultMeasurements.EmptyDataText = EmptyDataTextMeasurement
 
         If (dtMeasure.Rows.Count > 0) Then
@@ -56,6 +64,8 @@ Public Class Measuerments
             chkOnlyFails.Enabled = False
         End If
 
+        imgExport.Visible = ShowExport
+
         SetVisible(dtMeasure)
 
         If (pnlInformation.Visible) Then
@@ -71,40 +81,47 @@ Public Class Measuerments
                 pnlInformation.Visible = False
                 grdResultMeasurements.Visible = True
                 pnlLegend.Visible = False
-                pnlFilter.Visible = False
+                chkOnlyFails.Visible = False
+                lblInfo.Visible = False
+                chkIncludeArchived.Visible = False
 
-                Dim index As Int32
-                index = dt.Columns.IndexOf("Lower Limit") + 2
-                grdResultMeasurements.HeaderRow.Cells(index).Visible = False
-                index = dt.Columns.IndexOf("Upper Limit") + 2
-                grdResultMeasurements.HeaderRow.Cells(index).Visible = False
-                index = dt.Columns.IndexOf("Unit") + 2
-                grdResultMeasurements.HeaderRow.Cells(index).Visible = False
-                index = dt.Columns.IndexOf("VerNum") + 2
-                grdResultMeasurements.HeaderRow.Cells(index).Visible = False
-                index = dt.Columns.IndexOf("Test Num") + 2
-                grdResultMeasurements.HeaderRow.Cells(index).Visible = False
-                index = dt.Columns.IndexOf("Degradation") + 2
-                grdResultMeasurements.HeaderRow.Cells(index).Visible = False
-                
-                For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
+                If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
+
+                    Dim index As Int32
                     index = dt.Columns.IndexOf("Lower Limit") + 2
-                    grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                    grdResultMeasurements.HeaderRow.Cells(index).Visible = False
                     index = dt.Columns.IndexOf("Upper Limit") + 2
-                    grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                    grdResultMeasurements.HeaderRow.Cells(index).Visible = False
                     index = dt.Columns.IndexOf("Unit") + 2
-                    grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                    grdResultMeasurements.HeaderRow.Cells(index).Visible = False
                     index = dt.Columns.IndexOf("VerNum") + 2
-                    grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                    grdResultMeasurements.HeaderRow.Cells(index).Visible = False
                     index = dt.Columns.IndexOf("Test Num") + 2
-                    grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                    grdResultMeasurements.HeaderRow.Cells(index).Visible = False
                     index = dt.Columns.IndexOf("Degradation") + 2
-                    grdResultMeasurements.Rows(i).Cells(index).Visible = False
-                Next
+                    grdResultMeasurements.HeaderRow.Cells(index).Visible = False
+
+                    For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
+                        index = dt.Columns.IndexOf("Lower Limit") + 2
+                        grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                        index = dt.Columns.IndexOf("Upper Limit") + 2
+                        grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                        index = dt.Columns.IndexOf("Unit") + 2
+                        grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                        index = dt.Columns.IndexOf("VerNum") + 2
+                        grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                        index = dt.Columns.IndexOf("Test Num") + 2
+                        grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                        index = dt.Columns.IndexOf("Degradation") + 2
+                        grdResultMeasurements.Rows(i).Cells(index).Visible = False
+                    Next
+                End If
             Case ControlMode.RelabDisplay
                 pnlInformation.Visible = True
                 grdResultMeasurements.Visible = True
-                pnlFilter.Visible = True
+                chkOnlyFails.Visible = True
+                lblInfo.Visible = True
+                chkIncludeArchived.Visible = True
                 pnlLegend.Visible = True
         End Select
     End Sub
@@ -132,6 +149,15 @@ Public Class Measuerments
         End Get
         Set(value As Int32)
             hdnTestID.Value = value
+        End Set
+    End Property
+
+    Public Property ShowExport() As Boolean
+        Get
+            Return _showExport
+        End Get
+        Set(value As Boolean)
+            _showExport = value
         End Set
     End Property
 
@@ -180,61 +206,64 @@ Public Class Measuerments
     End Sub
 
     Protected Sub grdResultMeasurements_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultMeasurements.DataBound
-        grdResultMeasurements.HeaderRow.Cells(2).Visible = False 'ID
-        grdResultMeasurements.HeaderRow.Cells(3).Visible = False 'Measurement (non template field)
-        grdResultMeasurements.HeaderRow.Cells(9).Visible = False 'MeasurementTypeID
-        grdResultMeasurements.HeaderRow.Cells(11).Visible = False 'Archived
-        grdResultMeasurements.HeaderRow.Cells(12).Visible = False 'XMLID
-        grdResultMeasurements.HeaderRow.Cells(13).Visible = False 'MaxVersion
-        grdResultMeasurements.HeaderRow.Cells(14).Visible = False 'Comment
-        grdResultMeasurements.HeaderRow.Cells(15).Visible = False 'Description
-        grdResultMeasurements.HeaderRow.Cells(16).Visible = False 'WasChanged
-        grdResultMeasurements.HeaderRow.Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
-        grdResultMeasurements.HeaderRow.Cells(19).Visible = False 'HasFiles
-        grdResultMeasurements.HeaderRow.Cells(20).Visible = False 'ResultMeasurementID
-        grdResultMeasurements.HeaderRow.Cells(4).Width = 10
-        grdResultMeasurements.HeaderRow.Cells(5).Width = 10
-        grdResultMeasurements.HeaderRow.Cells(6).Width = 10
-        grdResultMeasurements.HeaderRow.Cells(6).CssClass = "removeStyleWithCenter"
-        grdResultMeasurements.HeaderRow.Cells(6).Wrap = True
-        grdResultMeasurements.HeaderRow.Cells(6).HorizontalAlign = HorizontalAlign.Center
+        If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
+            grdResultMeasurements.HeaderRow.Cells(2).Visible = False 'ID
+            grdResultMeasurements.HeaderRow.Cells(3).Visible = False 'Measurement (non template field)
+            grdResultMeasurements.HeaderRow.Cells(9).Visible = False 'MeasurementTypeID
+            grdResultMeasurements.HeaderRow.Cells(11).Visible = False 'Archived
+            grdResultMeasurements.HeaderRow.Cells(12).Visible = False 'XMLID
+            grdResultMeasurements.HeaderRow.Cells(13).Visible = False 'MaxVersion
+            grdResultMeasurements.HeaderRow.Cells(14).Visible = False 'Comment
+            grdResultMeasurements.HeaderRow.Cells(15).Visible = False 'Description
+            grdResultMeasurements.HeaderRow.Cells(16).Visible = False 'WasChanged
+            grdResultMeasurements.HeaderRow.Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
+            grdResultMeasurements.HeaderRow.Cells(19).Visible = False 'HasFiles
+            grdResultMeasurements.HeaderRow.Cells(20).Visible = False 'ResultMeasurementID
+            grdResultMeasurements.HeaderRow.Cells(4).Width = 10
+            grdResultMeasurements.HeaderRow.Cells(5).Width = 10
+            grdResultMeasurements.HeaderRow.Cells(6).Width = 10
+            grdResultMeasurements.HeaderRow.Cells(6).CssClass = "removeStyleWithCenter"
+            grdResultMeasurements.HeaderRow.Cells(6).Wrap = True
+            grdResultMeasurements.HeaderRow.Cells(6).HorizontalAlign = HorizontalAlign.Center
 
-        For i As Int32 = 15 To grdResultMeasurements.HeaderRow.Cells.Count - 1
-            grdResultMeasurements.HeaderRow.Cells(i).Wrap = True
-            grdResultMeasurements.HeaderRow.Cells(i).ControlStyle.Width = 10
-            grdResultMeasurements.HeaderRow.Cells(i).ControlStyle.CssClass = "removeStyleWithCenter"
-        Next i
+            For i As Int32 = 15 To grdResultMeasurements.HeaderRow.Cells.Count - 1
+                grdResultMeasurements.HeaderRow.Cells(i).Wrap = True
+                grdResultMeasurements.HeaderRow.Cells(i).ControlStyle.Width = 10
+                grdResultMeasurements.HeaderRow.Cells(i).ControlStyle.CssClass = "removeStyleWithCenter"
+            Next i
 
-        If (grdResultMeasurements.Rows.Count > 0) Then
-            For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
-                grdResultMeasurements.Rows(i).Cells(2).Visible = False 'ID
-                grdResultMeasurements.Rows(i).Cells(3).Visible = False 'Measurement (non template field)
-                grdResultMeasurements.Rows(i).Cells(9).Visible = False 'MeasurementTypeID
-                grdResultMeasurements.Rows(i).Cells(11).Visible = False 'Archived
-                grdResultMeasurements.Rows(i).Cells(12).Visible = False 'XMLID
-                grdResultMeasurements.Rows(i).Cells(13).Visible = False 'MaxVersion
-                grdResultMeasurements.Rows(i).Cells(14).Visible = False 'Comment
-                grdResultMeasurements.Rows(i).Cells(15).Visible = False 'Description
-                grdResultMeasurements.Rows(i).Cells(16).Visible = False 'WasChanged
-                grdResultMeasurements.Rows(i).Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
-                grdResultMeasurements.Rows(i).Cells(19).Visible = False 'HasFiles
-                grdResultMeasurements.Rows(i).Cells(20).Visible = False 'ResultMeasurementID
-                grdResultMeasurements.Rows(i).Cells(6).ControlStyle.CssClass = "removeStyleWithCenter" 'Result
-                grdResultMeasurements.Rows(i).Cells(6).Wrap = True 'Result
-                grdResultMeasurements.Rows(i).Cells(6).HorizontalAlign = HorizontalAlign.Center 'Result
-                grdResultMeasurements.Rows(i).Cells(6).ControlStyle.Width = 220 'Result
-                grdResultMeasurements.Rows(i).Cells(4).ControlStyle.Width = 60 'LL
-                grdResultMeasurements.Rows(i).Cells(5).ControlStyle.Width = 60 'UL
-                grdResultMeasurements.Rows(i).Cells(7).ControlStyle.Width = 50 'Unit
-                grdResultMeasurements.Rows(i).Cells(8).ControlStyle.Width = 50 'Pass/Fail
-                grdResultMeasurements.Rows(i).Cells(10).ControlStyle.Width = 50 'Test Num
+            If (grdResultMeasurements.Rows.Count > 0) Then
+                For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
+                    grdResultMeasurements.Rows(i).Cells(2).Visible = False 'ID
+                    grdResultMeasurements.Rows(i).Cells(3).Visible = False 'Measurement (non template field)
+                    grdResultMeasurements.Rows(i).Cells(9).Visible = False 'MeasurementTypeID
+                    grdResultMeasurements.Rows(i).Cells(11).Visible = False 'Archived
+                    grdResultMeasurements.Rows(i).Cells(12).Visible = False 'XMLID
+                    grdResultMeasurements.Rows(i).Cells(13).Visible = False 'MaxVersion
+                    grdResultMeasurements.Rows(i).Cells(14).Visible = False 'Comment
+                    grdResultMeasurements.Rows(i).Cells(15).Visible = False 'Description
+                    grdResultMeasurements.Rows(i).Cells(16).Visible = False 'WasChanged
+                    grdResultMeasurements.Rows(i).Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
+                    grdResultMeasurements.Rows(i).Cells(19).Visible = False 'HasFiles
+                    grdResultMeasurements.Rows(i).Cells(20).Visible = False 'ResultMeasurementID
+                    grdResultMeasurements.Rows(i).Cells(6).ControlStyle.CssClass = "removeStyleWithCenter" 'Result
+                    grdResultMeasurements.Rows(i).Cells(6).Wrap = True 'Result
+                    grdResultMeasurements.Rows(i).Cells(6).HorizontalAlign = HorizontalAlign.Center 'Result
+                    grdResultMeasurements.Rows(i).Cells(6).ControlStyle.Width = 220 'Result
+                    grdResultMeasurements.Rows(i).Cells(4).ControlStyle.Width = 60 'LL
+                    grdResultMeasurements.Rows(i).Cells(5).ControlStyle.Width = 60 'UL
+                    grdResultMeasurements.Rows(i).Cells(7).ControlStyle.Width = 50 'Unit
+                    grdResultMeasurements.Rows(i).Cells(8).ControlStyle.Width = 50 'Pass/Fail
+                    grdResultMeasurements.Rows(i).Cells(10).ControlStyle.Width = 50 'Test Num
 
-                For j As Int32 = 21 To grdResultMeasurements.Rows(i).Cells.Count - 1 'The Parameter columns
-                    grdResultMeasurements.Rows(i).Cells(j).Wrap = True
-                    grdResultMeasurements.Rows(i).Cells(j).ControlStyle.CssClass = "removeStyleWithCenter"
-                    grdResultMeasurements.Rows(i).Cells(j).ControlStyle.Width = 70
+                    For j As Int32 = 21 To grdResultMeasurements.Rows(i).Cells.Count - 1 'The Parameter columns
+                        grdResultMeasurements.Rows(i).Cells(j).Wrap = True
+                        grdResultMeasurements.Rows(i).Cells(j).ControlStyle.CssClass = "removeStyleWithCenter"
+                        grdResultMeasurements.Rows(i).Cells(j).ControlStyle.Width = 70
+                    Next
                 Next
-            Next
+            End If
+
         End If
     End Sub
 
@@ -302,5 +331,11 @@ Public Class Measuerments
         hdnMeasurementID.Value = gvrow.Cells(2).Text
         sseImages.ContextKey = hdnMeasurementID.Value.ToString()
         ModalPopupExtender1.Show()
+    End Sub
+
+    Protected Sub imgExport_Click(sender As Object, e As ImageClickEventArgs)
+        Dim resultID As Int32
+        Int32.TryParse(hdnResultID.Value, resultID)
+        Helpers.ExportToExcel(Helpers.GetDateTimeFileName("ResultSummary", "xls"), RelabManager.ResultSummaryExport(hdnBatchID.Value, resultID))
     End Sub
 End Class

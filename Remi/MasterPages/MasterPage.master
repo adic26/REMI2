@@ -13,7 +13,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
+    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server" EnablePartialRendering="false" CombineScripts="false"></asp:ToolkitScriptManager>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeln" CollapsedImage="..\Design\Icons\png\24x24\next.png" 
         ExpandedImage="..\Design\Icons\png\24x24\back.png" ImageControlID="imgExpCol" 
         TargetControlID="pnlLeftNavContent" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
