@@ -240,6 +240,7 @@
     <Folder Include="Scripts\January162015" />
     <Folder Include="Scripts\January212015" />
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Obsolete" />
+    <Folder Include="Scripts\January262015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2621,5 +2622,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispESResultSummary.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\January262015\LCDRequestSetup.sql" />
   </ItemGroup>
 </Project>
