@@ -161,6 +161,8 @@
     <asp:ObjectDataSource runat="server" ID="odsParents" OldValuesParameterFormatString="original_{0}" SelectMethod="GetRequestParent" TypeName="REMI.Bll.RequestManager">
         <SelectParameters>
             <asp:ControlParameter ControlID="ctl00$Content$hdnRequestTypeID" Name="requestTypeID" PropertyName="Value" Type="Int32" />
+            <asp:Parameter Name="includeArchived" DefaultValue="true" Type="Boolean" />
+            <asp:Parameter Name="includeSelect" DefaultValue="true" Type="Boolean" />
         </SelectParameters>
     </asp:ObjectDataSource>
 

@@ -52,13 +52,18 @@ Namespace REMI.Bll
             Return New DataTable("RequestSetupInfo")
         End Function
 
-        Public Shared Function GetRequestParent(ByVal requestTypeID As Int32) As DataTable
+        Public Shared Function GetRequestParent(ByVal requestTypeID As Int32, ByVal includeArchived As Boolean, ByVal includeSelect As Boolean) As DataTable
             Try
-                Dim fields = (From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).ToList()
-                Dim list2 = (From t In New String() {String.Empty} Select New With {.Name = "Select...", .ReqFieldSetupID = 0})
-                Dim union = list2.Union(fields)
+                Dim fields = (From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID And (r.Archived = False Or (includeArchived)) Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).ToList()
 
-                Return REMI.BusinessEntities.Helpers.EQToDataTable(union.OrderBy(Function(r) r.ReqFieldSetupID), "RequestSetupParent")
+                If (includeSelect) Then
+                    Dim list2 = (From t In New String() {String.Empty} Select New With {.Name = "Select...", .ReqFieldSetupID = 0})
+                    Dim union = list2.Union(fields)
+
+                    Return REMI.BusinessEntities.Helpers.EQToDataTable(union.OrderBy(Function(r) r.Name), "RequestSetupParent")
+                Else
+                    Return REMI.BusinessEntities.Helpers.EQToDataTable(fields.OrderBy(Function(r) r.Name), "RequestSetupParent")
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
