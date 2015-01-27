@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("111a476d-ea95-4d2b-8edd-fc0dc8a5a466")>
+<Assembly: EdmSchemaAttribute("cd7c202c-5b51-422e-aa8a-877671129d60")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -124,7 +124,7 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserSearchFilter_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "UserSearchFilter", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserSearchFilter), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Products_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Product), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Products_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Product), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigurationUpload), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductLookups_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductLookup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductLookup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductSettings_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductSetting", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductSetting), True)>
@@ -9451,13 +9451,11 @@ Namespace REMI.Entities
         ''' Create a new Product object.
         ''' </summary>
         ''' <param name="id">Initial value of the ID property.</param>
-        ''' <param name="c_ProductGroupName">Initial value of the C_ProductGroupName property.</param>
-        ''' <param name="isActive">Initial value of the IsActive property.</param>
-        Public Shared Function CreateProduct(id As Global.System.Int32, c_ProductGroupName As Global.System.String, isActive As Global.System.Boolean) As Product
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        Public Shared Function CreateProduct(id As Global.System.Int32, lookupID As Global.System.Int32) As Product
             Dim product as Product = New Product
             product.ID = id
-            product.C_ProductGroupName = c_ProductGroupName
-            product.IsActive = isActive
+            product.LookupID = lookupID
             Return product
         End Function
 
@@ -9495,7 +9493,7 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
         <DataMemberAttribute()>
         Public Property C_ProductGroupName() As Global.System.String
             Get
@@ -9504,7 +9502,7 @@ Namespace REMI.Entities
             Set
                 OnC_ProductGroupNameChanging(value)
                 ReportPropertyChanging("C_ProductGroupName")
-                _C_ProductGroupName = StructuralObject.SetValidValue(value, false)
+                _C_ProductGroupName = StructuralObject.SetValidValue(value, true)
                 ReportPropertyChanged("C_ProductGroupName")
                 OnC_ProductGroupNameChanged()
             End Set
@@ -9520,26 +9518,26 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
         <DataMemberAttribute()>
-        Public Property IsActive() As Global.System.Boolean
+        Public Property C_IsActive() As Nullable(Of Global.System.Boolean)
             Get
-                Return _IsActive
+                Return _C_IsActive
             End Get
             Set
-                OnIsActiveChanging(value)
-                ReportPropertyChanging("IsActive")
-                _IsActive = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("IsActive")
-                OnIsActiveChanged()
+                OnC_IsActiveChanging(value)
+                ReportPropertyChanging("C_IsActive")
+                _C_IsActive = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("C_IsActive")
+                OnC_IsActiveChanged()
             End Set
         End Property
     
-        Private _IsActive As Global.System.Boolean
-        Private Partial Sub OnIsActiveChanging(value As Global.System.Boolean)
+        Private _C_IsActive As Nullable(Of Global.System.Boolean)
+        Private Partial Sub OnC_IsActiveChanging(value As Nullable(Of Global.System.Boolean))
         End Sub
     
-        Private Partial Sub OnIsActiveChanged()
+        Private Partial Sub OnC_IsActiveChanged()
         End Sub
     
         ''' <summary>
@@ -9595,9 +9593,9 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
         <DataMemberAttribute()>
-        Public Property LookupID() As Nullable(Of Global.System.Int32)
+        Public Property LookupID() As Global.System.Int32
             Get
                 Return _LookupID
             End Get
@@ -9610,8 +9608,8 @@ Namespace REMI.Entities
             End Set
         End Property
     
-        Private _LookupID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnLookupIDChanging(value As Nullable(Of Global.System.Int32))
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
         End Sub
     
         Private Partial Sub OnLookupIDChanged()

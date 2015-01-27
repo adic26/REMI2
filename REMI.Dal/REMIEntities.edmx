@@ -1015,11 +1015,11 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="_ProductGroupName" Type="nvarchar" Nullable="false" MaxLength="150" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="_ProductGroupName" Type="nvarchar" MaxLength="150" />
+          <Property Name="_IsActive" Type="bit" />
           <Property Name="QAPLocation" Type="nvarchar" MaxLength="255" />
           <Property Name="TSDContact" Type="nvarchar" MaxLength="255" />
-          <Property Name="LookupID" Type="int" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductSettings">
           <Key>
@@ -2286,7 +2286,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Products_Lookups">
-          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="0..1" />
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="Products" Type="remiModel.Store.Products" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Lookups">
@@ -6089,11 +6089,11 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="C_ProductGroupName" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="C_ProductGroupName" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="C_IsActive" />
           <Property Type="String" Name="QAPLocation" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="TSDContact" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="LookupID" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
           <NavigationProperty Name="Batches" Relationship="REMI.Entities.FK_Batches_Products" FromRole="Product" ToRole="Batch" />
           <NavigationProperty Name="Calibrations" Relationship="REMI.Entities.FK_Calibration_Products" FromRole="Product" ToRole="Calibration" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_Products_Lookups" FromRole="Product" ToRole="Lookup" />
@@ -6129,7 +6129,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Products_Lookups">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
           <End Type="REMI.Entities.Product" Role="Product" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Lookup">
@@ -7318,7 +7318,7 @@
                 <ScalarProperty Name="LookupID" ColumnName="LookupID" />
                 <ScalarProperty Name="TSDContact" ColumnName="TSDContact" />
                 <ScalarProperty Name="QAPLocation" ColumnName="QAPLocation" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="C_IsActive" ColumnName="_IsActive" />
                 <ScalarProperty Name="C_ProductGroupName" ColumnName="_ProductGroupName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
@@ -7528,7 +7528,7 @@
         <EntityTypeShape EntityType="REMI.Entities.UserSearchFilter" Width="1.5" PointX="4.6071488096412025" PointY="16.077593587375056" />
         <AssociationConnector Association="REMI.Entities.FK_UserSearchFilter_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UserSearchFilter_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="5.9169212663159341" PointY="16.449978582770555" />
+        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="2.1119344318806821" PointY="23.189956690738889" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Products" />
         <AssociationConnector Association="REMI.Entities.FK_Calibration_Products" />
         <AssociationConnector Association="REMI.Entities.FK_Products_Lookups" />
