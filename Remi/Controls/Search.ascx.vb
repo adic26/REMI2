@@ -18,6 +18,7 @@ Public Class Search1
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.GetType(), "SearchScript")) Then
             Page.ClientScript.RegisterClientScriptInclude(Me.GetType(), "SearchScript", ResolveClientUrl(SearchScript))
         End If
+        hdnUser.Value = UserManager.GetCurrentUser.UserName
     End Sub
 
     Public Property SearchScript As String
