@@ -291,7 +291,6 @@ Namespace REMI.BusinessEntities
                     dt.Columns.Add(k, GetType(String))
                 Next
 
-
                 For Each f In FailDocs
                     Dim dr As DataRow = dt.NewRow
                     dr("Unit") = BatchUnitNumber
@@ -303,6 +302,10 @@ Namespace REMI.BusinessEntities
                     Next
                     dt.Rows.Add(dr)
                 Next
+
+                If (dt.Columns("Failed 3rd Level") Is Nothing) Then
+                    dt.Columns.Add("Failed 3rd Level", GetType(String))
+                End If
 
                 Return dt
             End Get

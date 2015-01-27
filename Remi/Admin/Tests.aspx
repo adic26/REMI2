@@ -152,7 +152,7 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:LinkButton ID="lnkEdit" runat="server" CommandArgument='<%# Eval("ID") %>' Commandname="Edit" Enabled='<%# Not Remi.Bll.UserManager.GetCurrentUser.HasAdminReadOnlyAuthority %>'>Edit</asp:LinkButton>
+                        <asp:LinkButton ID="lnkEdit" runat="server" CommandArgument='<%# Eval("ID") %>' Commandname="EditRow" Enabled='<%# Not Remi.Bll.UserManager.GetCurrentUser.HasAdminReadOnlyAuthority %>'>Edit</asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField ShowHeader="False">

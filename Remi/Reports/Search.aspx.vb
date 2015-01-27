@@ -23,18 +23,6 @@ Partial Class Search
                 rblSearchBy.Items(2).Enabled = True 'Exceptions
             End If
 
-            If (UserManager.GetCurrentUser.HasRelabAccess Or UserManager.GetCurrentUser.HasRelabAuthority Or testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
-                rblSearchBy.Items(4).Enabled = True 'Results
-            End If
-
-            'If (UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin Or testCenterAdmin) Then
-            '    rblSearchBy.Items(5).Enabled = True 'ENV Report
-            'End If
-
-            If (UserManager.GetCurrentUser.IsLabTechOpsManager Or UserManager.GetCurrentUser.IsLabTestCoordinator Or testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
-                rblSearchBy.Items(6).Enabled = True 'KPI
-            End If
-
             If (Not (IsPostBack)) Then
                 rblSearchBy_OnSelectedIndexChanged(rblSearchBy, e)
 
@@ -130,9 +118,6 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
-                pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = False
                 pnlSearchBatch.Visible = True
@@ -151,9 +136,6 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
-                pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = False
                 pnlSearchBatch.Visible = True
@@ -174,9 +156,6 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
-                pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = False
                 pnlSearchBatch.Visible = True
@@ -201,9 +180,6 @@ Partial Class Search
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
-                pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = False
                 pnlSearchBatch.Visible = True
@@ -243,26 +219,6 @@ Partial Class Search
                     gvwUsers.DataBind()
 
                     Helpers.MakeAccessable(gvwUsers)
-                    'ElseIf (pnlEnvReport.Visible) Then
-                    '    Dim startDate As DateTime = txtStartENV.Text
-                    '    Dim endDate As DateTime = txtEndENV.Text
-                    '    Dim years As Int32 = DateDiff(DateInterval.Year, startDate, endDate, Microsoft.VisualBasic.FirstDayOfWeek.Monday)
-
-                    '    If (years < 2) Then
-                    '        envds = REMI.Bll.ProductGroupManager.GetTestCountByType(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
-
-                    '        gvwENVReport.DataSource = REMI.Bll.ProductGroupManager.GetEnvironmentalReport(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, 1)
-                    '        gvwENVReport.DataBind()
-
-                    '        Helpers.MakeAccessable(gvwENVReport)
-                    '    End If
-                ElseIf (pnlKPI.Visible) Then
-                    Dim kpidt As New DataTable()
-                    kpidt = ReportManager.GetKPI(ddlKPIType.SelectedValue, txtStartKPI.Text, txtEndKPI.Text, ddlTestCenterKPI.SelectedValue)
-
-                    gvwKPI.DataSource = kpidt
-                    gvwKPI.DataBind()
-                    Helpers.MakeAccessable(gvwKPI)
                 ElseIf (pnlSearchExceptions.Visible) Then
                     Dim es As New ExceptionSearch()
                     Dim accessory As Int32
@@ -322,35 +278,6 @@ Partial Class Search
                     Else
                         gvwTestExceptions.DataSource = Nothing
                         gvwTestExceptions.DataBind()
-                    End If
-                ElseIf (pnlSearchResults.Visible) Then
-                    Dim products As List(Of Int32) = (From item In chkProductFilterRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-                    Dim jobs As List(Of Int32)
-                    Dim stages As List(Of Int32)
-
-                    If (chkJobsRQ.Items(0).Selected) Then
-                        jobs = (From item In chkJobsRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-                    Else
-                        jobs = (From item In chkJobsRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-                    End If
-
-                    If (chkStagesRQ.Items(0).Selected) Then
-                        stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-                    Else
-                        stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-                    End If
-
-                    notMain.Clear()
-
-                    If (products.Count = 0 Or jobs.Count = 0) Then
-                        lnkExportAction.Enabled = False
-                        notMain.Notifications.AddWithMessage("You Must Select At Least One Product and One Job!", NotificationType.Warning)
-                    Else
-                        gvwRQResultsTrend.DataSource = RelabManager.ResultSearch(ddlMeasurementType.SelectedValue, ddlTestsResults.SelectedValue, ddlParameter.SelectedValue, ddlParameterValue.SelectedValue, String.Join(",", products.ConvertAll(Of String)(Function(i As Integer) i.ToString()).ToArray()), String.Join(",", jobs.ConvertAll(Of Integer)(Function(i As String) i.ToString()).ToArray()), String.Join(",", stages.ConvertAll(Of Integer)(Function(i As String) i.ToString()).ToArray()), ddlTestCenterRQ.SelectedValue, chkShowOnlyFailValue.Checked)
-                        gvwRQResultsTrend.DataBind()
-                        Helpers.MakeAccessable(gvwRQResultsTrend)
-                        gvwRQResultsTrend.Visible = True
-                        lnkExportAction.Enabled = True
                     End If
                 ElseIf (pnlSearchBatch.Visible) Then
                     Dim bs As New BatchSearch()
@@ -487,10 +414,7 @@ Partial Class Search
 
         gvwTraining.Visible = pnlTraining.Visible
         gvwUsers.Visible = pnlSearchUser.Visible
-        'gvwENVReport.Visible = pnlEnvReport.Visible
-        gvwRQResultsTrend.Visible = pnlSearchResults.Visible
         gvwUnits.Visible = pnlSearchUnits.Visible
-        gvwKPI.Visible = pnlKPI.Visible
         gvwTestExceptions.Visible = pnlSearchExceptions.Visible
         bscMain.Visible = pnlSearchBatch.Visible
     End Sub
@@ -527,18 +451,6 @@ Partial Class Search
             us.DepartmentID = departmentID
 
             Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchUser", "xls"), REMI.Dal.UserDB.UserSearch(us, False, False, False))
-            'ElseIf (pnlEnvReport.Visible) Then
-            '    Dim startDate As DateTime = txtStartENV.Text
-            '    Dim endDate As DateTime = txtEndENV.Text
-            '    Dim years As Int32 = DateDiff(DateInterval.Year, startDate, endDate, Microsoft.VisualBasic.FirstDayOfWeek.Monday)
-
-            '    If (years < 2) Then
-            '        envds = REMI.Bll.ProductGroupManager.GetTestCountByType(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
-
-            '        Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchENV", "xls"), REMI.Bll.ProductGroupManager.GetEnvironmentalReport(startDate, endDate, ddlReportBasedOn.SelectedValue, ddlTestCentersENV.SelectedValue, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, 1))
-            '    End If
-        ElseIf (pnlKPI.Visible) Then
-            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchKPI", "xls"), ReportManager.GetKPI(ddlKPIType.SelectedValue, txtStartKPI.Text, txtEndKPI.Text, ddlTestCenterKPI.SelectedValue))
         ElseIf (pnlSearchExceptions.Visible) Then
             Dim es As New ExceptionSearch()
             Dim accessory As Int32
@@ -594,24 +506,6 @@ Partial Class Search
             gvwTestExceptions.DataBind()
 
             Helpers.ExportToExcel(Helpers.GetDateTimeFileName("SearchExceptions", "xls"), gvwTestExceptions)
-        ElseIf (pnlSearchResults.Visible) Then
-            Dim products As List(Of Int32) = (From item In chkProductFilterRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-            Dim jobs As List(Of Int32)
-            Dim stages As List(Of Int32)
-
-            If (chkJobsRQ.Items(0).Selected) Then
-                jobs = (From item In chkJobsRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-            Else
-                jobs = (From item In chkJobsRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-            End If
-
-            If (chkStagesRQ.Items(0).Selected) Then
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-            Else
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-            End If
-
-            Helpers.ExportToExcel(Helpers.GetDateTimeFileName("RQSearchSummary", "xls"), RelabManager.ResultSearch(ddlMeasurementType.SelectedValue, ddlTestsResults.SelectedValue, ddlParameter.SelectedValue, ddlParameterValue.SelectedValue, String.Join(",", products.ConvertAll(Of String)(Function(i As Integer) i.ToString()).ToArray()), String.Join(",", jobs.ConvertAll(Of Integer)(Function(i As String) i.ToString()).ToArray()), String.Join(",", stages.ConvertAll(Of Integer)(Function(i As String) i.ToString()).ToArray()), ddlTestCenterRQ.SelectedValue, chkShowOnlyFailValue.Checked).Tables(0))
         ElseIf (pnlSearchBatch.Visible) Then
             Dim bs As New BatchSearch()
             Dim accessory As Int32
@@ -766,175 +660,6 @@ Partial Class Search
         End If
     End Sub
 
-    Protected Sub gvwRQResultsTrend_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwRQResultsTrend.RowDataBound
-        If e.Row.RowType = DataControlRowType.DataRow Then
-            e.Row().Cells(10).Font.Bold = True
-
-            If (e.Row().Cells(11).Text = "Pass") Then
-                e.Row().Cells(11).ForeColor = Drawing.Color.Green
-            Else
-                e.Row().Cells(11).ForeColor = Drawing.Color.Red
-            End If
-        End If
-    End Sub
-
-    Protected Sub ddlParameter_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlParameter.SelectedIndexChanged
-        ddlParameterValue.Items.Clear()
-        ddlParameterValue.Items.Add(New ListItem("Select A Value", String.Empty))
-
-        If (Not (String.IsNullOrEmpty(ddlParameter.SelectedValue))) Then
-            Dim stages As List(Of Int32)
-
-            If (chkStagesRQ.Items(0).Selected) Then
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-            Else
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-            End If
-
-            ddlParameterValue.DataSource = RelabManager.GetParametersByMeasurementTest(String.Empty, ddlTestsResults.SelectedValue, ddlMeasurementType.SelectedValue, ddlParameter.SelectedValue, chkShowOnlyFailValue.Checked, String.Join(",", stages.ConvertAll(Of Integer)(Function(i As String) i.ToString()).ToArray()))
-            ddlParameterValue.DataBind()
-        End If
-
-        gvwRQResultsTrend.Visible = False
-        updProcessing.Update()
-    End Sub
-
-    Protected Sub ddlMeasurementType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlMeasurementType.SelectedIndexChanged
-        ddlParameter.Items.Clear()
-        ddlParameterValue.Items.Clear()
-        ddlParameter.Items.Add(New ListItem("Select A Parameter", String.Empty))
-
-        Dim measurementTypeID As Int32
-        Int32.TryParse(ddlMeasurementType.SelectedValue, measurementTypeID)
-
-        If (ddlMeasurementType.SelectedValue > 0) Then
-            Dim stages As List(Of Int32)
-
-            If (chkStagesRQ.Items(0).Selected) Then
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-            Else
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-            End If
-
-            ddlParameter.DataSource = RelabManager.GetParametersByMeasurementTest(String.Empty, ddlTestsResults.SelectedValue, measurementTypeID, String.Empty, chkShowOnlyFailValue.Checked, String.Join(",", stages.ConvertAll(Of Integer)(Function(i As String) i.ToString()).ToArray()))
-            ddlParameter.DataBind()
-        End If
-
-        gvwRQResultsTrend.Visible = False
-        updProcessing.Update()
-    End Sub
-
-    Protected Sub chkStagesRQ_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkStagesRQ.SelectedIndexChanged
-        gvwRQResultsTrend.Visible = False
-        gvwRQResultsTrend.DataSource = Nothing
-        gvwRQResultsTrend.DataBind()
-        updProcessing.Update()
-
-        ddlTestsResults.Items.Clear()
-        ddlTestsResults.Items.Add(New ListItem("Select A Test", 0))
-        ddlMeasurementType.Items.Clear()
-        ddlMeasurementType.Items.Add(New ListItem("Select A Measurement", 0))
-        ddlParameter.Items.Clear()
-        ddlParameter.Items.Add(New ListItem("Select A Parameter", 0))
-        ddlParameterValue.Items.Clear()
-        ddlParameterValue.Items.Add(New ListItem("Select A Value", 0))
-
-        Dim stages As IEnumerable(Of Int32)
-        Dim countSelected As Int32 = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select item).Count
-
-        'If (countSelected = 0) Then
-        '    chkStagesRQ.SelectedValue = 0
-        'End If
-
-        If (countSelected = 0) Then
-            chkStagesRQ.Items(0).Selected = True
-            countSelected = 1
-        End If
-
-        If (chkStagesRQ.Items(0).Selected And countSelected = 1) Then
-            stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-        Else
-            stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Selected = True And item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-            chkStagesRQ.Items(0).Selected = False
-        End If
-
-        ddlTestsResults.DataSource = ((From r In New Remi.Dal.Entities().Instance().Results.Include("TestUnit").Include("TestUnit.Batch").Include("TestUnit.Batch.TestCenter").Include("TestStage").Include("Test") Where stages.Contains(r.TestStage.ID) And (r.Test.IsArchived = False Or r.Test.IsArchived Is Nothing) And (r.TestStage.IsArchived = False Or r.TestStage.IsArchived Is Nothing) And ((ddlTestCenterRQ.SelectedValue > 0 And r.TestUnit.Batch.TestCenter.LookupID = ddlTestCenterRQ.SelectedValue) Or ddlTestCenterRQ.SelectedValue = 0) Select Name = r.Test.TestName, ID = r.Test.ID).Distinct()).ToList().OrderBy(Function(o) o.Name)
-        ddlTestsResults.DataBind()
-    End Sub
-
-    Protected Sub chkJobsRQ_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkJobsRQ.SelectedIndexChanged
-        chkStagesRQ.Items.Clear()
-        chkStagesRQ.Items.Add(New ListItem("All", 0))
-
-        Dim jobs As IEnumerable(Of Int32)
-        Dim countSelected As Int32 = (From item In chkJobsRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select item).Count
-
-        If (countSelected = 0) Then
-            chkJobsRQ.Items(0).Selected = True
-            countSelected = 1
-        End If
-
-        If (chkJobsRQ.Items(0).Selected And countSelected = 1) Then
-            jobs = (From item In chkJobsRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-        Else
-            jobs = (From item In chkJobsRQ.Items.Cast(Of ListItem)() Where item.Selected = True And item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-            chkJobsRQ.Items(0).Selected = False
-        End If
-
-        chkStagesRQ.DataSource = ((From r In New REMI.Dal.Entities().Instance().Results.Include("TestUnit").Include("TestUnit.Batch").Include("TestUnit.Batch.TestCenter").Include("TestStage") Where jobs.Contains(r.TestStage.Job.ID) And ((ddlTestCenterRQ.SelectedValue > 0 And r.TestUnit.Batch.TestCenter.LookupID = ddlTestCenterRQ.SelectedValue) Or ddlTestCenterRQ.SelectedValue = 0) And (r.TestStage.IsArchived = False Or r.TestStage.IsArchived Is Nothing) Select Name = r.TestStage.Job.JobName + " " + r.TestStage.TestStageName, ID = r.TestStage.ID).Distinct()).ToList().OrderBy(Function(o) o.Name)
-        chkStagesRQ.DataBind()
-        chkStagesRQ.Items(0).Selected = True
-
-        ddlTestsResults.Items.Clear()
-        ddlTestsResults.Items.Add(New ListItem("Select A Test", 0))
-
-        chkStagesRQ_SelectedIndexChanged(sender, e)
-
-        ddlMeasurementType.Items.Clear()
-        ddlMeasurementType.Items.Add(New ListItem("Select A Measurement", 0))
-        ddlParameter.Items.Clear()
-        ddlParameter.Items.Add(New ListItem("Select A Parameter", 0))
-        ddlParameterValue.Items.Clear()
-        ddlParameterValue.Items.Add(New ListItem("Select A Value", 0))
-
-        gvwRQResultsTrend.Visible = False
-        gvwRQResultsTrend.DataSource = Nothing
-        gvwRQResultsTrend.DataBind()
-        updProcessing.Update()
-    End Sub
-
-    Protected Sub chkShowOnlyFailValue_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkShowOnlyFailValue.CheckedChanged
-        chkJobsRQ_SelectedIndexChanged(sender, e)
-        gvwRQResultsTrend.Visible = False
-        updProcessing.Update()
-    End Sub
-
-    Protected Sub ddlTestsResults_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTestsResults.SelectedIndexChanged
-        ddlParameter.Items.Clear()
-        ddlParameterValue.Items.Clear()
-        ddlMeasurementType.Items.Clear()
-        ddlMeasurementType.Items.Add(New ListItem("Select A Measurement", 0))
-
-        Dim testID As Int32
-        Int32.TryParse(ddlTestsResults.SelectedValue, testID)
-
-        If (ddlTestsResults.SelectedValue > 0) Then
-            Dim stages As IEnumerable(Of Int32)
-
-            If (chkStagesRQ.Items(0).Selected) Then
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Text <> "All" Select Convert.ToInt32(item.Value)).ToList()
-            Else
-                stages = (From item In chkStagesRQ.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
-            End If
-
-            ddlMeasurementType.DataSource = ((From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements.Include("Result").Include("Result.TestUnit").Include("Result.TestUnit.Batch").Include("Result.TestUnit.Batch.TestCenter").Include("TestStage").Include("Test") Where rm.Result.Test.ID = testID And stages.Contains(rm.Result.TestStage.ID) And ((chkShowOnlyFailValue.Checked And rm.PassFail = False) Or Not chkShowOnlyFailValue.Checked) And rm.Archived = False And ((ddlTestCenterRQ.SelectedValue > 0 And rm.Result.TestUnit.Batch.TestCenter.LookupID = ddlTestCenterRQ.SelectedValue) Or ddlTestCenterRQ.SelectedValue = 0) Select Measurement = rm.Lookup.Values, MeasurementTypeID = rm.Lookup.LookupID).Distinct()).ToList().OrderBy(Function(o) o.Measurement)
-            ddlMeasurementType.DataBind()
-        End If
-
-        gvwRQResultsTrend.Visible = False
-        updProcessing.Update()
-    End Sub
-
     Protected Sub ddlJobs_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlJobs.SelectedIndexChanged
         ddlTestStages.Items.Clear()
         ddlTestStages.Items.Add(New ListItem("All", 0))
@@ -1004,9 +729,6 @@ Partial Class Search
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchUnits.Visible = False
-                pnlSearchResults.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
                 pnlTraining.Visible = False
 
                 ddlProductType.Items.Clear()
@@ -1078,7 +800,7 @@ Partial Class Search
                 txtEnd.Text = DateTime.Now.ToShortDateString()
 
                 ddlTestCenters.Items.Clear()
-                ddlTestCenters.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
+                ddlTestCenters.DataSource = REMI.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCenters.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1091,10 +813,7 @@ Partial Class Search
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = True
                 pnlSearchUser.Visible = False
-                pnlSearchResults.Visible = False
                 pnlSearchUnits.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
 
                 ddlJobs2.Items.Clear()
                 ddlJobs2.Items.Add("ALL")
@@ -1123,21 +842,18 @@ Partial Class Search
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = True
-                pnlSearchResults.Visible = False
-                'pnlEnvReport.Visible = False
                 pnlSearchUnits.Visible = False
-                pnlKPI.Visible = False
 
                 ddlProductFilterUser.Items.Clear()
                 ddlProductFilterUser.DataSource = prodList
                 ddlProductFilterUser.DataBind()
 
                 ddlTestCentersUser.Items.Clear()
-                ddlTestCentersUser.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
+                ddlTestCentersUser.DataSource = REMI.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCentersUser.DataBind()
 
                 ddlDepartmentUser.Items.Clear()
-                ddlDepartmentUser.DataSource = Remi.Bll.LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 0)
+                ddlDepartmentUser.DataSource = REMI.Bll.LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlDepartmentUser.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1149,104 +865,22 @@ Partial Class Search
                 If (ddlDepartmentUser.Items.Contains(ld)) Then
                     ddlDepartmentUser.SelectedValue = UserManager.GetCurrentUser.DepartmentID
                 End If
-            Case "4"
-                'Results
-                pnlTraining.Visible = False
-                pnlSearchResults.Visible = True
-                pnlSearchUser.Visible = False
-                pnlSearchBatch.Visible = False
-                pnlSearchExceptions.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
-                pnlSearchUnits.Visible = False
-
-                prodList.Rows.RemoveAt(0)
-                prodList.AcceptChanges()
-
-                chkProductFilterRQ.Items.Clear()
-                chkProductFilterRQ.DataSource = prodList
-                chkProductFilterRQ.DataBind()
-
-                chkJobsRQ.Items.Clear()
-                chkJobsRQ.Items.Add("All")
-                chkJobsRQ.DataSource = JobManager.GetJobListDT
-                chkJobsRQ.DataBind()
-                chkJobsRQ.SelectedValue = "All"
-
-                ddlTestCenterRQ.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
-                ddlTestCenterRQ.DataBind()
-
-                Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
-                If (ddlTestCenterRQ.Items.Contains(l)) Then
-                    ddlTestCenterRQ.SelectedValue = UserManager.GetCurrentUser.TestCentreID
-                End If
-
-                chkJobsRQ_SelectedIndexChanged(sender, e)
-                'Case "5"
-                '    'ENV Report
-                '    pnlTraining.Visible = False
-                '    pnlSearchResults.Visible = False
-                '    pnlSearchUser.Visible = False
-                '    pnlSearchBatch.Visible = False
-                '    pnlSearchExceptions.Visible = False
-                '    pnlEnvReport.Visible = True
-                '    pnlSearchUnits.Visible = False
-                '    pnlKPI.Visible = False
-
-                '    ddlTestCentersENV.Items.Clear()
-                '    ddlTestCentersENV.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
-                '    ddlTestCentersENV.DataBind()
-
-                '    Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
-                '    If (ddlTestCentersENV.Items.Contains(l)) Then
-                '        ddlTestCentersENV.SelectedValue = UserManager.GetCurrentUser.TestCentreID
-                '    End If
-
-                '    txtStartENV.Text = DateTime.Today.Subtract(TimeSpan.FromDays(7)).ToString("d")
-                '    txtEndENV.Text = DateTime.Today.ToString("d")
             Case "1" 'Search Units
                 pnlTraining.Visible = False
                 pnlSearchUnits.Visible = True
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
-                pnlSearchResults.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = False
-            Case "5"
-                'KPI
-                pnlTraining.Visible = False
-                pnlSearchUnits.Visible = False
-                pnlSearchBatch.Visible = False
-                pnlSearchExceptions.Visible = False
-                pnlSearchUser.Visible = False
-                pnlSearchResults.Visible = False
-                'pnlEnvReport.Visible = False
-                pnlKPI.Visible = True
-
-                ddlTestCenterKPI.Items.Clear()
-                ddlTestCenterKPI.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
-                ddlTestCenterKPI.DataBind()
-
-                Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
-                If (ddlTestCenterKPI.Items.Contains(l)) Then
-                    ddlTestCenterKPI.SelectedValue = UserManager.GetCurrentUser.TestCentreID
-                End If
-
-                txtStartKPI.Text = DateTime.Today.Subtract(TimeSpan.FromDays(30)).ToString("d")
-                txtEndKPI.Text = DateTime.Today.ToString("d")
-            Case "6"
+            Case "4"
                 'Training
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
-                pnlSearchResults.Visible = False
-                'pnlEnvReport.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = True
 
                 ddlTestCenterTraining.Items.Clear()
-                ddlTestCenterTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
+                ddlTestCenterTraining.DataSource = REMI.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlTestCenterTraining.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -1256,42 +890,31 @@ Partial Class Search
                 End If
 
                 ddlSearchTraining.Items.Clear()
-                ddlSearchTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("Training", 0, 0, String.Empty, String.Empty, 0, 0)
+                ddlSearchTraining.DataSource = REMI.Bll.LookupsManager.GetLookups("Training", 0, 0, String.Empty, String.Empty, 0, 0)
                 ddlSearchTraining.DataBind()
             Case Else
                 pnlTraining.Visible = False
                 pnlSearchBatch.Visible = True
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
-                pnlSearchResults.Visible = False
-                'pnlEnvReport.Visible = False
                 pnlSearchUnits.Visible = False
         End Select
 
         gvwTraining.DataSource = Nothing
         gvwUsers.DataSource = Nothing
-        'gvwENVReport.DataSource = Nothing
-        gvwRQResultsTrend.DataSource = Nothing
         gvwUnits.DataSource = Nothing
-        gvwKPI.DataSource = Nothing
         gvwTestExceptions.DataSource = Nothing
         bscMain.Datasource = Nothing
 
         gvwTraining.DataBind()
         gvwUsers.DataBind()
-        'gvwENVReport.DataBind()
-        gvwRQResultsTrend.DataBind()
         gvwUnits.DataBind()
-        gvwKPI.DataBind()
         gvwTestExceptions.DataBind()
         bscMain.DataBind()
 
         gvwTraining.Visible = pnlTraining.Visible
         gvwUsers.Visible = pnlSearchUser.Visible
-        'gvwENVReport.Visible = pnlEnvReport.Visible
-        gvwRQResultsTrend.Visible = pnlSearchResults.Visible
         gvwUnits.Visible = pnlSearchUnits.Visible
-        gvwKPI.Visible = pnlKPI.Visible
         gvwTestExceptions.Visible = pnlSearchExceptions.Visible
         bscMain.Visible = pnlSearchBatch.Visible
     End Sub
@@ -1368,6 +991,4 @@ Partial Class Search
         End Select
     End Sub
 #End Region
-
-   
 End Class

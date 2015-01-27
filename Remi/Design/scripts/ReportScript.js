@@ -23,6 +23,7 @@
     var tests = $('#bs_TestField');
     var stages = $('#bs_RealStages');
     var oTable;
+    var user = $("[id$='hdnUser']");
 
     var o = new Option("--aReqNum", "--aReqNum");
     $(o).html("Request Number");
@@ -460,7 +461,7 @@ function searchAll(rtID, type) {
             populateFields(data.Results, $('#bs_TestField'), "Test");
 
             //job Search
-            jobSearch($('#bs_StagesField'));
+            jobSearch($('#bs_StagesField'), user[0].value);
         }
         else if (data == true) {
             //console.log(data);
@@ -471,11 +472,14 @@ function searchAll(rtID, type) {
     });    
 }
 
-function jobSearch(model) {
+function jobSearch(model, username) {
     //setting up parameters from web service
-    var requestParams = {};
 
-    var myRequest = jsonRequest("../webservice/RemiAPI.asmx/GetJobs", requestParams).success(function (data) {
+    var requestParams = JSON.stringify({
+        "userIdentification": username
+    });
+
+    var myRequest = jsonRequest("../webservice/REMIInternal.asmx/GetJobs", requestParams).success(function (data) {
         var results = data;
         var rslt = $(results);
 

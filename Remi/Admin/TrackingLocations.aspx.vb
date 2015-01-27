@@ -65,7 +65,7 @@ Partial Class Admin_TrackingLocation
         Integer.TryParse(e.CommandArgument, ID)
 
         Select Case e.CommandName.ToLower()
-            Case "edit"
+            Case "editrow"
                 Dim tmpTL As TrackingLocationCollection = TrackingLocationManager.GetTrackingLocationHostsByID(ID)
 
                 If tmpTL IsNot Nothing Then
@@ -76,6 +76,7 @@ Partial Class Admin_TrackingLocation
                     hdnSelectedTrackingLocationID.Value = tmpTL(0).ID
                     ShowAddEditPanel(tmpTL)
                 End If
+                upTLLeftNav.Update()
                 Exit Select
             Case "deleteitem"
                 notMain.Notifications.Add(TrackingLocationManager.Delete(ID))

@@ -77,11 +77,15 @@ Namespace REMI.Bll
             Return New DataTable("ResultsSummaryExport")
         End Function
 
-        Public Shared Function MeasurementFiles(ByVal MeasurementID As Int32) As DataTable
+        Public Shared Function MeasurementFiles(ByVal MeasurementID As Int32, ByVal resultID As Int32) As DataTable
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
 
-                Return BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultMeasurementID = MeasurementID Select mf).ToList(), "MeasurementFiles")
+                If (resultID > 0) Then
+                    Return BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultsMeasurement.Result.ID = resultID Select mf).ToList(), "MeasurementFiles")
+                Else
+                    Return BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultMeasurementID = MeasurementID Select mf).ToList(), "MeasurementFiles")
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -230,15 +234,6 @@ Namespace REMI.Bll
         Public Shared Function ResultGraph(ByVal batchIDs As String, ByVal unitIDs As String, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal showUpperLowerLimits As Boolean, ByVal testID As Int32, ByVal xaxis As Int32, ByVal plotValue As Int32, ByVal includeArchived As Boolean, ByVal stages As String) As DataSet
             Try
                 Return RelabDB.ResultGraph(batchIDs, unitIDs, measurementTypeID, parameterName, parameterValue, showUpperLowerLimits, testID, xaxis, plotValue, includeArchived, stages)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return New DataSet
-        End Function
-
-        Public Shared Function ResultSearch(ByVal measurementTypeID As Int32, ByVal testID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal productIDs As String, ByVal jobNameIDs As String, ByVal testStageIDs As String, ByVal testCenterID As Int32, ByVal showFailureOnly As Boolean) As DataSet
-            Try
-                Return RelabDB.ResultSearch(measurementTypeID, testID, parameterName, parameterValue, productIDs, jobNameIDs, testStageIDs, testCenterID, showFailureOnly)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

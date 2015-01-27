@@ -93,7 +93,7 @@
                     SortExpression="UnitCapacity" />
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:LinkButton ID="lnkEdit" runat="server" Commandname="Edit" CommandArgument='<%# Eval("ID") %>' Enabled='<%# Not Remi.Bll.UserManager.GetCurrentUser.HasAdminReadOnlyAuthority %>'>Edit</asp:LinkButton>
+                        <asp:LinkButton ID="lnkEdit" runat="server" Commandname="EditRow" CommandArgument='<%# Eval("ID") %>' Enabled='<%# Not Remi.Bll.UserManager.GetCurrentUser.HasAdminReadOnlyAuthority %>'>Edit</asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField ShowHeader="False">

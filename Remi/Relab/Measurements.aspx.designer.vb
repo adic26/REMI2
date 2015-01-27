@@ -11,7 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class Measurements
+Partial Public Class Relab_Measurements
 
     '''<summary>
     '''lblHeader control.
@@ -48,24 +48,6 @@ Partial Public Class Measurements
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hypCancel As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
-    '''imgExportAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgExportAction As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''lnkExportAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lnkExportAction As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
     '''pnlLeftMenuFilter control.
@@ -140,146 +122,11 @@ Partial Public Class Measurements
     Protected WithEvents hdnUnit As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''btnShowPopup control.
+    '''msmMeasuerments control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnShowPopup As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''ModalPopupExtender1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ModalPopupExtender1 As Global.AjaxControlToolkit.ModalPopupExtender
-
-    '''<summary>
-    '''pnlpopup control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pnlpopup As Global.System.Web.UI.WebControls.Panel
-
-    '''<summary>
-    '''hdnMeasurementID control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnMeasurementID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''lblTitle control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lblTitle As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
-    '''imgslides control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgslides As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''btnPrevious control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnPrevious As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnPlay control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnPlay As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnNext control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnNext As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnCancel control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnCancel As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''lblDesc control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lblDesc As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
-    '''sseImages control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents sseImages As Global.AjaxControlToolkit.SlideShowExtender
-
-    '''<summary>
-    '''chkOnlyFails control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents chkOnlyFails As Global.System.Web.UI.WebControls.CheckBox
-
-    '''<summary>
-    '''chkIncludeArchived control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents chkIncludeArchived As Global.System.Web.UI.WebControls.CheckBox
-
-    '''<summary>
-    '''grdResultMeasurements control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents grdResultMeasurements As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''grdResultInformation control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents grdResultInformation As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents msmMeasuerments As Global.Remi.Measuerments
 End Class

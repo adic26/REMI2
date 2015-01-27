@@ -18,6 +18,8 @@ BEGIN
 
 	DECLARE @ColumnName NVARCHAR(255)
 	DECLARE @whereStr NVARCHAR(MAX)
+	DECLARE @whereStr2 NVARCHAR(MAX)
+	DECLARE @whereStr3 NVARCHAR(MAX)
 	DECLARE @rows NVARCHAR(MAX)
 	DECLARE @ParameterColumnNames NVARCHAR(MAX)
 	DECLARE @InformationColumnNames NVARCHAR(MAX)
@@ -186,12 +188,12 @@ BEGIN
 
 		INSERT INTO #executeSQL (sqlvar)
 		VALUES ('INSERT INTO dbo.#RR 
-		SELECT r.RequestID, r.BatchID, r.RequestNumber, tu.BatchUnitNumber, tu.IMEI, tu.BSN, ')
+		SELECT r.RequestID, r.BatchID, r.RequestNumber, tu.BatchUnitNumber, tu.IMEI, tu.BSN ')
 
 		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage')) > 0)
 		BEGIN
 			INSERT INTO #executeSQL (sqlvar)
-			VALUES ('m.ID, rs.ID AS ResultID, x.ID AS XMLID, ')
+			VALUES (',m.ID, rs.ID AS ResultID, x.ID AS XMLID, ')
 		END
 		ELSE
 		BEGIN
@@ -211,7 +213,7 @@ BEGIN
 		END
 
 		INSERT INTO #executeSQL (sqlvar)
-		VALUES ('FROM dbo.#Request r WITH(NOLOCK)
+		VALUES (' FROM dbo.#Request r WITH(NOLOCK)
 			INNER JOIN dbo.Batches b WITH(NOLOCK) ON b.ID=r.BatchID
 			INNER JOIN dbo.TestUnits tu WITH(NOLOCK) ON tu.BatchID=b.ID ')
 
@@ -319,6 +321,7 @@ BEGIN
 		END
 
 		SET @SQL =  REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <')
+		PRINT @SQL
 		EXEC sp_executesql @SQL
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
@@ -361,10 +364,89 @@ BEGIN
 				
 				IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
 				BEGIN
-					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + Name + '] = ''' + Val + '''' + ' AND ' FROM dbo.#Params
-					SET @whereStr = ' WHERE ' +  SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+					SET @whereStr = ' WHERE '
+					SET @whereStr2 = ''
+					SET @whereStr3 = ''
+					
+					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+					INTO #buildparamtable
+					FROM #Params
+					GROUP BY name
+					
+					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+					INTO #buildparamtable2
+					FROM #Params
+					GROUP BY name
+					
+					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+					INTO #buildparamtable3
+					FROM #Params
+					GROUP BY name
+					
+					UPDATE bt
+					SET bt.params = REPLACE(REPLACE((
+							SELECT ('''' + p.Val + ''',') As Val
+							FROM #Params p
+							WHERE p.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
+							FOR XML PATH('')), '<Val>', ''), '</Val>','')
+					FROM #buildparamtable bt
+					WHERE Params = ''
+					
+					UPDATE bt
+					SET bt.params = REPLACE(REPLACE((
+							SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(p.Val, '*','%') + '%'' OR ') As Val
+							FROM #Params p
+							WHERE p.Name = bt.Name AND Val LIKE '*%' AND Val NOT LIKE '-%'
+							FOR XML PATH('')), '<Val>', ''), '</Val>','')
+					FROM #buildparamtable2 bt
+					WHERE Params = '' OR Params IS NULL
+					
+					UPDATE bt
+					SET bt.params = REPLACE(REPLACE((
+							SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(p.Val, '-','%') + '%'' OR ') As Val
+							FROM #Params p
+							WHERE p.Name = bt.Name AND Val LIKE '-%'
+							FOR XML PATH('')), '<Val>', ''), '</Val>','')
+					FROM #buildparamtable3 bt
+					WHERE Params = '' OR Params IS NULL
+					
+					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(params, 0, LEN(params)) + ') AND ' 
+					FROM dbo.#buildparamtable 
+					WHERE Params IS NOT NULL
+					
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+
+					SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
+					FROM dbo.#buildparamtable2 
+					WHERE Params IS NOT NULL
+					
+					IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr2 = ' AND ' + @whereStr2
+						ELSE
+							SET @whereStr2 = @whereStr2
+					END
+					
+					SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
+					FROM dbo.#buildparamtable3
+					WHERE Params IS NOT NULL
+					
+					IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr3 = ' AND ' + @whereStr3
+						ELSE
+							SET @whereStr3 = @whereStr3
+					END
+												
+					SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')				
+
+					DROP TABLE #buildparamtable
+					DROP TABLE #buildparamtable2
 				END
-				
+
 				SET @SQL = 'INSERT INTO dbo.#RRParameters SELECT *
 				FROM (
 					SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
@@ -424,8 +506,87 @@ BEGIN
 
 				IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
 				BEGIN
-					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + Name + '] = ''' + Val + '''' + ' AND ' FROM dbo.#Infos
-					SET @whereStr = ' WHERE ' +  SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+					SET @whereStr = ' WHERE '
+					SET @whereStr2 = ''
+					SET @whereStr3 = ''
+					
+					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+					INTO #buildinfotable
+					FROM dbo.#infos
+					GROUP BY name
+					
+					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+					INTO #buildinfotable2
+					FROM dbo.#infos
+					GROUP BY name
+					
+					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+					INTO #buildinfotable3
+					FROM dbo.#infos
+					GROUP BY name
+					
+					UPDATE bt
+					SET bt.info = REPLACE(REPLACE((
+							SELECT ('''' + i.Val + ''',') As Val
+							FROM dbo.#infos i
+							WHERE i.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
+							FOR XML PATH('')), '<Val>', ''), '</Val>','')
+					FROM #buildinfotable bt
+					WHERE info = ''
+					
+					UPDATE bt
+					SET bt.info = REPLACE(REPLACE((
+							SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(i.Val, '*','%') + '%'' OR ') As Val
+							FROM dbo.#infos i
+							WHERE i.Name = bt.Name AND Val LIKE '*%'
+							FOR XML PATH('')), '<Val>', ''), '</Val>','')
+					FROM #buildinfotable2 bt
+					WHERE info = '' OR info IS NULL
+					
+					UPDATE bt
+					SET bt.info = REPLACE(REPLACE((
+							SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(i.Val, '-','%') + '%'' OR ') As Val
+							FROM dbo.#infos i
+							WHERE i.Name = bt.Name AND Val LIKE '-%'
+							FOR XML PATH('')), '<Val>', ''), '</Val>','')
+					FROM #buildinfotable3 bt
+					WHERE info = '' OR info IS NULL
+										
+					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(info, 0, LEN(info)) + ') AND ' 
+					FROM dbo.#buildinfotable 
+					WHERE info IS NOT NULL 
+					
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+										
+					SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
+					FROM dbo.#buildinfotable2 
+					WHERE info IS NOT NULL 
+					
+					IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr2 = ' AND ' + @whereStr2
+						ELSE
+							SET @whereStr2 = @whereStr2
+					END						
+					
+					SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
+					FROM dbo.#buildinfotable3 
+					WHERE info IS NOT NULL 
+					
+					IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
+					BEGIN						
+						IF (@whereStr <> ' WHERE ')
+							SET @whereStr3 = ' AND ' + @whereStr3
+						ELSE
+							SET @whereStr3 = @whereStr3
+					END
+												
+					SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')
+
+					DROP TABLE #buildinfotable
+					DROP TABLE #buildinfotable2
 				END
 
 				SET @SQL = N'INSERT INTO dbo.#RRInformation SELECT *
@@ -552,13 +713,19 @@ VALUES ('Request', 51, '*Windermere')
 --,('Unit', 0, '1')
 --,('IMEI', 0, '')
 --,('ResultArchived', 0, '')
+,('Param:Band', 0, 'GPRS1800')
 --,('Param:Band', 0, 'LTE17')
-,('Param:Channel', 0, '5800')
+,('Param:Channel', 0, '*700')
+,('Param:Channel', 0, '-512')
 --,('ResultInfoArchived', 0, '')
 --,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
+,('Info:HardwareID', 0, '*Rohde&Schwarz')
+,('Info:OSVersion', 0, 'NA')
+--,('Info:OSVersion', 0, 'adsf')
 --,('Info:CameraID', 0, 'Not Reported')
 --,('Info:hoursintest', 0, '10')
 --, ('TestRunStartDate', 0, '2015-01-19')
 --, ('TestRunEndDate', 0, '2015-01-19')
 --,('Measurement', 0, '*RxBER')
+--('Info:', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
 EXEC [Req].[RequestSearch] 1, @table--, 251

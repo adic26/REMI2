@@ -32,16 +32,6 @@
             });
         }
 
-        $(document).ready(function () {
-            $('table#ctl00_Content_gvwTypeTests').columnFilters(
-            {
-                caseSensitive: false,
-                underline: true,
-                wildCard: '*',
-                alternateRowClassNames: ['evenrow', 'oddrow']
-            });
-        });
-
         var _isInitialLoad = true;
 
         function contentPageLoad(sender, args) {
@@ -105,6 +95,21 @@
             <asp:AsyncPostBackTrigger ControlID="ddlTrackType" />
         </Triggers>
         <ContentTemplate>
+            <script type="text/javascript">
+                var prm = Sys.WebForms.PageRequestManager.getInstance();
+                prm.add_pageLoaded(EndRequestTrackingTests);
+
+                function EndRequestTrackingTests(sender, args) {
+                    $('table#ctl00_Content_gvwTypeTests').columnFilters(
+                    {
+                        caseSensitive: false,
+                        underline: true,
+                        wildCard: '*',
+                        alternateRowClassNames: ['evenrow', 'oddrow']
+                    });
+                }
+            </script>
+
             <asp:UpdateProgress runat="server" ID="udpTTT" DynamicLayout="true" DisplayAfter="10" AssociatedUpdatePanelID="upTTT">
                 <ProgressTemplate>
                     <div class="LoadingModal"></div>

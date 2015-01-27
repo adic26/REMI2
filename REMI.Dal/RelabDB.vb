@@ -449,36 +449,5 @@ Namespace REMI.Dal
 
             Return ds
         End Function
-
-        Public Shared Function ResultSearch(ByVal measurementTypeID As Int32, ByVal testID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal productIDs As String, ByVal jobNameIDs As String, ByVal testStageIDs As String, ByVal testCenterID As Int32, ByVal showFailureOnly As Boolean) As DataSet
-            Dim ds As New DataSet()
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("Relab.remispResultsSearch", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-
-                    myCommand.Parameters.AddWithValue("@MeasurementTypeID", measurementTypeID)
-                    myCommand.Parameters.AddWithValue("@TestID", testID)
-
-                    If (Not String.IsNullOrEmpty(parameterName)) Then
-                        myCommand.Parameters.AddWithValue("@ParameterName", parameterName)
-                        If (Not String.IsNullOrEmpty(parameterValue)) Then
-                            myCommand.Parameters.AddWithValue("@ParameterValue", parameterValue)
-                        End If
-                    End If
-
-                    myCommand.Parameters.AddWithValue("@ProductIDs", productIDs)
-                    myCommand.Parameters.AddWithValue("@JobNameIDs", jobNameIDs)
-                    myCommand.Parameters.AddWithValue("@TestStageIDs", testStageIDs)
-                    myCommand.Parameters.AddWithValue("@TestCenterID", testCenterID)
-                    myCommand.Parameters.AddWithValue("@ShowFailureOnly", showFailureOnly)
-
-                    myConnection.Open()
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(ds)
-                End Using
-            End Using
-
-            Return ds
-        End Function
     End Class
 End Namespace

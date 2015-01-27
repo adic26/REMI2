@@ -14,15 +14,6 @@ Option Explicit On
 Partial Public Class ES_Default
 
     '''<summary>
-    '''ave control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ave As Global.AjaxControlToolkit.AlwaysVisibleControlExtender
-
-    '''<summary>
     '''lblPH control.
     '''</summary>
     '''<remarks>
@@ -50,33 +41,6 @@ Partial Public Class ES_Default
     Protected WithEvents ESMenu As Global.System.Web.UI.WebControls.Menu
 
     '''<summary>
-    '''cpeRequestInfo control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cpeRequestInfo As Global.AjaxControlToolkit.CollapsiblePanelExtender
-
-    '''<summary>
-    '''cpeRequestSummary control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cpeRequestSummary As Global.AjaxControlToolkit.CollapsiblePanelExtender
-
-    '''<summary>
-    '''cpeFA control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cpeFA As Global.AjaxControlToolkit.CollapsiblePanelExtender
-
-    '''<summary>
     '''hdnBatchID control.
     '''</summary>
     '''<remarks>
@@ -93,6 +57,60 @@ Partial Public Class ES_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnRequestNumber As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''cpeRequestInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeRequestInfo As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
+    '''cpeFA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeFA As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
+    '''cpeRequestSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeRequestSummary As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
+    '''cpeApprovals control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeApprovals As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
+    '''cpeResultSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeResultSummary As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
+    '''cpeResultBreakDown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeResultBreakDown As Global.AjaxControlToolkit.CollapsiblePanelExtender
 
     '''<summary>
     '''lblRequestNumber control.
@@ -203,15 +221,6 @@ Partial Public Class ES_Default
     Protected WithEvents rptRequestSummary As Global.System.Web.UI.WebControls.Repeater
 
     '''<summary>
-    '''grdApproval control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents grdApproval As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
     '''pnlRequestInfoHeader control.
     '''</summary>
     '''<remarks>
@@ -257,6 +266,249 @@ Partial Public Class ES_Default
     Protected WithEvents gvwRequestInfo As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
+    '''pnlResultSummaryHeader control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlResultSummaryHeader As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''lblResultSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblResultSummary As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgResultSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgResultSummary As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''pnlResultSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlResultSummary As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''gvwResultSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents gvwResultSummary As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''pnlResultBreakdownHeader control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlResultBreakdownHeader As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''lblResultBreakDown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblResultBreakDown As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgResultBreakDown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgResultBreakDown As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''pnlResultBreakDown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlResultBreakDown As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''updResultBreakdown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents updResultBreakdown As Global.System.Web.UI.UpdatePanel
+
+    '''<summary>
+    '''upResultBreakdown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents upResultBreakdown As Global.System.Web.UI.UpdateProgress
+
+    '''<summary>
+    '''btnESShowPopup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnESShowPopup As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''mpeES control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents mpeES As Global.AjaxControlToolkit.ModalPopupExtender
+
+    '''<summary>
+    '''pnlESpopup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlESpopup As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''hdnResultID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnResultID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''lblESTitle control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblESTitle As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgESslides control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgESslides As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''btnESPrevious control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnESPrevious As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnESPlay control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnESPlay As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnESNext control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnESNext As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnESCancel control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnESCancel As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''lblESDesc control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblESDesc As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''sseESImages control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents sseESImages As Global.AjaxControlToolkit.SlideShowExtender
+
+    '''<summary>
+    '''pnlQRASlider control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlQRASlider As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''rboQRASlider control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rboQRASlider As Global.System.Web.UI.WebControls.RadioButtonList
+
+    '''<summary>
+    '''gvwResultBreakDown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents gvwResultBreakDown As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''odsResultBreakdown control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsResultBreakdown As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
     '''pnlFA control.
     '''</summary>
     '''<remarks>
@@ -300,4 +552,49 @@ Partial Public Class ES_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents pnlFailures As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''pnlApprovalHeader control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlApprovalHeader As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''lblApprove control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblApprove As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgApprovals control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgApprovals As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''pnlApproval control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlApproval As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''grdApproval control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdApproval As Global.System.Web.UI.WebControls.GridView
 End Class

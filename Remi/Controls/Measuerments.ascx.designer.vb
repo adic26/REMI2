@@ -11,194 +11,221 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class MasterPages_MasterPage
+Partial Public Class Measuerments
 
     '''<summary>
-    '''litPageTitle control.
+    '''pnlMeasurements control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents litPageTitle As Global.System.Web.UI.WebControls.Literal
+    Protected WithEvents pnlMeasurements As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
-    '''head control.
+    '''hdnTestID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents head As Global.System.Web.UI.WebControls.ContentPlaceHolder
+    Protected WithEvents hdnTestID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''form1 control.
+    '''hdnResultID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
+    Protected WithEvents hdnResultID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''AjaxScriptManager1 control.
+    '''hdnBatchID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents AjaxScriptManager1 As Global.AjaxControlToolkit.ToolkitScriptManager
+    Protected WithEvents hdnBatchID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''cpeln control.
+    '''btnShowPopup control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cpeln As Global.AjaxControlToolkit.CollapsiblePanelExtender
+    Protected WithEvents btnShowPopup As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''pnlHeader control.
+    '''ModalPopupExtender1 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlHeader As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents ModalPopupExtender1 As Global.AjaxControlToolkit.ModalPopupExtender
 
     '''<summary>
-    '''imgUserName control.
+    '''pnlpopup control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents imgUserName As Global.System.Web.UI.WebControls.Image
+    Protected WithEvents pnlpopup As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
-    '''hlUser control.
+    '''hdnMeasurementID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents hlUser As Global.System.Web.UI.WebControls.HyperLink
+    Protected WithEvents hdnMeasurementID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''lnkLogout control.
+    '''lblTitle control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lnkLogout As Global.System.Web.UI.WebControls.LinkButton
+    Protected WithEvents lblTitle As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''pnlHead control.
+    '''imgslides control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlHead As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents imgslides As Global.System.Web.UI.WebControls.Image
 
     '''<summary>
-    '''menuHeader control.
+    '''btnPrevious control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents menuHeader As Global.System.Web.UI.WebControls.Menu
+    Protected WithEvents btnPrevious As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''pnlBody control.
+    '''btnPlay control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlBody As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents btnPlay As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''pnlExpColLefNav control.
+    '''btnNext control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlExpColLefNav As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents btnNext As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''imgExpCol control.
+    '''btnCancel control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents imgExpCol As Global.System.Web.UI.WebControls.Image
+    Protected WithEvents btnCancel As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''pnlLeftNav control.
+    '''lblDesc control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlLeftNav As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents lblDesc As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''pnlLeftNavContent control.
+    '''sseImages control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlLeftNavContent As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents sseImages As Global.AjaxControlToolkit.SlideShowExtender
 
     '''<summary>
-    '''leftSidebarContent control.
+    '''imgExport control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents leftSidebarContent As Global.System.Web.UI.WebControls.ContentPlaceHolder
+    Protected WithEvents imgExport As Global.System.Web.UI.WebControls.ImageButton
 
     '''<summary>
-    '''pnlContent control.
+    '''chkOnlyFails control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlContent As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents chkOnlyFails As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''pageTitleContent control.
+    '''chkIncludeArchived control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pageTitleContent As Global.System.Web.UI.WebControls.ContentPlaceHolder
+    Protected WithEvents chkIncludeArchived As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''Content control.
+    '''lblInfo control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents Content As Global.System.Web.UI.WebControls.ContentPlaceHolder
+    Protected WithEvents lblInfo As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''rightSidebarContent control.
+    '''grdResultMeasurements control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents rightSidebarContent As Global.System.Web.UI.WebControls.ContentPlaceHolder
+    Protected WithEvents grdResultMeasurements As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''pnlLegend control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlLegend As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''pnlInformation control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlInformation As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''grdResultInformation control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdResultInformation As Global.System.Web.UI.WebControls.GridView
 End Class

@@ -11,15 +11,6 @@ Namespace REMI.Bll
     Public Class ReportManager
         Inherits REMIManagerBase
 
-        Public Shared Function GetKPI(ByVal type As Int32, ByVal startDate As DateTime, ByVal endDate As DateTime, ByVal testCenterID As Int32) As DataTable
-            Try
-                Return ReportDB.GetKPI(type, startDate, endDate, testCenterID)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return New DataTable
-        End Function
-
         Public Shared Function Search(ByVal requestTypeID As Int32, ByVal SearchFields As DataTable) As DataTable
             Try
                 Return ReportDB.Search(requestTypeID, SearchFields)
@@ -28,6 +19,16 @@ Namespace REMI.Bll
             End Try
 
             Return New DataTable("Search")
+        End Function
+
+        Public Shared Function ESResultSummary(ByVal requestNumber As String) As DataTable
+            Try
+                Return ReportDB.ESResultSummary(requestNumber)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("ESResultSummary")
         End Function
 
         Public Shared Function SearchTree(ByVal requestTypeID As Int32) As DataTable

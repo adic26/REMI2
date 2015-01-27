@@ -39,7 +39,7 @@ Partial Class Admin_TrackingLocationTypes
 
     Protected Sub gvTestStationTypes_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Select Case e.CommandName.ToLower()
-            Case "edit"
+            Case "editrow"
                 EditID = Convert.ToInt32(e.CommandArgument)
                 hdnEditID.Value = EditID
                 pnlAddEdit.Visible = True

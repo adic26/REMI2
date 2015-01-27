@@ -239,6 +239,8 @@
     <Folder Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types" />
     <Folder Include="Scripts\January162015" />
     <Folder Include="Scripts\January212015" />
+    <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Obsolete" />
+    <Folder Include="Scripts\January262015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -1998,9 +2000,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Functions\GetDateDiffInMinutes.function.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispKPIReports.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\ProductLookups.table.sql">
       <SubType>Code</SubType>
     </None>
@@ -2471,11 +2470,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsSearch.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispResultsSummary.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -2615,5 +2609,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\January212015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispKPIReports.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Obsolete\Relab.remispResultsSearch.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispESResultSummary.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\January262015\LCDRequestSetup.sql" />
   </ItemGroup>
 </Project>

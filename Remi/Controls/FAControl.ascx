@@ -21,7 +21,7 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Description">
             <ItemTemplate>
-                <asp:Label runat="server" ID="lblDescription" style="word-break:break-all;word-wrap:break-word;" Text='<%# Eval("Failure Description").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>")%>' Width="200px"></asp:Label>
+                <asp:Label runat="server" ID="lblDescription" Style="word-break: break-all; word-wrap: break-word;" Text='<%# Eval("Failure Description").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>")%>' Width="200px"></asp:Label>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="1st Level Fail">
@@ -36,7 +36,7 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="3rd Level Fail">
             <ItemTemplate>
-                <asp:Label runat="server" ID="lbl3Lvl" Text='<%# Eval("Failed 3rd Level")%>'></asp:Label>
+                <asp:Label runat="server" ID="lbl3Lvl" Text='<%# Eval("Failed 3rd Level")%>' Visible="false"></asp:Label>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Caused By">
@@ -46,12 +46,12 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Analysis">
             <ItemTemplate>
-                <asp:Label runat="server" ID="lblAnaysis" style="word-break:break-all;word-wrap:break-word;" Text='<%# Eval("Analysis").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>")%>' Width="200px"></asp:Label>
+                <asp:Label runat="server" ID="lblAnaysis" Style="word-break: break-all; word-wrap: break-word;" Text='<%# Eval("Analysis").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>")%>' Width="200px"></asp:Label>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Root Cause">
             <ItemTemplate>
-                <asp:Label runat="server" ID="lblRootCause" style="word-break:break-all;word-wrap:break-word;" Text='<%# Eval("Root Cause").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>")%>' Width="200px"></asp:Label>
+                <asp:Label runat="server" ID="lblRootCause" Style="word-break: break-all; word-wrap: break-word;" Text='<%# Eval("Root Cause").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>")%>' Width="200px"></asp:Label>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Link To FA">

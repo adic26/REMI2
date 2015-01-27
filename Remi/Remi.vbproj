@@ -245,6 +245,13 @@
     <Compile Include="Controls\IBatchListControl.ascx.designer.vb">
       <DependentUpon>IBatchListControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Measuerments.ascx.designer.vb">
+      <DependentUpon>Measuerments.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Measuerments.ascx.vb">
+      <DependentUpon>Measuerments.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Controls\Notifications.ascx.designer.vb">
       <DependentUpon>Notifications.ascx</DependentUpon>
     </Compile>
@@ -632,6 +639,7 @@
     <Content Include="Admin\Tools\ClearCache.aspx" />
     <Content Include="Admin\TrackingLocationTests.aspx" />
     <Content Include="Controls\FAControl.ascx" />
+    <Content Include="Controls\Measuerments.ascx" />
     <Content Include="Controls\RequestSetup.ascx" />
     <Content Include="Controls\Search.ascx" />
     <Content Include="Default.aspx" />
@@ -639,6 +647,8 @@
     <Content Include="Design\beta.jpg" />
     <Content Include="Design\Icons\ic_overflow_tab.png" />
     <Content Include="Design\Icons\Menu.png" />
+    <Content Include="Design\Icons\png\SliderOff.png" />
+    <Content Include="Design\Icons\png\SliderOn.png" />
     <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap-select.css" />
     <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.css" />
     <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.icon-large.css" />
@@ -681,6 +691,7 @@
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.8.2.custom.min.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui.min.js" />
     <Content Include="Design\scripts\jQueryUI\jquery.blockUI.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.10.2.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.11.1.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.4.2.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.8.0.js" />
