@@ -297,7 +297,7 @@ Namespace REMI.Bll
 
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
-                Dim record = (From xml In instance.ProductConfigurationUploads.Include("Test").Include("Product") Where xml.Test.ID = testID And xml.Product.ID = productID Select xml)
+                Dim record = (From xml In instance.ProductConfigurationUploads.Include("Test").Include("Product").Include("Lookups") Where xml.Test.ID = testID And xml.Product.ID = productID Select xml)
 
                 For Each rec In record
                     Dim xmlFrag As XDocument = ProductGroupDB.GetProductConfigurationXML(rec.ID)
@@ -327,7 +327,7 @@ Namespace REMI.Bll
                         Next
                     End If
 
-                    xmls.Add(New ProductConfiguration(rec.ID, True, rec.PCName, xmlFrag.Root.ToString(), rec.Test.TestName, rec.Product.ProductGroupName, testID, productID, versions, versions.Count + 1, currentCodeVersions))
+                    xmls.Add(New ProductConfiguration(rec.ID, True, rec.PCName, xmlFrag.Root.ToString(), rec.Test.TestName, rec.Product.Lookup.Values, testID, productID, versions, versions.Count + 1, currentCodeVersions))
                 Next
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)

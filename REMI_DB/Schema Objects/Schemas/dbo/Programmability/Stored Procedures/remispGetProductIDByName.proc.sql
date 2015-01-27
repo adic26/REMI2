@@ -1,9 +1,10 @@
 ﻿ALTER PROCEDURE [dbo].[remispGetProductIDByName] @ProductGroupName NVARCHAR(800)
 AS
 BEGIN
-	SELECT ID, ProductGroupName
-	FROM Products
-	WHERE LTRIM(RTRIM(ProductGroupName))=LTRIM(RTRIM(@ProductGroupName))
+	SELECT ID, lp.[values] AS ProductGroupName
+	FROM Products p
+		INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+	WHERE LTRIM(RTRIM(lp.[values]))=LTRIM(RTRIM(@ProductGroupName))
 END
 GO
 GRANT EXECUTE ON remispGetProductIDByName TO Remi

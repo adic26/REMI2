@@ -1,8 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[remispGetProductNameByID] @ProductID INT
+﻿ALTER PROCEDURE [dbo].[remispGetProductNameByID] @ProductID INT
 AS
 BEGIN
-	SELECT ID, ProductGroupName
-	FROM Products
+	SELECT ID, lp.[Values] AS ProductGroupName
+	FROM Products p
+		INNER JOIN Lookups lp ON lp.LookupID=p.LookupID
 	WHERE ID=@ProductID
 END
 GO

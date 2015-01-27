@@ -23,7 +23,7 @@ AS
 	EXEC remispGetEstimatedTSTime @batchid,@teststagename,@jobname, @TSTimeLeft OUTPUT, @JobTimeLeft OUTPUT, @TestStageID, @JobID
 	
 	SELECT BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.ConcurrencyID,BatchesRows.ID,BatchesRows.JobName,
-	BatchesRows.LastUser,BatchesRows.Priority AS PriorityID,p.ProductGroupName,BatchesRows.QRANumber,BatchesRows.RequestPurpose As RequestPurposeID,batchesrows.ProductTypeID,batchesrows.AccessoryGroupID,
+	BatchesRows.LastUser,BatchesRows.Priority AS PriorityID,lp.[Values] AS ProductGroupName,BatchesRows.QRANumber,BatchesRows.RequestPurpose As RequestPurposeID,batchesrows.ProductTypeID,batchesrows.AccessoryGroupID,
 	batchesrows.ProductID,BatchesRows.TestCenterLocationID,
 	l3.[Values] AS TestCenterLocation,BatchesRows.TestStageName,
 	BatchesRows.TestStageCompletionStatus, @testunitcount as testUnitCount,
@@ -54,6 +54,7 @@ AS
 	from Batches as BatchesRows WITH(NOLOCK)
 		LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = BatchesRows.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
 		INNER JOIN Products p WITH(NOLOCK) ON BatchesRows.productID=p.ID
+		INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 		LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON BatchesRows.ProductTypeID=l.LookupID  
 		LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON BatchesRows.AccessoryGroupID=l2.LookupID  
 		LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON BatchesRows.TestCenterLocationID=l3.LookupID  

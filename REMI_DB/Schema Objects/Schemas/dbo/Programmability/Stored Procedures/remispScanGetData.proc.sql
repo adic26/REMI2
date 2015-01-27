@@ -61,11 +61,12 @@ declare @productType NVARCHAR(150)
 Declare @NoBSN BIT
 
 --jobname, product group, job WI, jobID
-select @jobName=b.jobname,@cprNumber =b.CPRNumber,@hwrevision = b.HWRevision, @productGroup=p.ProductGroupName,@jobWILocation=j.WILocation,@jobid=j.ID, @batchStatus = b.BatchStatus ,
+select @jobName=b.jobname,@cprNumber =b.CPRNumber,@hwrevision = b.HWRevision, @productGroup=lp.[Values],@jobWILocation=j.WILocation,@jobid=j.ID, @batchStatus = b.BatchStatus ,
 @productID=p.ID, @NoBSN=j.NoBSN, @productTypeID=b.ProductTypeID, @accessoryTypeID=b.AccessoryGroupID
 from Batches as b
 	INNER JOIN jobs as j ON j.JobName = b.JobName
 	INNER JOIN Products p ON p.ID=b.ProductID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 where b.QRANumber = @qranumber
 
 SELECT @productType=[values] FROM Lookups WHERE LookupID=@productTypeID

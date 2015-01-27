@@ -634,7 +634,7 @@ Namespace REMI.Dal
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "ProductGroup"
-                        myFields.OptionsType = (From p In instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
+                        myFields.OptionsType = (From p In instance.Products Where p.IsActive = True Order By p.Lookup.Values Select p.Lookup.Values).ToList
                     Case "RequestedTest"
                         myFields.OptionsType = (From j In JobDB.GetJobListDT(user).AsEnumerable() Select j.Name).ToList()
                 End Select

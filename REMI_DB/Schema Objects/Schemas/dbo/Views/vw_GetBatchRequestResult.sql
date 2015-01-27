@@ -1,7 +1,7 @@
 ﻿ALTER VIEW [dbo].[vw_GetBatchRequestResult]
 AS
 SELECT b.QRANumber, b.BatchStatus, b.DateCreated, b.ExecutiveSummary, b.ExpectedSampleSize, b.IsMQual, b.UnitsToBeReturnedToRequestor,
-	tu.BatchUnitNumber, tu.BSN, tu.IMEI, p.ProductGroupName, PT.[Values] As ProductType, ag.[Values] As AccessoryGroup,
+	tu.BatchUnitNumber, tu.BSN, tu.IMEI, lp.[values] AS ProductGroupName, PT.[Values] As ProductType, ag.[Values] As AccessoryGroup,
 	tc.[Values] As TestCenter, reqpur.[Values] As RequestPurpose, pty.[Values] As Priority, dpmt.[Values] As Department,
 	rtn.[Values] As RequestName, rfs.Name, rfd.Value, ts.TestStageName, t.TestName, mn.[Values] As MeasurementName, 
 	m.MeasurementValue, m.UpperLimit, m.LowerLimit, m.Archived, m.Comment, m.DegradationVal, m.Description, m.PassFail, m.ReTestNum,
@@ -11,6 +11,7 @@ FROM Batches b
 	INNER JOIN TestUnits tu WITH(NOLOCK) ON b.ID = tu.BatchID
 	INNER JOIN Req.Request rq WITH(NOLOCK) ON rq.RequestNumber=b.QRANumber
 	INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 	INNER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.RequestID=rq.RequestID
 	INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
 	INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID

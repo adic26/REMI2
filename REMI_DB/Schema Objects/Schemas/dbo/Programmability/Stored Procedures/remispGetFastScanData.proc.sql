@@ -41,7 +41,8 @@ declare @ApplicableTests nvarchar(1000)=''
 --jobname-- product group
 declare @jobname nvarchar(400)
 
-select @jobname=jobname, @productname=p.ProductGroupName from Batches inner join Products p on p.ID=Batches.ProductID where Batches.QRANumber = @qranumber
+select @jobname=jobname, @productname=lp.[Values] from Batches inner join Products p on p.ID=Batches.ProductID 
+				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID where Batches.QRANumber = @qranumber
 
 declare @jobID int
 -- job WI
