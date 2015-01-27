@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="false" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.Measurements" Codebehind="Measurements.aspx.vb" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.Relab_Measurements" Codebehind="Measurements.aspx.vb" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 <%@ Register Src="~/Controls/Measuerments.ascx" TagName="Measuerments" TagPrefix="msm" %>
 
@@ -57,7 +57,7 @@
     <asp:Panel runat="server" ID="pnlMeasurements">
         <asp:HiddenField runat="server" ID="hdnUnit" />
         
-        <msm:Measuerments runat="server" ID="msmMeasuerments" ShowExport="true" ShowFailsOnly="false" IncludeArchived="false" DisplayMode="RelabDisplay" EmptyDataTextInformation="There is no information found for this result." EmptyDataTextMeasurement="There were no measurements found for this result." />
+        <msm:Measuerments runat="server" ID="msmMeasuerments" ShowExport="true" EnableViewState="true" ShowFailsOnly="false" IncludeArchived="false" DisplayMode="RelabDisplay" EmptyDataTextInformation="There is no information found for this result." EmptyDataTextMeasurement="There were no measurements found for this result." />
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>

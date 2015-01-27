@@ -11,7 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class Measurements
+Partial Public Class Relab_Measurements
 
     '''<summary>
     '''lblHeader control.

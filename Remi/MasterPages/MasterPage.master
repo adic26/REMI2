@@ -11,9 +11,9 @@
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
     <link href="../Design/style.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body onload="document.getElementById('<%=menuHeader.ClientID%>').style.display='inline'">
     <form id="form1" runat="server">
-    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server" EnablePartialRendering="false" CombineScripts="false"></asp:ToolkitScriptManager>
+    <asp:ToolkitScriptManager ID="AjaxScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeln" CollapsedImage="..\Design\Icons\png\24x24\next.png" 
         ExpandedImage="..\Design\Icons\png\24x24\back.png" ImageControlID="imgExpCol" 
         TargetControlID="pnlLeftNavContent" CollapsedSize="0" Collapsed="false" ScrollContents="false" 
@@ -48,7 +48,7 @@
             </span>
         </asp:Panel>
         <asp:Panel runat="server" ID="pnlHead" CssClass="menuHeader">
-            <asp:Menu runat="server" ID="menuHeader" Orientation="Horizontal" RenderingMode="List" CssClass="" StaticEnableDefaultPopOutImage="false" DynamicEnableDefaultPopOutImage="false">
+            <asp:Menu runat="server" ID="menuHeader" Orientation="Horizontal" RenderingMode="List" style="display:none;" CssClass="" StaticEnableDefaultPopOutImage="false" DynamicEnableDefaultPopOutImage="false">
                 <LevelMenuItemStyles>
                     <asp:MenuItemStyle CssClass="menuItemLevel1" />
                     <asp:MenuItemStyle CssClass="menuItemLevel2" />

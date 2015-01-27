@@ -14,6 +14,42 @@ Option Explicit On
 Partial Public Class Measuerments
 
     '''<summary>
+    '''pnlMeasurements control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlMeasurements As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''hdnTestID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnTestID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnResultID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnResultID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnBatchID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnBatchID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''btnShowPopup control.
     '''</summary>
     '''<remarks>
@@ -48,33 +84,6 @@ Partial Public Class Measuerments
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnMeasurementID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''hdnTestID control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnTestID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''hdnResultID control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnResultID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''hdnBatchID control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnBatchID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''lblTitle control.
@@ -147,15 +156,6 @@ Partial Public Class Measuerments
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents sseImages As Global.AjaxControlToolkit.SlideShowExtender
-
-    '''<summary>
-    '''pnlMeasurements control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pnlMeasurements As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
     '''imgExport control.

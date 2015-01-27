@@ -767,10 +767,23 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@QRANumber", MyBatch.QRANumber)
                     myCommand.Parameters.AddWithValue("@JobName", MyBatch.JobName)
                     myCommand.Parameters.AddWithValue("@TestCenterLocation", MyBatch.TestCenterLocation)
-                    myCommand.Parameters.AddWithValue("@Priority", MyBatch.Priority)
-                    myCommand.Parameters.AddWithValue("@PriorityID", MyBatch.PriorityID)
-                    myCommand.Parameters.AddWithValue("@RequestPurpose", MyBatch.RequestPurpose)
-                    myCommand.Parameters.AddWithValue("@RequestPurposeID", MyBatch.RequestPurposeID)
+
+                    If (MyBatch.Priority Is Nothing) Then
+                        myCommand.Parameters.AddWithValue("@Priority", "Not Set")
+                        myCommand.Parameters.AddWithValue("@PriorityID", 0)
+                    Else
+                        myCommand.Parameters.AddWithValue("@Priority", MyBatch.Priority)
+                        myCommand.Parameters.AddWithValue("@PriorityID", MyBatch.PriorityID)
+                    End If
+
+                    If (MyBatch.RequestPurpose Is Nothing) Then
+                        myCommand.Parameters.AddWithValue("@RequestPurpose", "Not Set")
+                        myCommand.Parameters.AddWithValue("@RequestPurposeID", 0)
+                    Else
+                        myCommand.Parameters.AddWithValue("@RequestPurpose", MyBatch.RequestPurpose)
+                        myCommand.Parameters.AddWithValue("@RequestPurposeID", MyBatch.RequestPurposeID)
+                    End If
+
                     myCommand.Parameters.AddWithValue("@BatchStatus", MyBatch.Status)
                     myCommand.Parameters.AddWithValue("@Requestor", MyBatch.Requestor)
                     myCommand.Parameters.AddWithValue("@ProductGroupName", MyBatch.ProductGroup)

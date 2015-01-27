@@ -17,7 +17,11 @@ Public Class Measuerments
     End Enum
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        DisplayMode = ControlMode.RelabDisplay
+        If (Not IsPostBack) Then
+        End If
+    End Sub
+
+    Public Sub New()
     End Sub
 
     Public Sub SetDataSource(ByVal resultID As Int32, ByVal batchID As Int32)
@@ -84,9 +88,13 @@ Public Class Measuerments
                 chkOnlyFails.Visible = False
                 lblInfo.Visible = False
                 chkIncludeArchived.Visible = False
+                pnlpopup.Visible = False
+                ModalPopupExtender1.Enabled = False
+                sseImages.Enabled = False
 
                 If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
 
+                    grdResultMeasurements.HeaderRow.Cells(0).Visible = False
                     Dim index As Int32
                     index = dt.Columns.IndexOf("Lower Limit") + 2
                     grdResultMeasurements.HeaderRow.Cells(index).Visible = False
@@ -102,6 +110,7 @@ Public Class Measuerments
                     grdResultMeasurements.HeaderRow.Cells(index).Visible = False
 
                     For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
+                        grdResultMeasurements.Rows(i).Cells(0).Visible = False
                         index = dt.Columns.IndexOf("Lower Limit") + 2
                         grdResultMeasurements.Rows(i).Cells(index).Visible = False
                         index = dt.Columns.IndexOf("Upper Limit") + 2
@@ -123,6 +132,9 @@ Public Class Measuerments
                 lblInfo.Visible = True
                 chkIncludeArchived.Visible = True
                 pnlLegend.Visible = True
+                pnlpopup.Visible = True
+                ModalPopupExtender1.Enabled = True
+                sseImages.Enabled = True
         End Select
     End Sub
 
