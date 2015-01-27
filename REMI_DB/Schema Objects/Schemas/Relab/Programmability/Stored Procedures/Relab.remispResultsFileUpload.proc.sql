@@ -35,6 +35,17 @@ BEGIN
 		@Duration = T.c.query('Duration').value('.', 'nvarchar(max)'),
 		@StationName = T.c.query('StationName').value('.', 'nvarchar(400)')
 	FROM @ResultsXML.nodes('/TestResults/Header') T(c)
+		
+	IF (@QRANumber IS NULL OR LTRIM(RTRIM(@QRANumber)) = '')
+	BEGIN
+		SELECT @QRANumber = T.c.query('RequestNumber').value('.', 'nvarchar(max)')
+		FROM @ResultsXML.nodes('/TestResults/Header') T(c)
+	END
+	IF (@JobName IS NULL OR LTRIM(RTRIM(@JobName)) = '')
+	BEGIN
+		SELECT @JobName = T.c.query('JobName').value('.', 'nvarchar(max)')
+		FROM @ResultsXML.nodes('/TestResults/Header') T(c)
+	END
 	
 	IF (@EndDate IS NULL OR LTRIM(RTRIM(@EndDate)) = '')
 	BEGIN
