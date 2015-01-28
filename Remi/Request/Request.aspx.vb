@@ -77,14 +77,33 @@ Public Class Request
                         Dim ddl As New DropDownList
                         ddl.ID = String.Format("ddl{0}", res.FieldSetupID)
                         ddl.EnableViewState = True
-
-                        For Each o In res.OptionsType
-                            ddl.Items.Add(o)
-                        Next
-
-                        ddl.SelectedValue = res.Value
                         AddHandler ddl.SelectedIndexChanged, AddressOf Me.ddl_SelectedIndexChanged
                         ddl.AutoPostBack = True
+
+                        If (res.ParentFieldSetupID > 0) Then
+
+                            For Each rec In (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p)
+                                If (res.CustomLookupHierarchy IsNot Nothing) Then
+                                    For Each ch In res.CustomLookupHierarchy
+                                        If (ch.ParentLookup = (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p.Value).FirstOrDefault()) Then
+                                            ddl.Items.Add(ch.ChildLookup)
+                                        End If
+                                    Next
+
+                                    If (ddl.Items.Count = 0) Then
+                                        For Each o In res.OptionsType
+                                            ddl.Items.Add(o)
+                                        Next
+                                    End If
+                                End If
+                            Next
+                        Else
+                            For Each o In res.OptionsType
+                                ddl.Items.Add(o)
+                            Next
+                        End If
+
+                        ddl.SelectedValue = res.Value
 
                         tCell2.Controls.Add(ddl)
                     Case "LINK"
