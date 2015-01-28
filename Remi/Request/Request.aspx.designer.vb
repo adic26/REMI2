@@ -77,6 +77,15 @@ Partial Public Class Request
     Protected WithEvents hdnRequestTypeID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''notMain control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents notMain As Global.Remi.Controls_Notifications
+
+    '''<summary>
     '''pnlRequest control.
     '''</summary>
     '''<remarks>

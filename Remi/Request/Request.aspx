@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="vb" EnableViewState="true" AutoEventWireup="false" CodeBehind="Request.aspx.vb" Inherits="Remi.Request" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
@@ -24,6 +25,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <asp:HiddenField runat="server" ID="hdnRequestType" />
     <asp:HiddenField runat="server" ID="hdnRequestTypeID" />
+    
+    <uc1:NotificationList ID="notMain" runat="server" />
 
     <asp:Panel runat="server" ID="pnlRequest" EnableViewState="true">
         <asp:Table runat="server" ID="tbl" Width="70%" EnableViewState="true" CssClass="requestTable">

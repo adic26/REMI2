@@ -144,6 +144,25 @@ Public Class Request
                         txt.ID = String.Format("txt{0}", res.FieldSetupID)
                         txt.Width = 500
                         tCell2.Controls.Add(txt)
+
+                        Dim cv As New CompareValidator
+                        cv.ID = String.Format("cv{0}", res.FieldSetupID)
+                        cv.Operator = ValidationCompareOperator.DataTypeCheck
+                        cv.ControlToValidate = txt.ID
+
+                        Select Case res.FieldValidation.ToUpper
+                            Case "INT"
+                                cv.Type = ValidationDataType.Integer
+                                cv.ErrorMessage = "Value Must Be Numeric"
+                            Case "DOUBLE"
+                                cv.Type = ValidationDataType.Double
+                                cv.ErrorMessage = "Value Must Be Double"
+                            Case "STRING"
+                                cv.Type = ValidationDataType.String
+                                cv.ErrorMessage = "Value Must Be String"
+                        End Select
+
+                        tCell2.Controls.Add(cv)
                 End Select
 
                 tRow.Cells.Add(tCell2)
@@ -157,6 +176,8 @@ Public Class Request
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
+        notMain.Notifications.Clear()
+
         If (Page.IsPostBack) Then
             Page.SetFocus(Helpers.GetPostBackControl(Page))
         Else
@@ -217,7 +238,13 @@ Public Class Request
                 End If
             Next
 
-            RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName)
+            Dim saveSuccess As Boolean = RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName)
+
+            If (saveSuccess) Then
+                notMain.Notifications.AddWithMessage("Saved Successful!", NotificationType.Information)
+            Else
+                notMain.Notifications.AddWithMessage("Saved Failed!", NotificationType.Errors)
+            End If
         End If
     End Sub
 
