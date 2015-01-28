@@ -19,7 +19,11 @@ Public Class Request
 
         If (rf IsNot Nothing) Then
             If (rf(0).IsFromExternalSystem) Then
-                Response.Redirect((From rl In rf Where rl.IntField = "RequestLink" Select rl.Value).FirstOrDefault(), True)
+                If (rf(0).NewRequest) Then
+                    Response.Redirect(String.Format("/Request/Default.aspx?rt={0}", type), True)
+                Else
+                    Response.Redirect((From rl In rf Where rl.IntField = "RequestLink" Select rl.Value).FirstOrDefault(), True)
+                End If
             End If
 
             hdnRequestType.Value = rf(0).RequestType
