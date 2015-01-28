@@ -21,4 +21,22 @@ Partial Public Class Request
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblRequest As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''pnlRequest control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlRequest As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''tbl control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents tbl As Global.System.Web.UI.WebControls.Table
 End Class
