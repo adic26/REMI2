@@ -15,7 +15,7 @@
                 <br /><asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
             </li>
             <li>
-                <asp:HyperLink runat="server" ID="hypAdmin" Enabled="true" Text="Admin" Target="_blank"></asp:HyperLink>
+                <asp:HyperLink runat="server" ID="hypAdmin" Visible="false" Text="Admin" Target="_blank"></asp:HyperLink>
             </li>
             <li>
                 <asp:HyperLink runat="server" ID="hypNew" Enabled="true" Text="Create Request" Target="_blank"></asp:HyperLink>

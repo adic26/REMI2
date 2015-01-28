@@ -1332,6 +1332,7 @@
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="LookupID" Type="int" Nullable="false" />
           <Property Name="IsDefault" Type="bit" />
+          <Property Name="IsAdmin" Type="bit" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -3445,23 +3446,14 @@
           </AssociationSet>
           <EntitySet Name="Menus" EntityType="REMI.Entities.Menu" />
           <EntitySet Name="MenuDepartments" EntityType="REMI.Entities.MenuDepartment" />
-          <EntitySet Name="UserDetails" EntityType="REMI.Entities.UserDetail" />
           <EntitySet Name="Users" EntityType="REMI.Entities.User" />
           <AssociationSet Name="FK_MenuDepartment_Lookups" Association="REMI.Entities.FK_MenuDepartment_Lookups">
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="MenuDepartment" EntitySet="MenuDepartments" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserDetails_Lookups" Association="REMI.Entities.FK_UserDetails_Lookups">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="UserDetail" EntitySet="UserDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_MenuDepartment_Menu" Association="REMI.Entities.FK_MenuDepartment_Menu">
             <End Role="Menu" EntitySet="Menus" />
             <End Role="MenuDepartment" EntitySet="MenuDepartments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserDetails_Users" Association="REMI.Entities.FK_UserDetails_Users">
-            <End Role="User" EntitySet="Users" />
-            <End Role="UserDetail" EntitySet="UserDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_UsersProducts_Users" Association="REMI.Entities.FK_UsersProducts_Users">
             <End Role="User" EntitySet="Users" />
@@ -3619,6 +3611,15 @@
           <AssociationSet Name="FK_UsersProducts_Products" Association="REMI.Entities.FK_UsersProducts_Products">
             <End Role="Product" EntitySet="Products" />
             <End Role="UsersProduct" EntitySet="UsersProducts" />
+          </AssociationSet>
+          <EntitySet Name="UserDetails" EntityType="REMI.Entities.UserDetail" />
+          <AssociationSet Name="FK_UserDetails_Lookups" Association="REMI.Entities.FK_UserDetails_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="UserDetail" EntitySet="UserDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserDetails_Users" Association="REMI.Entities.FK_UserDetails_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserDetail" EntitySet="UserDetails" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
@@ -5134,13 +5135,13 @@
           <NavigationProperty Name="ReqFieldSetups" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" FromRole="Lookup" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="ReqFieldSetups1" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" FromRole="Lookup" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="MenuDepartments" Relationship="REMI.Entities.FK_MenuDepartment_Lookups" FromRole="Lookup" ToRole="MenuDepartment" />
-          <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="Lookup" ToRole="UserDetail" />
           <NavigationProperty Name="RequestTypeAccesses" Relationship="REMI.Entities.FK_RequestTypeAccess_Lookups" FromRole="Lookup" ToRole="RequestTypeAccess" />
           <NavigationProperty Name="JobAccesses" Relationship="REMI.Entities.FK_JobAccess_Lookups" FromRole="Lookup" ToRole="JobAccess" />
           <NavigationProperty Name="ServicesAccesses" Relationship="REMI.Entities.FK_ServicesAccess_Lookups" FromRole="Lookup" ToRole="ServicesAccess" />
           <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups" FromRole="Lookup" ToRole="LookupsHierarchy" />
           <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups1" FromRole="Lookup" ToRole="LookupsHierarchy" />
           <NavigationProperty Name="Products" Relationship="REMI.Entities.FK_Products_Lookups" FromRole="Lookup" ToRole="Product" />
+          <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="Lookup" ToRole="UserDetail" />
           </EntityType>
         <Association Name="FK_Batches_AccessoryGroup">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
@@ -5547,17 +5548,6 @@
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_MenuDepartment_Lookups" FromRole="MenuDepartment" ToRole="Lookup" />
           <NavigationProperty Name="Menu" Relationship="REMI.Entities.FK_MenuDepartment_Menu" FromRole="MenuDepartment" ToRole="Menu" />
         </EntityType>
-        <EntityType Name="UserDetail">
-          <Key>
-            <PropertyRef Name="UserDetailsID" />
-          </Key>
-          <Property Type="Int32" Name="UserDetailsID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="UserID" Nullable="false" />
-          <Property Type="Int32" Name="LookupID" Nullable="false" />
-          <Property Type="Boolean" Name="IsDefault" />
-          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="UserDetail" ToRole="Lookup" />
-          <NavigationProperty Name="User" Relationship="REMI.Entities.FK_UserDetails_Users" FromRole="UserDetail" ToRole="User" />
-        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="ID" />
@@ -5570,10 +5560,10 @@
           <Property Type="Int32" Name="IsActive" Nullable="false" />
           <Property Type="String" Name="DefaultPage" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ByPassProduct" />
-          <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Users" FromRole="User" ToRole="UserDetail" />
           <NavigationProperty Name="UsersProducts" Relationship="REMI.Entities.FK_UsersProducts_Users" FromRole="User" ToRole="UsersProduct" />
           <NavigationProperty Name="UserTrainings" Relationship="REMI.Entities.FK_UserTraining_Users" FromRole="User" ToRole="UserTraining" />
           <NavigationProperty Name="UserSearchFilters" Relationship="REMI.Entities.FK_UserSearchFilter_Users" FromRole="User" ToRole="UserSearchFilter" />
+          <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Users" FromRole="User" ToRole="UserDetail" />
         </EntityType>
         <Association Name="FK_MenuDepartment_Lookups">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -5587,18 +5577,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserDetails_Lookups">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
-          <End Type="REMI.Entities.UserDetail" Role="UserDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="UserDetail">
-              <PropertyRef Name="LookupID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MenuDepartment_Menu">
           <End Type="REMI.Entities.Menu" Role="Menu" Multiplicity="1" />
           <End Type="REMI.Entities.MenuDepartment" Role="MenuDepartment" Multiplicity="*" />
@@ -5608,18 +5586,6 @@
             </Principal>
             <Dependent Role="MenuDepartment">
               <PropertyRef Name="MenuID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserDetails_Users">
-          <End Type="REMI.Entities.User" Role="User" Multiplicity="1" />
-          <End Type="REMI.Entities.UserDetail" Role="UserDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="UserDetail">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6089,8 +6055,6 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="C_ProductGroupName" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="C_IsActive" />
           <Property Type="String" Name="QAPLocation" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="TSDContact" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="LookupID" Nullable="false" />
@@ -6209,6 +6173,42 @@
             </Principal>
             <Dependent Role="UsersProduct">
               <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="UserDetail">
+          <Key>
+            <PropertyRef Name="UserDetailsID" />
+          </Key>
+          <Property Type="Int32" Name="UserDetailsID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
+          <Property Type="Boolean" Name="IsDefault" />
+          <Property Type="Boolean" Name="IsAdmin" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="UserDetail" ToRole="Lookup" />
+          <NavigationProperty Name="User" Relationship="REMI.Entities.FK_UserDetails_Users" FromRole="UserDetail" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_UserDetails_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.UserDetail" Role="UserDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="UserDetail">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserDetails_Users">
+          <End Type="REMI.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="REMI.Entities.UserDetail" Role="UserDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserDetail">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7137,16 +7137,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserDetails">
-            <EntityTypeMapping TypeName="REMI.Entities.UserDetail">
-              <MappingFragment StoreEntitySet="UserDetails">
-                <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
-                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="UserDetailsID" ColumnName="UserDetailsID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="REMI.Entities.User">
               <MappingFragment StoreEntitySet="Users">
@@ -7318,9 +7308,18 @@
                 <ScalarProperty Name="LookupID" ColumnName="LookupID" />
                 <ScalarProperty Name="TSDContact" ColumnName="TSDContact" />
                 <ScalarProperty Name="QAPLocation" ColumnName="QAPLocation" />
-                <ScalarProperty Name="C_IsActive" ColumnName="_IsActive" />
-                <ScalarProperty Name="C_ProductGroupName" ColumnName="_ProductGroupName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserDetails">
+            <EntityTypeMapping TypeName="REMI.Entities.UserDetail">
+              <MappingFragment StoreEntitySet="UserDetails">
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserDetailsID" ColumnName="UserDetailsID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -7483,12 +7482,9 @@
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
         <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="3" PointY="54.875" />
         <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="5.25" PointY="48.75" />
-        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="5.25" PointY="51.625" />
         <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="3" PointY="58.125" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Lookups" />
-        <AssociationConnector Association="REMI.Entities.FK_UserDetails_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Menu" />
-        <AssociationConnector Association="REMI.Entities.FK_UserDetails_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UsersProducts_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Users" />
         <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="12.75" PointY="59.5" />
@@ -7538,6 +7534,9 @@
         <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_Products" />
         <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Products" />
         <AssociationConnector Association="REMI.Entities.FK_UsersProducts_Products" />
+        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="9.9678541561438969" PointY="26.209551748917228" />
+        <AssociationConnector Association="REMI.Entities.FK_UserDetails_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_UserDetails_Users" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

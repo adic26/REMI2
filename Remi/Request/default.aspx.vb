@@ -31,22 +31,24 @@ Public Class ReqDefault
     End Sub
 
     Private Sub UpdateLinks()
-        Dim myMenu As WebControls.Menu
-        Dim mi As New MenuItem
-        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
-
-        mi = New MenuItem
-        mi.Text = "Admin"
-        mi.Target = "_blank"
-        mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", ddlRequestType.SelectedItem.Text, ddlRequestType.SelectedItem.Value)
-        myMenu.Items(0).ChildItems.Add(mi)
-
         lblRequest.Text = ddlRequestType.SelectedItem.Text
-        hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", ddlRequestType.SelectedItem.Text, ddlRequestType.SelectedItem.Value)
+
+        If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = ddlRequestType.SelectedItem.Value).FirstOrDefault() IsNot Nothing) Then
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+            mi = New MenuItem
+            mi.Text = "Admin"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", ddlRequestType.SelectedItem.Text, ddlRequestType.SelectedItem.Value)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypAdmin.Visible = True
+            hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", ddlRequestType.SelectedItem.Text, ddlRequestType.SelectedItem.Value)
+        End If
 
         srcRequest.RequestType = ddlRequestType.SelectedItem.Value
         srcRequest.Visible = True
-
         hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", ddlRequestType.SelectedItem.Text)
     End Sub
 End Class

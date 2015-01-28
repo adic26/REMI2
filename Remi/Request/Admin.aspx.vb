@@ -12,16 +12,20 @@ Public Class ReqAdmin
             Dim requestType As String = IIf(Request.QueryString.Item("rt") Is Nothing, String.Empty, Request.QueryString.Item("rt"))
             Dim requestTypeID As String = IIf(Request.QueryString.Item("id") Is Nothing, 0, Request.QueryString.Item("id"))
 
-            hdnRequestType.Value = requestType
-            hdnRequestTypeID.Value = requestTypeID
+            If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = requestTypeID).FirstOrDefault() Is Nothing) Then
+                Response.Redirect("~/Request/Default.aspx", True)
+            Else
+                hdnRequestType.Value = requestType
+                hdnRequestTypeID.Value = requestTypeID
+
+                lblRequest.Text = String.Format("Administrate {0}", requestType)
+            End If
 
             If (requestTypeID > 0 And requestType.Trim().Length > 0) Then
                 BindRequest()
             Else
                 Response.Redirect("~/Request/Default.aspx", True)
             End If
-
-            lblRequest.Text = String.Format("Administrate {0}", requestType)
         End If
     End Sub
 #End Region
