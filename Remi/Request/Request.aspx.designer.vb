@@ -23,6 +23,60 @@ Partial Public Class Request
     Protected WithEvents lblRequest As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''pnlLeftMenuActions control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlLeftMenuActions As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''hypAdmin control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypAdmin As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
+    '''hypNew control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypNew As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
+    '''btnSave control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnSave As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''hdnRequestType control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnRequestType As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnRequestTypeID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnRequestTypeID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''pnlRequest control.
     '''</summary>
     '''<remarks>

@@ -1240,6 +1240,7 @@ table tr td input
 {
     text-align:center;
     width: 20%;
+    border:none;
 }
 
 .RequestCell2
@@ -1249,4 +1250,10 @@ table tr td input
     padding-left:10px;
     padding-top:10px;
     padding-bottom:10px;
+    border:none;
+}
+
+.requestTable
+{
+    border:none;
 }

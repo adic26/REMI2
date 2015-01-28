@@ -18,6 +18,8 @@ Public Class Request
         End If
 
         If (rf IsNot Nothing) Then
+            hdnRequestType.Value = rf(0).RequestType
+            hdnRequestTypeID.Value = rf(0).RequestTypeID
             lblRequest.Text = rf(0).RequestNumber
 
             For Each res In rf
@@ -40,6 +42,14 @@ Public Class Request
                         Dim chk As New CheckBox
                         chk.ID = String.Format("chk{0}", res.FieldSetupID)
                         chk.EnableViewState = True
+
+                        Dim checked As Boolean = False
+                        Boolean.TryParse(res.Value, checked)
+
+                        chk.Checked = checked
+                        chk.Text = String.Empty
+
+                        tCell2.Controls.Add(chk)
                     Case "DATETIME"
                         Dim dt As New TextBox
                         dt.Text = res.Value
@@ -76,8 +86,17 @@ Public Class Request
                         lnk.Text = res.Name
                         lnk.Target = "_blank"
                         lnk.NavigateUrl = res.Value
-
                         tCell2.Controls.Add(lnk)
+
+                        Dim lnktxt As New TextBox
+                        lnktxt.Text = res.Value
+                        lnktxt.EnableViewState = True
+                        lnktxt.ID = String.Format("lnktxt{0}", res.FieldSetupID)
+                        lnktxt.Width = 500
+                        If (res.IntField = "RequestLink") Then
+                            lnktxt.Style.Add("display", "none")
+                        End If
+                        tCell2.Controls.Add(lnktxt)
                     Case "RADIOBUTTON"
                         Dim rb As New RadioButtonList
                         rb.ID = String.Format("rb{0}", res.FieldSetupID)
@@ -98,9 +117,7 @@ Public Class Request
                         txt.ID = String.Format("txt{0}", res.FieldSetupID)
                         txt.Width = 500
                         tCell2.Controls.Add(txt)
-
                 End Select
-
 
                 tRow.Cells.Add(tCell2)
                 tbl.Rows.Add(tRow)
@@ -115,12 +132,70 @@ Public Class Request
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
         If (Page.IsPostBack) Then
             Page.SetFocus(Helpers.GetPostBackControl(Page))
+        Else
+            hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+            tbl.Attributes.Remove("border")
+
+            If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
+                Dim myMenu As WebControls.Menu
+                Dim mi As New MenuItem
+                myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+                mi = New MenuItem
+                mi.Text = "Admin"
+                mi.Target = "_blank"
+                mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
+                myMenu.Items(0).ChildItems.Add(mi)
+                hypAdmin.Visible = True
+                hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
+            End If
         End If
     End Sub
 
-    Public Sub ddl_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs)
+    Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
         Dim req As String = IIf(Request.QueryString.Item("req") Is Nothing, String.Empty, Request.QueryString.Item("req"))
-        Dim type As String = IIf(Request.QueryString.Item("type") Is Nothing, String.Empty, Request.QueryString.Item("type"))
+        Dim rf As RequestFieldsCollection
+
+        If (Not String.IsNullOrEmpty(req)) Then
+            rf = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, False, req)
+        Else
+            rf = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, False, String.Empty)
+        End If
+
+        If (rf IsNot Nothing) Then
+            For Each res In rf
+                Dim con As New Control
+
+                Select Case res.FieldType.ToUpper()
+                    Case "CHECKBOX"
+                        con = Helpers.FindControlRecursive(tbl, String.Format("chk{0}", res.FieldSetupID))
+                    Case "DATETIME"
+                        con = Helpers.FindControlRecursive(tbl, String.Format("dt{0}", res.FieldSetupID))
+                    Case "DROPDOWN"
+                        con = Helpers.FindControlRecursive(tbl, String.Format("ddl{0}", res.FieldSetupID))
+                    Case "LINK"
+                        con = Helpers.FindControlRecursive(tbl, String.Format("lnktxt{0}", res.FieldSetupID))
+                    Case "RADIOBUTTON"
+                        con = Helpers.FindControlRecursive(tbl, String.Format("rb{0}", res.FieldSetupID))
+                    Case "TEXTAREA"
+                        con = Helpers.FindControlRecursive(tbl, String.Format("txtArea{0}", res.FieldSetupID))
+                    Case "TEXTBOX"
+                        con = Helpers.FindControlRecursive(tbl, String.Format("txt{0}", res.FieldSetupID))
+                End Select
+
+                If (res.FieldType.ToUpper() = "CHECKBOX") Then
+                    res.Value = If(Request.Form(con.UniqueID) = "on", True, False)
+                Else
+                    res.Value = Request.Form(con.UniqueID)
+                End If
+            Next
+
+            RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName)
+        End If
+    End Sub
+
+    Protected Sub ddl_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs)
+        Dim req As String = IIf(Request.QueryString.Item("req") Is Nothing, String.Empty, Request.QueryString.Item("req"))
         Dim ddl As DropDownList = DirectCast(sender, DropDownList)
         Dim id As Int32
         Dim val As String = ddl.SelectedValue
@@ -130,9 +205,9 @@ Public Class Request
 
         Dim rf As RequestFieldsCollection
         If (Not String.IsNullOrEmpty(req)) Then
-            rf = RequestManager.GetRequestFieldSetup(type, False, req)
+            rf = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, False, req)
         Else
-            rf = RequestManager.GetRequestFieldSetup(type, False, String.Empty)
+            rf = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, False, String.Empty)
         End If
 
         For Each rec In (From p In rf Where p.ParentFieldSetupID = id Select p)
@@ -145,7 +220,7 @@ Public Class Request
                     End If
                 Next
 
-                Dim con As DropDownList = DirectCast(FindControlRecursive(tbl, String.Format("ddl{0}", rec.FieldSetupID)), DropDownList)
+                Dim con As DropDownList = DirectCast(Helpers.FindControlRecursive(tbl, String.Format("ddl{0}", rec.FieldSetupID)), DropDownList)
                 con.Items.Clear()
                 con.ClearSelection()
 
@@ -159,17 +234,4 @@ Public Class Request
             End If
         Next
     End Sub
-
-    Private Function FindControlRecursive(ByVal root As Control, ByVal id As String) As Control
-        If (root.ID = id) Then
-            Return root
-        End If
-        For Each c As Control In root.Controls
-            Dim t As Control = FindControlRecursive(c, id)
-            If (Not (t) Is Nothing) Then
-                Return t
-            End If
-        Next
-        Return Nothing
-    End Function
 End Class

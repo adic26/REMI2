@@ -460,12 +460,12 @@ Namespace REMI.Dal
                     Dim sfd As New REMI.Entities.ReqFieldData()
                     sfd.ReqFieldSetupID = rec.FieldSetupID
                     sfd.RequestID = reqID
-                    sfd.Value = rec.Value
+                    sfd.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
                     sfd.InsertTime = DateTime.Now
                     sfd.LastUser = userIdentification
                     instance.AddToReqFieldDatas(sfd)
                 Else
-                    fieldData.Value = rec.Value
+                    fieldData.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
                     fieldData.InsertTime = DateTime.Now
                     fieldData.LastUser = userIdentification
                 End If
