@@ -128,6 +128,16 @@ Public Class Request
                         Dim rb As New RadioButtonList
                         rb.ID = String.Format("rb{0}", res.FieldSetupID)
                         rb.EnableViewState = True
+                        rb.RepeatDirection = RepeatDirection.Horizontal
+                        rb.CssClass = "RemoveBorder"
+
+                        For Each o In res.OptionsType
+                            rb.Items.Add(o)
+                        Next
+
+                        rb.SelectedValue = res.Value
+
+                        tCell2.Controls.Add(rb)
                     Case "TEXTAREA"
                         Dim txtArea As New TextBox
                         txtArea.EnableViewState = True
