@@ -795,14 +795,14 @@ BEGIN
 		SELECT @LookupID = MAX(LookupID)+1 FROM Lookups
 		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Products'		
 				
-		INSERT INTO Lookups ([Values], LookupID, IsActive) VALUES (LTRIM(RTRIM(@ProductGroupName)), @LookupID, 1)
-		INSERT INTO Products (LookupID, IsActive, QAPLocation, TSDContact) 
-		VALUES (@LookupID, CONVERT(BIT, @isActive), @QAP, @TSDContact)
+		INSERT INTO Lookups ([Values], LookupID, IsActive) VALUES (LTRIM(RTRIM(@ProductGroupName)), @LookupID, CONVERT(BIT, @isActive))
+		INSERT INTO Products (LookupID, QAPLocation, TSDContact) 
+		VALUES (@LookupID, @QAP, @TSDContact)
 	END
 	ELSE
 	BEGIN
 		UPDATE Products
-		SET IsActive = CONVERT(BIT, @isActive), QAPLocation = @QAP, TSDContact = @TSDContact
+		SET QAPLocation = @QAP, TSDContact = @TSDContact
 		WHERE ID=@ProductID
 	END
 END
