@@ -48,6 +48,28 @@ CREATE NONCLUSTERED INDEX [IX_Products_PG_IsActive] ON [dbo].[Products]
 INCLUDE ( [ID]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
+declare @lookupid int
+select @lookupid = lookupid from Lookups where [Values]='TextArea'
+
+update Req.ReqFieldSetup set FieldTypeID=@lookupid where Name like '%execut%' or Name like '%reason%'
+
+update Req.ReqFieldSetup set Name='Job' where Name ='Requested Test'
+
+update Req.ReqFieldMapping set ExtField='Job' where IntField='requestedtest'
+
+update Req.ReqFieldSetup 
+set ParentReqFieldSetupID = (select ReqFieldSetupID from Req.ReqFieldSetup s where s.RequestTypeID=Req.ReqFieldSetup.RequestTypeID and s.Name='Product Type')
+where Name like '%access%' and Archived=0
+
+insert into LookupsHierarchy (ParentLookupTypeID, ChildLookupTypeID, ParentLookupID,ChildLookupID,RequestTypeID)
+values (12,	1,	71,	0,	1)
+insert into LookupsHierarchy (ParentLookupTypeID, ChildLookupTypeID, ParentLookupID,ChildLookupID,RequestTypeID)
+values (12,	1,	70,	0,	1)
+insert into LookupsHierarchy (ParentLookupTypeID, ChildLookupTypeID, ParentLookupID,ChildLookupID,RequestTypeID)
+values (12,	1,	72,	0,	1)
+insert into LookupsHierarchy (ParentLookupTypeID, ChildLookupTypeID, ParentLookupID,ChildLookupID,RequestTypeID)
+values (12,	1,	73,	0,	1)
+
 ALTER TABLE dbo.UserDetails ADD IsAdmin BIT DEFAULT(0) NULL
 
 go
@@ -59,4 +81,5 @@ ALTER TABLE Products ALTER COLUMN _ProductGroupName NVARCHAR(150) NULL
 go
 ALTER TABLE Products ALTER COLUMN _IsActive BIT NULL
 go
-COMMIT TRAN
+
+ROLLBACK TRAN
