@@ -49,6 +49,14 @@ Public Class ReqDefault
 
         srcRequest.RequestType = ddlRequestType.SelectedItem.Value
         srcRequest.Visible = True
-        hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", ddlRequestType.SelectedItem.Text)
+
+        Dim isExternal As Boolean = (From rt As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where rt.Field(Of String)("RequestType") = ddlRequestType.SelectedItem.Text Select rt.Field(Of Boolean)("IsExternal")).FirstOrDefault()
+
+        If (Not isExternal) Then
+            hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", ddlRequestType.SelectedItem.Text)
+            hypNew.Visible = True
+        Else
+            hypNew.Visible = False
+        End If
     End Sub
 End Class

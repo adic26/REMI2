@@ -18,7 +18,7 @@
                 <asp:HyperLink runat="server" ID="hypAdmin" Visible="false" Text="Admin" Target="_blank"></asp:HyperLink>
             </li>
             <li>
-                <asp:HyperLink runat="server" ID="hypNew" Enabled="true" Text="Create Request" Target="_blank"></asp:HyperLink>
+                <asp:HyperLink runat="server" ID="hypNew" Visible="false" Text="Create Request" Target="_blank"></asp:HyperLink>
             </li>
         </ul>
     </asp:Panel>

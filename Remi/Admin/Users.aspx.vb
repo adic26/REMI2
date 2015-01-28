@@ -413,6 +413,7 @@ Partial Class Admin_Users
         dtRequestAccess.Columns.Add("RequestTypeID", Type.GetType("System.Int32"))
         dtRequestAccess.Columns.Add("IsAdmin", Type.GetType("System.Boolean"))
         dtRequestAccess.Columns.Add("UserDetailsID", Type.GetType("System.Int32"))
+        dtRequestAccess.Columns.Add("IsExternal", Type.GetType("System.Boolean"))
 
         For Each row As GridViewRow In requestAccess.Rows
             If (row.RowType = DataControlRowType.DataRow) Then
@@ -429,6 +430,7 @@ Partial Class Admin_Users
                 newRow("RequestTypeID") = rec("RequestTypeID")
                 newRow("IsAdmin") = chkIsAdmin.Checked
                 newRow("UserDetailsID") = rec("UserDetailsID")
+                newRow("IsExternal") = rec("IsExternal")
 
                 dtRequestAccess.Rows.Add(newRow)
             End If
