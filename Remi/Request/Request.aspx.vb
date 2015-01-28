@@ -18,6 +18,10 @@ Public Class Request
         End If
 
         If (rf IsNot Nothing) Then
+            If (rf(0).IsFromExternalSystem) Then
+                Response.Redirect((From rl In rf Where rl.IntField = "RequestLink" Select rl.Value).FirstOrDefault(), True)
+            End If
+
             hdnRequestType.Value = rf(0).RequestType
             hdnRequestTypeID.Value = rf(0).RequestTypeID
             lblRequest.Text = rf(0).RequestNumber
