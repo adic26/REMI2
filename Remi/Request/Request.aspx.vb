@@ -194,6 +194,10 @@ Public Class Request
             hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
             tbl.Attributes.Remove("border")
 
+            If (String.IsNullOrEmpty(hdnRequestTypeID.Value)) Then
+                Response.Redirect(String.Format("/Request/Default.aspx"), True)
+            End If
+
             If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
                 Dim myMenu As WebControls.Menu
                 Dim mi As New MenuItem
@@ -207,7 +211,7 @@ Public Class Request
                 hypAdmin.Visible = True
                 hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
             End If
-        End If
+            End If
     End Sub
 
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
