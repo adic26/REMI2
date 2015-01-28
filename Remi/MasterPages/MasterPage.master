@@ -74,6 +74,7 @@
                         <asp:MenuItem Text="Me" NavigateUrl="~/BadgeAccess/EditMyUser.aspx"></asp:MenuItem>
                         <asp:MenuItem Text="Batches Requested" NavigateUrl="~/ManageUser/BatchesByRequestor.aspx"></asp:MenuItem>
                     </asp:MenuItem>
+                    <asp:MenuItem Text="Requests" NavigateUrl="~/Request/default.aspx" Value="Requests"></asp:MenuItem>
                     <asp:MenuItem Text="Results" NavigateUrl="~/Relab/Results.aspx" Value="Results">
                         <asp:MenuItem Text="Result Search" NavigateUrl="~/Relab/Reports.aspx" Value="ResultsSearch"></asp:MenuItem>
                     </asp:MenuItem>

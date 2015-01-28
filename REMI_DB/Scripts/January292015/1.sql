@@ -70,6 +70,16 @@ values (12,	1,	72,	0,	1)
 insert into LookupsHierarchy (ParentLookupTypeID, ChildLookupTypeID, ParentLookupID,ChildLookupID,RequestTypeID)
 values (12,	1,	73,	0,	1)
 
+INSERT INTO Menu(Name, Url) VALUES ('Requests', '/Request/default.aspx')
+
+declare @MenuID int
+select @MenuID=MenuID from Menu where Name='Requests'
+
+INSERT INTO MenuDepartment (DepartmentID,MenuID) VALUES (5753, @MenuID)
+INSERT INTO MenuDepartment (DepartmentID,MenuID) VALUES (5752, @MenuID)
+INSERT INTO MenuDepartment (DepartmentID,MenuID) VALUES (5754, @MenuID)
+INSERT INTO MenuDepartment (DepartmentID,MenuID) VALUES (5955, @MenuID)
+
 ALTER TABLE dbo.UserDetails ADD IsAdmin BIT DEFAULT(0) NULL
 
 go

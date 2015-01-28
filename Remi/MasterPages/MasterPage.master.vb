@@ -153,6 +153,12 @@ Partial Class MasterPages_MasterPage
                     menuHeader.FindItem("Search").ChildItems.Remove(menuHeader.FindItem("Search/ResultsSearch"))
                 End If
             End If
+
+            If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Requests").FirstOrDefault() IsNot Nothing) Then
+                If (menuHeader.FindItem("Requests") IsNot Nothing) Then
+                    menuHeader.Items.Remove(menuHeader.FindItem("Requests"))
+                End If
+            End If
         End If
     End Sub
 End Class
