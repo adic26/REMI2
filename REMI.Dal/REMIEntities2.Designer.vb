@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("a356b9ab-a573-45cd-bb91-4722b3a13f02")>
+<Assembly: EdmSchemaAttribute("0bbfb554-c75b-43dd-bf4e-3e5df5c6bcb8")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -1328,6 +1328,34 @@ Namespace REMI.Entities
         End Property
     
         Private _UserDetails As ObjectSet(Of UserDetail)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ReqFieldDataAudits() As ObjectSet(Of ReqFieldDataAudit)
+            Get
+                If (_ReqFieldDataAudits Is Nothing) Then
+                    _ReqFieldDataAudits = MyBase.CreateObjectSet(Of ReqFieldDataAudit)("ReqFieldDataAudits")
+                End If
+                Return _ReqFieldDataAudits
+            End Get
+        End Property
+    
+        Private _ReqFieldDataAudits As ObjectSet(Of ReqFieldDataAudit)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property vw_RequestDataAudit() As ObjectSet(Of vw_RequestDataAudit)
+            Get
+                If (_vw_RequestDataAudit Is Nothing) Then
+                    _vw_RequestDataAudit = MyBase.CreateObjectSet(Of vw_RequestDataAudit)("vw_RequestDataAudit")
+                End If
+                Return _vw_RequestDataAudit
+            End Get
+        End Property
+    
+        Private _vw_RequestDataAudit As ObjectSet(Of vw_RequestDataAudit)
 
         #End Region
 
@@ -1905,6 +1933,20 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToUserDetails(ByVal userDetail As UserDetail)
             MyBase.AddObject("UserDetails", userDetail)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ReqFieldDataAudits EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToReqFieldDataAudits(ByVal reqFieldDataAudit As ReqFieldDataAudit)
+            MyBase.AddObject("ReqFieldDataAudits", reqFieldDataAudit)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the vw_RequestDataAudit EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddTovw_RequestDataAudit(ByVal vw_RequestDataAudit As vw_RequestDataAudit)
+            MyBase.AddObject("vw_RequestDataAudit", vw_RequestDataAudit)
         End Sub
 
         #End Region
@@ -11716,6 +11758,223 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="ReqFieldDataAudit")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class ReqFieldDataAudit
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new ReqFieldDataAudit object.
+        ''' </summary>
+        ''' <param name="reqFieldDataAuditID">Initial value of the ReqFieldDataAuditID property.</param>
+        ''' <param name="requestID">Initial value of the RequestID property.</param>
+        ''' <param name="reqFieldSetupID">Initial value of the ReqFieldSetupID property.</param>
+        ''' <param name="value">Initial value of the Value property.</param>
+        ''' <param name="insertTime">Initial value of the InsertTime property.</param>
+        ''' <param name="action">Initial value of the Action property.</param>
+        ''' <param name="userName">Initial value of the UserName property.</param>
+        Public Shared Function CreateReqFieldDataAudit(reqFieldDataAuditID As Global.System.Int32, requestID As Global.System.Int32, reqFieldSetupID As Global.System.Int32, value As Global.System.String, insertTime As Global.System.DateTime, action As Global.System.String, userName As Global.System.String) As ReqFieldDataAudit
+            Dim reqFieldDataAudit as ReqFieldDataAudit = New ReqFieldDataAudit
+            reqFieldDataAudit.ReqFieldDataAuditID = reqFieldDataAuditID
+            reqFieldDataAudit.RequestID = requestID
+            reqFieldDataAudit.ReqFieldSetupID = reqFieldSetupID
+            reqFieldDataAudit.Value = value
+            reqFieldDataAudit.InsertTime = insertTime
+            reqFieldDataAudit.Action = action
+            reqFieldDataAudit.UserName = userName
+            Return reqFieldDataAudit
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ReqFieldDataAuditID() As Global.System.Int32
+            Get
+                Return _ReqFieldDataAuditID
+            End Get
+            Set
+                If (_ReqFieldDataAuditID <> Value) Then
+                    OnReqFieldDataAuditIDChanging(value)
+                    ReportPropertyChanging("ReqFieldDataAuditID")
+                    _ReqFieldDataAuditID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ReqFieldDataAuditID")
+                    OnReqFieldDataAuditIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ReqFieldDataAuditID As Global.System.Int32
+        Private Partial Sub OnReqFieldDataAuditIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnReqFieldDataAuditIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property RequestID() As Global.System.Int32
+            Get
+                Return _RequestID
+            End Get
+            Set
+                OnRequestIDChanging(value)
+                ReportPropertyChanging("RequestID")
+                _RequestID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("RequestID")
+                OnRequestIDChanged()
+            End Set
+        End Property
+    
+        Private _RequestID As Global.System.Int32
+        Private Partial Sub OnRequestIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnRequestIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ReqFieldSetupID() As Global.System.Int32
+            Get
+                Return _ReqFieldSetupID
+            End Get
+            Set
+                OnReqFieldSetupIDChanging(value)
+                ReportPropertyChanging("ReqFieldSetupID")
+                _ReqFieldSetupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ReqFieldSetupID")
+                OnReqFieldSetupIDChanged()
+            End Set
+        End Property
+    
+        Private _ReqFieldSetupID As Global.System.Int32
+        Private Partial Sub OnReqFieldSetupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnReqFieldSetupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Value() As Global.System.String
+            Get
+                Return _Value
+            End Get
+            Set
+                OnValueChanging(value)
+                ReportPropertyChanging("Value")
+                _Value = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Value")
+                OnValueChanged()
+            End Set
+        End Property
+    
+        Private _Value As Global.System.String
+        Private Partial Sub OnValueChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnValueChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property InsertTime() As Global.System.DateTime
+            Get
+                Return _InsertTime
+            End Get
+            Set
+                OnInsertTimeChanging(value)
+                ReportPropertyChanging("InsertTime")
+                _InsertTime = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("InsertTime")
+                OnInsertTimeChanged()
+            End Set
+        End Property
+    
+        Private _InsertTime As Global.System.DateTime
+        Private Partial Sub OnInsertTimeChanging(value As Global.System.DateTime)
+        End Sub
+    
+        Private Partial Sub OnInsertTimeChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Action() As Global.System.String
+            Get
+                Return _Action
+            End Get
+            Set
+                OnActionChanging(value)
+                ReportPropertyChanging("Action")
+                _Action = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Action")
+                OnActionChanged()
+            End Set
+        End Property
+    
+        Private _Action As Global.System.String
+        Private Partial Sub OnActionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnActionChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property UserName() As Global.System.String
+            Get
+                Return _UserName
+            End Get
+            Set
+                OnUserNameChanging(value)
+                ReportPropertyChanging("UserName")
+                _UserName = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("UserName")
+                OnUserNameChanged()
+            End Set
+        End Property
+    
+        Private _UserName As Global.System.String
+        Private Partial Sub OnUserNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnUserNameChanged()
+        End Sub
 
         #End Region
 
@@ -25369,6 +25628,175 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnTestRecordExistsChanged()
+        End Sub
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="vw_RequestDataAudit")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class vw_RequestDataAudit
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new vw_RequestDataAudit object.
+        ''' </summary>
+        ''' <param name="requestNumber">Initial value of the RequestNumber property.</param>
+        ''' <param name="name">Initial value of the Name property.</param>
+        ''' <param name="value">Initial value of the Value property.</param>
+        ''' <param name="userName">Initial value of the UserName property.</param>
+        ''' <param name="insertTime">Initial value of the InsertTime property.</param>
+        Public Shared Function Createvw_RequestDataAudit(requestNumber As Global.System.String, name As Global.System.String, value As Global.System.String, userName As Global.System.String, insertTime As Global.System.DateTime) As vw_RequestDataAudit
+            Dim vw_RequestDataAudit as vw_RequestDataAudit = New vw_RequestDataAudit
+            vw_RequestDataAudit.RequestNumber = requestNumber
+            vw_RequestDataAudit.Name = name
+            vw_RequestDataAudit.Value = value
+            vw_RequestDataAudit.UserName = userName
+            vw_RequestDataAudit.InsertTime = insertTime
+            Return vw_RequestDataAudit
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property RequestNumber() As Global.System.String
+            Get
+                Return _RequestNumber
+            End Get
+            Set
+                If (_RequestNumber <> Value) Then
+                    OnRequestNumberChanging(value)
+                    ReportPropertyChanging("RequestNumber")
+                    _RequestNumber = StructuralObject.SetValidValue(value, false)
+                    ReportPropertyChanged("RequestNumber")
+                    OnRequestNumberChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _RequestNumber As Global.System.String
+        Private Partial Sub OnRequestNumberChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnRequestNumberChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Name() As Global.System.String
+            Get
+                Return _Name
+            End Get
+            Set
+                If (_Name <> Value) Then
+                    OnNameChanging(value)
+                    ReportPropertyChanging("Name")
+                    _Name = StructuralObject.SetValidValue(value, false)
+                    ReportPropertyChanged("Name")
+                    OnNameChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _Name As Global.System.String
+        Private Partial Sub OnNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Value() As Global.System.String
+            Get
+                Return _Value
+            End Get
+            Set
+                OnValueChanging(value)
+                ReportPropertyChanging("Value")
+                _Value = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Value")
+                OnValueChanged()
+            End Set
+        End Property
+    
+        Private _Value As Global.System.String
+        Private Partial Sub OnValueChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnValueChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property UserName() As Global.System.String
+            Get
+                Return _UserName
+            End Get
+            Set
+                If (_UserName <> Value) Then
+                    OnUserNameChanging(value)
+                    ReportPropertyChanging("UserName")
+                    _UserName = StructuralObject.SetValidValue(value, false)
+                    ReportPropertyChanged("UserName")
+                    OnUserNameChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _UserName As Global.System.String
+        Private Partial Sub OnUserNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnUserNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property InsertTime() As Global.System.DateTime
+            Get
+                Return _InsertTime
+            End Get
+            Set
+                If (_InsertTime <> Value) Then
+                    OnInsertTimeChanging(value)
+                    ReportPropertyChanging("InsertTime")
+                    _InsertTime = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("InsertTime")
+                    OnInsertTimeChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _InsertTime As Global.System.DateTime
+        Private Partial Sub OnInsertTimeChanging(value As Global.System.DateTime)
+        End Sub
+    
+        Private Partial Sub OnInsertTimeChanged()
         End Sub
 
         #End Region

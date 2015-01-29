@@ -18,6 +18,7 @@ Public Class Request
         End If
 
         If (rf IsNot Nothing) Then
+            hdnRequestNumber.Value = rf(0).RequestNumber
             If (rf(0).IsFromExternalSystem) Then
                 If (rf(0).NewRequest) Then
                     Response.Redirect(String.Format("/Request/Default.aspx?rt={0}", type), True)
@@ -301,5 +302,17 @@ Public Class Request
                 Next
             End If
         Next
+    End Sub
+
+    Protected Sub chkDisplayChanges_CheckedChanged(sender As Object, e As EventArgs)
+        If (DirectCast(sender, CheckBox).Checked) Then
+            pnlDisplayChanges.Visible = True
+        Else
+            pnlDisplayChanges.Visible = False
+        End If
+    End Sub
+
+    Protected Sub grdDisplayChanges_PreRender() Handles grdDisplayChanges.PreRender
+        Helpers.MakeAccessable(grdDisplayChanges)
     End Sub
 End Class

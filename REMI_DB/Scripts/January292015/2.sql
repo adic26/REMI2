@@ -2223,6 +2223,12 @@ END
 GO
 GRANT EXECUTE ON Req.remispGetRequestTypes TO REMI
 GO
+create VIEW [req].[vw_RequestDataAudit] AS
+SELECT r.RequestNumber, fs.Name, fda.Value, fda.UserName, fda.InsertTime
+FROM Req.ReqFieldDataAudit fda
+	INNER JOIN Req.Request r ON fda.RequestID=r.RequestID
+	INNER JOIN Req.ReqFieldSetup fs ON fs.ReqFieldSetupID=fda.ReqFieldSetupID
+GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

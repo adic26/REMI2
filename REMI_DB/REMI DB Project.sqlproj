@@ -242,6 +242,7 @@
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Obsolete" />
     <Folder Include="Scripts\January262015" />
     <Folder Include="Scripts\January292015" />
+    <Folder Include="Schema Objects\Schemas\Req\Views" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2627,5 +2628,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\January292015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Views\Req.vw_RequestDataAudit.sql" />
   </ItemGroup>
 </Project>
