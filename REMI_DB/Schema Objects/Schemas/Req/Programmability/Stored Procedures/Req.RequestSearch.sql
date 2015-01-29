@@ -29,7 +29,7 @@ BEGIN
 		( 
 		SELECT DISTINCT '],[' + rfs.Name
 		FROM Req.ReqFieldSetup rfs WITH(NOLOCK)
-		WHERE rfs.RequestTypeID=@RequestTypeID
+		WHERE rfs.RequestTypeID=@RequestTypeID AND ISNULL(rfs.Archived, 0) = CONVERT(BIT, 0)
 		ORDER BY '],[' +  rfs.Name
 		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
