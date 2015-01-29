@@ -50,7 +50,7 @@ Partial Class ManageProducts_EditProductSettings
 
         Dim instance = New REMI.Dal.Entities().Instance()
 
-        Dim product = (From p In instance.Products Where p.ID = productID Select p.QAPLocation, p.TSDContact, p.IsActive).FirstOrDefault()
+        Dim product = (From p In instance.Products Where p.ID = productID Select p.QAPLocation, p.TSDContact, p.Lookup.IsActive).FirstOrDefault()
         txtQAPLocation.Text = product.QAPLocation
         txtTSDContact.Text = product.TSDContact
         hdnIsActive.Value = product.IsActive

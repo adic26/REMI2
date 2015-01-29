@@ -46,6 +46,19 @@ Namespace REMI.BusinessEntities
             Return [String].Empty
         End Function
 
+        Public Shared Function FindControlRecursive(ByVal root As Control, ByVal id As String) As Control
+            If (root.ID = id) Then
+                Return root
+            End If
+            For Each c As Control In root.Controls
+                Dim t As Control = FindControlRecursive(c, id)
+                If (Not (t) Is Nothing) Then
+                    Return t
+                End If
+            Next
+            Return Nothing
+        End Function
+
         Public Shared Function EQToDataTable(ByVal parIList As System.Collections.IEnumerable, ByVal tableName As String) As System.Data.DataTable
             Dim ret As New System.Data.DataTable(tableName)
             Try

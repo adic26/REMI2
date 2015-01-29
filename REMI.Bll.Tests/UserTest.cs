@@ -53,7 +53,7 @@ namespace REMI.Bll.Tests
 
             User u = UserManager.GetUser(ut.User.LDAPLogin, ut.User.ID);
 
-            Assert.That(UserManager.Save(u, true) > 0);
+            Assert.That(UserManager.Save(u, true, true) > 0);
         }
 
         [Test]

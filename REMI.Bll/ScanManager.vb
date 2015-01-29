@@ -27,7 +27,7 @@ Namespace REMI.Bll
                 scanData.ProductGroupName = productGroup
 
                 If Not String.IsNullOrEmpty(productGroup) Then
-                    scanData.ProductID = (From p In instance.Products Where p.ProductGroupName = productGroup Select p.ID).FirstOrDefault()
+                    scanData.ProductID = (From p In instance.Products Where p.Lookup.Values = productGroup Select p.ID).FirstOrDefault()
                 End If
 
                 scanData.SelectedTrackingLocationName = trackingLocationname

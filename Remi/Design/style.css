@@ -1107,7 +1107,11 @@ table tr td input
 
 .Scrollgrid
 { 
-    OVERFLOW: auto; BORDER-LEFT: #000000 1px; WIDTH: 100%; BORDER-BOTTOM: #000000 1px; HEIGHT: 100%;
+    OVERFLOW: auto; 
+    BORDER-LEFT: #000000 1px; 
+    WIDTH: 100%; 
+    BORDER-BOTTOM: #000000 1px; 
+    /*HEIGHT: 650px;*/
     scrollbar-3d-light-color: #999999;
     scrollbar-arrow-color: #9C3842;
     scrollbar-base-color: #003366;
@@ -1230,4 +1234,26 @@ table tr td input
     padding-bottom: 5px;
     padding-left:5px;
     color: #FFF;
+}
+
+.RequestCell1
+{
+    text-align:right;
+    width: 20%;
+    border:none;
+}
+
+.RequestCell2
+{
+    text-align:left;
+    padding-right:10px;
+    padding-left:10px;
+    padding-top:10px;
+    padding-bottom:10px;
+    border:none;
+}
+
+.requestTable
+{
+    border:none;
 }

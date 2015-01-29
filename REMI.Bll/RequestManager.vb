@@ -22,6 +22,16 @@ Namespace REMI.Bll
             Return New DataTable("Requests")
         End Function
 
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetRequestAuditLogs(ByVal requestNumber As String) As DataTable
+            Try
+                Return BusinessEntities.Helpers.EQToDataTable((From rda In New REMI.Dal.Entities().Instance().vw_RequestDataAudit Where rda.RequestNumber = requestNumber Select rda).ToList(), "RequestAudit")
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber)
+            End Try
+            Return New DataTable
+        End Function
+
         Public Shared Function GetRequestsForDashBoard(ByVal searchStr As String) As DataTable
             Try
                 Return RequestDB.GetRequestsForDashBoard(searchStr)

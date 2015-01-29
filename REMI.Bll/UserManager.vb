@@ -95,7 +95,7 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function Save(ByVal u As User, ByVal saveTraining As Boolean) As Integer
+        Public Shared Function Save(ByVal u As User, ByVal saveTraining As Boolean, ByVal saveRequestAccess As Boolean) As Integer
             Try
                 If RIM.ReliabilityEngineering.ActiveDirectoryServices.RIMAuthenticationProvider.UserOrGroupExistsInGAL(u.LDAPName) Then
                     u.LastUser = UserManager.GetCurrentValidUserLDAPName
@@ -180,6 +180,21 @@ Namespace REMI.Bll
                         'add new roles.
                         If u.RolesList IsNot Nothing AndAlso u.RolesList.Count > 0 Then
                             System.Web.Security.Roles.AddUserToRoles(u.UserName, u.RolesList.ToArray) 'add user to roles
+                        End If
+
+                        If (saveRequestAccess) Then
+                            For Each dr As DataRow In u.RequestTypes.Rows
+                                Dim userDetailsID As Int32 = 0
+                                Int32.TryParse(dr("UserDetailsID").ToString(), userDetailsID)
+
+                                Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.UserDetailsID = userDetailsID).FirstOrDefault()
+
+                                If (ud IsNot Nothing) Then
+                                    Dim isAdmin As Boolean = False
+                                    Boolean.TryParse(dr("IsAdmin").ToString(), isAdmin)
+                                    ud.IsAdmin = isAdmin
+                                End If
+                            Next
                         End If
 
                         If (saveTraining) Then
@@ -367,7 +382,7 @@ Namespace REMI.Bll
                         Roles.AddUserToRole(u.LDAPName, "Relab")
                     End If
 
-                    u.ID = Save(u, False)
+                    u.ID = Save(u, False, False)
 
                     If u.ID > 0 Then 'if the user was saved then
                         HttpContext.Current.Session.Add(_userSessionVariableName, u) 'save it to the session

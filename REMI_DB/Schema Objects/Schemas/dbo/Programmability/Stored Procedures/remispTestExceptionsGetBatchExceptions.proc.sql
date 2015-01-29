@@ -1,7 +1,7 @@
 ﻿ALTER procedure [dbo].[remispTestExceptionsGetBatchExceptions] @qraNumber nvarchar(11) = null
 AS
 --get any for the product
-select distinct pvt.id, null as batchunitnumber, pvt.ReasonForRequest AS ReasonForRequestID,p.ProductGroupName,b.JobName, ts.teststagename
+select distinct pvt.id, null as batchunitnumber, pvt.ReasonForRequest AS ReasonForRequestID,lp.[values] AS ProductGroupName,b.JobName, ts.teststagename
 , t.TestName, (SELECT TOP 1 LastUser FROM TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS LastUser,
 (SELECT TOP 1 ConcurrencyID FROM TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS ConcurrencyID,
 pvt.TestStageID, pvt.TestUnitID, pvt.ProductTypeID, pvt.AccessoryGroupID, pvt.ProductID,
@@ -12,6 +12,7 @@ FROM vw_ExceptionsPivoted as pvt
 	LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=pvt.ProductTypeID
 	LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=pvt.AccessoryGroupID
 	LEFT OUTER JOIN Products p WITH(NOLOCK) ON p.ID=pvt.ProductID
+	LEFT OUTER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 	LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.LookupID=pvt.TestCenterID
 	LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.LookupID=pvt.ReasonForRequest
 	, Batches as b, teststages ts WITH(NOLOCK), Jobs j WITH(NOLOCK)
@@ -58,7 +59,7 @@ where b.QRANumber = @qranumber
 union all
 
 --then get any for the test units.
-select distinct pvt.id, tu.BatchUnitNumber, pvt.ReasonForRequest AS ReasonForRequestID,p.ProductGroupName,b.JobName, 
+select distinct pvt.id, tu.BatchUnitNumber, pvt.ReasonForRequest AS ReasonForRequestID,lp.[Values] AS ProductGroupName,b.JobName, 
 (select teststagename from teststages WITH(NOLOCK) where teststages.id =pvt.TestStageid) as teststagename, t.testname,
 (SELECT TOP 1 LastUser FROM TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS LastUser,
 (SELECT TOP 1 ConcurrencyID FROM TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS ConcurrencyID
@@ -74,6 +75,7 @@ FROM vw_ExceptionsPivoted as pvt
 	LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.LookupID=pvt.ReasonForRequest
 	INNER JOIN testunits tu WITH(NOLOCK) ON tu.ID=pvt.TestUnitID
 	INNER JOIN Batches b WITH(NOLOCK) ON b.ID=tu.BatchID
+	LEFT OUTER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 WHERE b.QRANumber = @qranumber and tu.batchid = b.id and pvt.TestUnitID = tu.id
 order by pvt.TestUnitID desc,TestName
 GO

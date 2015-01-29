@@ -241,6 +241,8 @@
     <Folder Include="Scripts\January212015" />
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Obsolete" />
     <Folder Include="Scripts\January262015" />
+    <Folder Include="Scripts\January292015" />
+    <Folder Include="Schema Objects\Schemas\Req\Views" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -646,9 +648,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_DeleteInactiveProfiles.proc.sql">
       <SubType>Code</SubType>
       <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispEnvironmentalReport.proc.sql">
-      <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UnRegisterSchemaVersion.proc.sql">
       <SubType>Code</SubType>
@@ -1424,6 +1423,7 @@
     <None Include="Scripts\November032014\3.sql" />
     <None Include="Scripts\November032014\4.sql" />
     <None Include="Scripts\November262014\1.sql" />
+    <None Include="Scripts\January292015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -1606,11 +1606,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProductIDByName.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\Products.UIX_Products_ProductGroupName.defconst.sql">
       <SubType>Code</SubType>
     </None>
   </ItemGroup>
@@ -2625,5 +2620,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\January262015\LCDRequestSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispEnvironmentalReport.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\January292015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Views\Req.vw_RequestDataAudit.sql" />
   </ItemGroup>
 </Project>

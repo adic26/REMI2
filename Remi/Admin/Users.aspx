@@ -236,8 +236,7 @@
                 </td>                
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    ByPass Product Restriction:</td>
+                <td class="HorizTableFirstcolumn">ByPass Product Restriction:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:CheckBox ID="chkByPassProduct" runat="server" />
                 </td>                
@@ -306,13 +305,26 @@
                 </td>
             </tr>
             <tr>
+                <td class="HorizTableFirstcolumn">Request Access:</td>
+                <td class="HorizTableSecondColumn">
+                    <asp:GridView runat="server" ID="gvRequestTypes" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="UserDetailsID">
+                        <Columns>
+                            <asp:BoundField DataField="RequestType" HeaderText="Request" readonly="true" SortExpression="RequestType" />
+                            <asp:BoundField DataField="Department" HeaderText="Department" readonly="true" SortExpression="Department" />
+                            <asp:TemplateField HeaderText="Admin">
+                                <ItemTemplate>
+                                    <asp:CheckBox runat="server" ID="chkIsAdmin" Checked='<%# DataBinder.Eval(Container.DataItem, "IsAdmin")%>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </td>
+            </tr>
+            <tr>
                 <td class="HorizTableFirstcolumn">
                     Projects:</td>
                 <td class="Datagrid">
-                    <asp:DataList ID="dlstProductGroups" runat="server" 
-                          DataSourceID="odsProductGroups" 
-                        ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" 
-                        ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
+                    <asp:DataList ID="dlstProductGroups" runat="server" DataSourceID="odsProductGroups" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
                         <ItemTemplate>
                             <asp:HiddenField ID="hdnProductID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "ID") %>' />
                             <asp:CheckBox ID='chkProductGroup'  runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "ProductGroupName") %>' CssClass="HorizTableSecondColumn"/>

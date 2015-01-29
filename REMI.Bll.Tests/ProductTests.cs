@@ -54,7 +54,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetProductIDByName()
         {
-            Assert.That(ProductGroupManager.GetProductIDByName((from p in instance.Products orderby p.ID descending select p.ProductGroupName).FirstOrDefault()) > 0);
+            Assert.That(ProductGroupManager.GetProductIDByName((from p in instance.Products orderby p.ID descending select p.Lookup.Values).FirstOrDefault()) > 0);
         }
 
         [Test]
@@ -144,7 +144,7 @@ namespace REMI.Bll.Tests
             var product = new REMI.Entities.Product();
             product = (from p in instance.Products orderby p.ID descending select p).FirstOrDefault();
 
-            Assert.True(ProductGroupManager.UpdateProduct(product.ProductGroupName, (product.IsActive ? 1 : 0), product.ID, product.QAPLocation, product.TSDContact));
+            Assert.True(ProductGroupManager.UpdateProduct(product.Lookup.Values, (product.Lookup.IsActive == 1 ? 1 : 0), product.ID, product.QAPLocation, product.TSDContact));
         }
 
         [Test]

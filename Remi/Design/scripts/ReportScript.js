@@ -337,10 +337,10 @@
                 });
         } else {
             alert("Please enter a search field");
+            $('div.table').unblock();
         }
     });
-
-
+    
     // Old export Function
     //$('#bs_export').click(function () {
     //    if (navigator.appName == 'Microsoft Internet Explorer') {

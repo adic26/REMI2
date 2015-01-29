@@ -4,14 +4,15 @@ BEGIN
 	DECLARE @TrueBit BIT
 	SET @TrueBit = CONVERT(BIT, 1)
 
-	SELECT ID, ProductGroupName
-	FROM Products
-	WHERE (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND Products.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
+	SELECT ID, lp.[values] AS ProductGroupName
+	FROM Products p
+		INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+	WHERE (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
 		AND
 		(
 			(@ShowArchived = 1)
 			OR
-			(@ShowArchived = 0 AND IsActive = @TrueBit)
+			(@ShowArchived = 0 AND lp.IsActive = @TrueBit)
 		)
 	ORDER BY ProductGroupname
 END

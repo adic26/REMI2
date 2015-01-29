@@ -8,7 +8,7 @@ BEGIN
 	select *
 	from 
 	(
-		select ROW_NUMBER() over (order by p.ProductGroupName desc)as row, pvt.ID, b.QRANumber, ISNULL(tu.Batchunitnumber, 0) as batchunitnumber, pvt.[ReasonForRequest] As ReasonForRequestID, p.ProductGroupName,
+		select ROW_NUMBER() over (order by lp.[values] desc)as row, pvt.ID, b.QRANumber, ISNULL(tu.Batchunitnumber, 0) as batchunitnumber, pvt.[ReasonForRequest] As ReasonForRequestID, lp.[Values] AS ProductGroupName, 
 		(select jobname from jobs,TestStages where teststages.id =pvt.TestStageid and Jobs.ID = TestStages.jobid) as jobname, 
 		(select teststagename from teststages WITH(NOLOCK) where teststages.id =pvt.TestStageid) as teststagename, 
 		t.TestName,pvt.TestStageID, pvt.TestUnitID,
@@ -23,6 +23,7 @@ BEGIN
 			LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=pvt.ProductTypeID
 			LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=pvt.AccessoryGroupID
 			LEFT OUTER JOIN Products p WITH(NOLOCK) ON p.ID=pvt.ProductID
+			LEFT OUTER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 			LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.LookupID=pvt.TestCenterID
 			LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.LookupID=pvt.ReasonForRequest
 		WHERE (

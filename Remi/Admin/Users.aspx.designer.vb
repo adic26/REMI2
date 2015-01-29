@@ -455,6 +455,15 @@ Partial Public Class Admin_Users
     Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
+    '''gvRequestTypes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents gvRequestTypes As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
     '''dlstProductGroups control.
     '''</summary>
     '''<remarks>

@@ -141,7 +141,7 @@
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTRSLink" runat="server" Visible="false" />
-            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to view the TRS for this batch" Target="_blank" Visible="false">Request Link</asp:HyperLink>
+            <asp:HyperLink ID="hypTRSLink" runat="server" ToolTip="Click to View the Request Associated With This Batch" Target="_blank" Visible="false">Request Link</asp:HyperLink>
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgRelabLink" runat="server" Visible="false" />

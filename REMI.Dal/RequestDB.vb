@@ -460,12 +460,12 @@ Namespace REMI.Dal
                     Dim sfd As New REMI.Entities.ReqFieldData()
                     sfd.ReqFieldSetupID = rec.FieldSetupID
                     sfd.RequestID = reqID
-                    sfd.Value = rec.Value
+                    sfd.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
                     sfd.InsertTime = DateTime.Now
                     sfd.LastUser = userIdentification
                     instance.AddToReqFieldDatas(sfd)
                 Else
-                    fieldData.Value = rec.Value
+                    fieldData.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
                     fieldData.InsertTime = DateTime.Now
                     fieldData.LastUser = userIdentification
                 End If
@@ -633,8 +633,6 @@ Namespace REMI.Dal
 
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
-                    Case "ProductGroup"
-                        myFields.OptionsType = (From p In instance.Products Where p.IsActive = True Order By p.ProductGroupName Select p.ProductGroupName).ToList
                     Case "RequestedTest"
                         myFields.OptionsType = (From j In JobDB.GetJobListDT(user).AsEnumerable() Select j.Name).ToList()
                 End Select

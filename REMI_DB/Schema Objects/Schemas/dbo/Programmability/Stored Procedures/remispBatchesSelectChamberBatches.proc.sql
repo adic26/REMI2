@@ -98,7 +98,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 				b.Priority AS PriorityID,
 				b.TestStageName, 
 				b.BatchStatus, 
-				p.ProductGroupName, 
+				lp.[Values] AS ProductGroupName, 
 				b.ProductTypeID,
 				b.AccessoryGroupID,
 				l.[Values] AS ProductType,
@@ -121,6 +121,7 @@ SELECT BatchesRows.Row, BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.
 				INNER JOIN TrackingLocationTypes as tlt WITH(NOLOCK) on tl.TrackingLocationTypeID = tlt.id 
 				inner join TestUnits AS tu WITH(NOLOCK) ON dtl.TestUnitID = tu.ID on tu.CurrentTestName = t.TestName and b.id = tu.batchid  --batches where there's a tracking log
 				INNER JOIN Products p WITH(NOLOCK) ON b.ProductID=p.id
+				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
 				LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID  
 				LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON b.TestCenterLocationID=l3.LookupID  

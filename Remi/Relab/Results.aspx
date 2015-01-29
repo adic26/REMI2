@@ -81,7 +81,7 @@
                 var prm = Sys.WebForms.PageRequestManager.getInstance();
                 prm.add_pageLoaded(EndRequestSummary);
 
-                function EndRequestOverall(sender, args) {
+                function EndRequestSummary(sender, args) {
                     if (prm._postBackSettings != null) {
                         if (prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlBatches' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlYear') {
                             $('table#ctl00_Content_grdResultSummary').columnFilters(
@@ -215,7 +215,7 @@
                         var prm = Sys.WebForms.PageRequestManager.getInstance();
                         prm.add_pageLoaded(EndRequestOverall);
 
-                        function EndRequestSummary(sender, args) {
+                        function EndRequestOverall(sender, args) {
                             if (prm._postBackSettings != null) {
                                 if (prm._postBackSettings.sourceElement.id == 'ctl00_Content_pnlTestStageSummary' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlBatches' || prm._postBackSettings.sourceElement.id == 'ctl00_Content_ddlYear') {
                                     $('table#ctl00_Content_grdOverallSummary').columnFilters(

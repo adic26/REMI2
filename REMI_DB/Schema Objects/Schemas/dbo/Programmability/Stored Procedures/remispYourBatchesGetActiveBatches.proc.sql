@@ -1,8 +1,9 @@
 ﻿ALTER PROCEDURE [dbo].[remispYourBatchesGetActiveBatches] @UserID int, @ByPassProductCheck INT = 0, @Year INT = 0, @OnlyShowQRAWithResults INT = 0
 AS	
-SELECT b.ID, p.ProductGroupName,b.QRANumber, (b.QRANumber + ' ' + p.ProductGroupName) AS Name
+SELECT b.ID, lp.[Values] AS ProductGroupName,b.QRANumber, (b.QRANumber + ' ' + lp.[Values]) AS Name
 	FROM Batches as b WITH(NOLOCK)
 	INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 WHERE ( 
 		(@Year = 0 AND BatchStatus NOT IN(5,7))
 		OR

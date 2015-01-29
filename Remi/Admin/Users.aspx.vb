@@ -40,6 +40,10 @@ Partial Class Admin_Users
         Helpers.MakeAccessable(gvwPermissions)
     End Sub
 
+    Protected Sub gvRequestTypes_PreRender() Handles gvRequestTypes.PreRender
+        Helpers.MakeAccessable(gvRequestTypes)
+    End Sub
+
     Protected Sub UpdateTrainingGvw() Handles gvwTraining.PreRender
         Helpers.MakeAccessable(gvwTraining)
     End Sub
@@ -128,6 +132,9 @@ Partial Class Admin_Users
 
             hdnUserName.Value = CurrentUser.LDAPName
             hdnUserID.Value = CurrentUser.ID
+
+            gvRequestTypes.DataSource = CurrentUser.RequestTypes()
+            gvRequestTypes.DataBind()
 
             For Each dr As DataRow In CurrentUser.UserDetails.Rows
                 For Each dli As DataListItem In dlstTestCenter.Items
@@ -244,7 +251,7 @@ Partial Class Admin_Users
         End If
 
         'Projects
-        Dim userProjects As New DataTable
+        Dim userProjects As New DataTable("ProductGroups")
         userProjects.Columns.Add("ID", Type.GetType("System.Int32"))
         userProjects.Columns.Add("ProductGroupName", Type.GetType("System.String"))
 
@@ -280,7 +287,7 @@ Partial Class Admin_Users
         Next
 
         Dim training As GridView = DirectCast(Me.FindControl(gvwTraining.UniqueID), GridView)
-        Dim userTraining As New DataTable
+        Dim userTraining As New DataTable("Training")
         userTraining.Columns.Add("UserID", Type.GetType("System.Int32"))
         userTraining.Columns.Add("DateAdded", Type.GetType("System.DateTime"))
         userTraining.Columns.Add("LookupID", Type.GetType("System.Int32"))
@@ -357,7 +364,7 @@ Partial Class Admin_Users
         Dim testCenters As DataList = DirectCast(Me.FindControl(dlstTestCenter.UniqueID), DataList)
         Dim departments As DataList = DirectCast(Me.FindControl(dlstDepartments.UniqueID), DataList)
 
-        Dim userDetails As New DataTable
+        Dim userDetails As New DataTable("UserDetails")
         userDetails.Columns.Add("Name", Type.GetType("System.String"))
         userDetails.Columns.Add("Values", Type.GetType("System.String"))
         userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
@@ -401,7 +408,41 @@ Partial Class Admin_Users
 
         tmpUser.UserDetails = userDetails
 
-        UserManager.Save(tmpUser, True)
+        Dim requestAccess As GridView = DirectCast(Me.FindControl(gvRequestTypes.UniqueID), GridView)
+        Dim dtRequestAccess As New DataTable("RequestTypes")
+        dtRequestAccess.Columns.Add("RequestType", Type.GetType("System.String"))
+        dtRequestAccess.Columns.Add("Department", Type.GetType("System.String"))
+        dtRequestAccess.Columns.Add("IsActive", Type.GetType("System.Boolean"))
+        dtRequestAccess.Columns.Add("HasIntegration", Type.GetType("System.Boolean"))
+        dtRequestAccess.Columns.Add("RequestTypeID", Type.GetType("System.Int32"))
+        dtRequestAccess.Columns.Add("IsAdmin", Type.GetType("System.Boolean"))
+        dtRequestAccess.Columns.Add("UserDetailsID", Type.GetType("System.Int32"))
+        dtRequestAccess.Columns.Add("IsExternal", Type.GetType("System.Boolean"))
+
+        For Each row As GridViewRow In requestAccess.Rows
+            If (row.RowType = DataControlRowType.DataRow) Then
+                Dim userDetailsID As Int32 = requestAccess.DataKeys(row.RowIndex).Values(0)
+                Dim chkIsAdmin As CheckBox = row.FindControl("chkIsAdmin")
+
+                Dim rec As DataRow = tmpUser.RequestTypes.Select(String.Format("UserDetailsID={0}", userDetailsID))(0)
+
+                Dim newRow As DataRow = dtRequestAccess.NewRow
+                newRow("RequestType") = rec("RequestType")
+                newRow("Department") = rec("Department")
+                newRow("IsActive") = rec("IsActive")
+                newRow("HasIntegration") = rec("HasIntegration")
+                newRow("RequestTypeID") = rec("RequestTypeID")
+                newRow("IsAdmin") = chkIsAdmin.Checked
+                newRow("UserDetailsID") = rec("UserDetailsID")
+                newRow("IsExternal") = rec("IsExternal")
+
+                dtRequestAccess.Rows.Add(newRow)
+            End If
+        Next
+
+        tmpUser.RequestTypes = dtRequestAccess
+
+        UserManager.Save(tmpUser, True, True)
         notMain.Notifications.Add(tmpUser.Notifications)
 
         If Not notMain.HasErrors Then

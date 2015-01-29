@@ -200,12 +200,10 @@ $(function () { //ready function
                 });
         } else {
             alert("Please enter a search field");
+            $('div.table').unblock();
         }
-
-
     });
-
-
+    
     function searchAll(rtID, type) {
         var requestParams = JSON.stringify({
             "requestTypeID": rtID,
