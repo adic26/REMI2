@@ -297,7 +297,7 @@ Namespace REMI.Bll
 
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
-                Dim record = (From xml In instance.ProductConfigurationUploads.Include("Test").Include("Product").Include("Lookups") Where xml.Test.ID = testID And xml.Product.ID = productID Select xml)
+                Dim record = (From xml In instance.ProductConfigurationUploads.Include("Test").Include("Product").Include("Product.Lookup") Where xml.Test.ID = testID And xml.Product.ID = productID Select xml)
 
                 For Each rec In record
                     Dim xmlFrag As XDocument = ProductGroupDB.GetProductConfigurationXML(rec.ID)
