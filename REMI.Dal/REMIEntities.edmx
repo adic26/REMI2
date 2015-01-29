@@ -7469,9 +7469,9 @@
         <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="64.75" />
         <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="70.25" />
         <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="61.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="1.5" PointX="12.75" PointY="48.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="10.5" PointY="53.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="1.5" PointX="12.75" PointY="45" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="2.375" PointX="12.75" PointY="48.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="2.375" PointX="10.5" PointY="53.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="2" PointX="10.375" PointY="44.75" />
         <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="53.125" />
         <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="10.5" PointY="61.5" />
         <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="7.5" PointY="57.25" />

@@ -26,7 +26,7 @@
                 <asp:CheckBox runat="server" ID="chkDisplayChanges" Text="Display Changes" Visible="false" TextAlign="Right" AutoPostBack="true" OnCheckedChanged="chkDisplayChanges_CheckedChanged" />
             </li>
             <li>
-                <asp:Button runat="server" ID="btnSave" Text="Save Request" CssClass="buttonSmall" />
+                <asp:Button runat="server" ID="btnSave" Text="Save Request" CssClass="buttonSmall" OnClick="ValidateBtn_Click" />
             </li>
         </ul>
     </asp:Panel>

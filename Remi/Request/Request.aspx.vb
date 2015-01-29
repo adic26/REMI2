@@ -6,6 +6,12 @@ Imports Remi.BusinessEntities
 Public Class Request
     Inherits System.Web.UI.Page
 
+    Protected Sub ValidateBtn_Click(sender As Object, e As EventArgs)
+        If Page.IsValid Then
+        Else
+        End If
+    End Sub
+
     Protected Overrides Sub OnInit(e As System.EventArgs)
         Dim req As String = IIf(Request.QueryString.Item("req") Is Nothing, String.Empty, Request.QueryString.Item("req"))
         Dim type As String = IIf(Request.QueryString.Item("type") Is Nothing, String.Empty, Request.QueryString.Item("type"))
@@ -43,6 +49,7 @@ Public Class Request
                 Dim tCell As New TableCell()
                 Dim tCell2 As New TableCell()
                 Dim lblName As New Label
+                Dim rfv As New RequiredFieldValidator
 
                 tCell.CssClass = "RequestCell1"
                 tCell2.CssClass = "RequestCell2"
@@ -52,6 +59,14 @@ Public Class Request
                 lblName.ID = String.Format("lbl{0}", res.FieldSetupID)
                 tCell.Controls.Add(lblName)
                 tRow.Cells.Add(tCell)
+
+                If (res.IsRequired) Then
+                    rfv.EnableViewState = True
+                    rfv.Enabled = True
+                    rfv.ErrorMessage = "This Field Is Requierd"
+                    rfv.ID = String.Format("rfv{0}", res.FieldSetupID)
+                    rfv.Display = ValidatorDisplay.Static
+                End If
 
                 Select Case res.FieldType.ToUpper()
                     Case "CHECKBOX"
@@ -66,6 +81,10 @@ Public Class Request
                         chk.Text = String.Empty
 
                         tCell2.Controls.Add(chk)
+
+                        If (res.IsRequired) Then
+                            rfv.ControlToValidate = chk.ID
+                        End If
                     Case "DATETIME"
                         Dim dt As New TextBox
                         dt.Text = res.Value
@@ -81,6 +100,10 @@ Public Class Request
 
                         tCell2.Controls.Add(dt)
                         tCell2.Controls.Add(ce)
+
+                        If (res.IsRequired) Then
+                            rfv.ControlToValidate = dt.ID
+                        End If
                     Case "DROPDOWN"
                         Dim ddl As New DropDownList
                         ddl.ID = String.Format("ddl{0}", res.FieldSetupID)
@@ -114,6 +137,10 @@ Public Class Request
                         ddl.SelectedValue = res.Value
 
                         tCell2.Controls.Add(ddl)
+
+                        If (res.IsRequired) Then
+                            rfv.ControlToValidate = ddl.ID
+                        End If
                     Case "LINK"
                         Dim lnk As New HyperLink
                         lnk.ID = String.Format("lnk{0}", res.FieldSetupID)
@@ -132,6 +159,10 @@ Public Class Request
                             lnktxt.Style.Add("display", "none")
                         End If
                         tCell2.Controls.Add(lnktxt)
+
+                        If (res.IsRequired) Then
+                            rfv.ControlToValidate = lnktxt.ID
+                        End If
                     Case "RADIOBUTTON"
                         Dim rb As New RadioButtonList
                         rb.ID = String.Format("rb{0}", res.FieldSetupID)
@@ -146,6 +177,10 @@ Public Class Request
                         rb.SelectedValue = res.Value
 
                         tCell2.Controls.Add(rb)
+
+                        If (res.IsRequired) Then
+                            rfv.ControlToValidate = rb.ID
+                        End If
                     Case "TEXTAREA"
                         Dim txtArea As New TextBox
                         txtArea.EnableViewState = True
@@ -155,6 +190,10 @@ Public Class Request
                         txtArea.Rows = 20
                         txtArea.Text = res.Value
                         tCell2.Controls.Add(txtArea)
+
+                        If (res.IsRequired) Then
+                            rfv.ControlToValidate = txtArea.ID
+                        End If
                     Case "TEXTBOX"
                         Dim txt As New TextBox
                         txt.Text = res.Value
@@ -181,7 +220,15 @@ Public Class Request
                         End Select
 
                         tCell2.Controls.Add(cv)
+
+                        If (res.IsRequired) Then
+                            rfv.ControlToValidate = txt.ID
+                        End If
                 End Select
+
+                If (res.IsRequired) Then
+                    tCell2.Controls.Add(rfv)
+                End If
 
                 tRow.Cells.Add(tCell2)
                 tbl.Rows.Add(tRow)
