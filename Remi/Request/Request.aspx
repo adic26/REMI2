@@ -14,10 +14,16 @@
                 <asp:HyperLink runat="server" ID="hypAdmin" Visible="false" Text="Admin" Target="_blank"></asp:HyperLink>
             </li>
             <li>
+                <asp:HyperLink runat="server" ID="hypBatch" Visible="false" Text="Batch" Target="_blank"></asp:HyperLink>
+            </li>
+            <li>
+                <asp:HyperLink runat="server" ID="hypResults" Text="Results" Visible="false" Target="_blank"></asp:HyperLink>
+            </li>
+            <li>
                 <asp:HyperLink runat="server" ID="hypNew" Enabled="true" Text="Create Request" Target="_blank"></asp:HyperLink>
             </li>
             <li>
-                <asp:CheckBox runat="server" ID="chkDisplayChanges" Text="Display Changes" TextAlign="Right" AutoPostBack="true" OnCheckedChanged="chkDisplayChanges_CheckedChanged" />
+                <asp:CheckBox runat="server" ID="chkDisplayChanges" Text="Display Changes" Visible="false" TextAlign="Right" AutoPostBack="true" OnCheckedChanged="chkDisplayChanges_CheckedChanged" />
             </li>
             <li>
                 <asp:Button runat="server" ID="btnSave" Text="Save Request" CssClass="buttonSmall" />

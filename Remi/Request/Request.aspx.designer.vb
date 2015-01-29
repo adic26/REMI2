@@ -41,6 +41,24 @@ Partial Public Class Request
     Protected WithEvents hypAdmin As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''hypBatch control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypBatch As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
+    '''hypResults control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypResults As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''hypNew control.
     '''</summary>
     '''<remarks>

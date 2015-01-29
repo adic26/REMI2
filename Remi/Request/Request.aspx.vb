@@ -19,6 +19,13 @@ Public Class Request
 
         If (rf IsNot Nothing) Then
             hdnRequestNumber.Value = rf(0).RequestNumber
+
+            If (rf(0).NewRequest) Then
+                chkDisplayChanges.Visible = False
+            Else
+                chkDisplayChanges.Visible = True
+            End If
+
             If (rf(0).IsFromExternalSystem) Then
                 If (rf(0).NewRequest) Then
                     Response.Redirect(String.Format("/Request/Default.aspx?rt={0}", type), True)
@@ -192,18 +199,45 @@ Public Class Request
         If (Page.IsPostBack) Then
             Page.SetFocus(Helpers.GetPostBackControl(Page))
         Else
-            hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
             tbl.Attributes.Remove("border")
 
             If (String.IsNullOrEmpty(hdnRequestTypeID.Value)) Then
                 Response.Redirect(String.Format("/Request/Default.aspx"), True)
             End If
 
-            If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
-                Dim myMenu As WebControls.Menu
-                Dim mi As New MenuItem
-                myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+            Dim requestNumber As String = hdnRequestNumber.Value
+            Dim myMenu As WebControls.Menu
+            Dim mi As New MenuItem
+            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+            hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
 
+            mi = New MenuItem
+            mi.Text = "Create Request"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+            myMenu.Items(0).ChildItems.Add(mi)
+
+            Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+
+            If (rec IsNot Nothing) Then
+                mi = New MenuItem
+                mi.Text = "Batch"
+                mi.Target = "_blank"
+                mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
+                myMenu.Items(0).ChildItems.Add(mi)
+                hypBatch.Visible = True
+                hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
+
+                mi = New MenuItem
+                mi.Text = "Results"
+                mi.Target = "_blank"
+                mi.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+                myMenu.Items(0).ChildItems.Add(mi)
+                hypResults.Visible = True
+                hypResults.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+            End If
+
+            If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
                 mi = New MenuItem
                 mi.Text = "Admin"
                 mi.Target = "_blank"
