@@ -234,5 +234,86 @@ Public Class ReqAdmin
         grdRequestAdmin.EditIndex = -1
         BindRequest()
     End Sub
+
+    Protected Sub chkFilter_CheckedChanged(sender As Object, e As EventArgs)
+        If (DirectCast(sender, CheckBox).Checked) Then
+            pnlFilter.Visible = True
+
+            ddlParentType.DataSource = LookupsManager.GetLookupTypes()
+            ddlParentType.DataBind()
+
+            ddlChildType.DataSource = LookupsManager.GetLookupTypes()
+            ddlChildType.DataBind()
+        Else
+            pnlFilter.Visible = False
+
+            ddlParentType.DataSource = Nothing
+            ddlParentType.DataBind()
+
+            cblParent.Items.Clear()
+
+            ddlChildType.DataSource = Nothing
+            ddlChildType.DataBind()
+
+            cblChild.Items.Clear()
+        End If
+    End Sub
+
+    Protected Sub ddlParentType_SelectedIndexChanged(sender As Object, e As EventArgs)
+        Dim ddl As DropDownList = DirectCast(sender, DropDownList)
+
+        cblParent.DataSource = LookupsManager.GetLookups(ddl.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1)
+        cblParent.DataBind()
+
+        ddlChildType.DataSource = LookupsManager.GetLookupTypes()
+        ddlChildType.DataBind()
+        cblChild.Items.Clear()
+
+        cblParent.Enabled = False
+    End Sub
+
+    Protected Sub ddlChildType_SelectedIndexChanged(sender As Object, e As EventArgs)
+        Dim ddl As DropDownList = DirectCast(sender, DropDownList)
+
+        If (ddl.SelectedItem.Value = 0) Then
+            cblChild.Items.Clear()
+            cblParent.Enabled = False
+        Else
+            cblChild.DataSource = LookupsManager.GetLookups(ddl.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, True, 0)
+            cblChild.DataBind()
+            cblParent.Enabled = True
+        End If
+    End Sub
+
+    Protected Sub cblChild_SelectedIndexChanged(sender As Object, e As EventArgs)
+        LookupsManager.SaveLookupHierarchy(ddlParentType.SelectedItem.Value, ddlChildType.SelectedItem.Value, cblParent.SelectedItem.Value, hdnRequestTypeID.Value, cblChild.Items)
+    End Sub
+
+    Protected Sub cblParent_SelectedIndexChanged(sender As Object, e As EventArgs)
+        Dim cbl As CheckBoxList = DirectCast(sender, CheckBoxList)
+
+        If (cbl.SelectedItem Is Nothing) Then
+            cblChild.DataSource = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, True, 0)
+            cblChild.DataBind()
+        Else
+            Dim requestTypeID As Int32
+            Int32.TryParse(hdnRequestTypeID.Value, requestTypeID)
+            Dim selectedText As String = cbl.SelectedItem.Text
+
+            For Each rec In (From item In cbl.Items.Cast(Of ListItem)() Where item.Selected = True Select item).ToList()
+                If (rec.Text <> selectedText) Then
+                    cbl.Items.FindByValue(rec.Value).Selected = False
+                End If
+            Next
+
+            Dim dtLookups As DataTable = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, ddlParentType.SelectedItem.Text, cbl.SelectedItem.Text, requestTypeID, True, 0)
+            cblChild.DataSource = dtLookups
+            cblChild.DataBind()
+
+            For Each item As ListItem In cblChild.Items
+                item.Selected = (From t As DataRow In dtLookups.Rows Where t.Field(Of Int32)("LookupID") = item.Value Select t.Field(Of Int32)("RequestAssigned")).FirstOrDefault()
+            Next
+        End If
+    End Sub
 #End Region
 End Class

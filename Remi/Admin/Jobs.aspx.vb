@@ -439,7 +439,7 @@ Partial Class Admin_TestStages
         Dim ddlProductTypes As DropDownList = gdvOrientations.Rows(e.NewEditIndex).FindControl("ddlProductTypes")
         Dim chkActive As CheckBox = gdvOrientations.Rows(e.NewEditIndex).FindControl("chkActive")
 
-        ddlProductTypes.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, 0)
+        ddlProductTypes.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, False, 0)
         ddlProductTypes.DataBind()
 
         chkActive.Enabled = True
@@ -494,7 +494,7 @@ Partial Class Admin_TestStages
 
     Protected Sub btnAddOrientation_Click(ByVal sender As Object, ByVal e As EventArgs)
         pnlOrientationAdd.Visible = True
-        ddlPT.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, 0)
+        ddlPT.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, False, 0)
         ddlPT.DataBind()
     End Sub
 

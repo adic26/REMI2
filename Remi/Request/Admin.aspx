@@ -9,11 +9,53 @@
     <br />
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
-    <asp:Panel ID="pnlLeftMenuActions" runat="server"></asp:Panel>
+    <asp:Panel ID="pnlLeftMenuActions" runat="server">
+        <h3>Options</h3>
+        <ul>
+            <li>
+                <asp:CheckBox runat="server" ID="chkFilter" Text="Manage Filters" Visible="true" TextAlign="Right" AutoPostBack="true" OnCheckedChanged="chkFilter_CheckedChanged" />
+            </li>
+        </ul>
+    </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <asp:HiddenField runat="server" ID="hdnRequestType" />
     <asp:HiddenField runat="server" ID="hdnRequestTypeID" />
+
+    <asp:Panel runat="server" ID="pnlFilter" Visible="false">
+        <h2>Add/Edit Filter</h2>
+
+        <table border="0" cellpadding="2" cellspacing="2" class="RemoveBorder">
+            <thead>
+                <tr>
+                    <td><b>Parent</b></td>
+                    <td><b>Child</b></td>
+                </tr>
+            </thead>
+            <tr>
+                <td><asp:DropDownList ID="ddlParentType" runat="server" AutoPostBack="True" DataTextField="Name" DataValueField="LookupTypeID" OnSelectedIndexChanged="ddlParentType_SelectedIndexChanged"></asp:DropDownList> </td>
+                <td><asp:DropDownList ID="ddlChildType" runat="server" AutoPostBack="True" DataTextField="Name" DataValueField="LookupTypeID" OnSelectedIndexChanged="ddlChildType_SelectedIndexChanged"></asp:DropDownList> </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="OVERFLOW-Y:scroll; WIDTH:150px; HEIGHT:200px">
+                        <asp:CheckBoxList runat="server" ID="cblParent" DataTextField="LookupType" AutoPostBack="true" DataValueField="LookupID" CssClass="removeStyleWithLeft" OnSelectedIndexChanged="cblParent_SelectedIndexChanged"></asp:CheckBoxList>
+                    </div>
+                </td>
+                <td>
+                    <div style="OVERFLOW-Y:scroll; WIDTH:150px; HEIGHT:200px">
+                        <asp:CheckBoxList runat="server" ID="cblChild" DataTextField="LookupType" AutoPostBack="true" DataValueField="LookupID" CssClass="removeStyleWithLeft" OnSelectedIndexChanged="cblChild_SelectedIndexChanged"></asp:CheckBoxList>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <p> 
+            In this area you can create a lookup hierarchy. <br />
+            You must first select a parent dropdown then a child dropdown. This gives you a list of values that you can customize based on parent values.<br />
+            For example if you want no accessories to display when you click handheld from the ProductType list then you select "NotSet" in the acessory list.
+        </p>
+        <br /><br/>
+    </asp:Panel>
     
     <div class="Scrollgrid">
         <asp:GridView runat="server" ID="grdRequestAdmin" AutoGenerateColumns="false" ShowFooter="true" EnableViewState="true" OnRowCommand="grdRequestAdmin_RowDataCommand" DataKeyNames="FieldSetupID" OnRowEditing="grdRequestAdmin_OnRowEditing" AutoGenerateEditButton="true" OnRowCancelingEdit="grdRequestAdmin_OnRowCancelingEdit" OnRowUpdating="grdRequestAdmin_RowUpdating">
@@ -177,6 +219,7 @@
             <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
             <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
             <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
+            <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
         </SelectParameters>
     </asp:ObjectDataSource>
@@ -189,6 +232,7 @@
             <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
             <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
             <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
+            <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
         </SelectParameters>
 

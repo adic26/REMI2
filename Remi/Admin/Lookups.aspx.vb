@@ -37,7 +37,7 @@ Public Class Admin_Lookups
     End Sub
 
     Protected Sub BindLookups(ByVal type As String, ByVal removeFirst As Int32)
-        gdvLookups.DataSource = LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, removeFirst)
+        gdvLookups.DataSource = LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, removeFirst)
         gdvLookups.DataBind()
     End Sub
 
@@ -51,7 +51,7 @@ Public Class Admin_Lookups
         Dim hdnParentID As HiddenField = gdvLookups.Rows(e.NewEditIndex).FindControl("hdnParentID")
         Dim chkActive As CheckBox = gdvLookups.Rows(e.NewEditIndex).FindControl("chkActive")
 
-        ddlParentID.DataSource = LookupsManager.GetLookups(ddlLookupList.SelectedValue, 0, 0, String.Empty, String.Empty, 0, 0)
+        ddlParentID.DataSource = LookupsManager.GetLookups(ddlLookupList.SelectedValue, 0, 0, String.Empty, String.Empty, 0, False, 0)
         ddlParentID.DataBind()
 
         chkActive.Enabled = True

@@ -162,7 +162,7 @@ Public Class Overview
 
     Protected Sub Page_PreRender() Handles Me.PreLoad
         If Not Page.IsPostBack Then
-            ddlDepartment.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 0)
+            ddlDepartment.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 0)
             ddlDepartment.DataBind()
 
             ddlDepartment.SelectedValue = UserManager.GetCurrentUser.DepartmentID
