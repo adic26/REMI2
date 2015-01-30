@@ -45,7 +45,7 @@ Namespace REMI.Bll
                     dt.Rows(0).Item("LookupType") = "Not Set"
                 End If
 
-                If RemoveFirst = 1 Then
+                If RemoveFirst = 1 And dt.Rows.Count > 1 Then
                     dt.Rows(0).Delete()
                     dt.AcceptChanges()
                 End If
@@ -62,6 +62,27 @@ Namespace REMI.Bll
         Public Shared Function SaveLookup(ByVal lookupType As String, ByVal value As String, ByVal isActive As Int32, ByVal description As String, ByVal parentID As Int32) As Boolean
             Try
                 Return LookupsDB.SaveLookup(lookupType, value, isActive, description, parentID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
+        Public Shared Function SaveLookupType(ByVal lookupType As String) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+
+                If ((From l In instance.LookupTypes Where l.Name = lookupType Select l).FirstOrDefault() Is Nothing) Then
+                    Dim lt As New REMI.Entities.LookupType
+                    lt.Name = lookupType
+
+                    instance.AddToLookupTypes(lt)
+                    instance.SaveChanges()
+                End If
+
+                Return True
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try

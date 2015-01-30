@@ -15,7 +15,6 @@ Public Class Admin_Lookups
             ddlLookupList.DataSource = LookupsManager.GetLookupTypes(True)
             ddlLookupList.DataBind()
 
-
             gdvTargetAccess.DataSource = (From ta In New REMI.Dal.Entities().Instance.TargetAccesses Select ta).ToList()
             gdvTargetAccess.DataBind()
 
@@ -37,8 +36,17 @@ Public Class Admin_Lookups
     End Sub
 
     Protected Sub BindLookups(ByVal type As String, ByVal removeFirst As Int32)
-        gdvLookups.DataSource = LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, removeFirst)
-        gdvLookups.DataBind()
+        If (type <> "SELECT...") Then
+            gdvLookups.DataSource = LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, removeFirst)
+            gdvLookups.DataBind()
+
+            If (gdvLookups.Rows.Count = 1 And gdvLookups.Rows(0).Cells(1).Text = "0") Then
+                gdvLookups.Rows(0).Visible = False
+            End If
+        Else
+            gdvLookups.DataSource = Nothing
+            gdvLookups.DataBind()
+        End If
     End Sub
 
     Protected Sub gdvLookups_OnRowEditing(ByVal sender As Object, ByVal e As GridViewEditEventArgs)
@@ -143,12 +151,19 @@ Public Class Admin_Lookups
     End Sub
 
     Protected Sub lnkAddLookupAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddLookupAction.Click
-        Dim value As String = Request.Form(gdvLookups.FooterRow.FindControl("txtValue").UniqueID)
-        Dim description As String = Request.Form(gdvLookups.FooterRow.FindControl("txtDescription").UniqueID)
-        Dim parentID As Int32 = 0
-        Int32.TryParse(Request.Form(gdvLookups.FooterRow.FindControl("ddlFooterParentID").UniqueID), parentID)
+        If (gdvLookups.FooterRow IsNot Nothing) Then
+            Dim value As String = Request.Form(gdvLookups.FooterRow.FindControl("txtValue").UniqueID)
+            Dim description As String = Request.Form(gdvLookups.FooterRow.FindControl("txtDescription").UniqueID)
+            Dim parentID As Int32 = 0
+            Int32.TryParse(Request.Form(gdvLookups.FooterRow.FindControl("ddlFooterParentID").UniqueID), parentID)
 
-        REMI.Bll.LookupsManager.SaveLookup(ddlLookupList.SelectedItem.Value, value, 1, description, parentID)
+            LookupsManager.SaveLookup(ddlLookupList.SelectedItem.Value, value, 1, description, parentID)
+        End If
+
+        If (Not String.IsNullOrEmpty(txtLookupTypeName.Text)) Then
+            LookupsManager.SaveLookupType(txtLookupTypeName.Text)
+        End If
+
         Response.Redirect("/Admin/Lookups.aspx")
     End Sub
 
