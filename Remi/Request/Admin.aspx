@@ -51,6 +51,19 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <asp:TextBox Runat="server" ID="txtNewParentLookup"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:TextBox Runat="server" ID="txtNewChildLookup"></asp:TextBox>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <asp:Button runat="server" ID="btnSaveLookup" Text="Create New Lookup" CssClass="buttonSmall" OnClick="btnSaveLookup_Click" />
+                </td>
+            </tr>
         </table>
         <p> 
             In this area you can create a lookup hierarchy. <br />

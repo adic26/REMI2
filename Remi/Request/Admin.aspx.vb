@@ -74,6 +74,26 @@ Public Class ReqAdmin
 #End Region
 
 #Region "Events"
+    Protected Sub btnSaveLookup_Click(sender As Object, e As EventArgs)
+        If Not String.IsNullOrEmpty(txtNewChildLookup.Text) And ddlChildType.SelectedValue > 0 Then
+            If (LookupsManager.SaveLookup(ddlChildType.SelectedItem.Text, txtNewChildLookup.Text, 1, String.Empty, Nothing)) Then
+                cblChild.DataSource = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1)
+                cblChild.DataBind()
+
+                txtNewChildLookup.Text = String.Empty
+            End If
+        End If
+
+        If Not String.IsNullOrEmpty(txtNewParentLookup.Text) And ddlParentType.SelectedValue > 0 Then
+            If (LookupsManager.SaveLookup(ddlParentType.SelectedItem.Text, txtNewParentLookup.Text, 1, String.Empty, Nothing)) Then
+                cblParent.DataSource = LookupsManager.GetLookups(ddlParentType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1)
+                cblParent.DataBind()
+
+                txtNewParentLookup.Text = String.Empty
+            End If
+        End If
+    End Sub
+
     Protected Sub chkArchived_CheckedChanged(sender As Object, e As EventArgs)
         BindRequest()
     End Sub
