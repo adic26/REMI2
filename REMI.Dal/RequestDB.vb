@@ -591,6 +591,12 @@ Namespace REMI.Dal
                 myFields.OptionsTypeName = (From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.LookupType.Name).FirstOrDefault()
                 myFields.OptionsType = filteredOptions
 
+                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("DefaultValue")) Then
+                    myFields.DefaultValue = myDataRecord.GetString(myDataRecord.GetOrdinal("DefaultValue"))
+                Else
+                    myFields.DefaultValue = String.Empty
+                End If
+
                 Dim lookups = (From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.ParentLookupTypeID <> myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
                         Select New With {lh.RequestTypeID, lh.ParentLookupID, lh.ChildLookupID, lh.ParentLookupTypeID, lh.ChildLookupTypeID, .ParentLookup = lh.Lookup.Values, .ChildLookup = lh.Lookup1.Values, .ParentLookupType = lh.LookupType.Name, .ChildLookupType = lh.LookupType1.Name}).ToList()
 

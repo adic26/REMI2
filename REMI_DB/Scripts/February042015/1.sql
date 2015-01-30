@@ -1,4 +1,8 @@
-﻿ALTER PROCEDURE [Req].[RequestFieldSetup] @RequestTypeID INT, @IncludeArchived BIT = 0, @RequestNumber NVARCHAR(12) = NULL
+BEGIN TRAN
+GO
+ALTER TABLE Req.ReqFieldSetup ADD DefaultValue NVARCHAR (400) NULL
+GO
+ALTER PROCEDURE [Req].[RequestFieldSetup] @RequestTypeID INT, @IncludeArchived BIT = 0, @RequestNumber NVARCHAR(12) = NULL
 AS
 BEGIN
 	DECLARE @RequestID INT
@@ -64,3 +68,7 @@ END
 GO
 GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI
 GO
+
+
+GO
+ROLLBACK TRAN

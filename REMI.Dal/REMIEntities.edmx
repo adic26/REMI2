@@ -1560,6 +1560,7 @@
           <Property Name="ColumnOrder" Type="int" Nullable="false" />
           <Property Name="Category" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="ParentReqFieldSetupID" Type="int" />
+          <Property Name="DefaultValue" Type="nvarchar" MaxLength="400" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -1761,12 +1762,13 @@
       -->
         <EntityType Name="vw_RequestDataAudit">
           <Key>
-            <PropertyRef Name="RequestNumber" />
             <PropertyRef Name="Name" />
+            
             <PropertyRef Name="UserName" />
             <PropertyRef Name="InsertTime" />
+            <PropertyRef Name="RequestNumber" />
           </Key>
-          <Property Name="RequestNumber" Type="nvarchar" Nullable="false" MaxLength="11" />
+          <Property Name="RequestNumber" Type="nvarchar" MaxLength="11" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
           <Property Name="Value" Type="nvarchar" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="255" />
@@ -5475,6 +5477,7 @@
           <Property Type="Int32" Name="ColumnOrder" Nullable="false" />
           <Property Type="String" Name="Category" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ParentReqFieldSetupID" />
+          <Property Type="String" Name="DefaultValue" MaxLength="400" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -7148,6 +7151,7 @@
           <EntitySetMapping Name="ReqFieldSetups">
             <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetup">
               <MappingFragment StoreEntitySet="ReqFieldSetup">
+                <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
                 <ScalarProperty Name="ParentReqFieldSetupID" ColumnName="ParentReqFieldSetupID" />
                 <ScalarProperty Name="Category" ColumnName="Category" />
                 <ScalarProperty Name="ColumnOrder" ColumnName="ColumnOrder" />

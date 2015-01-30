@@ -93,7 +93,7 @@ Namespace REMI.Bll
             Return New DataTable("RequestMappingFields")
         End Function
 
-        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal hasREMIIntegration As Boolean, ByVal intField As String, ByVal description As String) As Boolean
+        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal hasREMIIntegration As Boolean, ByVal intField As String, ByVal description As String, ByVal defaultValue As String) As Boolean
             Try
                 Dim oldName As String = String.Empty
                 Dim instance = New REMI.Dal.Entities().Instance()
@@ -110,6 +110,7 @@ Namespace REMI.Bll
                     setup.Category = category
                     setup.ParentReqFieldSetupID = parentFieldID
                     setup.Description = description
+                    setup.DefaultValue = defaultValue
 
                     Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
 
@@ -137,6 +138,7 @@ Namespace REMI.Bll
                     rfs.ColumnOrder = 1
                     rfs.DisplayOrder = 999
                     rfs.Description = description
+                    rfs.DefaultValue = defaultValue
 
                     instance.AddToReqFieldSetups(rfs)
 

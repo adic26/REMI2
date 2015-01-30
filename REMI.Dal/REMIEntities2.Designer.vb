@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("41624f9e-076f-4140-adfa-864e68c34ab9")>
+<Assembly: EdmSchemaAttribute("98d80c06-bc8b-43fa-823a-fb621d6d0b47")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -12543,6 +12543,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnParentReqFieldSetupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property DefaultValue() As Global.System.String
+            Get
+                Return _DefaultValue
+            End Get
+            Set
+                OnDefaultValueChanging(value)
+                ReportPropertyChanging("DefaultValue")
+                _DefaultValue = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("DefaultValue")
+                OnDefaultValueChanged()
+            End Set
+        End Property
+    
+        Private _DefaultValue As Global.System.String
+        Private Partial Sub OnDefaultValueChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnDefaultValueChanged()
         End Sub
 
         #End Region

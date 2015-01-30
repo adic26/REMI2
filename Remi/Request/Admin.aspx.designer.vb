@@ -41,6 +41,15 @@ Partial Public Class ReqAdmin
     Protected WithEvents chkFilter As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
+    '''chkArchived control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chkArchived As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
     '''hdnRequestType control.
     '''</summary>
     '''<remarks>

@@ -134,7 +134,12 @@ Public Class Request
                             Next
                         End If
 
-                        ddl.SelectedValue = res.Value
+                        If (String.IsNullOrEmpty(res.Value) And Not String.IsNullOrEmpty(res.DefaultValue)) Then
+                            ddl.SelectedValue = res.DefaultValue
+                        Else
+                            ddl.SelectedValue = res.Value
+                        End If
+
 
                         tCell2.Controls.Add(ddl)
 

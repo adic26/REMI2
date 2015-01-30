@@ -36,7 +36,7 @@ Public Class ReqAdmin
     End Sub
 
     Protected Sub BindRequest()
-        grdRequestAdmin.DataSource = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, True, String.Empty)
+        grdRequestAdmin.DataSource = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, chkArchived.Checked, String.Empty)
         grdRequestAdmin.DataBind()
     End Sub
 #End Region
@@ -67,13 +67,31 @@ Public Class ReqAdmin
             isArchived = True
         End If
 
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, True, intField, description)
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, True, intField, description, String.Empty)
 
         BindRequest()
     End Sub
 #End Region
 
 #Region "Events"
+    Protected Sub chkArchived_CheckedChanged(sender As Object, e As EventArgs)
+        BindRequest()
+    End Sub
+
+    Protected Sub grdRequestAdmin_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles grdRequestAdmin.RowCreated
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim archived As Boolean = False
+
+            If (DataBinder.Eval(e.Row.DataItem, "IsArchived") IsNot Nothing) Then
+                Boolean.TryParse(DataBinder.Eval(e.Row.DataItem, "IsArchived").ToString(), archived)
+            End If
+
+            If (archived) Then
+                e.Row.BackColor = Drawing.Color.Yellow
+            End If
+        End If
+    End Sub
+
     Protected Sub grdRequestAdmin_RowDataCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Dim index As Integer = 0
 
@@ -89,10 +107,10 @@ Public Class ReqAdmin
                     Int32.TryParse(grdRequestAdmin.DataKeys(index).Values(0).ToString(), fieldID)
                     Int32.TryParse(grdRequestAdmin.DataKeys(index - 1).Values(0).ToString(), nextFieldID)
 
-                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim instance = New Remi.Dal.Entities().Instance()
 
-                    Dim rf As REMI.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = fieldID Select f).FirstOrDefault()
-                    Dim nextrf As REMI.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = nextFieldID Select f).FirstOrDefault()
+                    Dim rf As Remi.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = fieldID Select f).FirstOrDefault()
+                    Dim nextrf As Remi.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = nextFieldID Select f).FirstOrDefault()
 
                     If (rf IsNot Nothing) Then
                         displayOrder = rf.DisplayOrder
@@ -119,10 +137,10 @@ Public Class ReqAdmin
                     Int32.TryParse(grdRequestAdmin.DataKeys(index).Values(0).ToString(), fieldID)
                     Int32.TryParse(grdRequestAdmin.DataKeys(index + 1).Values(0).ToString(), nextFieldID)
 
-                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim instance = New Remi.Dal.Entities().Instance()
 
-                    Dim rf As REMI.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = fieldID Select f).FirstOrDefault()
-                    Dim nextrf As REMI.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = nextFieldID Select f).FirstOrDefault()
+                    Dim rf As Remi.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = fieldID Select f).FirstOrDefault()
+                    Dim nextrf As Remi.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.ReqFieldSetupID = nextFieldID Select f).FirstOrDefault()
 
                     If (rf IsNot Nothing) Then
                         displayOrder = rf.DisplayOrder
@@ -145,6 +163,9 @@ Public Class ReqAdmin
         grdRequestAdmin.EditIndex = e.NewEditIndex
         BindRequest()
 
+        Dim requestTypeID As Int32
+        Int32.TryParse(hdnRequestTypeID.Value, requestTypeID)
+
         Dim lblName As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblName")
         Dim lblDescription As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblDescription")
         Dim lblFieldType As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblFieldType")
@@ -153,22 +174,30 @@ Public Class ReqAdmin
         Dim lblCategory As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblCategory")
         Dim lblParentField As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblParentField")
         Dim lblIntField As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblIntField")
+        Dim lblDefaultValue As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblDefaultValue")
 
         Dim hdnFieldTypeID As HiddenField = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("hdnFieldTypeID")
         Dim hdnValidationTypeID As HiddenField = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("hdnValidationTypeID")
         Dim hdnOptionsTypeID As HiddenField = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("hdnOptionsTypeID")
         Dim hdnParentFieldID As HiddenField = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("hdnParentFieldID")
+        Dim hdnOptionsDefault As HiddenField = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("hdnOptionsDefault")
 
         Dim ddlIntField As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlIntField")
         Dim ddlParentField As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlParentField")
         Dim ddlFieldType As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlFieldType")
         Dim ddlValidationType As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlValidationType")
         Dim ddlOptionsType As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlOptionsType")
+        Dim ddlDefaultValue As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlDefaultValue")
+
+        ddlDefaultValue.DataSource = LookupsManager.GetLookups(lblOptionsType.Text, 0, 0, String.Empty, String.Empty, requestTypeID, False)
+        ddlDefaultValue.DataBind()
+
         ddlFieldType.SelectedValue = hdnFieldTypeID.Value
         ddlValidationType.SelectedValue = hdnValidationTypeID.Value
         ddlOptionsType.SelectedValue = hdnOptionsTypeID.Value
         ddlIntField.SelectedValue = lblIntField.Text
         ddlParentField.SelectedValue = hdnParentFieldID.Value
+        ddlDefaultValue.SelectedValue = ddlDefaultValue.Items.FindByText(hdnOptionsDefault.Value).Value
 
         Dim txtName As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtName")
         Dim txtDescription As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtDescription")
@@ -185,6 +214,7 @@ Public Class ReqAdmin
         lblCategory.Visible = False
         lblParentField.Visible = False
         lblDescription.Visible = False
+        lblDefaultValue.Visible = False
 
         txtName.Visible = True
         txtCategory.Visible = True
@@ -193,6 +223,7 @@ Public Class ReqAdmin
         ddlIntField.Visible = True
         ddlParentField.Visible = True
         ddlValidationType.Visible = True
+        ddlDefaultValue.Visible = True
         ddlFieldType.Visible = True
         ddlOptionsType.Visible = True
         chkArchived.Enabled = True
@@ -218,6 +249,7 @@ Public Class ReqAdmin
         Dim ddlFieldType As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlFieldType")
         Dim ddlValidationType As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlValidationType")
         Dim ddlOptionsType As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlOptionsType")
+        Dim ddlDefaultValue As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlDefaultValue")
 
         Dim parentFieldID As Int32
         Dim fieldTypeID As Int32
@@ -230,7 +262,7 @@ Public Class ReqAdmin
         Int32.TryParse(ddlOptionsType.SelectedValue, optionsTypeID)
         Int32.TryParse(grdRequestAdmin.DataKeys(e.RowIndex).Values(0), fieldSetupID)
 
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, chkIntegrated.Checked, ddlIntField.SelectedValue, txtDescription.Text)
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, chkIntegrated.Checked, ddlIntField.SelectedValue, txtDescription.Text, ddlDefaultValue.SelectedItem.Text)
         grdRequestAdmin.EditIndex = -1
         BindRequest()
     End Sub
@@ -316,4 +348,5 @@ Public Class ReqAdmin
         End If
     End Sub
 #End Region
+
 End Class

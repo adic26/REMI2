@@ -15,6 +15,9 @@
             <li>
                 <asp:CheckBox runat="server" ID="chkFilter" Text="Manage Filters" Visible="true" TextAlign="Right" AutoPostBack="true" OnCheckedChanged="chkFilter_CheckedChanged" />
             </li>
+            <li>
+                <asp:CheckBox runat="server" ID="chkArchived" Text="Archived" TextAlign="Right" AutoPostBack="true" OnCheckedChanged="chkArchived_CheckedChanged" />
+            </li>
         </ul>
     </asp:Panel>
 </asp:Content>
@@ -137,6 +140,16 @@
                     <FooterStyle HorizontalAlign="Right" />
                     <FooterTemplate>
                         <asp:DropDownList runat="server" ID="ddlNewOptionsType" DataTextField="Name" DataValueField="LookupTypeID" Visible="true" DataSourceID="odsLookupTypes"></asp:DropDownList>
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="DefaultValue">
+                    <ItemTemplate>
+                        <asp:HiddenField runat="server" ID="hdnOptionsDefault" Value='<%# Eval("DefaultValue")%>' />
+                        <asp:Label runat="server" ID="lblDefaultValue" Text='<%# Eval("DefaultValue")%>' Visible="true"></asp:Label>
+                        <asp:DropDownList runat="server" ID="ddlDefaultValue" DataTextField="LookupType" DataValueField="LookupID" Visible="false"></asp:DropDownList>
+                    </ItemTemplate>
+                    <FooterStyle HorizontalAlign="Right" />
+                    <FooterTemplate>
                     </FooterTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="RequestTypeID" HeaderText="RequestTypeID" InsertVisible="False" ReadOnly="True" Visible="false" />
