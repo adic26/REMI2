@@ -952,6 +952,7 @@
           </Key>
           <Property Name="LookupTypeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
+          <Property Name="IsSystem" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Menu">
           <Key>
@@ -4216,6 +4217,7 @@
           <NavigationProperty Name="Lookups" Relationship="REMI.Entities.FK_Lookups_LookupType" FromRole="LookupType" ToRole="Lookup" />
           <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType" FromRole="LookupType" ToRole="LookupsHierarchy" />
           <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType1" FromRole="LookupType" ToRole="LookupsHierarchy" />
+          <Property Type="Boolean" Name="IsSystem" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductConfiguration">
           <Key>
@@ -6693,6 +6695,7 @@
           <EntitySetMapping Name="LookupTypes">
             <EntityTypeMapping TypeName="REMI.Entities.LookupType">
               <MappingFragment StoreEntitySet="LookupType">
+                <ScalarProperty Name="IsSystem" ColumnName="IsSystem" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="LookupTypeID" ColumnName="LookupTypeID" />
               </MappingFragment>

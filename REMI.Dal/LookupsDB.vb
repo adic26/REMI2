@@ -43,11 +43,12 @@ Namespace REMI.Dal
             Return dt
         End Function
 
-        Public Shared Function GetLookupTypes() As DataTable
+        Public Shared Function GetLookupTypes(ByVal showSystemTypes As Boolean) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetLookupTypes", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@ShowSystemTypes", showSystemTypes)
                     MyConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
@@ -97,140 +98,5 @@ Namespace REMI.Dal
             End Using
             Return lookupID
         End Function
-
-        ' ''' <summary> 
-        ' ''' Returns a list with ProductType objects. 
-        ' ''' </summary> 
-        ' ''' <returns> 
-        ' ''' A ProductTypeCollection. 
-        ' ''' </returns> 
-        'Public Shared Function GetOracleProductTypeList() As List(Of String)
-        '    Dim tempList As New List(Of String)
-        '    Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
-
-        '        Using myCommand As New OracleCommand("REMI_HELPER.get_product_types", myConnection)
-        '            myCommand.CommandType = CommandType.StoredProcedure
-        '            Dim pOut As New OracleParameter
-        '            pOut.Direction = ParameterDirection.ReturnValue
-        '            pOut.OracleType = OracleType.Cursor
-        '            pOut.ParameterName = "C_REF_RET"
-        '            myCommand.Parameters.Add(pOut)
-        '            myConnection.Open()
-        '            Using myReader As OracleDataReader = myCommand.ExecuteReader
-        '                If myReader.HasRows Then
-        '                    While myReader.Read()
-        '                        If Not tempList.Contains(myReader.GetValue(0).ToString) Then
-        '                            tempList.Add(myReader.GetValue(0).ToString)
-        '                        End If
-        '                    End While
-        '                End If
-
-        '            End Using
-        '        End Using
-        '    End Using
-        '    Return tempList
-        'End Function
-
-        ' ''' <summary> 
-        ' ''' Returns a list with departments objects. 
-        ' ''' </summary> 
-        ' ''' <returns> 
-        ' ''' </returns> 
-        'Public Shared Function GetOracleDepartmentList() As List(Of String)
-        '    Dim tempList As New List(Of String)
-        '    Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
-
-        '        Using myCommand As New OracleCommand("REMI_HELPER.get_departments", myConnection)
-        '            myCommand.CommandType = CommandType.StoredProcedure
-        '            Dim pOut As New OracleParameter
-        '            pOut.Direction = ParameterDirection.ReturnValue
-        '            pOut.OracleType = OracleType.Cursor
-        '            pOut.ParameterName = "C_REF_RET"
-        '            myCommand.Parameters.Add(pOut)
-        '            myConnection.Open()
-        '            Using myReader As OracleDataReader = myCommand.ExecuteReader
-        '                If myReader.HasRows Then
-        '                    While myReader.Read()
-        '                        If Not tempList.Contains(myReader.GetValue(0).ToString) Then
-        '                            tempList.Add(myReader.GetValue(0).ToString)
-        '                        End If
-        '                    End While
-        '                End If
-
-        '            End Using
-        '        End Using
-        '    End Using
-        '    Return tempList
-        'End Function
-
-        ' ''' <summary> 
-        ' ''' Returns a list with AccessoryGroup objects. 
-        ' ''' </summary> 
-        ' ''' <returns> 
-        ' ''' A AccessoryGroupCollection. 
-        ' ''' </returns> 
-        'Public Shared Function GetOracleAccessoryList() As List(Of String)
-        '    Dim tempList As New List(Of String)
-        '    Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
-
-        '        Using myCommand As New OracleCommand("REMI_HELPER.get_accessory_groups", myConnection)
-        '            myCommand.CommandType = CommandType.StoredProcedure
-        '            Dim pOut As New OracleParameter
-        '            pOut.Direction = ParameterDirection.ReturnValue
-        '            pOut.OracleType = OracleType.Cursor
-        '            pOut.ParameterName = "C_REF_RET"
-        '            myCommand.Parameters.Add(pOut)
-        '            myConnection.Open()
-        '            Using myReader As OracleDataReader = myCommand.ExecuteReader
-        '                If myReader.HasRows Then
-        '                    While myReader.Read()
-        '                        If Not tempList.Contains(myReader.GetValue(0).ToString) Then
-        '                            tempList.Add(myReader.GetValue(0).ToString)
-        '                        End If
-        '                    End While
-        '                End If
-
-        '            End Using
-        '        End Using
-        '    End Using
-        '    Return tempList
-        'End Function
-
-        ' ''' <summary> 
-        ' ''' Returns a list with GeographicalLocation objects. 
-        ' ''' </summary> 
-        ' ''' <returns> 
-        ' ''' A List of the available geographical locations. 
-        ' ''' </returns> 
-        'Public Shared Function GetOracleTestCentersList() As List(Of String)
-        '    Dim geoLocList As List(Of String) = REMIAppCache.GetGeoLocList()
-        '    If geoLocList Is Nothing Then
-        '        geoLocList = New List(Of String)
-
-        '        Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
-
-        '            Using myCommand As New OracleCommand("REMI_HELPER.get_TestCenterLocations ", myConnection)
-        '                myCommand.CommandType = CommandType.StoredProcedure
-
-        '                Dim pOut As New OracleParameter
-        '                pOut.Direction = ParameterDirection.ReturnValue
-        '                pOut.OracleType = OracleType.Cursor
-        '                pOut.ParameterName = "o_cur"
-        '                myCommand.Parameters.Add(pOut)
-
-        '                myConnection.Open()
-        '                Using myReader As OracleDataReader = myCommand.ExecuteReader
-        '                    If myReader.HasRows Then
-        '                        While myReader.Read()
-        '                            geoLocList.Add(myReader.GetString(0))
-        '                        End While
-        '                    End If
-        '                End Using
-        '            End Using
-        '        End Using
-        '        REMIAppCache.AddGeoLocList(geoLocList)
-        '    End If
-        '    Return geoLocList
-        'End Function
     End Class
 End Namespace

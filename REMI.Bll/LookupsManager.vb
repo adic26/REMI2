@@ -19,9 +19,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetLookupTypes() As DataTable
+        Public Shared Function GetLookupTypes(ByVal showSystemTypes As Boolean) As DataTable
             Try
-                Return LookupsDB.GetLookupTypes()
+                Return LookupsDB.GetLookupTypes(showSystemTypes)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

@@ -1,5 +1,7 @@
 BEGIN TRAN
 GO
+ALTER TABLE LookupType ADD IsSystem BIT DEFAULT(0) NOT NULL
+GO
 ALTER TABLE Req.ReqFieldSetup ADD DefaultValue NVARCHAR (400) NULL
 GO
 ALTER PROCEDURE [Req].[RequestFieldSetup] @RequestTypeID INT, @IncludeArchived BIT = 0, @RequestNumber NVARCHAR(12) = NULL
@@ -166,5 +168,24 @@ END
 GO
 GRANT EXECUTE ON Req.remispGetRequestTypes TO REMI
 GO
+UPDATE LookupType SET IsSystem=1 WHERE Name IN ('AccFunctionalMatrix','Configuration','Exceptions','Level','MeasurementType','MFIFunctionalMatrix','Observations','SFIFunctionalMatrix',
+	'Training','FieldTypes','ValidationTypes')
+GO
+ALTER PROCEDURE remispGetLookupTypes @ShowSystemTypes BIT
+AS
+BEGIN
+	SELECT 0 AS LookupTypeID, 'SELECT...' AS Name, 0 As IsSystem
+	UNION ALL
+	SELECT lt.LookupTypeID, lt.Name, IsSystem
+	FROM LookupType lt
+	WHERE 
+		(
+			@ShowSystemTypes = 1
+			OR
+			lt.IsSystem=@ShowSystemTypes
+		)
+END
+GO
+GRANT EXECUTE ON remispGetLookupTypes TO REMI
 GO
 ROLLBACK TRAN

@@ -12,7 +12,7 @@ Public Class Admin_Lookups
                 Response.Redirect("~/")
             End If
 
-            ddlLookupList.DataSource = LookupsManager.GetLookupTypes()
+            ddlLookupList.DataSource = LookupsManager.GetLookupTypes(True)
             ddlLookupList.DataBind()
 
 

@@ -197,7 +197,10 @@ Public Class ReqAdmin
         ddlOptionsType.SelectedValue = hdnOptionsTypeID.Value
         ddlIntField.SelectedValue = lblIntField.Text
         ddlParentField.SelectedValue = hdnParentFieldID.Value
-        ddlDefaultValue.SelectedValue = ddlDefaultValue.Items.FindByText(hdnOptionsDefault.Value).Value
+
+        If (ddlDefaultValue.Items.FindByText(hdnOptionsDefault.Value) IsNot Nothing) Then
+            ddlDefaultValue.SelectedValue = ddlDefaultValue.Items.FindByText(hdnOptionsDefault.Value).Value
+        End If
 
         Dim txtName As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtName")
         Dim txtDescription As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtDescription")
@@ -271,10 +274,10 @@ Public Class ReqAdmin
         If (DirectCast(sender, CheckBox).Checked) Then
             pnlFilter.Visible = True
 
-            ddlParentType.DataSource = LookupsManager.GetLookupTypes()
+            ddlParentType.DataSource = LookupsManager.GetLookupTypes(False)
             ddlParentType.DataBind()
 
-            ddlChildType.DataSource = LookupsManager.GetLookupTypes()
+            ddlChildType.DataSource = LookupsManager.GetLookupTypes(False)
             ddlChildType.DataBind()
         Else
             pnlFilter.Visible = False
@@ -297,7 +300,7 @@ Public Class ReqAdmin
         cblParent.DataSource = LookupsManager.GetLookups(ddl.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1)
         cblParent.DataBind()
 
-        ddlChildType.DataSource = LookupsManager.GetLookupTypes()
+        ddlChildType.DataSource = LookupsManager.GetLookupTypes(False)
         ddlChildType.DataBind()
         cblChild.Items.Clear()
 

@@ -222,7 +222,11 @@
     </asp:ObjectDataSource>
 
     <asp:ObjectDataSource runat="server" ID="odsFieldMapping" OldValuesParameterFormatString="original_{0}" SelectMethod="GetRequestMappingFields" TypeName="REMI.Bll.RequestManager"></asp:ObjectDataSource>
-    <asp:ObjectDataSource runat="server" ID="odsLookupTypes" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookupTypes" TypeName="REMI.Bll.LookupsManager"></asp:ObjectDataSource>
+    <asp:ObjectDataSource runat="server" ID="odsLookupTypes" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookupTypes" TypeName="REMI.Bll.LookupsManager">
+        <SelectParameters>
+            <asp:Parameter Type="Boolean" Name="ShowSystemTypes" DefaultValue="false" />
+        </SelectParameters>
+    </asp:ObjectDataSource>
 
     <asp:ObjectDataSource runat="server" ID="odsValidation" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookups" TypeName="REMI.Bll.LookupsManager">
         <SelectParameters>

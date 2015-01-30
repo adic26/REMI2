@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("98d80c06-bc8b-43fa-823a-fb621d6d0b47")>
+<Assembly: EdmSchemaAttribute("38b407d5-c435-442c-a544-1cea6e70c00f")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -9050,10 +9050,12 @@ Namespace REMI.Entities
         ''' </summary>
         ''' <param name="lookupTypeID">Initial value of the LookupTypeID property.</param>
         ''' <param name="name">Initial value of the Name property.</param>
-        Public Shared Function CreateLookupType(lookupTypeID As Global.System.Int32, name As Global.System.String) As LookupType
+        ''' <param name="isSystem">Initial value of the IsSystem property.</param>
+        Public Shared Function CreateLookupType(lookupTypeID As Global.System.Int32, name As Global.System.String, isSystem As Global.System.Boolean) As LookupType
             Dim lookupType as LookupType = New LookupType
             lookupType.LookupTypeID = lookupTypeID
             lookupType.Name = name
+            lookupType.IsSystem = isSystem
             Return lookupType
         End Function
 
@@ -9111,6 +9113,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property IsSystem() As Global.System.Boolean
+            Get
+                Return _IsSystem
+            End Get
+            Set
+                OnIsSystemChanging(value)
+                ReportPropertyChanging("IsSystem")
+                _IsSystem = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsSystem")
+                OnIsSystemChanged()
+            End Set
+        End Property
+    
+        Private _IsSystem As Global.System.Boolean
+        Private Partial Sub OnIsSystemChanging(value As Global.System.Boolean)
+        End Sub
+    
+        Private Partial Sub OnIsSystemChanged()
         End Sub
 
         #End Region
