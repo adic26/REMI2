@@ -182,20 +182,33 @@ Namespace REMI.Bll
                             System.Web.Security.Roles.AddUserToRoles(u.UserName, u.RolesList.ToArray) 'add user to roles
                         End If
 
+                        instance.SaveChanges()
+
                         If (saveRequestAccess) Then
                             For Each dr As DataRow In u.RequestTypes.Rows
                                 Dim userDetailsID As Int32 = 0
+                                Dim typeID As Int32 = 0
+                                Dim isAdmin As Boolean = False
                                 Int32.TryParse(dr("UserDetailsID").ToString(), userDetailsID)
+                                Int32.TryParse(dr("TypeID").ToString(), typeID)
+                                Boolean.TryParse(dr("IsAdmin").ToString(), isAdmin)
 
-                                Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.UserDetailsID = userDetailsID).FirstOrDefault()
-
-                                If (ud IsNot Nothing) Then
-                                    Dim isAdmin As Boolean = False
-                                    Boolean.TryParse(dr("IsAdmin").ToString(), isAdmin)
+                                If ((From d In instance.UserDetails Where d.UserDetailsID = userDetailsID).FirstOrDefault() IsNot Nothing) Then
+                                    Dim urd As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.UserDetailsID = userDetailsID).FirstOrDefault()
+                                    urd.IsAdmin = isAdmin
+                                Else
+                                    Dim ud As New REMI.Entities.UserDetail
+                                    ud.LookupID = typeID
+                                    ud.UserID = u.ID
+                                    ud.IsDefault = False
                                     ud.IsAdmin = isAdmin
+
+                                    instance.AddToUserDetails(ud)
                                 End If
                             Next
                         End If
+
+                        instance.SaveChanges()
 
                         If (saveTraining) Then
                             Dim newTraining = (From t In u.Training Where t.Item("ID") IsNot Nothing And t.Item("ID") IsNot DBNull.Value _

@@ -310,7 +310,7 @@
             <tr>
                 <td class="HorizTableFirstcolumn">Request Access:</td>
                 <td class="HorizTableSecondColumn">
-                    <asp:GridView runat="server" ID="gvRequestTypes" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="UserDetailsID">
+                    <asp:GridView runat="server" ID="gvRequestTypes" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="UserDetailsID,TypeID,RequestTypeAccessID">
                         <Columns>
                             <asp:BoundField DataField="RequestType" HeaderText="Request" readonly="true" SortExpression="RequestType" />
                             <asp:BoundField DataField="Department" HeaderText="Department" readonly="true" SortExpression="Department" />
