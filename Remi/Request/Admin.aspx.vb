@@ -209,7 +209,6 @@ Public Class ReqAdmin
         Dim chkArchived As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkArchived")
         Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIntegrated")
 
-        lblIntField.Visible = False
         lblName.Visible = False
         lblFieldType.Visible = False
         lblValidationType.Visible = False
@@ -223,7 +222,6 @@ Public Class ReqAdmin
         txtCategory.Visible = True
         txtDescription.Visible = True
 
-        ddlIntField.Visible = True
         ddlParentField.Visible = True
         ddlValidationType.Visible = True
         ddlDefaultValue.Visible = True
@@ -232,6 +230,14 @@ Public Class ReqAdmin
         chkArchived.Enabled = True
         chkIsRequired.Enabled = True
         chkIntegrated.Enabled = True
+
+        If (UserManager.GetCurrentUser.IsAdmin) Then
+            lblIntField.Visible = False
+            ddlIntField.Visible = True
+        Else
+            lblIntField.Visible = True
+            ddlIntField.Visible = False
+        End If
     End Sub
 
     Protected Sub grdRequestAdmin_OnRowCancelingEdit(ByVal sender As Object, ByVal e As GridViewCancelEditEventArgs)
