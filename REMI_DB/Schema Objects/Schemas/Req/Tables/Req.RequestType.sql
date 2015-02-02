@@ -7,6 +7,7 @@
 	[CanReport] [bit] NOT NULL,
 	[HasApproval] [bit] NOT NULL,
 	[IsExternal] [bit] NOT NULL,
+	rv ROWVERSION,
  CONSTRAINT [PK_RequestType] PRIMARY KEY CLUSTERED 
 (
 	[RequestTypeID] ASC

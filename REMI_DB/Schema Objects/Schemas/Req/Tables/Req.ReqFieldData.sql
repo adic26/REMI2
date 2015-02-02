@@ -4,7 +4,8 @@
 [ReqFieldSetupID] [int] NOT NULL,
 [Value] [nvarchar] (400) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 LastUser [nvarchar](255),
-InsertTime DateTime
+InsertTime DateTime,
+rv ROWVERSION,
 )
 GO
 -- Constraints and Indexes

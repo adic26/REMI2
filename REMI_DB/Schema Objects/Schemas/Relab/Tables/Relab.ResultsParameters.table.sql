@@ -3,6 +3,7 @@
 	[ResultMeasurementID] [int] NOT NULL,
 	[ParameterName] [nvarchar](255) NOT NULL,
 	[Value] [nvarchar](250) NOT NULL,
+	rv ROWVERSION,
  CONSTRAINT [PK_ResultsParameters] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

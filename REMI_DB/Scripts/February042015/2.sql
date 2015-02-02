@@ -26,6 +26,24 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
 GO
 BEGIN TRANSACTION
 GO
+ALTER TABLE Req.ReqFieldData ADD rv ROWVERSION
+GO
+ALTER TABLE Relab.ResultsInformation ADD rv ROWVERSION
+GO
+ALTER TABLE Relab.ResultsParameters ADD rv ROWVERSION
+GO
+ALTER TABLE Relab.ResultsXML ADD rv ROWVERSION
+GO
+ALTER TABLE Relab.ResultsMeasurementsFiles ADD rv ROWVERSION
+GO
+ALTER TABLE Relab.ResultsMeasurements ADD rv ROWVERSION
+GO
+ALTER TABLE Relab.Results ADD rv ROWVERSION
+GO
+ALTER TABLE Req.Request ADD rv ROWVERSION
+GO
+ALTER TABLE Req.RequestType ADD rv ROWVERSION
+GO
 PRINT N'Altering [Relab].[remispResultsMeasurementFileUpload]'
 GO
 ALTER PROCEDURE Relab.remispResultsMeasurementFileUpload @File VARBINARY(MAX), @ContentType NVARCHAR(50), @FileName NVARCHAR(200), @Success AS BIT = NULL OUTPUT
