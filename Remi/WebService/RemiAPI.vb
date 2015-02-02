@@ -467,6 +467,17 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(Description:="Given a test id this function returns all departments that have access for this test.")> _
+    Public Function GetTestAccess(ByVal testID As Int32) As DataTable
+        Try
+            Return TestManager.GetTestAccess(testID)
+        Catch ex As Exception
+            JobManager.LogIssue("REMI API GetTestAccess", "e3", NotificationType.Errors, ex, String.Format("TestID: {0}", testID))
+        End Try
+
+        Return New DataTable("TestAccess")
+    End Function
+
     <WebMethod(Description:="Given a test name this method returns all the known details of a specific test.")> _
     Public Function GetTestByID(ByVal id As Int32) As Test
         Try
@@ -681,7 +692,7 @@ Public Class RemiAPI
         Return New DataTable("JobOrientation")
     End Function
 
-    <WebMethod(Description:="Given a job id this function returns all orientations for this job.")> _
+    <WebMethod(Description:="Given a job id this function returns all departments that have access for this job.")> _
     Public Function GetJobAccess(ByVal jobID As Int32) As DataTable
         Try
             Return JobManager.GetJobAccess(jobID)

@@ -14,7 +14,7 @@ Imports System.Reflection
 Namespace REMI.Dal
     Public Class RequestDB
 
-        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
+        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal userID As Int32) As DataTable
             Dim dt As New DataTable("RequestSetupInfo")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Req.GetRequestSetupInfo", myConnection)
@@ -24,6 +24,7 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@BatchID", batchID)
                     myCommand.Parameters.AddWithValue("@TestStageType", testStageType)
                     myCommand.Parameters.AddWithValue("@BlankSelected", blankSelected)
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
