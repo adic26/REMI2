@@ -13,7 +13,6 @@
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
     <uc1:Notifications ID="notMain" runat="server" />
-    <asp:AjaxScriptManager runat="server" ID="scriptmanager1"></asp:AjaxScriptManager>
     <table style="width: 86%;" border="0">
         <tr>
             <td class="HorizTableFirstcolumn">

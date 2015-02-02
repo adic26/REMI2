@@ -32,15 +32,6 @@ Partial Public Class Admin_Tests_EditDetail
     Protected WithEvents notMain As Global.Remi.Controls_Notifications
 
     '''<summary>
-    '''scriptmanager1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents scriptmanager1 As Global.System.Web.UI.AjaxScriptManager
-
-    '''<summary>
     '''txtName control.
     '''</summary>
     '''<remarks>
