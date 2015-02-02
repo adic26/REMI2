@@ -1425,6 +1425,7 @@
     <None Include="Scripts\November032014\4.sql" />
     <None Include="Scripts\November262014\1.sql" />
     <None Include="Scripts\January292015\2.sql" />
+    <None Include="Scripts\February042015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
