@@ -566,7 +566,7 @@ Namespace REMI.Dal
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
                 Dim filteredOptions As New List(Of String)
-                Dim onlylh As List(Of String) = (From l In instance.LookupsHierarchies.Include("Lookup1") Where l.ChildLookupTypeID = myFields.OptionsTypeID And l.ParentLookupTypeID = myFields.OptionsTypeID Select l.Lookup1.Values).ToList()
+                Dim onlylh As List(Of String) = (From l In instance.LookupsHierarchies.Include("Lookup1") Where l.RequestTypeID = myFields.RequestTypeID And l.ChildLookupTypeID = myFields.OptionsTypeID And l.ParentLookupTypeID = myFields.OptionsTypeID Select l.Lookup1.Values).ToList()
 
                 options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 _
                      Order By lo.Values Select lo.Values).ToList)
