@@ -5,7 +5,6 @@ Imports System.Data.Common
 Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Configuration
-'Imports System.Data.OracleClient
 Imports REMI.BusinessEntities
 Imports REMI.Validation
 Imports REMI.Core
@@ -20,48 +19,7 @@ Namespace REMI.Dal
     Public Class JobDB
         'to prevent instances of this class.
         Protected Sub New()
-
         End Sub
-
-        '#Region "TRS Methods"
-        '        ''' <summary>
-        '        ''' Gets the list of available jobs as it exists in the trs.
-        '        ''' </summary>
-        '        ''' <returns></returns>
-        '        ''' <remarks></remarks>
-        '        Public Shared Function GetTRSJobList() As List(Of String)
-        '            Dim jList As List(Of String) = REMIAppCache.GetTRSJobList()
-        '            If jList Is Nothing Then
-        '                jList = New List(Of String)
-        '                Using myConnection As New OracleConnection(REMIConfiguration.ConnectionStringReq("TRSDBConnectionString"))
-        '                    Using myCommand As New OracleCommand("REMI_HELPER.get_job_types", myConnection)
-        '                        myCommand.CommandType = CommandType.StoredProcedure
-
-        '                        Dim pOut As New OracleParameter
-        '                        pOut.Direction = ParameterDirection.ReturnValue
-        '                        pOut.OracleType = OracleType.Cursor
-        '                        pOut.ParameterName = "C_REF_RET"
-        '                        myCommand.Parameters.Add(pOut)
-        '                        myConnection.Open()
-
-        '                        Using myReader As OracleDataReader = myCommand.ExecuteReader
-        '                            If myReader.HasRows Then
-        '                                While myReader.Read
-        '                                    jList.Add(myReader.GetValue(1).ToString.Trim)
-        '                                End While
-        '                            End If
-        '                        End Using
-        '                    End Using
-        '                End Using
-
-        '                If jList IsNot Nothing Then
-        '                    REMIAppCache.SetTRSJobList(jList)
-        '                End If
-        '            End If
-
-        '            Return jList
-        '        End Function
-        '#End Region
 
 #Region "Public Methods"
         Public Shared Function GetREMIJobList() As List(Of String)
@@ -125,6 +83,7 @@ Namespace REMI.Dal
 
         Public Shared Function SaveOrientation(ByVal jobID As Int32, ByVal id As Int32, ByVal name As String, ByVal productTypeID As Int32, ByVal description As String, ByVal isActive As Boolean, ByVal xml As String) As Boolean
             Dim Result As Integer = 0
+            Dim success As Boolean = False
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispJobOrientationSave", myConnection)
@@ -136,12 +95,22 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@Description", description)
                     myCommand.Parameters.AddWithValue("@IsActive", isActive)
                     myCommand.Parameters.AddWithValue("@Definition", xml)
+
+                    Dim output As DbParameter = myCommand.CreateParameter()
+                    output.DbType = DbType.Boolean
+                    output.Direction = ParameterDirection.Output
+                    output.ParameterName = "@Success"
+                    output.Value = success
+                    myCommand.Parameters.Add(output)
+
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
+
+                    Boolean.TryParse(myCommand.Parameters("@Success").Value.ToString(), success)
                 End Using
             End Using
 
-            Return True
+            Return success
         End Function
 
         Public Shared Function GetJobListDT(ByVal user As User) As JobCollection

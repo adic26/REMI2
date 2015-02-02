@@ -2,6 +2,7 @@
 Imports REMI.Core
 'Imports System.Data.OracleClient
 Imports REMI.BusinessEntities
+Imports System.Data.Common
 
 Namespace REMI.Dal
     Public Class LookupsDB
@@ -60,8 +61,9 @@ Namespace REMI.Dal
 
         Public Shared Function SaveLookup(ByVal lookupType As String, ByVal value As String, ByVal isActive As Int32, ByVal description As String, ByVal parentID As Int32) As Boolean
             Dim Result As Integer = 0
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            Dim success As Boolean = False
 
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispSaveLookup", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@LookupType", lookupType)
@@ -69,11 +71,22 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@IsActive", isActive)
                     myCommand.Parameters.AddWithValue("@Description", description)
                     myCommand.Parameters.AddWithValue("@ParentID", parentID)
+
+                    Dim output As DbParameter = myCommand.CreateParameter()
+                    output.DbType = DbType.Boolean
+                    output.Direction = ParameterDirection.Output
+                    output.ParameterName = "@Success"
+                    output.Value = success
+                    myCommand.Parameters.Add(output)
+
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
+
+                    Boolean.TryParse(myCommand.Parameters("@Success").Value.ToString(), success)
                 End Using
             End Using
-            Return True
+
+            Return success
         End Function
 
         Public Shared Function GetLookupID(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32

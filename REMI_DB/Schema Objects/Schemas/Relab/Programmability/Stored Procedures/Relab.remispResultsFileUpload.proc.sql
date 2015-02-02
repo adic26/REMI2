@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [Relab].[remispResultsFileUpload] @XML AS NTEXT, @LossFile AS NTEXT = NULL
+﻿ALTER PROCEDURE [Relab].[remispResultsFileUpload] @XML AS NTEXT, @LossFile AS NTEXT = NULL, @Success AS BIT = NULL OUTPUT
 AS
 BEGIN
 	DECLARE @TestStageID INT
@@ -141,6 +141,9 @@ BEGIN
 					BEGIN
 						INSERT INTO Relab.ResultsOrphaned (ResultXML, LossFile)
 						VALUES (@XML, @ResultsLossFile)
+
+						SET @Success = 0
+						PRINT @Success
 					END
 				ELSE
 					BEGIN
@@ -151,6 +154,9 @@ BEGIN
 
 						INSERT INTO Relab.ResultsXML (ResultID, ResultXML, VerNum, StationName, StartDate, EndDate, LossFile)
 						VALUES (@ResultID, @XML, 1, @StationName, @StartDate, CONVERT(DATETIME, @EndDate), @ResultsLossFile)
+
+						SET @Success = 1
+						PRINT @Success
 					END
 			END
 			ELSE
@@ -159,6 +165,9 @@ BEGIN
 
 				INSERT INTO Relab.ResultsXML (ResultID, ResultXML, VerNum, StationName, StartDate, EndDate, LossFile)
 				VALUES (@ResultID, @XML, @VerNum, @StationName, @StartDate, CONVERT(DATETIME, @EndDate), @ResultsLossFile)
+
+				SET @Success = 1
+				PRINT @Success
 			END
 		END
 	END
@@ -166,6 +175,10 @@ BEGIN
 	BEGIN
 		INSERT INTO Relab.ResultsOrphaned (ResultXML, LossFile)
 		VALUES (@XML, @ResultsLossFile)
+
+		SET @Success = 0
+		
+		PRINT @Success
 	END
 END
 GO

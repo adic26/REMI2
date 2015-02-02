@@ -91,25 +91,22 @@ Namespace REMI.Dal
                         myReader.Close()
                     End Using
                 End Using
-                'If myTest IsNot Nothing Then
-                '    myTest.TrackingLocationTypes = GetApplicableTLTypes(myTest.ID, myConnection)
-                'End If
             End Using
+
             Return myTest
         End Function
 
         Public Shared Function GetListOfBatchSpecificTestDurations(ByVal qraNumber As String, ByVal myconnection As SqlConnection) As Dictionary(Of Integer, Double)
-
             Dim tempList As New Dictionary(Of Integer, Double)
 
             Using myCommand As New SqlCommand("remispBatchSpecificTestDurationsGetList", myconnection)
                 myCommand.CommandType = CommandType.StoredProcedure
-
                 myCommand.Parameters.AddWithValue("@qranumber", qraNumber)
 
                 If myconnection.State <> ConnectionState.Open Then
                     myconnection.Open()
                 End If
+
                 Using myReader As SqlDataReader = myCommand.ExecuteReader()
                     If myReader.HasRows Then
                         While myReader.Read()
@@ -133,7 +130,6 @@ Namespace REMI.Dal
         ''' A TestCollection. 
         ''' </returns> 
         Public Shared Function GetListByTestType(ByVal TestType As TestType, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal includeArchived As Boolean) As TestCollection
-
             Dim tempList As New TestCollection
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestsSelectListByType", myConnection)
@@ -169,6 +165,7 @@ Namespace REMI.Dal
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TestStageID", TestStageID)
                     myConnection.Open()
+
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then
                             While myReader.Read()
@@ -184,8 +181,8 @@ Namespace REMI.Dal
 
         Public Shared Function GetTestsByBatchUnitStage(ByVal requestNumber As String, ByVal unitNumber As Int32, ByVal TestStageID As Integer) As TestCollection
             Dim tempList As New TestCollection
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestsSelectByBatchUnitStage", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
@@ -207,46 +204,46 @@ Namespace REMI.Dal
 
         Public Shared Function AddApplicableTrackingLocationType(ByVal testID As Integer, ByVal trackingLocationType As TrackingLocationType) As Boolean
             Dim Result As Integer = 0
-            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
+            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestsAddTrackingLocationForTest", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-
                     myCommand.Parameters.AddWithValue("@TestID", testID)
                     myCommand.Parameters.AddWithValue("@TrackingLocationTypeID", trackingLocationType.ID)
 
                     MyConnection.Open()
                     Result = myCommand.ExecuteNonQuery()
                 End Using
-
             End Using
+
             If Result > 0 Then
                 'messy clear the whole cache
                 'must do this becuase there is no graph of which batches will be affected by the test update.
                 REMIAppCache.ClearCache()
             End If
+
             Return Result > 0
         End Function
+
         Public Shared Function DeleteApplicableTrackingLocationType(ByVal testID As Integer, ByVal trackingLocationType As TrackingLocationType) As Boolean
             Dim Result As Integer = 0
-            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
+            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestsRemoveTrackingLocationForTest", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-
                     myCommand.Parameters.AddWithValue("@TestID", testID)
                     myCommand.Parameters.AddWithValue("@TrackingLocationTypeID", trackingLocationType.ID)
-
                     MyConnection.Open()
                     Result = myCommand.ExecuteNonQuery()
                 End Using
-
             End Using
+
             If Result > 0 Then
                 'messy clear the whole cache
                 'must do this becuase there is no graph of which batches will be affected by the update.
                 REMIAppCache.ClearCache()
             End If
+
             Return Result > 0
         End Function
 
@@ -345,8 +342,8 @@ Namespace REMI.Dal
         ''' <param name="id">The ID of the Test to delete.</param> 
         Public Shared Function Delete(ByVal ID As Integer, ByVal UserName As String) As Integer
             Dim Result As Integer = 0
-            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
+            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestsDeleteSingleItem", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@ID", ID)
@@ -354,8 +351,8 @@ Namespace REMI.Dal
                     MyConnection.Open()
                     Result = myCommand.ExecuteNonQuery()
                 End Using
-
             End Using
+
             If Result > 0 Then
                 'messy clear the whole cache
                 'must do this becuase there is no graph of which batches will be affected by the test update.
@@ -363,7 +360,6 @@ Namespace REMI.Dal
             End If
             Return Result
         End Function
-
 #End Region
 
 #Region "Private Methods"
@@ -446,9 +442,4 @@ Namespace REMI.Dal
 #End Region
 
     End Class
-
-
 End Namespace
-
-
-
