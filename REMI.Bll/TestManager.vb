@@ -13,6 +13,54 @@ Namespace REMI.Bll
     Public Class TestManager
         Inherits REMIManagerBase
 
+        <DataObjectMethod(DataObjectMethodType.Delete, False)> _
+        Public Shared Function DeleteAccess(ByVal testAccessID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim ja As Entities.TestsAccess = (From a In instance.TestsAccesses Where a.TestAccessID = testAccessID Select a).FirstOrDefault()
+                instance.DeleteObject(ja)
+
+                instance.SaveChanges()
+
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetTestAccess(ByVal testID As Int32) As DataTable
+            Try
+                Return TestDB.GetTestAccess(testID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                Return Nothing
+            End Try
+        End Function
+
+        Public Shared Function SaveAccess(ByVal testID As Int32, ByVal departmentID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim ja As Entities.TestsAccess = (From a In instance.TestsAccesses Where a.TestID = testID And a.LookupID = departmentID Select a).FirstOrDefault()
+
+                If (ja Is Nothing) Then
+                    Dim a As New REMI.Entities.TestsAccess()
+                    a.Lookup = (From l In instance.Lookups Where l.LookupID = departmentID Select l).FirstOrDefault()
+                    a.Test = (From t In instance.Tests Where t.ID = testID Select t).FirstOrDefault()
+                    instance.AddToTestsAccesses(a)
+                End If
+
+                instance.SaveChanges()
+
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+            Return False
+        End Function
+
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetTests(ByVal trackingLocationID As Int32, ByVal jobID As Int32) As List(Of String)
             Try

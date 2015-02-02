@@ -113,6 +113,49 @@
         </tr>
         <tr>
             <td class="HorizTableFirstcolumn">
+                Access:
+            </td>
+            <td class="HorizTableSecondColumn">
+                <asp:GridView runat="server" ID="grdAccess" ShowFooter="true" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="TestAccessID">
+                    <Columns>
+                        <asp:BoundField DataField="TestAccessID" HeaderText="TestAccessID" ReadOnly="true" SortExpression="TestAccessID" />
+                        <asp:BoundField DataField="TestName" HeaderText="TestName" SortExpression="TestName" />
+                        <asp:TemplateField HeaderText="Department" SortExpression="">
+                            <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblDepartment" Text='<%# Eval("Department")%>' Visible="true" />
+                            </ItemTemplate>
+                            <FooterStyle HorizontalAlign="Right" />
+                            <FooterTemplate>
+                                <asp:DropDownList runat="server" ID="ddlDepartments" DataTextField="LookupType" DataSourceID="odsDepartments" DataValueField="LookupID"></asp:DropDownList>
+                            </FooterTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField ShowHeader="False">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("TestAccessID")%>' onclientclick="return confirm('Are you sure you want to delete this department?');" CommandName="DeleteAccess" CausesValidation="false">Delete</asp:LinkButton>
+                            </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:Button ID="btnAddAccess" CssClass="buttonSmall" runat="server" Text="Add Access" OnClick="btnAddAccess_Click" CausesValidation="true" />
+                            </FooterTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+                <asp:ObjectDataSource ID="odsDepartments" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetLookups" TypeName="REMI.Bll.LookupsManager">
+                    <SelectParameters>
+                        <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
+                        <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
+                        <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
+                        <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
+                        <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
+                        <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
+                        <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
+                        <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+                    </SelectParameters>
+                </asp:ObjectDataSource>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="HorizTableFirstcolumn">
                 Archive:
             </td>
             <td class="HorizTableSecondColumn">

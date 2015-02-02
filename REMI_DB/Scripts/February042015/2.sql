@@ -389,6 +389,55 @@ IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
+PRINT N'Creating [dbo].[TestsAccess]'
+GO
+CREATE TABLE [dbo].[TestsAccess]
+(
+[TestAccessID] [int] NOT NULL IDENTITY(1, 1),
+[TestID] [int] NOT NULL,
+[LookupID] [int] NOT NULL
+)
+GO
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Creating primary key [PK_TestsAccess] on [dbo].[TestsAccess]'
+GO
+ALTER TABLE [dbo].[TestsAccess] ADD CONSTRAINT [PK_TestsAccess] PRIMARY KEY CLUSTERED  ([TestAccessID])
+GO
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Creating [dbo].[remispGetTestsAccess]'
+GO
+CREATE PROCEDURE [dbo].[remispGetTestsAccess] @TestID INT = 0
+AS
+BEGIN
+	SELECT ta.TestAccessID, t.TestName, l.[Values] As Department
+	FROM TestsAccess ta
+		INNER JOIN Tests t ON t.ID=ta.TestID
+		INNER JOIN Lookups l ON l.LookupID=ta.LookupID
+	WHERE (@TestID > 0 AND ta.TestID=@TestID) OR (@TestID = 0)
+	ORDER BY t.TestName
+END
+GO
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+PRINT N'Adding foreign keys to [dbo].[TestsAccess]'
+GO
+ALTER TABLE [dbo].[TestsAccess] ADD CONSTRAINT [FK_TestsAccess_Tests] FOREIGN KEY ([TestID]) REFERENCES [dbo].[Tests] ([ID])
+ALTER TABLE [dbo].[TestsAccess] ADD CONSTRAINT [FK_TestsAccess_Lookups] FOREIGN KEY ([LookupID]) REFERENCES [dbo].[Lookups] ([LookupID])
+GO
+
+insert into TestsAccess (TestID,LookupID)
+select ID as testid, 5752 as lookupid
+from tests
+where isnull(IsArchived,0)=0 and TestType=1
+GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN

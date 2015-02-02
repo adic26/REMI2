@@ -2637,4 +2637,10 @@
   <ItemGroup>
     <None Include="Scripts\February042015\1.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\TestsAccess.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetTestsAccess.sql" />
+  </ItemGroup>
 </Project>

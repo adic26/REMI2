@@ -41,6 +41,25 @@ Namespace REMI.Dal
             Return tempList
         End Function
 
+        Public Shared Function GetTestAccess(ByVal testID As Int32) As DataTable
+            Dim dt As New DataTable
+            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetTestsAccess", MyConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+
+                    If (testID > 0) Then
+                        myCommand.Parameters.AddWithValue("@TestID", testID)
+                    End If
+
+                    MyConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "TestAccess"
+                End Using
+            End Using
+            Return dt
+        End Function
+
         ''' <summary>Gets an instance of Test from the underlying datasource.</summary> 
         ''' <param name="id">The unique ID of the Test in the database.</param> 
         ''' <returns>A Test if the ID was found in the database, or Nothing otherwise.</returns> 

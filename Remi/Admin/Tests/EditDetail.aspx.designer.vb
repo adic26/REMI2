@@ -212,6 +212,24 @@ Partial Public Class Admin_Tests_EditDetail
     Protected WithEvents lstAddedTLTypes As Global.System.Web.UI.WebControls.ListBox
 
     '''<summary>
+    '''grdAccess control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdAccess As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''odsDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
     '''chkArchived control.
     '''</summary>
     '''<remarks>
