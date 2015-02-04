@@ -8,7 +8,7 @@ Public Class Menu
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 1)
+            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
             ddlDepartments.DataBind()
 
             MenuBindData()

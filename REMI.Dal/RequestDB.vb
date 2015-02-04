@@ -14,7 +14,7 @@ Imports System.Reflection
 Namespace REMI.Dal
     Public Class RequestDB
 
-        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
+        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal userID As Int32) As DataTable
             Dim dt As New DataTable("RequestSetupInfo")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Req.GetRequestSetupInfo", myConnection)
@@ -24,6 +24,7 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@BatchID", batchID)
                     myCommand.Parameters.AddWithValue("@TestStageType", testStageType)
                     myCommand.Parameters.AddWithValue("@BlankSelected", blankSelected)
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
@@ -565,7 +566,7 @@ Namespace REMI.Dal
                 myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
                 Dim options As New List(Of String)
                 Dim filteredOptions As New List(Of String)
-                Dim onlylh As List(Of String) = (From l In instance.LookupsHierarchies.Include("Lookup1") Where l.ChildLookupTypeID = myFields.OptionsTypeID And l.ParentLookupTypeID = myFields.OptionsTypeID Select l.Lookup1.Values).ToList()
+                Dim onlylh As List(Of String) = (From l In instance.LookupsHierarchies.Include("Lookup1") Where l.RequestTypeID = myFields.RequestTypeID And l.ChildLookupTypeID = myFields.OptionsTypeID And l.ParentLookupTypeID = myFields.OptionsTypeID Select l.Lookup1.Values).ToList()
 
                 options.AddRange((From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID And lo.IsActive = 1 _
                      Order By lo.Values Select lo.Values).ToList)
@@ -590,6 +591,12 @@ Namespace REMI.Dal
 
                 myFields.OptionsTypeName = (From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.LookupType.Name).FirstOrDefault()
                 myFields.OptionsType = filteredOptions
+
+                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("DefaultValue")) Then
+                    myFields.DefaultValue = myDataRecord.GetString(myDataRecord.GetOrdinal("DefaultValue"))
+                Else
+                    myFields.DefaultValue = String.Empty
+                End If
 
                 Dim lookups = (From lh In instance.LookupsHierarchies.Include("Lookup").Include("Lookup1").Include("LookupType").Include("LookupType1").Include("RequestType") Where lh.ChildLookupTypeID = myFields.OptionsTypeID And lh.ParentLookupTypeID <> myFields.OptionsTypeID And lh.RequestTypeID = myFields.RequestTypeID _
                         Select New With {lh.RequestTypeID, lh.ParentLookupID, lh.ChildLookupID, lh.ParentLookupTypeID, lh.ChildLookupTypeID, .ParentLookup = lh.Lookup.Values, .ChildLookup = lh.Lookup1.Values, .ParentLookupType = lh.LookupType.Name, .ChildLookupType = lh.LookupType1.Name}).ToList()

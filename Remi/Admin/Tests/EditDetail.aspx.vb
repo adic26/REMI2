@@ -79,6 +79,8 @@ Partial Class Admin_Tests_EditDetail
                 txtTrainee.Text = t.Trainee
                 txtDegradation.Text = t.Degradation
                 chkArchived.Checked = t.IsArchived
+
+                BindAccess()
             Else
                 notMain.Notifications.AddWithMessage("Unable to locate the given test.", NotificationType.Warning)
             End If
@@ -94,6 +96,41 @@ Partial Class Admin_Tests_EditDetail
         If li IsNot Nothing Then
             lstAddedTLTypes.Items.Add(li)
             lstAllTLTypes.Items.Remove(li)
+        End If
+    End Sub
+
+    Protected Sub grdAccessGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdAccess.PreRender
+        Helpers.MakeAccessable(grdAccess)
+    End Sub
+
+    Protected Sub grdAccess_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles grdAccess.RowCommand
+        Select Case e.CommandName.ToLower()
+            Case "deleteaccess"
+                TestManager.DeleteAccess(Convert.ToInt32(e.CommandArgument))
+        End Select
+
+        BindAccess()
+    End Sub
+
+    Protected Sub BindAccess()
+        grdAccess.DataSource = TestManager.GetTestAccess(hdnEditID.Value)
+        grdAccess.DataBind()
+    End Sub
+
+    Protected Sub btnAddAccess_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Dim departmentID As Int32 = 0
+        Int32.TryParse(Request.Form(grdAccess.FooterRow.FindControl("ddlDepartments").UniqueID), departmentID)
+
+        If (departmentID > 0) Then
+            Dim success As Boolean = TestManager.SaveAccess(hdnEditID.Value, departmentID)
+
+            If (success) Then
+                notMain.Add("Successfully Created New Access", NotificationType.Information)
+            Else
+                notMain.Add("Failed To Create New Access", NotificationType.Errors)
+            End If
+        Else
+            notMain.Add("Please ensure you have selected a department!", NotificationType.Warning)
         End If
     End Sub
 

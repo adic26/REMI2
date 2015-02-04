@@ -14,7 +14,7 @@ Public Class Security
             End If
 
             BindServices()
-            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 1)
+            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
             ddlDepartments.DataBind()
         End If
 

@@ -16,16 +16,29 @@ Namespace REMI.Dal
     Public Class SecurityDB
 
         Public Shared Function AddRemovePermission(ByVal permission As String, ByVal role As String) As Boolean
+            Dim success As Boolean = False
+
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispAddRemovePermissiontoRole", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@Permission", permission)
                     myCommand.Parameters.AddWithValue("@Role", role)
+
+                    Dim output As DbParameter = myCommand.CreateParameter()
+                    output.DbType = DbType.Boolean
+                    output.Direction = ParameterDirection.Output
+                    output.ParameterName = "@Success"
+                    output.Value = success
+                    myCommand.Parameters.Add(output)
+
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
+
+                    Boolean.TryParse(myCommand.Parameters("@Success").Value.ToString(), success)
                 End Using
             End Using
-            Return True
+
+            Return success
         End Function
 
         Public Shared Function GetPermissions() As DataTable

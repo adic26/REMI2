@@ -4,6 +4,7 @@
 	[File] [varbinary](max) NOT NULL,
 	[ContentType] [nvarchar](50) NOT NULL,
 	[FileName] [nvarchar](200) NOT NULL,
+	rv ROWVERSION,
  CONSTRAINT [PK_ResultsMeasurementsFiles] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

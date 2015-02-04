@@ -68,7 +68,7 @@ Namespace REMI.Dal
             Return totalUpdateCount
         End Function
 
-        Public Shared Function SelectOne(ByVal ID As Integer) As TestRecord
+        Public Shared Function GetItemByID(ByVal ID As Integer) As TestRecord
             Dim tempTR As New TestRecord
             Using myconnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestRecordsSelectOne", myconnection)

@@ -4,7 +4,7 @@ Imports Remi.Contracts
 
 Partial Class Admin_Users
     Inherits System.Web.UI.Page
-    Dim level As DataTable = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, 0)
+    Dim level As DataTable = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0)
 
     Protected Sub Page_Load() Handles Me.Load
         If Not Page.IsPostBack AndAlso Not UserManager.GetCurrentUser.IsAdmin And Not UserManager.GetCurrentUser.IsTestCenterAdmin Then
@@ -418,13 +418,16 @@ Partial Class Admin_Users
         dtRequestAccess.Columns.Add("IsAdmin", Type.GetType("System.Boolean"))
         dtRequestAccess.Columns.Add("UserDetailsID", Type.GetType("System.Int32"))
         dtRequestAccess.Columns.Add("IsExternal", Type.GetType("System.Boolean"))
+        dtRequestAccess.Columns.Add("TypeID", Type.GetType("System.Int32"))
 
         For Each row As GridViewRow In requestAccess.Rows
             If (row.RowType = DataControlRowType.DataRow) Then
                 Dim userDetailsID As Int32 = requestAccess.DataKeys(row.RowIndex).Values(0)
+                Dim RequestTypeAccessID As Int32 = requestAccess.DataKeys(row.RowIndex).Values(2)
+                Dim typeID As Int32 = requestAccess.DataKeys(row.RowIndex).Values(1)
                 Dim chkIsAdmin As CheckBox = row.FindControl("chkIsAdmin")
 
-                Dim rec As DataRow = tmpUser.RequestTypes.Select(String.Format("UserDetailsID={0}", userDetailsID))(0)
+                Dim rec As DataRow = tmpUser.RequestTypes.Select(String.Format("RequestTypeAccessID={0}", RequestTypeAccessID))(0)
 
                 Dim newRow As DataRow = dtRequestAccess.NewRow
                 newRow("RequestType") = rec("RequestType")
@@ -435,6 +438,7 @@ Partial Class Admin_Users
                 newRow("IsAdmin") = chkIsAdmin.Checked
                 newRow("UserDetailsID") = rec("UserDetailsID")
                 newRow("IsExternal") = rec("IsExternal")
+                newRow("TypeID") = rec("TypeID")
 
                 dtRequestAccess.Rows.Add(newRow)
             End If

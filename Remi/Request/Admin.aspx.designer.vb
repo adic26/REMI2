@@ -32,6 +32,24 @@ Partial Public Class ReqAdmin
     Protected WithEvents pnlLeftMenuActions As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
+    '''chkFilter control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chkFilter As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''chkArchived control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chkArchived As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
     '''hdnRequestType control.
     '''</summary>
     '''<remarks>
@@ -48,6 +66,78 @@ Partial Public Class ReqAdmin
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnRequestTypeID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''pnlFilter control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlFilter As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''ddlParentType control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlParentType As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''ddlChildType control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlChildType As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''cblParent control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cblParent As Global.System.Web.UI.WebControls.CheckBoxList
+
+    '''<summary>
+    '''cblChild control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cblChild As Global.System.Web.UI.WebControls.CheckBoxList
+
+    '''<summary>
+    '''txtNewParentLookup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtNewParentLookup As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtNewChildLookup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtNewChildLookup As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''btnSaveLookup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnSaveLookup As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
     '''grdRequestAdmin control.

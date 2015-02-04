@@ -467,6 +467,17 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(Description:="Given a test id this function returns all departments that have access for this test.")> _
+    Public Function GetTestAccess(ByVal testID As Int32) As DataTable
+        Try
+            Return TestManager.GetTestAccess(testID)
+        Catch ex As Exception
+            JobManager.LogIssue("REMI API GetTestAccess", "e3", NotificationType.Errors, ex, String.Format("TestID: {0}", testID))
+        End Try
+
+        Return New DataTable("TestAccess")
+    End Function
+
     <WebMethod(Description:="Given a test name this method returns all the known details of a specific test.")> _
     Public Function GetTestByID(ByVal id As Int32) As Test
         Try
@@ -555,7 +566,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProduct(ByVal type As String, ByVal productID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0)
+            Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0, False, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsTypeStringByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type, productID))
         End Try
@@ -565,7 +576,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProductParent(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, 1)
+            Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, False, 1)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsTypeStringByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1} ParentID: {2}", type, productID, parentID))
         End Try
@@ -575,7 +586,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookupsAdvanced(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Int32, ByVal removeFirstAllRecord As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, parentID, parentLookupType, parentLookupValue, requestTypeID, removeFirstAllRecord)
+            Return LookupsManager.GetLookups(type, productID, parentID, parentLookupType, parentLookupValue, requestTypeID, False, removeFirstAllRecord)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsAdvanced", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type))
         End Try
@@ -585,7 +596,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookupsByTypeString(ByVal type As String) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, 0)
+            Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsByTypeString", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type))
         End Try
@@ -618,7 +629,7 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsByProduct(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0)
+            Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0, False, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type.ToString(), productID))
         End Try
@@ -629,7 +640,7 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsByProductParent(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, 1)
+            Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, False, 1)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1} ParentID: {2}", type.ToString(), productID, parentID))
         End Try
@@ -640,7 +651,7 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookups(ByVal type As Remi.Contracts.LookupType) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, 0)
+            Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, 0)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookups", "e3", NotificationType.Errors, ex, String.Format("Type: {0}", type.ToString()))
         End Try
@@ -681,7 +692,7 @@ Public Class RemiAPI
         Return New DataTable("JobOrientation")
     End Function
 
-    <WebMethod(Description:="Given a job id this function returns all orientations for this job.")> _
+    <WebMethod(Description:="Given a job id this function returns all departments that have access for this job.")> _
     Public Function GetJobAccess(ByVal jobID As Int32) As DataTable
         Try
             Return JobManager.GetJobAccess(jobID)

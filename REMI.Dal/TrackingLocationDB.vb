@@ -204,31 +204,9 @@ Namespace REMI.Dal
 
             Return Result
         End Function
-
-        ''' <summary> 
-        ''' Returns the number of TrackingLocations. This is used for paging the database if there are many items in a list.
-        ''' </summary> 
-        Public Shared Function SelectCountForGetList(ByVal tlc As TrackingLocationCriteria) As Integer
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Dim myCommand As SqlCommand = CreateCommandForSearching(tlc, myConnection)
-                Using myCommand
-                    Dim IDParam As DbParameter = myCommand.CreateParameter()
-                    IDParam.DbType = DbType.Int32
-                    IDParam.Direction = ParameterDirection.InputOutput
-                    IDParam.ParameterName = "@RecordCount"
-                    IDParam.Value = 0
-                    myCommand.Parameters.Add(IDParam)
-                    myConnection.Open()
-                    myCommand.ExecuteNonQuery()
-
-                    Return CInt(myCommand.Parameters("@RecordCount").Value)
-                End Using
-            End Using
-        End Function
 #End Region
 
 #Region "Private Methods"
-
         ''' <summary>
         ''' Creates the command for searching.
         ''' </summary>

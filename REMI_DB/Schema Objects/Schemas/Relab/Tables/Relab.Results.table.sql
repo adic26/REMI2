@@ -4,6 +4,7 @@
 	[TestID] [int] NOT NULL,
 	[TestUnitID] [int] NOT NULL,
 	[PassFail] [bit] NULL,
+	rv ROWVERSION,
  CONSTRAINT [PK_Results] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

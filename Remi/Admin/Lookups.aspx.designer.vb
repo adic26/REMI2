@@ -230,6 +230,15 @@ Partial Public Class Admin_Lookups
     Protected WithEvents lnkCancelAction As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
+    '''txtLookupTypeName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtLookupTypeName As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
     '''ddlLookupList control.
     '''</summary>
     '''<remarks>

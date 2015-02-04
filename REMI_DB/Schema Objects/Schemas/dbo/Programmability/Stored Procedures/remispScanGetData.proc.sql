@@ -59,10 +59,11 @@ declare @productTypeID INT
 declare @accessoryType NVARCHAR(150)
 declare @productType NVARCHAR(150)
 Declare @NoBSN BIT
+DECLARE @DepartmentID INT
 
 --jobname, product group, job WI, jobID
 select @jobName=b.jobname,@cprNumber =b.CPRNumber,@hwrevision = b.HWRevision, @productGroup=lp.[Values],@jobWILocation=j.WILocation,@jobid=j.ID, @batchStatus = b.BatchStatus ,
-@productID=p.ID, @NoBSN=j.NoBSN, @productTypeID=b.ProductTypeID, @accessoryTypeID=b.AccessoryGroupID
+@productID=p.ID, @NoBSN=j.NoBSN, @productTypeID=b.ProductTypeID, @accessoryTypeID=b.AccessoryGroupID, @DepartmentID = DepartmentID
 from Batches as b
 	INNER JOIN jobs as j ON j.JobName = b.JobName
 	INNER JOIN Products p ON p.ID=b.ProductID
@@ -197,17 +198,18 @@ INTO #tests
 FROM (
 SELECT t.TestName, ts.ProcessOrder
 FROM Tests t
-INNER JOIN TrackingLocationsForTests tlft ON t.ID = tlft.TestID
-INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
-INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
-INNER JOIN TestStages ts ON ts.TestID = t.ID AND ts.JobID=@jobID AND t.TestType NOT IN (1, 3)
+	INNER JOIN TrackingLocationsForTests tlft ON t.ID = tlft.TestID
+	INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
+	INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+	INNER JOIN TestStages ts ON ts.TestID = t.ID AND ts.JobID=@jobID AND t.TestType NOT IN (1, 3)
 WHERE ISNULL(t.IsArchived, 0)=0 AND tl.ID = @selectedTrackingLocationID
 UNION
 SELECT t2.TestName, 0 AS ProcessOrder
 FROM Tests t2
-INNER JOIN TrackingLocationsForTests tlft ON t2.ID = tlft.TestID
-INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
-INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+	INNER JOIN TrackingLocationsForTests tlft ON t2.ID = tlft.TestID
+	INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
+	INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+	INNER JOIN TestsAccess ta ON ta.TestID=t2.id AND ta.LookupID IN (@DepartmentID)
 WHERE ISNULL(t2.IsArchived, 0)=0 AND tl.ID = @selectedTrackingLocationID AND t2.TestType IN (1, 3)
 ) test
 ORDER BY test.ProcessOrder

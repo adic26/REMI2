@@ -66,7 +66,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.Select, False)> _
         Public Shared Function GetItemByID(ByVal ID As Integer) As TestRecord
             Try
-                Return TestRecordDB.SelectOne(ID)
+                Return TestRecordDB.GetItemByID(ID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TestRecord: {0}", ID))
             End Try

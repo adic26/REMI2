@@ -14,6 +14,7 @@
 	Description NVARCHAR(800) NULL,
 	LastUser NVARCHAR(255) NULL,
 	DegradationVal DECIMAL(10,3) NULL,
+	rv ROWVERSION,
  CONSTRAINT [PK_ResultsMeasurements] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

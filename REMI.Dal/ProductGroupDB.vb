@@ -252,9 +252,9 @@ Namespace REMI.Dal
             Return True
         End Function
 
-
         Public Shared Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String, ByVal tsdContact As String) As Boolean 'We are passing in productGroupName because the webservice will insert a missing one
             Dim Result As Integer = 0
+            Dim success As Boolean = False
 
             If (QAP Is Nothing) Then
                 QAP = String.Empty
@@ -272,11 +272,22 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@productID", productID)
                     myCommand.Parameters.AddWithValue("@QAP", QAP)
                     myCommand.Parameters.AddWithValue("@TSDContact", tsdContact)
+
+                    Dim output As DbParameter = myCommand.CreateParameter()
+                    output.DbType = DbType.Boolean
+                    output.Direction = ParameterDirection.Output
+                    output.ParameterName = "@Success"
+                    output.Value = success
+                    myCommand.Parameters.Add(output)
+
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
+
+                    Boolean.TryParse(myCommand.Parameters("@Success").Value.ToString(), success)
                 End Using
             End Using
-            Return True
+
+            Return success
         End Function
 
         ''' <summary>Deletes a ProductGroup/User association from the database.</summary> 

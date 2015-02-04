@@ -222,21 +222,28 @@ Namespace REMI.Bll
         Public Shared Function GetReqString(ByVal Number As String) As String
             Try
                 Dim isValid As Boolean = Number.Split("-"c).Length - 1 = 1
+                Dim userID As Int32 = UserManager.GetCurrentUser.ID
+                Dim departments As List(Of Int32) = (From d In New REMI.Dal.Entities().Instance().UserDetails.Include("Lookup").Include("Lookup.LookupType") Where d.UserID = userID And d.Lookup.LookupType.Name = "Department" Select d.LookupID).ToList()
 
                 Select Case Number.Length
                     Case 4
                         Number = String.Format("{0}-{1}", DateTime.Now.Year.ToString().Substring(2), Number)
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
                     Case 7
                         If (isValid) Then
-                            Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault()
+                            Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
                         Else
                             Return Number.Trim()
                         End If
                     Case 11
-                        Return Number.Trim()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
+                    Case 15, 21
+                        Dim reqNum As String = Number.Substring(0, 11).ToString().Trim()
+                        If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                            Return Number
+                        End If
                     Case Else
-                        Return Number.Trim()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
                 End Select
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, Number.ToString())

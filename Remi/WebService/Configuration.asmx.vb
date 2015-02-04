@@ -211,10 +211,12 @@ Public Class ProductConfiguration
         Return Nothing
     End Function
 
-    <WebMethod(Description:="Get the setup information for the batch for stage and test")> _
-    Public Function GetBatchTestSetupInfo(ByVal batchID As Int32, ByVal jobID As Int32, ByVal productID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
+    <WebMethod(EnableSession:=True, Description:="Get the setup information for the batch for stage and test")> _
+    Public Function GetBatchTestSetupInfo(ByVal batchID As Int32, ByVal jobID As Int32, ByVal productID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal useridentification As String) As DataTable
         Try
-            Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)
+            If UserManager.SetUserToSession(useridentification) Then
+                Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)
+            End If
         Catch ex As Exception
             RequestManager.LogIssue("GetBatchTestSetupInfo", "e3", NotificationType.Errors, ex, String.Format("BatchID: {0} JobID: {1} ProductID: {2} TestStageType: {3} BlankSelected: {4}", batchID, jobID, productID, testStageType, blankSelected))
         End Try

@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [dbo].[remispSaveProduct] @ProductID int , @isActive int, @ProductGroupName NVARCHAR(150), @QAP NVARCHAR(255), @TSDContact NVARCHAR(255)
+﻿ALTER PROCEDURE [dbo].[remispSaveProduct] @ProductID int , @isActive int, @ProductGroupName NVARCHAR(150), @QAP NVARCHAR(255), @TSDContact NVARCHAR(255), @Success AS BIT = NULL OUTPUT
 AS
 BEGIN
 	IF (@ProductID = 0)--ensure we don't have it
@@ -17,14 +17,18 @@ BEGIN
 		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Products'		
 				
 		INSERT INTO Lookups ([Values], LookupID, IsActive) VALUES (LTRIM(RTRIM(@ProductGroupName)), @LookupID, 1)
-		INSERT INTO Products (LookupID, IsActive, QAPLocation, TSDContact) 
-		VALUES (@LookupID, CONVERT(BIT, @isActive), @QAP, @TSDContact)
+		INSERT INTO Products (LookupID, QAPLocation, TSDContact) 
+		VALUES (@LookupID, @QAP, @TSDContact)
+
+		SET @Success = 1
 	END
 	ELSE
 	BEGIN
 		UPDATE Products
-		SET IsActive = CONVERT(BIT, @isActive), QAPLocation = @QAP, TSDContact = @TSDContact
+		SET QAPLocation = @QAP, TSDContact = @TSDContact
 		WHERE ID=@ProductID
+
+		SET @Success = 1
 	END
 END
 GRANT EXECUTE ON remispSaveProduct TO REMI

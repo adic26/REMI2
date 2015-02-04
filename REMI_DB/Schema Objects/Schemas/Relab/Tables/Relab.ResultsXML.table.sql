@@ -8,6 +8,7 @@
 	[StartDate] [datetime] NULL,
 	[EndDate] [datetime] NULL,
 	[lossFile] [xml] NULL,
+	rv ROWVERSION,
  CONSTRAINT [PK_Relab.ResultXML] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

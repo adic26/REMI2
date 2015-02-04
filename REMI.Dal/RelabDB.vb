@@ -252,30 +252,56 @@ Namespace REMI.Dal
         End Function
 
         Public Shared Function UploadResults(ByVal xml As String, ByVal lossFile As String) As Boolean
+            Dim success As Boolean = False
+
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Relab.remispResultsFileUpload", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@XML", xml)
                     myCommand.Parameters.AddWithValue("@LossFile", lossFile)
+
+                    Dim output As DbParameter = myCommand.CreateParameter()
+                    output.DbType = DbType.Boolean
+                    output.Direction = ParameterDirection.Output
+                    output.ParameterName = "@Success"
+                    output.Value = success
+                    myCommand.Parameters.Add(output)
+
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
+
+                    Boolean.TryParse(myCommand.Parameters("@Success").Value.ToString(), success)
                 End Using
             End Using
-            Return True
+
+            Return success
         End Function
 
         Public Shared Function UploadResultsMeasurementsFile(ByVal file() As Byte, ByVal contentType As String, ByVal fileName As String) As Boolean
+            Dim success As Boolean = False
+
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Relab.remispResultsMeasurementFileUpload", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@File", file)
                     myCommand.Parameters.AddWithValue("@ContentType", contentType)
                     myCommand.Parameters.AddWithValue("@FileName", fileName)
+
+                    Dim output As DbParameter = myCommand.CreateParameter()
+                    output.DbType = DbType.Boolean
+                    output.Direction = ParameterDirection.Output
+                    output.ParameterName = "@Success"
+                    output.Value = success
+                    myCommand.Parameters.Add(output)
+
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
+
+                    Boolean.TryParse(myCommand.Parameters("@Success").Value.ToString(), success)
                 End Using
             End Using
-            Return True
+
+            Return success
         End Function
 
         Public Shared Function GetMeasurementParameterCommaSeparated(ByVal measurementID As Int32) As DataTable

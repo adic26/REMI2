@@ -59,8 +59,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <h1>Lookups</h1>
-    Select A Lookup Type: <asp:DropDownList ID="ddlLookupList" runat="server" AutoPostBack="True" DataTextField="Name" DataValueField="Name"></asp:DropDownList> 
-    
+    New Lookup Type: <asp:TextBox runat="server" ID="txtLookupTypeName"></asp:TextBox><br />
+    Select A Lookup Type: <asp:DropDownList ID="ddlLookupList" runat="server" AutoPostBack="True" DataTextField="Name" DataValueField="Name"></asp:DropDownList>
+        
     <asp:GridView runat="server" ID="gdvLookups" AutoGenerateColumns="false" ShowFooter="true" EnableViewState="true" OnRowEditing="gdvLookups_OnRowEditing" DataKeyNames="LookupType" AutoGenerateEditButton="true" OnRowCancelingEdit="gdvLookups_OnRowCancelingEdit" OnRowUpdating="gdvLookups_RowUpdating">
         <Columns>
             <asp:BoundField DataField="LookupID" HeaderText="LookupID" ReadOnly="true" SortExpression="LookupID" />
@@ -110,6 +111,7 @@
             <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
             <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
             <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
+            <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
         </SelectParameters>
     </asp:ObjectDataSource>

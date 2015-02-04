@@ -35,5 +35,6 @@ namespace REMI.Contracts
         List<String> OptionsType  { get; set; }
         bool NewRequest { get; set; }
         Int32 ParentFieldSetupID { get; set; }
+        String DefaultValue { get; set; }
     }
 }

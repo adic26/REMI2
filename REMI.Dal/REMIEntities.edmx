@@ -61,6 +61,7 @@
           <EntitySet Name="TestRecordsAudit" EntityType="remiModel.Store.TestRecordsAudit" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TestRecordsXTrackingLogs" EntityType="remiModel.Store.TestRecordsXTrackingLogs" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Tests" EntityType="remiModel.Store.Tests" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TestsAccess" EntityType="remiModel.Store.TestsAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TestStages" EntityType="remiModel.Store.TestStages" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TestUnits" EntityType="remiModel.Store.TestUnits" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TrackingLocations" EntityType="remiModel.Store.TrackingLocations" store:Type="Tables" Schema="dbo" />
@@ -564,6 +565,14 @@
             <End Role="TestRecords" EntitySet="TestRecords" />
             <End Role="TestRecordsXTrackingLogs" EntitySet="TestRecordsXTrackingLogs" />
           </AssociationSet>
+          <AssociationSet Name="FK_TestsAccess_Lookups" Association="remiModel.Store.FK_TestsAccess_Lookups">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="TestsAccess" EntitySet="TestsAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestsAccess_Tests" Association="remiModel.Store.FK_TestsAccess_Tests">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="TestsAccess" EntitySet="TestsAccess" />
+          </AssociationSet>
           <AssociationSet Name="FK_TestStages_Jobs" Association="remiModel.Store.FK_TestStages_Jobs">
             <End Role="Jobs" EntitySet="Jobs" />
             <End Role="TestStages" EntitySet="TestStages" />
@@ -952,6 +961,7 @@
           </Key>
           <Property Name="LookupTypeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
+          <Property Name="IsSystem" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Menu">
           <Key>
@@ -1213,6 +1223,14 @@
           <Property Name="Owner" Type="nvarchar" MaxLength="255" />
           <Property Name="Trainee" Type="nvarchar" MaxLength="255" />
           <Property Name="DegradationVal" Type="decimal" Precision="10" Scale="3" />
+        </EntityType>
+        <EntityType Name="TestsAccess">
+          <Key>
+            <PropertyRef Name="TestAccessID" />
+          </Key>
+          <Property Name="TestAccessID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TestID" Type="int" Nullable="false" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TestStages">
           <Key>
@@ -1560,6 +1578,7 @@
           <Property Name="ColumnOrder" Type="int" Nullable="false" />
           <Property Name="Category" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="ParentReqFieldSetupID" Type="int" />
+          <Property Name="DefaultValue" Type="nvarchar" MaxLength="400" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -1761,12 +1780,13 @@
       -->
         <EntityType Name="vw_RequestDataAudit">
           <Key>
-            <PropertyRef Name="RequestNumber" />
             <PropertyRef Name="Name" />
+            
             <PropertyRef Name="UserName" />
             <PropertyRef Name="InsertTime" />
+            <PropertyRef Name="RequestNumber" />
           </Key>
-          <Property Name="RequestNumber" Type="nvarchar" Nullable="false" MaxLength="11" />
+          <Property Name="RequestNumber" Type="nvarchar" MaxLength="11" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
           <Property Name="Value" Type="nvarchar" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="255" />
@@ -2864,6 +2884,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TestsAccess_Lookups">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="TestsAccess" Type="remiModel.Store.TestsAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="TestsAccess">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestsAccess_Tests">
+          <End Role="Tests" Type="remiModel.Store.Tests" Multiplicity="1" />
+          <End Role="TestsAccess" Type="remiModel.Store.TestsAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TestsAccess">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TestStages_Jobs">
           <End Role="Jobs" Type="remiModel.Store.Jobs" Multiplicity="1" />
           <End Role="TestStages" Type="remiModel.Store.TestStages" Multiplicity="*" />
@@ -3661,6 +3705,15 @@
           </AssociationSet>
           <EntitySet Name="ReqFieldDataAudits" EntityType="REMI.Entities.ReqFieldDataAudit" />
           <EntitySet Name="vw_RequestDataAudit" EntityType="REMI.Entities.vw_RequestDataAudit" />
+          <EntitySet Name="TestsAccesses" EntityType="REMI.Entities.TestsAccess" />
+          <AssociationSet Name="FK_TestsAccess_Lookups" Association="REMI.Entities.FK_TestsAccess_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="TestsAccess" EntitySet="TestsAccesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestsAccess_Tests" Association="REMI.Entities.FK_TestsAccess_Tests">
+            <End Role="Test" EntitySet="Tests" />
+            <End Role="TestsAccess" EntitySet="TestsAccesses" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
           <Key>
@@ -4214,6 +4267,7 @@
           <NavigationProperty Name="Lookups" Relationship="REMI.Entities.FK_Lookups_LookupType" FromRole="LookupType" ToRole="Lookup" />
           <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType" FromRole="LookupType" ToRole="LookupsHierarchy" />
           <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType1" FromRole="LookupType" ToRole="LookupsHierarchy" />
+          <Property Type="Boolean" Name="IsSystem" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductConfiguration">
           <Key>
@@ -4464,6 +4518,7 @@
           <NavigationProperty Name="Results" Relationship="REMI.Entities.FK_Results_Tests" FromRole="Test" ToRole="Result" />
           <NavigationProperty Name="TestStages" Relationship="REMI.Entities.FK_TestStages_Tests" FromRole="Test" ToRole="TestStage" />
           <NavigationProperty Name="TrackingLocationsForTests" Relationship="REMI.Entities.FK_TrackingLocationsForTests_Tests" FromRole="Test" ToRole="TrackingLocationsForTest" />
+          <NavigationProperty Name="TestsAccesses" Relationship="REMI.Entities.FK_TestsAccess_Tests" FromRole="Test" ToRole="TestsAccess" />
         </EntityType>
         <EntityType Name="TestStage">
           <Key>
@@ -5182,6 +5237,7 @@
           <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups1" FromRole="Lookup" ToRole="LookupsHierarchy" />
           <NavigationProperty Name="Products" Relationship="REMI.Entities.FK_Products_Lookups" FromRole="Lookup" ToRole="Product" />
           <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="Lookup" ToRole="UserDetail" />
+          <NavigationProperty Name="TestsAccesses" Relationship="REMI.Entities.FK_TestsAccess_Lookups" FromRole="Lookup" ToRole="TestsAccess" />
           </EntityType>
         <Association Name="FK_Batches_AccessoryGroup">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
@@ -5475,6 +5531,7 @@
           <Property Type="Int32" Name="ColumnOrder" Nullable="false" />
           <Property Type="String" Name="Category" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ParentReqFieldSetupID" />
+          <Property Type="String" Name="DefaultValue" MaxLength="400" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -6277,6 +6334,40 @@
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="InsertTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="TestsAccess">
+          <Key>
+            <PropertyRef Name="TestAccessID" />
+          </Key>
+          <Property Type="Int32" Name="TestAccessID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="TestID" Nullable="false" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_TestsAccess_Lookups" FromRole="TestsAccess" ToRole="Lookup" />
+          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_TestsAccess_Tests" FromRole="TestsAccess" ToRole="Test" />
+        </EntityType>
+        <Association Name="FK_TestsAccess_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.TestsAccess" Role="TestsAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="TestsAccess">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestsAccess_Tests">
+          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
+          <End Type="REMI.Entities.TestsAccess" Role="TestsAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TestsAccess">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6690,6 +6781,7 @@
           <EntitySetMapping Name="LookupTypes">
             <EntityTypeMapping TypeName="REMI.Entities.LookupType">
               <MappingFragment StoreEntitySet="LookupType">
+                <ScalarProperty Name="IsSystem" ColumnName="IsSystem" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="LookupTypeID" ColumnName="LookupTypeID" />
               </MappingFragment>
@@ -7148,6 +7240,7 @@
           <EntitySetMapping Name="ReqFieldSetups">
             <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetup">
               <MappingFragment StoreEntitySet="ReqFieldSetup">
+                <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
                 <ScalarProperty Name="ParentReqFieldSetupID" ColumnName="ParentReqFieldSetupID" />
                 <ScalarProperty Name="Category" ColumnName="Category" />
                 <ScalarProperty Name="ColumnOrder" ColumnName="ColumnOrder" />
@@ -7412,6 +7505,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TestsAccesses">
+            <EntityTypeMapping TypeName="REMI.Entities.TestsAccess">
+              <MappingFragment StoreEntitySet="TestsAccess">
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="TestAccessID" ColumnName="TestAccessID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7628,6 +7730,9 @@
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Users" />
         <EntityTypeShape EntityType="REMI.Entities.ReqFieldDataAudit" Width="1.5" PointX="10.75" PointY="9.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_RequestDataAudit" Width="1.5" PointX="2.625" PointY="8.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TestsAccess" Width="1.5" PointX="0.51571959281140922" PointY="9.61177495569539" />
+        <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Tests" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
