@@ -179,7 +179,7 @@ BEGIN
 			ALTER TABLE dbo.#RR ADD TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
 				TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
 				MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
-				UpperLimit NVARCHAR(255), LowerLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(400), 
+				LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(400), 
 				DegradationVal DECIMAL(10,3), Description NVARCHAR(800), PassFail BIT, ReTestNum INT,
 				MeasurementUnitType NVARCHAR(150)
 		END
@@ -208,7 +208,7 @@ BEGIN
 		BEGIN
 			INSERT INTO #executeSQL (sqlvar)
 			VALUES (', t.TestName, ts.TestStageName, x.StartDate AS TestRunStartDate, x.EndDate AS TestRunEndDate, 
-				mn.[Values] As MeasurementName, m.MeasurementValue, m.UpperLimit, m.LowerLimit, m.Archived, m.Comment, m.DegradationVal, m.Description, m.PassFail, m.ReTestNum, 
+				mn.[Values] As MeasurementName, m.MeasurementValue, m.LowerLimit, m.UpperLimit, m.Archived, m.Comment, m.DegradationVal, m.Description, m.PassFail, m.ReTestNum, 
 				mut.[Values] As MeasurementUnitType ')
 		END
 
