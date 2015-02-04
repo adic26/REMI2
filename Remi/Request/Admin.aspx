@@ -159,7 +159,7 @@
                     <ItemTemplate>
                         <asp:HiddenField runat="server" ID="hdnOptionsDefault" Value='<%# Eval("DefaultValue")%>' />
                         <asp:Label runat="server" ID="lblDefaultValue" Text='<%# Eval("DefaultValue")%>' Visible="true"></asp:Label>
-                        <asp:DropDownList runat="server" ID="ddlDefaultValue" DataTextField="LookupType" DataValueField="LookupID" Visible="false"></asp:DropDownList>
+                        <asp:DropDownList runat="server" ID="ddlDefaultValue" Visible="false"></asp:DropDownList>
                     </ItemTemplate>
                     <FooterStyle HorizontalAlign="Right" />
                     <FooterTemplate>

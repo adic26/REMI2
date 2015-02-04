@@ -184,7 +184,9 @@ Public Class ReqAdmin
         BindRequest()
 
         Dim requestTypeID As Int32
+        Dim fieldID As Int32
         Int32.TryParse(hdnRequestTypeID.Value, requestTypeID)
+        Int32.TryParse(grdRequestAdmin.DataKeys(e.NewEditIndex).Values(0).ToString(), fieldID)
 
         Dim lblName As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblName")
         Dim lblDescription As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblDescription")
@@ -209,7 +211,11 @@ Public Class ReqAdmin
         Dim ddlOptionsType As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlOptionsType")
         Dim ddlDefaultValue As DropDownList = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("ddlDefaultValue")
 
-        ddlDefaultValue.DataSource = LookupsManager.GetLookups(lblOptionsType.Text, 0, 0, String.Empty, String.Empty, requestTypeID, False)
+        Dim rf As RequestFields = (From r In RequestManager.GetRequestFieldSetup(hdnRequestType.Value, chkArchived.Checked, String.Empty).ToList Where r.FieldSetupID = fieldID Select r).FirstOrDefault()
+        Dim options As New List(Of String)
+        options.Add("")
+        options.AddRange(rf.OptionsType)
+        ddlDefaultValue.DataSource = options
         ddlDefaultValue.DataBind()
 
         ddlFieldType.SelectedValue = hdnFieldTypeID.Value
@@ -226,7 +232,7 @@ Public Class ReqAdmin
         Dim txtDescription As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtDescription")
         Dim txtCategory As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtCategory")
         Dim chkIsRequired As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIsRequired")
-        Dim chkArchived As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkArchived")
+        Dim chkArch As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkArchived")
         Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIntegrated")
 
         lblName.Visible = False
@@ -247,7 +253,7 @@ Public Class ReqAdmin
         ddlDefaultValue.Visible = True
         ddlFieldType.Visible = True
         ddlOptionsType.Visible = True
-        chkArchived.Enabled = True
+        chkArch.Enabled = True
         chkIsRequired.Enabled = True
         chkIntegrated.Enabled = True
 
