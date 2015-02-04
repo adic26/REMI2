@@ -34,6 +34,7 @@ declare @batchSpecificDuration float
 declare @totalTestTimeMinutes float
 declare @ApplicableTestStages nvarchar(1000)=''
 declare @ApplicableTests nvarchar(1000)=''
+DECLARE @DepartmentID INT
 -----------------------
 --Vars for use in SP --
 -----------------------
@@ -41,7 +42,7 @@ declare @ApplicableTests nvarchar(1000)=''
 --jobname-- product group
 declare @jobname nvarchar(400)
 
-select @jobname=jobname, @productname=lp.[Values] from Batches inner join Products p on p.ID=Batches.ProductID 
+select @jobname=jobname, @productname=lp.[Values], @DepartmentID = DepartmentID from Batches inner join Products p on p.ID=Batches.ProductID 
 				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID where Batches.QRANumber = @qranumber
 
 declare @jobID int
@@ -193,17 +194,18 @@ INTO #tests
 FROM (
 SELECT t.TestName, ts.ProcessOrder
 FROM Tests t
-INNER JOIN TrackingLocationsForTests tlft ON t.ID = tlft.TestID
-INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
-INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
-INNER JOIN TestStages ts ON ts.TestID = t.ID AND ts.JobID=@jobID AND t.TestType NOT IN (1, 3)
+	INNER JOIN TrackingLocationsForTests tlft ON t.ID = tlft.TestID
+	INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
+	INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+	INNER JOIN TestStages ts ON ts.TestID = t.ID AND ts.JobID=@jobID AND t.TestType NOT IN (1, 3)
 WHERE ISNULL(t.IsArchived, 0)=0 AND tl.ID = @tlid
 UNION
 SELECT t2.TestName, 0 AS ProcessOrder
 FROM Tests t2
-INNER JOIN TrackingLocationsForTests tlft ON t2.ID = tlft.TestID
-INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
-INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+	INNER JOIN TrackingLocationsForTests tlft ON t2.ID = tlft.TestID
+	INNER JOIN TrackingLocationTypes tlt ON tlt.ID = tlft.TrackingLocationtypeID
+	INNER JOIN TrackingLocations tl ON tl.TrackingLocationTypeID = tlt.ID
+	INNER JOIN TestsAccess ta ON ta.TestID=t2.id AND ta.LookupID IN (@DepartmentID)
 WHERE ISNULL(t2.IsArchived, 0)=0 AND tl.ID = @tlid AND t2.TestType IN (1, 3)
 ) test
 ORDER BY test.ProcessOrder

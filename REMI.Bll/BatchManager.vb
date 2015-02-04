@@ -237,6 +237,11 @@ Namespace REMI.Bll
                         End If
                     Case 11
                         Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
+                    Case 15, 21
+                        Dim reqNum As String = Number.Substring(0, 11).ToString().Trim()
+                        If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                            Return Number
+                        End If
                     Case Else
                         Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
                 End Select
