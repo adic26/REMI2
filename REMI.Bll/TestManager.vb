@@ -117,11 +117,23 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetTestsByBatchStage(ByVal batchID As Int32, ByVal testStage As String, ByVal removeParametrice As Boolean) As Dictionary(Of String, String)
             Try
+                Dim tests As Dictionary(Of String, String)
+
                 If (removeParametrice And Not (UserManager.GetCurrentUser.IsAdmin)) Then
-                    Return (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And (t.teststagetype = 2 Or t.teststagetype = 3 Or t.teststagetype = 4 Or t.teststagetype = 5 Or t.TestID = 1280 Or t.TestID = 1073) And t.tsname = testStage And t.processorder > -1 Select t).OrderBy(Function(o) o.tname).ToDictionary(Function(k) k.TestID.ToString(), Function(v) v.tname)
+                    tests = (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And (t.teststagetype = 2 Or t.teststagetype = 3 Or t.teststagetype = 4 Or t.teststagetype = 5 Or t.TestID = 1280 Or t.TestID = 1073) And t.tsname = testStage And t.processorder > -1 Select t).OrderBy(Function(o) o.tname).ToDictionary(Function(k) k.TestID.ToString(), Function(v) v.tname)
                 Else
-                    Return (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And t.tsname = testStage And t.processorder > -1 Select t).OrderBy(Function(o) o.tname).ToDictionary(Function(k) k.TestID.ToString(), Function(v) v.tname)
+                    tests = (From t In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where t.BatchID = batchID And t.IsArchived = False And t.TestIsArchived = False And t.tsname = testStage And t.processorder > -1 Select t).OrderBy(Function(o) o.tname).ToDictionary(Function(k) k.TestID.ToString(), Function(v) v.tname)
                 End If
+
+                If (tests.Count = 0) Then
+                    Dim t As Test = GetTestByName(testStage, False)
+
+                    If (t IsNot Nothing) Then
+                        tests.Add(t.ID.ToString(), t.Name)
+                    End If
+                End If
+
+                Return tests
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TestStage: {0} BatchID: {1}", testStage, batchID))
                 Return New Dictionary(Of String, String)

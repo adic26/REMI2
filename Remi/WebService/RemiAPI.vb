@@ -1125,7 +1125,7 @@ Public Class RemiAPI
             Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
 
             If batch IsNot Nothing Then
-                Return (From s In TestStageManager.GetTestStagesNameByBatch(batch.ID) Select s.Value).ToList
+                Return (From s In TestStageManager.GetTestStagesNameByBatch(batch.ID, batch.JobName) Select s.Value).ToList
             End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API Get batch stages name", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))

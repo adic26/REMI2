@@ -9,6 +9,7 @@ AS
 				ISNULL(ts.IsArchived, 0) AS IsArchived, dbo.remifnTestStageCanDelete(ts.ID) AS CanDelete
 			FROM teststages as ts,jobs as j
 			where ((ts.jobid = j.id and j.Jobname = @Jobname) or @jobname is null) AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(j.IsActive, 0) = 1
+				AND (ts.TestStageType = @TestStageType or @TestStageType is null)
 			order by JobName, ProcessOrder
 		end
 		else
