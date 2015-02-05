@@ -246,16 +246,17 @@ Namespace REMI.Bll
                             If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
                                 Return Number
                             End If
-                        Else
-                            Return Number.Trim()
                         End If
+
+                        Return Number.Trim()
                     Case Else
                         Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
                 End Select
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, Number.ToString())
             End Try
-            Return String.Empty
+
+            Return Number
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
