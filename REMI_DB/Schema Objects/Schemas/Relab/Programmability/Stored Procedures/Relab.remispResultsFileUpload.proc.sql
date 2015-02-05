@@ -41,10 +41,16 @@ BEGIN
 		SELECT @QRANumber = T.c.query('RequestNumber').value('.', 'nvarchar(max)')
 		FROM @ResultsXML.nodes('/TestResults/Header') T(c)
 	END
+
 	IF (@JobName IS NULL OR LTRIM(RTRIM(@JobName)) = '')
 	BEGIN
 		SELECT @JobName = T.c.query('JobName').value('.', 'nvarchar(max)')
 		FROM @ResultsXML.nodes('/TestResults/Header') T(c)
+	END
+	
+	IF (@JobName IS NULL OR LTRIM(RTRIM(@JobName)) = '')
+	BEGIN
+		SELECT @JobName=JobName FROM Batches b WITH(NOLOCK) WHERE b.QRANumber=@QRANumber
 	END
 	
 	IF (@EndDate IS NULL OR LTRIM(RTRIM(@EndDate)) = '')
@@ -96,14 +102,14 @@ BEGIN
 		INNER JOIN Batches b ON tu.BatchID=b.ID
 	WHERE QRANumber=@QRANumber AND tu.BatchUnitNumber=@TestUnitNumber
 	
-	PRINT 'QRA: ' + CONVERT(VARCHAR, @QRANumber)
+	PRINT 'Request Number: ' + CONVERT(VARCHAR, @QRANumber)
 	PRINT 'Unit Number: ' + CONVERT(VARCHAR, @TestUnitNumber)
-	PRINT 'Unit Number: ' + CONVERT(VARCHAR, @TestUnitNumber)
+	PRINT 'Station Name: ' + CONVERT(VARCHAR, @StationName)
 	PRINT 'Duration: ' + CONVERT(VARCHAR, @Duration)
 	PRINT 'Date Started: ' + CONVERT(VARCHAR, @StartDate)
 	PRINT 'Date Completed: ' + CONVERT(VARCHAR, @EndDate)
+	PRINT 'JobName: ' + @JobName
 	PRINT 'Test Stage: ' + @TestStageName
-	PRINT 'Job: ' + @JobName
 	PRINT 'Test Name: ' + @TestName
 
 	IF (@TestUnitID IS NOT NULL)

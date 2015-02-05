@@ -42,11 +42,6 @@ Namespace REMI.Core
                 Return ConfigurationManager.AppSettings("DefaultRedirectPage")
             End Get
         End Property
-        Public Shared ReadOnly Property DefaultRequestNumber() As String
-            Get
-                Return ConfigurationManager.AppSettings("DefaultRequestNumber")
-            End Get
-        End Property
         Public Shared ReadOnly Property TRSLinkCreationString() As String
             Get
                 Return ConfigurationManager.AppSettings("TRSLinkCreationString")

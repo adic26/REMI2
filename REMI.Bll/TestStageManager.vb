@@ -56,9 +56,15 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTestStagesNameByBatch(ByVal batchID As Int32) As Dictionary(Of String, String)
+        Public Shared Function GetTestStagesNameByBatch(ByVal batchID As Int32, ByVal jobName As String) As Dictionary(Of String, String)
             Try
-                Return (From ts In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where ts.BatchID = batchID And ts.IsArchived = False And ts.TestIsArchived = False And ts.processorder > -1 Select ts.processorder, ts.TestStageID, ts.tsname).Distinct().OrderBy(Function(o) o.processorder).ToDictionary(Function(k) k.TestStageID.ToString(), Function(v) v.tsname)
+                Dim stages As Dictionary(Of String, String) = (From ts In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where ts.BatchID = batchID And ts.IsArchived = False And ts.TestIsArchived = False And ts.processorder > -1 Select ts.processorder, ts.TestStageID, ts.tsname).Distinct().OrderBy(Function(o) o.processorder).ToDictionary(Function(k) k.TestStageID.ToString(), Function(v) v.tsname)
+
+                For Each s In GetList(TestStageType.IncomingEvaluation, jobName)
+                    stages.Add(s.ID.ToString(), s.Name)
+                Next
+
+                Return stages
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("BatchID: {0}", batchID))
                 Return New Dictionary(Of String, String)

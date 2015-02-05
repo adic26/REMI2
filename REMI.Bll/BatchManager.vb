@@ -221,9 +221,13 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetReqString(ByVal Number As String) As String
             Try
-                Dim isValid As Boolean = Number.Split("-"c).Length - 1 = 1
+                Dim isValid As Boolean = Number.Split("-"c).Length - 1 > 0
                 Dim userID As Int32 = UserManager.GetCurrentUser.ID
                 Dim departments As List(Of Int32) = (From d In New REMI.Dal.Entities().Instance().UserDetails.Include("Lookup").Include("Lookup.LookupType") Where d.UserID = userID And d.Lookup.LookupType.Name = "Department" Select d.LookupID).ToList()
+
+                If (Number.Contains("XX-TEST")) Then
+                    isValid = False
+                End If
 
                 Select Case Number.Length
                     Case 4
@@ -235,20 +239,24 @@ Namespace REMI.Bll
                         Else
                             Return Number.Trim()
                         End If
-                    Case 11
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
-                    Case 15, 21
+                    Case 11, 15, 21
                         Dim reqNum As String = Number.Substring(0, 11).ToString().Trim()
-                        If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
-                            Return Number
+
+                        If (isValid) Then
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                                Return Number
+                            End If
                         End If
+
+                        Return Number.Trim()
                     Case Else
                         Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
                 End Select
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, Number.ToString())
             End Try
-            Return String.Empty
+
+            Return Number
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _

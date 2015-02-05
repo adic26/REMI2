@@ -14,7 +14,7 @@ Namespace REMI.Bll
             Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
             Dim scanData As FastScanData
 
-            If (barcode.BatchNumber = REMI.Core.REMIConfiguration.DefaultRequestNumber) Then
+            If (barcode.BatchNumber.Contains("XX-TEST")) Then
                 Dim instance = New REMI.Dal.Entities().Instance()
                 scanData = New FastScanData
                 scanData.ApplicableTests = Nothing

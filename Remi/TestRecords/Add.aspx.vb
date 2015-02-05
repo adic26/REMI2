@@ -20,7 +20,7 @@ Partial Class TestRecords_Add
             cblUnit.DataSource = (From t As TestUnit In b.TestUnits Order By t.BatchUnitNumber Select t.ID, t.BatchUnitNumber)
             cblUnit.DataBind()
             cblUnit.Items(0).Selected = True
-            ddlTestStage.DataSource = TestStageManager.GetTestStagesNameByBatch(b.ID)
+            ddlTestStage.DataSource = TestStageManager.GetTestStagesNameByBatch(b.ID, b.JobName)
             ddlTestStage.DataBind()
 
             If (ddlTestStage.Items.Count > 0) Then

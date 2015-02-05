@@ -4,7 +4,7 @@ SELECT b.QRANumber, b.BatchStatus, b.DateCreated, b.ExecutiveSummary, b.Expected
 	tu.BatchUnitNumber, tu.BSN, tu.IMEI, lp.[values] AS ProductGroupName, PT.[Values] As ProductType, ag.[Values] As AccessoryGroup,
 	tc.[Values] As TestCenter, reqpur.[Values] As RequestPurpose, pty.[Values] As Priority, dpmt.[Values] As Department,
 	rtn.[Values] As RequestName, rfs.Name, rfd.Value, ts.TestStageName, t.TestName, mn.[Values] As MeasurementName, 
-	m.MeasurementValue, m.UpperLimit, m.LowerLimit, m.Archived, m.Comment, m.DegradationVal, m.Description, m.PassFail, m.ReTestNum,
+	m.MeasurementValue, m.LowerLimit, m.UpperLimit, m.Archived, m.Comment, m.DegradationVal, m.Description, m.PassFail, m.ReTestNum,
 	mut.[Values] As MeasurementUnitType, ri.Name As InformationName, ri.Value As InformationValue, ri.IsArchived As InformationArchived,
 	rp.ParameterName, rp.Value As ParameterValue, rx.VerNum AS XMLVerNum, rx.StationName, rx.StartDate, rx.EndDate
 FROM Batches b
