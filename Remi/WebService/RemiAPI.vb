@@ -10,7 +10,7 @@ Imports System.Data
 Imports System.Web.Script.Services
 
 <System.Web.Services.WebService(Name:="RemiAPI", Namespace:="http://go/remi/")> _
-<System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
+<System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.None)> _
 <ToolboxItem(False)> _
 <ScriptService()> _
 Public Class RemiAPI
@@ -959,20 +959,60 @@ Public Class RemiAPI
         Return False
     End Function
 
-    <WebMethod(Description:="Gets Default Request Number.")> _
+    <Obsolete("Don't use this routine any more. Use GetDefaultReqNum with request parameter."), _
+    WebMethod(Description:="Gets Default Request Number.", MessageName:="GetDefaultReqNum")> _
     Public Function GetDefaultReqNum() As String
         Try
-            Return Remi.Core.REMIConfiguration.DefaultRequestNumber()
+            Return "QRA-XX-TEST"
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetDefaultReqNum", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return String.Empty
+    End Function
+
+    <Obsolete("Don't use this routine any more. Use GetDefaultReqNumWithUnit with request parameter."), _
+    WebMethod(Description:="Gets Default Request Number With Unit.", MessageName:="GetDefaultReqNumWithUnit")> _
+    Public Function GetDefaultReqNumWithUnit() As String
+        Try
+            Return "QRA-XX-TEST-001"
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetDefaultReqNum", "e3", NotificationType.Errors, ex)
         End Try
         Return String.Empty
     End Function
 
-    <WebMethod(Description:="Gets Default Request Number With Unit.")> _
-    Public Function GetDefaultReqNumWithUnit() As String
+    <WebMethod(Description:="Gets Default Request Number.", MessageName:="GetDefaultReqNumByRequestType")> _
+    Public Function GetDefaultReqNum(ByVal RequestType As String) As String
         Try
-            Return String.Format("{0}-001", Remi.Core.REMIConfiguration.DefaultRequestNumber())
+            Dim reqNum As String = String.Empty
+
+            If (String.IsNullOrEmpty(RequestType)) Then
+                reqNum = String.Format("QRA-XX-TEST")
+            Else
+                reqNum = String.Format("{0}-XX-TEST", RequestType)
+            End If
+
+            Return reqNum
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetDefaultReqNum", "e3", NotificationType.Errors, ex)
+        End Try
+
+        Return String.Empty
+    End Function
+
+    <WebMethod(Description:="Gets Default Request Number With Unit.", MessageName:="GetDefaultReqNumWithUnitByRequestType")> _
+    Public Function GetDefaultReqNumWithUnit(ByVal RequestType As String) As String
+        Try
+            Dim reqNum As String = String.Empty
+
+            If (String.IsNullOrEmpty(RequestType)) Then
+                reqNum = String.Format("QRA-XX-TEST-001")
+            Else
+                reqNum = String.Format("{0}-XX-TEST-001", RequestType)
+            End If
+
+            Return reqNum
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetDefaultReqNum", "e3", NotificationType.Errors, ex)
         End Try
