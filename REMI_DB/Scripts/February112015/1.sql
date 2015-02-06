@@ -2,6 +2,8 @@ BEGIN TRAN
 DECLARE @LookupTypeID INT
 DECLARE @LookupID INT
 
+update Req.RequestType set HasIntegration=1 where RequestTypeID=1
+
 INSERT INTO LookupType (Name, IsSystem) VALUES ('ConfigModes', 1)
 INSERT INTO LookupType (Name, IsSystem) VALUES ('ConfigTypes', 1)
 
