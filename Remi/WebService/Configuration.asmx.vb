@@ -10,7 +10,7 @@ Imports System.Configuration
 Imports Remi.BusinessEntities
 
 <System.Web.Services.WebService(Name:="Configuration", Namespace:="http://go/remi/")> _
-<System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
+<System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.None)> _
 <ToolboxItem(False)> _
 Public Class ProductConfiguration
     Inherits System.Web.Services.WebService
@@ -171,11 +171,12 @@ Public Class ProductConfiguration
 
 #Region "Configuration"
     <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfig")> _
-    Public Function GetConfig(ByVal Name As String, ByVal version As Version, ByVal mode As Int32, ByVal type As Int32) As String
+    Public Function GetConfig(ByVal Name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32) As String
         Dim xml As String = String.Empty
 
         Try
-            ConfigManager.GetConfig(Name, version, mode, type)
+            Dim verNum As New Version(version)
+            ConfigManager.GetConfig(Name, verNum, mode, type)
         Catch ex As Exception
             ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
         End Try
@@ -184,14 +185,15 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfigByNames")> _
-    Public Function GetConfig(ByVal Name As String, ByVal version As Version, ByVal mode As String, ByVal type As String) As String
+    Public Function GetConfig(ByVal Name As String, ByVal version As String, ByVal mode As String, ByVal type As String) As String
         Dim xml As String = String.Empty
 
         Try
+            Dim verNum As New Version(version)
             Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
             Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            ConfigManager.GetConfig(Name, version, modeID, typeID)
+            ConfigManager.GetConfig(Name, verNum, modeID, typeID)
         Catch ex As Exception
             ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
         End Try
@@ -200,9 +202,10 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(Description:="Saves Configuration", MessageName:="SaveConfig")> _
-    Public Function SaveConfig(ByVal Name As String, ByVal version As Version, ByVal mode As Int32, ByVal type As Int32, ByVal definition As String) As Boolean
+    Public Function SaveConfig(ByVal Name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32, ByVal definition As String) As Boolean
         Try
-            Return ConfigManager.SaveConfig(Name, version, mode, type, definition)
+            Dim verNum As New Version(version)
+            Return ConfigManager.SaveConfig(Name, verNum, mode, type, definition)
         Catch ex As Exception
             ConfigManager.LogIssue("SaveConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
         End Try
@@ -211,12 +214,13 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(Description:="Saves Configuration", MessageName:="SaveConfigByNames")> _
-    Public Function SaveConfig(ByVal Name As String, ByVal version As Version, ByVal mode As String, ByVal type As String, ByVal definition As String) As Boolean
+    Public Function SaveConfig(ByVal Name As String, ByVal version As String, ByVal mode As String, ByVal type As String, ByVal definition As String) As Boolean
         Try
+            Dim verNum As New Version(version)
             Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
             Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            Return ConfigManager.SaveConfig(Name, version, modeID, typeID, definition)
+            Return ConfigManager.SaveConfig(Name, verNum, modeID, typeID, definition)
         Catch ex As Exception
             ConfigManager.LogIssue("SaveConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
         End Try
