@@ -245,6 +245,50 @@ Public Class Request
         MyBase.OnInit(e)
     End Sub
 
+    Protected Sub BuildMenu()
+        Dim requestNumber As String = hdnRequestNumber.Value
+        Dim myMenu As WebControls.Menu
+        Dim mi As New MenuItem
+        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+        hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+
+        mi = New MenuItem
+        mi.Text = "Create Request"
+        mi.Target = "_blank"
+        mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+
+        If (rec IsNot Nothing) Then
+            mi = New MenuItem
+            mi.Text = "Batch"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypBatch.Visible = True
+            hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
+
+            mi = New MenuItem
+            mi.Text = "Results"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypResults.Visible = True
+            hypResults.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+        End If
+
+        If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
+            mi = New MenuItem
+            mi.Text = "Admin"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypAdmin.Visible = True
+            hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
+        End If
+    End Sub
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
         notMain.Notifications.Clear()
 
@@ -257,48 +301,8 @@ Public Class Request
                 Response.Redirect(String.Format("/Request/Default.aspx"), True)
             End If
 
-            Dim requestNumber As String = hdnRequestNumber.Value
-            Dim myMenu As WebControls.Menu
-            Dim mi As New MenuItem
-            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
-            hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
-
-            mi = New MenuItem
-            mi.Text = "Create Request"
-            mi.Target = "_blank"
-            mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
-
-            If (rec IsNot Nothing) Then
-                mi = New MenuItem
-                mi.Text = "Batch"
-                mi.Target = "_blank"
-                mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
-                myMenu.Items(0).ChildItems.Add(mi)
-                hypBatch.Visible = True
-                hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
-
-                mi = New MenuItem
-                mi.Text = "Results"
-                mi.Target = "_blank"
-                mi.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
-                myMenu.Items(0).ChildItems.Add(mi)
-                hypResults.Visible = True
-                hypResults.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
-            End If
-
-            If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
-                mi = New MenuItem
-                mi.Text = "Admin"
-                mi.Target = "_blank"
-                mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
-                myMenu.Items(0).ChildItems.Add(mi)
-                hypAdmin.Visible = True
-                hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
-            End If
-            End If
+            BuildMenu()
+        End If
     End Sub
 
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
@@ -342,6 +346,7 @@ Public Class Request
             Dim saveSuccess As Boolean = RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName)
 
             If (saveSuccess) Then
+                BuildMenu()
                 notMain.Notifications.AddWithMessage("Saved Successful!", NotificationType.Information)
             Else
                 notMain.Notifications.AddWithMessage("Saved Failed!", NotificationType.Errors)
