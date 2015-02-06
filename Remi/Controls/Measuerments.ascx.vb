@@ -214,6 +214,15 @@ Public Class Measuerments
             If (e.Row.Cells(3).Text.ToLower().Contains("true")) Then
                 e.Row.BackColor = Drawing.Color.LightBlue
             End If
+
+            Dim lbtnXML As LinkButton = DirectCast(e.Row.FindControl("lbtnXML"), LinkButton)
+            Dim hdnConfigXML As HiddenField = DirectCast(e.Row.FindControl("hdnConfigXML"), HiddenField)
+
+            If (String.IsNullOrEmpty(hdnConfigXML.Value)) Then
+                lbtnXML.Visible = False
+            Else
+                lbtnXML.Visible = True
+            End If
         End If
     End Sub
 
@@ -349,5 +358,16 @@ Public Class Measuerments
         Dim resultID As Int32
         Int32.TryParse(hdnResultID.Value, resultID)
         Helpers.ExportToExcel(Helpers.GetDateTimeFileName("ResultSummary", "xls"), RelabManager.ResultSummaryExport(hdnBatchID.Value, resultID))
+    End Sub
+
+    Protected Sub grdResultInformation_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs) Handles grdResultInformation.RowCommand
+        Dim xmlstr As String = e.CommandArgument
+        Dim xml As XDocument = XDocument.Parse(xmlstr)
+
+        Select Case e.CommandName.ToLower()
+            Case "xml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("XMLFile", "xml"), xml)
+                Exit Select
+        End Select
     End Sub
 End Class

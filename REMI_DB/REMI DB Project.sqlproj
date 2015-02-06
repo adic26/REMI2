@@ -244,6 +244,7 @@
     <Folder Include="Scripts\January292015" />
     <Folder Include="Schema Objects\Schemas\Req\Views" />
     <Folder Include="Scripts\February042015" />
+    <Folder Include="Scripts\February112015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2642,5 +2643,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetTestsAccess.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Configurations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\February112015\1.sql" />
   </ItemGroup>
 </Project>

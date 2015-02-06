@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="BatchManager.vb" />
     <Compile Include="CalibrationManager.vb" />
+    <Compile Include="ConfigManager.vb" />
     <Compile Include="ExceptionManager.vb" />
     <Compile Include="GridViewTemplate.vb" />
     <Compile Include="JobManager.vb" />

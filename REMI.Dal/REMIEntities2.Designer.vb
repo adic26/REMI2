@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("0f1da020-e703-4216-ab28-e4ca86d14663")>
+<Assembly: EdmSchemaAttribute("1dedf076-d62c-4782-9bb1-36635bf3eca8")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -133,6 +133,8 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestsAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "TestsAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestsAccess), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestsAccess_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "TestsAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestsAccess), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups1", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
 
 #End Region
 
@@ -1372,6 +1374,20 @@ Namespace REMI.Entities
         End Property
     
         Private _TestsAccesses As ObjectSet(Of TestsAccess)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property Configurations() As ObjectSet(Of Configuration)
+            Get
+                If (_Configurations Is Nothing) Then
+                    _Configurations = MyBase.CreateObjectSet(Of Configuration)("Configurations")
+                End If
+                Return _Configurations
+            End Get
+        End Property
+    
+        Private _Configurations As ObjectSet(Of Configuration)
 
         #End Region
 
@@ -1970,6 +1986,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToTestsAccesses(ByVal testsAccess As TestsAccess)
             MyBase.AddObject("TestsAccesses", testsAccess)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the Configurations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToConfigurations(ByVal configuration As Configuration)
+            MyBase.AddObject("Configurations", configuration)
         End Sub
 
         #End Region
@@ -6687,6 +6710,262 @@ Namespace REMI.Entities
     ''' <summary>
     ''' No Metadata Documentation available.
     ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="Configuration")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class Configuration
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new Configuration object.
+        ''' </summary>
+        ''' <param name="configID">Initial value of the ConfigID property.</param>
+        ''' <param name="modeID">Initial value of the ModeID property.</param>
+        ''' <param name="version">Initial value of the Version property.</param>
+        ''' <param name="configTypeID">Initial value of the ConfigTypeID property.</param>
+        ''' <param name="name">Initial value of the Name property.</param>
+        ''' <param name="definition">Initial value of the Definition property.</param>
+        Public Shared Function CreateConfiguration(configID As Global.System.Int32, modeID As Global.System.Int32, version As Global.System.String, configTypeID As Global.System.Int32, name As Global.System.String, definition As Global.System.String) As Configuration
+            Dim configuration as Configuration = New Configuration
+            configuration.ConfigID = configID
+            configuration.ModeID = modeID
+            configuration.Version = version
+            configuration.ConfigTypeID = configTypeID
+            configuration.Name = name
+            configuration.Definition = definition
+            Return configuration
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ConfigID() As Global.System.Int32
+            Get
+                Return _ConfigID
+            End Get
+            Set
+                If (_ConfigID <> Value) Then
+                    OnConfigIDChanging(value)
+                    ReportPropertyChanging("ConfigID")
+                    _ConfigID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ConfigID")
+                    OnConfigIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ConfigID As Global.System.Int32
+        Private Partial Sub OnConfigIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnConfigIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ModeID() As Global.System.Int32
+            Get
+                Return _ModeID
+            End Get
+            Set
+                OnModeIDChanging(value)
+                ReportPropertyChanging("ModeID")
+                _ModeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ModeID")
+                OnModeIDChanged()
+            End Set
+        End Property
+    
+        Private _ModeID As Global.System.Int32
+        Private Partial Sub OnModeIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnModeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Version() As Global.System.String
+            Get
+                Return _Version
+            End Get
+            Set
+                OnVersionChanging(value)
+                ReportPropertyChanging("Version")
+                _Version = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Version")
+                OnVersionChanged()
+            End Set
+        End Property
+    
+        Private _Version As Global.System.String
+        Private Partial Sub OnVersionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnVersionChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ConfigTypeID() As Global.System.Int32
+            Get
+                Return _ConfigTypeID
+            End Get
+            Set
+                OnConfigTypeIDChanging(value)
+                ReportPropertyChanging("ConfigTypeID")
+                _ConfigTypeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ConfigTypeID")
+                OnConfigTypeIDChanged()
+            End Set
+        End Property
+    
+        Private _ConfigTypeID As Global.System.Int32
+        Private Partial Sub OnConfigTypeIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnConfigTypeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Name() As Global.System.String
+            Get
+                Return _Name
+            End Get
+            Set
+                OnNameChanging(value)
+                ReportPropertyChanging("Name")
+                _Name = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Name")
+                OnNameChanged()
+            End Set
+        End Property
+    
+        Private _Name As Global.System.String
+        Private Partial Sub OnNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Definition() As Global.System.String
+            Get
+                Return _Definition
+            End Get
+            Set
+                OnDefinitionChanging(value)
+                ReportPropertyChanging("Definition")
+                _Definition = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Definition")
+                OnDefinitionChanged()
+            End Set
+        End Property
+    
+        Private _Definition As Global.System.String
+        Private Partial Sub OnDefinitionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnDefinitionChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Configurations_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Configurations_Lookups1", "Lookup")>
+        Public Property Lookup1() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups1", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups1", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property Lookup1Reference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups1", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Configurations_Lookups1", "Lookup", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
     <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="DeviceTrackingLog")>
     <Serializable()>
     <DataContractAttribute(IsReference:=True)>
@@ -8719,6 +8998,42 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestsAccess)("REMI.Entities.FK_TestsAccess_Lookups", "TestsAccess", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Configurations_Lookups", "Configuration")>
+         Public Property Configurations() As EntityCollection(Of Configuration)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Configuration)("REMI.Entities.FK_Configurations_Lookups", "Configuration")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Configuration)("REMI.Entities.FK_Configurations_Lookups", "Configuration", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Configurations_Lookups1", "Configuration")>
+         Public Property Configurations1() As EntityCollection(Of Configuration)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Configuration)("REMI.Entities.FK_Configurations_Lookups1", "Configuration")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Configuration)("REMI.Entities.FK_Configurations_Lookups1", "Configuration", value)
                 End If
             End Set
         End Property
@@ -11620,11 +11935,13 @@ Namespace REMI.Entities
         ''' <param name="requestID">Initial value of the RequestID property.</param>
         ''' <param name="reqFieldSetupID">Initial value of the ReqFieldSetupID property.</param>
         ''' <param name="value">Initial value of the Value property.</param>
-        Public Shared Function CreateReqFieldData(requestID As Global.System.Int32, reqFieldSetupID As Global.System.Int32, value As Global.System.String) As ReqFieldData
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateReqFieldData(requestID As Global.System.Int32, reqFieldSetupID As Global.System.Int32, value As Global.System.String, rv As Global.System.Byte()) As ReqFieldData
             Dim reqFieldData as ReqFieldData = New ReqFieldData
             reqFieldData.RequestID = requestID
             reqFieldData.ReqFieldSetupID = reqFieldSetupID
             reqFieldData.Value = value
+            reqFieldData.rv = rv
             Return reqFieldData
         End Function
 
@@ -11759,6 +12076,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnInsertTimeChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
@@ -12964,9 +13306,11 @@ Namespace REMI.Entities
         ''' Create a new Request object.
         ''' </summary>
         ''' <param name="requestID">Initial value of the RequestID property.</param>
-        Public Shared Function CreateRequest(requestID As Global.System.Int32) As Request
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateRequest(requestID As Global.System.Int32, rv As Global.System.Byte()) As Request
             Dim request as Request = New Request
             request.RequestID = requestID
+            request.rv = rv
             Return request
         End Function
 
@@ -13049,6 +13393,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnBatchIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
@@ -13499,7 +13868,8 @@ Namespace REMI.Entities
         ''' <param name="canReport">Initial value of the CanReport property.</param>
         ''' <param name="hasApproval">Initial value of the HasApproval property.</param>
         ''' <param name="isExternal">Initial value of the IsExternal property.</param>
-        Public Shared Function CreateRequestType(requestTypeID As Global.System.Int32, typeID As Global.System.Int32, requestConnectName As Global.System.String, dBType As Global.System.String, hasIntegration As Global.System.Boolean, canReport As Global.System.Boolean, hasApproval As Global.System.Boolean, isExternal As Global.System.Boolean) As RequestType
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateRequestType(requestTypeID As Global.System.Int32, typeID As Global.System.Int32, requestConnectName As Global.System.String, dBType As Global.System.String, hasIntegration As Global.System.Boolean, canReport As Global.System.Boolean, hasApproval As Global.System.Boolean, isExternal As Global.System.Boolean, rv As Global.System.Byte()) As RequestType
             Dim requestType as RequestType = New RequestType
             requestType.RequestTypeID = requestTypeID
             requestType.TypeID = typeID
@@ -13509,6 +13879,7 @@ Namespace REMI.Entities
             requestType.CanReport = canReport
             requestType.HasApproval = hasApproval
             requestType.IsExternal = isExternal
+            requestType.rv = rv
             Return requestType
         End Function
 
@@ -13716,6 +14087,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnIsExternalChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
@@ -14066,12 +14462,14 @@ Namespace REMI.Entities
         ''' <param name="testStageID">Initial value of the TestStageID property.</param>
         ''' <param name="testID">Initial value of the TestID property.</param>
         ''' <param name="testUnitID">Initial value of the TestUnitID property.</param>
-        Public Shared Function CreateResult(id As Global.System.Int32, testStageID As Global.System.Int32, testID As Global.System.Int32, testUnitID As Global.System.Int32) As Result
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateResult(id As Global.System.Int32, testStageID As Global.System.Int32, testID As Global.System.Int32, testUnitID As Global.System.Int32, rv As Global.System.Byte()) As Result
             Dim result as Result = New Result
             result.ID = id
             result.TestStageID = testStageID
             result.TestID = testID
             result.TestUnitID = testUnitID
+            result.rv = rv
             Return result
         End Function
 
@@ -14204,6 +14602,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnPassFailChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
@@ -14361,13 +14784,15 @@ Namespace REMI.Entities
         ''' <param name="name">Initial value of the Name property.</param>
         ''' <param name="value">Initial value of the Value property.</param>
         ''' <param name="isArchived">Initial value of the IsArchived property.</param>
-        Public Shared Function CreateResultsInformation(id As Global.System.Int32, xMLID As Global.System.Int32, name As Global.System.String, value As Global.System.String, isArchived As Global.System.Boolean) As ResultsInformation
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateResultsInformation(id As Global.System.Int32, xMLID As Global.System.Int32, name As Global.System.String, value As Global.System.String, isArchived As Global.System.Boolean, rv As Global.System.Byte()) As ResultsInformation
             Dim resultsInformation as ResultsInformation = New ResultsInformation
             resultsInformation.ID = id
             resultsInformation.XMLID = xMLID
             resultsInformation.Name = name
             resultsInformation.Value = value
             resultsInformation.IsArchived = isArchived
+            resultsInformation.rv = rv
             Return resultsInformation
         End Function
 
@@ -14501,6 +14926,56 @@ Namespace REMI.Entities
     
         Private Partial Sub OnIsArchivedChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ConfigID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _ConfigID
+            End Get
+            Set
+                OnConfigIDChanging(value)
+                ReportPropertyChanging("ConfigID")
+                _ConfigID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ConfigID")
+                OnConfigIDChanged()
+            End Set
+        End Property
+    
+        Private _ConfigID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnConfigIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnConfigIDChanged()
+        End Sub
 
         #End Region
 
@@ -14561,7 +15036,8 @@ Namespace REMI.Entities
         ''' <param name="passFail">Initial value of the PassFail property.</param>
         ''' <param name="reTestNum">Initial value of the ReTestNum property.</param>
         ''' <param name="archived">Initial value of the Archived property.</param>
-        Public Shared Function CreateResultsMeasurement(id As Global.System.Int32, resultID As Global.System.Int32, measurementTypeID As Global.System.Int32, measurementValue As Global.System.String, passFail As Global.System.Boolean, reTestNum As Global.System.Int32, archived As Global.System.Boolean) As ResultsMeasurement
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateResultsMeasurement(id As Global.System.Int32, resultID As Global.System.Int32, measurementTypeID As Global.System.Int32, measurementValue As Global.System.String, passFail As Global.System.Boolean, reTestNum As Global.System.Int32, archived As Global.System.Boolean, rv As Global.System.Byte()) As ResultsMeasurement
             Dim resultsMeasurement as ResultsMeasurement = New ResultsMeasurement
             resultsMeasurement.ID = id
             resultsMeasurement.ResultID = resultID
@@ -14570,6 +15046,7 @@ Namespace REMI.Entities
             resultsMeasurement.PassFail = passFail
             resultsMeasurement.ReTestNum = reTestNum
             resultsMeasurement.Archived = archived
+            resultsMeasurement.rv = rv
             Return resultsMeasurement
         End Function
 
@@ -14952,6 +15429,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnDegradationValChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
@@ -15374,12 +15876,14 @@ Namespace REMI.Entities
         ''' <param name="file">Initial value of the File property.</param>
         ''' <param name="contentType">Initial value of the ContentType property.</param>
         ''' <param name="fileName">Initial value of the FileName property.</param>
-        Public Shared Function CreateResultsMeasurementsFile(id As Global.System.Int32, file As Global.System.Byte(), contentType As Global.System.String, fileName As Global.System.String) As ResultsMeasurementsFile
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateResultsMeasurementsFile(id As Global.System.Int32, file As Global.System.Byte(), contentType As Global.System.String, fileName As Global.System.String, rv As Global.System.Byte()) As ResultsMeasurementsFile
             Dim resultsMeasurementsFile as ResultsMeasurementsFile = New ResultsMeasurementsFile
             resultsMeasurementsFile.ID = id
             resultsMeasurementsFile.File = file
             resultsMeasurementsFile.ContentType = contentType
             resultsMeasurementsFile.FileName = fileName
+            resultsMeasurementsFile.rv = rv
             Return resultsMeasurementsFile
         End Function
 
@@ -15512,6 +16016,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnFileNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
@@ -15650,12 +16179,14 @@ Namespace REMI.Entities
         ''' <param name="resultMeasurementID">Initial value of the ResultMeasurementID property.</param>
         ''' <param name="parameterName">Initial value of the ParameterName property.</param>
         ''' <param name="value">Initial value of the Value property.</param>
-        Public Shared Function CreateResultsParameter(id As Global.System.Int32, resultMeasurementID As Global.System.Int32, parameterName As Global.System.String, value As Global.System.String) As ResultsParameter
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateResultsParameter(id As Global.System.Int32, resultMeasurementID As Global.System.Int32, parameterName As Global.System.String, value As Global.System.String, rv As Global.System.Byte()) As ResultsParameter
             Dim resultsParameter as ResultsParameter = New ResultsParameter
             resultsParameter.ID = id
             resultsParameter.ResultMeasurementID = resultMeasurementID
             resultsParameter.ParameterName = parameterName
             resultsParameter.Value = value
+            resultsParameter.rv = rv
             Return resultsParameter
         End Function
 
@@ -15763,6 +16294,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnValueChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
@@ -16013,12 +16569,14 @@ Namespace REMI.Entities
         ''' <param name="resultID">Initial value of the ResultID property.</param>
         ''' <param name="resultXML">Initial value of the ResultXML property.</param>
         ''' <param name="verNum">Initial value of the VerNum property.</param>
-        Public Shared Function CreateResultsXML(id As Global.System.Int32, resultID As Global.System.Int32, resultXML As Global.System.String, verNum As Global.System.Int32) As ResultsXML
+        ''' <param name="rv">Initial value of the rv property.</param>
+        Public Shared Function CreateResultsXML(id As Global.System.Int32, resultID As Global.System.Int32, resultXML As Global.System.String, verNum As Global.System.Int32, rv As Global.System.Byte()) As ResultsXML
             Dim resultsXML as ResultsXML = New ResultsXML
             resultsXML.ID = id
             resultsXML.ResultID = resultID
             resultsXML.ResultXML = resultXML
             resultsXML.VerNum = verNum
+            resultsXML.rv = rv
             Return resultsXML
         End Function
 
@@ -16276,6 +16834,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnErrorOccuredChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property rv() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_rv)
+            End Get
+            Set
+                OnrvChanging(value)
+                ReportPropertyChanging("rv")
+                _rv = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("rv")
+                OnrvChanged()
+            End Set
+        End Property
+    
+        Private _rv As Global.System.Byte()
+        Private Partial Sub OnrvChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnrvChanged()
         End Sub
 
         #End Region
