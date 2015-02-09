@@ -92,6 +92,21 @@ Public Class ReqAdmin
                 txtNewParentLookup.Text = String.Empty
             End If
         End If
+
+        If Not String.IsNullOrEmpty(txtLookupType.Text) Then
+            If (LookupsManager.SaveLookupType(txtLookupType.Text)) Then
+                txtLookupType.Text = String.Empty
+
+                ddlParentType.DataSource = LookupsManager.GetLookupTypes(False)
+                ddlParentType.DataBind()
+
+                ddlChildType.DataSource = LookupsManager.GetLookupTypes(False)
+                ddlChildType.DataBind()
+
+                cblParent.Items.Clear()
+                cblChild.Items.Clear()
+            End If
+        End If
     End Sub
 
     Protected Sub chkArchived_CheckedChanged(sender As Object, e As EventArgs)

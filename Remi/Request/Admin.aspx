@@ -61,6 +61,11 @@
             </tr>
             <tr>
                 <td colspan="2">
+                    <asp:TextBox runat="server" ID="txtLookupType"></asp:TextBox>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
                     <asp:Button runat="server" ID="btnSaveLookup" Text="Create New Lookup" CssClass="buttonSmall" OnClick="btnSaveLookup_Click" />
                 </td>
             </tr>
