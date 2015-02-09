@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.Relab_Measurements" Codebehind="Measurements.aspx.vb" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" ValidateRequest="false" Inherits="Remi.Relab_Measurements" Codebehind="Measurements.aspx.vb" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 <%@ Register Src="~/Controls/Measuerments.ascx" TagName="Measuerments" TagPrefix="msm" %>
 
