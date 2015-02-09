@@ -333,7 +333,7 @@ Public Class Measuerments
             If DisplayMode <> ControlMode.ExecutiveSummaryDisplay And (Regex.IsMatch(e.Row.Cells(6).Text, "^-{0,1}[0-9 ]+$") Or Regex.IsMatch(e.Row.Cells(6).Text, "^-{0,1}[0-9]\d*(\.\d+)?$") Or e.Row.Cells(6).Text.Contains("True") Or e.Row.Cells(6).Text.Contains("Pass") Or e.Row.Cells(6).Text.Contains("Fail") Or e.Row.Cells(6).Text.Contains("False")) Then
                 hplMeasurementType.Visible = True
                 lblMeasurementType.Visible = False
-                hplMeasurementType.NavigateUrl = String.Format("/Relab/ResultGraph.aspx?BatchID={0}&MeasurementID={1}&TestID={2}", Request.QueryString("Batch"), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), hdnTestID.Value)
+                hplMeasurementType.NavigateUrl = String.Format("/Relab/ResultGraph.aspx?BatchID={0}&MeasurementID={1}&TestID={2}", Request.QueryString("Batch"), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), TestID)
             Else
                 hplMeasurementType.Visible = False
                 lblMeasurementType.Visible = True
