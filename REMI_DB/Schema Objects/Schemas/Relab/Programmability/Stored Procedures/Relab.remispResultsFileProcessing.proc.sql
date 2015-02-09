@@ -180,7 +180,8 @@ BEGIN
 			WHILE (@InfoRowID IS NOT NULL)
 			BEGIN
 				SELECT @xmlPart  = value FROM #temp3 WHERE RowID=@InfoRowID	
-				
+				SET @ConfigID = NULL
+
 				SELECT T.c.query('Name').value('.', 'nvarchar(max)') AS Name, T.c.query('Value').value('.', 'nvarchar(max)') AS Value, 0 AS ConfigID
 				INTO #information
 				FROM @xmlPart.nodes('/Info') T(c)
@@ -233,8 +234,7 @@ BEGIN
 				BEGIN
 					UPDATE #information
 					SET ConfigID=@ConfigID
-				END
-				
+				END				
 				
 				UPDATE ri
 				SET IsArchived=1
