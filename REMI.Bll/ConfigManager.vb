@@ -18,7 +18,8 @@ Namespace REMI.Bll
 
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
-                Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = mode And c.ConfigTypeID = type And c.Version = version.ToString() Select c).FirstOrDefault()
+                Dim ver As String = version.ToString()
+                Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = mode And c.ConfigTypeID = type And c.Version = ver Select c).FirstOrDefault()
                 
                 If (config IsNot Nothing) Then
                     xml = config.Definition
@@ -33,7 +34,8 @@ Namespace REMI.Bll
         Public Shared Function SaveConfig(ByVal Name As String, ByVal version As Version, ByVal mode As Int32, ByVal type As Int32, ByVal definition As String) As Boolean
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
-                Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = mode And c.ConfigTypeID = type And c.Version = version.ToString() Select c).FirstOrDefault()
+                Dim ver As String = version.ToString()
+                Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = mode And c.ConfigTypeID = type And c.Version = ver Select c).FirstOrDefault()
 
                 If (config Is Nothing) Then
                     config = New REMI.Entities.Configuration
