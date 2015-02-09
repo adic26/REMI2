@@ -639,6 +639,28 @@ BEGIN
 	SET NOCOUNT OFF
 END
 GO
+ALTER PROCEDURE [dbo].[remispYourBatchesGetActiveBatches] @UserID int, @ByPassProductCheck INT = 0, @Year INT = 0, @OnlyShowQRAWithResults INT = 0
+AS	
+SELECT b.ID, lp.[Values] AS ProductGroupName,b.QRANumber, (b.QRANumber + ' ' + lp.[Values]) AS Name
+	FROM Batches as b WITH(NOLOCK)
+	INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+WHERE ( 
+		(@Year = 0 AND BatchStatus NOT IN(5,7))
+		OR
+		(@Year > 0 AND b.QRANumber LIKE '%-' + RIGHT(CONVERT(NVARCHAR, @Year), 2) + '-%')
+	  )
+	AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
+	AND (@OnlyShowQRAWithResults = 0 OR (@OnlyShowQRAWithResults = 1 AND b.ID IN (SELECT tu.BatchID FROM Relab.Results r INNER JOIN TestUnits tu ON tu.ID=r.TestUnitID)))
+	AND (b.DepartmentID IN (SELECT ud.LookupID 
+							FROM UserDetails ud 
+								INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
+							WHERE ud.UserID=@UserID))
+ORDER BY b.QRANumber DESC
+RETURN
+GO
+GRANT EXECUTE ON remispYourBatchesGetActiveBatches TO Remi
+GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

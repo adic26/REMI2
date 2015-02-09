@@ -62,7 +62,7 @@
             <asp:AsyncPostBackTrigger ControlID="ddlYear" />
         </Triggers>
         <ContentTemplate>
-            Select QRA: <asp:DropDownList ID="ddlBatches" runat="server" AutoPostBack="true" CausesValidation="true"></asp:DropDownList>
+            Select Request: <asp:DropDownList ID="ddlBatches" runat="server" AutoPostBack="true" CausesValidation="true"></asp:DropDownList>
             <asp:DropDownList runat="server" ID="ddlYear" CausesValidation="true" AutoPostBack="true">
                 <asp:ListItem Selected="True" Text="Select A Year (if applicable)" Value="0"></asp:ListItem>
             </asp:DropDownList>
