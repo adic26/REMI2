@@ -37,7 +37,7 @@ Namespace REMI.Bll
                 Dim ver As String = version.ToString()
                 Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = mode And c.ConfigTypeID = type And c.Version = ver Select c).FirstOrDefault()
 
-                If (config Is Nothing) Then
+                If (config Is Nothing And mode > 0 And type > 0) Then
                     config = New REMI.Entities.Configuration
                     config.Definition = definition
                     config.Name = Name
