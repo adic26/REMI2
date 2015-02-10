@@ -395,11 +395,6 @@ Namespace REMI.Bll
 
                     u.UserDetails = userDetails
 
-                    If (Not u.RolesList.Contains("Relab")) Then
-                        u.RolesList.Add("Relab")
-                        Roles.AddUserToRole(u.LDAPName, "Relab")
-                    End If
-
                     u.ID = Save(u, False, False)
 
                     If u.ID > 0 Then 'if the user was saved then

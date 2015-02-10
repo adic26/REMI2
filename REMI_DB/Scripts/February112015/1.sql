@@ -69,5 +69,22 @@ SELECT @MenuID=menuID FROM Menu WHERE Name='Graph'
 insert into MenuDepartment (DepartmentID,MenuID)
 select LookupID AS DepartmentID, @MenuID from Lookups where LookupTypeID=4 and IsActive=1
 GO
-
+delete
+from aspnet_PermissionsInRoles
+where PermissionID in (select permissionid
+from aspnet_Permissions
+where Permission='HasRelabAuthority')
+GO
+delete
+from aspnet_Permissions
+where Permission='HasRelabAuthority'
+GO
+delete from aspnet_PermissionsInRoles where RoleID in (select roleid from aspnet_Roles where RoleName='Relab')
+GO
+delete from aspnet_UsersInRoles where RoleID in (select roleid from aspnet_Roles where RoleName='Relab')
+GO
+delete
+from aspnet_Roles
+where RoleName='Relab'
+GO
 ROLLBACK TRAN

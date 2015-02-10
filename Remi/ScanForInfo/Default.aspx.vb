@@ -411,18 +411,15 @@ Partial Class ScanForInfo_Default
         hypProductGroupLink.NavigateUrl = b.ProductGroupLink
         hypTestRecords.NavigateUrl = b.TestRecordsLink
 
-        'You are a relab role or your role has permission to view relab
-        If (UserManager.GetCurrentUser.HasRelabAuthority Or UserManager.GetCurrentUser.HasRelabAccess()) Then
-            hypRelabLink.Visible = True
-            imgRelabLink.Visible = True
+        hypRelabLink.Visible = True
+        imgRelabLink.Visible = True
 
-            Dim record As Int32 = (From r In New REMI.Dal.Entities().Instance().Results _
-                          Where r.TestUnit.Batch.ID = b.ID _
-                          Take 1 _
-                          Select r.ID).FirstOrDefault()
-            If (record < 1) Then
-                hypRelabLink.Enabled = False
-            End If
+        Dim record As Int32 = (From r In New Remi.Dal.Entities().Instance().Results _
+                        Where r.TestUnit.Batch.ID = b.ID _
+                        Take 1 _
+                        Select r.ID).FirstOrDefault()
+        If (record < 1) Then
+            hypRelabLink.Enabled = False
         End If
 
         imgTestRecords.Visible = True

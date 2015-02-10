@@ -12,15 +12,11 @@ Public Class Results
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            If (Not UserManager.GetCurrentUser.HasRelabAccess And Not UserManager.GetCurrentUser.HasRelabAuthority) Then
-                Response.Redirect("~/")
-            End If
-
             Dim year As Int32
             Dim batchID As Int32
             Int32.TryParse(Request.QueryString("Batch"), batchID)
             If (batchID > 0) Then
-                Dim qra = (From b In New REMI.Dal.Entities().Instance().Batches Where b.ID = batchID Select b.QRANumber, b.BatchStatus).FirstOrDefault()
+                Dim qra = (From b In New Remi.Dal.Entities().Instance().Batches Where b.ID = batchID Select b.QRANumber, b.BatchStatus).FirstOrDefault()
                 If (qra.BatchStatus = 5 Or qra.BatchStatus = 7) Then
                     year = qra.QRANumber.Substring(qra.QRANumber.IndexOf("-") + 1, 2)
                 End If

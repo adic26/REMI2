@@ -6,9 +6,6 @@ Public Class Versions
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            If (Not UserManager.GetCurrentUser.HasRelabAccess And Not UserManager.GetCurrentUser.HasRelabAuthority) Then
-                Response.Redirect("~/")
-            End If
             Dim batchID As Int32
             Dim testID As Int32
             Int32.TryParse(Request.QueryString("Batch"), batchID)
