@@ -52,4 +52,22 @@ GO
 ALTER TABLE [dbo].[Configurations] CHECK CONSTRAINT [FK_Configurations_Lookups1]
 GO
 
+INSERT INTO Menu (Name, Url) VALUES ('Versions', '/Relab/Versions.aspx')
+INSERT INTO Menu (Name, Url) VALUES ('Measurements', '/Relab/Measurements.aspx')
+INSERT INTO Menu (Name, Url) VALUES ('Graph', '/Relab/ResultGraph.aspx')
+GO
+DECLARE @MenuID INT
+SELECT @MenuID=menuID FROM Menu WHERE Name='Versions'
+insert into MenuDepartment (DepartmentID,MenuID)
+select LookupID AS DepartmentID, @MenuID from Lookups where LookupTypeID=4 and IsActive=1
+
+SELECT @MenuID=menuID FROM Menu WHERE Name='Measurements'
+insert into MenuDepartment (DepartmentID,MenuID)
+select LookupID AS DepartmentID, @MenuID from Lookups where LookupTypeID=4 and IsActive=1
+
+SELECT @MenuID=menuID FROM Menu WHERE Name='Graph'
+insert into MenuDepartment (DepartmentID,MenuID)
+select LookupID AS DepartmentID, @MenuID from Lookups where LookupTypeID=4 and IsActive=1
+GO
+
 ROLLBACK TRAN
