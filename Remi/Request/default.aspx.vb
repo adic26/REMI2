@@ -21,6 +21,10 @@ Public Class ReqDefault
                 ddlRequestType.SelectedIndex = 0
             End If
 
+            If (ddlRequestType.Items.Count = 1) Then
+                ddlRequestType.Enabled = False
+            End If
+
             UpdateLinks()
         End If
 

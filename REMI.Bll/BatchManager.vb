@@ -245,6 +245,8 @@ Namespace REMI.Bll
                         If (isValid) Then
                             If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
                                 Return Number
+                            Else
+                                Return String.Empty
                             End If
                         End If
 
