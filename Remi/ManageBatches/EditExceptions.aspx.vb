@@ -11,7 +11,7 @@ Partial Class ManageBatches_EditExceptions
         If Not Page.IsPostBack Then
             notMain.Clear()
 
-            Dim qra As String = Request.QueryString.Get("QRA")
+            Dim qra As String = Request.QueryString.Get("RN")
             If Not String.IsNullOrEmpty(qra) Then
                 ProcessQRA(qra)
             End If

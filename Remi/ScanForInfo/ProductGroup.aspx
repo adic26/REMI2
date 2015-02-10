@@ -197,7 +197,7 @@
                                     SortExpression="ID" Visible="False" />
                                 <asp:BoundField DataField="TestUnitID" HeaderText="TestUnitID" SortExpression="TestUnitID"
                                     Visible="False" />
-                                <asp:BoundField DataField="TestUnitQRANumber" HeaderText="QRA" SortExpression="TestUnitQRANumber" />
+                                <asp:BoundField DataField="TestUnitQRANumber" HeaderText="Request" SortExpression="TestUnitQRANumber" />
                                 <asp:TemplateField HeaderText="Unit" SortExpression="BatchUnitNumber">
                                     <ItemTemplate>
                                         <asp:Label ID="lblUnitNumber" runat="server" Text='<%# Eval("TestUnitBatchUnitNumber") %>'></asp:Label>

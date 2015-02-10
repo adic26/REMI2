@@ -7,7 +7,7 @@
     <Columns>
         
         <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" Visible = "false" SortExpression="ID" />
-        <asp:TemplateField HeaderText="QRA" SortExpression="QRANumber">
+        <asp:TemplateField HeaderText="Request" SortExpression="QRANumber">
             <ItemTemplate>
                 <asp:HyperLink EnableViewState="false" ID="hypQRANumber" runat="server" NavigateUrl='<%# Eval("BatchInfoLink") %>'
                     Text='<%# Eval("QRANumber") %>' ToolTip='<%# "Click to view the information page for this batch" %>'></asp:HyperLink></ItemTemplate>

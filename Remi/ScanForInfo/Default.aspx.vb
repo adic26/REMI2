@@ -7,7 +7,7 @@ Partial Class ScanForInfo_Default
     Inherits System.Web.UI.Page
 
     Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
-        Response.Redirect(String.Format("{0}?QRA={1}", Helpers.GetCurrentPageName, Helpers.CleanInputText(txtBarcodeReading.Text, 30)), True)
+        Response.Redirect(String.Format("{0}?RN={1}", Helpers.GetCurrentPageName, Helpers.CleanInputText(txtBarcodeReading.Text, 30)), True)
     End Sub
 
     Protected Sub grdTrackingLogGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdTrackingLog.PreRender
@@ -75,7 +75,7 @@ Partial Class ScanForInfo_Default
                 End If
         End Select
 
-        Dim b As BatchView = BatchManager.GetViewBatch(Request.QueryString.Get("QRA"))
+        Dim b As BatchView = BatchManager.GetViewBatch(Request.QueryString.Get("RN"))
         grdDetail.DataSource = b.TestUnits
         grdDetail.DataBind()
     End Sub
@@ -347,7 +347,7 @@ Partial Class ScanForInfo_Default
     Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
         If Not Page.IsPostBack Then
             notMain.Clear()
-            Dim tmpStr As String = Request.QueryString.Get("QRA")
+            Dim tmpStr As String = Request.QueryString.Get("RN")
             If Not String.IsNullOrEmpty(tmpStr) Then
                 ProcessQRA(tmpStr)
             Else
@@ -378,7 +378,7 @@ Partial Class ScanForInfo_Default
         mi = New MenuItem
         mi.Text = "Executive Summary"
         mi.Target = "_blank"
-        mi.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
+        mi.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?RN={0}", b.QRANumber)
         myMenu.Items(0).ChildItems.Add(mi)
 
         mi = New MenuItem
@@ -406,7 +406,7 @@ Partial Class ScanForInfo_Default
         hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
         hypTRSLink.NavigateUrl = b.RequestLink()
         hypRefresh.NavigateUrl = b.BatchInfoLink
-        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?QRA={0}", b.QRANumber)
+        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?RN={0}", b.QRANumber)
         hypRelabLink.NavigateUrl = b.RelabResultLink
         hypProductGroupLink.NavigateUrl = b.ProductGroupLink
         hypTestRecords.NavigateUrl = b.TestRecordsLink

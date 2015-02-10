@@ -10,7 +10,7 @@ Partial Class ES_Default
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
-            Dim tmpStr As String = Request.QueryString.Get("QRA")
+            Dim tmpStr As String = Request.QueryString.Get("RN")
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr))
             Dim b As BatchView
 

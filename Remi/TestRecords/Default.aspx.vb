@@ -17,7 +17,7 @@ Partial Class TestRecords_Default
         If Not Page.IsPostBack Then
             notMain.Clear()
             'get all of the query string values
-            Dim QRA As String = Request.QueryString.Get("QRA")
+            Dim QRA As String = Request.QueryString.Get("RN")
             Dim testName As String = Request.QueryString.Get("TestName")
             Dim testStageName As String = Request.QueryString.Get("TestStageName")
             Dim jobName As String = Request.QueryString.Get("JobName")

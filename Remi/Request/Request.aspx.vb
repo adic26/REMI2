@@ -268,10 +268,10 @@ Public Class Request
             mi = New MenuItem
             mi.Text = "Batch"
             mi.Target = "_blank"
-            mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
+            mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
             myMenu.Items(0).ChildItems.Add(mi)
             hypBatch.Visible = True
-            hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
+            hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
 
             mi = New MenuItem
             mi.Text = "Results"
