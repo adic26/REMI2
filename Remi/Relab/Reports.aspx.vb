@@ -12,13 +12,17 @@ Public Class Reports
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
-            ddlRequestType.DataSource = RequestManager.GetRequestTypes()
+            ddlRequestType.DataSource = UserManager.GetCurrentUser.RequestTypes
             ddlRequestType.DataBind()
 
             Dim requestType As String = IIf(Request.QueryString.Item("rt") Is Nothing, String.Empty, Request.QueryString.Item("rt"))
 
             If (requestType.Trim().Length > 0) Then
                 ddlRequestType.Items.FindByText(requestType).Selected = True
+            End If
+
+            If (ddlRequestType.Items.Count = 1) Then
+                ddlRequestType.Enabled = False
             End If
 
             UpdateSearch()

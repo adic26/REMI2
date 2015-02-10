@@ -17,6 +17,10 @@ Public Class Request
         Dim type As String = IIf(Request.QueryString.Item("type") Is Nothing, String.Empty, Request.QueryString.Item("type"))
         Dim rf As RequestFieldsCollection
 
+        If ((From rt As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where rt.Field(Of String)("RequestType") = type Select rt).FirstOrDefault() Is Nothing) Then
+            Response.Redirect(String.Format("/Request/Default.aspx"), True)
+        End If
+
         If (Not String.IsNullOrEmpty(req)) Then
             rf = RequestManager.GetRequestFieldSetup(type, False, req)
         Else
