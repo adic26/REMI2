@@ -1,4 +1,5 @@
 ﻿<%@ Application Language="VB" %>
+<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Net" %>
 <%@ Import Namespace="REMI.BusinessEntities" %>
 <%@ Import Namespace="REMI.Bll" %>
@@ -20,7 +21,7 @@
                     LogUnhandledException(ex)
                 End If
             End If
-        End If  
+        End If
     End Sub
     
     Sub Application_AuthenticateRequest(ByVal sender As Object, ByVal e As EventArgs)
@@ -46,7 +47,7 @@
                             'get the user to set their test center if they havent already. They will be hounded for this. 
                             'it's omportant to have this set given all the new labs coming online.
                             If String.IsNullOrEmpty(currentUser.TestCentre) AndAlso String.IsNullOrEmpty(currentUser.Department) AndAlso Not httpApp.Context.Request.Path.EndsWith("badgeaccess/EditmyUser.aspx") Then
-                                httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx?defaults=false", True) 'if this user has not yet selected a test centre. make them do it!
+                                httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx?defaults=false", True)
                             Else
                                 If httpApp.Context.Request.Path.ToLower = "/default.aspx" And Not (String.IsNullOrEmpty(currentUser.DefaultPage)) Then
                                     httpApp.Context.Response.Redirect(String.Format("~{0}", currentUser.DefaultPage), True)
@@ -63,19 +64,34 @@
                     httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx?defaults=false", True)
                 End If
             End If
-        ElseIf httpApp.Context.Request.Path.ToLower.Contains("/requests/") Then
-                Dim paths As String() = httpApp.Context.Request.Path.ToString().Split(New [Char]() {"/"c}, System.StringSplitOptions.RemoveEmptyEntries)
             
-                If (paths.Count = 2) Then
-                    If (paths(1).Contains("-")) Then
-                        Dim reqSplit As String() = paths(1).Split(New [Char]() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)
-                        httpApp.Context.Response.Redirect(String.Format("~/Request/Request.aspx?type={0}&req={1}", reqSplit(0), paths(1).ToUpper), True)
-                    Else
-                        httpApp.Context.Response.Redirect(String.Format("~/Request/Default.aspx?rt={0}", paths(1).ToUpper), True)
-                    End If
-                Else
-                    httpApp.Context.Response.Redirect("~/Request/Default.aspx", True)
+            If (UserManager.GetCurrentUser() IsNot Nothing) Then
+                If (REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID) Is Nothing) Then
+                    REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID))
                 End If
+                
+                Dim dtMenuAccess As DataTable = REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID)
+                
+                If ((From m As DataRow In dtMenuAccess.Rows Where m.Field(Of String)("Url").ToLower.Contains(httpApp.Context.Request.Path.ToLower) Select m).FirstOrDefault() Is Nothing) Then
+                    
+                    If ((From m As DataRow In SecurityManager.GetMenu().Rows Where m.Field(Of String)("Url").ToLower.Contains(httpApp.Context.Request.Path.ToLower) Select m).FirstOrDefault() IsNot Nothing) Then
+                        httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx", True)
+                    End If
+                End If
+            End If
+        ElseIf httpApp.Context.Request.Path.ToLower.Contains("/requests/") Then
+            Dim paths As String() = httpApp.Context.Request.Path.ToString().Split(New [Char]() {"/"c}, System.StringSplitOptions.RemoveEmptyEntries)
+            
+            If (paths.Count = 2) Then
+                If (paths(1).Contains("-")) Then
+                    Dim reqSplit As String() = paths(1).Split(New [Char]() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)
+                    httpApp.Context.Response.Redirect(String.Format("~/Request/Request.aspx?type={0}&req={1}", reqSplit(0), paths(1).ToUpper), True)
+                Else
+                    httpApp.Context.Response.Redirect(String.Format("~/Request/Default.aspx?rt={0}", paths(1).ToUpper), True)
+                End If
+            Else
+                httpApp.Context.Response.Redirect("~/Request/Default.aspx", True)
+            End If
         End If
     End Sub
 
