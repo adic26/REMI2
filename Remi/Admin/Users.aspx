@@ -18,49 +18,6 @@
         catch (ex) { alert(ex) }
     }
 
-    var departmentdefaultset = false;
-    var testcenterdefaultset = false;
-
-    function chkTestCenter_click(chk, hdn) {
-        if (document.getElementById(chk).checked == true && testcenterdefaultset == false) {
-            var r = confirm("Set As Default?");
-
-            if (r == true) {
-                testcenterdefaultset = true;
-                document.getElementById(hdn).innerText = "true";
-            }
-            else {
-                document.getElementById(hdn).innerText = "false";
-            }
-        }
-        else if (document.getElementById(hdn).value == "true" && document.getElementById(chk).checked == false) {
-            document.getElementById(chk).checked = true;
-        }
-        else {
-            document.getElementById(hdn).innerText = "false";
-        }
-    }
-
-    function chkDepartment_click(chk, hdn) {
-        if (document.getElementById(chk).checked == true && departmentdefaultset == false) {
-            var r = confirm("Set As Default?");
-
-            if (r == true) {
-                departmentdefaultset = true;
-                document.getElementById(hdn).innerText = "true";
-            }
-            else {
-                document.getElementById(hdn).innerText = "false";
-            }
-        }
-        else if (document.getElementById(hdn).value == "true" && document.getElementById(chk).checked == false) {
-            document.getElementById(chk).checked = true;
-        }
-        else {
-            document.getElementById(hdn).innerText = "false";
-        }
-    }
-
     function EnableDisableCheckbox_Click(ddl, chk, userName, lbl) {
         try {
 
@@ -258,53 +215,52 @@
             </tr>
             <tr>
                 <td class="HorizTableFirstcolumn">Test Center:</td>
-                <td class="HorizTableSecondColumn">
-                    <asp:DataList ID="dlstTestCenter" runat="server" DataSourceID="odsTestCentres" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
-                         <ItemTemplate>
-                             <asp:HiddenField ID="hdnTCIsDefault" runat="server" Value="" />
-                            <asp:HiddenField ID="hdnTestCenterID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
-                            <asp:CheckBox ID='chkTestCenter' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
-                        </ItemTemplate>
-                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
-                     </asp:DataList>
-                    <asp:ObjectDataSource ID="odsTestCentres" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
-                        <SelectParameters>
-                            <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
-                            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
-                            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
-                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
-                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
-                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
-                            <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
-                            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
-                        </SelectParameters>
-                    </asp:ObjectDataSource>
+                <td class="HorizTableSecondColumn">                                        
+                    <asp:GridView runat="server" ID="grdTestCenter" EmptyDataText="No Test Centers" AutoGenerateColumns="false">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Test Center" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblName" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>'></asp:Label>
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Access" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:HiddenField ID="hdnLookupID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
+                                    <asp:CheckBox runat="server" ID="chkAccess" Checked="false" />
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Default" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:CheckBox runat="server" ID="chkDefault" Checked="false" />
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
                 </td>
             </tr>
             <tr>
                 <td class="HorizTableFirstcolumn">Department:</td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DataList ID="dlstDepartments" runat="server" DataSourceID="odsDepartments" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
-                        <ItemTemplate>
-                            <asp:HiddenField ID="hdnDIsDefault" runat="server" Value="" />
-                            <asp:HiddenField ID="hdnDepartmentID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
-                            <asp:CheckBox ID='chkDepartment' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
-                        </ItemTemplate>
-                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
-                    </asp:DataList>
-
-                     <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
-                         <SelectParameters>
-                            <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
-                            <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
-                            <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
-                            <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
-                            <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
-                            <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
-                            <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
-                            <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
-                        </SelectParameters>
-                     </asp:ObjectDataSource>
+                    <asp:GridView runat="server" ID="grdDepartments" EmptyDataText="No Departments" AutoGenerateColumns="false">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Department" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblName" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>'></asp:Label>
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Access" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:HiddenField ID="hdnLookupID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
+                                    <asp:CheckBox runat="server" ID="chkAccess" Checked="false" />
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Default" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:CheckBox runat="server" ID="chkDefault" Checked="false" />
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
                 </td>
             </tr>
             <tr>

@@ -419,40 +419,22 @@ Partial Public Class Admin_Users
     Protected WithEvents ddlDefaultPage As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''dlstTestCenter control.
+    '''grdTestCenter control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dlstTestCenter As Global.System.Web.UI.WebControls.DataList
+    Protected WithEvents grdTestCenter As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''odsTestCentres control.
+    '''grdDepartments control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents odsTestCentres As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
-    '''dlstDepartments control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents dlstDepartments As Global.System.Web.UI.WebControls.DataList
-
-    '''<summary>
-    '''odsDepartments control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
+    Protected WithEvents grdDepartments As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''gvRequestTypes control.

@@ -43,8 +43,7 @@
     <div style="float:left;">
         <table>
             <tr>
-                 <td class="HorizTableFirstcolumn">
-                     Select Test Centre: </td>
+                 <td class="HorizTableFirstcolumn">Test Centre:</td>
                  <td style="text-align:left;">
                      <asp:DropDownList runat="server" ID="ddlTestCenter" DataSourceID="odsTestCentres" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
 
@@ -66,8 +65,7 @@
                  </td>
              </tr>
             <tr>
-                 <td class="HorizTableFirstcolumn">
-                     Select Department: </td>
+                 <td class="HorizTableFirstcolumn">Department:</td>
                  <td style="text-align:left;">
                      <asp:DropDownList runat="server" ID="ddlDepartment" DataSourceID="odsDepartments" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
                      
@@ -89,7 +87,7 @@
                  </td>
             </tr>
              <tr>
-                 <td class="HorizTableFirstcolumn">Select Default Page: </td>
+                 <td class="HorizTableFirstcolumn">Default Page:</td>
                  <td style="text-align:left;">
                     <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px" DataTextField="Name" DataValueField="Url"></asp:DropDownList>
                  </td>
