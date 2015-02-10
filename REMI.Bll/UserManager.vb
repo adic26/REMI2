@@ -136,6 +136,11 @@ Namespace REMI.Bll
                             Dim ud As New REMI.Entities.UserDetail()
                             ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
                             ud.Lookup = (From l In instance.Lookups Where l.LookupID = lookupID Select l).FirstOrDefault()
+
+                            Dim isDefault As Boolean = (From d In u.UserDetails Where DirectCast(d.Item("LookupID"), Int32) = lookupID Select DirectCast(d.Item("IsDefault"), Boolean)).FirstOrDefault()
+
+                            ud.IsDefault = isDefault
+
                             instance.AddToUserDetails(ud)
                         Next
 
@@ -206,9 +211,9 @@ Namespace REMI.Bll
                                     instance.AddToUserDetails(ud)
                                 End If
                             Next
-                        End If
 
-                        instance.SaveChanges()
+                            instance.SaveChanges()
+                        End If
 
                         If (saveTraining) Then
                             Dim newTraining = (From t In u.Training Where t.Item("ID") IsNot Nothing And t.Item("ID") IsNot DBNull.Value _
@@ -274,9 +279,9 @@ Namespace REMI.Bll
                                     instance.AddToUserTrainings(ut)
                                 End If
                             Next
-                        End If
 
-                        instance.SaveChanges()
+                            instance.SaveChanges()
+                        End If
 
                         If (UserManager.GetCurrentUser.ID = u.ID) Then
                             UserManager.LogUserOut()

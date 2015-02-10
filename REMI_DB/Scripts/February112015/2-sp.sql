@@ -1359,6 +1359,26 @@ END
 GO
 GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
+create PROCEDURE [dbo].[remispModifyUserToBasicAccess] @UserName NVARCHAR(255)
+AS
+BEGIN
+	DECLARE @UserID INT
+	DECLARE @UserIDGuid UNIQUEIDENTIFIER
+	DECLARE @RoleID UNIQUEIDENTIFIER
+	SELECT @UserID=ID FROM Users WHERE LDAPLogin=@UserName
+	SELECT @UserIDGuid = UserID FROM aspnet_Users WHERE UserName=@UserName
+	SELECT @RoleID = RoleID FROM aspnet_Roles WHERE RoleName='LabTestAssociate'
+	
+	DELETE FROM UserDetails WHERE UserID=@UserID
+	
+	UPDATE Users SET ByPassProduct=0 WHERE ID=@UserID
+	DELETE FROM UsersProducts WHERE UserID=@UserID
+	DELETE FROM aspnet_UsersInRoles WHERE UserId=@UserIDGuid AND RoleId <> @RoleID
+	DELETE FROM UserTraining WHERE UserID=@UserID
+END
+GO
+GRANT EXECUTE ON [remispModifyUserToBasicAccess] TO REMI
+GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

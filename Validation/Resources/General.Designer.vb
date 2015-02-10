@@ -245,6 +245,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Default Test Centre or Department Not Entered..
+        '''</summary>
+        Public Shared ReadOnly Property e28() As String
+            Get
+                Return ResourceManager.GetString("e28", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Could not retrieve item. There was a database error.  REMI administrators have been notified..
         '''</summary>
         Public Shared ReadOnly Property e3() As String

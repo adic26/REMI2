@@ -59,13 +59,22 @@ Partial Public Class BadgeAccess_EditMyUser
     Protected WithEvents hdnUserID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''dlstTestCenter control.
+    '''ddlTestCenter control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dlstTestCenter As Global.System.Web.UI.WebControls.DataList
+    Protected WithEvents ddlTestCenter As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''grdTestCenter control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdTestCenter As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''odsTestCentres control.
@@ -77,13 +86,22 @@ Partial Public Class BadgeAccess_EditMyUser
     Protected WithEvents odsTestCentres As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''dlstDepartments control.
+    '''ddlDepartment control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dlstDepartments As Global.System.Web.UI.WebControls.DataList
+    Protected WithEvents ddlDepartment As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''grdDepartments control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdDepartments As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''odsDepartments control.

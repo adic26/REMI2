@@ -35,6 +35,7 @@
                 If httpApp.Context.Request.Path.ToLower <> "/badgeaccess/default.aspx" AndAlso httpApp.Context.Request.Path.ToLower <> "/badgeaccess/error.aspx" Then
                     'we need to see if the current windows user can be set to the session.
                     Dim currentUser As User = UserManager.GetCurrentUser()
+                    
                     If currentUser IsNot Nothing Then
                         'do they need to scan their badge?
                         If currentUser.RequiresSuppAuth() Or currentUser.ID = 0 Then
@@ -44,8 +45,8 @@
                             UserManager.SetUserToSession(currentUser)
                             'get the user to set their test center if they havent already. They will be hounded for this. 
                             'it's omportant to have this set given all the new labs coming online.
-                            If String.IsNullOrEmpty(currentUser.TestCentre) AndAlso Not httpApp.Context.Request.Path.EndsWith("badgeaccess/EditmyUser.aspx") Then
-                                httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx", True) 'if this user has not yet selected a test centre. make them do it!
+                            If String.IsNullOrEmpty(currentUser.TestCentre) AndAlso String.IsNullOrEmpty(currentUser.Department) AndAlso Not httpApp.Context.Request.Path.EndsWith("badgeaccess/EditmyUser.aspx") Then
+                                httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx?defaults=false", True) 'if this user has not yet selected a test centre. make them do it!
                             Else
                                 If httpApp.Context.Request.Path.ToLower = "/default.aspx" And Not (String.IsNullOrEmpty(currentUser.DefaultPage)) Then
                                     httpApp.Context.Response.Redirect(String.Format("~{0}", currentUser.DefaultPage), True)
@@ -57,20 +58,24 @@
                         httpApp.Context.Response.Redirect("~/BadgeAccess/Error.aspx", True)
                     End If
                 End If
+            Else
+                If String.IsNullOrEmpty(UserManager.GetCurrentUser().TestCentre) AndAlso String.IsNullOrEmpty(UserManager.GetCurrentUser().Department) AndAlso Not httpApp.Context.Request.Path.EndsWith("badgeaccess/EditmyUser.aspx") Then
+                    httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx?defaults=false", True)
+                End If
             End If
         ElseIf httpApp.Context.Request.Path.ToLower.Contains("/requests/") Then
-            Dim paths As String() = httpApp.Context.Request.Path.ToString().Split(New [Char]() {"/"c}, System.StringSplitOptions.RemoveEmptyEntries)
+                Dim paths As String() = httpApp.Context.Request.Path.ToString().Split(New [Char]() {"/"c}, System.StringSplitOptions.RemoveEmptyEntries)
             
-            If (paths.Count = 2) Then
-                If (paths(1).Contains("-")) Then
-                    Dim reqSplit As String() = paths(1).Split(New [Char]() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)
-                    httpApp.Context.Response.Redirect(String.Format("~/Request/Request.aspx?type={0}&req={1}", reqSplit(0), paths(1).ToUpper), True)
+                If (paths.Count = 2) Then
+                    If (paths(1).Contains("-")) Then
+                        Dim reqSplit As String() = paths(1).Split(New [Char]() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)
+                        httpApp.Context.Response.Redirect(String.Format("~/Request/Request.aspx?type={0}&req={1}", reqSplit(0), paths(1).ToUpper), True)
+                    Else
+                        httpApp.Context.Response.Redirect(String.Format("~/Request/Default.aspx?rt={0}", paths(1).ToUpper), True)
+                    End If
                 Else
-                    httpApp.Context.Response.Redirect(String.Format("~/Request/Default.aspx?rt={0}", paths(1).ToUpper), True)
+                    httpApp.Context.Response.Redirect("~/Request/Default.aspx", True)
                 End If
-            Else
-                httpApp.Context.Response.Redirect("~/Request/Default.aspx", True)
-            End If
         End If
     End Sub
 

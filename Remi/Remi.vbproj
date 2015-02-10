@@ -222,7 +222,6 @@
       <DependentUpon>Users.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="App_GlobalResources\HTTPModules\REMIAuthModule.vb" />
     <Compile Include="BadgeAccess\Default.aspx.designer.vb">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
