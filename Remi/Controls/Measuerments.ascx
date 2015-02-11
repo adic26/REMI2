@@ -95,7 +95,13 @@
             <RowStyle CssClass="evenrow" />
             <Columns>
                 <asp:BoundField DataField="Name" HeaderText="Name" InsertVisible="False" ReadOnly="True"  Visible="true" />
-                <asp:BoundField DataField="Value" HeaderText="Info" InsertVisible="False" ReadOnly="True"  Visible="true" />
+                <asp:TemplateField HeaderText="Info" SortExpression="">
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lblValue" Visible="true" Text='<%# Eval("Value") %>'></asp:Label>
+                        <asp:HiddenField runat="server" Value='<%# Eval("ConfigXML") %>' ID="hdnConfigXML" />
+                        <asp:LinkButton ID="lbtnXML" runat="server" Visible="false" ToolTip="XML File" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="XML" CommandArgument='<%# Eval("ConfigXML") %>'></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:BoundField DataField="VerNum" HeaderText="Version" InsertVisible="False" ReadOnly="True"  Visible="true" />
                 <asp:BoundField DataField="IsArchived" HeaderText="Archived" InsertVisible="False" ReadOnly="True"  Visible="true" ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden" />
             </Columns>

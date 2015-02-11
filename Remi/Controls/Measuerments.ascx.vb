@@ -214,6 +214,15 @@ Public Class Measuerments
             If (e.Row.Cells(3).Text.ToLower().Contains("true")) Then
                 e.Row.BackColor = Drawing.Color.LightBlue
             End If
+
+            Dim lbtnXML As LinkButton = DirectCast(e.Row.FindControl("lbtnXML"), LinkButton)
+            Dim hdnConfigXML As HiddenField = DirectCast(e.Row.FindControl("hdnConfigXML"), HiddenField)
+
+            If (String.IsNullOrEmpty(hdnConfigXML.Value)) Then
+                lbtnXML.Visible = False
+            Else
+                lbtnXML.Visible = True
+            End If
         End If
     End Sub
 
@@ -324,7 +333,7 @@ Public Class Measuerments
             If DisplayMode <> ControlMode.ExecutiveSummaryDisplay And (Regex.IsMatch(e.Row.Cells(6).Text, "^-{0,1}[0-9 ]+$") Or Regex.IsMatch(e.Row.Cells(6).Text, "^-{0,1}[0-9]\d*(\.\d+)?$") Or e.Row.Cells(6).Text.Contains("True") Or e.Row.Cells(6).Text.Contains("Pass") Or e.Row.Cells(6).Text.Contains("Fail") Or e.Row.Cells(6).Text.Contains("False")) Then
                 hplMeasurementType.Visible = True
                 lblMeasurementType.Visible = False
-                hplMeasurementType.NavigateUrl = String.Format("/Relab/ResultGraph.aspx?BatchID={0}&MeasurementID={1}&TestID={2}", Request.QueryString("Batch"), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), hdnTestID.Value)
+                hplMeasurementType.NavigateUrl = String.Format("/Relab/ResultGraph.aspx?BatchID={0}&MeasurementID={1}&TestID={2}", Request.QueryString("Batch"), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), TestID)
             Else
                 hplMeasurementType.Visible = False
                 lblMeasurementType.Visible = True
@@ -349,5 +358,16 @@ Public Class Measuerments
         Dim resultID As Int32
         Int32.TryParse(hdnResultID.Value, resultID)
         Helpers.ExportToExcel(Helpers.GetDateTimeFileName("ResultSummary", "xls"), RelabManager.ResultSummaryExport(hdnBatchID.Value, resultID))
+    End Sub
+
+    Protected Sub grdResultInformation_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs) Handles grdResultInformation.RowCommand
+        Dim xmlstr As String = e.CommandArgument
+        Dim xml As XDocument = XDocument.Parse(xmlstr)
+
+        Select Case e.CommandName.ToLower()
+            Case "xml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("XMLFile", "xml"), xml)
+                Exit Select
+        End Select
     End Sub
 End Class

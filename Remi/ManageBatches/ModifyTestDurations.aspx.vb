@@ -8,7 +8,7 @@ Partial Class ManageBatches_ModifyTestDurations
     Protected Sub PageLoad() Handles Me.Load
         If Not Page.IsPostBack Then
             notMain.Clear()
-            Dim qra As String = Request.QueryString.Get("QRA")
+            Dim qra As String = Request.QueryString.Get("RN")
             If Not String.IsNullOrEmpty(qra) Then
                 ProcessQRA(qra)
             End If

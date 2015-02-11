@@ -5,10 +5,6 @@ Public Class Relab_Measurements
     Inherits System.Web.UI.Page
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If (Not UserManager.GetCurrentUser.HasRelabAccess And Not UserManager.GetCurrentUser.HasRelabAuthority) Then
-            Response.Redirect("~/")
-        End If
-
         Dim resultID As Int32
         Dim batchID As Int32
 
@@ -56,6 +52,7 @@ Public Class Relab_Measurements
                 ddlTestStage.SelectedValue = dt.FirstOrDefault().TestStageID
                 ddlUnits.SelectedValue = dt.FirstOrDefault().TestUnitID
 
+                msmMeasuerments.TestID = ddlTests.SelectedValue
                 msmMeasuerments.SetDataSource(resultID, batchID)
             End If
         End If

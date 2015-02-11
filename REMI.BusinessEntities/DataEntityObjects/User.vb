@@ -406,10 +406,6 @@ Namespace REMI.BusinessEntities
             Return CheckPermission("HasAdminReadOnlyAuthority", String.Empty, 0)
         End Function
 
-        Public Function HasRelabAuthority() As Boolean
-            Return CheckPermission("HasRelabAuthority", String.Empty, 0)
-        End Function
-
         Public Function HasBatchSetupAuthority(ByVal batchDepartmentID As Int32) As Boolean
             Return CheckPermission("HasBatchSetupAuthority", String.Empty, batchDepartmentID)
         End Function
@@ -462,13 +458,6 @@ Namespace REMI.BusinessEntities
         Public ReadOnly Property IsDeveloper() As Boolean
             Get
                 Return RolesList.Contains("Developer")
-            End Get
-        End Property
-
-        <XmlIgnore()> _
-        Public ReadOnly Property HasRelabAccess() As Boolean
-            Get
-                Return RolesList.Contains("Relab")
             End Get
         End Property
 

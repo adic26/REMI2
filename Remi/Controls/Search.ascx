@@ -30,16 +30,18 @@
                     <select id="bs_TestField" class="selectpicker show-tick" title="Select Test..." multiple data-size="15" data-selected-text-format="count"></select>
                     <select id="bs_Additional" class="selectpicker show-tick" title="Select Additional..." multiple data-size="15" data-selected-text-format="count">
                     </select>
-
-                    <button id="bs_OKayButton" type="button" class="btn btn-primary" autocomplete="off">ADD</button>
+                    
+                    <input id="bs_OKayButton" type="button" value="ADD" class="btn btn-primary" autocomplete="off" />
                 </div>
             </div>
         </div>
     </div>
 
     <div id="FinalItemsList" class="list-group"></div>
-    <button id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off">Search</button>
+    <input id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off" value="SEARCH" />
     <asp:HiddenField runat="server" ID="hdnUser" />
+    <asp:HiddenField runat="server" ID="hdnUserID" />
+    <asp:HiddenField runat="server" ID="hdnTop" />
     <div class="info"></div>
     <div class="table"> 
         <table id="searchResults"></table>

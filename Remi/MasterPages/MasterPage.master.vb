@@ -47,21 +47,6 @@ Partial Class MasterPages_MasterPage
                 End If
             End If
 
-            'You are a relab role or your role has permission to view relab
-            If Not (UserManager.GetCurrentUser.HasRelabAuthority() And UserManager.GetCurrentUser.HasRelabAccess()) Then
-                If (menuHeader.FindItem("Results") IsNot Nothing) Then
-                    menuHeader.Items.Remove(menuHeader.FindItem("Results"))
-                End If
-
-                If (menuHeader.FindItem("Results") IsNot Nothing) Then
-                    menuHeader.FindItem("Results").ChildItems.Remove(menuHeader.FindItem("Results/ResultsSearch"))
-                End If
-                'ResultsSearch
-                If (menuHeader.FindItem("Search") IsNot Nothing) Then
-                    menuHeader.FindItem("Search").ChildItems.Remove(menuHeader.FindItem("Search/ResultsSearch"))
-                End If
-            End If
-
             If Not (UserManager.GetCurrentUser.IsIncomingSpecialist OrElse UserManager.GetCurrentUser.IsMaterialsManagementSpecialist) Then
                 If (menuHeader.FindItem("incoming") IsNot Nothing) Then
                     menuHeader.Items.Remove(menuHeader.FindItem("incoming"))

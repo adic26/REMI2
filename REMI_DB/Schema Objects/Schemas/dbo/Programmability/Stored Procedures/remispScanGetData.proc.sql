@@ -60,9 +60,10 @@ declare @accessoryType NVARCHAR(150)
 declare @productType NVARCHAR(150)
 Declare @NoBSN BIT
 DECLARE @DepartmentID INT
+DECLARE @BatchID INT
 
 --jobname, product group, job WI, jobID
-select @jobName=b.jobname,@cprNumber =b.CPRNumber,@hwrevision = b.HWRevision, @productGroup=lp.[Values],@jobWILocation=j.WILocation,@jobid=j.ID, @batchStatus = b.BatchStatus ,
+select @BatchID=b.ID,@jobName=b.jobname,@cprNumber =b.CPRNumber,@hwrevision = b.HWRevision, @productGroup=lp.[Values],@jobWILocation=j.WILocation,@jobid=j.ID, @batchStatus = b.BatchStatus ,
 @productID=p.ID, @NoBSN=j.NoBSN, @productTypeID=b.ProductTypeID, @accessoryTypeID=b.AccessoryGroupID, @DepartmentID = DepartmentID
 from Batches as b
 	INNER JOIN jobs as j ON j.JobName = b.JobName
@@ -189,8 +190,22 @@ set @selectedLocationNumberOfScans = (select COUNT (*) from Testrecordsxtracking
 --test valid for tracking location
 set @selectedTestIsValidForLocation = case when (select 1 from Tests as t, TrackingLocations as tl, trackinglocationtypes as tlt, TrackingLocationsForTests as tltfort 
 where tlt.ID = tltfort.TrackingLocationtypeID and t.ID = tltfort.TestID and t.ID = @selectedTestID and tlt.ID = tl.TrackingLocationTypeID and tl.ID = @selectedTrackingLocationID) IS not null then 1 else 0 end
---get applicable test stages
-select @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName from TestStages where ISNULL(TestStages.IsArchived, 0)=0 AND testStages.TestStageType NOT IN (4,5, 0) AND TestStages.JobID = @jobID order by ProcessOrder
+
+IF EXISTS (SELECT 1 FROM Req.RequestSetup WHERE BatchID=@BatchID)
+BEGIN
+	SELECT @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName 
+	FROM TestStages ts
+		INNER JOIN Req.RequestSetup rs ON rs.BatchID=@BatchID AND rs.TestStageID=ts.ID
+	WHERE ISNULL(ts.IsArchived, 0)=0 AND ts.TestStageType NOT IN (4,5,0) AND ts.JobID = @jobID 
+	ORDER BY ProcessOrder
+END
+ELSE
+BEGIN
+	SELECT @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName 
+	FROM TestStages ts
+	WHERE ISNULL(ts.IsArchived, 0)=0 AND ts.TestStageType NOT IN (4,5,0) AND ts.JobID = @jobID 
+	ORDER BY ProcessOrder
+END
 
 --get applicable tests
 SELECT test.TestName, test.ProcessOrder

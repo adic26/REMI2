@@ -5,8 +5,26 @@ Imports Remi.Contracts
 Partial Class RequestSetup
     Inherits System.Web.UI.UserControl
 
+    Private _controlMode As ControlMode
+    Private _title As String
+
+    Public Enum ControlMode
+        Batch = 1
+        Request = 2
+        Job = 3
+    End Enum
+
     Public Sub New()
     End Sub
+
+    Public Property DisplayMode() As ControlMode
+        Get
+            Return _controlMode
+        End Get
+        Set(ByVal value As ControlMode)
+            _controlMode = value
+        End Set
+    End Property
 
     Public Property OrientationID() As Int32
         Get
@@ -36,6 +54,15 @@ Partial Class RequestSetup
         End Get
         Set(ByVal value As String)
             hdnQRANumber.Value = value
+        End Set
+    End Property
+
+    Public Property Title() As String
+        Get
+            Return _title
+        End Get
+        Set(ByVal value As String)
+            _title = value
         End Set
     End Property
 
@@ -169,7 +196,13 @@ Partial Class RequestSetup
             btnSave.Visible = True
         End If
 
-        AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0))
+        Dim dt As DataTable = RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0)
+
+        If (dt.Rows.Count = 0) Then
+            Me.Visible = False
+        End If
+
+        AddTopNodes(dt)
 
         MyBase.DataBind()
 
@@ -186,6 +219,15 @@ Partial Class RequestSetup
             ddlOrientations.SelectedValue = orientationID
         Else
             Orientation.Visible = False
+        End If
+
+        If (DisplayMode = ControlMode.Request) Then
+            Orientation.Visible = False
+            chklSaveOptions.Visible = False
+            ddlRequestSetupOptions.Visible = False
+            lblLoadSetup.Visible = False
+            lblSaveOptions.Visible = False
+            btnSave.Visible = False
         End If
     End Sub
 
@@ -251,9 +293,19 @@ Partial Class RequestSetup
         Next
     End Sub
 
-    Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
+    Public Function Save() As Boolean
         If (HasEditItemAuthority Or IsAdmin Or IsProjectManager) Then
             If (tvRequest.Nodes.Count > 0) Then
+                If (DisplayMode = ControlMode.Request) Then
+                    If (Not String.IsNullOrEmpty(QRANumber)) Then
+                        If (HasEditItemAuthority And chklSaveOptions.Items.FindByValue("1") Is Nothing) Then
+                            Dim li As ListItem = New ListItem(QRANumber, 1, True)
+                            chklSaveOptions.Items.Add(li)
+                            chklSaveOptions.SelectedValue = li.Value
+                        End If
+                    End If
+                End If
+
                 Dim saveOptions As List(Of Int32) = (From item In chklSaveOptions.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
                 Dim oID As Int32 = 0
                 Int32.TryParse(ddlOrientations.SelectedValue, oID)
@@ -262,5 +314,10 @@ Partial Class RequestSetup
                 AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0))
             End If
         End If
+        Return True
+    End Function
+
+    Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
+        Save()
     End Sub
 End Class

@@ -165,4 +165,31 @@ Partial Public Class Request
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents tbl As Global.System.Web.UI.WebControls.Table
+
+    '''<summary>
+    '''pnlSetup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlSetup As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''setup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents setup As Global.Remi.RequestSetup
+
+    '''<summary>
+    '''setupEnv control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents setupEnv As Global.Remi.RequestSetup
 End Class

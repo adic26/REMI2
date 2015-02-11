@@ -23,6 +23,7 @@
           <EntitySet Name="BatchesAudit" EntityType="remiModel.Store.BatchesAudit" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="BatchSpecificTestDurations" EntityType="remiModel.Store.BatchSpecificTestDurations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Calibration" EntityType="remiModel.Store.Calibration" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Configurations" EntityType="remiModel.Store.Configurations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DeviceTrackingLog" EntityType="remiModel.Store.DeviceTrackingLog" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobAccess" EntityType="remiModel.Store.JobAccess" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="JobOrientation" EntityType="remiModel.Store.JobOrientation" store:Type="Tables" Schema="dbo" />
@@ -296,6 +297,14 @@
           <AssociationSet Name="FK_Calibration_Tests" Association="remiModel.Store.FK_Calibration_Tests">
             <End Role="Tests" EntitySet="Tests" />
             <End Role="Calibration" EntitySet="Calibration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Configurations_Lookups" Association="remiModel.Store.FK_Configurations_Lookups">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="Configurations" EntitySet="Configurations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Configurations_Lookups1" Association="remiModel.Store.FK_Configurations_Lookups1">
+            <End Role="Lookups" EntitySet="Lookups" />
+            <End Role="Configurations" EntitySet="Configurations" />
           </AssociationSet>
           <AssociationSet Name="FK_DeviceTrackingLog_TestUnits" Association="remiModel.Store.FK_DeviceTrackingLog_TestUnits">
             <End Role="TestUnits" EntitySet="TestUnits" />
@@ -879,6 +888,17 @@
           <Property Name="TestID" Type="int" Nullable="false" />
           <Property Name="LastUser" Type="nvarchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="Configurations">
+          <Key>
+            <PropertyRef Name="ConfigID" />
+          </Key>
+          <Property Name="ConfigID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ModeID" Type="int" Nullable="false" />
+          <Property Name="Version" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="ConfigTypeID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
+          <Property Name="Definition" Type="xml" Nullable="false" />
+        </EntityType>
         <EntityType Name="DeviceTrackingLog">
           <Key>
             <PropertyRef Name="ID" />
@@ -1432,6 +1452,7 @@
           <Property Name="TestID" Type="int" Nullable="false" />
           <Property Name="TestUnitID" Type="int" Nullable="false" />
           <Property Name="PassFail" Type="bit" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="ResultsInformation">
           <Key>
@@ -1442,6 +1463,8 @@
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="Value" Type="nvarchar" Nullable="false" MaxLength="500" />
           <Property Name="IsArchived" Type="bit" Nullable="false" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ConfigID" Type="int" />
         </EntityType>
         <EntityType Name="ResultsMeasurements">
           <Key>
@@ -1462,6 +1485,7 @@
           <Property Name="Description" Type="nvarchar" MaxLength="800" />
           <Property Name="LastUser" Type="nvarchar" MaxLength="255" />
           <Property Name="DegradationVal" Type="decimal" Precision="10" Scale="3" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="ResultsMeasurementsAudit">
           <Key>
@@ -1483,6 +1507,7 @@
           <Property Name="File" Type="varbinary(max)" Nullable="false" />
           <Property Name="ContentType" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="FileName" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'REMILocal.Relab.ResultsOrphaned' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -1502,6 +1527,7 @@
           <Property Name="ResultMeasurementID" Type="int" Nullable="false" />
           <Property Name="ParameterName" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="Value" Type="nvarchar" Nullable="false" MaxLength="250" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="ResultsStatus">
           <Key>
@@ -1527,6 +1553,7 @@
           <Property Name="EndDate" Type="datetime" />
           <Property Name="lossFile" Type="xml" />
           <Property Name="ErrorOccured" Type="int" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="ReqFieldData">
           <Key>
@@ -1538,6 +1565,7 @@
           <Property Name="Value" Type="nvarchar" Nullable="false" />
           <Property Name="LastUser" Type="nvarchar" MaxLength="255" />
           <Property Name="InsertTime" Type="datetime" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="ReqFieldDataAudit">
           <Key>
@@ -1595,6 +1623,7 @@
           <Property Name="RequestID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="RequestNumber" Type="nvarchar" MaxLength="11" />
           <Property Name="BatchID" Type="int" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="RequestSetup">
           <Key>
@@ -1620,6 +1649,7 @@
           <Property Name="CanReport" Type="bit" Nullable="false" />
           <Property Name="HasApproval" Type="bit" Nullable="false" />
           <Property Name="IsExternal" Type="bit" Nullable="false" />
+          <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="RequestTypeAccess">
           <Key>
@@ -2077,6 +2107,30 @@
             </Principal>
             <Dependent Role="Calibration">
               <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Configurations_Lookups">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="Configurations" Type="remiModel.Store.Configurations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Configurations">
+              <PropertyRef Name="ConfigTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Configurations_Lookups1">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
+          <End Role="Configurations" Type="remiModel.Store.Configurations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Configurations">
+              <PropertyRef Name="ModeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3714,6 +3768,15 @@
             <End Role="Test" EntitySet="Tests" />
             <End Role="TestsAccess" EntitySet="TestsAccesses" />
           </AssociationSet>
+          <EntitySet Name="Configurations" EntityType="REMI.Entities.Configuration" />
+          <AssociationSet Name="FK_Configurations_Lookups" Association="REMI.Entities.FK_Configurations_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Configuration" EntitySet="Configurations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Configurations_Lookups1" Association="REMI.Entities.FK_Configurations_Lookups1">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Configuration" EntitySet="Configurations" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
           <Key>
@@ -3859,6 +3922,7 @@
           <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_Results_Tests" FromRole="Result" ToRole="Test" />
           <NavigationProperty Name="TestStage" Relationship="REMI.Entities.FK_Results_TestStages" FromRole="Result" ToRole="TestStage" />
           <NavigationProperty Name="TestUnit" Relationship="REMI.Entities.FK_Results_TestUnits" FromRole="Result" ToRole="TestUnit" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <EntityType Name="ResultsInformation">
           <Key>
@@ -3870,6 +3934,8 @@
           <Property Type="String" Name="Value" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsArchived" Nullable="false" />
           <NavigationProperty Name="ResultsXML" Relationship="REMI.Entities.FK_ResultsInformation_ResultsXML" FromRole="ResultsInformation" ToRole="ResultsXML" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ConfigID" />
         </EntityType>
         <EntityType Name="ResultsMeasurement">
           <Key>
@@ -3897,6 +3963,7 @@
           <NavigationProperty Name="ResultsParameters" Relationship="REMI.Entities.FK_ResultsParameters_ResultsMeasurements" FromRole="ResultsMeasurement" ToRole="ResultsParameter" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ResultsMeasurements_Lookups_MeasurementType" FromRole="ResultsMeasurement" ToRole="Lookup" />
           <NavigationProperty Name="Lookup1" Relationship="REMI.Entities.FK_ResultsMeasurements_Lookups_UnitType" FromRole="ResultsMeasurement" ToRole="Lookup" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           </EntityType>
         <EntityType Name="ResultsMeasurementsAudit">
           <Key>
@@ -3920,6 +3987,7 @@
           <Property Type="String" Name="ContentType" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="FileName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ResultsMeasurement" Relationship="REMI.Entities.FK_ResultsMeasurementsFiles_ResultsMeasurements" FromRole="ResultsMeasurementsFile" ToRole="ResultsMeasurement" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <EntityType Name="ResultsOrphaned">
           <Key>
@@ -3937,6 +4005,7 @@
           <Property Type="String" Name="ParameterName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Value" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ResultsMeasurement" Relationship="REMI.Entities.FK_ResultsParameters_ResultsMeasurements" FromRole="ResultsParameter" ToRole="ResultsMeasurement" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <EntityType Name="ResultsXML">
           <Key>
@@ -3955,6 +4024,7 @@
           <NavigationProperty Name="Result" Relationship="REMI.Entities.FK_ResultXML_Results" FromRole="ResultsXML" ToRole="Result" />
           <NavigationProperty Name="ResultsInformations" Relationship="REMI.Entities.FK_ResultsInformation_ResultsXML" FromRole="ResultsXML" ToRole="ResultsInformation" />
           <NavigationProperty Name="ResultsMeasurements" Relationship="REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID" FromRole="ResultsXML" ToRole="ResultsMeasurement" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <EntityType Name="RequestSetup">
           <Key>
@@ -5238,6 +5308,8 @@
           <NavigationProperty Name="Products" Relationship="REMI.Entities.FK_Products_Lookups" FromRole="Lookup" ToRole="Product" />
           <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="Lookup" ToRole="UserDetail" />
           <NavigationProperty Name="TestsAccesses" Relationship="REMI.Entities.FK_TestsAccess_Lookups" FromRole="Lookup" ToRole="TestsAccess" />
+          <NavigationProperty Name="Configurations" Relationship="REMI.Entities.FK_Configurations_Lookups" FromRole="Lookup" ToRole="Configuration" />
+          <NavigationProperty Name="Configurations1" Relationship="REMI.Entities.FK_Configurations_Lookups1" FromRole="Lookup" ToRole="Configuration" />
           </EntityType>
         <Association Name="FK_Batches_AccessoryGroup">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
@@ -5455,6 +5527,7 @@
           <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldData" ToRole="ReqFieldSetup" />
           <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="InsertTime" Precision="3" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -5465,6 +5538,7 @@
           <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="Request" ToRole="ReqFieldData" />
           <Property Type="Int32" Name="BatchID" />
           <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Request" ToRole="Batch" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <Association Name="FK_ReqFieldData_Request">
           <End Type="REMI.Entities.Request" Role="Request" Multiplicity="1" />
@@ -5496,6 +5570,7 @@
           <NavigationProperty Name="RequestTypeAccesses" Relationship="REMI.Entities.FK_RequestTypeAccess_RequestType" FromRole="RequestType" ToRole="RequestTypeAccess" />
           <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_RequestType" FromRole="RequestType" ToRole="LookupsHierarchy" />
           <NavigationProperty Name="UserSearchFilters" Relationship="REMI.Entities.FK_UserSearchFilter_RequestType" FromRole="RequestType" ToRole="UserSearchFilter" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <Association Name="FK_RequestType_TypeID">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -6368,6 +6443,43 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Configuration">
+          <Key>
+            <PropertyRef Name="ConfigID" />
+          </Key>
+          <Property Type="Int32" Name="ConfigID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ModeID" Nullable="false" />
+          <Property Type="String" Name="Version" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ConfigTypeID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Definition" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_Configurations_Lookups" FromRole="Configuration" ToRole="Lookup" />
+          <NavigationProperty Name="Lookup1" Relationship="REMI.Entities.FK_Configurations_Lookups1" FromRole="Configuration" ToRole="Lookup" />
+        </EntityType>
+        <Association Name="FK_Configurations_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.Configuration" Role="Configuration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Configuration">
+              <PropertyRef Name="ConfigTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Configurations_Lookups1">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.Configuration" Role="Configuration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Configuration">
+              <PropertyRef Name="ModeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6478,6 +6590,7 @@
           <EntitySetMapping Name="Results">
             <EntityTypeMapping TypeName="REMI.Entities.Result">
               <MappingFragment StoreEntitySet="Results">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="PassFail" ColumnName="PassFail" />
                 <ScalarProperty Name="TestUnitID" ColumnName="TestUnitID" />
                 <ScalarProperty Name="TestID" ColumnName="TestID" />
@@ -6489,6 +6602,8 @@
           <EntitySetMapping Name="ResultsInformations">
             <EntityTypeMapping TypeName="REMI.Entities.ResultsInformation">
               <MappingFragment StoreEntitySet="ResultsInformation">
+                <ScalarProperty Name="ConfigID" ColumnName="ConfigID" />
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -6500,6 +6615,7 @@
           <EntitySetMapping Name="ResultsMeasurements">
             <EntityTypeMapping TypeName="REMI.Entities.ResultsMeasurement">
               <MappingFragment StoreEntitySet="ResultsMeasurements">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="DegradationVal" ColumnName="DegradationVal" />
                 <ScalarProperty Name="LastUser" ColumnName="LastUser" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -6533,6 +6649,7 @@
           <EntitySetMapping Name="ResultsMeasurementsFiles">
             <EntityTypeMapping TypeName="REMI.Entities.ResultsMeasurementsFile">
               <MappingFragment StoreEntitySet="ResultsMeasurementsFiles">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="ContentType" ColumnName="ContentType" />
                 <ScalarProperty Name="File" ColumnName="File" />
@@ -6552,6 +6669,7 @@
           <EntitySetMapping Name="ResultsParameters">
             <EntityTypeMapping TypeName="REMI.Entities.ResultsParameter">
               <MappingFragment StoreEntitySet="ResultsParameters">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="ParameterName" ColumnName="ParameterName" />
                 <ScalarProperty Name="ResultMeasurementID" ColumnName="ResultMeasurementID" />
@@ -6562,6 +6680,7 @@
           <EntitySetMapping Name="ResultsXMLs">
             <EntityTypeMapping TypeName="REMI.Entities.ResultsXML">
               <MappingFragment StoreEntitySet="ResultsXML">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="ErrorOccured" ColumnName="ErrorOccured" />
                 <ScalarProperty Name="lossFile" ColumnName="lossFile" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
@@ -7206,6 +7325,7 @@
           <EntitySetMapping Name="ReqFieldDatas">
             <EntityTypeMapping TypeName="REMI.Entities.ReqFieldData">
               <MappingFragment StoreEntitySet="ReqFieldData">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="InsertTime" ColumnName="InsertTime" />
                 <ScalarProperty Name="LastUser" ColumnName="LastUser" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -7217,6 +7337,7 @@
           <EntitySetMapping Name="Requests">
             <EntityTypeMapping TypeName="REMI.Entities.Request">
               <MappingFragment StoreEntitySet="Request">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="BatchID" ColumnName="BatchID" />
                 <ScalarProperty Name="RequestNumber" ColumnName="RequestNumber" />
                 <ScalarProperty Name="RequestID" ColumnName="RequestID" />
@@ -7226,6 +7347,7 @@
           <EntitySetMapping Name="RequestTypes">
             <EntityTypeMapping TypeName="REMI.Entities.RequestType">
               <MappingFragment StoreEntitySet="RequestType">
+                <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="IsExternal" ColumnName="IsExternal" />
                 <ScalarProperty Name="HasApproval" ColumnName="HasApproval" />
                 <ScalarProperty Name="CanReport" ColumnName="CanReport" />
@@ -7514,6 +7636,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Configurations">
+            <EntityTypeMapping TypeName="REMI.Entities.Configuration">
+              <MappingFragment StoreEntitySet="Configurations">
+                <ScalarProperty Name="Definition" ColumnName="Definition" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ConfigTypeID" ColumnName="ConfigTypeID" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="ModeID" ColumnName="ModeID" />
+                <ScalarProperty Name="ConfigID" ColumnName="ConfigID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7733,6 +7867,9 @@
         <EntityTypeShape EntityType="REMI.Entities.TestsAccess" Width="1.5" PointX="0.51571959281140922" PointY="9.61177495569539" />
         <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Tests" />
+        <EntityTypeShape EntityType="REMI.Entities.Configuration" Width="1.5" PointX="6.956855343169" PointY="18.403342195974357" />
+        <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups1" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

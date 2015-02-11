@@ -131,6 +131,15 @@ Partial Public Class ReqAdmin
     Protected WithEvents txtNewChildLookup As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''txtLookupType control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtLookupType As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
     '''btnSaveLookup control.
     '''</summary>
     '''<remarks>

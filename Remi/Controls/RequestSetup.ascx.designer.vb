@@ -122,6 +122,15 @@ Partial Public Class RequestSetup
     Protected WithEvents hdnHasEditItemAuthority As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''lblTitle control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblTitle As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''notMain control.
     '''</summary>
     '''<remarks>
@@ -149,6 +158,15 @@ Partial Public Class RequestSetup
     Protected WithEvents ddlOrientations As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''lblLoadSetup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblLoadSetup As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''ddlRequestSetupOptions control.
     '''</summary>
     '''<remarks>
@@ -156,6 +174,15 @@ Partial Public Class RequestSetup
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlRequestSetupOptions As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''lblSaveOptions control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblSaveOptions As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''chklSaveOptions control.

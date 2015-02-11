@@ -8,10 +8,14 @@ Public Class ReqDefault
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
-            ddlRequestType.DataSource = RequestManager.GetRequestTypes()
+            ddlRequestType.DataSource = UserManager.GetCurrentUser.RequestTypes
             ddlRequestType.DataBind()
 
             Dim requestType As String = IIf(Request.QueryString.Item("rt") Is Nothing, String.Empty, Request.QueryString.Item("rt"))
+
+            If (Not String.IsNullOrEmpty(requestType) AndAlso (From rt As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where rt.Field(Of String)("RequestType") = requestType Select rt).FirstOrDefault() Is Nothing) Then
+                Response.Redirect(String.Format("/Request/Default.aspx"), True)
+            End If
 
             If (requestType.Trim().Length > 0) Then
                 ddlRequestType.Items.FindByText(requestType).Selected = True
@@ -19,6 +23,10 @@ Public Class ReqDefault
 
             If (ddlRequestType.Items.Count > 0 And ddlRequestType.SelectedIndex = -1) Then
                 ddlRequestType.SelectedIndex = 0
+            End If
+
+            If (ddlRequestType.Items.Count = 1) Then
+                ddlRequestType.Enabled = False
             End If
 
             UpdateLinks()

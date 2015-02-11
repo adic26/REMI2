@@ -10,13 +10,15 @@ Imports System.Configuration
 Imports Remi.BusinessEntities
 
 <System.Web.Services.WebService(Name:="Configuration", Namespace:="http://go/remi/")> _
-<System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
+<System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.None)> _
 <ToolboxItem(False)> _
 Public Class ProductConfiguration
     Inherits System.Web.Services.WebService
 
+#Region "OBSOLETE"
 #Region "Product"
-    <WebMethod(Description:="Retrieve Product Test Configuration")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Retrieve Product Test Configuration")> _
     Public Function GetProductConfigurationXML(ByVal productID As Int32, ByVal testID As Int32) As String
         Dim xml As String = String.Empty
         Try
@@ -33,7 +35,8 @@ Public Class ProductConfiguration
         Return xml
     End Function
 
-    <WebMethod(Description:="Returns whether this product and test has any product configuration.")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Returns whether this product and test has any product configuration.")> _
     Public Function HasProductConfigurationXML(ByVal productID As Int32, ByVal testID As Int32) As Boolean
         Dim hasXML As Boolean = False
         Try
@@ -44,7 +47,8 @@ Public Class ProductConfiguration
         Return hasXML
     End Function
 
-    <WebMethod(Description:="Retrieve Product Test Configuration By Name")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Retrieve Product Test Configuration By Name")> _
     Public Function GetProductConfigurationXMLByName(ByVal productID As Int32, ByVal testID As Int32, ByVal name As String) As String
         Dim xml As String = String.Empty
         Try
@@ -61,7 +65,8 @@ Public Class ProductConfiguration
         Return xml
     End Function
 
-    <WebMethod(Description:="Returns whether this product and test has any product configuration.")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Returns whether this product and test has any product configuration.")> _
     Public Function HasProductConfigurationXMLByName(ByVal productID As Int32, ByVal testID As Int32, ByVal name As String) As Boolean
         Dim hasXML As Boolean = False
         Try
@@ -72,7 +77,8 @@ Public Class ProductConfiguration
         Return hasXML
     End Function
 
-    <WebMethod(Description:="Returns all product/test config seperated by the name of the configuration")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Returns all product/test config seperated by the name of the configuration")> _
     Public Function GetProductConfigurationXMLCombined(ByVal productID As Int32, ByVal testID As Int32) As String
         Dim xml As String = String.Empty
         Try
@@ -83,7 +89,8 @@ Public Class ProductConfiguration
         Return xml
     End Function
 
-    <WebMethod(Description:="Returns whether this product and test has any product configurations.")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Returns whether this product and test has any product configurations.")> _
     Public Function GetAllProductConfigurationXMLs(ByVal productID As Int32, ByVal testID As Int32, ByVal loadVersions As Boolean) As ProductConfigCollection
         Try
             Return ProductGroupManager.GetAllProductConfigurationXMLs(productID, testID, loadVersions)
@@ -96,7 +103,8 @@ Public Class ProductConfiguration
 #End Region
 
 #Region "Station"
-    <WebMethod(Description:="Retrieve Station Configuration")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Retrieve Station Configuration")> _
     Public Function GetStationConfigurationXML(ByVal hostID As Int32) As String
         Dim xml As String = String.Empty
         Try
@@ -107,7 +115,8 @@ Public Class ProductConfiguration
         Return xml
     End Function
 
-    <WebMethod(Description:="Retrieve Station Configuration Based on Profile")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Retrieve Station Configuration Based on Profile")> _
     Public Function GetStationConfigurationXMLProfile(ByVal hostID As Int32, ByVal profileName As String) As String
         Dim xml As String = String.Empty
         Try
@@ -118,7 +127,8 @@ Public Class ProductConfiguration
         Return xml
     End Function
 
-    <WebMethod(Description:="Retrieve Multiple Station Configuration By HostName")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Retrieve Multiple Station Configuration By HostName")> _
     Public Function GetAllStationConfigurationXML(ByVal hostName As String) As List(Of String)
         Dim config As New List(Of String)
         Try
@@ -155,6 +165,67 @@ Public Class ProductConfiguration
         End Try
 
         Return config
+    End Function
+#End Region
+#End Region
+
+#Region "Configuration"
+    <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfig")> _
+    Public Function GetConfig(ByVal Name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32) As String
+        Dim xml As String = String.Empty
+
+        Try
+            Dim verNum As New Version(version)
+            ConfigManager.GetConfig(Name, verNum, mode, type)
+        Catch ex As Exception
+            ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
+        End Try
+
+        Return xml
+    End Function
+
+    <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfigByNames")> _
+    Public Function GetConfig(ByVal Name As String, ByVal version As String, ByVal mode As String, ByVal type As String) As String
+        Dim xml As String = String.Empty
+
+        Try
+            Dim verNum As New Version(version)
+            Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
+            Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
+
+            ConfigManager.GetConfig(Name, verNum, modeID, typeID)
+        Catch ex As Exception
+            ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
+        End Try
+
+        Return xml
+    End Function
+
+    <WebMethod(Description:="Saves Configuration", MessageName:="SaveConfig")> _
+    Public Function SaveConfig(ByVal Name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32, ByVal definition As String) As Boolean
+        Try
+            Dim verNum As New Version(version)
+            Return ConfigManager.SaveConfig(Name, verNum, mode, type, definition)
+        Catch ex As Exception
+            ConfigManager.LogIssue("SaveConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
+        End Try
+
+        Return False
+    End Function
+
+    <WebMethod(Description:="Saves Configuration", MessageName:="SaveConfigByNames")> _
+    Public Function SaveConfig(ByVal Name As String, ByVal version As String, ByVal mode As String, ByVal type As String, ByVal definition As String) As Boolean
+        Try
+            Dim verNum As New Version(version)
+            Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
+            Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
+
+            Return ConfigManager.SaveConfig(Name, verNum, modeID, typeID, definition)
+        Catch ex As Exception
+            ConfigManager.LogIssue("SaveConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
+        End Try
+
+        Return False
     End Function
 #End Region
 

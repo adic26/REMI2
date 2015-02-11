@@ -332,11 +332,26 @@ Namespace REMI.Bll
 
         Public Shared Function SaveRequest(ByVal requestName As String, ByRef request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
             Dim saved As Boolean = False
-            Try
-                saved = RequestDB.SaveRequest(requestName, request, userIdentification)
 
-                If (saved) Then
-                    BatchManager.GetItem(request(0).RequestNumber, userIdentification, False, True, False)
+            Try
+                If (request IsNot Nothing) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim requestTypeID As Int32 = request(0).RequestTypeID
+                    Dim requestNumber As String = request(0).RequestNumber
+                    Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
+
+                    saved = RequestDB.SaveRequest(requestName, request, userIdentification)
+
+                    If (saved And requestType.HasIntegration) Then
+                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, userIdentification, False, True, False)
+
+                        Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
+
+                        If (req.BatchID Is Nothing) Then
+                            req.BatchID = b.ID
+                            instance.SaveChanges()
+                        End If
+                    End If
                 End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)

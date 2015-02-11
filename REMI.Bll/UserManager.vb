@@ -106,37 +106,63 @@ Namespace REMI.Bll
                         Dim instance = New REMI.Dal.Entities().Instance()
 
                         'Get existing set of UserDetails for user
-                        Dim userDetails As List(Of Int32) = (From ud In instance.UserDetails _
-                                    Where ud.User.ID = u.ID _
-                                    Select ProductID = ud.LookupID).ToList()
+                        Dim userDetailsTestCenter = (From ud In instance.UserDetails _
+                                    Where ud.User.ID = u.ID And ud.Lookup.LookupType.Name = "TestCenter" _
+                                    Select New With {.LookupID = ud.LookupID, .isDefault = ud.IsDefault}).ToList()
+
+                        Dim userDetailsDepartment = (From ud In instance.UserDetails _
+                                    Where ud.User.ID = u.ID And ud.Lookup.LookupType.Name = "Department" _
+                                    Select New With {.LookupID = ud.LookupID, .isDefault = ud.IsDefault}).ToList()
 
                         'Get new set of UserDetails for user
-                        Dim userDetailsNew As List(Of Int32) = (From ud In u.UserDetails _
-                                Select DirectCast(ud.Item("LookupID"), Int32)).ToList()
+                        Dim userDetailsNewTestCenter = (From ud In u.UserDetails Where DirectCast(ud.Item("Name"), String) = "TestCenter" _
+                                Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isDefault = DirectCast(ud.Item("isDefault"), Boolean)}).ToList()
 
-                        ''Gets the list of UserDetails that are missing for user
-                        Dim missingUserDetails = userDetailsNew.Except(userDetails)
+                        Dim userDetailsNewDepartment = (From ud In u.UserDetails Where DirectCast(ud.Item("Name"), String) = "Department" _
+                                Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isDefault = DirectCast(ud.Item("isDefault"), Boolean)}).ToList()
 
-                        ''Gets the list of UserDetails that need to be removed
-                        Dim removeUserDetails = userDetails.Except(userDetailsNew)
+                        For Each udd In userDetailsNewDepartment
+                            Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.User.ID = u.ID And d.LookupID = udd.LookupID Select d).FirstOrDefault()
 
-                        'Remove userdetails
-                        For Each t In removeUserDetails
-                            Dim lookupID As Int32 = t
-                            Dim up As REMI.Entities.UserDetail = (From ud In instance.UserDetails Where ud.User.ID = u.ID And ud.LookupID = lookupID Select ud).FirstOrDefault()
+                            If (ud Is Nothing) Then
+                                ud = New REMI.Entities.UserDetail
+                                ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
+                                ud.Lookup = (From l In instance.Lookups Where l.LookupID = udd.LookupID Select l).FirstOrDefault()
+                                ud.IsDefault = udd.isDefault
 
-                            If (Not up.IsDefault Or up.IsDefault Is Nothing) Then
+                                instance.AddToUserDetails(ud)
+                            Else
+                                ud.IsDefault = udd.isDefault
+                            End If
+                        Next
+
+                        For Each udtc In userDetailsNewTestCenter
+                            Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.User.ID = u.ID And d.LookupID = udtc.LookupID Select d).FirstOrDefault()
+
+                            If (ud Is Nothing) Then
+                                ud = New REMI.Entities.UserDetail
+                                ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
+                                ud.Lookup = (From l In instance.Lookups Where l.LookupID = udtc.LookupID Select l).FirstOrDefault()
+                                ud.IsDefault = udtc.isDefault
+
+                                instance.AddToUserDetails(ud)
+                            Else
+                                ud.IsDefault = udtc.isDefault
+                            End If
+                        Next
+
+                        For Each udr In userDetailsDepartment
+                            If (From d In u.UserDetails Where DirectCast(d.Item("LookupID"), Int32) = udr.LookupID Select d).FirstOrDefault() Is Nothing Then
+                                Dim up As REMI.Entities.UserDetail = (From ud In instance.UserDetails Where ud.User.ID = u.ID And ud.LookupID = udr.LookupID Select ud).FirstOrDefault()
                                 instance.DeleteObject(up)
                             End If
                         Next
 
-                        'Add missing UserDetails
-                        For Each t In missingUserDetails
-                            Dim lookupID As Int32 = t
-                            Dim ud As New REMI.Entities.UserDetail()
-                            ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
-                            ud.Lookup = (From l In instance.Lookups Where l.LookupID = lookupID Select l).FirstOrDefault()
-                            instance.AddToUserDetails(ud)
+                        For Each udr In userDetailsTestCenter
+                            If (From d In u.UserDetails Where DirectCast(d.Item("LookupID"), Int32) = udr.LookupID Select d).FirstOrDefault() Is Nothing Then
+                                Dim up As REMI.Entities.UserDetail = (From ud In instance.UserDetails Where ud.User.ID = u.ID And ud.LookupID = udr.LookupID Select ud).FirstOrDefault()
+                                instance.DeleteObject(up)
+                            End If
                         Next
 
                         'Get existing set of products for user
@@ -206,9 +232,9 @@ Namespace REMI.Bll
                                     instance.AddToUserDetails(ud)
                                 End If
                             Next
-                        End If
 
-                        instance.SaveChanges()
+                            instance.SaveChanges()
+                        End If
 
                         If (saveTraining) Then
                             Dim newTraining = (From t In u.Training Where t.Item("ID") IsNot Nothing And t.Item("ID") IsNot DBNull.Value _
@@ -274,9 +300,9 @@ Namespace REMI.Bll
                                     instance.AddToUserTrainings(ut)
                                 End If
                             Next
-                        End If
 
-                        instance.SaveChanges()
+                            instance.SaveChanges()
+                        End If
 
                         If (UserManager.GetCurrentUser.ID = u.ID) Then
                             UserManager.LogUserOut()
@@ -389,11 +415,6 @@ Namespace REMI.Bll
                     userDetails.Rows.Add(newRow2)
 
                     u.UserDetails = userDetails
-
-                    If (Not u.RolesList.Contains("Relab")) Then
-                        u.RolesList.Add("Relab")
-                        Roles.AddUserToRole(u.LDAPName, "Relab")
-                    End If
 
                     u.ID = Save(u, False, False)
 

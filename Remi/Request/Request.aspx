@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="vb" EnableViewState="true" AutoEventWireup="false" CodeBehind="Request.aspx.vb" Inherits="Remi.Request" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
+<%@ Register Src="../Controls/RequestSetup.ascx" TagName="RequestSetup" TagPrefix="rs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
@@ -37,8 +38,7 @@
     <asp:HiddenField runat="server" ID="hdnRequestNumber" />
     
     <uc1:NotificationList ID="notMain" runat="server" />
-
-    
+        
     <asp:Panel runat="server" ID="pnlDisplayChanges" Visible="false">
         <asp:GridView ID="grdDisplayChanges" runat="server" DataSourceID="odsDisplayChanges" AutoGenerateColumns="True" EnableViewState="False" EmptyDataText="No Changes">
         </asp:GridView>
@@ -49,8 +49,12 @@
         </asp:ObjectDataSource>
     </asp:Panel>
     <br />
-    <asp:Panel runat="server" ID="pnlRequest" EnableViewState="true">
+    <asp:Panel runat="server" ID="pnlRequest" EnableViewState="true" style="display:inline-block;vertical-align:top;">
         <asp:Table runat="server" ID="tbl" Width="70%" EnableViewState="true" CssClass="requestTable"></asp:Table>
+    </asp:Panel>
+    <asp:Panel runat="server" ID="pnlSetup" EnableViewState="true" style="display:inline-block;vertical-align:top;" Visible="false">
+        <rs:RequestSetup ID="setup" runat="server" Visible="false" DisplayMode="Request" Title="Setup Parametric" />
+        <rs:RequestSetup ID="setupEnv" runat="server" Visible="false" DisplayMode="Request" Title="Setup Environmental" />
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>

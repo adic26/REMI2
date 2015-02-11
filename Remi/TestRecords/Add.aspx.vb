@@ -114,7 +114,7 @@ Partial Class TestRecords_Add
 #Region "Page Load"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            Dim qraNumber As String = Request.QueryString.Get("QRA")
+            Dim qraNumber As String = Request.QueryString.Get("RN")
             If Not String.IsNullOrEmpty(qraNumber) Then
                 ProcessQRA(qraNumber)
             Else
@@ -211,7 +211,7 @@ Partial Class TestRecords_Add
         End If
 
         If (units.Count > 0) Then
-            gvwRelabMatrix.DataSource = RelabManager.FunctionalMatrixByTestRecord(Nothing, testStageID, testID, BatchManager.GetItem(Request.QueryString.Get("QRA")).ID, String.Join(",", units.ConvertAll(Of String)(Function(j As Integer) j.ToString()).ToArray()), rblMFISFIAcc.SelectedValue)
+            gvwRelabMatrix.DataSource = RelabManager.FunctionalMatrixByTestRecord(Nothing, testStageID, testID, BatchManager.GetItem(Request.QueryString.Get("RN")).ID, String.Join(",", units.ConvertAll(Of String)(Function(j As Integer) j.ToString()).ToArray()), rblMFISFIAcc.SelectedValue)
             gvwRelabMatrix.DataBind()
 
             If (gvwRelabMatrix.HeaderRow IsNot Nothing) Then

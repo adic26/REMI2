@@ -456,4 +456,7 @@
   <data name="i14" xml:space="preserve">
     <value>The batch priority was changed.</value>
   </data>
+  <data name="e28" xml:space="preserve">
+    <value>Default Test Centre or Department Not Entered.</value>
+  </data>
 </root>

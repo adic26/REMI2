@@ -244,6 +244,8 @@
     <Folder Include="Scripts\January292015" />
     <Folder Include="Schema Objects\Schemas\Req\Views" />
     <Folder Include="Scripts\February042015" />
+    <Folder Include="Scripts\February112015" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -519,46 +521,14 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductManagersAudit.pkey.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_GetProfiles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_GetNumberOfInactiveProfiles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsGetSpecificLocationForUsersTestCenter.proc.sql">
       <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_RemoveUsersFromRoles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_IsUserInRole.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_GetUsersInRoles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesDeleteSingleItem.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_GetRolesForUser.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesInsertUpdateSingleItem.proc.sql">
       <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_FindUsersInRole.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UsersInRoles_AddUsersToRoles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesSelectList.proc.sql">
       <SubType>Code</SubType>
@@ -589,14 +559,6 @@
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSelectChamberBatches.proc.sql">
       <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Users_DeleteUser.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_DeleteRole.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTaskAssignmentsRemove.proc.sql">
       <SubType>Code</SubType>
@@ -646,32 +608,8 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypePermissionsGetForUserAtLocation.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_DeleteInactiveProfiles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_UnRegisterSchemaVersion.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestExceptionsDelete.proc.sql">
       <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_DeleteProfiles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_RegisterSchemaVersion.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_CheckSchemaVersion.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Applications_CreateApplication.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUser.proc.sql">
       <SubType>Code</SubType>
@@ -763,24 +701,8 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsSelectListByLastUser.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Users_CreateUser.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_CreateRole.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_RoleExists.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsAddTrackingLocationForTest.proc.sql">
       <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Roles_GetAllRoles.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsRemoveTrackingLocationForTest.proc.sql">
       <SubType>Code</SubType>
@@ -842,14 +764,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsSetBSN.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Setup_RestorePermissions.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Setup_RemoveAllRoleMembers.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsInsertNew.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -865,20 +779,8 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetFastScanData.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_AnyDataInTables.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveFastScanData.proc.sql">
       <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_SetProperties.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_Profile_GetProperties.proc.sql">
-      <SubType>Code</SubType>
-      <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsGetByQRANumber.proc.sql">
       <SubType>Code</SubType>
@@ -1832,12 +1734,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Lookups.UX_Lookups_TypeVal.index.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetRolesByPermission.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetPermissionsByRole.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispUsersSearch.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -2260,9 +2156,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetServices.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\aspnet_GetPermissions.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Scripts\December022014\1.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -2642,5 +2535,183 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetTestsAccess.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Tables\Relab.ResultsInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Configurations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\February112015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\February112015\2-sp.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Utilities\remispModifyUserToBasicAccess.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_AnyDataInTables.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Applications_CreateApplication.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_CheckSchemaVersion.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_GetPermissions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_GetPermissionsByRole.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_GetRolesByPermission.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Profile_DeleteInactiveProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Profile_DeleteProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Profile_GetNumberOfInactiveProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Profile_GetProfiles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Profile_GetProperties.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Profile_SetProperties.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_RegisterSchemaVersion.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Roles_CreateRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Roles_DeleteRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Roles_GetAllRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Roles_RoleExists.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Setup_RemoveAllRoleMembers.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Setup_RestorePermissions.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_UnRegisterSchemaVersion.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Users_CreateUser.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_Users_DeleteUser.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_UsersInRoles_AddUsersToRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_UsersInRoles_FindUsersInRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_UsersInRoles_GetRolesForUser.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_UsersInRoles_GetUsersInRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_UsersInRoles_IsUserInRole.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET\aspnet_UsersInRoles_RemoveUsersFromRoles.proc.sql">
+      <SubType>Code</SubType>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </None>
   </ItemGroup>
 </Project>

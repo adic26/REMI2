@@ -301,7 +301,7 @@
                 <Columns>
                     <asp:TemplateField HeaderText="Request">
                         <ItemTemplate>
-                            <asp:HyperLink EnableViewState="false" ID="hypQRANumber" runat="server" NavigateUrl='<%# "/ScanForInfo/Default.aspx?QRA=" + Eval("QRANumber") %>'
+                            <asp:HyperLink EnableViewState="false" ID="hypQRANumber" runat="server" NavigateUrl='<%# "/ScanForInfo/Default.aspx?RN=" + Eval("QRANumber")%>'
                             Text='<%# Eval("QRANumber") %>' ToolTip='<%# "Click to view the information page for this batch" %>' Target="_blank"></asp:HyperLink>
                         </ItemTemplate>
                     </asp:TemplateField>

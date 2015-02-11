@@ -43,17 +43,13 @@
     <div style="float:left;">
         <table>
             <tr>
-                 <td class="HorizTableFirstcolumn">
-                     Select Test Centre: </td>
+                 <td class="HorizTableFirstcolumn">Test Centre:</td>
                  <td style="text-align:left;">
-                     <asp:DataList ID="dlstTestCenter" runat="server" DataSourceID="odsTestCentres" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
-                         <ItemTemplate>
-                             <asp:HiddenField ID="hdnTCIsDefault" runat="server" Value="" />
-                            <asp:HiddenField ID="hdnTestCenterID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
-                            <asp:CheckBox ID='chkTestCenter' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
-                        </ItemTemplate>
-                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
-                     </asp:DataList>
+                     <asp:DropDownList runat="server" ID="ddlTestCenter" DataSourceID="odsTestCentres" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+
+                     <asp:GridView runat="server" ID="grdTestCenter" EmptyDataText="No Test Centers">
+                     </asp:GridView>
+
                     <asp:ObjectDataSource ID="odsTestCentres" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                         <SelectParameters>
                             <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
@@ -69,17 +65,12 @@
                  </td>
              </tr>
             <tr>
-                 <td class="HorizTableFirstcolumn">
-                     Select Department: </td>
+                 <td class="HorizTableFirstcolumn">Department:</td>
                  <td style="text-align:left;">
-                     <asp:DataList ID="dlstDepartments" runat="server" DataSourceID="odsDepartments" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
-                        <ItemTemplate>
-                            <asp:HiddenField ID="hdnDIsDefault" runat="server" Value="" />
-                            <asp:HiddenField ID="hdnDepartmentID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
-                            <asp:CheckBox ID='chkDepartment' runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>' CssClass="HorizTableSecondColumn"/>
-                        </ItemTemplate>
-                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
-                    </asp:DataList>
+                     <asp:DropDownList runat="server" ID="ddlDepartment" DataSourceID="odsDepartments" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
+                     
+                     <asp:GridView runat="server" ID="grdDepartments" EmptyDataText="No Departments">
+                     </asp:GridView>
 
                      <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                          <SelectParameters>
@@ -96,7 +87,7 @@
                  </td>
             </tr>
              <tr>
-                 <td class="HorizTableFirstcolumn">Select Default Page: </td>
+                 <td class="HorizTableFirstcolumn">Default Page:</td>
                  <td style="text-align:left;">
                     <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="195px" DataTextField="Name" DataValueField="Url"></asp:DropDownList>
                  </td>

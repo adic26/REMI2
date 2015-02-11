@@ -235,7 +235,13 @@ Namespace REMI.Bll
                         Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
                     Case 7
                         If (isValid) Then
-                            Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                                Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
+                            ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault() Is Nothing) Then
+                                Return Number.Trim()
+                            Else
+                                Return String.Empty
+                            End If
                         Else
                             Return Number.Trim()
                         End If
@@ -245,6 +251,10 @@ Namespace REMI.Bll
                         If (isValid) Then
                             If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
                                 Return Number
+                            ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum Select b.QRANumber).FirstOrDefault() Is Nothing) Then
+                                Return Number
+                            Else
+                                Return String.Empty
                             End If
                         End If
 

@@ -17,6 +17,10 @@ Public Class Request
         Dim type As String = IIf(Request.QueryString.Item("type") Is Nothing, String.Empty, Request.QueryString.Item("type"))
         Dim rf As RequestFieldsCollection
 
+        If ((From rt As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where rt.Field(Of String)("RequestType") = type Select rt).FirstOrDefault() Is Nothing) Then
+            Response.Redirect(String.Format("/Request/Default.aspx"), True)
+        End If
+
         If (Not String.IsNullOrEmpty(req)) Then
             rf = RequestManager.GetRequestFieldSetup(type, False, req)
         Else
@@ -112,7 +116,6 @@ Public Class Request
                         ddl.AutoPostBack = True
 
                         If (res.ParentFieldSetupID > 0) Then
-
                             For Each rec In (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p)
                                 If (res.CustomLookupHierarchy IsNot Nothing) Then
                                     For Each ch In res.CustomLookupHierarchy
@@ -140,11 +143,43 @@ Public Class Request
                             ddl.SelectedValue = res.Value
                         End If
 
-
                         tCell2.Controls.Add(ddl)
 
                         If (res.IsRequired) Then
                             rfv.ControlToValidate = ddl.ID
+                        End If
+
+                        If (res.IntField = "RequestedTest" And res.HasIntegration And res.NewRequest) Then
+                            Dim jobID As Int32 = JobManager.GetJobByName(ddl.SelectedValue).ID
+
+                            setup.Visible = True
+                            setupEnv.Visible = True
+                            pnlSetup.Visible = True
+                            setup.JobID = jobID
+                            setup.ProductID = 0
+                            setup.JobName = ddl.SelectedValue
+                            setup.ProductName = String.Empty
+                            setup.QRANumber = lblRequest.Text
+                            setup.BatchID = 0
+                            setup.TestStageType = TestStageType.Parametric
+                            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                            setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                            setup.HasEditItemAuthority = True
+                            setup.OrientationID = 0
+                            setup.DataBind()
+
+                            setupEnv.JobID = jobID
+                            setupEnv.BatchID = 0
+                            setupEnv.ProductID = 0
+                            setupEnv.JobName = ddl.SelectedValue
+                            setupEnv.ProductName = String.Empty
+                            setupEnv.QRANumber = lblRequest.Text
+                            setupEnv.TestStageType = TestStageType.EnvironmentalStress
+                            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                            setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                            setup.HasEditItemAuthority = True
+                            setupEnv.OrientationID = 0
+                            setupEnv.DataBind()
                         End If
                     Case "LINK"
                         Dim lnk As New HyperLink
@@ -245,6 +280,80 @@ Public Class Request
         MyBase.OnInit(e)
     End Sub
 
+    Protected Sub BuildMenu()
+        Dim requestNumber As String = hdnRequestNumber.Value
+        Dim myMenu As WebControls.Menu
+        Dim mi As New MenuItem
+        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+        hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+
+        mi = New MenuItem
+        mi.Text = "Create Request"
+        mi.Target = "_blank"
+        mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+
+        If (rec IsNot Nothing) Then
+            mi = New MenuItem
+            mi.Text = "Batch"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypBatch.Visible = True
+            hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
+
+            Dim batch As BatchView = BatchManager.GetViewBatch(requestNumber)
+            setup.Visible = True
+            setupEnv.Visible = True
+            pnlSetup.Visible = True
+            setup.JobID = batch.JobID
+            setup.ProductID = batch.ProductID
+            setup.JobName = batch.JobName
+            setup.ProductName = batch.ProductGroup
+            setup.QRANumber = rec.RequestNumber
+            setup.BatchID = rec.BatchID
+            setup.TestStageType = TestStageType.Parametric
+            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
+            setup.OrientationID = 0
+            setup.DataBind()
+
+            setupEnv.JobID = batch.JobID
+            setupEnv.BatchID = rec.BatchID
+            setupEnv.ProductID = batch.ProductID
+            setupEnv.JobName = batch.JobName
+            setupEnv.ProductName = batch.ProductGroup
+            setupEnv.QRANumber = batch.QRANumber
+            setupEnv.TestStageType = TestStageType.EnvironmentalStress
+            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            setupEnv.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
+            setupEnv.OrientationID = 0
+            setupEnv.DataBind()
+
+            mi = New MenuItem
+            mi.Text = "Results"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypResults.Visible = True
+            hypResults.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+        End If
+
+        If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
+            mi = New MenuItem
+            mi.Text = "Admin"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypAdmin.Visible = True
+            hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
+        End If
+    End Sub
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
         notMain.Notifications.Clear()
 
@@ -257,48 +366,8 @@ Public Class Request
                 Response.Redirect(String.Format("/Request/Default.aspx"), True)
             End If
 
-            Dim requestNumber As String = hdnRequestNumber.Value
-            Dim myMenu As WebControls.Menu
-            Dim mi As New MenuItem
-            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
-            hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
-
-            mi = New MenuItem
-            mi.Text = "Create Request"
-            mi.Target = "_blank"
-            mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
-
-            If (rec IsNot Nothing) Then
-                mi = New MenuItem
-                mi.Text = "Batch"
-                mi.Target = "_blank"
-                mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
-                myMenu.Items(0).ChildItems.Add(mi)
-                hypBatch.Visible = True
-                hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?QRA={0}", requestNumber)
-
-                mi = New MenuItem
-                mi.Text = "Results"
-                mi.Target = "_blank"
-                mi.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
-                myMenu.Items(0).ChildItems.Add(mi)
-                hypResults.Visible = True
-                hypResults.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
-            End If
-
-            If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
-                mi = New MenuItem
-                mi.Text = "Admin"
-                mi.Target = "_blank"
-                mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
-                myMenu.Items(0).ChildItems.Add(mi)
-                hypAdmin.Visible = True
-                hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
-            End If
-            End If
+            BuildMenu()
+        End If
     End Sub
 
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
@@ -342,7 +411,31 @@ Public Class Request
             Dim saveSuccess As Boolean = RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName)
 
             If (saveSuccess) Then
-                notMain.Notifications.AddWithMessage("Saved Successful!", NotificationType.Information)
+                notMain.Notifications.AddWithMessage("Saved Request Successful!", NotificationType.Information)
+                Dim requestNumber As String = rf(0).RequestNumber
+                Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+
+                If (rec IsNot Nothing) Then
+                    If (setup.Visible) Then
+                        setup.BatchID = rec.BatchID
+                        setup.QRANumber = requestNumber
+                        notMain.Notifications.AddWithMessage("Saved Parametric Setup Successful!", NotificationType.Information)
+                        setup.Save()
+                    End If
+
+                    If (setupEnv.Visible) Then
+                        setupEnv.BatchID = rec.BatchID
+                        setupEnv.QRANumber = requestNumber
+                        notMain.Notifications.AddWithMessage("Saved Environmental Setup Successful!", NotificationType.Information)
+                        setupEnv.Save()
+                    End If
+                End If
+
+                If (rf(0).NewRequest) Then
+                    Response.Redirect(String.Format("~/Request/Request.aspx?type={0}&req={1}", hdnRequestType.Value, requestNumber), True)
+                End If
+
+                BuildMenu()
             Else
                 notMain.Notifications.AddWithMessage("Saved Failed!", NotificationType.Errors)
             End If
@@ -364,6 +457,41 @@ Public Class Request
         Else
             rf = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, False, String.Empty)
         End If
+
+        For Each field In rf
+            If (field.IntField = "RequestedTest" And field.HasIntegration And field.NewRequest And field.FieldSetupID = id) Then
+                Dim jobID As Int32 = JobManager.GetJobByName(val).ID
+
+                setup.Visible = True
+                setupEnv.Visible = True
+                pnlSetup.Visible = True
+                setup.JobID = jobID
+                setup.ProductID = 0
+                setup.JobName = ddl.SelectedValue
+                setup.ProductName = String.Empty
+                setup.QRANumber = lblRequest.Text
+                setup.BatchID = 0
+                setup.TestStageType = TestStageType.Parametric
+                setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                setup.HasEditItemAuthority = True
+                setup.OrientationID = 0
+                setup.DataBind()
+
+                setupEnv.JobID = jobID
+                setupEnv.BatchID = 0
+                setupEnv.ProductID = 0
+                setupEnv.JobName = ddl.SelectedValue
+                setupEnv.ProductName = String.Empty
+                setupEnv.QRANumber = lblRequest.Text
+                setupEnv.TestStageType = TestStageType.EnvironmentalStress
+                setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                setupEnv.HasEditItemAuthority = True
+                setupEnv.OrientationID = 0
+                setupEnv.DataBind()
+            End If
+        Next
 
         For Each rec In (From p In rf Where p.ParentFieldSetupID = id Select p)
             Dim values As New List(Of String)

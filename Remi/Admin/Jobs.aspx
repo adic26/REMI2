@@ -221,7 +221,7 @@
                             <h2><asp:Label ID="lblSetup" runat="server" Text="Parametric Setup"></asp:Label></h2>
                         </Header>
                         <Content>
-                            <rs:RequestSetup ID="JobSetup" runat="server" Visible="true" />
+                            <rs:RequestSetup ID="JobSetup" runat="server" Visible="true" DisplayMode="Job" />
                         </Content>
                     </asp:AccordionPane>
                     <asp:AccordionPane runat="server" ID="acpEnvSetup">
@@ -229,7 +229,7 @@
                             <h2><asp:Label ID="lblEnvSetup" runat="server" Text="Env Setup"></asp:Label></h2>
                         </Header>
                         <Content>
-                            <rs:RequestSetup ID="JobEnvSetup" runat="server" Visible="true" />
+                            <rs:RequestSetup ID="JobEnvSetup" runat="server" Visible="true" DisplayMode="Job" />
                         </Content>
                     </asp:AccordionPane>
                     <asp:AccordionPane runat="server" ID="acpOrientation">

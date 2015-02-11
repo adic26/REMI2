@@ -7,10 +7,14 @@ SELECT b.ID, lp.[Values] AS ProductGroupName,b.QRANumber, (b.QRANumber + ' ' + l
 WHERE ( 
 		(@Year = 0 AND BatchStatus NOT IN(5,7))
 		OR
-		(@Year > 0 AND b.QRANumber LIKE 'QRA-' + RIGHT(CONVERT(NVARCHAR, @Year), 2) + '%')
+		(@Year > 0 AND b.QRANumber LIKE '%-' + RIGHT(CONVERT(NVARCHAR, @Year), 2) + '-%')
 	  )
 	AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
 	AND (@OnlyShowQRAWithResults = 0 OR (@OnlyShowQRAWithResults = 1 AND b.ID IN (SELECT tu.BatchID FROM Relab.Results r INNER JOIN TestUnits tu ON tu.ID=r.TestUnitID)))
+	AND (b.DepartmentID IN (SELECT ud.LookupID 
+							FROM UserDetails ud 
+								INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
+							WHERE ud.UserID=@UserID))
 ORDER BY b.QRANumber DESC
 RETURN
 GO

@@ -1,5 +1,6 @@
-﻿Imports REMI.Bll
-Imports REMI.BusinessEntities
+﻿Imports Remi.Bll
+Imports Remi.BusinessEntities
+Imports Remi.Validation
 
 Partial Class BadgeAccess_EditMyUser
     Inherits System.Web.UI.Page
@@ -9,6 +10,8 @@ Partial Class BadgeAccess_EditMyUser
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        notMain.Notifications.Clear()
+
         If (Not Page.IsPostBack) Then
             ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
             ddlDefaultPage.DataBind()
@@ -17,6 +20,12 @@ Partial Class BadgeAccess_EditMyUser
             ddlTraining.Items.Add("Select")
             ddlTraining.DataSource = (From t In UserManager.GetCurrentUser.Training Where t.Field(Of String)("Level") = "Trainer" Select New With {.TrainingOption = t.Field(Of String)("TrainingOption"), .LookupID = t.Field(Of Int32)("LookupID")})
             ddlTraining.DataBind()
+
+            Dim defaults As String = IIf(Request.QueryString.Item("defaults") Is Nothing, String.Empty, Request.QueryString.Item("defaults"))
+
+            If (defaults = "false" And String.IsNullOrEmpty(UserManager.GetCurrentUser.TestCentre) And String.IsNullOrEmpty(UserManager.GetCurrentUser.Department)) Then
+                notMain.Notifications.Add(New Notification("e28", NotificationType.Errors))
+            End If
         End If
 
         Dim username As String = UserManager.GetCurrentUser.LDAPName
@@ -30,39 +39,21 @@ Partial Class BadgeAccess_EditMyUser
 
         hdnUserID.Value = UserManager.GetCurrentValidUserID
 
-        For Each dr As DataRow In UserManager.GetCurrentUser.UserDetails.Rows
-            For Each dli As DataListItem In dlstTestCenter.Items
-                Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
-                Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
+        If (UserManager.GetCurrentUser.DepartmentID > 0) Then
+            ddlDepartment.SelectedValue = UserManager.GetCurrentUser.DepartmentID
+            ddlDepartment.Enabled = False
+        End If
 
-                hdnTCIsDefault.Value = dr.Item("IsDefault").ToString()
+        If (UserManager.GetCurrentUser.TestCentreID > 0) Then
+            ddlTestCenter.SelectedValue = UserManager.GetCurrentUser.TestCentreID
+            ddlTestCenter.Enabled = False
+        End If
 
-                If chkTestCenter.Text = dr.Item("Values").ToString() Then
-                    chkTestCenter.Checked = True
-                    chkTestCenter.Enabled = False
+        grdTestCenter.DataSource = (From d As DataRow In UserManager.GetCurrentUser.UserDetails.Rows Where d.Field(Of String)("Name") = "TestCenter" Select New With {.TestCenters = d.Field(Of String)("Values")}).ToList()
+        grdTestCenter.DataBind()
 
-                    If (hdnTCIsDefault.Value = "True") Then
-                        chkTestCenter.Style.Add("font-weight", "bold")
-                    End If
-                End If
-            Next
-
-            For Each dli As DataListItem In dlstDepartments.Items
-                Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
-                Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
-
-                hdnDIsDefault.Value = dr.Item("IsDefault").ToString()
-
-                If chkDepartment.Text = dr.Item("Values").ToString() Then
-                    chkDepartment.Checked = True
-                    chkDepartment.Enabled = False
-
-                    If (hdnDIsDefault.Value = "True") Then
-                        chkDepartment.Style.Add("font-weight", "bold")
-                    End If
-                End If
-            Next
-        Next
+        grdDepartments.DataSource = (From d As DataRow In UserManager.GetCurrentUser.UserDetails.Rows Where d.Field(Of String)("Name") = "Department" Select New With {.Departments = d.Field(Of String)("Values")}).ToList()
+        grdDepartments.DataBind()
     End Sub
 
     Protected Sub ddlTraining_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTraining.SelectedIndexChanged
@@ -118,50 +109,23 @@ Partial Class BadgeAccess_EditMyUser
         UserManager.SetUserToSession(UserManager.GetUser(UserManager.GetCurrentUser.LDAPName, UserManager.GetCurrentUser.ID))
         UserManager.GetCurrentUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
 
-        Dim testCenters As DataList = DirectCast(Me.FindControl(dlstTestCenter.UniqueID), DataList)
-        Dim departments As DataList = DirectCast(Me.FindControl(dlstDepartments.UniqueID), DataList)
+        If (ddlDepartment.Enabled = True) Then
+            Dim newRow As DataRow = UserManager.GetCurrentUser.UserDetails.NewRow
+            newRow("LookupID") = ddlDepartment.SelectedItem.Value
+            newRow("Values") = ddlDepartment.SelectedItem.Text
+            newRow("Name") = "Department"
+            newRow("IsDefault") = True
+            UserManager.GetCurrentUser.UserDetails.Rows.Add(newRow)
+        End If
 
-        Dim userDetails As New DataTable
-        userDetails.Columns.Add("Name", Type.GetType("System.String"))
-        userDetails.Columns.Add("Values", Type.GetType("System.String"))
-        userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
-        userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
-
-        For Each dli As DataListItem In testCenters.Items
-            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
-                Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
-                Dim hdnTestCenterID As HiddenField = dli.FindControl("hdnTestCenterID")
-                Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
-
-                If Request.Form(chkTestCenter.UniqueID) = "on" Then
-                    Dim newRow As DataRow = userDetails.NewRow
-                    newRow("LookupID") = hdnTestCenterID.Value
-                    newRow("Values") = chkTestCenter.Text
-                    newRow("Name") = "TestCenter"
-                    newRow("IsDefault") = hdnTCIsDefault.Value
-                    userDetails.Rows.Add(newRow)
-                End If
-            End If
-        Next
-
-        For Each dli As DataListItem In departments.Items
-            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
-                Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
-                Dim hdnDepartmentID As HiddenField = dli.FindControl("hdnDepartmentID")
-                Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
-
-                If Request.Form(chkDepartment.UniqueID) = "on" Then
-                    Dim newRow As DataRow = userDetails.NewRow
-                    newRow("LookupID") = hdnDepartmentID.Value
-                    newRow("Values") = chkDepartment.Text
-                    newRow("Name") = "Department"
-                    newRow("IsDefault") = hdnDIsDefault.Value
-                    userDetails.Rows.Add(newRow)
-                End If
-            End If
-        Next
-
-        UserManager.GetCurrentUser.UserDetails = userDetails
+        If (ddlTestCenter.Enabled = True) Then
+            Dim newRow As DataRow = UserManager.GetCurrentUser.UserDetails.NewRow
+            newRow("LookupID") = ddlTestCenter.SelectedItem.Value
+            newRow("Values") = ddlTestCenter.SelectedItem.Text
+            newRow("Name") = "TestCenter"
+            newRow("IsDefault") = True
+            UserManager.GetCurrentUser.UserDetails.Rows.Add(newRow)
+        End If
 
         Dim training As GridView = DirectCast(Me.FindControl(gvwTraining.UniqueID), GridView)
         For Each gvr As GridViewRow In training.Rows
@@ -189,10 +153,10 @@ Partial Class BadgeAccess_EditMyUser
         Next
 
         If UserManager.Save(UserManager.GetCurrentUser, False, False) > 0 Then
-            notMain.Add("Location saved!", REMI.Validation.NotificationType.Information)
+            notMain.Add("Location saved!", Remi.Validation.NotificationType.Information)
             RedirectIfRequested()
         Else
-            notMain.Add("Unable to save. Please contact support.", REMI.Validation.NotificationType.Errors)
+            notMain.Add("Unable to save. Please contact support.", Remi.Validation.NotificationType.Errors)
         End If
     End Sub
 
@@ -211,12 +175,20 @@ Partial Class BadgeAccess_EditMyUser
         gvwTraining.DataBind()
     End Sub
 
-    Protected Sub UpdateGvwHeader() Handles gvwTraining.PreRender
+    Protected Sub TrainingHeader() Handles gvwTraining.PreRender
         Helpers.MakeAccessable(gvwTraining)
     End Sub
 
-    Protected Sub UpdategvwTrainingLevelsHeader() Handles gvwTrainingLevels.PreRender
+    Protected Sub TrainingLevelsHeader() Handles gvwTrainingLevels.PreRender
         Helpers.MakeAccessable(gvwTrainingLevels)
+    End Sub
+
+    Protected Sub DepartmentsHeader() Handles grdDepartments.PreRender
+        Helpers.MakeAccessable(grdDepartments)
+    End Sub
+
+    Protected Sub TestCentersHeader() Handles grdTestCenter.PreRender
+        Helpers.MakeAccessable(grdTestCenter)
     End Sub
 
     Private Sub RedirectIfRequested()

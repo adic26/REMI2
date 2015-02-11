@@ -409,7 +409,7 @@
                             <ContentTemplate>
                                 <asp:Button runat="server" ID="btnEdit" Text="Edit Setup" CssClass="buttonSmall" CausesValidation="true" OnClick="btnEdit_Click" />
                                 
-                                <rs:RequestSetup ID="setup" runat="server" Visible="false" />
+                                <rs:RequestSetup ID="setup" runat="server" Visible="false" DisplayMode="Batch" />
 
                                 <asp:UpdatePanel ID="updTestingsummary" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true"  >
                                     <Triggers>
@@ -449,7 +449,7 @@
                                 <asp:Button runat="server" ID="btnEditStressing" Text="Edit Setup" CssClass="buttonSmall" CausesValidation="true" OnClick="btnEditStressing_Click" />
                                 <h2><asp:Label runat="server" ID="lblOrientation"></asp:Label></h2>
                                 
-                                <rs:RequestSetup runat="server" Visible="false" ID="setupStressing" />
+                                <rs:RequestSetup runat="server" Visible="false" ID="setupStressing" DisplayMode="Batch" />
         
                                 <asp:UpdatePanel ID="updStressingSummary" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
                                     <Triggers>

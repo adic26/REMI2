@@ -146,14 +146,95 @@ BEGIN
 			FROM @xml.nodes('/TestResults/Information/Info') T(c)
 			
 			SELECT @InfoRowID = MIN(RowID) FROM #temp3
+			DECLARE @Version NVARCHAR(50)
+			DECLARE @ProductConfigCommon NVARCHAR(50)
+			DECLARE @SequenceConfigCommon NVARCHAR(50)
+			DECLARE @StationConfigCommon NVARCHAR(50)
+			DECLARE @TestConfigCommon NVARCHAR(50)
+			DECLARE @Mode NVARCHAR(50)
+			DECLARE @ConfigID INT
+			SET @ConfigID = -1
+			
+			SELECT @Mode=T.c.query('Value').value('.', 'nvarchar(max)')
+			FROM @xml.nodes('/TestResults/Information/Info') T(c)
+			WHERE T.c.query('Name').value('.', 'nvarchar(max)') = 'OperatingMode'
+			
+			SELECT @Version=T.c.query('Value').value('.', 'nvarchar(max)')
+			FROM @xml.nodes('/TestResults/Information/Info') T(c)
+			WHERE T.c.query('Name').value('.', 'nvarchar(max)') = 'Test System Version'
+			
+			IF (@Version IS NOT NULL)
+			BEGIN
+				SELECT @Version = pvt.[1] + '.' + pvt.[2]
+				FROM  
+					(
+						SELECT RowID, s as val
+							FROM dbo.Split('.',@Version)
+					) a
+					PIVOT (
+							MAX(val) 
+							FOR RowID IN ([1],[2],[3],[4])
+							) as pvt
+			END
 			
 			WHILE (@InfoRowID IS NOT NULL)
 			BEGIN
 				SELECT @xmlPart  = value FROM #temp3 WHERE RowID=@InfoRowID	
-				
-				SELECT T.c.query('Name').value('.', 'nvarchar(max)') AS Name, T.c.query('Value').value('.', 'nvarchar(max)') AS Value
+				SET @ConfigID = NULL
+
+				SELECT T.c.query('Name').value('.', 'nvarchar(max)') AS Name, T.c.query('Value').value('.', 'nvarchar(max)') AS Value, 0 AS ConfigID
 				INTO #information
 				FROM @xmlPart.nodes('/Info') T(c)
+					
+				IF EXISTS (SELECT 1 FROM #information WHERE Name='ProductConfigCommon')
+				BEGIN
+					SELECT @ProductConfigCommon=Value FROM #information WHERE Name='ProductConfigCommon'
+					
+					SELECT @ConfigID = c.ConfigID
+					FROM dbo.Configurations c 
+						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
+						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
+					WHERE lct.[Values] = 'ProductConfigCommon' AND c.[Version]=@Version AND lm.[Values] = @Mode
+				END
+					
+				IF EXISTS (SELECT 1 FROM #information WHERE Name='SequenceConfigCommon')
+				BEGIN
+					SELECT @SequenceConfigCommon=Value FROM #information WHERE Name='SequenceConfigCommon'
+					
+					SELECT @ConfigID = c.ConfigID
+					FROM dbo.Configurations c 
+						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
+						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
+					WHERE lct.[Values] = 'SequenceConfigCommon' AND c.[Version]=@Version AND lm.[Values] = @Mode
+				END
+				
+				IF EXISTS (SELECT 1 FROM #information WHERE Name='StationConfigCommon')
+				BEGIN
+					SELECT @StationConfigCommon=Value FROM #information WHERE Name='StationConfigCommon'
+					
+					SELECT @ConfigID = c.ConfigID
+					FROM dbo.Configurations c 
+						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
+						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
+					WHERE lct.[Values] = 'StationConfigCommon' AND c.[Version]=@Version AND lm.[Values] = @Mode
+				END
+				
+				IF EXISTS (SELECT 1 FROM #information WHERE Name='TestConfigCommon')
+				BEGIN
+					SELECT @TestConfigCommon=Value FROM #information WHERE Name='TestConfigCommon'
+					
+					SELECT @ConfigID = c.ConfigID
+					FROM dbo.Configurations c 
+						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
+						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
+					WHERE lct.[Values] = 'TestConfigCommon' AND c.[Version]=@Version AND lm.[Values] = @Mode
+				END
+				
+				IF (@ConfigID IS NOT NULL AND @ConfigID > 0)
+				BEGIN
+					UPDATE #information
+					SET ConfigID=@ConfigID
+				END				
 				
 				UPDATE ri
 				SET IsArchived=1
@@ -163,8 +244,8 @@ BEGIN
 				WHERE rxml.VerNum < @VerNum AND ISNULL(ri.IsArchived,0)=0 AND rxml.ResultID=@ResultID
 					
 				PRINT 'INSERT Version ' + CONVERT(NVARCHAR, @VerNum) + ' Information'
-				INSERT INTO Relab.ResultsInformation(XMLID, Name, Value, IsArchived)
-				SELECT @ID AS XMLID, Name, Value, 0
+				INSERT INTO Relab.ResultsInformation(XMLID, Name, Value, IsArchived, ConfigID)
+				SELECT @ID AS XMLID, Name, Value, 0, @ConfigID
 				FROM #information
 
 				SELECT @InfoRowID = MIN(RowID) FROM #temp3 WHERE RowID > @InfoRowID

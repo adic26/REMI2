@@ -36,6 +36,14 @@ Partial Class Admin_Users
         Helpers.MakeAccessable(gvwUsers)
     End Sub
 
+    Protected Sub TestCenterHeader() Handles grdTestCenter.PreRender
+        Helpers.MakeAccessable(grdTestCenter)
+    End Sub
+
+    Protected Sub DeaprtmentHeader() Handles grdDepartments.PreRender
+        Helpers.MakeAccessable(grdDepartments)
+    End Sub
+
     Protected Sub UpdatePermissionsGvw() Handles gvwPermissions.PreRender
         Helpers.MakeAccessable(gvwPermissions)
     End Sub
@@ -136,38 +144,36 @@ Partial Class Admin_Users
             gvRequestTypes.DataSource = CurrentUser.RequestTypes()
             gvRequestTypes.DataBind()
 
-            For Each dr As DataRow In CurrentUser.UserDetails.Rows
-                For Each dli As DataListItem In dlstTestCenter.Items
-                    Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
-                    Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
+            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdTestCenter.DataBind()
 
-                    hdnTCIsDefault.Value = dr.Item("IsDefault").ToString()
+            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdDepartments.DataBind()
 
-                    If chkTestCenter.Text = dr.Item("Values").ToString() Then
-                        chkTestCenter.Checked = True
+            For Each drtc As GridViewRow In grdTestCenter.Rows
+                Dim chkAccess As CheckBox = drtc.FindControl("chkAccess")
+                Dim chkDefault As CheckBox = drtc.FindControl("chkDefault")
+                Dim hdnLookupID As HiddenField = drtc.FindControl("hdnLookupID")
 
-                        If (hdnTCIsDefault.Value = "True") Then
-                            chkTestCenter.Enabled = False
-                            chkTestCenter.Style.Add("font-weight", "bold")
-                        End If
-                    End If
-                Next
+                Dim dr As DataRow = (From ud As DataRow In CurrentUser.UserDetails.Rows Where ud.Field(Of Int32)("LookupID") = hdnLookupID.Value Select ud).FirstOrDefault()
 
-                For Each dli As DataListItem In dlstDepartments.Items
-                    Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
-                    Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
+                If (dr IsNot Nothing) Then
+                    chkDefault.Checked = dr.Field(Of Boolean)("IsDefault")
+                    chkAccess.Checked = True
+                End If
+            Next
 
-                    hdnDIsDefault.Value = dr.Item("IsDefault").ToString()
+            For Each drtc As GridViewRow In grdDepartments.Rows
+                Dim chkAccess As CheckBox = drtc.FindControl("chkAccess")
+                Dim chkDefault As CheckBox = drtc.FindControl("chkDefault")
+                Dim hdnLookupID As HiddenField = drtc.FindControl("hdnLookupID")
 
-                    If chkDepartment.Text = dr.Item("Values").ToString() Then
-                        chkDepartment.Checked = True
+                Dim dr As DataRow = (From ud As DataRow In CurrentUser.UserDetails.Rows Where ud.Field(Of Int32)("LookupID") = hdnLookupID.Value Select ud).FirstOrDefault()
 
-                        If (hdnDIsDefault.Value = "True") Then
-                            chkDepartment.Enabled = False
-                            chkDepartment.Style.Add("font-weight", "bold")
-                        End If
-                    End If
-                Next
+                If (dr IsNot Nothing) Then
+                    chkDefault.Checked = dr.Field(Of Boolean)("IsDefault")
+                    chkAccess.Checked = True
+                End If
             Next
 
             dlstProductGroups.DataBind()
@@ -361,48 +367,58 @@ Partial Class Admin_Users
         tmpUser.Training = userTraining
         tmpUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
 
-        Dim testCenters As DataList = DirectCast(Me.FindControl(dlstTestCenter.UniqueID), DataList)
-        Dim departments As DataList = DirectCast(Me.FindControl(dlstDepartments.UniqueID), DataList)
-
+        Dim defaultIsSet As Boolean = False
         Dim userDetails As New DataTable("UserDetails")
         userDetails.Columns.Add("Name", Type.GetType("System.String"))
         userDetails.Columns.Add("Values", Type.GetType("System.String"))
         userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
         userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
 
-        For Each dli As DataListItem In testCenters.Items
-            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
-                Dim chkTestCenter As CheckBox = dli.FindControl("chkTestCenter")
-                Dim hdnTestCenterID As HiddenField = dli.FindControl("hdnTestCenterID")
-                Dim hdnTCIsDefault As HiddenField = dli.FindControl("hdnTCIsDefault")
+        For Each drtc As GridViewRow In grdDepartments.Rows
+            Dim chkAccess As CheckBox = drtc.FindControl("chkAccess")
+            Dim chkDefault As CheckBox = drtc.FindControl("chkDefault")
+            Dim hdnLookupID As HiddenField = drtc.FindControl("hdnLookupID")
+            Dim lblName As Label = drtc.FindControl("lblName")
 
-                If Request.Form(chkTestCenter.UniqueID) = "on" Then
-                    Dim isDefault As Boolean = False
-                    Boolean.TryParse(hdnTCIsDefault.Value, isDefault)
-                    Dim newRow As DataRow = userDetails.NewRow
-                    newRow("LookupID") = hdnTestCenterID.Value
-                    newRow("Values") = chkTestCenter.Text
-                    newRow("Name") = "TestCenter"
-                    newRow("IsDefault") = isDefault
-                    userDetails.Rows.Add(newRow)
+            If (chkAccess.Checked) Then
+                Dim newRow As DataRow = userDetails.NewRow
+                newRow("LookupID") = hdnLookupID.Value
+                newRow("Values") = lblName.Text
+                newRow("Name") = "Department"
+
+                If (chkDefault.Checked And Not defaultIsSet) Then
+                    defaultIsSet = True
+                    newRow("IsDefault") = chkDefault.Checked
+                Else
+                    newRow("IsDefault") = False
                 End If
+
+                userDetails.Rows.Add(newRow)
             End If
         Next
 
-        For Each dli As DataListItem In departments.Items
-            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
-                Dim chkDepartment As CheckBox = dli.FindControl("chkDepartment")
-                Dim hdnDepartmentID As HiddenField = dli.FindControl("hdnDepartmentID")
-                Dim hdnDIsDefault As HiddenField = dli.FindControl("hdnDIsDefault")
+        defaultIsSet = False
 
-                If Request.Form(chkDepartment.UniqueID) = "on" Then
-                    Dim newRow As DataRow = userDetails.NewRow
-                    newRow("LookupID") = hdnDepartmentID.Value
-                    newRow("Values") = chkDepartment.Text
-                    newRow("Name") = "Department"
-                    newRow("IsDefault") = hdnDIsDefault.Value
-                    userDetails.Rows.Add(newRow)
+        For Each drtc As GridViewRow In grdTestCenter.Rows
+            Dim chkAccess As CheckBox = drtc.FindControl("chkAccess")
+            Dim chkDefault As CheckBox = drtc.FindControl("chkDefault")
+            Dim hdnLookupID As HiddenField = drtc.FindControl("hdnLookupID")
+            Dim lblName As Label = drtc.FindControl("lblName")
+
+            If (chkAccess.Checked) Then
+                Dim newRow As DataRow = userDetails.NewRow
+                newRow("LookupID") = hdnLookupID.Value
+                newRow("Values") = lblName.Text
+                newRow("Name") = "TestCenter"
+
+                If (chkDefault.Checked And Not defaultIsSet) Then
+                    defaultIsSet = True
+                    newRow("IsDefault") = chkDefault.Checked
+                Else
+                    newRow("IsDefault") = False
                 End If
+
+                userDetails.Rows.Add(newRow)
             End If
         Next
 
@@ -468,24 +484,6 @@ Partial Class Admin_Users
 
     Protected Sub lnkAddNewUser_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddNewUser.Click
         SetupPageAddEditUser(Nothing)
-    End Sub
-
-    Protected Sub dlstTestCenter_Item_Bound(sender As Object, e As DataListItemEventArgs) Handles dlstTestCenter.ItemDataBound
-        Dim hdnTCIsDefault As HiddenField = DirectCast(e.Item.FindControl("hdnTCIsDefault"), HiddenField)
-        Dim chkTestCenter As CheckBox = DirectCast(e.Item.FindControl("chkTestCenter"), CheckBox)
-
-        If hdnUserID.Value.Trim().Length = 0 Or hdnUserID.Value = "-1" Then
-            chkTestCenter.InputAttributes.Add("onclick", "chkTestCenter_click('" & chkTestCenter.ClientID & "', '" & hdnTCIsDefault.ClientID & "');")
-        End If
-    End Sub
-
-    Protected Sub dlstDepartments_Item_Bound(sender As Object, e As DataListItemEventArgs) Handles dlstDepartments.ItemDataBound
-        Dim hdnDIsDefault As HiddenField = DirectCast(e.Item.FindControl("hdnDIsDefault"), HiddenField)
-        Dim chkDepartment As CheckBox = DirectCast(e.Item.FindControl("chkDepartment"), CheckBox)
-
-        If hdnUserID.Value.Trim().Length = 0 Or hdnUserID.Value = "-1" Then
-            chkDepartment.InputAttributes.Add("onclick", "chkDepartment_click('" & chkDepartment.ClientID & "', '" & hdnDIsDefault.ClientID & "');")
-        End If
     End Sub
 
     Protected Sub gvwTraining_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwTraining.RowDataBound

@@ -7,7 +7,7 @@ Partial Class ScanUnit
     Inherits System.Web.UI.Page
 
     Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
-        Response.Redirect(String.Format("{0}?QRA={1}", Helpers.GetCurrentPageName, Helpers.CleanInputText(txtBarcodeReading.Text, 30)))
+        Response.Redirect(String.Format("{0}?RN={1}", Helpers.GetCurrentPageName, Helpers.CleanInputText(txtBarcodeReading.Text, 30)))
     End Sub
 
     Protected Sub SetGvwHeaders() Handles grdTrackingLog.PreRender, grdDetail.PreRender
@@ -92,7 +92,7 @@ Partial Class ScanUnit
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             notMain.Clear()
-            Dim tmpStr As String = Request.QueryString.Get("QRA")
+            Dim tmpStr As String = Request.QueryString.Get("RN")
             If Not String.IsNullOrEmpty(tmpStr) Then
                 ProcessQRA(tmpStr)
             Else

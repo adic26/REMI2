@@ -78,37 +78,37 @@ Namespace REMI.Core
             Return _applicationPath + REMIConfiguration.REMIJobLink + "?JobID=" + JobID.ToString()
         End Function
         Public Shared Function GetBatchInfoLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMIBatchInfoLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.REMIBatchInfoLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetEditExceptionsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiExceptionsLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.RemiExceptionsLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetTestRecordsAddLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMITestRecordsAddLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.REMITestRecordsAddLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetBatchSchedulingLink(ByVal qraNumber As String) As String
-            Return _applicationPath + "ManageBatches/ViewTestStageSchedule.aspx?QRA=" + qraNumber
+            Return _applicationPath + "ManageBatches/ViewTestStageSchedule.aspx?RN=" + qraNumber
         End Function
         Public Shared Function GetSetBatchStatusLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchStatusLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.RemiSetBatchStatusLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetSetBatchCommentsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMIBatchCommentsEditLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.REMIBatchCommentsEditLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetSetBatchTestStageLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchTestStageLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.RemiSetBatchTestStageLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetSetBatchSpecificTestDurationsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchSpecificTestDurationLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.RemiSetBatchSpecificTestDurationLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetSetBatchPriorityLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchPriorityLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.RemiSetBatchPriorityLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetTestRecordsEditDetailLink(ByVal trId As Integer) As String
             Return _applicationPath + REMIConfiguration.RemiTestRecordsDetailLink + "?trID=" + trId.ToString
         End Function
         Public Shared Function GetTestUnitExceptionsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetTestUnitExceptionsLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.RemiSetTestUnitExceptionsLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetSetProductExceptionsLink(ByVal productID As Int32) As String
             Return _applicationPath + REMIConfiguration.RemiSetProductExceptionsLink + "?product=" + productID.ToString()
@@ -123,7 +123,7 @@ Namespace REMI.Core
             Return _applicationPath + REMIConfiguration.RemiSetStationConfigLink + "?BarcodeSuffix=" + trackingLocationID.ToString()
         End Function
         Public Shared Function GetUnitInfoLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMIUnitInfoLink + "?QRA=" + QRANumber
+            Return _applicationPath + REMIConfiguration.REMIUnitInfoLink + "?RN=" + QRANumber
         End Function
         Public Shared Function GetScannerProgrammingLink(ByVal TrackingLocationID As Integer) As String
             Return _applicationPath + REMIConfiguration.REMIScannerProgrammingLink + "?ID=" + TrackingLocationID.ToString
@@ -138,7 +138,7 @@ Namespace REMI.Core
             Dim str As New Text.StringBuilder
             str.Append(_applicationPath)
             str.Append(REMIConfiguration.REMITestRecordsLink)
-            str.Append("?qra=")
+            str.Append("?RN=")
             str.Append(qraNumber)
             If Not String.IsNullOrEmpty(testName) Then
                 str.Append("&testname=")
