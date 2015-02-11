@@ -27,6 +27,9 @@ $(function () { //ready function
 
     $.fn.dataTable.TableTools.defaults.aButtons = ["copy", "csv", "xls"];
 
+    additional.selectpicker('val', '--aReqNum');
+   // $('.selectpicker').selectpicker('render');
+
     function ProcessQuery(d) {
         var emptySearch = "<thead><tr></tr></thead><tbody></tbody>";
         if (d != emptySearch) {
