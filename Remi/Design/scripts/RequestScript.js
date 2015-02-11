@@ -15,7 +15,8 @@ $(function () { //ready function
     var request = searchAll(rtID[0].value, "");
     var req = $('#bs_ddlSearchField');
     var additional = $('#bs_Additional');
-
+    var executeTop = $("[id$='hdnTop']");
+    var user = $("[id$='hdnUser']");
     var oTable;
     var count = 0;
     
@@ -24,6 +25,101 @@ $(function () { //ready function
     $('#bs_Additional').append(o);
 
     $.fn.dataTable.TableTools.defaults.aButtons = ["copy", "csv", "xls"];
+
+    function ProcessQuery(d) {
+        var emptySearch = "<thead><tr></tr></thead><tbody></tbody>";
+        if (d != emptySearch) {
+
+            //Meaningful data is present
+            if (navigator.appName != 'Microsoft Internet Explorer') {
+                $('#searchResults').empty();
+                $('#searchResults').append(d);
+
+                oTable = $('#searchResults').DataTable({
+                    destroy: true,
+                    "scrollX": true,
+                    dom: 'T<"clear">lfrtip',
+                    TableTools: {
+                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                    }
+                });
+            } else {
+                //Enter IE
+                //oTable is not defined
+                if (oTable == null) {
+                    $('#searchResults').empty();
+                    $('#searchResults').append(d);
+
+                    oTable = $('#searchResults').DataTable({
+                        destroy: true,
+                        "scrollX": true,
+                        dom: 'T<"clear">lfrtip',
+                        TableTools: {
+                            "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                        }
+                    });
+                } else {
+                    //OTable is defined already
+                    //(i) Destroy dataTable
+                    oTable.destroy();
+
+                    //(ii)append the data
+                    $('#searchResults').empty();
+                    $('#searchResults').append(d);
+
+                    //(iii) Re-Draw the table
+                    oTable = $('#searchResults').DataTable({
+                        destroy: true,
+                        "scrollX": true,
+                        dom: 'T<"clear">lfrtip',
+                        TableTools: {
+                            "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                        }
+                    });
+                }
+            }
+        } else { //meaningful data is NOT present!
+            if (navigator.appName != 'Microsoft Internet Explorer' && oTable != null) {
+                oTable = $('#searchResults').DataTable({
+                    destroy: true,
+                    "scrollX": true,
+                    dom: 'T<"clear">lfrtip',
+                    TableTools: {
+                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
+                    }
+                });
+
+                oTable.clear();
+                oTable.draw();
+            } else if (oTable != null) {
+                oTable.clear();
+                oTable.draw();
+            }
+
+            alert("Returned an empty search");
+        }
+
+        $('#searchResults').find('th.sorting').css('background-color', 'black');
+        $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
+    }
+
+    if (executeTop.val() == "True") {
+        $('div.table').block({
+            message: '<h1>Processing</h1>',
+            css: { border: '3px solid #a00' }
+        });
+
+        var requestParams = JSON.stringify({
+            "requestTypeID": rtID[0].value,
+            "fields": []
+        });
+
+        var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
+            function (d) {
+                ProcessQuery(d);
+                $('div.table').unblock();
+            });
+    }
 
     $('#bs_OKayButton').on('click', function () {
         var myList = $(FinalItemsList);
@@ -55,8 +151,8 @@ $(function () { //ready function
 
         myList.show();
         $('#bs_searchButton').show();
-
     });
+
     $('#bs_searchButton').on('click', function () {
         $('div.table').block({
             message: '<h1>Processing</h1>',
@@ -79,12 +175,10 @@ $(function () { //ready function
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             var testID = $('#bs_ddlSearchField optgroup > option')[originalIndex].getAttribute('testid');
             $.each(searchTermRequests, function (s_index, s_element) {
-                //console.log($(this).text());
                 if (s_element.children[0].value != '') {
                     var searchTerm = s_element.innerText
                     if (searchTerm == element.innerText) {
                         var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
-                        //console.log(request);
                         fullList.push(request);
                     }
                 }
@@ -92,11 +186,8 @@ $(function () { //ready function
         });
 
         $.each(searchTermRequests, function (s_index, s_element) {
-            //console.log($(this).text());
-
             if (s_element.children[0].value != '' && s_element.outerHTML.indexOf('addition="true"') > -1) {
                 var additionalVals = s_element.outerText + ',0,' + s_element.children[0].value;
-                //console.log(additionalVals);
                 fullList.push(additionalVals);
             }
         });
@@ -108,7 +199,6 @@ $(function () { //ready function
         });
 
         if (fullList.length > 0) {
-
             var requestParams = JSON.stringify({
                 "requestTypeID": rtID[0].value,
                 "fields": fullList
@@ -116,86 +206,7 @@ $(function () { //ready function
 
             var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
                 function (d) {
-
-                    var emptySearch = "<thead><tr></tr></thead><tbody></tbody>";
-                    if (d != emptySearch) {
-
-                        //Meaningful data is present
-                        if (navigator.appName != 'Microsoft Internet Explorer') {
-                            $('#searchResults').empty();
-                            $('#searchResults').append(d);
-
-                            oTable = $('#searchResults').DataTable({
-                                destroy: true,
-                                "scrollX": true,
-                                dom: 'T<"clear">lfrtip',
-                                TableTools: {
-                                    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                                }
-                            });
-                        } else {
-                            //Enter IE
-                            //oTable is not defined
-                            if (oTable == null) {
-                                $('#searchResults').empty();
-                                $('#searchResults').append(d);
-
-                                oTable = $('#searchResults').DataTable({
-                                    destroy: true,
-                                    "scrollX": true,
-                                    dom: 'T<"clear">lfrtip',
-                                    TableTools: {
-                                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                                    }
-                                });
-                            } else {
-                                //OTable is defined already
-
-                                //(i) Destroy dataTable
-                                oTable.destroy();
-
-                                //(ii)append the data
-                                $('#searchResults').empty();
-                                $('#searchResults').append(d);
-
-                                //(iii) Re-Draw the table
-                                oTable = $('#searchResults').DataTable({
-                                    destroy: true,
-                                    "scrollX": true,
-                                    dom: 'T<"clear">lfrtip',
-                                    TableTools: {
-                                        "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                                    }
-                                });
-                            }
-                        }
-                    } else { //meaningful data is NOT present!
-                        if (navigator.appName != 'Microsoft Internet Explorer' && oTable != null) {
-
-
-                            oTable = $('#searchResults').DataTable({
-                                destroy: true,
-                                "scrollX": true,
-                                dom: 'T<"clear">lfrtip',
-                                TableTools: {
-                                    "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                                }
-                            });
-
-                            oTable.clear();
-                            oTable.draw();
-                        } else if (oTable != null) {
-                            oTable.clear();
-                            oTable.draw();
-                        }
-
-                        alert("Returned an empty search");
-                    }
-
-                    $('#searchResults').find('th.sorting').css('background-color', 'black');
-                    $('#searchResults').find('th.sorting_asc').css('background-color', 'black');
-                    //$('#bs_export').show();
-                    //unblocking UI
+                    ProcessQuery(d);
                     $('div.table').unblock();
                 });
         } else {

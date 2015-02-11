@@ -25,6 +25,6 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
-    <uc2:Search ID="srcRequest" runat="server" Visible="false" SearchScript="../Design/scripts/RequestScript.js" JQueryScript="../Design/scripts/jQuery/jquery-1.11.1.js" />
+    <uc2:Search ID="srcRequest" runat="server" Visible="false" SearchScript="../Design/scripts/RequestScript.js" JQueryScript="../Design/scripts/jQuery/jquery-1.11.1.js" ExecuteTop="true" />
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>

@@ -9,7 +9,7 @@ BEGIN
 	CREATE TABLE dbo.#ReqNum (RequestNumber NVARCHAR(11) COLLATE SQL_Latin1_General_CP1_CI_AS)
 
 	SELECT * INTO dbo.#temp FROM @tv
-
+	
 	UPDATE t
 	SET t.ColumnName= '[' + rfs.Name + ']'
 	FROM Req.ReqFieldSetup rfs WITH(NOLOCK)
@@ -24,6 +24,8 @@ BEGIN
 	DECLARE @ParameterColumnNames NVARCHAR(MAX)
 	DECLARE @InformationColumnNames NVARCHAR(MAX)
 	DECLARE @SQL NVARCHAR(MAX)
+	DECLARE @RecordCount INT
+	SELECT @RecordCount = COUNT(*) FROM dbo.#temp 
 
 	SELECT @rows=  ISNULL(STUFF(
 		( 
@@ -157,7 +159,8 @@ BEGIN
 		VALUES (' 1=1 ')
 	END
 
-	SET @SQL =  REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;','')
+	SET @SQL = REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;','')
+		
 	EXEC sp_executesql @SQL
 
 	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType NOT IN ('Request','ReqNum')) > 0)
@@ -645,9 +648,10 @@ BEGIN
 			ORDER BY TABLE_NAME
 		END
 
-		SET @SQL = 'SELECT DISTINCT ' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#RR rr 
-			LEFT OUTER JOIN dbo.#RRParameters p ON rr.ID=p.ResultMeasurementID
-			LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID 
+		SET @SQL = 'SELECT DISTINCT ' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' 
+			FROM dbo.#RR rr 
+				LEFT OUTER JOIN dbo.#RRParameters p ON rr.ID=p.ResultMeasurementID
+				LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID 
 			WHERE ((' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 1 AND i.RID IS NOT NULL ))
 				AND ((' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 1 AND p.ResultMeasurementID IS NOT NULL ))'
 		
@@ -678,7 +682,7 @@ BEGIN
 			ORDER BY TABLE_NAME
 		END
 
-		SET @SQL = 'SELECT DISTINCT ' +  SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#Request r '
+		SET @SQL = 'SELECT DISTINCT ' + CASE WHEN @RecordCount = 0 THEN 'TOP 20' ELSE '' END + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#Request r ORDER BY RequestNumber DESC '
 
 		EXEC sp_executesql @SQL
 	END

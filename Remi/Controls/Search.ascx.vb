@@ -21,6 +21,15 @@ Public Class Search1
         hdnUser.Value = UserManager.GetCurrentUser.UserName
     End Sub
 
+    Public Property ExecuteTop As Boolean
+        Get
+            Return hdnTop.Value
+        End Get
+        Set(value As Boolean)
+            hdnTop.Value = value
+        End Set
+    End Property
+
     Public Property SearchScript As String
         Get
             Return _searchScript
