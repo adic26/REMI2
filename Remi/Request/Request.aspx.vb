@@ -116,7 +116,6 @@ Public Class Request
                         ddl.AutoPostBack = True
 
                         If (res.ParentFieldSetupID > 0) Then
-
                             For Each rec In (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p)
                                 If (res.CustomLookupHierarchy IsNot Nothing) Then
                                     For Each ch In res.CustomLookupHierarchy
@@ -144,11 +143,45 @@ Public Class Request
                             ddl.SelectedValue = res.Value
                         End If
 
-
                         tCell2.Controls.Add(ddl)
 
                         If (res.IsRequired) Then
                             rfv.ControlToValidate = ddl.ID
+                        End If
+
+                        If (res.IntField = "RequestedTest" And res.HasIntegration And res.NewRequest) Then
+                            Dim jobID As Int32 = JobManager.GetJobByName(ddl.SelectedValue).ID
+
+                            setup.Visible = True
+                            setupEnv.Visible = True
+                            pnlSetup.Visible = True
+                            setup.JobID = jobID
+                            setup.ProductID = 0
+                            setup.JobName = ddl.SelectedValue
+                            setup.ProductName = String.Empty
+                            setup.QRANumber = lblRequest.Text
+                            setup.BatchID = 0
+                            setup.TestStageType = TestStageType.Parametric
+                            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                            setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                            setup.HasEditItemAuthority = True
+                            setup.OrientationID = 0
+                            setup.DataBind()
+
+                            setupEnv.JobID = jobID
+                            setupEnv.BatchID = 0
+                            setupEnv.ProductID = 0
+                            setupEnv.JobName = ddl.SelectedValue
+                            setupEnv.ProductName = String.Empty
+                            setupEnv.QRANumber = lblRequest.Text
+                            setupEnv.TestStageType = TestStageType.EnvironmentalStress
+                            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                            setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                            setup.HasEditItemAuthority = True
+                            setupEnv.OrientationID = 0
+                            setupEnv.DataBind()
+                        ElseIf (res.IntField = "RequestedTest" And res.HasIntegration And Not res.NewRequest) Then
+                            ddl.Enabled = False
                         End If
                     Case "LINK"
                         Dim lnk As New HyperLink
@@ -381,15 +414,27 @@ Public Class Request
 
             If (saveSuccess) Then
                 notMain.Notifications.AddWithMessage("Saved Request Successful!", NotificationType.Information)
+                Dim requestNumber As String = rf(0).RequestNumber
+                Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
 
-                If (setup.Visible) Then
-                    notMain.Notifications.AddWithMessage("Saved Parametric Setup Successful!", NotificationType.Information)
-                    setup.Save()
+                If (rec IsNot Nothing) Then
+                    If (setup.Visible) Then
+                        setup.BatchID = rec.BatchID
+                        setup.QRANumber = requestNumber
+                        notMain.Notifications.AddWithMessage("Saved Parametric Setup Successful!", NotificationType.Information)
+                        setup.Save()
+                    End If
+
+                    If (setupEnv.Visible) Then
+                        setupEnv.BatchID = rec.BatchID
+                        setupEnv.QRANumber = requestNumber
+                        notMain.Notifications.AddWithMessage("Saved Environmental Setup Successful!", NotificationType.Information)
+                        setupEnv.Save()
+                    End If
                 End If
 
-                If (setupEnv.Visible) Then
-                    notMain.Notifications.AddWithMessage("Saved Environmental Setup Successful!", NotificationType.Information)
-                    setupEnv.Save()
+                If (rf(0).NewRequest) Then
+                    Response.Redirect(String.Format("~/Request/Request.aspx?type={0}&req={1}", hdnRequestType.Value, requestNumber), True)
                 End If
 
                 BuildMenu()
@@ -414,6 +459,41 @@ Public Class Request
         Else
             rf = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, False, String.Empty)
         End If
+
+        For Each field In rf
+            If (field.IntField = "RequestedTest" And field.HasIntegration And field.NewRequest And field.FieldSetupID = id) Then
+                Dim jobID As Int32 = JobManager.GetJobByName(val).ID
+
+                setup.Visible = True
+                setupEnv.Visible = True
+                pnlSetup.Visible = True
+                setup.JobID = jobID
+                setup.ProductID = 0
+                setup.JobName = ddl.SelectedValue
+                setup.ProductName = String.Empty
+                setup.QRANumber = lblRequest.Text
+                setup.BatchID = 0
+                setup.TestStageType = TestStageType.Parametric
+                setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                setup.HasEditItemAuthority = True
+                setup.OrientationID = 0
+                setup.DataBind()
+
+                setupEnv.JobID = jobID
+                setupEnv.BatchID = 0
+                setupEnv.ProductID = 0
+                setupEnv.JobName = ddl.SelectedValue
+                setupEnv.ProductName = String.Empty
+                setupEnv.QRANumber = lblRequest.Text
+                setupEnv.TestStageType = TestStageType.EnvironmentalStress
+                setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                setupEnv.HasEditItemAuthority = True
+                setupEnv.OrientationID = 0
+                setupEnv.DataBind()
+            End If
+        Next
 
         For Each rec In (From p In rf Where p.ParentFieldSetupID = id Select p)
             Dim values As New List(Of String)

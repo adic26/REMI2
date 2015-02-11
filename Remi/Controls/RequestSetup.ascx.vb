@@ -296,6 +296,16 @@ Partial Class RequestSetup
     Public Function Save() As Boolean
         If (HasEditItemAuthority Or IsAdmin Or IsProjectManager) Then
             If (tvRequest.Nodes.Count > 0) Then
+                If (DisplayMode = ControlMode.Request) Then
+                    If (Not String.IsNullOrEmpty(QRANumber)) Then
+                        If (HasEditItemAuthority And chklSaveOptions.Items.FindByValue("1") Is Nothing) Then
+                            Dim li As ListItem = New ListItem(QRANumber, 1, True)
+                            chklSaveOptions.Items.Add(li)
+                            chklSaveOptions.SelectedValue = li.Value
+                        End If
+                    End If
+                End If
+
                 Dim saveOptions As List(Of Int32) = (From item In chklSaveOptions.Items.Cast(Of ListItem)() Where item.Selected = True Select Convert.ToInt32(item.Value)).ToList()
                 Dim oID As Int32 = 0
                 Int32.TryParse(ddlOrientations.SelectedValue, oID)
