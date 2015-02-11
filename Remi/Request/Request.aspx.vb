@@ -273,6 +273,36 @@ Public Class Request
             hypBatch.Visible = True
             hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
 
+            Dim batch As BatchView = BatchManager.GetViewBatch(requestNumber)
+            setup.Visible = True
+            setupEnv.Visible = True
+            pnlSetup.Visible = True
+            setup.JobID = batch.JobID
+            setup.ProductID = batch.ProductID
+            setup.JobName = batch.JobName
+            setup.ProductName = batch.ProductGroup
+            setup.QRANumber = rec.RequestNumber
+            setup.BatchID = rec.BatchID
+            setup.TestStageType = TestStageType.Parametric
+            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
+            setup.OrientationID = 0
+            setup.DataBind()
+
+            setupEnv.JobID = batch.JobID
+            setupEnv.BatchID = rec.BatchID
+            setupEnv.ProductID = batch.ProductID
+            setupEnv.JobName = batch.JobName
+            setupEnv.ProductName = batch.ProductGroup
+            setupEnv.QRANumber = batch.QRANumber
+            setupEnv.TestStageType = TestStageType.EnvironmentalStress
+            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            setupEnv.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
+            setupEnv.OrientationID = 0
+            setupEnv.DataBind()
+
             mi = New MenuItem
             mi.Text = "Results"
             mi.Target = "_blank"
@@ -350,8 +380,19 @@ Public Class Request
             Dim saveSuccess As Boolean = RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName)
 
             If (saveSuccess) Then
+                notMain.Notifications.AddWithMessage("Saved Request Successful!", NotificationType.Information)
+
+                If (setup.Visible) Then
+                    notMain.Notifications.AddWithMessage("Saved Parametric Setup Successful!", NotificationType.Information)
+                    setup.Save()
+                End If
+
+                If (setupEnv.Visible) Then
+                    notMain.Notifications.AddWithMessage("Saved Environmental Setup Successful!", NotificationType.Information)
+                    setupEnv.Save()
+                End If
+
                 BuildMenu()
-                notMain.Notifications.AddWithMessage("Saved Successful!", NotificationType.Information)
             Else
                 notMain.Notifications.AddWithMessage("Saved Failed!", NotificationType.Errors)
             End If

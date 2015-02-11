@@ -18,6 +18,8 @@
         <asp:HiddenField ID="hdnIsAdmin" runat="server" />
         <asp:HiddenField ID="hdnHasEditItemAuthority" runat="server" />
 
+        <h2><asp:Label runat="server" ID="lblTitle" Text='<%# Title %>'></asp:Label></h2>
+
         <uc1:NotificationList ID="notMain" runat="server" />
 
         <asp:Panel runat="server" ID="Orientation" Visible="false">
@@ -26,11 +28,11 @@
             </asp:DropDownList>
         </asp:Panel>
 
-        Load Setup:
+        <asp:label runat="server" Text="Load Setup:" ID="lblLoadSetup"></asp:label>
         <asp:DropDownList runat="server" ID="ddlRequestSetupOptions" CausesValidation="true"
             AutoPostBack="true">
         </asp:DropDownList><br />
-        Save Options: <asp:CheckBoxList runat="server" ID="chklSaveOptions" CausesValidation="true" CssClass="removeStyleWithLeftSameLine" RepeatDirection="Horizontal"></asp:CheckBoxList>
+        <asp:label runat="server" Text="Save Options:" ID="lblSaveOptions"></asp:label><asp:CheckBoxList runat="server" ID="chklSaveOptions" CausesValidation="true" CssClass="removeStyleWithLeftSameLine" RepeatDirection="Horizontal"></asp:CheckBoxList>
         <asp:Button runat="server" ID="btnSave" Text="Save" CssClass="buttonSmall" Visible="false" />
 
         <br />
