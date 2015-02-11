@@ -15,7 +15,9 @@ BEGIN
 	FROM Req.ReqFieldSetup rfs WITH(NOLOCK)
 		INNER JOIN dbo.#temp t WITH(NOLOCK) ON rfs.ReqFieldSetupID=t.ID
 	WHERE rfs.RequestTypeID=@RequestTypeID AND t.TableType='Request'
-
+	
+	DECLARE @ProductGroupColumn NVARCHAR(150)
+	DECLARE @DepartmentColumn NVARCHAR(150)
 	DECLARE @ColumnName NVARCHAR(255)
 	DECLARE @whereStr NVARCHAR(MAX)
 	DECLARE @whereStr2 NVARCHAR(MAX)
@@ -25,8 +27,21 @@ BEGIN
 	DECLARE @InformationColumnNames NVARCHAR(MAX)
 	DECLARE @SQL NVARCHAR(MAX)
 	DECLARE @RecordCount INT
+	DECLARE @ByPassProductCheck INT
 	SELECT @RecordCount = COUNT(*) FROM dbo.#temp 
-
+	SET @ByPassProductCheck = 0
+	SELECT @ByPassProductCheck = u.ByPassProduct FROM Users u WHERE u.ID=@UserID
+	
+	SELECT @ProductGroupColumn = fs.Name
+	FROM Req.ReqFieldSetup fs
+		INNER JOIN Req.ReqFieldMapping fm ON fs.Name=fm.ExtField AND fs.RequestTypeID=fm.RequestTypeID
+	WHERE fs.RequestTypeID = @RequestTypeID AND fm.IntField='ProductGroup'
+	
+	SELECT @DepartmentColumn = fs.Name
+	FROM Req.ReqFieldSetup fs
+		INNER JOIN Req.ReqFieldMapping fm ON fs.Name=fm.ExtField AND fs.RequestTypeID=fm.RequestTypeID
+	WHERE fs.RequestTypeID = @RequestTypeID AND fm.IntField='Department'
+	
 	SELECT @rows=  ISNULL(STUFF(
 		( 
 		SELECT DISTINCT '],[' + rfs.Name
@@ -160,7 +175,7 @@ BEGIN
 	END
 
 	SET @SQL = REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;','')
-		
+
 	EXEC sp_executesql @SQL
 
 	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType NOT IN ('Request','ReqNum')) > 0)
@@ -328,7 +343,6 @@ BEGIN
 		END
 
 		SET @SQL =  REPLACE(REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <'),'&amp;','&')
-		PRINT @SQL
 		EXEC sp_executesql @SQL
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
@@ -356,7 +370,6 @@ BEGIN
 			BEGIN
 				SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
 				EXEC sp_executesql @SQL
-				
 				SET @whereStr = ''
 				
 				DELETE p 
@@ -647,13 +660,31 @@ BEGIN
 				AND COLUMN_NAME NOT IN ('RequestID', 'XMLID', 'ID', 'BatchID', 'ResultID', 'RID', 'ResultMeasurementID')
 			ORDER BY TABLE_NAME
 		END
+		
+		SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr))
 
-		SET @SQL = 'SELECT DISTINCT ' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' 
+		SET @SQL = 'SELECT DISTINCT ' + @whereStr + '
 			FROM dbo.#RR rr 
 				LEFT OUTER JOIN dbo.#RRParameters p ON rr.ID=p.ResultMeasurementID
-				LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID 
+				LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID
 			WHERE ((' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 1 AND i.RID IS NOT NULL ))
-				AND ((' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 1 AND p.ResultMeasurementID IS NOT NULL ))'
+				AND ((' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 1 AND p.ResultMeasurementID IS NOT NULL )) '
+		
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
+		BEGIN
+			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 AND [' + @ProductGroupColumn + '] IN (SELECT p.[values] 
+																FROM UsersProducts up 
+																	INNER JOIN Lookups p ON p.LookupID=up.ProductID 
+																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
+		END
+		
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
+		BEGIN
+			SET @SQL += ' AND ([' + @DepartmentColumn + '] IN (SELECT lt.[Values]
+															FROM UserDetails ud
+																INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
+															WHERE ud.UserID=' + CONVERT(NVARCHAR, @UserID) + ')) '
+		END
 		
 		print @SQL
 		EXEC sp_executesql @SQL
@@ -681,9 +712,30 @@ BEGIN
 			WHERE (TABLE_NAME like '#Request%') AND COLUMN_NAME NOT IN ('RequestID', 'BatchID')
 			ORDER BY TABLE_NAME
 		END
+		
+		SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr))
 
-		SET @SQL = 'SELECT DISTINCT ' + CASE WHEN @RecordCount = 0 THEN 'TOP 20' ELSE '' END + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ' FROM dbo.#Request r ORDER BY RequestNumber DESC '
+		SET @SQL = 'SELECT DISTINCT ' + CASE WHEN @RecordCount = 0 THEN 'TOP 20' ELSE '' END + @whereStr + ' 
+					FROM dbo.#Request r 
+					WHERE (1=1)'
 
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
+		BEGIN
+			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 AND [' + @ProductGroupColumn + '] IN (SELECT p.[values] 
+																FROM UsersProducts up 
+																	INNER JOIN Lookups p ON p.LookupID=up.ProductID 
+																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
+		END
+		
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
+		BEGIN
+			SET @SQL += ' AND ([' + @DepartmentColumn + '] IN (SELECT lt.[Values]
+															FROM UserDetails ud
+																INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
+															WHERE ud.UserID=' + CONVERT(NVARCHAR, @UserID) + ')) '
+		END
+		
+		SET @SQL += ' ORDER BY RequestNumber DESC '
 		EXEC sp_executesql @SQL
 	END
 

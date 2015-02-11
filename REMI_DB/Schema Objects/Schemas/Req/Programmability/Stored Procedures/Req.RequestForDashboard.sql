@@ -25,7 +25,7 @@ BEGIN
 		SET @sql = 'SELECT RequestNumber AS RequestNumber, [RequestedTest] AS RequestedTest, [SampleSize] AS SAMPLESIZE, [ProductGroup] AS PRODUCT,
 			[ProductType] AS PRODUCTTYPE, [AccessoryGroup] AS ACCESSORYGROUPNAME, [RequestStatus] AS STATUS, [RequestPurpose] AS PURPOSE, '
 		
-		IF (@rows LIKE '[ExecutiveSummary]')
+		IF (@rows LIKE '%[ExecutiveSummary]%')
 		BEGIN
 			SET @sql += ' [ExecutiveSummary] AS ExecutiveSummary, '
 		END
