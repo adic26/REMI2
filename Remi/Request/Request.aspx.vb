@@ -180,8 +180,6 @@ Public Class Request
                             setup.HasEditItemAuthority = True
                             setupEnv.OrientationID = 0
                             setupEnv.DataBind()
-                        ElseIf (res.IntField = "RequestedTest" And res.HasIntegration And Not res.NewRequest) Then
-                            ddl.Enabled = False
                         End If
                     Case "LINK"
                         Dim lnk As New HyperLink
