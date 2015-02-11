@@ -84,8 +84,11 @@
                     dom: 'T<"clear">lfrtip',
                     TableTools: {
                         "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                    }
+                    },
+                    "aaSorting": [[0, 'desc']]
                 });
+
+                
             } else {
                 //Enter IE
                 //oTable is not defined
@@ -99,7 +102,8 @@
                         dom: 'T<"clear">lfrtip',
                         TableTools: {
                             "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                        }
+                        },
+                        "aaSorting": [[0, 'desc']]
                     });
                 } else {
                     //OTable is defined already
@@ -118,7 +122,8 @@
                         dom: 'T<"clear">lfrtip',
                         TableTools: {
                             "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                        }
+                        },
+                        "aaSorting": [[0, 'desc']]
                     });
                 }
             }
@@ -132,7 +137,8 @@
                     dom: 'T<"clear">lfrtip',
                     TableTools: {
                         "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                    }
+                    },
+                    "aaSorting": [[0, 'desc']]
                 });
 
                 oTable.clear();
