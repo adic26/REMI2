@@ -16,7 +16,7 @@ BEGIN
 		INNER JOIN dbo.#temp t WITH(NOLOCK) ON rfs.ReqFieldSetupID=t.ID
 	WHERE rfs.RequestTypeID=@RequestTypeID AND t.TableType='Request'
 	
-	DECLARE @ProductGroupColumn NVARCHAR(150)
+	DECLARE @ProductGroupColumn NVARCHAR(150) 
 	DECLARE @DepartmentColumn NVARCHAR(150)
 	DECLARE @ColumnName NVARCHAR(255)
 	DECLARE @whereStr NVARCHAR(MAX)
@@ -33,7 +33,7 @@ BEGIN
 	SELECT @ByPassProductCheck = u.ByPassProduct FROM Users u WHERE u.ID=@UserID
 	
 	SELECT @ProductGroupColumn = fs.Name
-	FROM Req.ReqFieldSetup fs
+	FROM Req.ReqFieldSetup fs 
 		INNER JOIN Req.ReqFieldMapping fm ON fs.Name=fm.ExtField AND fs.RequestTypeID=fm.RequestTypeID
 	WHERE fs.RequestTypeID = @RequestTypeID AND fm.IntField='ProductGroup'
 	
@@ -672,7 +672,8 @@ BEGIN
 		
 		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
 		BEGIN
-			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 AND [' + @ProductGroupColumn + '] IN (SELECT p.[values] 
+			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
+																	AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
 																FROM UsersProducts up 
 																	INNER JOIN Lookups p ON p.LookupID=up.ProductID 
 																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
@@ -680,7 +681,7 @@ BEGIN
 		
 		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
 		BEGIN
-			SET @SQL += ' AND ([' + @DepartmentColumn + '] IN (SELECT lt.[Values]
+			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
 															FROM UserDetails ud
 																INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
 															WHERE ud.UserID=' + CONVERT(NVARCHAR, @UserID) + ')) '
@@ -721,7 +722,8 @@ BEGIN
 
 		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
 		BEGIN
-			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 AND [' + @ProductGroupColumn + '] IN (SELECT p.[values] 
+			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
+															AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
 																FROM UsersProducts up 
 																	INNER JOIN Lookups p ON p.LookupID=up.ProductID 
 																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
@@ -729,7 +731,7 @@ BEGIN
 		
 		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
 		BEGIN
-			SET @SQL += ' AND ([' + @DepartmentColumn + '] IN (SELECT lt.[Values]
+			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
 															FROM UserDetails ud
 																INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
 															WHERE ud.UserID=' + CONVERT(NVARCHAR, @UserID) + ')) '
