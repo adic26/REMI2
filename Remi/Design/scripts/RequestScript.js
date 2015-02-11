@@ -42,7 +42,8 @@ $(function () { //ready function
                     dom: 'T<"clear">lfrtip',
                     TableTools: {
                         "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                    }
+                    },
+                    "aaSorting": [[0, 'desc']]
                 });
             } else {
                 //Enter IE
@@ -57,7 +58,8 @@ $(function () { //ready function
                         dom: 'T<"clear">lfrtip',
                         TableTools: {
                             "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                        }
+                        },
+                        "aaSorting": [[0, 'desc']]
                     });
                 } else {
                     //OTable is defined already
@@ -75,7 +77,8 @@ $(function () { //ready function
                         dom: 'T<"clear">lfrtip',
                         TableTools: {
                             "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                        }
+                        },
+                        "aaSorting": [[0, 'desc']]
                     });
                 }
             }
@@ -87,7 +90,8 @@ $(function () { //ready function
                     dom: 'T<"clear">lfrtip',
                     TableTools: {
                         "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
-                    }
+                    },
+                    "aaSorting": [[0, 'desc']]
                 });
 
                 oTable.clear();
