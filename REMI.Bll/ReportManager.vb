@@ -11,9 +11,9 @@ Namespace REMI.Bll
     Public Class ReportManager
         Inherits REMIManagerBase
 
-        Public Shared Function Search(ByVal requestTypeID As Int32, ByVal SearchFields As DataTable) As DataTable
+        Public Shared Function Search(ByVal requestTypeID As Int32, ByVal SearchFields As DataTable, ByVal userID As Int32) As DataTable
             Try
-                Return ReportDB.Search(requestTypeID, SearchFields)
+                Return ReportDB.Search(requestTypeID, SearchFields, userID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

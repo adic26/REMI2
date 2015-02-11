@@ -40,6 +40,7 @@
     <div id="FinalItemsList" class="list-group"></div>
     <input id="bs_searchButton" type="button" class="btn btn-primary" autocomplete="off" value="SEARCH" />
     <asp:HiddenField runat="server" ID="hdnUser" />
+    <asp:HiddenField runat="server" ID="hdnUserID" />
     <asp:HiddenField runat="server" ID="hdnTop" />
     <div class="info"></div>
     <div class="table"> 

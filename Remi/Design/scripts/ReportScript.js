@@ -25,6 +25,7 @@
     var oTable;
     var executeTop = $("[id$='hdnTop']");
     var user = $("[id$='hdnUser']");
+    var userID = $("[id$='hdnUserID']");
 
     var o = new Option("--aReqNum", "--aReqNum");
     $(o).html("Request Number");
@@ -156,7 +157,8 @@
 
         var requestParams = JSON.stringify({
             "requestTypeID": rtID[0].value,
-            "fields": []
+            "fields": [],
+            "userID": userID[0].value
         });
 
         var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
@@ -347,7 +349,8 @@
         if (fullList.length > 0) {
             var requestParams = JSON.stringify({
                 "requestTypeID": rtID[0].value,
-                "fields": fullList
+                "fields": fullList,
+                "userID": userID[0].value
             });
 
             var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(

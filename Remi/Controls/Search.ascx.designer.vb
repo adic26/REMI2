@@ -23,6 +23,15 @@ Partial Public Class Search1
     Protected WithEvents hdnUser As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''hdnUserID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnUserID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''hdnTop control.
     '''</summary>
     '''<remarks>

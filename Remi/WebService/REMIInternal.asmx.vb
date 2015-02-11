@@ -57,8 +57,8 @@ Public Class REMIInternal
         Return myList
     End Function
 
-    <WebMethod(EnableSession:=False, Description:="")> _
-    Public Function customSearch(ByVal requestTypeID As Int32, ByVal fields As List(Of String)) As String
+    <WebMethod(EnableSession:=True, Description:="")> _
+    Public Function customSearch(ByVal requestTypeID As Int32, ByVal fields As List(Of String), ByVal userID As Int32) As String
         Dim myList As New List(Of String)()
         Dim tableTags As New StringBuilder()
 
@@ -80,7 +80,7 @@ Public Class REMIInternal
                 dt.Rows.Add(r)
             Next
 
-            Dim results As DataTable = ReportManager.Search(requestTypeID, dt)
+            Dim results As DataTable = ReportManager.Search(requestTypeID, dt, userID)
 
             tableTags.Append("<thead><tr>")
 
@@ -121,8 +121,8 @@ Public Class REMIInternal
         Return tableTags.ToString()
     End Function
 
-    <System.Web.Services.WebMethod()> _
-    Public Function colSearch(ByVal requestTypeID As Int32, ByVal fields As List(Of String)) As String
+    <WebMethod(EnableSession:=True, Description:="")> _
+    Public Function colSearch(ByVal requestTypeID As Int32, ByVal fields As List(Of String), ByVal userID As Int32) As String
         Dim myList As New List(Of String)()
         Dim theads As New StringBuilder()
 
@@ -144,7 +144,7 @@ Public Class REMIInternal
                 dt.Rows.Add(r)
             Next
 
-            Dim results As DataTable = ReportManager.Search(requestTypeID, dt)
+            Dim results As DataTable = ReportManager.Search(requestTypeID, dt, userID)
 
             theads.Append("<thead><tr>")
 

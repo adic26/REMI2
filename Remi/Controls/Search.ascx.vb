@@ -19,6 +19,7 @@ Public Class Search1
             Page.ClientScript.RegisterClientScriptInclude(Me.GetType(), "SearchScript", ResolveClientUrl(SearchScript))
         End If
         hdnUser.Value = UserManager.GetCurrentUser.UserName
+        hdnUserID.Value = UserManager.GetCurrentUser.ID
     End Sub
 
     Public Property ExecuteTop As Boolean

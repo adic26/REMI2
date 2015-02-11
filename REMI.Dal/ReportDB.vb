@@ -13,7 +13,7 @@ Imports System.Reflection
 Namespace REMI.Dal
     Public Class ReportDB
 
-        Public Shared Function Search(ByVal requestTypeID As Int32, ByVal SearchFields As DataTable) As DataTable
+        Public Shared Function Search(ByVal requestTypeID As Int32, ByVal SearchFields As DataTable, ByVal userID As Int32) As DataTable
             Dim dt As New DataTable("Search")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Req.RequestSearch", myConnection)
@@ -24,6 +24,7 @@ Namespace REMI.Dal
                     parameter = myCommand.Parameters.AddWithValue("@tv", SearchFields)
                     parameter.SqlDbType = SqlDbType.Structured
                     parameter.TypeName = "dbo.SearchFields"
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
 
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
