@@ -113,6 +113,15 @@ Partial Public Class RequestSetup
     Protected WithEvents hdnIsAdmin As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''hdnRequestTypeID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnRequestTypeID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''hdnHasEditItemAuthority control.
     '''</summary>
     '''<remarks>

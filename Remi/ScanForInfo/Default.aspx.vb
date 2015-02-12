@@ -234,6 +234,7 @@ Partial Class ScanForInfo_Default
                     setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                     setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)
                     setup.OrientationID = 0
+                    setup.RequestTypeID = b.ReqData(0).RequestTypeID
                     setup.DataBind()
 
                     setupStressing.JobID = b.JobID
@@ -247,6 +248,7 @@ Partial Class ScanForInfo_Default
                     setupStressing.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                     setupStressing.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)
                     setupStressing.OrientationID = If(b.Orientation Is Nothing, 0, b.Orientation.ID)
+                    setupStressing.RequestTypeID = b.ReqData(0).RequestTypeID
                     setupStressing.DataBind()
 
                     If (setup.HasEditItemAuthority) Then

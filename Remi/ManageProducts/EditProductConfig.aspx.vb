@@ -24,7 +24,7 @@ Partial Class ManageProducts_EditProductConfig
         txtPCName.Visible = False
         btnAddNode.Visible = False
         ddlTests.Items.Clear()
-        Dim tests As List(Of Test) = TestManager.GetTestsByType(TestType.Parametric, False)
+        Dim tests As List(Of Test) = TestManager.GetTestsByType(TestType.Parametric.ToString(), False, UserManager.GetCurrentUser.ID, 0)
         tests.Insert(0, New Test())
         ddlTests.DataSource = tests
         ddlTests.DataValueField = "ID"

@@ -166,6 +166,7 @@ Public Class Request
                             setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                             setup.HasEditItemAuthority = True
                             setup.OrientationID = 0
+                            setup.RequestTypeID = hdnRequestTypeID.Value
                             setup.DataBind()
 
                             setupEnv.JobID = jobID
@@ -179,6 +180,7 @@ Public Class Request
                             setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                             setup.HasEditItemAuthority = True
                             setupEnv.OrientationID = 0
+                            setupEnv.RequestTypeID = hdnRequestTypeID.Value
                             setupEnv.DataBind()
                         End If
                     Case "LINK"
@@ -319,6 +321,7 @@ Public Class Request
             setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
             setup.OrientationID = 0
+            setup.RequestTypeID = hdnRequestTypeID.Value
             setup.DataBind()
 
             setupEnv.JobID = batch.JobID
@@ -332,6 +335,7 @@ Public Class Request
             setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             setupEnv.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
             setupEnv.OrientationID = 0
+            setupEnv.RequestTypeID = hdnRequestTypeID.Value
             setupEnv.DataBind()
 
             mi = New MenuItem
@@ -476,6 +480,7 @@ Public Class Request
                 setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                 setup.HasEditItemAuthority = True
                 setup.OrientationID = 0
+                setup.RequestTypeID = hdnRequestTypeID.Value
                 setup.DataBind()
 
                 setupEnv.JobID = jobID
@@ -489,6 +494,7 @@ Public Class Request
                 setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                 setupEnv.HasEditItemAuthority = True
                 setupEnv.OrientationID = 0
+                setupEnv.RequestTypeID = hdnRequestTypeID.Value
                 setupEnv.DataBind()
             End If
         Next

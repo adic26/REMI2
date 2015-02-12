@@ -491,7 +491,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of the Parametric Tests available. Represented as a list of strings. This method can be used to populate lists.")> _
     Public Function GetParametricTests() As String()
         Try
-            Return TestManager.GetTestsByType(TestType.Parametric, False).ToStringArray
+            Return TestManager.GetTestsByType(TestType.Parametric.ToString(), False, 0, 0).ToStringArray
         Catch ex As Exception
             TestManager.LogIssue("REMI API GetParametricTests", "e3", NotificationType.Errors, ex)
         End Try

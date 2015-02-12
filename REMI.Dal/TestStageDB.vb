@@ -343,14 +343,14 @@ Namespace REMI.Dal
                 Case TestStageType.Parametric
                     tests = REMIAppCache.GetParametricTests()
                     If tests Is Nothing Then
-                        tests = TestDB.GetListByTestType(TestType.Parametric, -1, -1, False)
+                        tests = TestDB.GetListByTestType(TestType.Parametric, -1, -1, False, 0, 0)
                         REMIAppCache.SetParametricTests(tests)
                     End If
                     ts.Tests = tests
                 Case TestStageType.EnvironmentalStress
                     tests = REMIAppCache.GetEnvironmentalTests()
                     If tests Is Nothing Then
-                        tests = TestDB.GetListByTestType(TestType.EnvironmentalStress, -1, -1, False)
+                        tests = TestDB.GetListByTestType(TestType.EnvironmentalStress, -1, -1, False, 0, 0)
                         REMIAppCache.SetEnvironmentalTests(tests)
                     End If
                     'get the specific test
@@ -359,14 +359,14 @@ Namespace REMI.Dal
                 Case TestStageType.IncomingEvaluation
                     tests = REMIAppCache.GetIncomingEvalTests()
                     If tests Is Nothing Then
-                        tests = TestDB.GetListByTestType(TestType.IncomingEvaluation, -1, -1, False)
+                        tests = TestDB.GetListByTestType(TestType.IncomingEvaluation, -1, -1, False, 0, 0)
                         REMIAppCache.SetIncomingEvalTests(tests)
                     End If
                     ts.Tests = tests
                 Case TestStageType.NonTestingTask
                     tests = REMIAppCache.GetNonTestingTests()
                     If tests Is Nothing Then
-                        tests = TestDB.GetListByTestType(TestType.NonTestingTask, -1, -1, False)
+                        tests = TestDB.GetListByTestType(TestType.NonTestingTask, -1, -1, False, 0, 0)
                         REMIAppCache.SetNonTestingTests(tests)
                     End If
                     ts.Tests = tests

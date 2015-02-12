@@ -139,9 +139,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobListDT() As JobCollection
+        Public Shared Function GetJobListDT(ByVal requestTypeID As Int32) As JobCollection
             Try
-                Return JobDB.GetJobListDT(UserManager.GetCurrentUser)
+                Return JobDB.GetJobListDT(UserManager.GetCurrentUser, requestTypeID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return New JobCollection

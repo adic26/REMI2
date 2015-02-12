@@ -52,9 +52,9 @@ Namespace REMI.Bll
             Return New DataTable("RequestTypes")
         End Function
 
-        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32) As DataTable
+        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal RequestTypeID As Int32) As DataTable
             Try
-                Return RequestDB.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected, UserManager.GetCurrentUser.ID)
+                Return RequestDB.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected, UserManager.GetCurrentUser.ID, RequestTypeID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

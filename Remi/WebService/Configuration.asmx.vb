@@ -228,7 +228,7 @@ Public Class ProductConfiguration
         Return False
     End Function
 
-    <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfig")> _
+    <WebMethod(Description:="Retrieves Configuration", MessageName:="PublishConfig")> _
     Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As String
         Dim xml As String = String.Empty
 
@@ -242,7 +242,7 @@ Public Class ProductConfiguration
         Return xml
     End Function
 
-    <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfigByNames")> _
+    <WebMethod(Description:="Retrieves Configuration", MessageName:="PublishConfigByNames")> _
     Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As String, ByVal type As String, ByVal toMode As String) As String
         Dim xml As String = String.Empty
 
@@ -315,10 +315,10 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Get the setup information for the batch for stage and test")> _
-    Public Function GetBatchTestSetupInfo(ByVal batchID As Int32, ByVal jobID As Int32, ByVal productID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal useridentification As String) As DataTable
+    Public Function GetBatchTestSetupInfo(ByVal batchID As Int32, ByVal jobID As Int32, ByVal productID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal useridentification As String, ByVal requestTypeID As Int32) As DataTable
         Try
             If UserManager.SetUserToSession(useridentification) Then
-                Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected)
+                Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected, requestTypeID)
             End If
         Catch ex As Exception
             RequestManager.LogIssue("GetBatchTestSetupInfo", "e3", NotificationType.Errors, ex, String.Format("BatchID: {0} JobID: {1} ProductID: {2} TestStageType: {3} BlankSelected: {4}", batchID, jobID, productID, testStageType, blankSelected))

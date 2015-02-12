@@ -48,7 +48,7 @@ Namespace REMI.Bll
                     dt.Rows.Add(newRQRow)
                 Next
 
-                For Each rec As Test In TestManager.GetTestsByType(TestType.Parametric, False)
+                For Each rec As Test In TestManager.GetTestsByType(TestType.Parametric.ToString(), False, UserManager.GetCurrentUser.ID, requestTypeID)
                     Dim newTestRow As DataRow = dt.NewRow
                     newTestRow("Type") = "Test"
                     newTestRow("Name") = rec.Name
