@@ -200,9 +200,10 @@ BEGIN
 					
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='ProductConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @ProductConfigCommon=Value FROM #information WHERE Name='ProductConfigCommon'
-					
-					SELECT @ConfigXML = c.Definition
+
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfProductConfig/ProductConfig') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @ProductConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -210,10 +211,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfProductConfig/ProductConfig') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @ProductConfigCommon
-
 						UPDATE x
 						SET x.ProductXML = @ConfigXML
 						FROM Relab.ResultsXML x
@@ -223,9 +220,10 @@ BEGIN
 					
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='SequenceConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @SequenceConfigCommon=Value FROM #information WHERE Name='SequenceConfigCommon'
 					
-					SELECT @ConfigXML = c.Definition
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfSequenceConfigCommon/SequenceConfigCommon') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @SequenceConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -233,10 +231,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfSequence/Sequence') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @SequenceConfigCommon
-								
 						UPDATE x
 						SET x.SequenceXML = @ConfigXML
 						FROM Relab.ResultsXML x
@@ -246,9 +240,10 @@ BEGIN
 				
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='StationConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @StationConfigCommon=Value FROM #information WHERE Name='StationConfigCommon'
-					
-					SELECT @ConfigXML = c.Definition
+
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfStationConfig/StationConfig') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @StationConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -256,10 +251,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfStationConfig/StationConfig') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @StationConfigCommon
-
 						UPDATE x
 						SET x.StationXML = @ConfigXML
 						FROM Relab.ResultsXML x
@@ -269,9 +260,10 @@ BEGIN
 				
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='TestConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @TestConfigCommon=Value FROM #information WHERE Name='TestConfigCommon'
 					
-					SELECT @ConfigXML = c.Definition
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfTestConfig/TestConfig') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @TestConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -279,10 +271,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfTestConfig/TestConfig') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @TestConfigCommon
-
 						UPDATE x
 						SET x.TestXML = (SELECT x.TestXML, @ConfigXML FOR XML PATH('TestConfigs'))
 						FROM Relab.ResultsXML x
