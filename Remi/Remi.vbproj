@@ -652,6 +652,8 @@
     <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.css" />
     <Content Include="Design\jQueryCSS\BootstrapCSS\bootstrap.icon-large.css" />
     <Content Include="Design\jQueryCSS\BootstrapCSS\jquery.taginput.css" />
+    <Content Include="Design\jQueryCSS\DataTableCSS\dataTables.colVis.css" />
+    <Content Include="Design\jQueryCSS\DataTableCSS\dataTables.colvis.jqueryui.css" />
     <Content Include="Design\jQueryCSS\DataTableCSS\dataTables.tableTools.css" />
     <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables.css" />
     <Content Include="Design\jQueryCSS\DataTableCSS\jquery.dataTables.min.css" />
@@ -680,6 +682,7 @@
     <Content Include="Design\scripts\Bootstrap\bootstrap-select.js" />
     <Content Include="Design\scripts\Bootstrap\bootstrap.js" />
     <Content Include="Design\scripts\Bootstrap\jquery.taginput.src.js" />
+    <Content Include="Design\scripts\DataTables\dataTables.colVis.js" />
     <Content Include="Design\scripts\DataTables\dataTables.tableTools.js" />
     <Content Include="Design\scripts\DataTables\jquery.dataTables.js" />
     <Content Include="Design\scripts\DataTables\ZeroClipboard.js" />
