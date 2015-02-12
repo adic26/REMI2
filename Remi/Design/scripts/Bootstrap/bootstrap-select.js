@@ -1185,19 +1185,22 @@
   // ==============================
   function Plugin(option, event) {
     // get the args of the outer function..
-    var args = arguments;
-    // The arguments of the function are explicitly re-defined from the argument list, because the shift causes them
-    // to get lost
-    //noinspection JSDuplicatedDeclaration
-    var _option = option,
-        option = args[0],
-        event = args[1];
+      var args = arguments,
+      // The arguments of the function are explicitly re-defined from the argument list, because the shift causes them
+      // to get lost
+      //noinspection JSDuplicatedDeclaration
+      //var _option = option,
+      //    option = args[0],
+        //    event = args[1];
+        _option = option,
+        _event = event;
+      
     [].shift.apply(args);
 
     // This fixes a bug in the js implementation on android 2.3 #715
-    if (typeof option == 'undefined') {
-      option = _option;
-    }
+    //if (typeof option == 'undefined') {
+    //  option = _option;
+    //}
 
     var value;
     var chain = this.each(function () {
@@ -1217,11 +1220,11 @@
           }
         }
 
-        if (typeof option == 'string') {
-          if (data[option] instanceof Function) {
-            value = data[option].apply(data, args);
+        if (typeof _option == 'string') {
+          if (data[_option] instanceof Function) {
+            value = data[_option].apply(data, args);
           } else {
-            value = data.options[option];
+            value = data.options[_option];
           }
         }
       }

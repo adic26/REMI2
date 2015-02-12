@@ -48,6 +48,7 @@ $(function () { //ready function
                     },
                     "aaSorting": [[0, 'desc']]
                 });
+                   
             } else {
                 //Enter IE
                 //oTable is not defined
