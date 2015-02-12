@@ -9,6 +9,10 @@
 	[EndDate] [datetime] NULL,
 	[lossFile] [xml] NULL,
 	rv ROWVERSION,
+	[ProductXML] [xml] NULL,
+	[StationXML] [xml] NULL,
+	[TestXML] [xml] NULL,
+	[SequenceXML] [xml] NULL,
  CONSTRAINT [PK_Relab.ResultXML] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

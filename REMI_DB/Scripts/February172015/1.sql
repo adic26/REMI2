@@ -1,4 +1,16 @@
-﻿ALTER PROCEDURE [Relab].[remispResultsFileProcessing]
+BEGIN TRAN
+GO
+ALTER TABLE Relab.resultsinformation drop column configid
+GO
+ALTER TABLE Relab.ResultsXML ADD ProductXML XML NULL
+GO
+ALTER TABLE Relab.ResultsXML ADD StationXML XML NULL
+GO
+ALTER TABLE Relab.ResultsXML ADD TestXML XML NULL
+GO
+ALTER TABLE Relab.ResultsXML ADD SequenceXML XML NULL
+GO
+ALTER PROCEDURE [Relab].[remispResultsFileProcessing]
 AS
 BEGIN
 	BEGIN TRANSACTION
@@ -630,3 +642,39 @@ END
 GO
 GRANT EXECUTE ON Relab.remispResultsFileProcessing TO REMI
 GO
+ALTER PROCEDURE [Relab].[remispResultsInformation] @ResultID INT, @IncludeArchived INT = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @FalseBit BIT
+	SET @FalseBit = CONVERT(BIT, 0)
+	
+	SELECT ri.Name, ri.Value, ri.XMLID, rxml.VerNum, ISNULL(ri.IsArchived, 0) AS IsArchived,
+		rxml.TestXML, rxml.ProductXML, rxml.SequenceXML, rxml.StationXML
+	FROM Relab.ResultsInformation ri
+		INNER JOIN Relab.ResultsXML rxml ON ri.XMLID=rxml.ID
+	WHERE rxml.ResultID=@ResultID AND ((@IncludeArchived = 0 AND ri.IsArchived=@FalseBit) OR (@IncludeArchived=1))
+
+	SET NOCOUNT OFF
+END
+GO
+GRANT EXECUTE ON [Relab].[remispResultsInformation] TO Remi
+GO
+ALTER PROCEDURE Relab.remispResultVersions  @TestID INT, @BatchID INT
+AS
+BEGIN
+	SELECT tu.BatchUnitNumber, ts.TestStageName As TestStage, rxml.ResultXML, rxml.StationName, rxml.StartDate, rxml.EndDate, ISNULL(rxml.lossFile,'') AS lossFile, 
+		CASE WHEN rxml.isProcessed = 1 THEN 'Yes' ELSE 'No' END As Processed, rxml.VerNum, 
+		ISNULL(rxml.ProductXML, '') AS ProductXML, ISNULL(rxml.StationXML, '') AS StationXML, ISNULL(rxml.SequenceXML, '') AS SequenceXML,
+		ISNULL(rxml.TestXML, '') AS TestXML
+	FROM Relab.Results r WITH(NOLOCK)
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON r.TestUnitID=tu.ID
+		INNER JOIN Relab.ResultsXML rxml WITH(NOLOCK) ON r.ID=rxml.ResultID
+		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
+	WHERE r.TestID=@TestID AND tu.BatchID=@BatchID
+END
+GO
+GRANT EXECUTE ON [Relab].[remispResultVersions] TO Remi
+GO
+ROLLBACK TRAN

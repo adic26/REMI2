@@ -48,7 +48,19 @@ Public Class Versions
                 Helpers.ExportToXML(Helpers.GetDateTimeFileName("XMLFile", "xml"), xml)
                 Exit Select
             Case "loss"
-                Helpers.ExportToXML(Helpers.GetDateTimeFileName("ResultSummary", "xml"), xml)
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("lossfile", "xml"), xml)
+                Exit Select
+            Case "productxml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("ProductXMLFile", "xml"), xml)
+                Exit Select
+            Case "testxml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("TestXMLFile", "xml"), xml)
+                Exit Select
+            Case "sequencexml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("SequenceXMLFile", "xml"), xml)
+                Exit Select
+            Case "stationxml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("StationXMLFile", "xml"), xml)
                 Exit Select
         End Select
     End Sub

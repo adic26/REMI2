@@ -18,11 +18,10 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("1dedf076-d62c-4782-9bb1-36635bf3eca8")>
+<Assembly: EdmSchemaAttribute("d3ad2682-4514-417b-9dfb-d1531d654cb2")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsInformation_ResultsXML", "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ResultsXML), "ResultsInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsInformation), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.ResultsXML), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurementsAudit_ResultsMeasurements", "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ResultsMeasurement), "ResultsMeasurementsAudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurementsAudit), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurementsFiles_ResultsMeasurements", "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.ResultsMeasurement), "ResultsMeasurementsFile", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurementsFile), True)>
@@ -135,6 +134,7 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestsAccess_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "TestsAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestsAccess), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups1", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsInformation_ResultsXML", "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ResultsXML), "ResultsInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsInformation), True)>
 
 #End Region
 
@@ -268,20 +268,6 @@ Namespace REMI.Entities
         End Property
     
         Private _Results As ObjectSet(Of Result)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property ResultsInformations() As ObjectSet(Of ResultsInformation)
-            Get
-                If (_ResultsInformations Is Nothing) Then
-                    _ResultsInformations = MyBase.CreateObjectSet(Of ResultsInformation)("ResultsInformations")
-                End If
-                Return _ResultsInformations
-            End Get
-        End Property
-    
-        Private _ResultsInformations As ObjectSet(Of ResultsInformation)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -1388,6 +1374,20 @@ Namespace REMI.Entities
         End Property
     
         Private _Configurations As ObjectSet(Of Configuration)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ResultsInformations() As ObjectSet(Of ResultsInformation)
+            Get
+                If (_ResultsInformations Is Nothing) Then
+                    _ResultsInformations = MyBase.CreateObjectSet(Of ResultsInformation)("ResultsInformations")
+                End If
+                Return _ResultsInformations
+            End Get
+        End Property
+    
+        Private _ResultsInformations As ObjectSet(Of ResultsInformation)
 
         #End Region
 
@@ -1433,13 +1433,6 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToResults(ByVal result As Result)
             MyBase.AddObject("Results", result)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the ResultsInformations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToResultsInformations(ByVal resultsInformation As ResultsInformation)
-            MyBase.AddObject("ResultsInformations", resultsInformation)
         End Sub
     
         ''' <summary>
@@ -1993,6 +1986,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToConfigurations(ByVal configuration As Configuration)
             MyBase.AddObject("Configurations", configuration)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ResultsInformations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToResultsInformations(ByVal resultsInformation As ResultsInformation)
+            MyBase.AddObject("ResultsInformations", resultsInformation)
         End Sub
 
         #End Region
@@ -14951,31 +14951,6 @@ Namespace REMI.Entities
     
         Private Partial Sub OnrvChanged()
         End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property ConfigID() As Nullable(Of Global.System.Int32)
-            Get
-                Return _ConfigID
-            End Get
-            Set
-                OnConfigIDChanging(value)
-                ReportPropertyChanging("ConfigID")
-                _ConfigID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ConfigID")
-                OnConfigIDChanged()
-            End Set
-        End Property
-    
-        Private _ConfigID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnConfigIDChanging(value As Nullable(Of Global.System.Int32))
-        End Sub
-    
-        Private Partial Sub OnConfigIDChanged()
-        End Sub
 
         #End Region
 
@@ -16860,6 +16835,106 @@ Namespace REMI.Entities
     
         Private Partial Sub OnrvChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ProductXML() As Global.System.String
+            Get
+                Return _ProductXML
+            End Get
+            Set
+                OnProductXMLChanging(value)
+                ReportPropertyChanging("ProductXML")
+                _ProductXML = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("ProductXML")
+                OnProductXMLChanged()
+            End Set
+        End Property
+    
+        Private _ProductXML As Global.System.String
+        Private Partial Sub OnProductXMLChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnProductXMLChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property StationXML() As Global.System.String
+            Get
+                Return _StationXML
+            End Get
+            Set
+                OnStationXMLChanging(value)
+                ReportPropertyChanging("StationXML")
+                _StationXML = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("StationXML")
+                OnStationXMLChanged()
+            End Set
+        End Property
+    
+        Private _StationXML As Global.System.String
+        Private Partial Sub OnStationXMLChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnStationXMLChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property TestXML() As Global.System.String
+            Get
+                Return _TestXML
+            End Get
+            Set
+                OnTestXMLChanging(value)
+                ReportPropertyChanging("TestXML")
+                _TestXML = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("TestXML")
+                OnTestXMLChanged()
+            End Set
+        End Property
+    
+        Private _TestXML As Global.System.String
+        Private Partial Sub OnTestXMLChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnTestXMLChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property SequenceXML() As Global.System.String
+            Get
+                Return _SequenceXML
+            End Get
+            Set
+                OnSequenceXMLChanging(value)
+                ReportPropertyChanging("SequenceXML")
+                _SequenceXML = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("SequenceXML")
+                OnSequenceXMLChanged()
+            End Set
+        End Property
+    
+        Private _SequenceXML As Global.System.String
+        Private Partial Sub OnSequenceXMLChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnSequenceXMLChanged()
+        End Sub
 
         #End Region
 
@@ -16902,14 +16977,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ResultsInformation_ResultsXML", "ResultsInformation")>
-         Public Property ResultsInformations() As EntityCollection(Of ResultsInformation)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsMeasurement")>
+         Public Property ResultsMeasurements() As EntityCollection(Of ResultsMeasurement)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ResultsInformation)("REMI.Entities.FK_ResultsInformation_ResultsXML", "ResultsInformation")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ResultsMeasurement)("REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsMeasurement")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ResultsInformation)("REMI.Entities.FK_ResultsInformation_ResultsXML", "ResultsInformation", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ResultsMeasurement)("REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsMeasurement", value)
                 End If
             End Set
         End Property
@@ -16920,14 +16995,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsMeasurement")>
-         Public Property ResultsMeasurements() As EntityCollection(Of ResultsMeasurement)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ResultsInformation_ResultsXML", "ResultsInformation")>
+         Public Property ResultsInformations() As EntityCollection(Of ResultsInformation)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ResultsMeasurement)("REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsMeasurement")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ResultsInformation)("REMI.Entities.FK_ResultsInformation_ResultsXML", "ResultsInformation")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ResultsMeasurement)("REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID", "ResultsMeasurement", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ResultsInformation)("REMI.Entities.FK_ResultsInformation_ResultsXML", "ResultsInformation", value)
                 End If
             End Set
         End Property

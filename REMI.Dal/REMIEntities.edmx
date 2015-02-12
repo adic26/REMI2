@@ -1464,7 +1464,6 @@
           <Property Name="Value" Type="nvarchar" Nullable="false" MaxLength="500" />
           <Property Name="IsArchived" Type="bit" Nullable="false" />
           <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
-          <Property Name="ConfigID" Type="int" />
         </EntityType>
         <EntityType Name="ResultsMeasurements">
           <Key>
@@ -1554,6 +1553,10 @@
           <Property Name="lossFile" Type="xml" />
           <Property Name="ErrorOccured" Type="int" />
           <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ProductXML" Type="xml" />
+          <Property Name="StationXML" Type="xml" />
+          <Property Name="TestXML" Type="xml" />
+          <Property Name="SequenceXML" Type="xml" />
         </EntityType>
         <EntityType Name="ReqFieldData">
           <Key>
@@ -3237,7 +3240,6 @@
           <EntitySet Name="vw_GetTaskInfoCompleted" EntityType="REMI.Entities.vw_GetTaskInfoCompleted" />
           <EntitySet Name="vw_TestRecordAudit" EntityType="REMI.Entities.vw_TestRecordAudit" />
           <EntitySet Name="Results" EntityType="REMI.Entities.Result" />
-          <EntitySet Name="ResultsInformations" EntityType="REMI.Entities.ResultsInformation" />
           <EntitySet Name="ResultsMeasurements" EntityType="REMI.Entities.ResultsMeasurement" />
           <EntitySet Name="ResultsMeasurementsAudits" EntityType="REMI.Entities.ResultsMeasurementsAudit" />
           <EntitySet Name="ResultsMeasurementsFiles" EntityType="REMI.Entities.ResultsMeasurementsFile" />
@@ -3252,10 +3254,6 @@
           <AssociationSet Name="FK_ResultXML_Results" Association="REMI.Entities.FK_ResultXML_Results">
             <End Role="Result" EntitySet="Results" />
             <End Role="ResultsXML" EntitySet="ResultsXMLs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ResultsInformation_ResultsXML" Association="REMI.Entities.FK_ResultsInformation_ResultsXML">
-            <End Role="ResultsXML" EntitySet="ResultsXMLs" />
-            <End Role="ResultsInformation" EntitySet="ResultsInformations" />
           </AssociationSet>
           <AssociationSet Name="FK_ResultsMeasurements_ResultsXML_XMLID" Association="REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID">
             <End Role="ResultsXML" EntitySet="ResultsXMLs" />
@@ -3777,6 +3775,11 @@
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="Configuration" EntitySet="Configurations" />
           </AssociationSet>
+          <EntitySet Name="ResultsInformations" EntityType="REMI.Entities.ResultsInformation" />
+          <AssociationSet Name="FK_ResultsInformation_ResultsXML" Association="REMI.Entities.FK_ResultsInformation_ResultsXML">
+            <End Role="ResultsXML" EntitySet="ResultsXMLs" />
+            <End Role="ResultsInformation" EntitySet="ResultsInformations" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
           <Key>
@@ -3924,19 +3927,6 @@
           <NavigationProperty Name="TestUnit" Relationship="REMI.Entities.FK_Results_TestUnits" FromRole="Result" ToRole="TestUnit" />
           <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
-        <EntityType Name="ResultsInformation">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="XMLID" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Value" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="IsArchived" Nullable="false" />
-          <NavigationProperty Name="ResultsXML" Relationship="REMI.Entities.FK_ResultsInformation_ResultsXML" FromRole="ResultsInformation" ToRole="ResultsXML" />
-          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="ConfigID" />
-        </EntityType>
         <EntityType Name="ResultsMeasurement">
           <Key>
             <PropertyRef Name="ID" />
@@ -4022,9 +4012,13 @@
           <Property Type="String" Name="lossFile" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ErrorOccured" />
           <NavigationProperty Name="Result" Relationship="REMI.Entities.FK_ResultXML_Results" FromRole="ResultsXML" ToRole="Result" />
-          <NavigationProperty Name="ResultsInformations" Relationship="REMI.Entities.FK_ResultsInformation_ResultsXML" FromRole="ResultsXML" ToRole="ResultsInformation" />
           <NavigationProperty Name="ResultsMeasurements" Relationship="REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID" FromRole="ResultsXML" ToRole="ResultsMeasurement" />
           <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="ProductXML" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StationXML" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TestXML" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="SequenceXML" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ResultsInformations" Relationship="REMI.Entities.FK_ResultsInformation_ResultsXML" FromRole="ResultsXML" ToRole="ResultsInformation" />
         </EntityType>
         <EntityType Name="RequestSetup">
           <Key>
@@ -4064,18 +4058,6 @@
             </Principal>
             <Dependent Role="ResultsXML">
               <PropertyRef Name="ResultID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ResultsInformation_ResultsXML">
-          <End Type="REMI.Entities.ResultsXML" Role="ResultsXML" Multiplicity="1" />
-          <End Type="REMI.Entities.ResultsInformation" Role="ResultsInformation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ResultsXML">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ResultsInformation">
-              <PropertyRef Name="XMLID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6480,6 +6462,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ResultsInformation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="XMLID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsArchived" Nullable="false" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <NavigationProperty Name="ResultsXML" Relationship="REMI.Entities.FK_ResultsInformation_ResultsXML" FromRole="ResultsInformation" ToRole="ResultsXML" />
+        </EntityType>
+        <Association Name="FK_ResultsInformation_ResultsXML">
+          <End Type="REMI.Entities.ResultsXML" Role="ResultsXML" Multiplicity="1" />
+          <End Type="REMI.Entities.ResultsInformation" Role="ResultsInformation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResultsXML">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ResultsInformation">
+              <PropertyRef Name="XMLID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6599,19 +6605,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ResultsInformations">
-            <EntityTypeMapping TypeName="REMI.Entities.ResultsInformation">
-              <MappingFragment StoreEntitySet="ResultsInformation">
-                <ScalarProperty Name="ConfigID" ColumnName="ConfigID" />
-                <ScalarProperty Name="rv" ColumnName="rv" />
-                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="XMLID" ColumnName="XMLID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ResultsMeasurements">
             <EntityTypeMapping TypeName="REMI.Entities.ResultsMeasurement">
               <MappingFragment StoreEntitySet="ResultsMeasurements">
@@ -6680,6 +6673,10 @@
           <EntitySetMapping Name="ResultsXMLs">
             <EntityTypeMapping TypeName="REMI.Entities.ResultsXML">
               <MappingFragment StoreEntitySet="ResultsXML">
+                <ScalarProperty Name="SequenceXML" ColumnName="SequenceXML" />
+                <ScalarProperty Name="TestXML" ColumnName="TestXML" />
+                <ScalarProperty Name="StationXML" ColumnName="StationXML" />
+                <ScalarProperty Name="ProductXML" ColumnName="ProductXML" />
                 <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="ErrorOccured" ColumnName="ErrorOccured" />
                 <ScalarProperty Name="lossFile" ColumnName="lossFile" />
@@ -7648,6 +7645,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ResultsInformations">
+            <EntityTypeMapping TypeName="REMI.Entities.ResultsInformation">
+              <MappingFragment StoreEntitySet="ResultsInformation">
+                <ScalarProperty Name="rv" ColumnName="rv" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="XMLID" ColumnName="XMLID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7675,7 +7684,6 @@
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfoCompleted" Width="1.5" PointX="0.75" PointY="5.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_TestRecordAudit" Width="1.5" PointX="6.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="21" PointY="73.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="25.5" PointY="82.875" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="25.5" PointY="69.625" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="27.75" PointY="68.25" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="27.75" PointY="71.375" />
@@ -7685,7 +7693,6 @@
         <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="15.75" PointY="64.75" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultXML_Results" />
-        <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsAudit_ResultsMeasurements" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsFiles_ResultsMeasurements" />
@@ -7870,6 +7877,8 @@
         <EntityTypeShape EntityType="REMI.Entities.Configuration" Width="1.5" PointX="6.956855343169" PointY="18.403342195974357" />
         <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups1" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="10.448514069639385" PointY="8.9410736155421819" />
+        <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -4,8 +4,7 @@
 	[Name] [nvarchar](255) NOT NULL,
 	[Value] [nvarchar](500) NOT NULL,
 	[IsArchived] [bit] NOT NULL,
-	[rv] [timestamp] NOT NULL,
-	[ConfigID] [int] NULL,
+	[rv] [timestamp] NOT NULL
  CONSTRAINT [PK_ResultsInformation] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
