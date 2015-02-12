@@ -59,5 +59,33 @@ Namespace REMI.Bll
 
             Return False
         End Function
+
+        Public Shared Function PublishConfig(ByVal Name As String, ByVal version As Version, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim ver As String = version.ToString()
+                Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = fromMode And c.ConfigTypeID = type And c.Version = ver Select c).FirstOrDefault()
+
+                If (config IsNot Nothing And toMode > 0) Then
+                    Dim newConfig = New REMI.Entities.Configuration
+                    newConfig.Definition = config.Definition
+                    newConfig.Name = config.Name
+                    newConfig.ModeID = toMode
+                    newConfig.ConfigTypeID = config.ConfigTypeID
+                    newConfig.Version = config.Version
+
+                    instance.AddToConfigurations(newConfig)
+                    instance.SaveChanges()
+
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
     End Class
 End Namespace

@@ -227,6 +227,38 @@ Public Class ProductConfiguration
 
         Return False
     End Function
+
+    <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfig")> _
+    Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As String
+        Dim xml As String = String.Empty
+
+        Try
+            Dim verNum As New Version(version)
+            ConfigManager.PublishConfig(Name, verNum, fromMode, type, toMode)
+        Catch ex As Exception
+            ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+        End Try
+
+        Return xml
+    End Function
+
+    <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfigByNames")> _
+    Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As String, ByVal type As String, ByVal toMode As String) As String
+        Dim xml As String = String.Empty
+
+        Try
+            Dim verNum As New Version(version)
+            Dim fromModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", fromMode, Nothing)
+            Dim toModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", toMode, Nothing)
+            Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
+
+            ConfigManager.PublishConfig(Name, verNum, fromModeID, typeID, toModeID)
+        Catch ex As Exception
+            ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+        End Try
+
+        Return xml
+    End Function
 #End Region
 
 #Region "Calibration/LossFile"
