@@ -50,6 +50,24 @@ Partial Public Class Relab_Measurements
     Protected WithEvents hypCancel As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''imgVersions control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgVersions As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''hypVersions control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hypVersions As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''pnlLeftMenuFilter control.
     '''</summary>
     '''<remarks>

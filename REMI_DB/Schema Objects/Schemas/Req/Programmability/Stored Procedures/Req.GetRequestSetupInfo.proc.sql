@@ -8,7 +8,7 @@ BEGIN
 		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
 		INNER JOIN TestsAccess ta ON ta.LookupID=ud.LookupID
 		INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ta.LookupID
-	WHERE ud.UserID=@UserID AND lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
+	WHERE (@UserID = 0 OR ud.UserID=@UserID) AND lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
 
 	IF NOT EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE BatchID=@BatchID AND t.TestType=@TestStageType)
 	BEGIN

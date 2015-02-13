@@ -37,6 +37,15 @@ Partial Class RequestSetup
         End Set
     End Property
 
+    Public Property UserID() As Int32
+        Get
+            Return hdnUserID.Value
+        End Get
+        Set(value As Int32)
+            hdnUserID.Value = value
+        End Set
+    End Property
+
     Public Property RequestTypeID() As Int32
         Get
             Return hdnRequestTypeID.Value
@@ -210,7 +219,7 @@ Partial Class RequestSetup
         End If
 
         If (Not defaultLoad) Then
-            Dim dt As DataTable = RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0, RequestTypeID)
+            Dim dt As DataTable = RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0, RequestTypeID, UserID)
 
             If (dt.Rows.Count = 0) Then
                 Me.Visible = False
@@ -254,15 +263,15 @@ Partial Class RequestSetup
 
     Protected Sub ddlRequestSetupOptions_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlRequestSetupOptions.SelectedIndexChanged
         If (ddlRequestSetupOptions.SelectedItem.Text = "Blank") Then
-            AddTopNodes(RequestManager.GetRequestSetupInfo(0, JobID, 0, TestStageType, 1, RequestTypeID))
+            AddTopNodes(RequestManager.GetRequestSetupInfo(0, JobID, 0, TestStageType, 1, RequestTypeID, UserID))
         ElseIf (ddlRequestSetupOptions.SelectedValue = ProductID) Then
-            AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, 0, TestStageType, 0, RequestTypeID))
+            AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, 0, TestStageType, 0, RequestTypeID, UserID))
         ElseIf (ddlRequestSetupOptions.SelectedValue = JobID) Then
-            AddTopNodes(RequestManager.GetRequestSetupInfo(0, JobID, 0, TestStageType, 0, RequestTypeID))
+            AddTopNodes(RequestManager.GetRequestSetupInfo(0, JobID, 0, TestStageType, 0, RequestTypeID, UserID))
         ElseIf (ddlRequestSetupOptions.SelectedValue = 0) Then
-            AddTopNodes(RequestManager.GetRequestSetupInfo(0, JobID, 0, TestStageType, 1, RequestTypeID))
+            AddTopNodes(RequestManager.GetRequestSetupInfo(0, JobID, 0, TestStageType, 1, RequestTypeID, UserID))
         Else
-            AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0, RequestTypeID))
+            AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0, RequestTypeID, UserID))
         End If
     End Sub
 
@@ -326,7 +335,7 @@ Partial Class RequestSetup
                 Int32.TryParse(ddlOrientations.SelectedValue, oID)
 
                 notMain.Notifications.Add(RequestManager.SaveRequestSetup(hdnProductID.Value, hdnJobID.Value, hdnBatchID.Value, saveOptions, tvRequest.CheckedNodes, TestStageType, oID))
-                AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0, RequestTypeID))
+                AddTopNodes(RequestManager.GetRequestSetupInfo(ProductID, JobID, BatchID, TestStageType, 0, RequestTypeID, UserID))
             End If
         End If
         Return True

@@ -46,7 +46,10 @@ Namespace REMI.Dal
 
         Public Shared Function GetTrackingLocationID(ByVal trackingLocationName As String, ByVal testCenterID As Int32) As Int32
             Dim tlc As New TrackingLocationCriteria
-            tlc.GeoLocationID = testCenterID
+            If (testCenterID > 0) Then
+                tlc.GeoLocationID = testCenterID
+            End If
+
             tlc.TrackingLocName = trackingLocationName
 
             Dim tl As TrackingLocationCollection = SearchFor(tlc, 1, 1)

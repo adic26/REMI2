@@ -200,9 +200,10 @@ BEGIN
 					
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='ProductConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @ProductConfigCommon=Value FROM #information WHERE Name='ProductConfigCommon'
-					
-					SELECT @ConfigXML = c.Definition
+
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfProductConfig/ProductConfig') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @ProductConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -210,10 +211,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfProductConfig/ProductConfig') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @ProductConfigCommon
-
 						UPDATE x
 						SET x.ProductXML = @ConfigXML
 						FROM Relab.ResultsXML x
@@ -223,9 +220,10 @@ BEGIN
 					
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='SequenceConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @SequenceConfigCommon=Value FROM #information WHERE Name='SequenceConfigCommon'
 					
-					SELECT @ConfigXML = c.Definition
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfSequenceConfigCommon/SequenceConfigCommon') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @SequenceConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -233,10 +231,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfSequence/Sequence') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @SequenceConfigCommon
-								
 						UPDATE x
 						SET x.SequenceXML = @ConfigXML
 						FROM Relab.ResultsXML x
@@ -246,9 +240,10 @@ BEGIN
 				
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='StationConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @StationConfigCommon=Value FROM #information WHERE Name='StationConfigCommon'
-					
-					SELECT @ConfigXML = c.Definition
+
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfStationConfig/StationConfig') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @StationConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -256,10 +251,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfStationConfig/StationConfig') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @StationConfigCommon
-
 						UPDATE x
 						SET x.StationXML = @ConfigXML
 						FROM Relab.ResultsXML x
@@ -269,9 +260,10 @@ BEGIN
 				
 				IF EXISTS (SELECT 1 FROM #information WHERE Name='TestConfigCommon')
 				BEGIN
+					SET @ConfigXML = NULL
 					SELECT @TestConfigCommon=Value FROM #information WHERE Name='TestConfigCommon'
 					
-					SELECT @ConfigXML = c.Definition
+					SELECT @ConfigXML = (SELECT T.c.query('.') FROM c.Definition.nodes('/ArrayOfTestConfig/TestConfig') T(c) WHERE T.c.value('@Name', 'varchar(MAX)') = @TestConfigCommon)
 					FROM dbo.Configurations c 
 						INNER JOIN Lookups lct ON lct.LookupID=c.ConfigTypeID
 						INNER JOIN Lookups lm ON lm.LookupID=c.ModeID
@@ -279,10 +271,6 @@ BEGIN
 					
 					IF (@ConfigXML IS NOT NULL)
 					BEGIN
-						SELECT @ConfigXML = T.c.query('.')
-						FROM @configxml.nodes('/ArrayOfTestConfig/TestConfig') T(c)
-						WHERE T.c.value('@Name', 'varchar(MAX)') = @TestConfigCommon
-
 						UPDATE x
 						SET x.TestXML = (SELECT x.TestXML, @ConfigXML FOR XML PATH('TestConfigs'))
 						FROM Relab.ResultsXML x
@@ -661,7 +649,7 @@ END
 GO
 GRANT EXECUTE ON [Relab].[remispResultsInformation] TO Remi
 GO
-ALTER PROCEDURE Relab.remispResultVersions  @TestID INT, @BatchID INT
+ALTER PROCEDURE Relab.remispResultVersions  @TestID INT, @BatchID INT, @UnitNumber INT = 0, @TestStageID INT = 0
 AS
 BEGIN
 	SELECT tu.BatchUnitNumber, ts.TestStageName As TestStage, rxml.ResultXML, rxml.StationName, rxml.StartDate, rxml.EndDate, ISNULL(rxml.lossFile,'') AS lossFile, 
@@ -673,6 +661,8 @@ BEGIN
 		INNER JOIN Relab.ResultsXML rxml WITH(NOLOCK) ON r.ID=rxml.ResultID
 		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
 	WHERE r.TestID=@TestID AND tu.BatchID=@BatchID
+		AND (@UnitNumber = 0 OR tu.BatchUnitNumber=@UnitNumber)
+		AND (@TestStageID = 0 OR ts.ID=@TestStageID)
 END
 GO
 GRANT EXECUTE ON [Relab].[remispResultVersions] TO Remi
@@ -713,7 +703,7 @@ BEGIN
 		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
 		INNER JOIN TestsAccess ta ON ta.LookupID=ud.LookupID
 		INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ta.LookupID
-	WHERE ud.UserID=@UserID AND lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
+	WHERE (@UserID = 0 OR ud.UserID=@UserID) AND lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
 
 	IF NOT EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE BatchID=@BatchID AND t.TestType=@TestStageType)
 	BEGIN
@@ -778,14 +768,14 @@ GO
 ALTER PROCEDURE [dbo].[remispTestsSelectListByType] @TestType int, @IncludeArchived BIT = 0, @UserID INT, @RequestTypeID INT
 AS
 BEGIN
-	SELECT ta.TestID
+	SELECT DISTINCT ta.TestID
 	INTO #Tests
 	FROM UserDetails ud
 		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
 		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
 		INNER JOIN TestsAccess ta ON ta.LookupID=ud.LookupID
 		INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ta.LookupID
-	WHERE ud.UserID=@UserID AND lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
+	WHERE lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID) AND (@UserID = 0 OR ud.UserID=@UserID)
 
 	SELECT t.Comment,t.ConcurrencyID,t.Duration,t.ID,t.LastUser,t.ResultBasedOntime,t.TestName,t.TestType,t.WILocation, dbo.remifnTestCanDelete(t.ID) AS CanDelete, t.IsArchived,
 		(SELECT TestStageName FROM TestStages WHERE TestID=t.ID) As TestStage, (SELECT JobName FROM Jobs WHERE ID IN (SELECT JobID FROM TestStages WHERE TestID=t.ID)) As JobName,

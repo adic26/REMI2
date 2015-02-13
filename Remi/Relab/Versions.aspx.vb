@@ -15,6 +15,9 @@ Public Class Versions
                 Response.Redirect("~/")
             End If
 
+            Dim unitNumber As Int32 = IIf(Request.QueryString.Item("unitNumber") Is Nothing, 0, Request.QueryString.Item("unitNumber"))
+            Dim testStageID As Int32 = IIf(Request.QueryString.Item("TestStageID") Is Nothing, 0, Request.QueryString.Item("TestStageID"))
+
             Dim qra = (From b In New REMI.Dal.Entities().Instance().Batches Where b.ID = batchID Select b.QRANumber).FirstOrDefault()
             hypBatch.NavigateUrl = Core.REMIWebLinks.GetBatchInfoLink(qra)
 
@@ -25,7 +28,7 @@ Public Class Versions
                         Select New With {t.TestName}).FirstOrDefault()
             lblHeader.Text = String.Format("Versions {0}: {1}", resultInfo.TestName, qra)
 
-            Dim ds = (From r In New REMI.Dal.Entities().Instance().Results Where r.TestUnit.Batch.ID = batchID And r.Test.ID = testID Select New With {.TestStageName = r.TestStage.TestStageName, .ID = r.ID, .BatchUnitNumber = r.TestUnit.BatchUnitNumber}).Distinct().OrderBy(Function(o) o.BatchUnitNumber).ToList()
+            Dim ds = (From r In New Remi.Dal.Entities().Instance().Results Where r.TestUnit.Batch.ID = batchID And r.Test.ID = testID And (unitNumber = 0 Or r.TestUnit.BatchUnitNumber = unitNumber) And (testStageID = 0 Or r.TestStageID = testStageID) Select New With {.TestStageName = r.TestStage.TestStageName, .ID = r.ID, .BatchUnitNumber = r.TestUnit.BatchUnitNumber}).Distinct().OrderBy(Function(o) o.BatchUnitNumber).ToList()
             grdMeasurementLinks.DataSource = ds
             grdMeasurementLinks.DataBind()
         End If
