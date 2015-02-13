@@ -752,6 +752,19 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(EnableSession:=True, Description:="Creates A New REMI User.", MessageName:="GetUser")> _
+    Public Function CreateUser(ByVal userIdentification As String, ByVal testCenterID As Int32, ByVal departmentID As Int32, ByVal badgeNumber As Int32) As Boolean
+        Try
+            UserManager.ConfirmUserCredentialsAndSave(userIdentification, String.Empty, badgeNumber, testCenterID, False, departmentID)
+
+            Return True
+        Catch ex As Exception
+            UserManager.LogIssue("REMI API CreateUser", "e3", NotificationType.Errors, ex, String.Format("User: {0} testCenterID: {1} departmentID: {2} badgeNumber: {3}", userIdentification, testCenterID, departmentID, badgeNumber))
+        End Try
+
+        Return False
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Given a badge number returns a user's login name.")> _
     <Obsolete("This method has been superceeded by GetUserDetails.")> _
     Public Function GetFriendlyUserID(ByVal userIdentification As String) As String
