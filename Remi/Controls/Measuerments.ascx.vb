@@ -17,7 +17,8 @@ Public Class Measuerments
     End Enum
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If (Not IsPostBack) Then
+        If (IsPostBack) Then
+            SetDataSource(hdnResultID.Value, hdnBatchID.Value)
         End If
     End Sub
 
