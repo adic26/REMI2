@@ -752,7 +752,7 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    <WebMethod(EnableSession:=True, Description:="Creates A New REMI User.", MessageName:="GetUser")> _
+    <WebMethod(EnableSession:=True, Description:="Creates A New REMI User.", MessageName:="CreateUser")> _
     Public Function CreateUser(ByVal userIdentification As String, ByVal testCenterID As Int32, ByVal departmentID As Int32, ByVal badgeNumber As Int32) As Boolean
         Try
             UserManager.ConfirmUserCredentialsAndSave(userIdentification, String.Empty, badgeNumber, testCenterID, False, departmentID)
