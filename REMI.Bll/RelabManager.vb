@@ -101,9 +101,9 @@ Namespace REMI.Bll
             Return New DataTable("ResultMeasurements")
         End Function
 
-        Public Shared Function ResultVersions(ByVal testID As Integer, ByVal batchID As Int32) As DataTable
+        Public Shared Function ResultVersions(ByVal testID As Integer, ByVal batchID As Int32, ByVal unitNumber As Int32, ByVal testStageID As Int32) As DataTable
             Try
-                Return RelabDB.ResultVersions(testID, batchID)
+                Return RelabDB.ResultVersions(testID, batchID, unitNumber, testStageID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

@@ -94,6 +94,8 @@
         <SelectParameters>
             <asp:QueryStringParameter Name="BatchID" Type="Int32" QueryStringField="Batch" />
             <asp:QueryStringParameter Name="TestID" Type="Int32" QueryStringField="TestID" />
+            <asp:QueryStringParameter Name="UnitNUmber" Type="Int32" QueryStringField="unitNumber" DefaultValue="0" />
+            <asp:QueryStringParameter Name="TestStageID" Type="Int32" QueryStringField="TestStageID" DefaultValue="0" />
         </SelectParameters>
     </asp:ObjectDataSource>
 

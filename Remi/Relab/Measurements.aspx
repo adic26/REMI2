@@ -32,6 +32,10 @@
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgCancelAction" ToolTip="Go Back to Overview" runat="server" />
                 <asp:HyperLink ID="hypCancel" runat="server">Results</asp:HyperLink>
             </li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgVersions" ToolTip="Go To Versions" runat="server" />
+                <asp:HyperLink ID="hypVersions" runat="server" Target="_blank">Versions</asp:HyperLink>
+            </li>
         </ul>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlLeftMenuFilter">
