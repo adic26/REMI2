@@ -176,7 +176,7 @@ Public Class ProductConfiguration
 
         Try
             Dim verNum As New Version(version)
-            ConfigManager.GetConfig(Name, verNum, mode, type)
+            xml = ConfigManager.GetConfig(Name, verNum, mode, type)
         Catch ex As Exception
             ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
         End Try
@@ -193,7 +193,7 @@ Public Class ProductConfiguration
             Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
             Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            ConfigManager.GetConfig(Name, verNum, modeID, typeID)
+            xml = ConfigManager.GetConfig(Name, verNum, modeID, typeID)
         Catch ex As Exception
             ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} Mode: {2} Type: {3}", Name, version.ToString(), mode, type))
         End Try
@@ -230,21 +230,21 @@ Public Class ProductConfiguration
 
     <WebMethod(Description:="Retrieves Configuration", MessageName:="PublishConfig")> _
     Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As String
-        Dim xml As String = String.Empty
+        Dim publishSucceeded As Boolean = False
 
         Try
             Dim verNum As New Version(version)
-            ConfigManager.PublishConfig(Name, verNum, fromMode, type, toMode)
+            publishSucceeded = ConfigManager.PublishConfig(Name, verNum, fromMode, type, toMode)
         Catch ex As Exception
-            ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
         End Try
 
-        Return xml
+        Return publishSucceeded
     End Function
 
     <WebMethod(Description:="Retrieves Configuration", MessageName:="PublishConfigByNames")> _
     Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As String, ByVal type As String, ByVal toMode As String) As String
-        Dim xml As String = String.Empty
+        Dim publishSucceeded As Boolean = False
 
         Try
             Dim verNum As New Version(version)
@@ -252,12 +252,12 @@ Public Class ProductConfiguration
             Dim toModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", toMode, Nothing)
             Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            ConfigManager.PublishConfig(Name, verNum, fromModeID, typeID, toModeID)
+            publishSucceeded = ConfigManager.PublishConfig(Name, verNum, fromModeID, typeID, toModeID)
         Catch ex As Exception
-            ConfigManager.LogIssue("GetConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
         End Try
 
-        Return xml
+        Return publishSucceeded
     End Function
 #End Region
 
