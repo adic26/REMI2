@@ -85,6 +85,7 @@ Partial Class Admin_TestStages
         JobSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
         JobSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
         JobSetup.RequestTypeID = 0
+        JobSetup.UserID = 0
         JobSetup.DataBind()
 
         JobEnvSetup.JobID = j.ID
@@ -98,6 +99,7 @@ Partial Class Admin_TestStages
         JobEnvSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
         JobEnvSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
         JobEnvSetup.RequestTypeID = 0
+        JobEnvSetup.UserID = 0
         JobEnvSetup.DataBind()
 
         BindOrientations()

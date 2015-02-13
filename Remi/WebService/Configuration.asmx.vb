@@ -318,7 +318,7 @@ Public Class ProductConfiguration
     Public Function GetBatchTestSetupInfo(ByVal batchID As Int32, ByVal jobID As Int32, ByVal productID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal useridentification As String, ByVal requestTypeID As Int32) As DataTable
         Try
             If UserManager.SetUserToSession(useridentification) Then
-                Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected, requestTypeID)
+                Return RequestManager.GetRequestSetupInfo(productID, jobID, batchID, testStageType, blankSelected, requestTypeID, UserManager.GetCurrentUser.ID)
             End If
         Catch ex As Exception
             RequestManager.LogIssue("GetBatchTestSetupInfo", "e3", NotificationType.Errors, ex, String.Format("BatchID: {0} JobID: {1} ProductID: {2} TestStageType: {3} BlankSelected: {4}", batchID, jobID, productID, testStageType, blankSelected))

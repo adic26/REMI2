@@ -131,6 +131,15 @@ Partial Public Class RequestSetup
     Protected WithEvents hdnHasEditItemAuthority As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''hdnUserID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnUserID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''lblTitle control.
     '''</summary>
     '''<remarks>
