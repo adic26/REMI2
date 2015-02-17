@@ -54,7 +54,11 @@ Namespace REMI.Dal
 
             Dim tl As TrackingLocationCollection = SearchFor(tlc, 1, 1)
 
-            Return tl(0).ID
+            If (tl.Count > 0) Then
+                Return tl(0).ID
+            Else
+                Return 0
+            End If
         End Function
 
         Public Shared Function GetHostID(ByVal computerName As String, ByVal trackingLocationID As Int32) As Int32
