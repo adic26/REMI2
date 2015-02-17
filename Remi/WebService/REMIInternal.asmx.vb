@@ -30,10 +30,10 @@ Public Class REMIInternal
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Returns a list of the Jobs (Test Types) available. Represented as a list of strings. This method can be used to populate lists.")> _
-    Public Function GetJobs(ByVal userIdentification As String) As String()
+    Public Function GetJobs(ByVal userIdentification As String, ByVal requestTypeID As Int32) As String()
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Dim jobs As String() = (From j As Job In JobManager.GetJobListDT() Select j.Name).ToArray
+                Dim jobs As String() = (From j As Job In JobManager.GetJobListDT(requestTypeID) Select j.Name).ToArray
                 Return jobs
             End If
         Catch ex As Exception

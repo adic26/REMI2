@@ -1,4 +1,16 @@
-﻿ALTER PROCEDURE [Relab].[remispResultsFileProcessing]
+BEGIN TRAN
+GO
+ALTER TABLE Relab.resultsinformation drop column configid
+GO
+ALTER TABLE Relab.ResultsXML ADD ProductXML XML NULL
+GO
+ALTER TABLE Relab.ResultsXML ADD StationXML XML NULL
+GO
+ALTER TABLE Relab.ResultsXML ADD TestXML XML NULL
+GO
+ALTER TABLE Relab.ResultsXML ADD SequenceXML XML NULL
+GO
+ALTER PROCEDURE [Relab].[remispResultsFileProcessing]
 AS
 BEGIN
 	BEGIN TRANSACTION
@@ -618,3 +630,176 @@ END
 GO
 GRANT EXECUTE ON Relab.remispResultsFileProcessing TO REMI
 GO
+ALTER PROCEDURE [Relab].[remispResultsInformation] @ResultID INT, @IncludeArchived INT = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @FalseBit BIT
+	SET @FalseBit = CONVERT(BIT, 0)
+	
+	SELECT ri.Name, ri.Value, ri.XMLID, rxml.VerNum, ISNULL(ri.IsArchived, 0) AS IsArchived,
+		rxml.TestXML, rxml.ProductXML, rxml.SequenceXML, rxml.StationXML
+	FROM Relab.ResultsInformation ri
+		INNER JOIN Relab.ResultsXML rxml ON ri.XMLID=rxml.ID
+	WHERE rxml.ResultID=@ResultID AND ((@IncludeArchived = 0 AND ri.IsArchived=@FalseBit) OR (@IncludeArchived=1))
+
+	SET NOCOUNT OFF
+END
+GO
+GRANT EXECUTE ON [Relab].[remispResultsInformation] TO Remi
+GO
+ALTER PROCEDURE Relab.remispResultVersions  @TestID INT, @BatchID INT, @UnitNumber INT = 0, @TestStageID INT = 0
+AS
+BEGIN
+	SELECT tu.BatchUnitNumber, ts.TestStageName As TestStage, rxml.ResultXML, rxml.StationName, rxml.StartDate, rxml.EndDate, ISNULL(rxml.lossFile,'') AS lossFile, 
+		CASE WHEN rxml.isProcessed = 1 THEN 'Yes' ELSE 'No' END As Processed, rxml.VerNum, 
+		ISNULL(rxml.ProductXML, '') AS ProductXML, ISNULL(rxml.StationXML, '') AS StationXML, ISNULL(rxml.SequenceXML, '') AS SequenceXML,
+		ISNULL(rxml.TestXML, '') AS TestXML
+	FROM Relab.Results r WITH(NOLOCK)
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON r.TestUnitID=tu.ID
+		INNER JOIN Relab.ResultsXML rxml WITH(NOLOCK) ON r.ID=rxml.ResultID
+		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
+	WHERE r.TestID=@TestID AND tu.BatchID=@BatchID
+		AND (@UnitNumber = 0 OR tu.BatchUnitNumber=@UnitNumber)
+		AND (@TestStageID = 0 OR ts.ID=@TestStageID)
+END
+GO
+GRANT EXECUTE ON [Relab].[remispResultVersions] TO Remi
+GO
+ALTER PROCEDURE [dbo].remispJobsList @UserID INT, @RequestTypeID INT
+AS
+	BEGIN
+		DECLARE @TrueBit BIT
+		SET @TrueBit = CONVERT(BIT, 1)
+		
+		SELECT ja.JobID
+		INTO #JobAccess
+		FROM UserDetails ud 
+			INNER JOIN Lookups l ON l.LookupID=ud.LookupID
+			INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID AND lt.Name='Department'
+			INNER JOIN JobAccess ja ON ja.LookupID=ud.LookupID
+			INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ja.LookupID
+		WHERE ud.UserID=@UserID AND rta.RequestTypeID=@RequestTypeID
+		
+		SELECT j.ID, j.JobName, j.IsActive, j.ContinueOnFailures, j.LastUser, j.NoBSN, j.TechnicalOperationsTest, j.ProcedureLocation, j.MechanicalTest,
+			j.WILocation, j.OperationsTest, j.Comment
+		FROM Jobs j
+		WHERE j.IsActive=@TrueBit AND j.ID IN (SELECT JobID FROM #JobAccess)
+		ORDER BY j.JobName
+		
+		DROP TABLE #JobAccess
+	END
+Go
+GRANT EXECUTE ON remispJobsList TO REMI
+GO
+ALTER PROCEDURE [Req].[GetRequestSetupInfo] @ProductID INT, @JobID INT, @BatchID INT, @TestStageType INT, @BlankSelected INT, @UserID INT, @RequestTypeID INT
+AS
+BEGIN
+	SELECT ta.TestID
+	INTO #Tests
+	FROM UserDetails ud
+		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
+		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
+		INNER JOIN TestsAccess ta ON ta.LookupID=ud.LookupID
+		INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ta.LookupID
+	WHERE (@UserID = 0 OR ud.UserID=@UserID) AND lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
+
+	IF NOT EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE BatchID=@BatchID AND t.TestType=@TestStageType)
+	BEGIN
+		IF EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE JobID=@JobID AND ProductID=@ProductID AND t.TestType=@TestStageType)
+		BEGIN
+			SELECT ts.ID As TestStageID, ts.TestStageName, t.ID AS TestID, t.TestName, CASE WHEN rs.ID IS NULL THEN CONVERT(BIT, 0) ELSE CONVERT(BIT, 1) END AS Selected
+			FROM Jobs j
+				INNER JOIN TestStages ts ON j.ID=ts.JobID
+				INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
+				LEFT OUTER JOIN Req.RequestSetup rs ON rs.JobID=@JobID AND rs.ProductID=@ProductID AND rs.TestID=t.ID AND rs.TestStageID=ts.ID
+			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
+				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+			ORDER BY ts.ProcessOrder, t.TestName
+		END
+		ELSE IF @BlankSelected = 0 AND EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE JobID=@JobID AND ProductID IS NULL AND t.TestType=@TestStageType)
+		BEGIN
+			SELECT ts.ID As TestStageID, ts.TestStageName, t.ID AS TestID, t.TestName, CASE WHEN rs.ID IS NULL THEN CONVERT(BIT, 0) ELSE CONVERT(BIT, 1) END AS Selected
+			FROM Jobs j
+				INNER JOIN TestStages ts ON j.ID=ts.JobID
+				INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
+				LEFT OUTER JOIN Req.RequestSetup rs ON rs.JobID=@JobID AND rs.ProductID IS NULL AND rs.TestID=t.ID AND rs.TestStageID=ts.ID
+			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
+				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+			ORDER BY ts.ProcessOrder, t.TestName
+		END
+		ELSE
+		BEGIN
+			SELECT ts.ID As TestStageID, ts.TestStageName, t.ID AS TestID, t.TestName, CASE WHEN @BlankSelected = 1 THEN CONVERT(BIT, 0) ELSE CONVERT(BIT, 1) END AS Selected
+			FROM Jobs j
+				INNER JOIN TestStages ts ON j.ID=ts.JobID
+				INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
+			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
+				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+			ORDER BY ts.ProcessOrder, t.TestName
+		END
+	END
+	ELSE
+	BEGIN
+		SELECT ts.ID As TestStageID, ts.TestStageName, t.ID AS TestID, t.TestName, CASE WHEN rs.ID IS NULL THEN CONVERT(BIT, 0) ELSE CONVERT(BIT, 1) END AS Selected
+		FROM Jobs j
+			INNER JOIN TestStages ts ON j.ID=ts.JobID
+			INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
+			LEFT OUTER JOIN Req.RequestSetup rs ON rs.TestID=t.ID 
+											AND rs.BatchID=@BatchID 
+											AND rs.TestStageID=ts.ID 
+											AND 
+											(
+												(ISNULL(rs.ProductID,0)=ISNULL(@ProductID,0))
+												OR
+												(rs.ProductID IS NULL)
+											)
+		WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
+			AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+		ORDER BY ts.ProcessOrder, t.TestName		
+	END
+	
+	DROP TABLE #Tests
+END
+GO
+GRANT EXECUTE ON [Req].[GetRequestSetupInfo] TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispTestsSelectListByType] @TestType int, @IncludeArchived BIT = 0, @UserID INT, @RequestTypeID INT
+AS
+BEGIN
+	SELECT DISTINCT ta.TestID
+	INTO #Tests
+	FROM UserDetails ud
+		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
+		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
+		INNER JOIN TestsAccess ta ON ta.LookupID=ud.LookupID
+		INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ta.LookupID
+	WHERE lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID) AND (@UserID = 0 OR ud.UserID=@UserID)
+
+	SELECT t.Comment,t.ConcurrencyID,t.Duration,t.ID,t.LastUser,t.ResultBasedOntime,t.TestName,t.TestType,t.WILocation, dbo.remifnTestCanDelete(t.ID) AS CanDelete, t.IsArchived,
+		(SELECT TestStageName FROM TestStages WHERE TestID=t.ID) As TestStage, (SELECT JobName FROM Jobs WHERE ID IN (SELECT JobID FROM TestStages WHERE TestID=t.ID)) As JobName,
+		t.Owner, t.Trainee, t.DegradationVal
+	FROM Tests t
+		INNER JOIN #Tests tt ON tt.TestID=t.ID
+	WHERE TestType = @TestType 
+		AND
+		(
+			(@IncludeArchived = 0 AND ISNULL(t.IsArchived, 0) = 0)
+			OR
+			(@IncludeArchived = 1)
+		)
+	ORDER BY TestName;
+	
+	SELECT t.id, tlt.id, tlt.TrackingLocationTypeName    
+	FROM trackinglocationtypes as tlt, TrackingLocationsForTests as tlfort, Tests as t
+	WHERE tlfort.testid = t.id and tlt.ID = tlfort.TrackingLocationtypeID
+		AND t.TestType = @TestType
+	ORDER BY tlt.TrackingLocationTypeName asc
+END
+GO
+GRANT EXECUTE ON remispTestsSelectListByType TO REMI
+GO
+delete from ProductSettings where KeyName like '%li%sett%'
+GO
+ROLLBACK TRAN

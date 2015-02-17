@@ -208,13 +208,15 @@ Namespace REMI.Dal
             Return dt
         End Function
 
-        Public Shared Function ResultVersions(ByVal testID As Integer, ByVal batchID As Integer) As DataTable
+        Public Shared Function ResultVersions(ByVal testID As Integer, ByVal batchID As Integer, ByVal unitNumber As Int32, ByVal testStageID As Int32) As DataTable
             Dim dt As New DataTable("ResultVersions")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Relab.remispResultVersions", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TestID", testID)
                     myCommand.Parameters.AddWithValue("@BatchID", batchID)
+                    myCommand.Parameters.AddWithValue("@UnitNumber", unitNumber)
+                    myCommand.Parameters.AddWithValue("@TestStageID", testStageID)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)

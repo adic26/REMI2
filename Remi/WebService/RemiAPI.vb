@@ -491,7 +491,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of the Parametric Tests available. Represented as a list of strings. This method can be used to populate lists.")> _
     Public Function GetParametricTests() As String()
         Try
-            Return TestManager.GetTestsByType(TestType.Parametric, False).ToStringArray
+            Return TestManager.GetTestsByType(TestType.Parametric.ToString(), False, 0, 0).ToStringArray
         Catch ex As Exception
             TestManager.LogIssue("REMI API GetParametricTests", "e3", NotificationType.Errors, ex)
         End Try
@@ -750,6 +750,19 @@ Public Class RemiAPI
             Return UserManager.GetUser(userIdentification, 0)
         End If
         Return Nothing
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Creates A New REMI User.", MessageName:="CreateUser")> _
+    Public Function CreateUser(ByVal userIdentification As String, ByVal testCenterID As Int32, ByVal departmentID As Int32, ByVal badgeNumber As Int32) As Boolean
+        Try
+            UserManager.ConfirmUserCredentialsAndSave(userIdentification, String.Empty, badgeNumber, testCenterID, False, departmentID)
+
+            Return True
+        Catch ex As Exception
+            UserManager.LogIssue("REMI API CreateUser", "e3", NotificationType.Errors, ex, String.Format("User: {0} testCenterID: {1} departmentID: {2} badgeNumber: {3}", userIdentification, testCenterID, departmentID, badgeNumber))
+        End Try
+
+        Return False
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Given a badge number returns a user's login name.")> _

@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [dbo].remispJobsList @UserID INT
+﻿ALTER PROCEDURE [dbo].remispJobsList @UserID INT, @RequestTypeID INT
 AS
 	BEGIN
 		DECLARE @TrueBit BIT
@@ -10,7 +10,8 @@ AS
 			INNER JOIN Lookups l ON l.LookupID=ud.LookupID
 			INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID AND lt.Name='Department'
 			INNER JOIN JobAccess ja ON ja.LookupID=ud.LookupID
-		WHERE ud.UserID=@UserID
+			INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ja.LookupID
+		WHERE ud.UserID=@UserID AND rta.RequestTypeID=@RequestTypeID
 		
 		SELECT j.ID, j.JobName, j.IsActive, j.ContinueOnFailures, j.LastUser, j.NoBSN, j.TechnicalOperationsTest, j.ProcedureLocation, j.MechanicalTest,
 			j.WILocation, j.OperationsTest, j.Comment

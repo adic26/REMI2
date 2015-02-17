@@ -246,6 +246,8 @@
     <Folder Include="Scripts\February042015" />
     <Folder Include="Scripts\February112015" />
     <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET" />
+    <Folder Include="Scripts\February172015" />
+    <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2713,5 +2715,11 @@
       <SubType>Code</SubType>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\February172015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities\remispDeleteAllResults.sql" />
   </ItemGroup>
 </Project>

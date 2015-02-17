@@ -150,7 +150,7 @@ Namespace REMI.BusinessEntities
                 retStr.Append("<a href=&quot;")
                 retStr.Append(Me.RelabResultLink)
                 retStr.Append("&quot;>View Results</a><br/>")
-                retStr.Append(String.Format("<a target=&quot;_blank&quot; href=&quot;/Relab/Versions.aspx?TestID=###TESTID####&Batch={0}&quot;>Version History</a> <br />", Me.ID))
+                retStr.Append(String.Format("<a target=&quot;_blank&quot; href=&quot;/Relab/Versions.aspx?TestID=###TESTID####&Batch={0}&TestStageID=###TESTSTAGEID####&quot;>Version History</a> <br />", Me.ID))
 
                 For Each tu As TestUnit In TestUnits
                     retStr.Append("<a href=&quot;")
@@ -166,7 +166,7 @@ Namespace REMI.BusinessEntities
                         Dim tr As TestRecord = TestRecords.GetItem(Me.JobName, testStageName, testName, tu.BatchUnitNumber)
 
                         If (tr IsNot Nothing) Then
-                            retStr = retStr.Replace("###TESTID####", tr.TestID.ToString())
+                            retStr = retStr.Replace("###TESTID####", tr.TestID.ToString()).Replace("###TESTSTAGEID####", tr.TestStageID.ToString())
                         End If
 
                         If tr IsNot Nothing Then  'if there is a test record for this unit for this test

@@ -55,15 +55,9 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetEditableTests()
-        {
-            Assert.IsNotNull(TestManager.GetEditableTests(false, TestType.Parametric.ToString()));
-        }
-
-        [Test]
         public void GetTestsByType()
         {
-            Assert.That(TestManager.GetTestsByType(TestType.Parametric, false).Count > 0);
+            Assert.That(TestManager.GetTestsByType(TestType.Parametric.ToString(), false, 0, 0).Count > 0);
         }
 
         [Test]

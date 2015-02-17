@@ -62,6 +62,26 @@
                     <asp:LinkButton ID="lbtnXML" runat="server" ToolTip="XML File" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="XML" CommandArgument='<%# Eval("ResultXML") %>'></asp:LinkButton>
                 </ItemTemplate>
             </asp:TemplateField>
+            <asp:TemplateField HeaderText="Product XML" SortExpression="">
+                <ItemTemplate>
+                    <asp:LinkButton ID="lbtnProductXML" runat="server" ToolTip="Product File" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="ProductXML" CommandArgument='<%# Eval("ProductXML")%>' Visible='<%# Eval("ProductXML") <> String.Empty%>'></asp:LinkButton>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Test XML" SortExpression="">
+                <ItemTemplate>
+                    <asp:LinkButton ID="lbtnTestXML" runat="server" ToolTip="Test File" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="TestXML" CommandArgument='<%# Eval("TestXML")%>' Visible='<%# Eval("TestXML") <> String.Empty%>'></asp:LinkButton>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Sequence XML" SortExpression="">
+                <ItemTemplate>
+                    <asp:LinkButton ID="lbtnSequenceXML" runat="server" ToolTip="Sequence File" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="SequenceXML" CommandArgument='<%# Eval("SequenceXML")%>' Visible='<%# Eval("SequenceXML") <> String.Empty%>'></asp:LinkButton>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Station XML" SortExpression="">
+                <ItemTemplate>
+                    <asp:LinkButton ID="lbtnStationXML" runat="server" ToolTip="Station File" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="StationXML" CommandArgument='<%# Eval("StationXML")%>' Visible='<%# Eval("StationXML") <> String.Empty %>'></asp:LinkButton>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Loss File" SortExpression="">
                 <ItemTemplate>
                     <asp:LinkButton ID="lbtnLoss" runat="server" ToolTip="Loss File" Text="<img src='\Design\Icons\png\24x24\xml_file.png'/>" CommandName="LOSS" CommandArgument='<%# Eval("LossFile") %>' Visible='<%# Eval("LossFile") <> String.Empty %>'></asp:LinkButton>
@@ -74,6 +94,8 @@
         <SelectParameters>
             <asp:QueryStringParameter Name="BatchID" Type="Int32" QueryStringField="Batch" />
             <asp:QueryStringParameter Name="TestID" Type="Int32" QueryStringField="TestID" />
+            <asp:QueryStringParameter Name="UnitNUmber" Type="Int32" QueryStringField="unitNumber" DefaultValue="0" />
+            <asp:QueryStringParameter Name="TestStageID" Type="Int32" QueryStringField="TestStageID" DefaultValue="0" />
         </SelectParameters>
     </asp:ObjectDataSource>
 

@@ -19,6 +19,7 @@ $(function () { //ready function
     var user = $("[id$='hdnUser']");
     var userID = $("[id$='hdnUserID']");
     var oTable;
+    var colvis;
     var count = 0;
     
     var o = new Option("--aReqNum", "--aReqNum");
@@ -43,11 +44,29 @@ $(function () { //ready function
                     destroy: true,
                     "scrollX": true,
                     dom: 'T<"clear">lfrtip',
+                    //jQueryUI: true,
+                    //dom: 'C<"clear">lfrtip',
+                    //"colVis": {
+                    //    "buttonText": "Change columns",
+                    //    activate: "mouseover"
+                    //},
+                    //dom: 'C<,"clear">lfrtip',
                     TableTools: {
                         "sSwfPath": "../Design/scripts/swf/copy_csv_xls.swf"
                     },
                     "aaSorting": [[0, 'desc']]
                 });
+                   
+                colvis = new $.fn.dataTable.ColVis(oTable, {
+                    "activate": "mouseover",
+                    "overlayFade": 1000,
+                    "restore": "Click Here for Restore",
+                    showAll: "Show all",
+                    showNone: "Show none",
+                    'bAutoWidth': false
+                });
+                $(colvis.button()).insertAfter('div.info');
+
             } else {
                 //Enter IE
                 //oTable is not defined
@@ -68,7 +87,7 @@ $(function () { //ready function
                     //OTable is defined already
                     //(i) Destroy dataTable
                     oTable.destroy();
-
+                    
                     //(ii)append the data
                     $('#searchResults').empty();
                     $('#searchResults').append(d);

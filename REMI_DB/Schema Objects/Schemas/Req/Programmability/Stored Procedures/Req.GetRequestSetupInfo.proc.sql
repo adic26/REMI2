@@ -1,12 +1,14 @@
-﻿ALTER PROCEDURE [Req].[GetRequestSetupInfo] @ProductID INT, @JobID INT, @BatchID INT, @TestStageType INT, @BlankSelected INT, @UserID INT
+﻿ALTER PROCEDURE [Req].[GetRequestSetupInfo] @ProductID INT, @JobID INT, @BatchID INT, @TestStageType INT, @BlankSelected INT, @UserID INT, @RequestTypeID INT
 AS
 BEGIN
-	SELECT ud.LookupID
-	INTO #Departments
+	SELECT ta.TestID
+	INTO #Tests
 	FROM UserDetails ud
 		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
 		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
-	WHERE ud.UserID=@UserID AND lt.Name='Department'
+		INNER JOIN TestsAccess ta ON ta.LookupID=ud.LookupID
+		INNER JOIN Req.RequestTypeAccess rta ON rta.LookupID = ta.LookupID
+	WHERE (@UserID = 0 OR ud.UserID=@UserID) AND lt.Name='Department' AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
 
 	IF NOT EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE BatchID=@BatchID AND t.TestType=@TestStageType)
 	BEGIN
@@ -18,7 +20,7 @@ BEGIN
 				INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
 				LEFT OUTER JOIN Req.RequestSetup rs ON rs.JobID=@JobID AND rs.ProductID=@ProductID AND rs.TestID=t.ID AND rs.TestStageID=ts.ID
 			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
-				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM TestsAccess ta INNER JOIN #Departments d ON d.LookupID=ta.LookupID)))
+				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
 			ORDER BY ts.ProcessOrder, t.TestName
 		END
 		ELSE IF @BlankSelected = 0 AND EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE JobID=@JobID AND ProductID IS NULL AND t.TestType=@TestStageType)
@@ -29,7 +31,7 @@ BEGIN
 				INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
 				LEFT OUTER JOIN Req.RequestSetup rs ON rs.JobID=@JobID AND rs.ProductID IS NULL AND rs.TestID=t.ID AND rs.TestStageID=ts.ID
 			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
-				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM TestsAccess ta INNER JOIN #Departments d ON d.LookupID=ta.LookupID)))
+				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
 			ORDER BY ts.ProcessOrder, t.TestName
 		END
 		ELSE
@@ -39,7 +41,7 @@ BEGIN
 				INNER JOIN TestStages ts ON j.ID=ts.JobID
 				INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
 			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
-				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM TestsAccess ta INNER JOIN #Departments d ON d.LookupID=ta.LookupID)))
+				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
 			ORDER BY ts.ProcessOrder, t.TestName
 		END
 	END
@@ -59,11 +61,11 @@ BEGIN
 												(rs.ProductID IS NULL)
 											)
 		WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
-			AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM TestsAccess ta INNER JOIN #Departments d ON d.LookupID=ta.LookupID)))
+			AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
 		ORDER BY ts.ProcessOrder, t.TestName		
 	END
 	
-	DROP TABLE #Departments
+	DROP TABLE #Tests
 END
 GO
 GRANT EXECUTE ON [Req].[GetRequestSetupInfo] TO REMI

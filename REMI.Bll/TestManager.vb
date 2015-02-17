@@ -93,23 +93,16 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetEditableTests(ByVal includeArchived As Boolean, ByVal testType As String) As TestCollection
+        Public Shared Function GetTestsByType(ByVal type As String, ByVal includeArchived As Boolean, ByVal userID As Int32, ByVal requestTypeID As Int32) As TestCollection
             Try
-                Dim testTypeID As TestType = DirectCast(System.Enum.Parse(GetType(Contracts.TestType), testType), Contracts.TestType)
-                Dim tl As TestCollection = GetTestsByType(testTypeID, includeArchived)
-                Return tl
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return New TestCollection
-            End Try
-        End Function
+                If (userID < 1) Then
+                    userID = UserManager.GetCurrentUser.ID
+                End If
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTestsByType(ByVal Type As TestType, ByVal includeArchived As Boolean) As TestCollection
-            Try
-                Return TestDB.GetListByTestType(Type, -1, -1, includeArchived)
+                Dim testTypeID As TestType = DirectCast(System.Enum.Parse(GetType(Contracts.TestType), type), Contracts.TestType)
+                Return TestDB.GetListByTestType(testTypeID, -1, -1, includeArchived, userID, requestTypeID)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TestType: {0}", Type.ToString()))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TestType: {0}", type.ToString()))
                 Return New TestCollection
             End Try
         End Function

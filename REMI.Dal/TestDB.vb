@@ -148,13 +148,15 @@ Namespace REMI.Dal
         ''' <returns> 
         ''' A TestCollection. 
         ''' </returns> 
-        Public Shared Function GetListByTestType(ByVal TestType As TestType, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal includeArchived As Boolean) As TestCollection
+        Public Shared Function GetListByTestType(ByVal TestType As TestType, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal includeArchived As Boolean, ByVal userID As Int32, ByVal requestTypeID As Int32) As TestCollection
             Dim tempList As New TestCollection
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestsSelectListByType", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TestType", TestType)
                     myCommand.Parameters.AddWithValue("@IncludeArchived", includeArchived)
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
+                    myCommand.Parameters.AddWithValue("@RequestTypeID", requestTypeID)
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then

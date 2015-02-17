@@ -15,6 +15,9 @@ Public Class Versions
                 Response.Redirect("~/")
             End If
 
+            Dim unitNumber As Int32 = IIf(Request.QueryString.Item("unitNumber") Is Nothing, 0, Request.QueryString.Item("unitNumber"))
+            Dim testStageID As Int32 = IIf(Request.QueryString.Item("TestStageID") Is Nothing, 0, Request.QueryString.Item("TestStageID"))
+
             Dim qra = (From b In New REMI.Dal.Entities().Instance().Batches Where b.ID = batchID Select b.QRANumber).FirstOrDefault()
             hypBatch.NavigateUrl = Core.REMIWebLinks.GetBatchInfoLink(qra)
 
@@ -25,7 +28,7 @@ Public Class Versions
                         Select New With {t.TestName}).FirstOrDefault()
             lblHeader.Text = String.Format("Versions {0}: {1}", resultInfo.TestName, qra)
 
-            Dim ds = (From r In New REMI.Dal.Entities().Instance().Results Where r.TestUnit.Batch.ID = batchID And r.Test.ID = testID Select New With {.TestStageName = r.TestStage.TestStageName, .ID = r.ID, .BatchUnitNumber = r.TestUnit.BatchUnitNumber}).Distinct().OrderBy(Function(o) o.BatchUnitNumber).ToList()
+            Dim ds = (From r In New Remi.Dal.Entities().Instance().Results Where r.TestUnit.Batch.ID = batchID And r.Test.ID = testID And (unitNumber = 0 Or r.TestUnit.BatchUnitNumber = unitNumber) And (testStageID = 0 Or r.TestStageID = testStageID) Select New With {.TestStageName = r.TestStage.TestStageName, .ID = r.ID, .BatchUnitNumber = r.TestUnit.BatchUnitNumber}).Distinct().OrderBy(Function(o) o.BatchUnitNumber).ToList()
             grdMeasurementLinks.DataSource = ds
             grdMeasurementLinks.DataBind()
         End If
@@ -48,7 +51,19 @@ Public Class Versions
                 Helpers.ExportToXML(Helpers.GetDateTimeFileName("XMLFile", "xml"), xml)
                 Exit Select
             Case "loss"
-                Helpers.ExportToXML(Helpers.GetDateTimeFileName("ResultSummary", "xml"), xml)
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("lossfile", "xml"), xml)
+                Exit Select
+            Case "productxml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("ProductXMLFile", "xml"), xml)
+                Exit Select
+            Case "testxml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("TestXMLFile", "xml"), xml)
+                Exit Select
+            Case "sequencexml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("SequenceXMLFile", "xml"), xml)
+                Exit Select
+            Case "stationxml"
+                Helpers.ExportToXML(Helpers.GetDateTimeFileName("StationXMLFile", "xml"), xml)
                 Exit Select
         End Select
     End Sub

@@ -106,7 +106,7 @@
         </asp:DropDownList>
         &nbsp;<b>Exclude</b>&nbsp;
         <asp:CheckBoxList runat="server" ID="chkTestStageType" CssClass="removeStyleWithLeft" RepeatDirection="Horizontal" AutoPostBack="false" Width="237px" AppendDataBoundItems="true"></asp:CheckBoxList>
-        Test: <asp:DropDownList ID="ddlTests" DataSourceID="odsTests" runat="server" AutoPostBack="False" Width="238px" AppendDataBoundItems="True" DataValueField="ID" DataTextField="Name">
+        Test: <asp:DropDownList ID="ddlTests" runat="server" DataSourceID="odsTests" AutoPostBack="False" Width="238px" AppendDataBoundItems="True" DataValueField="ID" DataTextField="Name">
             <asp:ListItem>All</asp:ListItem>
         </asp:DropDownList>
         <br />
@@ -347,8 +347,10 @@
 
     <asp:ObjectDataSource ID="odsTests" runat="server" SelectMethod="GetTestsByType" TypeName="Remi.Bll.TestManager" OldValuesParameterFormatString="original_{0}">
         <SelectParameters>
-            <asp:Parameter Type="Int32" Name="Type" DefaultValue="1" />
+            <asp:Parameter Type="String" Name="type" DefaultValue="Parametric" />
             <asp:Parameter Type="Boolean" Name="includeArchived" DefaultValue="False" />
+            <asp:Parameter Type="Int32" Name="userID" />
+            <asp:Parameter Type="Int32" Name="requestTypeID" DefaultValue="0" />
         </SelectParameters>
     </asp:ObjectDataSource>
 

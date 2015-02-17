@@ -165,15 +165,17 @@
             <AlternatingRowStyle CssClass="oddrow" />
         </asp:GridView> 
         <asp:ObjectDataSource ID="odsTests" runat="server" 
-            SelectMethod="GetEditableTests" TypeName="REMI.Bll.TestManager" 
+            SelectMethod="GetTestsByType" TypeName="REMI.Bll.TestManager" 
             DeleteMethod="DeleteTest" DataObjectTypeName="REMI.BusinessEntities.Test" 
             InsertMethod="SaveTest" OldValuesParameterFormatString="original_{0}">
             <DeleteParameters>
                 <asp:Parameter Name="ID" Type="Int32" />
             </DeleteParameters>
             <SelectParameters>
+                <asp:ControlParameter ControlID="ddlTestType" Name="type" PropertyName="SelectedValue" Type="String" />
                 <asp:ControlParameter ControlID="ctl00$leftSidebarContent$chkArchived" DefaultValue="false" Name="includeArchived" PropertyName="Checked" Type="Boolean" />
-                <asp:ControlParameter ControlID="ddlTestType" Name="testType" PropertyName="SelectedValue" Type="String" />
+                <asp:Parameter DefaultValue="0" Name="userID" Type="Int32" />
+                <asp:Parameter DefaultValue="0" Name="requestTypeID" Type="Int32" />
             </SelectParameters>
         </asp:ObjectDataSource>
     </asp:Panel>

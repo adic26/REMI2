@@ -14,7 +14,7 @@ Public Class Overview
         Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
 
         If (asm.IsInAsyncPostBack) Then
-            Dim asyncPostBackID As String = Helpers.GetAsyncPostBackControlID(Me)
+            Dim asyncPostBackID As String = asm.AsyncPostBackSourceElementID ' Helpers.GetAsyncPostBackControlID(Me)
             Dim postBackID As String = String.Empty
             Dim Control As Control = Helpers.GetPostBackControl(Me)
 

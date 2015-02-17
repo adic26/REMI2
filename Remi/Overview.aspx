@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" EnableViewState="true" ValidateRequest="false" Inherits="Remi.Overview" Title="Overview" Codebehind="Overview.aspx.vb" MaintainScrollPositionOnPostback="true" %>
+﻿<%@ Page Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" EnableViewState="true" Inherits="Remi.Overview" Title="Overview" Codebehind="Overview.aspx.vb" MaintainScrollPositionOnPostback="true" %>
 <%@ Register Assembly="System.Web.Ajax" Namespace="System.Web.UI" TagPrefix="asp" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="/Controls/BatchSelectControl.ascx" TagName="BatchSelectControl" TagPrefix="uc3" %>

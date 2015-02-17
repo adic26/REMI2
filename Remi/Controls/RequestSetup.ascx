@@ -16,7 +16,9 @@
         <asp:HiddenField ID="hdnTestStageType" runat="server" />
         <asp:HiddenField ID="hdnIsProjectManager" runat="server" />
         <asp:HiddenField ID="hdnIsAdmin" runat="server" />
+        <asp:HiddenField ID="hdnRequestTypeID" runat="server" />
         <asp:HiddenField ID="hdnHasEditItemAuthority" runat="server" />
+        <asp:HiddenField ID="hdnUserID" runat="server" />
 
         <h2><asp:Label runat="server" ID="lblTitle" Text='<%# Title %>'></asp:Label></h2>
 

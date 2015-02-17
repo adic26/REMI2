@@ -81,8 +81,8 @@ namespace REMI.Bll.Tests
             var result = new REMI.Entities.Result();
             result = (from r in instance.Results.Include("TestUnit").Include("TestUnit.Batch").Include("ResultsMeasurements").Include("Test") where r.ResultsMeasurements.Count > 1 orderby r.ID descending select r).FirstOrDefault();
 
-            Assert.That(RelabManager.ResultVersions(result.Test.ID, result.TestUnit.Batch.ID).Rows.Count > 0);
-            Assert.That(RelabManager.ResultVersions(0, result.TestUnit.Batch.ID).Rows.Count == 0);
+            Assert.That(RelabManager.ResultVersions(result.Test.ID, result.TestUnit.Batch.ID,0,0).Rows.Count > 0);
+            Assert.That(RelabManager.ResultVersions(0, result.TestUnit.Batch.ID,0,0).Rows.Count == 0);
         }
 
         [Test]

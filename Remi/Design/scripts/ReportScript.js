@@ -505,7 +505,8 @@ function jobSearch(model, username) {
     //setting up parameters from web service
 
     var requestParams = JSON.stringify({
-        "userIdentification": username
+        "userIdentification": username,
+        "requestTypeID": rtID[0].value
     });
 
     var myRequest = jsonRequest("../webservice/REMIInternal.asmx/GetJobs", requestParams).success(function (data) {

@@ -60,7 +60,7 @@
 <br /><br />
 
 <h3>Upload Result XML File</h3>
-<asp:Button runat="server" ID="btnUpload" OnClick="btnUpload_OnClick" Text="Upload XML File" /><br />
+<asp:Button runat="server" ID="btnUpload" Text="Upload XML File" /><br />
 <asp:TextBox runat="server" ID="txtXMLResult" TextMode="MultiLine" Rows="40" Columns="60"></asp:TextBox>
 
 </asp:Content>

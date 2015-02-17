@@ -14,7 +14,7 @@ Imports System.Reflection
 Namespace REMI.Dal
     Public Class RequestDB
 
-        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal userID As Int32) As DataTable
+        Public Shared Function GetRequestSetupInfo(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal testStageType As Int32, ByVal blankSelected As Int32, ByVal userID As Int32, ByVal RequestTypeID As Int32) As DataTable
             Dim dt As New DataTable("RequestSetupInfo")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("Req.GetRequestSetupInfo", myConnection)
@@ -25,6 +25,7 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@TestStageType", testStageType)
                     myCommand.Parameters.AddWithValue("@BlankSelected", blankSelected)
                     myCommand.Parameters.AddWithValue("@UserID", userID)
+                    myCommand.Parameters.AddWithValue("@RequestTypeID", RequestTypeID)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
@@ -641,7 +642,7 @@ Namespace REMI.Dal
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "RequestedTest"
-                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user).AsEnumerable() Select j.Name).ToList()
+                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user, myFields.RequestTypeID).AsEnumerable() Select j.Name).ToList()
                 End Select
             End If
 

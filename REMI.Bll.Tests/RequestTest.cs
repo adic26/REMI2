@@ -30,7 +30,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetRequestSetupInfo()
         {
-            Assert.That(RequestManager.GetRequestSetupInfo(0, 188, 0, (int)TestStageType.Parametric, 0).Rows.Count > 0);
+            Assert.That(RequestManager.GetRequestSetupInfo(0, 188, 0, (int)TestStageType.Parametric, 0, 1, 0).Rows.Count > 0);
         }
     }
 }

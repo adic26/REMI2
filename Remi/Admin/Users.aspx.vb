@@ -109,15 +109,18 @@ Partial Class Admin_Users
             hdnUserID.Value = -1
             chkIsActive.Checked = True
             chkByPassProduct.Checked = False
+            chkWA.Checked = True
+            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdTestCenter.DataBind()
 
-            ddlGeoLoc.Items.Clear()
-            ddlGeoLoc.DataSource = REMI.Bll.LookupsManager.GetLookups(LookupType.TestCenter, 0, 0, 1)
-            ddlGeoLoc.DataBind()
+            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdDepartments.DataBind()
         Else
             lblHeaderText.Text = String.Format("Editing {0}", CurrentUser.LDAPName)
             txtName.Visible = False
             lblUserName.Visible = True
             lblUserName.Text = CurrentUser.LDAPName
+            chkWA.Checked = True
             txtBadgeNumber.Text = CurrentUser.BadgeNumber
             If (CurrentUser.IsActive = 1) Then
                 chkIsActive.Checked = True
@@ -462,7 +465,7 @@ Partial Class Admin_Users
 
         tmpUser.RequestTypes = dtRequestAccess
 
-        UserManager.Save(tmpUser, True, True)
+        UserManager.Save(tmpUser, True, True, If(Request.Form(chkWA.UniqueID) = "on", True, False))
         notMain.Notifications.Add(tmpUser.Notifications)
 
         If Not notMain.HasErrors Then

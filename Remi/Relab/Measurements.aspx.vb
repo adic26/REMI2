@@ -36,7 +36,7 @@ Public Class Relab_Measurements
 
                 Dim resultInfo = (From r In New REMI.Dal.Entities().Instance().Results.Include("Results.TestUnits").Include("TestUnits.Batches") _
                             Where r.ID = resultID _
-                            Select New With {r.TestUnit.Batch.QRANumber, r.TestUnit.BatchUnitNumber}).FirstOrDefault()
+                            Select New With {r.TestUnit.Batch.QRANumber, r.TestUnit.BatchUnitNumber, r.TestID, r.TestStageID}).FirstOrDefault()
 
                 If (resultInfo Is Nothing) Then
                     Response.Redirect("/Relab/Results.aspx")
@@ -45,7 +45,8 @@ Public Class Relab_Measurements
                 lblHeader.Text = String.Format("Result Measurements {0} ", String.Format("{0}-{1:d3}", resultInfo.QRANumber, resultInfo.BatchUnitNumber))
                 hdnUnit.Value = resultInfo.BatchUnitNumber
 
-                hypCancel.NavigateUrl = "/Relab/Results.aspx?Batch=" + Request.QueryString("Batch")
+                hypCancel.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", Request.QueryString("Batch"))
+                hypVersions.NavigateUrl = String.Format("/Relab/Versions.aspx?TestID={0}&Batch={1}&unitNumber={2}&TestStageID={3}", resultInfo.TestID, Request.QueryString("Batch"), resultInfo.BatchUnitNumber, resultInfo.TestStageID)
 
                 Dim dt = (From r In New REMI.Dal.Entities().Instance().Results Where r.ID = resultID Select TestID = r.Test.ID, TestStageID = r.TestStage.ID, TestUnitID = r.TestUnit.ID)
                 ddlTests.SelectedValue = dt.FirstOrDefault().TestID
