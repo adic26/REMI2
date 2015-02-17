@@ -95,9 +95,16 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function Save(ByVal u As User, ByVal saveTraining As Boolean, ByVal saveRequestAccess As Boolean) As Integer
+        Public Shared Function Save(ByVal u As User, ByVal saveTraining As Boolean, ByVal saveRequestAccess As Boolean, ByVal validateIsRIMNET As Boolean) As Integer
             Try
-                If RIM.ReliabilityEngineering.ActiveDirectoryServices.RIMAuthenticationProvider.UserOrGroupExistsInGAL(u.LDAPName) Then
+                Dim validationPassed As Boolean = True
+
+                If Not RIM.ReliabilityEngineering.ActiveDirectoryServices.RIMAuthenticationProvider.UserOrGroupExistsInGAL(u.LDAPName) And validateIsRIMNET Then
+                    validationPassed = False
+                    u.Notifications.Add("w35", NotificationType.Warning)
+                End If
+
+                If (validationPassed) Then
                     u.LastUser = UserManager.GetCurrentValidUserLDAPName
 
                     If u.Validate Then
@@ -311,8 +318,6 @@ Namespace REMI.Bll
 
                         Return userID
                     End If
-                Else
-                    u.Notifications.Add("w35", NotificationType.Warning)
                 End If
             Catch sqlEx As SqlClient.SqlException When sqlEx.Number = 2601
                 u.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e5", NotificationType.Errors, sqlEx))
@@ -416,7 +421,7 @@ Namespace REMI.Bll
 
                     u.UserDetails = userDetails
 
-                    u.ID = Save(u, False, False)
+                    u.ID = Save(u, False, False, True)
 
                     If u.ID > 0 Then 'if the user was saved then
                         HttpContext.Current.Session.Add(_userSessionVariableName, u) 'save it to the session

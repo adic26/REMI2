@@ -152,11 +152,11 @@ Partial Class BadgeAccess_EditMyUser
             End If
         Next
 
-        If UserManager.Save(UserManager.GetCurrentUser, False, False) > 0 Then
-            notMain.Add("Location saved!", Remi.Validation.NotificationType.Information)
+        If UserManager.Save(UserManager.GetCurrentUser, False, False, True) > 0 Then
+            notMain.Add("Location saved!", REMI.Validation.NotificationType.Information)
             RedirectIfRequested()
         Else
-            notMain.Add("Unable to save. Please contact support.", Remi.Validation.NotificationType.Errors)
+            notMain.Add("Unable to save. Please contact support.", REMI.Validation.NotificationType.Errors)
         End If
     End Sub
 

@@ -401,6 +401,15 @@ Partial Public Class Admin_Users
     Protected WithEvents chkByPassProduct As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
+    '''chkWA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chkWA As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
     '''txtBadgeNumber control.
     '''</summary>
     '''<remarks>

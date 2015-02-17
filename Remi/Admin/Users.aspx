@@ -200,6 +200,12 @@
                 </td>                
             </tr>
             <tr>
+                <td class="HorizTableFirstcolumn">Is RIMNET User:</td>
+                <td class="HorizTableSecondColumn">
+                    <asp:CheckBox ID="chkWA" runat="server" Checked="true" />
+                </td>   
+            </tr>
+            <tr>
                 <td class="HorizTableFirstcolumn">
                     Badge Number:</td>
                 <td class="HorizTableSecondColumn">
