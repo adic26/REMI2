@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master"
-    AutoEventWireup="false" Inherits="Remi.ManageProducts_EditProductSettings" ValidateRequest="false" Codebehind="EditProductSettings.aspx.vb" %>
+    AutoEventWireup="false" Inherits="Remi.ManageProducts_EditProductSettings" ValidateRequest="true" Codebehind="EditProductSettings.aspx.vb" %>
     
 <%@ Register src="../Controls/Notifications.ascx" tagname="Notifications" tagprefix="uc1" %>
 

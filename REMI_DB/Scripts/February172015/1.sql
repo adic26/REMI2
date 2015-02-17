@@ -800,4 +800,6 @@ END
 GO
 GRANT EXECUTE ON remispTestsSelectListByType TO REMI
 GO
+delete from ProductSettings where KeyName like '%li%sett%'
+GO
 ROLLBACK TRAN
