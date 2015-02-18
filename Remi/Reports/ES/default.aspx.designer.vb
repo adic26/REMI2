@@ -113,6 +113,24 @@ Partial Public Class ES_Default
     Protected WithEvents cpeResultBreakDown As Global.AjaxControlToolkit.CollapsiblePanelExtender
 
     '''<summary>
+    '''cpeObservations control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeObservations As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
+    '''cpeObservationSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeObservationSummary As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
     '''lblRequestNumber control.
     '''</summary>
     '''<remarks>
@@ -552,6 +570,96 @@ Partial Public Class ES_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents pnlFailures As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''pnlObservationSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlObservationSummary As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''lblbservationSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblbservationSummary As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgObservationSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgObservationSummary As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''pnlObservationSummaryInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlObservationSummaryInfo As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''gvwObservationSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents gvwObservationSummary As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''pnlObservations control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlObservations As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''lblbservations control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblbservations As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgObservations control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgObservations As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''pnlObservationsInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlObservationsInfo As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''gvwObservations control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents gvwObservations As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''pnlApprovalHeader control.

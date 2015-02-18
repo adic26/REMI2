@@ -2722,4 +2722,10 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities\remispDeleteAllResults.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetObservations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetObservationSummary.sql" />
+  </ItemGroup>
 </Project>

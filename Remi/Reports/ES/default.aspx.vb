@@ -59,6 +59,14 @@ Partial Class ES_Default
                 grdApproval.DataSource = ds.Tables(1)
                 grdApproval.DataBind()
 
+                Dim dto As DataTable = RelabManager.GetObservations(b.ID)
+                gvwObservations.DataSource = dto
+                gvwObservations.DataBind()
+
+                Dim dtOS As DataTable = RelabManager.GetObservationSummary(b.ID)
+                gvwObservationSummary.DataSource = dtOS
+                gvwObservationSummary.DataBind()
+
                 SetStatus(ds.Tables(2).Rows(0)(0).ToString())
 
                 For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Select New With {tr.ID, tr.FailDocDS})
@@ -78,6 +86,22 @@ Partial Class ES_Default
                 Next
 
                 Dim mi As New MenuItem
+
+                If (dto.Rows.Count > 0) Then
+                    mi = New MenuItem
+                    mi.NavigateUrl = "#observationSummary"
+                    mi.Text = "Observation Summary"
+
+                    ESMenu.Items(0).ChildItems.Add(mi)
+                End If
+
+                If (dtOS.Rows.Count > 0) Then
+                    mi = New MenuItem
+                    mi.NavigateUrl = "#observations"
+                    mi.Text = "Observations"
+
+                    ESMenu.Items(0).ChildItems.Add(mi)
+                End If
 
                 If (pnlFA.Style.Item("Display") = "block") Then
                     mi = New MenuItem
@@ -133,6 +157,14 @@ Partial Class ES_Default
 
     Protected Sub gvwgrdApprovalGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdApproval.PreRender
         Helpers.MakeAccessable(grdApproval)
+    End Sub
+
+    Protected Sub gvwObservationsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwObservations.PreRender
+        Helpers.MakeAccessable(gvwObservations)
+    End Sub
+
+    Protected Sub gvwObservationSummaryGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwObservationSummary.PreRender
+        Helpers.MakeAccessable(gvwObservationSummary)
     End Sub
 
     Public ReadOnly Property PartName
@@ -254,4 +286,20 @@ Partial Class ES_Default
         Return Nothing
     End Function
 
+    Protected Sub gvwObservations_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwObservations.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim hdnImgStr As HiddenField = DirectCast(e.Row.FindControl("hdnImgStr"), HiddenField)
+            If (Not (String.IsNullOrEmpty(hdnImgStr.Value))) Then
+                If (Not (hdnImgStr.Value.Contains(";base64,AAAAAA=="))) Then
+                    Dim img As WebControls.Image = DirectCast(e.Row.FindControl("img"), WebControls.Image)
+                    img.Visible = True
+                    img.ImageUrl = hdnImgStr.Value
+                    img.Width = 30
+                    img.Height = 30
+                    img.Attributes.Add("onmouseover", String.Format("Tip('<img src=""{0}""/>',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'',TITLEBGCOLOR,'#6494C8')", hdnImgStr.Value))
+                    img.Attributes.Add("onmouseout", "UnTip()")
+                End If
+            End If
+        End If
+    End Sub
 End Class

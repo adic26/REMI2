@@ -7,6 +7,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="server"></asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" Runat="Server">
+    <script type="text/javascript" src='<%= ResolveUrl("~/Design/scripts/wz_tooltip.js")%>'></script>
     <asp:Label runat="server" ID="lblPH" Text="&nbsp;" style=""></asp:Label>
     <asp:Panel runat="server" ID="pnlHeader" CssClass="ScrollMenu">
         <asp:Menu ID="ESMenu" RenderingMode="Table" runat="server" OnMenuItemClick="ESMenu_MenuItemClick" Width="85" Orientation="Horizontal" CssClass="MenuESHeader" EnableViewState="true" StaticEnableDefaultPopOutImage="false" DynamicEnableDefaultPopOutImage="false" BorderStyle="None" BorderWidth="0">
@@ -39,7 +40,9 @@
     <asp:CollapsiblePanelExtender runat="server" ID="cpeApprovals" CollapseControlID="pnlApprovalHeader" TargetControlID="pnlApproval" TextLabelID="lblApprove" ExpandControlID="pnlApprovalHeader" ImageControlID="imgApprovals" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeResultSummary" CollapseControlID="pnlResultSummaryHeader" TargetControlID="pnlResultSummary" TextLabelID="lblResultSummary" ExpandControlID="pnlResultSummaryHeader" ImageControlID="imgResultSummary" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeResultBreakDown" CollapseControlID="pnlResultBreakdownHeader" TargetControlID="pnlResultBreakDown" TextLabelID="lblResultBreakDown" ExpandControlID="pnlResultBreakdownHeader" ImageControlID="imgResultBreakDown" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>     
-        
+    <asp:CollapsiblePanelExtender runat="server" ID="cpeObservations" CollapseControlID="pnlObservations" TargetControlID="pnlObservationsInfo" TextLabelID="lblbservations" ExpandControlID="pnlObservations" ImageControlID="imgObservations" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>     
+    <asp:CollapsiblePanelExtender runat="server" ID="cpeObservationSummary" CollapseControlID="pnlObservationSummary" TargetControlID="pnlObservationSummaryInfo" TextLabelID="lblbservationSummary" ExpandControlID="pnlObservationSummary" ImageControlID="imgObservationSummary" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>     
+      
     <a name="top"></a>
     <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label>
     <br /><br /><br />
@@ -230,6 +233,64 @@
     </asp:Panel>
      <asp:Panel runat="server" ID="pnlFAInfo" CssClass="CollapseBody">
         <asp:Panel runat="server" ID="pnlFailures" Visible="false"><b>Failure(s) Analysis:</b><br /></asp:Panel>
+     </asp:Panel>
+    <br /><br />
+
+    <a name="observationSummary"></a>
+    <asp:Panel ID="pnlObservationSummary" runat="server" CssClass="CollapseHeader" Height="75" HorizontalAlign="Left">
+        <asp:Label ID="lblbservationSummary" runat="server" Text="Observation<br/><font color='rgb(0,124,186)'>Summary</font>" /><asp:Image runat="server" ID="imgObservationSummary" />
+    </asp:Panel>
+     <asp:Panel runat="server" ID="pnlObservationSummaryInfo" CssClass="CollapseBody">
+         <asp:GridView ID="gvwObservationSummary" runat="server" EnableViewState="true" AutoGenerateColumns="true" ShowHeader="true" style="width:100%">
+         </asp:GridView>
+     </asp:Panel>
+    <br /><br />
+        
+    <a name="observations"></a>
+    <asp:Panel ID="pnlObservations" runat="server" CssClass="CollapseHeader" Height="75" HorizontalAlign="Left">
+        <asp:Label ID="lblbservations" runat="server" Text="Observations" /><asp:Image runat="server" ID="imgObservations" />
+    </asp:Panel>
+     <asp:Panel runat="server" ID="pnlObservationsInfo" CssClass="CollapseBody">
+         <asp:GridView ID="gvwObservations" runat="server" EnableViewState="true" AutoGenerateColumns="false" ShowHeader="true" style="width:100%">
+             <Columns>
+                <asp:TemplateField HeaderText="Unit">
+                    <ItemTemplate>
+                        <asp:Label runat="server" Visible="true" ID="lblUnit" Text='<%# Eval("BatchUnitNumber")%>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Total">
+                    <ItemTemplate>
+                        <asp:Label runat="server" Visible="true" ID="lblMaxStage" Text='<%# Eval("MaxStage")%>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Stage">
+                    <ItemTemplate>
+                        <asp:Label runat="server" Visible="true" ID="lblTestStage" Text='<%# Eval("TestStageName")%>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Observation">
+                    <ItemTemplate>
+                        <asp:Label runat="server" Visible="true" ID="lblObservation" Text='<%# Eval("Observation")%>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Orientation">
+                    <ItemTemplate>
+                        <asp:Label runat="server" Visible="true" ID="lblOrientation" Text='<%# Eval("Orientation")%>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Notes">
+                    <ItemTemplate>
+                        <asp:Label runat="server" Visible="true" ID="lblComment" Text='<%# Eval("Comment")%>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Attachment" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
+                    <ItemTemplate>
+                        <asp:Image Visible="false" runat="server" ImageUrl='' ID="img" />
+                        <asp:HiddenField runat="server" ID="hdnImgStr" Value='<%# "data:image/" + Eval("ContentType") + ";base64," + Convert.ToBase64String(Eval("Image"))%>' />
+                    </ItemTemplate>
+                </asp:TemplateField>           
+            </Columns>
+         </asp:GridView>
      </asp:Panel>
     <br /><br />
     
