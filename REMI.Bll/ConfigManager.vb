@@ -60,7 +60,7 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function PublishConfig(ByVal Name As String, ByVal version As Version, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
+        Public Shared Function DuplicateConfigMode(ByVal Name As String, ByVal version As Version, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
                 Dim ver As String = version.ToString()
@@ -73,6 +73,35 @@ Namespace REMI.Bll
                     newConfig.ModeID = toMode
                     newConfig.ConfigTypeID = config.ConfigTypeID
                     newConfig.Version = config.Version
+
+                    instance.AddToConfigurations(newConfig)
+                    instance.SaveChanges()
+
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        Public Shared Function DuplicateConfigVersion(ByVal Name As String, ByVal fromVersion As Version, ByVal mode As Int32, ByVal type As Int32, ByVal toVersion As Version) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim fromVer As String = fromVersion.ToString()
+                Dim toVer As String = toVersion.ToString()
+                Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = mode And c.ConfigTypeID = type And c.Version = fromVer Select c).FirstOrDefault()
+
+                If (config IsNot Nothing And Not String.IsNullOrEmpty(toVer)) Then
+                    Dim newConfig = New REMI.Entities.Configuration
+                    newConfig.Definition = config.Definition
+                    newConfig.Name = config.Name
+                    newConfig.ModeID = config.ModeID
+                    newConfig.ConfigTypeID = config.ConfigTypeID
+                    newConfig.Version = toVer
 
                     instance.AddToConfigurations(newConfig)
                     instance.SaveChanges()
