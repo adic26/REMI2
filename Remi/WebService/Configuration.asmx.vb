@@ -228,13 +228,13 @@ Public Class ProductConfiguration
         Return False
     End Function
 
-    <WebMethod(Description:="Retrieves Configuration", MessageName:="PublishConfig")> _
-    Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As String
+    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigMode")> _
+    Public Function DuplicateConfigMode(ByVal Name As String, ByVal version As String, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
         Dim publishSucceeded As Boolean = False
 
         Try
             Dim verNum As New Version(version)
-            publishSucceeded = ConfigManager.PublishConfig(Name, verNum, fromMode, type, toMode)
+            publishSucceeded = ConfigManager.DuplicateConfigMode(Name, verNum, fromMode, type, toMode)
         Catch ex As Exception
             ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
         End Try
@@ -242,8 +242,8 @@ Public Class ProductConfiguration
         Return publishSucceeded
     End Function
 
-    <WebMethod(Description:="Retrieves Configuration", MessageName:="PublishConfigByNames")> _
-    Public Function PublishConfig(ByVal Name As String, ByVal version As String, ByVal fromMode As String, ByVal type As String, ByVal toMode As String) As String
+    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigModeByNames")> _
+    Public Function DuplicateConfigMode(ByVal Name As String, ByVal version As String, ByVal fromMode As String, ByVal type As String, ByVal toMode As String) As Boolean
         Dim publishSucceeded As Boolean = False
 
         Try
@@ -252,9 +252,42 @@ Public Class ProductConfiguration
             Dim toModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", toMode, Nothing)
             Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            publishSucceeded = ConfigManager.PublishConfig(Name, verNum, fromModeID, typeID, toModeID)
+            publishSucceeded = ConfigManager.DuplicateConfigMode(Name, verNum, fromModeID, typeID, toModeID)
         Catch ex As Exception
             ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+        End Try
+
+        Return publishSucceeded
+    End Function
+
+    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigVersion")> _
+    Public Function DuplicateConfigVersion(ByVal Name As String, ByVal fromVersion As String, ByVal mode As Int32, ByVal type As Int32, ByVal toVersion As String) As Boolean
+        Dim publishSucceeded As Boolean = False
+
+        Try
+            Dim fromVer As New Version(fromVersion)
+            Dim toVer As New Version(toVersion)
+            publishSucceeded = ConfigManager.DuplicateConfigVersion(Name, fromVer, mode, type, toVer)
+        Catch ex As Exception
+            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
+        End Try
+
+        Return publishSucceeded
+    End Function
+
+    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigVersionByNames")> _
+    Public Function DuplicateConfigVersion(ByVal Name As String, ByVal fromVersion As String, ByVal mode As String, ByVal type As String, ByVal toVersion As String) As Boolean
+        Dim publishSucceeded As Boolean = False
+
+        Try
+            Dim fromVer As New Version(fromVersion)
+            Dim toVer As New Version(toVersion)
+            Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
+            Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
+
+            publishSucceeded = ConfigManager.DuplicateConfigVersion(Name, fromVer, modeID, typeID, toVer)
+        Catch ex As Exception
+            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
         End Try
 
         Return publishSucceeded
