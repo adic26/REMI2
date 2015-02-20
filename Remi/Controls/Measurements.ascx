@@ -52,7 +52,7 @@
         <asp:Button ID="btnPlay" runat="server" Text="Play" CssClass="buttonSmall"/>
         <asp:Button ID="btnNext" runat="server" Text="Next" CssClass="buttonSmall"/>
         <asp:Label ID="lblDesc" runat="server"></asp:Label>
-        <asp:SlideShowExtender runat="server" ID="sseImages" Enabled="true" UseContextKey="true" EnableViewState="true" TargetControlID="imgslides" ImageTitleLabelID="lblTitle" ImageDescriptionLabelID="lblDesc" PlayInterval="2000" Loop="true" SlideShowServicePath="http://localhost:81/WebService/REMIInternal.asmx" SlideShowServiceMethod="GetSlides" NextButtonID="btnNext" PreviousButtonID="btnPrevious" PlayButtonID="btnPlay"></asp:SlideShowExtender>
+        <asp:SlideShowExtender runat="server" ID="sseImages" Enabled="true" UseContextKey="true" EnableViewState="true" TargetControlID="imgslides" ImageTitleLabelID="lblTitle" ImageDescriptionLabelID="lblDesc" PlayInterval="2000" Loop="true" SlideShowServicePath="~/WebService/REMIInternal.asmx" SlideShowServiceMethod="GetSlides" NextButtonID="btnNext" PreviousButtonID="btnPrevious" PlayButtonID="btnPlay"></asp:SlideShowExtender>
     </div>
     
     <div class="removeStyle">
