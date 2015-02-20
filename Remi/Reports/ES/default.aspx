@@ -146,7 +146,7 @@
         <asp:Label ID="lblResultBreakDown" runat="server" Text="Results<br/><font color='rgb(0,124,186)'>BreakDown</font>" /><asp:Image runat="server" ID="imgResultBreakDown" />
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlResultBreakDown" CssClass="CollapseBody" EnableViewState="true">
-        <asp:UpdatePanel ID="updResultBreakdown" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
+        <asp:UpdatePanel ID="updResultBreakdown" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false" EnableViewState="true">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="rboQRASlider" />
             </Triggers>

@@ -28,6 +28,38 @@ Public Class Measurements
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "wz_tooltip")) Then
             Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "wz_tooltip", ResolveClientUrl("../Design/scripts/wz_tooltip.js"))
         End If
+
+        If (Not Page.ClientScript.IsStartupScriptRegistered(Me.Page.GetType(), "OnClickDialog")) Then
+            Dim sb As New StringBuilder
+            sb.AppendLine("<script language='javascript'>")
+            sb.AppendLine("$(document).on(""click"", ""[id*=viewImages]"", function (e) {")
+            sb.AppendLine("var imgID = ($(this)[0]).id;")
+            sb.AppendLine("var resultID = ($(this)[0]).attributes[""resultID""].value;")
+            sb.AppendLine("var id = ($(this)[0]).attributes[""sseImg""].value + ""_"" + resultID + ""_ssb"";")
+            sb.AppendLine("var ucID = ($(this)[0]).attributes[""pageID""].value;")
+            sb.AppendLine("$find(id).set_contextKey(($(this)[0]).attributes[""mID""].value);")
+            sb.AppendLine("$(""#"" + ucID + ""_images"").dialog({")
+            sb.AppendLine("autoResize: true,")
+            sb.AppendLine("height: 'auto',")
+            sb.AppendLine("width: 'auto',")
+            sb.AppendLine("position: 'center',")
+            sb.AppendLine("modal: true,")
+            sb.AppendLine("appendTo: 'body',")
+            sb.AppendLine("autoOpen: true,")
+            sb.AppendLine("buttons: [],")
+            sb.AppendLine("closeOnEscape: true,")
+            sb.AppendLine("closeText: null,")
+            sb.AppendLine("open: function () {")
+            sb.AppendLine("$find(id).set_contextKey(0);")
+            sb.AppendLine("$(this).parent().appendTo($(""#"" + ucID + ""_images"").parent().parent());")
+            sb.AppendLine("}});")
+            sb.AppendLine("e.preventDefault();")
+            sb.AppendLine("return false;")
+            sb.AppendLine("});")
+            sb.AppendLine("</script>")
+
+            Page.ClientScript.RegisterStartupScript(Me.Page.GetType(), "OnClickDialog", sb.ToString())
+        End If
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -66,6 +98,7 @@ Public Class Measurements
             If (dtMeasure.Rows.Count > 0) Then
                 grdResultMeasurements.DataSource = dtMeasure
                 grdResultMeasurements.DataBind()
+                sseImages.BehaviorID = String.Format("{0}_{1}_ssb", sseImages.UniqueID, ResultID)
             Else
                 chkIncludeArchived.Visible = False
                 chkOnlyFails.Visible = False
@@ -244,7 +277,6 @@ Public Class Measurements
     End Sub
 
     Protected Sub grdResultMeasurements_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultMeasurements.DataBound
-        sseImages.BehaviorID = String.Format("{0}_ssb", sseImages.UniqueID)
         If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
             grdResultMeasurements.HeaderRow.Cells(2).Visible = False 'ID
             grdResultMeasurements.HeaderRow.Cells(3).Visible = False 'Measurement (non template field)
@@ -340,35 +372,6 @@ Public Class Measurements
             If (e.Row.Cells(19).Text = "1") Then
                 Dim img As HtmlInputImage = DirectCast(e.Row.FindControl("viewImages"), HtmlInputImage)
                 img.Visible = True
-
-                Dim sb As New StringBuilder
-                sb.AppendLine("<script language='javascript'>")
-                sb.AppendLine("var imgID = '" + img.ClientID + "';")
-                sb.AppendLine("$(document).on(""click"", ""[id*="" + imgID + ""]"", function (e) {")
-                sb.AppendLine("var id = '" + sseImages.UniqueID + "_ssb';")
-                sb.AppendLine("var ucID = '" + Me.ClientID + "';")
-                sb.AppendLine("$find(id).set_contextKey(($(this)[0]).attributes[""mID""].value);")
-                sb.AppendLine("$(""#"" + ucID + ""_images"").dialog({")
-                sb.AppendLine("autoResize: true,")
-                sb.AppendLine("height: 'auto',")
-                sb.AppendLine("width: 'auto',")
-                sb.AppendLine("position: 'center',")
-                sb.AppendLine("modal: true,")
-                sb.AppendLine("appendTo: 'body',")
-                sb.AppendLine("autoOpen: true,")
-                sb.AppendLine("buttons: [],")
-                sb.AppendLine("closeOnEscape: true,")
-                sb.AppendLine("closeText: null,")
-                sb.AppendLine("open: function () {")
-                sb.AppendLine("$find(id).set_contextKey(0);")
-                sb.AppendLine("$(this).parent().appendTo($(""#"" + ucID + ""_images"").parent().parent());")
-                sb.AppendLine("}});")
-                sb.AppendLine("e.preventDefault();")
-                sb.AppendLine("return false;")
-                sb.AppendLine("});")
-                sb.AppendLine("</script>")
-
-                Page.ClientScript.RegisterStartupScript(Me.Page.GetType(), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), sb.ToString())
             End If
 
             Dim hplMeasurementType As HyperLink = DirectCast(e.Row.FindControl("hplMeasurementType"), HyperLink)
