@@ -1,16 +1,13 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.ES_Default" Codebehind="default.aspx.vb" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" EnableEventValidation="false" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.ES_Default" Codebehind="default.aspx.vb" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 <%@ Register Src="~/Controls/Measuerments.ascx" TagName="Measuerments" TagPrefix="msm" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script type="text/javascript" src="../../Design/scripts/jQuery/jquery-1.8.0.js"></script>
-</asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="server"></asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" Runat="Server">
-    <script type="text/javascript" src='<%= ResolveUrl("~/Design/scripts/wz_tooltip.js")%>'></script>
     <asp:Label runat="server" ID="lblPH" Text="&nbsp;" style=""></asp:Label>
     <asp:Panel runat="server" ID="pnlHeader" CssClass="ScrollMenu">
-        <asp:Menu ID="ESMenu" RenderingMode="Table" runat="server" OnMenuItemClick="ESMenu_MenuItemClick" Width="85" Orientation="Horizontal" CssClass="MenuESHeader" EnableViewState="true" StaticEnableDefaultPopOutImage="false" DynamicEnableDefaultPopOutImage="false" BorderStyle="None" BorderWidth="0">
+        <asp:Menu ID="ESMenu" RenderingMode="Table" runat="server" Width="85" Orientation="Horizontal" CssClass="MenuESHeader" EnableViewState="true" StaticEnableDefaultPopOutImage="false" DynamicEnableDefaultPopOutImage="false" BorderStyle="None" BorderWidth="0">
             <LevelMenuItemStyles>
                 <asp:MenuItemStyle CssClass="MenuESItem" />
                 <asp:MenuItemStyle CssClass="MenuESItem" />
@@ -30,10 +27,10 @@
         </asp:Menu>
     </asp:Panel>
 </asp:Content>
-<asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
+<asp:Content ID="content" ContentPlaceHolderID="Content" runat="Server">
     <asp:HiddenField ID="hdnBatchID" runat="server" />
     <asp:HiddenField ID="hdnRequestNumber" Value="" runat="server" />
-    
+         
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestInfo" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgExpCol" TargetControlID="pnlRequestInfo" ExpandedSize="600" TextLabelID="lblText" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlRequestInfoHeader" ExpandControlID="pnlRequestInfoHeader"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeFA" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgFA" TargetControlID="pnlFAInfo" TextLabelID="lblFA" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlFA" ExpandControlID="pnlFA"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestSummary" CollapseControlID="pnlRequestSummaryHeader" TargetControlID="pnlRequestSummary" TextLabelID="lblSummary" ExpandControlID="pnlRequestSummaryHeader" ImageControlID="imgRequestSummaryExpCol" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="false" CollapsedSize="1" ></asp:CollapsiblePanelExtender>
@@ -148,12 +145,10 @@
     <asp:Panel ID="pnlResultBreakdownHeader" runat="server" CssClass="CollapseHeader" Height="75" HorizontalAlign="Left">
         <asp:Label ID="lblResultBreakDown" runat="server" Text="Results<br/><font color='rgb(0,124,186)'>BreakDown</font>" /><asp:Image runat="server" ID="imgResultBreakDown" />
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlResultBreakDown" CssClass="CollapseBody">
-        
-        <asp:UpdatePanel ID="updResultBreakdown" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false" EnableViewState="true">
+    <asp:Panel runat="server" ID="pnlResultBreakDown" CssClass="CollapseBody" EnableViewState="true">
+        <asp:UpdatePanel ID="updResultBreakdown" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true" EnableViewState="true">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="rboQRASlider" />
-                <asp:AsyncPostBackTrigger ControlID="btnESShowPopup" />
             </Triggers>
             <ContentTemplate>
                 <asp:UpdateProgress runat="server" ID="upResultBreakdown" DynamicLayout="true" DisplayAfter="10" AssociatedUpdatePanelID="updResultBreakdown">
@@ -164,44 +159,28 @@
                 </asp:UpdateProgress>
 
                 <script type="text/javascript">
-                    $("[src*=zoom_in]").live("click", function () {
+                    $(document).on("click", "[src*=zoom_in]", function () {
                         $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>")
                         $(this).attr("src", "../../Design/Icons/png/16x16/zoom_out.png");
                     });
 
-                    $("[src*=zoom_out]").live("click", function () {
+                    $(document).on("click", "[src*=zoom_out]", function () {
                         $(this).attr("src", "../../Design/Icons/png/16x16/zoom_in.png");
                         $(this).closest("tr").next().remove();
                     });
                 </script>
 
-                <asp:Button ID="btnESShowPopup" runat="server" style="display:none" EnableViewState="true" />
-                <asp:ModalPopupExtender ID="mpeES" runat="server" EnableViewState="true" TargetControlID="btnESShowPopup" PopupControlID="pnlESpopup" CancelControlID="btnESCancel" BackgroundCssClass="ModalBackground"></asp:ModalPopupExtender>
-                <asp:Panel ID="pnlESpopup" runat="server" BackColor="White" EnableViewState="true" style="display:none;" Width="1050" Height="850" HorizontalAlign="Center" CssClass="ModalPopup">
-                    <asp:HiddenField runat="server" ID="hdnResultID" />
-            
-                    <asp:Label runat="server" ID="lblESTitle" EnableViewState="true"></asp:Label><br />
-                    <asp:Image ID="imgESslides" runat="server" EnableViewState="true" /><br />
-                    <asp:Button ID="btnESPrevious" runat="server" EnableViewState="true" Text="Prev" CssClass="buttonSmall"/>
-                    <asp:Button ID="btnESPlay" runat="server" Text="Play" CssClass="buttonSmall" EnableViewState="true" />
-                    <asp:Button ID="btnESNext" runat="server" Text="Next" CssClass="buttonSmall" EnableViewState="true" />
-                    <asp:Button ID="btnESCancel" runat="server" Text="Cancel" CssClass="buttonSmall" EnableViewState="true" /><br />
-                    <asp:Label ID="lblESDesc" runat="server"></asp:Label>
-
-                    <asp:SlideShowExtender runat="server" ID="sseESImages" EnableViewState="true" TargetControlID="imgESslides" UseContextKey="true" ImageTitleLabelID="lblESTitle" ImageDescriptionLabelID="lblESDesc" PlayInterval="2000" Loop="true" SlideShowServicePath="default.aspx" SlideShowServiceMethod="GetSlides" NextButtonID="btnESNext" PreviousButtonID="btnESPrevious" PlayButtonID="btnESPlay"></asp:SlideShowExtender>
-                </asp:Panel>
-
                 <asp:Panel runat="server" ID="pnlQRASlider" Visible="true" Height="" EnableViewState="true">
                     <asp:RadioButtonList runat="server" AutoPostBack="true" CausesValidation="true" EnableViewState="true" ID="rboQRASlider" RepeatDirection="Horizontal" RepeatLayout="Flow"></asp:RadioButtonList>
                 </asp:Panel>
 
-                <asp:GridView ID="gvwResultBreakDown" runat="server" EnableViewState="true" DataSourceID="odsResultBreakdown" AutoGenerateColumns="false" DataKeyNames="ID" ShowHeader="true" style="width:100%">
+                <asp:GridView ID="gvwResultBreakDown" runat="server" DataSourceID="odsResultBreakdown" EnableViewState="true" AutoGenerateColumns="false" DataKeyNames="ID" ShowHeader="true" style="width:100%">
                     <Columns>
                         <asp:TemplateField>
                             <ItemTemplate>
                                 <img alt = "" style="cursor: pointer" src="../../Design/Icons/png/16x16/zoom_in.png" id="imgadd" runat="server"  EnableViewState="true" />
                                 <asp:Panel ID="pnlmeasureBreakdown" runat="server" Style="display: none"  EnableViewState="true">
-                                    <msm:Measuerments runat="server" ID="msmMeasuerments" EnableViewState="true" ShowExport="true" ShowFailsOnly="false" IncludeArchived="false" DisplayMode="ExecutiveSummaryDisplay" EmptyDataTextInformation="" EmptyDataTextMeasurement="There were no measurements found for this result." />
+                                    <msm:Measuerments runat="server" ID="msmMeasuerments" Visible="false" EnableViewState="true" ShowExport="false" ShowFailsOnly="false" IncludeArchived="false" DisplayMode="ExecutiveSummaryDisplay" EmptyDataTextInformation="" EmptyDataTextMeasurement="There were no measurements found for this result." />
                                 </asp:Panel>
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -210,23 +189,18 @@
                         <asp:BoundField DataField="TestName" HeaderText="TestName" />
                         <asp:BoundField DataField="TestStageName" HeaderText="TestStageName" />
                         <asp:BoundField DataField="PassFail" HeaderText="Result" />
-                        <asp:TemplateField HeaderText="Images">
-                            <ItemTemplate>
-                                <asp:ImageButton ID="img" runat="server" OnClick="imgbtn_Click" ImageUrl="/Design/Icons/png/24x24/png_file.png" Visible="false" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
                 <asp:ObjectDataSource ID="odsResultBreakdown" runat="server" SelectMethod="ResultSummary" TypeName="REMI.Bll.RelabManager" OldValuesParameterFormatString="original_{0}">
                     <SelectParameters>
-                        <asp:ControlParameter ControlID="rboQRASlider" DefaultValue="-1" Name="BatchID" PropertyName="SelectedValue" Type="String" />
+                        <asp:ControlParameter ControlID="rboQRASlider" Name="BatchID" PropertyName="SelectedValue" Type="Int32" />
                     </SelectParameters>
                 </asp:ObjectDataSource>
             </ContentTemplate>
         </asp:UpdatePanel>
+        <br /><br />
     </asp:Panel>
 
-    <br /><br />
     <a name="fa"></a>
     <asp:Panel ID="pnlFA" runat="server" style="display:none;" CssClass="CollapseHeader" Height="75" HorizontalAlign="Left">
         <asp:Label ID="lblFA" runat="server" Text="Failure<br/><font color='rgb(0,124,186)'>Analysis</font>" /><asp:Image runat="server" ID="imgFA" />

@@ -16,70 +16,82 @@ Public Class Measuerments
         ExecutiveSummaryDisplay = 2
     End Enum
 
+    Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
+        If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("../Design/scripts/jQuery/jquery-1.10.2.js"))
+        End If
+
+        If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.11.3")) Then
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.11.3", ResolveClientUrl("../Design/scripts/jQueryUI/jquery-ui-1.11.3.js"))
+        End If
+
+        If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "wz_tooltip")) Then
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "wz_tooltip", ResolveClientUrl("../Design/scripts/wz_tooltip.js"))
+        End If
+    End Sub
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If (IsPostBack) Then
-            SetDataSource(hdnResultID.Value, hdnBatchID.Value)
+        If Not IsPostBack Then
+            Me.DataBind()
         End If
     End Sub
 
-    Public Sub New()
-    End Sub
+    Public Overrides Sub DataBind()
+        If (ResultID > 0 And BatchID > 0) Then
+            Dim failsOnly As Boolean = False
+            Dim includeArch As Boolean = False
 
-    Public Sub SetDataSource(ByVal resultID As Int32, ByVal batchID As Int32)
-        Dim failsOnly As Boolean = False
-        Dim includeArch As Boolean = False
-        hdnResultID.Value = resultID
-        hdnBatchID.Value = batchID
+            If (ShowFailsOnly) Then
+                failsOnly = True
+                chkOnlyFails.Visible = False
+            Else
+                failsOnly = chkOnlyFails.Checked
+            End If
 
-        If (ShowFailsOnly) Then
-            failsOnly = True
-            chkOnlyFails.Visible = False
-        Else
-            failsOnly = chkOnlyFails.Checked
-        End If
+            If (IncludeArchived) Then
+                includeArch = True
+                chkIncludeArchived.Visible = False
+            Else
+                includeArch = chkIncludeArchived.Checked
+            End If
 
-        If (IncludeArchived) Then
-            includeArch = True
-            chkIncludeArchived.Visible = False
-        Else
-            includeArch = chkIncludeArchived.Checked
-        End If
+            Dim dtMeasure As New DataTable
 
-        Dim dtMeasure As New DataTable
+            If (ResultID > 0) Then
+                dtMeasure = RelabManager.ResultMeasurements(ResultID, failsOnly, includeArch)
+            End If
 
-        If (resultID > 0) Then
-            dtMeasure = RelabManager.ResultMeasurements(resultID, failsOnly, includeArch)
-        End If
+            grdResultMeasurements.EmptyDataText = EmptyDataTextMeasurement
 
-        grdResultMeasurements.EmptyDataText = EmptyDataTextMeasurement
+            If (dtMeasure.Rows.Count > 0) Then
+                grdResultMeasurements.DataSource = dtMeasure
+                grdResultMeasurements.DataBind()
+            Else
+                chkIncludeArchived.Visible = False
+                chkOnlyFails.Visible = False
+            End If
 
-        If (dtMeasure.Rows.Count > 0) Then
-            grdResultMeasurements.DataSource = dtMeasure
-            grdResultMeasurements.DataBind()
-        Else
-            chkIncludeArchived.Visible = False
-            chkOnlyFails.Visible = False
-        End If
+            If (dtMeasure.Select("MaxVersion=1").Count > 0) Then
+                chkIncludeArchived.Enabled = False
+            End If
 
-        If (dtMeasure.Select("MaxVersion=1").Count > 0) Then
-            chkIncludeArchived.Enabled = False
-        End If
+            If (dtMeasure.Select("[Pass/Fail]='Fail'").Count = 0) Then
+                chkOnlyFails.Enabled = False
+            End If
 
-        If (dtMeasure.Select("[Pass/Fail]='Fail'").Count = 0) Then
-            chkOnlyFails.Enabled = False
-        End If
+            imgExport.Visible = ShowExport
 
-        imgExport.Visible = ShowExport
+            SetVisible(dtMeasure)
 
-        SetVisible(dtMeasure)
-
-        If (pnlInformation.Visible) Then
-            grdResultInformation.EmptyDataText = EmptyDataTextInformation
-            grdResultInformation.DataSource = RelabManager.ResultInformation(resultID, includeArch)
-            grdResultInformation.DataBind()
+            If (pnlInformation.Visible) Then
+                grdResultInformation.EmptyDataText = EmptyDataTextInformation
+                grdResultInformation.DataSource = RelabManager.ResultInformation(ResultID, includeArch)
+                grdResultInformation.DataBind()
+            End If
         End If
     End Sub
 
+#Region "Methods"
     Protected Sub SetVisible(ByVal dt As DataTable)
         Select Case DisplayMode
             Case ControlMode.ExecutiveSummaryDisplay
@@ -89,13 +101,8 @@ Public Class Measuerments
                 chkOnlyFails.Visible = False
                 lblInfo.Visible = False
                 chkIncludeArchived.Visible = False
-                pnlpopup.Visible = False
-                ModalPopupExtender1.Enabled = False
-                sseImages.Enabled = False
 
                 If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
-
-                    grdResultMeasurements.HeaderRow.Cells(0).Visible = False
                     Dim index As Int32
                     index = dt.Columns.IndexOf("Lower Limit") + 2
                     grdResultMeasurements.HeaderRow.Cells(index).Visible = False
@@ -111,7 +118,6 @@ Public Class Measuerments
                     grdResultMeasurements.HeaderRow.Cells(index).Visible = False
 
                     For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
-                        grdResultMeasurements.Rows(i).Cells(0).Visible = False
                         index = dt.Columns.IndexOf("Lower Limit") + 2
                         grdResultMeasurements.Rows(i).Cells(index).Visible = False
                         index = dt.Columns.IndexOf("Upper Limit") + 2
@@ -133,20 +139,11 @@ Public Class Measuerments
                 lblInfo.Visible = True
                 chkIncludeArchived.Visible = True
                 pnlLegend.Visible = True
-                pnlpopup.Visible = True
-                ModalPopupExtender1.Enabled = True
-                sseImages.Enabled = True
         End Select
     End Sub
+#End Region
 
-    Protected Sub gvwWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultMeasurements.PreRender
-        Helpers.MakeAccessable(grdResultMeasurements)
-    End Sub
-
-    Protected Sub grdResultInformationHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultInformation.PreRender
-        Helpers.MakeAccessable(grdResultInformation)
-    End Sub
-
+#Region "Properties"
     Public Property DisplayMode() As ControlMode
         Get
             Return _controlMode
@@ -162,6 +159,24 @@ Public Class Measuerments
         End Get
         Set(value As Int32)
             hdnTestID.Value = value
+        End Set
+    End Property
+
+    Public Property ResultID() As Int32
+        Get
+            Return hdnResultID.Value
+        End Get
+        Set(value As Int32)
+            hdnResultID.Value = value
+        End Set
+    End Property
+
+    Public Property BatchID() As Int32
+        Get
+            Return hdnBatchID.Value
+        End Get
+        Set(value As Int32)
+            hdnBatchID.Value = value
         End Set
     End Property
 
@@ -209,6 +224,16 @@ Public Class Measuerments
             _emptyDataTextInfo = value
         End Set
     End Property
+#End Region
+
+#Region "Events"
+    Protected Sub gvwWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultMeasurements.PreRender
+        Helpers.MakeAccessable(grdResultMeasurements)
+    End Sub
+
+    Protected Sub grdResultInformationHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultInformation.PreRender
+        Helpers.MakeAccessable(grdResultInformation)
+    End Sub
 
     Protected Sub grdResultInformation_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdResultInformation.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
@@ -219,6 +244,7 @@ Public Class Measuerments
     End Sub
 
     Protected Sub grdResultMeasurements_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultMeasurements.DataBound
+        sseImages.BehaviorID = String.Format("{0}_ssb", sseImages.UniqueID)
         If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
             grdResultMeasurements.HeaderRow.Cells(2).Visible = False 'ID
             grdResultMeasurements.HeaderRow.Cells(3).Visible = False 'Measurement (non template field)
@@ -276,7 +302,6 @@ Public Class Measuerments
                     Next
                 Next
             End If
-
         End If
     End Sub
 
@@ -313,10 +338,37 @@ Public Class Measuerments
             End If
 
             If (e.Row.Cells(19).Text = "1") Then
-                Dim img As ImageButton = DirectCast(e.Row.FindControl("img"), ImageButton)
+                Dim img As HtmlInputImage = DirectCast(e.Row.FindControl("viewImages"), HtmlInputImage)
                 img.Visible = True
-                img.Width = 30
-                img.Height = 30
+
+                Dim sb As New StringBuilder
+                sb.AppendLine("<script language='javascript'>")
+                sb.AppendLine("var imgID = '" + img.ClientID + "';")
+                sb.AppendLine("$(document).on(""click"", ""[id*="" + imgID + ""]"", function (e) {")
+                sb.AppendLine("var id = '" + sseImages.UniqueID + "_ssb';")
+                sb.AppendLine("var ucID = '" + Me.ClientID + "';")
+                sb.AppendLine("$find(id).set_contextKey(($(this)[0]).attributes[""mID""].value);")
+                sb.AppendLine("$(""#"" + ucID + ""_images"").dialog({")
+                sb.AppendLine("autoResize: true,")
+                sb.AppendLine("height: 'auto',")
+                sb.AppendLine("width: 'auto',")
+                sb.AppendLine("position: 'center',")
+                sb.AppendLine("modal: true,")
+                sb.AppendLine("appendTo: 'body',")
+                sb.AppendLine("autoOpen: true,")
+                sb.AppendLine("buttons: [],")
+                sb.AppendLine("closeOnEscape: true,")
+                sb.AppendLine("closeText: null,")
+                sb.AppendLine("open: function () {")
+                sb.AppendLine("$find(id).set_contextKey(0);")
+                sb.AppendLine("$(this).parent().appendTo($(""#"" + ucID + ""_images"").parent().parent());")
+                sb.AppendLine("}});")
+                sb.AppendLine("e.preventDefault();")
+                sb.AppendLine("return false;")
+                sb.AppendLine("});")
+                sb.AppendLine("</script>")
+
+                Page.ClientScript.RegisterStartupScript(Me.Page.GetType(), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), sb.ToString())
             End If
 
             Dim hplMeasurementType As HyperLink = DirectCast(e.Row.FindControl("hplMeasurementType"), HyperLink)
@@ -337,18 +389,8 @@ Public Class Measuerments
         End If
     End Sub
 
-    Protected Sub imgbtn_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        Dim btndetails As ImageButton = DirectCast(sender, ImageButton)
-        Dim gvrow As GridViewRow = DirectCast(btndetails.NamingContainer, GridViewRow)
-
-        hdnMeasurementID.Value = gvrow.Cells(2).Text
-        sseImages.ContextKey = hdnMeasurementID.Value.ToString()
-        ModalPopupExtender1.Show()
-    End Sub
-
     Protected Sub imgExport_Click(sender As Object, e As ImageClickEventArgs)
-        Dim resultID As Int32
-        Int32.TryParse(hdnResultID.Value, resultID)
-        Helpers.ExportToExcel(Helpers.GetDateTimeFileName("ResultSummary", "xls"), RelabManager.ResultSummaryExport(hdnBatchID.Value, resultID))
+        Helpers.ExportToExcel(Helpers.GetDateTimeFileName("ResultSummary", "xls"), RelabManager.ResultSummaryExport(BatchID, ResultID))
     End Sub
+#End Region
 End Class

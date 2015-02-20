@@ -140,6 +140,24 @@ Partial Public Class Relab_Measurements
     Protected WithEvents hdnUnit As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''hdnResultID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnResultID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnBatchID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnBatchID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''msmMeasuerments control.
     '''</summary>
     '''<remarks>

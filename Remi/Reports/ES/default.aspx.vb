@@ -40,7 +40,7 @@ Partial Class ES_Default
 
                 Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False)
 
-                For Each batch As Batch In batchCol
+                For Each batch As Batch In batchCol.Take(10)
                     Dim l As New ListItem
 
                     If (b.ID = batch.ID) Then
@@ -183,9 +183,6 @@ Partial Class ES_Default
         End If
     End Sub
 
-    Protected Sub ESMenu_MenuItemClick(sender As Object, e As MenuEventArgs)
-    End Sub
-
     Protected Sub gvwResultSummary_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwResultSummary.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
             For Each dc As DataControlFieldCell In e.Row.Cells
@@ -208,18 +205,17 @@ Partial Class ES_Default
             Dim imgadd As HtmlImage = DirectCast(e.Row.FindControl("imgadd"), HtmlImage)
             Dim pnlmeasureBreakdown As Panel = DirectCast(e.Row.FindControl("pnlmeasureBreakdown"), Panel)
             Dim instance = New REMI.Dal.Entities().Instance()
-
-            If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID And m.PassFail = False).FirstOrDefault() IsNot Nothing) Then
+            'And m.PassFail = False
+            If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID).FirstOrDefault() IsNot Nothing) Then
                 Dim msm As REMI.Measuerments = DirectCast(e.Row.FindControl("msmMeasuerments"), REMI.Measuerments)
+
                 msm.Visible = True
-                msm.SetDataSource(resultID, hdnBatchID.Value)
+                msm.BatchID = hdnBatchID.Value
+                msm.ResultID = resultID
+                msm.TestID = 0
+                msm.DataBind()
             Else
                 imgadd.Visible = False
-            End If
-
-            If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID And m.ResultsMeasurementsFiles.Count > 0).FirstOrDefault() IsNot Nothing) Then
-                Dim img As ImageButton = DirectCast(e.Row.FindControl("img"), ImageButton)
-                img.Visible = True
             End If
 
             For Each dc As DataControlFieldCell In e.Row.Cells
@@ -235,56 +231,6 @@ Partial Class ES_Default
             Next
         End If
     End Sub
-
-    Protected Sub imgbtn_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        Dim btndetails As ImageButton = DirectCast(sender, ImageButton)
-        Dim gvrow As GridViewRow = DirectCast(btndetails.NamingContainer, GridViewRow)
-        hdnResultID.Value = gvwResultBreakDown.DataKeys(gvrow.RowIndex).Values(0).ToString()
-        Dim contextKey As String = hdnResultID.value
-
-        sseESImages.ContextKey = contextKey
-        mpeES.Show()
-    End Sub
-
-    <System.Web.Services.WebMethod()> _
-    Public Shared Function GetSlides(ByVal contextKey As String) As AjaxControlToolkit.Slide()
-        If (contextKey IsNot Nothing) Then
-            Dim dt As DataTable = RelabManager.MeasurementFiles(0, contextKey)
-            Dim photos(dt.Rows.Count) As AjaxControlToolkit.Slide
-
-            For i = 0 To dt.Rows.Count - 1
-                Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
-                Dim downloadURL As String = String.Format("http://{0}:{1}/Handlers/Download.ashx?img={2}", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
-                Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)
-
-                If (Helpers.IsRecognisedImageFile(fileName)) Then
-                    photos(i) = New AjaxControlToolkit.Slide(imageDataURL, fileName, "<a href='" + downloadURL + "'>Download</a>")
-                Else
-                    Select Case (IO.Path.GetExtension(fileName).ToUpper)
-                        Case "CSV"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/csv_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "XLS"
-                        Case "XLSX"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xls_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "XML"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xml_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "PPT"
-                        Case "PPTX"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/ppt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "PDF"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/pdf_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "TXT"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case Else
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                    End Select
-                End If
-            Next
-            Return photos
-        End If
-
-        Return Nothing
-    End Function
 
     Protected Sub gvwObservations_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwObservations.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then

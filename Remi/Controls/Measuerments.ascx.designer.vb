@@ -50,40 +50,13 @@ Partial Public Class Measuerments
     Protected WithEvents hdnBatchID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''btnShowPopup control.
+    '''images control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnShowPopup As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''ModalPopupExtender1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ModalPopupExtender1 As Global.AjaxControlToolkit.ModalPopupExtender
-
-    '''<summary>
-    '''pnlpopup control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pnlpopup As Global.System.Web.UI.WebControls.Panel
-
-    '''<summary>
-    '''hdnMeasurementID control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnMeasurementID As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents images As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 
     '''<summary>
     '''lblTitle control.
@@ -129,15 +102,6 @@ Partial Public Class Measuerments
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnNext As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnCancel control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnCancel As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
     '''lblDesc control.
