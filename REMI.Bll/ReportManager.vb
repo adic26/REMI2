@@ -21,9 +21,9 @@ Namespace REMI.Bll
             Return New DataTable("Search")
         End Function
 
-        Public Shared Function ESResultSummary(ByVal requestNumber As String) As DataTable
+        Public Shared Function ESResultSummary(ByVal batchID As Int32) As DataTable
             Try
-                Return ReportDB.ESResultSummary(requestNumber)
+                Return ReportDB.ESResultSummary(batchID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

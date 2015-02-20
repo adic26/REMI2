@@ -12,9 +12,10 @@ Partial Class ES_Default
         If (Not Page.IsPostBack) Then
             Dim tmpStr As String = Request.QueryString.Get("RN")
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr))
-            Dim b As BatchView
 
             If bc.Validate Then
+                Dim mi As New MenuItem
+                Dim b As BatchView
                 Dim bcol As New BatchCollection
                 b = BatchManager.GetViewBatch(bc.BatchNumber)
                 bcol.Add(b)
@@ -29,16 +30,16 @@ Partial Class ES_Default
                 gvwRequestInfo.DataBind()
                 rptRequestSummary.DataSource = bcol
                 rptRequestSummary.DataBind()
+                Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
+                grdApproval.DataSource = ds.Tables(1)
+                grdApproval.DataBind()
 
-                gvwResultSummary.DataSource = ReportManager.ESResultSummary(b.QRANumber)
-                gvwResultSummary.DataBind()
-
-                Dim bs As New Remi.BusinessEntities.BatchSearch
+                Dim bs As New REMI.BusinessEntities.BatchSearch
                 bs.ProductID = b.ProductID
                 bs.JobName = b.JobName
                 bs.ProductTypeID = b.ProductTypeID
 
-                Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False)
+                Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
 
                 For Each batch As Batch In batchCol.Take(10)
                     Dim l As New ListItem
@@ -54,18 +55,6 @@ Partial Class ES_Default
                 Next
 
                 rboQRASlider.SelectedValue = b.ID
-
-                Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
-                grdApproval.DataSource = ds.Tables(1)
-                grdApproval.DataBind()
-
-                Dim dto As DataTable = RelabManager.GetObservations(b.ID)
-                gvwObservations.DataSource = dto
-                gvwObservations.DataBind()
-
-                Dim dtOS As DataTable = RelabManager.GetObservationSummary(b.ID)
-                gvwObservationSummary.DataSource = dtOS
-                gvwObservationSummary.DataBind()
 
                 SetStatus(ds.Tables(2).Rows(0)(0).ToString())
 
@@ -84,24 +73,6 @@ Partial Class ES_Default
 
                     pnlFAInfo.Controls.Add(fac)
                 Next
-
-                Dim mi As New MenuItem
-
-                If (dto.Rows.Count > 0) Then
-                    mi = New MenuItem
-                    mi.NavigateUrl = "#observationSummary"
-                    mi.Text = "Observation Summary"
-
-                    ESMenu.Items(0).ChildItems.Add(mi)
-                End If
-
-                If (dtOS.Rows.Count > 0) Then
-                    mi = New MenuItem
-                    mi.NavigateUrl = "#observations"
-                    mi.Text = "Observations"
-
-                    ESMenu.Items(0).ChildItems.Add(mi)
-                End If
 
                 If (pnlFA.Style.Item("Display") = "block") Then
                     mi = New MenuItem
@@ -150,9 +121,7 @@ Partial Class ES_Default
     End Sub
 
     Protected Sub gvwResultBreakDownGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwResultBreakDown.PreRender
-        If (Not IsPostBack) Then
-            Helpers.MakeAccessable(gvwResultBreakDown)
-        End If
+        Helpers.MakeAccessable(gvwResultBreakDown)
     End Sub
 
     Protected Sub gvwgrdApprovalGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdApproval.PreRender
@@ -246,6 +215,42 @@ Partial Class ES_Default
                     img.Attributes.Add("onmouseout", "UnTip()")
                 End If
             End If
+        End If
+    End Sub
+
+    Protected Sub gvwObservationSummary_DataBound(sender As Object, e As EventArgs)
+        Dim count As Int32 = gvwObservationSummary.Rows.Count
+
+        If (count > 0) Then
+            pnlObservationSummary.Enabled = True
+
+            If (ESMenu.FindItem("Observation Summary") Is Nothing) Then
+                Dim mi As MenuItem = New MenuItem
+                mi.NavigateUrl = "#observationSummary"
+                mi.Text = "Observation Summary"
+
+                ESMenu.Items(0).ChildItems.Add(mi)
+            End If
+        Else
+            pnlObservationSummary.Enabled = False
+        End If
+    End Sub
+
+    Protected Sub gvwObservations_DataBound(sender As Object, e As EventArgs)
+        Dim count As Int32 = gvwObservations.Rows.Count
+
+        If (count > 0) Then
+            pnlObservations.Enabled = True
+
+            If (ESMenu.FindItem("Observations") Is Nothing) Then
+                Dim mi As MenuItem = New MenuItem
+                mi.NavigateUrl = "#observations"
+                mi.Text = "Observations"
+
+                ESMenu.Items(0).ChildItems.Add(mi)
+            End If
+        Else
+            pnlObservations.Enabled = False
         End If
     End Sub
 End Class

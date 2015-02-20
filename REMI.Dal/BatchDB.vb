@@ -373,7 +373,7 @@ Namespace REMI.Dal
             Return batchData
         End Function
 
-        Private Shared Function BatchSearch(ByVal conn As SqlConnection, ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User) As SqlDataReader
+        Private Shared Function BatchSearch(ByVal conn As SqlConnection, ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32) As SqlDataReader
             Using myCommand As New SqlCommand("remispBatchesSearch", conn)
                 myCommand.CommandType = CommandType.StoredProcedure
                 myCommand.CommandTimeout = 40
@@ -402,6 +402,7 @@ Namespace REMI.Dal
                         End If
                     End If
                 Next
+                myCommand.Parameters.AddWithValue("@OnlyHasResults", OnlyHasResults)
 
                 conn.Open()
 
@@ -409,11 +410,11 @@ Namespace REMI.Dal
             End Using
         End Function
 
-        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User) As BatchCollection
+        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32) As BatchCollection
             Dim tmpList As New BatchCollection()
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myReader As SqlDataReader = BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user)
+                Using myReader As SqlDataReader = BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user, OnlyHasResults)
                     If myReader.HasRows Then
                         tmpList = New BatchCollection()
 
@@ -435,10 +436,10 @@ Namespace REMI.Dal
             End If
         End Function
 
-        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User) As List(Of BatchView)
+        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32) As List(Of BatchView)
             Dim tmpList As New List(Of BatchView)()
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myReader As SqlDataReader = BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user)
+                Using myReader As SqlDataReader = BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user, OnlyHasResults)
                     If myReader.HasRows Then
                         tmpList = New List(Of BatchView)
                         While myReader.Read()

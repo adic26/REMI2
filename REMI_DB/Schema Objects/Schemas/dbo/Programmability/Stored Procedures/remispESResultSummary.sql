@@ -1,16 +1,14 @@
-﻿ALTER PROCEDURE [dbo].[remispESResultSummary] @RequestNumber NVARCHAR(11)
+﻿ALTER PROCEDURE [dbo].[remispESResultSummary] @BatchID INT
 AS
 BEGIN
 	SET NOCOUNT ON
 
-	DECLARE @BatchID INT
 	DECLARE @UnitRows VARCHAR(8000)
 	DECLARE @sql VARCHAR(8000)
 	DECLARE @BatchUnitNumber INT
 	DECLARE @UnitCount INT
 	DECLARE @RowID INT
 	DECLARE @ID INT
-	SELECT @BatchID = ID FROM Batches WHERE QRANumber=@RequestNumber
 	CREATE TABLE #Results (TestID INT, TestName NVARCHAR(MAX), TestStageID INT, TestStageName NVARCHAR(MAX))
 
 	SELECT ROW_NUMBER() OVER (ORDER BY tu.ID) AS RowID, tu.BatchUnitNumber, tu.ID
