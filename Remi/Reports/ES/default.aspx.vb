@@ -207,7 +207,7 @@ Partial Class ES_Default
             Dim instance = New REMI.Dal.Entities().Instance()
             'And m.PassFail = False
             If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID).FirstOrDefault() IsNot Nothing) Then
-                Dim msm As REMI.Measuerments = DirectCast(e.Row.FindControl("msmMeasuerments"), REMI.Measuerments)
+                Dim msm As Remi.Measurements = DirectCast(e.Row.FindControl("msmMeasuerments"), Remi.Measurements)
 
                 msm.Visible = True
                 msm.BatchID = hdnBatchID.Value

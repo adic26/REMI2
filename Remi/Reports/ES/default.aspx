@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" EnableViewState="true" EnableEventValidation="false" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" Inherits="Remi.ES_Default" Codebehind="default.aspx.vb" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
-<%@ Register Src="~/Controls/Measuerments.ascx" TagName="Measuerments" TagPrefix="msm" %>
+<%@ Register Src="~/Controls/Measurements.ascx" TagName="Measurements" TagPrefix="msm" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="server"></asp:Content>
@@ -180,7 +180,7 @@
                             <ItemTemplate>
                                 <img alt = "" style="cursor: pointer" src="../../Design/Icons/png/16x16/zoom_in.png" id="imgadd" runat="server"  EnableViewState="true" />
                                 <asp:Panel ID="pnlmeasureBreakdown" runat="server" Style="display: none"  EnableViewState="true">
-                                    <msm:Measuerments runat="server" ID="msmMeasuerments" Visible="false" EnableViewState="true" ShowExport="false" ShowFailsOnly="false" IncludeArchived="false" DisplayMode="ExecutiveSummaryDisplay" EmptyDataTextInformation="" EmptyDataTextMeasurement="There were no measurements found for this result." />
+                                    <msm:Measurements runat="server" ID="msmMeasuerments" Visible="false" EnableViewState="true" ShowExport="false" ShowFailsOnly="false" IncludeArchived="false" DisplayMode="ExecutiveSummaryDisplay" EmptyDataTextInformation="" EmptyDataTextMeasurement="There were no measurements found for this result." />
                                 </asp:Panel>
                             </ItemTemplate>
                         </asp:TemplateField>

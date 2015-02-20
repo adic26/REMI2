@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="Measuerments.ascx.vb" Inherits="Remi.Measuerments" EnableViewState="true" %>
+﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="Measurements.ascx.vb" Inherits="Remi.Measurements" EnableViewState="true" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
    
 <link href="../Design/jQueryCSS/jQueryUI/jquery-ui-1.11.3.css" rel="stylesheet" />

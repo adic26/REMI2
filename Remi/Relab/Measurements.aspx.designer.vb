@@ -164,5 +164,5 @@ Partial Public Class Relab_Measurements
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents msmMeasuerments As Global.Remi.Measuerments
+    Protected WithEvents msmMeasuerments As Global.Remi.Measurements
 End Class

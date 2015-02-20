@@ -11,7 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class Measuerments
+Partial Public Class Measurements
 
     '''<summary>
     '''pnlMeasurements control.

@@ -1,7 +1,7 @@
 ﻿Imports Remi.BusinessEntities
 Imports Remi.Bll
 
-Public Class Measuerments
+Public Class Measurements
     Inherits System.Web.UI.UserControl
 
     Private _emptyDataTextMeasure As String
