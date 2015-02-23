@@ -20,6 +20,7 @@ BEGIN
 
 	DELETE x FROM Relab.ResultsInformation x WHERE x.XMLID IN (SELECT id FROM Relab.ResultsXML WHERE ResultID in (SELECT ID FROM Relab.Results WHERE TestUnitID IN (SELECT id FROM TestUnits WHERE BatchID=@batchid)))
 	DELETE rmf FROM Relab.ResultsMeasurementsFiles rmf WHERE ResultMeasurementID IN (SELECT ID FROM Relab.ResultsMeasurements rm WHERE rm.ResultID IN (SELECT id FROM Relab.Results WHERE TestUnitID IN (SELECT id FROM TestUnits WHERE BatchID=@batchid)))
+	DELETE rma FROM Relab.ResultsMeasurementsAudit rma WHERE ResultMeasurementID IN (SELECT ID FROM Relab.ResultsMeasurements rm WHERE rm.ResultID IN (SELECT id FROM Relab.Results WHERE TestUnitID IN (SELECT id FROM TestUnits WHERE BatchID=@batchid)))
 	DELETE rm FROM Relab.ResultsMeasurements rm WHERE rm.ResultID IN (SELECT id FROM Relab.Results WHERE TestUnitID IN (SELECT id FROM TestUnits WHERE BatchID=@batchid))
 	DELETE x FROM Relab.ResultsXML x WHERE x.ResultID IN (SELECT ID FROM Relab.Results WHERE TestUnitID IN (SELECT id FROM TestUnits WHERE BatchID=@batchid))
 	DELETE r FROM Relab.Results r WHERE TestUnitID IN (SELECT id FROM TestUnits WHERE BatchID=@batchid)
@@ -29,5 +30,5 @@ BEGIN
 	SET NOCOUNT OFF
 END
 GO
-GRANT EXECUTE ON [Relab].[remispResultsInformation] TO Remi
+GRANT EXECUTE ON [Relab].[remispDeleteAllResults] TO Remi
 GO
