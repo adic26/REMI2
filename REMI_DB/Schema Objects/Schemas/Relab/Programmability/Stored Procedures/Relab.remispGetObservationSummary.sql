@@ -5,7 +5,7 @@ BEGIN
 	DECLARE @ID INT
 	DECLARE @BatchUnitNumber INT
 	DECLARE @query NVARCHAR(4000)
-	CREATE TABLE #Observations (Observation NVARCHAR(255) NOT NULL)
+	CREATE TABLE #Observations (Observation NVARCHAR(255) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL)
 
 	SELECT ROW_NUMBER() OVER (ORDER BY tu.ID) AS RowID, tu.BatchUnitNumber, tu.ID
 	INTO #units
