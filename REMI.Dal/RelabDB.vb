@@ -433,6 +433,38 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetObservations(ByVal batchID As Int32) As DataTable
+            Dim dt As New DataTable("GetObservations")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("Relab.remispGetObservations", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@BatchID", batchID)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "GetObservations"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
+        Public Shared Function GetObservationSummary(ByVal batchID As Int32) As DataTable
+            Dim dt As New DataTable("GetObservationSummary")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("Relab.remispGetObservationSummary", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@BatchID", batchID)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "GetObservationSummary"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
         Public Shared Function ResultGraph(ByVal batchIDs As String, ByVal unitIDs As String, ByVal measurementTypeID As Int32, ByVal parameterName As String, ByVal parameterValue As String, ByVal showUpperLowerLimits As Boolean, ByVal testID As Int32, ByVal xaxis As Int32, ByVal plotValue As Int32, ByVal includeArchived As Boolean, ByVal stages As String) As DataSet
             Dim ds As New DataSet()
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)

@@ -248,6 +248,7 @@
     <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET" />
     <Folder Include="Scripts\February172015" />
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities" />
+    <Folder Include="Oracle\DTATTA" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2721,5 +2722,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities\remispDeleteAllResults.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetObservations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetObservationSummary.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Oracle\DTATTA\Data.sql" />
   </ItemGroup>
 </Project>

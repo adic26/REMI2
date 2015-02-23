@@ -512,9 +512,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True) As BatchCollection
+        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True, Optional OnlyHasResults As Int32 = 0) As BatchCollection
             Try
-                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser)
+                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser, OnlyHasResults)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Empty)
                 Return New BatchCollection
@@ -522,9 +522,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True) As List(Of BatchView)
+        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True, Optional OnlyHasResults As Int32 = 0) As List(Of BatchView)
             Try
-                Return BatchDB.BatchSearchBase(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser)
+                Return BatchDB.BatchSearchBase(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser, OnlyHasResults)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Empty)
                 Return New List(Of BatchView)

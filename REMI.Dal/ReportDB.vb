@@ -36,12 +36,12 @@ Namespace REMI.Dal
             Return dt
         End Function
 
-        Public Shared Function ESResultSummary(ByVal requestNumber As String) As DataTable
+        Public Shared Function ESResultSummary(ByVal batchID As Int32) As DataTable
             Dim dt As New DataTable("ESResultSummary")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispESResultSummary", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myCommand.Parameters.AddWithValue("@BatchID", batchID)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)

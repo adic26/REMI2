@@ -14,8 +14,8 @@ BEGIN
 		(SELECT TestStageName FROM TestStages WHERE TestID=t.ID) As TestStage, (SELECT JobName FROM Jobs WHERE ID IN (SELECT JobID FROM TestStages WHERE TestID=t.ID)) As JobName,
 		t.Owner, t.Trainee, t.DegradationVal
 	FROM Tests t
-		INNER JOIN #Tests tt ON tt.TestID=t.ID
-	WHERE TestType = @TestType 
+	WHERE TestType = @TestType
+		AND ((@TestType = 1 AND t.ID IN (SELECT tt.TestID FROM #Tests tt) ) OR @TestType <> 1)
 		AND
 		(
 			(@IncludeArchived = 0 AND ISNULL(t.IsArchived, 0) = 0)

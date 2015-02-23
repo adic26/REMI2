@@ -53,8 +53,11 @@ Public Class Relab_Measurements
                 ddlTestStage.SelectedValue = dt.FirstOrDefault().TestStageID
                 ddlUnits.SelectedValue = dt.FirstOrDefault().TestUnitID
 
+                msmMeasuerments.Visible = True
+                msmMeasuerments.BatchID = batchID
+                msmMeasuerments.ResultID = resultID
                 msmMeasuerments.TestID = ddlTests.SelectedValue
-                msmMeasuerments.SetDataSource(resultID, batchID)
+                msmMeasuerments.DataBind()
             End If
         End If
     End Sub

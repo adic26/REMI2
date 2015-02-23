@@ -244,11 +244,11 @@
     <Compile Include="Controls\IBatchListControl.ascx.designer.vb">
       <DependentUpon>IBatchListControl.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Measuerments.ascx.designer.vb">
-      <DependentUpon>Measuerments.ascx</DependentUpon>
+    <Compile Include="Controls\Measurements.ascx.designer.vb">
+      <DependentUpon>Measurements.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Measuerments.ascx.vb">
-      <DependentUpon>Measuerments.ascx</DependentUpon>
+    <Compile Include="Controls\Measurements.ascx.vb">
+      <DependentUpon>Measurements.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Controls\Notifications.ascx.designer.vb">
@@ -638,7 +638,7 @@
     <Content Include="Admin\Tools\ClearCache.aspx" />
     <Content Include="Admin\TrackingLocationTests.aspx" />
     <Content Include="Controls\FAControl.ascx" />
-    <Content Include="Controls\Measuerments.ascx" />
+    <Content Include="Controls\Measurements.ascx" />
     <Content Include="Controls\RequestSetup.ascx" />
     <Content Include="Controls\Search.ascx" />
     <Content Include="Default.aspx" />
@@ -676,6 +676,7 @@
     <Content Include="Design\jQueryCSS\images\sort_desc_disabled.png" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.10.4.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.11.2.css" />
+    <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.11.3.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui-1.8.2.custom.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.css" />
     <Content Include="Design\jQueryCSS\jQueryUI\jquery-ui.structure.css" />
@@ -690,6 +691,7 @@
     <Content Include="Design\scripts\i18n\defaults-en_US.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.10.4.min.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.11.2.js" />
+    <Content Include="Design\scripts\jQueryUI\jquery-ui-1.11.3.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui-1.8.2.custom.min.js" />
     <Content Include="Design\scripts\jQueryUI\jquery-ui.min.js" />
     <Content Include="Design\scripts\jQueryUI\jquery.blockUI.js" />

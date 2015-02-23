@@ -194,6 +194,7 @@ Public Class REMIInternal
     End Function
 
     <System.Web.Services.WebMethod()> _
+    <System.Web.Script.Services.ScriptMethod()> _
     Public Function GetSlides(ByVal contextKey As String) As AjaxControlToolkit.Slide()
         Dim dt As New DataTable
         Dim photos(dt.Rows.Count) As AjaxControlToolkit.Slide

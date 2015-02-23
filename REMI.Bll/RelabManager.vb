@@ -283,6 +283,24 @@ Namespace REMI.Bll
             Return New DataSet("PassFail")
         End Function
 
+        Public Shared Function GetObservations(ByVal batchID As Int32) As DataTable
+            Try
+                Return RelabDB.GetObservations(batchID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("GetObservations")
+        End Function
+
+        Public Shared Function GetObservationSummary(ByVal batchID As Int32) As DataTable
+            Try
+                Return RelabDB.GetObservationSummary(batchID)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("GetObservationSummary")
+        End Function
+
         Public Shared Function ReassignTestStage(ByVal batchID As Int32, ByVal testID As Int32, ByVal testStageID As Int32, ByVal unitID As Int32, ByVal newTestStageID As Int32) As Boolean
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()

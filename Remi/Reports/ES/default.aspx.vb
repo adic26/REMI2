@@ -12,9 +12,10 @@ Partial Class ES_Default
         If (Not Page.IsPostBack) Then
             Dim tmpStr As String = Request.QueryString.Get("RN")
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr))
-            Dim b As BatchView
 
             If bc.Validate Then
+                Dim mi As New MenuItem
+                Dim b As BatchView
                 Dim bcol As New BatchCollection
                 b = BatchManager.GetViewBatch(bc.BatchNumber)
                 bcol.Add(b)
@@ -29,18 +30,18 @@ Partial Class ES_Default
                 gvwRequestInfo.DataBind()
                 rptRequestSummary.DataSource = bcol
                 rptRequestSummary.DataBind()
+                Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
+                grdApproval.DataSource = ds.Tables(1)
+                grdApproval.DataBind()
 
-                gvwResultSummary.DataSource = ReportManager.ESResultSummary(b.QRANumber)
-                gvwResultSummary.DataBind()
-
-                Dim bs As New Remi.BusinessEntities.BatchSearch
+                Dim bs As New REMI.BusinessEntities.BatchSearch
                 bs.ProductID = b.ProductID
                 bs.JobName = b.JobName
                 bs.ProductTypeID = b.ProductTypeID
 
-                Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False)
+                Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
 
-                For Each batch As Batch In batchCol
+                For Each batch As Batch In batchCol.Take(10)
                     Dim l As New ListItem
 
                     If (b.ID = batch.ID) Then
@@ -54,10 +55,6 @@ Partial Class ES_Default
                 Next
 
                 rboQRASlider.SelectedValue = b.ID
-
-                Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
-                grdApproval.DataSource = ds.Tables(1)
-                grdApproval.DataBind()
 
                 SetStatus(ds.Tables(2).Rows(0)(0).ToString())
 
@@ -76,8 +73,6 @@ Partial Class ES_Default
 
                     pnlFAInfo.Controls.Add(fac)
                 Next
-
-                Dim mi As New MenuItem
 
                 If (pnlFA.Style.Item("Display") = "block") Then
                     mi = New MenuItem
@@ -126,13 +121,19 @@ Partial Class ES_Default
     End Sub
 
     Protected Sub gvwResultBreakDownGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwResultBreakDown.PreRender
-        If (Not IsPostBack) Then
-            Helpers.MakeAccessable(gvwResultBreakDown)
-        End If
+        Helpers.MakeAccessable(gvwResultBreakDown)
     End Sub
 
     Protected Sub gvwgrdApprovalGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdApproval.PreRender
         Helpers.MakeAccessable(grdApproval)
+    End Sub
+
+    Protected Sub gvwObservationsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwObservations.PreRender
+        Helpers.MakeAccessable(gvwObservations)
+    End Sub
+
+    Protected Sub gvwObservationSummaryGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwObservationSummary.PreRender
+        Helpers.MakeAccessable(gvwObservationSummary)
     End Sub
 
     Public ReadOnly Property PartName
@@ -149,9 +150,6 @@ Partial Class ES_Default
 
             SetStatus(ds.Tables(2).Rows(0)(0).ToString())
         End If
-    End Sub
-
-    Protected Sub ESMenu_MenuItemClick(sender As Object, e As MenuEventArgs)
     End Sub
 
     Protected Sub gvwResultSummary_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwResultSummary.RowDataBound
@@ -176,18 +174,17 @@ Partial Class ES_Default
             Dim imgadd As HtmlImage = DirectCast(e.Row.FindControl("imgadd"), HtmlImage)
             Dim pnlmeasureBreakdown As Panel = DirectCast(e.Row.FindControl("pnlmeasureBreakdown"), Panel)
             Dim instance = New REMI.Dal.Entities().Instance()
+            'And m.PassFail = False
+            If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID).FirstOrDefault() IsNot Nothing) Then
+                Dim msm As Remi.Measurements = DirectCast(e.Row.FindControl("msmMeasuerments"), Remi.Measurements)
 
-            If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID And m.PassFail = False).FirstOrDefault() IsNot Nothing) Then
-                Dim msm As REMI.Measuerments = DirectCast(e.Row.FindControl("msmMeasuerments"), REMI.Measuerments)
                 msm.Visible = True
-                msm.SetDataSource(resultID, hdnBatchID.Value)
+                msm.BatchID = hdnBatchID.Value
+                msm.ResultID = resultID
+                msm.TestID = 0
+                msm.DataBind()
             Else
                 imgadd.Visible = False
-            End If
-
-            If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID And m.ResultsMeasurementsFiles.Count > 0).FirstOrDefault() IsNot Nothing) Then
-                Dim img As ImageButton = DirectCast(e.Row.FindControl("img"), ImageButton)
-                img.Visible = True
             End If
 
             For Each dc As DataControlFieldCell In e.Row.Cells
@@ -204,54 +201,56 @@ Partial Class ES_Default
         End If
     End Sub
 
-    Protected Sub imgbtn_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        Dim btndetails As ImageButton = DirectCast(sender, ImageButton)
-        Dim gvrow As GridViewRow = DirectCast(btndetails.NamingContainer, GridViewRow)
-        hdnResultID.Value = gvwResultBreakDown.DataKeys(gvrow.RowIndex).Values(0).ToString()
-        Dim contextKey As String = hdnResultID.value
-
-        sseESImages.ContextKey = contextKey
-        mpeES.Show()
+    Protected Sub gvwObservations_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwObservations.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim hdnImgStr As HiddenField = DirectCast(e.Row.FindControl("hdnImgStr"), HiddenField)
+            If (Not (String.IsNullOrEmpty(hdnImgStr.Value))) Then
+                If (Not (hdnImgStr.Value.Contains(";base64,AAAAAA=="))) Then
+                    Dim img As WebControls.Image = DirectCast(e.Row.FindControl("img"), WebControls.Image)
+                    img.Visible = True
+                    img.ImageUrl = hdnImgStr.Value
+                    img.Width = 30
+                    img.Height = 30
+                    img.Attributes.Add("onmouseover", String.Format("Tip('<img src=""{0}""/>',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'',TITLEBGCOLOR,'#6494C8')", hdnImgStr.Value))
+                    img.Attributes.Add("onmouseout", "UnTip()")
+                End If
+            End If
+        End If
     End Sub
 
-    <System.Web.Services.WebMethod()> _
-    Public Shared Function GetSlides(ByVal contextKey As String) As AjaxControlToolkit.Slide()
-        If (contextKey IsNot Nothing) Then
-            Dim dt As DataTable = RelabManager.MeasurementFiles(0, contextKey)
-            Dim photos(dt.Rows.Count) As AjaxControlToolkit.Slide
+    Protected Sub gvwObservationSummary_DataBound(sender As Object, e As EventArgs)
+        Dim count As Int32 = gvwObservationSummary.Rows.Count
 
-            For i = 0 To dt.Rows.Count - 1
-                Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
-                Dim downloadURL As String = String.Format("http://{0}:{1}/Handlers/Download.ashx?img={2}", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
-                Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)
+        If (count > 0) Then
+            pnlObservationSummary.Enabled = True
 
-                If (Helpers.IsRecognisedImageFile(fileName)) Then
-                    photos(i) = New AjaxControlToolkit.Slide(imageDataURL, fileName, "<a href='" + downloadURL + "'>Download</a>")
-                Else
-                    Select Case (IO.Path.GetExtension(fileName).ToUpper)
-                        Case "CSV"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/csv_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "XLS"
-                        Case "XLSX"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xls_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "XML"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xml_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "PPT"
-                        Case "PPTX"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/ppt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "PDF"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/pdf_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "TXT"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case Else
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                    End Select
-                End If
-            Next
-            Return photos
+            If (ESMenu.FindItem("Observation Summary") Is Nothing) Then
+                Dim mi As MenuItem = New MenuItem
+                mi.NavigateUrl = "#observationSummary"
+                mi.Text = "Observation Summary"
+
+                ESMenu.Items(0).ChildItems.Add(mi)
+            End If
+        Else
+            pnlObservationSummary.Enabled = False
         End If
+    End Sub
 
-        Return Nothing
-    End Function
+    Protected Sub gvwObservations_DataBound(sender As Object, e As EventArgs)
+        Dim count As Int32 = gvwObservations.Rows.Count
 
+        If (count > 0) Then
+            pnlObservations.Enabled = True
+
+            If (ESMenu.FindItem("Observations") Is Nothing) Then
+                Dim mi As MenuItem = New MenuItem
+                mi.NavigateUrl = "#observations"
+                mi.Text = "Observations"
+
+                ESMenu.Items(0).ChildItems.Add(mi)
+            End If
+        Else
+            pnlObservations.Enabled = False
+        End If
+    End Sub
 End Class

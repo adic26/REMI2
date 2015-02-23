@@ -24,7 +24,8 @@
     @TrackingLocationFunction INT = NULL,
 	@NotInTrackingLocationFunction INT  = NULL,
 	@Revision NVARCHAR(10) = NULL,
-	@DepartmentID INT = NULL
+	@DepartmentID INT = NULL,
+	@OnlyHasResults INT = NULL
 AS
 	DECLARE @TestName NVARCHAR(400)
 	DECLARE @TestStageName NVARCHAR(400)
@@ -128,7 +129,7 @@ AS
 				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, 
 				ISNULL(b.[Order], 100) As PriorityOrder, b.DepartmentID, l6.[Values] AS Department, b.Requestor
 			FROM Batches as b WITH(NOLOCK)
-				inner join Products p WITH(NOLOCK) on b.ProductID=p.id 
+				INNER JOIN Products p WITH(NOLOCK) on b.ProductID=p.id 
 				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
 				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
@@ -186,7 +187,7 @@ AS
 						FROM TrackingLocations tl WITH(NOLOCK)
 							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID --AND dtl.OutTime IS NULL
 								AND dtl.InTime BETWEEN @BatchStart AND @BatchEnd
-						INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
+							INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
 						WHERE TrackingLocationTypeID=@TrackingLocationID)
 					)
 				)
@@ -196,10 +197,10 @@ AS
 					OR
 					(
 						b.ID IN (select DISTINCT tu.BatchID
-						from TrackingLocations tl WITH(NOLOCK)
-						inner join devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
-						inner join TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
-						INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
+							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
 						where tlt.TrackingLocationFunction=@TrackingLocationFunction)
 					)
 				)
@@ -209,10 +210,10 @@ AS
 					OR
 					(
 						b.ID IN (select DISTINCT tu.BatchID
-						from TrackingLocations tl WITH(NOLOCK)
-						inner join devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
-						inner join TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
-						INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
+							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
 						where tlt.TrackingLocationFunction NOT IN (@NotInTrackingLocationFunction))
 					)
 				)
@@ -223,6 +224,12 @@ AS
 					(@BatchStart IS NOT NULL AND @BatchEnd IS NOT NULL AND b.ID IN (Select distinct batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime BETWEEN @BatchStart AND @BatchEnd))
 				)
 				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@ExecutingUserID)))
+				AND
+				(
+					(@OnlyHasResults IS NULL OR @OnlyHasResults = 0)
+					OR
+					(@OnlyHasResults = 1 AND EXISTS(SELECT 1 FROM TestUnits tu INNER JOIN Relab.Results r ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
+				)
 		)AS BatchesRows		
 	ORDER BY BatchesRows.PriorityOrder ASC, BatchesRows.QRANumber DESC
 	
