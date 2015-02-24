@@ -460,7 +460,7 @@ BEGIN
 					UPDATE Relab.ResultsMeasurementsFiles 
 					SET ResultMeasurementID=@ResultMeasurementID
 					FROM Relab.ResultsMeasurementsFiles 
-						INNER JOIN #files f ON f.[FileName] = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+						INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 					WHERE ResultMeasurementID IS NULL
 				END
 				ELSE
@@ -507,11 +507,11 @@ BEGIN
 						INSERT INTO #files ([FileName])
 						SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 						FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
-					
+
 						UPDATE Relab.ResultsMeasurementsFiles 
 						SET ResultMeasurementID=@ResultMeasurementID2
 						FROM Relab.ResultsMeasurementsFiles 
-							INNER JOIN #files f ON f.[FileName] = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+							INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 						WHERE ResultMeasurementID IS NULL
 						
 						IF (@Parameters <> '')

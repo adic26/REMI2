@@ -82,12 +82,12 @@ BEGIN
 		SELECT @BatchUnitNumber=BatchUnitNumber, @TestUnitID=ID FROM #units WITH(NOLOCK) WHERE RowID=@RowID
 
 		SET @sql = 'UPDATE t SET [' + CONVERT(VARCHAR,@BatchUnitNumber) + '] = 
-			(
+			ISNULL((
 				SELECT DISTINCT CONVERT(BIT, 1)
 				FROM vw_GetTaskInfo ti 
 				WHERE ti.QRANumber = ''' + @QRANumber + ''' AND t.TestStageID=ti.TestStageID 
 					AND ti.testunitsfortest LIKE ''%' + CONVERT(VARCHAR,@BatchUnitNumber) + ',%''
-			)
+			), 0)
 		FROM #Testing t
 	'
 		

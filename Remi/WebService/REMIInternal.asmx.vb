@@ -197,10 +197,13 @@ Public Class REMIInternal
     <System.Web.Script.Services.ScriptMethod()> _
     Public Function GetSlides(ByVal contextKey As String) As AjaxControlToolkit.Slide()
         Dim dt As New DataTable
-        Dim photos(dt.Rows.Count) As AjaxControlToolkit.Slide
+        Dim photos(0) As AjaxControlToolkit.Slide
+        Dim imageCount As Int32 = 0
 
         If (contextKey <> "0") Then
             dt = RelabManager.MeasurementFiles(contextKey, 0)
+
+            ReDim Preserve photos(dt.Rows.Count)
 
             For i = 0 To dt.Rows.Count - 1
                 Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
@@ -229,6 +232,7 @@ Public Class REMIInternal
                             photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
                     End Select
                 End If
+                imageCount = imageCount + 1
             Next
         End If
 
