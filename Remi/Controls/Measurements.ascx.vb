@@ -18,54 +18,30 @@ Public Class Measurements
 
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then
-            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("../Design/scripts/jQuery/jquery-1.10.2.js"))
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("/Design/scripts/jQuery/jquery-1.10.2.js"))
         End If
 
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.11.3")) Then
-            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.11.3", ResolveClientUrl("../Design/scripts/jQueryUI/jquery-ui-1.11.3.js"))
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.11.3", ResolveClientUrl("/Design/scripts/jQueryUI/jquery-ui-1.11.3.js"))
         End If
 
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "wz_tooltip")) Then
-            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "wz_tooltip", ResolveClientUrl("../Design/scripts/wz_tooltip.js"))
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "wz_tooltip", ResolveClientUrl("/Design/scripts/wz_tooltip.js"))
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "ToolBox", ResolveClientUrl("/Design/scripts/ToolBox.js"))
         End If
 
-        If (Not Page.ClientScript.IsStartupScriptRegistered(Me.Page.GetType(), "OnClickDialog")) Then
-            Dim sb As New StringBuilder
-            sb.AppendLine("<script language='javascript'>")
-            sb.AppendLine("$(document).on(""click"", ""[id*=viewImages]"", function (e) {")
-            sb.AppendLine("var imgID = ($(this)[0]).id;")
-            sb.AppendLine("var resultID = ($(this)[0]).attributes[""resultID""].value;")
-            sb.AppendLine("var id = ($(this)[0]).attributes[""sseImg""].value + ""_"" + resultID + ""_ssb"";")
-            sb.AppendLine("var ucID = ($(this)[0]).attributes[""pageID""].value;")
-            sb.AppendLine("$find(id).set_contextKey(($(this)[0]).attributes[""mID""].value);")
-            sb.AppendLine("$(""#"" + ucID + ""_images"").dialog({")
-            sb.AppendLine("autoResize: true,")
-            sb.AppendLine("height: 'auto',")
-            sb.AppendLine("width: 'auto',")
-            sb.AppendLine("position: 'center',")
-            sb.AppendLine("modal: true,")
-            sb.AppendLine("appendTo: 'body',")
-            sb.AppendLine("autoOpen: true,")
-            sb.AppendLine("buttons: [],")
-            sb.AppendLine("closeOnEscape: true,")
-            sb.AppendLine("closeText: null,")
-            sb.AppendLine("open: function () {")
-            sb.AppendLine("$find(id).set_contextKey(0);")
-            sb.AppendLine("$(this).parent().appendTo($(""#"" + ucID + ""_images"").parent().parent());")
-            sb.AppendLine("}});")
-            sb.AppendLine("e.preventDefault();")
-            sb.AppendLine("return false;")
-            sb.AppendLine("});")
-            sb.AppendLine("</script>")
+        If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "ImageClick_Measurements")) Then
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "ImageClick_Measurements", ResolveClientUrl("/Design/scripts/ImageClick_Measurements.js"))
+            Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "magnific-popup", ResolveClientUrl("/Design/scripts/MagnificPopup/magnific-popup.js"))
 
-            Page.ClientScript.RegisterStartupScript(Me.Page.GetType(), "OnClickDialog", sb.ToString())
         End If
+
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not IsPostBack Then
-            Me.DataBind()
-        End If
+        'If Not IsPostBack Then
+        '    Me.DataBind()
+        'End If
     End Sub
 
     Public Overrides Sub DataBind()
@@ -98,7 +74,7 @@ Public Class Measurements
             If (dtMeasure.Rows.Count > 0) Then
                 grdResultMeasurements.DataSource = dtMeasure
                 grdResultMeasurements.DataBind()
-                sseImages.BehaviorID = String.Format("{0}_{1}_ssb", sseImages.UniqueID, ResultID)
+                'sseImages.BehaviorID = String.Format("{0}_{1}_ssb", sseImages.UniqueID, ResultID)
             Else
                 chkIncludeArchived.Visible = False
                 chkOnlyFails.Visible = False

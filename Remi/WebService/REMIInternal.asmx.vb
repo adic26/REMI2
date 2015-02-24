@@ -7,6 +7,8 @@ Imports REMI.Bll
 Imports log4net
 Imports REMI.Contracts
 Imports System.Data
+Imports System.Drawing
+Imports System.IO
 Imports System.Web.Script.Services
 
 <System.Web.Services.WebService(Name:="REMIInternal", Namespace:="http://go/remi/")> _
@@ -238,4 +240,41 @@ Public Class REMIInternal
 
         Return photos
     End Function
+
+
+
+    <System.Web.Services.WebMethod()> _
+    <System.Web.Script.Services.ScriptMethod()> _
+    Public Function GetSlidesJS(ByVal contextKey As String) As List(Of String)
+        Dim dt As New DataTable
+        Dim photos(0) As AjaxControlToolkit.Slide
+        Dim imgBuilder As New List(Of String)
+        Dim imageCount As Int32 = 0
+
+
+
+        If (contextKey <> "0") Then
+            dt = RelabManager.MeasurementFiles(contextKey, 0)
+
+            For i = 0 To dt.Rows.Count - 1
+                'ReDim Preserve photos(imageCount + 1)
+
+                Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
+                'Dim imageDataURL As String = String.Format(
+                Dim downloadURL As String = String.Format("http://{0}:{1}/Handlers/Download.ashx?img={2}", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
+                Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)
+
+                If (Helpers.IsRecognisedImageFile(fileName)) Then
+                    ' photos(i) = New AjaxControlToolkit.Slide(imageDataURL, fileName, "<a href='" + downloadURL + "'>Download</a>")
+                    'imgBuilder.Add(String.Format("<a class='image-link' href='{0}'><img src='{0}'></a>", imageDataURL.ToString()))
+                    imgBuilder.Add(imageDataURL.ToString())
+                End If
+                imageCount = imageCount + 1
+            Next
+        End If
+
+        Return imgBuilder
+    End Function
+
+
 End Class

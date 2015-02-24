@@ -1,7 +1,9 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="Measurements.ascx.vb" Inherits="Remi.Measurements" EnableViewState="true" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
    
-<link href="../Design/jQueryCSS/jQueryUI/jquery-ui-1.11.3.css" rel="stylesheet" />
+<link href="/Design/jQueryCSS/jQueryUI/jquery-ui-1.11.3.css" rel="stylesheet" />
+<link href="/Design/jQueryCSS/MagnificPopup/magnific-popup.css" rel="stylesheet" />
+
 
 <asp:Panel runat="server" ID="pnlMeasurements">
     <script type="text/javascript">
@@ -45,7 +47,9 @@
     <asp:HiddenField runat="server" ID="hdnResultID" Value="0" />
     <asp:HiddenField runat="server" ID="hdnBatchID" Value="0" />
     
-    <div id="images" runat="server" title="" style="display: none;" class="ModalPopup">
+    
+
+<%--    <div id="images" runat="server" title="" style="display: none;" class="ModalPopup">
         <asp:Label runat="server" ID="lblTitle"></asp:Label><br />
         <asp:Image ID="imgslides" runat="server" /><br />
         <asp:Button ID="btnPrevious" runat="server" Text="Prev" CssClass="buttonSmall"/>
@@ -53,7 +57,7 @@
         <asp:Button ID="btnNext" runat="server" Text="Next" CssClass="buttonSmall"/>
         <asp:Label ID="lblDesc" runat="server"></asp:Label>
         <asp:SlideShowExtender runat="server" ID="sseImages" Enabled="true" UseContextKey="true" EnableViewState="true" TargetControlID="imgslides" ImageTitleLabelID="lblTitle" ImageDescriptionLabelID="lblDesc" PlayInterval="2000" Loop="true" SlideShowServicePath="~/WebService/REMIInternal.asmx" SlideShowServiceMethod="GetSlides" NextButtonID="btnNext" PreviousButtonID="btnPrevious" PlayButtonID="btnPlay"></asp:SlideShowExtender>
-    </div>
+    </div>--%>
     
     <div class="removeStyle">
         <asp:ImageButton runat="server" ID="imgExport" ImageUrl="../Design/Icons/png/24x24/xls_file.png" OnClick="imgExport_Click" style="text-align:left;display:inline;" />
@@ -67,7 +71,7 @@
         <Columns>
             <asp:TemplateField HeaderText="Image" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
                 <ItemTemplate>                    
-                    <input type="image" src="../Design/Icons/png/24x24/png_file.png" runat="server" visible="false" id='viewImages' sseImg='<%# sseImages.UniqueID %>' mID='<%# Eval("ID") %>' pageID='<%# Me.ClientID %>' resultID='<%# ResultID.ToString()%>' role="button" />
+                    <input type="image" src="../Design/Icons/png/24x24/png_file.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("ID") %>' pageID='<%# Me.ClientID %>' role="button" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Measurement" SortExpression="Measurement" ItemStyle-Width="250px" ItemStyle-HorizontalAlign="Left" ItemStyle-Wrap="true" ItemStyle-CssClass="removeStyle">
