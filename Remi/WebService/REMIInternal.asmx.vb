@@ -203,9 +203,9 @@ Public Class REMIInternal
         If (contextKey <> "0") Then
             dt = RelabManager.MeasurementFiles(contextKey, 0)
 
-            For i = 0 To dt.Rows.Count - 1
-                ReDim Preserve photos(imageCount + 1)
+            ReDim Preserve photos(dt.Rows.Count)
 
+            For i = 0 To dt.Rows.Count - 1
                 Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
                 Dim downloadURL As String = String.Format("http://{0}:{1}/Handlers/Download.ashx?img={2}", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
                 Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)

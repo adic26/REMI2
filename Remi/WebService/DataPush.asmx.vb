@@ -50,7 +50,7 @@ Public Class DataPush
         End Try
     End Sub
 
-    <WebMethod(Description:="Get All Results For A Request Based On A Test")> _
+    <WebMethod(Description:="Get All Results For A Request Based On Tests")> _
     Public Function GetResults(ByVal requestNumber As String, ByVal testIDs As String, ByVal testStageName As String, ByVal unitNumber As Int32) As DataTable
         Try
             Return RelabManager.GetResults(requestNumber, testIDs, testStageName, unitNumber)
@@ -58,6 +58,16 @@ Public Class DataPush
             RelabManager.LogIssue("GetResults", "e3", NotificationType.Errors, ex)
         End Try
         Return New DataTable("Results")
+    End Function
+
+    <WebMethod(Description:="Get All Images For A Measurement or Result")> _
+    Public Function GetMeasurementFiles(ByVal measurementID As Int32, ByVal resultID As Int32) As DataTable
+        Try
+            Return RelabManager.MeasurementFiles(measurementID, resultID)
+        Catch ex As Exception
+            RelabManager.LogIssue("GetMeasurementFiles", "e3", NotificationType.Errors, ex)
+        End Try
+        Return New DataTable("MeasurementFiles")
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Modify a result")> _
