@@ -39,9 +39,6 @@ Public Class Measurements
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        'If Not IsPostBack Then
-        '    Me.DataBind()
-        'End If
     End Sub
 
     Public Overrides Sub DataBind()
@@ -74,7 +71,6 @@ Public Class Measurements
             If (dtMeasure.Rows.Count > 0) Then
                 grdResultMeasurements.DataSource = dtMeasure
                 grdResultMeasurements.DataBind()
-                'sseImages.BehaviorID = String.Format("{0}_{1}_ssb", sseImages.UniqueID, ResultID)
             Else
                 chkIncludeArchived.Visible = False
                 chkOnlyFails.Visible = False
