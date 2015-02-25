@@ -19,6 +19,7 @@ BEGIN
 	DECLARE @FinalResult NVARCHAR(15)
 	DECLARE @PassFail BIT
 	DECLARE @TestUnitNumber INT
+	DECLARE @TestStageType INT
 	DECLARE @Insert INT
 	SET @Insert = 1
 
@@ -116,17 +117,26 @@ BEGIN
 	BEGIN
 		PRINT 'TestUnitID: ' + CONVERT(VARCHAR, @TestUnitID)
 
-		SELECT @TestStageID = ts.ID 
+		SELECT @TestStageID = ts.ID, @TestStageType=ts.TestStageType
 		FROM Jobs j
 			INNER JOIN TestStages ts ON j.ID=ts.JobID
 		WHERE j.JobName=@JobName AND ts.TestStageName=@TestStageName
 	
 		PRINT 'TestStageID: ' + CONVERT(VARCHAR, @TestStageID)
 
-		SELECT @TestID = t.ID
-		FROM Tests t
-		WHERE t.TestName=@TestName
-	
+		IF (@TestStageType = 1)
+		BEGIN
+			SELECT @TestID = t.ID
+			FROM Tests t
+			WHERE t.TestName=@TestName
+		END
+		ELSE IF (@TestStageType = 2)
+		BEGIN
+			SELECT @TestID = ts.TestID
+			FROM TestStages ts
+			WHERE ts.ID=@TestStageID
+		END
+		
 		PRINT 'TestID: ' + CONVERT(VARCHAR, @TestID)
 	
 		IF (@TestID = 1099)--sensor
