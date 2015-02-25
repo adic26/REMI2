@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[BatchesJira](
+	[JIRAID] [int] IDENTITY(1,1) NOT NULL,
+	[BatchID] [int] NOT NULL,
+	[DisplayName] [nvarchar](50) NOT NULL,
+	[Link] [nvarchar](255) NOT NULL,
+	[Title] [nvarchar](255) NOT NULL,
+ CONSTRAINT [PK_BatchesJira] PRIMARY KEY CLUSTERED 
+(
+	[JIRAID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]

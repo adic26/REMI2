@@ -149,6 +149,15 @@ Partial Public Class ES_Default
     Protected WithEvents lblESText As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''grdJIRAS control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdJIRAS As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
     '''pnlRequestSummaryHeader control.
     '''</summary>
     '''<remarks>

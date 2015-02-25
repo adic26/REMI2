@@ -2732,4 +2732,16 @@
   <ItemGroup>
     <None Include="Oracle\DTATTA\Data.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetBatchJIRAs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\BatchesJira.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchesJira_Batches.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\FK_BatchesJira_Batches.sql" />
+  </ItemGroup>
 </Project>

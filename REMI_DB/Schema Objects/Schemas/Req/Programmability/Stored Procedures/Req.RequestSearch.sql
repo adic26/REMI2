@@ -197,7 +197,7 @@ BEGIN
 			ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
 				TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
 				MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
-				LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(400), 
+				LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
 				DegradationVal DECIMAL(10,3), Description NVARCHAR(800), PassFail BIT, ReTestNum INT,
 				MeasurementUnitType NVARCHAR(150)
 		END

@@ -219,6 +219,23 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetBatchJIRA(ByVal BatchID As Int32, ByVal ShowEmptyRecord As Boolean) As DataTable
+            Try
+                Dim dt As DataTable = BatchDB.GetBatchJIRA(BatchID)
+
+                If ShowEmptyRecord = False And dt.Rows.Count > 0 Then
+                    dt.Rows(0).Delete()
+                    dt.AcceptChanges()
+                End If
+
+                Return dt
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, BatchID.ToString())
+            End Try
+            Return New DataTable("BatchJIRA")
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetReqString(ByVal Number As String) As String
             Try
                 Dim isValid As Boolean = Number.Split("-"c).Length - 1 > 0
@@ -302,6 +319,38 @@ Namespace REMI.Bll
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Test Center Location: {0}", testCentreLocation))
                 Return New BatchCollection
             End Try
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function AddEditJira(ByVal batchID As Int32, ByVal jiraID As Int32, ByVal displayName As String, ByVal link As String, ByVal title As String) As Boolean
+            Try
+                If (batchID > 0) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim bjira As REMI.Entities.BatchesJira = (From j In instance.BatchesJiras Where j.BatchID = batchID And j.JIRAID = jiraID Select j).FirstOrDefault()
+
+                    If (bjira Is Nothing) Then
+                        bjira = New REMI.Entities.BatchesJira()
+                        bjira.BatchID = batchID
+                        bjira.DisplayName = displayName
+                        bjira.Title = title
+                        bjira.Link = link
+
+                        instance.AddToBatchesJiras(bjira)
+                    Else
+                        bjira.Title = title
+                        bjira.Link = link
+                        bjira.DisplayName = displayName
+                    End If
+
+                    instance.SaveChanges()
+
+                    Return True
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("batchID: {0} jiraID: {1} displayName: {2} link: {3} title: {4}", batchID, jiraID, displayName, link, title))
+            End Try
+
+            Return False
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
