@@ -291,7 +291,7 @@ BEGIN
 				LEFT OUTER JOIN dbo.Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
 				INNER JOIN dbo.Tests t WITH(NOLOCK) ON rs.TestID=t.ID
 				INNER JOIN dbo.TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
-				INNER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
+				LEFT OUTER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
 			WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) ')
 
 			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType = 'Measurement') > 0)
@@ -376,6 +376,7 @@ BEGIN
 
 		SET @SQL =  REPLACE(REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <'),'&amp;','&')
 		EXEC sp_executesql @SQL
+
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
 
@@ -702,7 +703,7 @@ BEGIN
 			WHERE ((' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 1 AND i.RID IS NOT NULL ))
 				AND ((' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 1 AND p.ResultMeasurementID IS NOT NULL )) '
 		
-		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
 																	AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
@@ -711,7 +712,7 @@ BEGIN
 																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
 		END
 		
-		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
 															FROM UserDetails ud
@@ -745,14 +746,14 @@ BEGIN
 			WHERE (TABLE_NAME like '#Request%') AND COLUMN_NAME NOT IN ('RequestID', 'BatchID')
 			ORDER BY TABLE_NAME
 		END
-		
+
 		SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr))
 
 		SET @SQL = 'SELECT DISTINCT ' + CASE WHEN @RecordCount = 0 THEN 'TOP 20' ELSE '' END + @whereStr + ' 
 					FROM dbo.#Request r 
 					WHERE (1=1)'
 
-		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
 															AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
@@ -761,7 +762,7 @@ BEGIN
 																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
 		END
 		
-		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
 															FROM UserDetails ud
@@ -781,6 +782,8 @@ BEGIN
 	DROP TABLE dbo.#Params
 	SET NOCOUNT OFF
 END
+GO
+GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO

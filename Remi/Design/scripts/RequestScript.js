@@ -16,8 +16,6 @@ $(function () { //ready function
     var req = $('#bs_ddlSearchField');
     var additional = $('#bs_Additional');
     var executeTop = $("[id$='hdnTop']");
-    var user = $("[id$='hdnUser']");
-    var userID = $("[id$='hdnUserID']");
     var oTable;
     var colvis;
     var count = 0;
@@ -139,7 +137,7 @@ $(function () { //ready function
         var requestParams = JSON.stringify({
             "requestTypeID": rtID[0].value,
             "fields": [],
-            "userID": userID[0].value
+            "userID": $("[id$='hdnUserID']")[0].value
         });
 
         var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
@@ -230,7 +228,7 @@ $(function () { //ready function
             var requestParams = JSON.stringify({
                 "requestTypeID": rtID[0].value,
                 "fields": fullList,
-                "userID": userID[0].value
+                "userID": $("[id$='hdnUserID']")[0].value
             });
 
             var myTable = jsonRequest("../webservice/REMIInternal.asmx/customSearch", requestParams).success(
