@@ -2753,5 +2753,6 @@
   <ItemGroup>
     <Build Include="Scripts\February262015\1.sql" />
     <None Include="Scripts\February262015\migrationDTATTA.sql" />
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Functions\Relab.ResultsObservation.sql" />
   </ItemGroup>
 </Project>

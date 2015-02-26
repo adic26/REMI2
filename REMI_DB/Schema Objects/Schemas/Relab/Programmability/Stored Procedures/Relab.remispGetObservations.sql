@@ -7,7 +7,7 @@ BEGIN
 								WHERE r2.TestUnitID=r.TestUnitID
 								ORDER BY ts2.ProcessOrder DESC
 								) AS MaxStage, 
-			ts.TestStageName, lm.[Values] AS Observation, 
+			ts.TestStageName, [Relab].[ResultsObservation] (m.ID) AS Observation, 
 			(SELECT T.c.value('@Description', 'varchar(MAX)')
 			FROM jo.Definition.nodes('/Orientations/Orientation') T(c)
 			WHERE T.c.value('@Unit', 'varchar(MAX)') = tu.BatchUnitNumber AND ts.TestStageName LIKE T.c.value('@Drop', 'varchar(MAX)') + ' %') AS Orientation, 
@@ -21,7 +21,7 @@ BEGIN
 		INNER JOIN Batches b ON b.ID=tu.BatchID
 		LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
 		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
-	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] like '%\%')
+	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] = 'Observation')
 		AND b.ID=@BatchID
 	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder
 END
