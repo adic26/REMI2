@@ -212,7 +212,7 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Link" SortExpression="">
                                     <ItemTemplate>
-                                        <asp:HyperLink runat="server" ID="hypLink" Text='<%# Eval("Link")%>' Visible="true" NavigateUrl='<%# Eval("Link")%>'></asp:HyperLink>
+                                        <asp:HyperLink runat="server" ID="hypLink" Text='<%# Eval("Link")%>' Visible="true" Target="_blank" NavigateUrl='<%# Eval("Link")%>'></asp:HyperLink>
                                         <asp:TextBox runat="server" ID="txtLink" Text='<%# Eval("Link")%>' Visible="false"></asp:TextBox>
                                     </ItemTemplate>
                                     <FooterStyle HorizontalAlign="Right" />
