@@ -3,8 +3,9 @@ AS
 BEGIN
 	SET NOCOUNT ON
 	
-	DECLARE @tests TABLE(ID INT)
-	INSERT INTO @tests SELECT s FROM dbo.Split(',',@TestIDs)
+	CREATE TABLE #Tests (ID INT NOT NULL)
+	INSERT INTO #Tests SELECT s FROM dbo.Split(',',@TestIDs)
+	
 	DECLARE @FalseBit BIT
 	DECLARE @TrueBit BIT
 	CREATE TABLE #parameters (ResultMeasurementID INT)
@@ -24,7 +25,7 @@ BEGIN
 			INNER JOIN TestUnits tu ON tu.ID = r.TestUnitID
 			INNER JOIN Batches b ON b.ID=tu.BatchID
 			INNER JOIN Tests t ON t.ID=r.TestID
-			INNER JOIN @tests tst ON t.ID=tst.ID
+			INNER JOIN #Tests tst ON t.ID=tst.ID
 			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
 		WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit AND rp.ParameterName <> 'Command'
 		ORDER BY '],[' +  rp.ParameterName
@@ -35,7 +36,7 @@ BEGIN
 
 	IF (@rows != '[na]')
 	BEGIN
-		EXEC ('INSERT INTO #parameters SELECT *
+		SET @sql = 'INSERT INTO #parameters SELECT *
 		FROM (
 			SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
 			FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
@@ -43,10 +44,11 @@ BEGIN
 				INNER JOIN TestUnits tu ON tu.ID = r.TestUnitID
 				INNER JOIN Batches b ON b.ID=tu.BatchID
 				INNER JOIN Tests t ON t.ID=r.TestID
-				INNER JOIN @tests tst ON t.ID=tst.ID
+				INNER JOIN #Tests tst ON t.ID=tst.ID
 				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rm.ID=rp.ResultMeasurementID
-			WHERE b.QRANumber=''' + @RequestNumber + ''' AND rm.Archived=' + @FalseBit + ' AND rp.ParameterName <> ''Command'' 
-			) te PIVOT (MAX(Value) FOR ParameterName IN (' + @rows + ')) AS pvt')
+			WHERE b.QRANumber=''' + @RequestNumber + ''' AND rm.Archived=' + CONVERT(VARCHAR, @FalseBit) + ' AND rp.ParameterName <> ''Command'' 
+			) te PIVOT (MAX(Value) FOR ParameterName IN (' + @rows + ')) AS pvt'
+		EXEC (@sql)
 	END
 	ELSE
 	BEGIN
@@ -63,7 +65,7 @@ BEGIN
 		INNER JOIN TestUnits tu ON tu.ID = r.TestUnitID
 		INNER JOIN Batches b ON b.ID=tu.BatchID
 		INNER JOIN Tests t ON t.ID=r.TestID
-		INNER JOIN @tests tst ON t.ID=tst.ID
+		INNER JOIN #Tests tst ON t.ID=tst.ID
 		INNER JOIN TestStages ts ON ts.ID=r.TestStageID
 		LEFT OUTER JOIN Lookups lu WITH(NOLOCK) ON lu.LookupID=rm.MeasurementUnitTypeID
 		LEFT OUTER JOIN Lookups lt WITH(NOLOCK) ON lt.LookupID=rm.MeasurementTypeID
@@ -88,6 +90,7 @@ BEGIN
 		)
 	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder, rm.ReTestNum
 
+	DROP TABLE #Tests
 	DROP TABLE #parameters
 	SET NOCOUNT OFF
 END
