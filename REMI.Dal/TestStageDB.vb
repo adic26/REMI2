@@ -170,18 +170,18 @@ Namespace REMI.Dal
         ''' <returns> 
         ''' A TestStageCollection. 
         ''' </returns> 
-        Public Shared Function GetList(ByVal type As TestStageType, ByVal jobName As String) As TestStageCollection
+        Public Shared Function GetList(ByVal type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean) As TestStageCollection
             Dim tmpList As New TestStageCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myConnection.Open()
-                tmpList = GetList(type, jobName, myConnection)
+                tmpList = GetList(type, jobName, ShowArchived, myConnection)
             End Using
 
             Return tmpList
         End Function
 
-        Public Shared Function GetList(ByVal Type As TestStageType, ByVal jobName As String, ByVal myconnection As SqlConnection) As TestStageCollection
+        Public Shared Function GetList(ByVal Type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean, ByVal myconnection As SqlConnection) As TestStageCollection
             Dim tempList As New TestStageCollection
 
             Using myCommand As New SqlCommand("remispTestStagesSelectList", myconnection)
@@ -194,6 +194,8 @@ Namespace REMI.Dal
                 If Not String.IsNullOrEmpty(jobName) Then
                     myCommand.Parameters.AddWithValue("@Jobname", jobName)
                 End If
+
+                myCommand.Parameters.AddWithValue("@ShowArchived", ShowArchived)
 
                 Using myReader As SqlDataReader = myCommand.ExecuteReader()
                     If myReader.HasRows Then

@@ -544,7 +544,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a job name this function returns all the known stages of the job.")> _
     Public Function GetJobStages(ByVal jobName As String) As TestStageCollection
         Try
-            Return TestStageManager.GetList(TestStageType.NotSet, jobName)
+            Return TestStageManager.GetList(TestStageType.NotSet, jobName, False)
         Catch ex As Exception
             JobManager.LogIssue("REMI API GetJobStages", "e3", NotificationType.Errors, ex, String.Format("JobName: {0}", jobName))
         End Try

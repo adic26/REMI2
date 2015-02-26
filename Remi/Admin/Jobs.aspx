@@ -205,13 +205,11 @@
                                 </Columns>
                             </asp:GridView>        
        
-                            <asp:ObjectDataSource ID="odsTestStage" runat="server" 
-                                OldValuesParameterFormatString="original_{0}" 
-                                SelectMethod="GetList" TypeName="REMI.Bll.TestStageManager">
+                            <asp:ObjectDataSource ID="odsTestStage" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetList" TypeName="REMI.Bll.TestStageManager">
                                 <SelectParameters>
                                     <asp:Parameter Name="type" DefaultValue="0" Type="Int32" />
-                                    <asp:ControlParameter ControlID="ddlJobs" Name="jobName" 
-                                        PropertyName="SelectedValue" Type="String" />
+                                    <asp:ControlParameter ControlID="ddlJobs" Name="jobName" PropertyName="SelectedValue" Type="String" />
+                                    <asp:Parameter Type="Boolean" Name="ShowArchived" DefaultValue="True" />
                                 </SelectParameters>
                             </asp:ObjectDataSource>
                         </Content>
