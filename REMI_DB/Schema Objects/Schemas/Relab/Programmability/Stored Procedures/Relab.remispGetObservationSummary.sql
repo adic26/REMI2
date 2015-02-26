@@ -21,7 +21,7 @@ BEGIN
 		INNER JOIN Tests t ON t.ID=r.TestID
 		INNER JOIN Lookups lm ON lm.LookupID=m.MeasurementTypeID
 		INNER JOIN Batches b ON b.ID=tu.BatchID
-		INNER JOIN JobOrientation jo ON jo.ID=b.OrientationID
+		LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
 		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
 	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] like '%\%') AND b.ID=@BatchID
 
@@ -43,7 +43,7 @@ BEGIN
 				INNER JOIN Tests t ON t.ID=r.TestID
 				INNER JOIN Lookups lm ON lm.LookupID=m.MeasurementTypeID
 				INNER JOIN Batches b ON b.ID=tu.BatchID
-				INNER JOIN JobOrientation jo ON jo.ID=b.OrientationID
+				LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
 				LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
 			WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 
 				AND [values] = #Observations.Observation) AND b.ID=' + CONVERT(VARCHAR, @BatchID) + ' 
