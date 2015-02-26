@@ -49,8 +49,8 @@
         
     <div class="removeStyle">
         <asp:ImageButton runat="server" ID="imgExport" ImageUrl="../Design/Icons/png/24x24/xls_file.png" OnClick="imgExport_Click" style="text-align:left;display:inline;" />
-        <b><asp:CheckBox ID="chkOnlyFails" runat="server" Text="Show Fails Only" AutoPostBack="true" /></b>
-        <b><asp:CheckBox ID="chkIncludeArchived" runat="server" Text="Include Archived" AutoPostBack="true" /></b>
+        <b><asp:CheckBox ID="chkOnlyFails" runat="server" Text="Show Fails Only" AutoPostBack="true" OnCheckedChanged="chkOnlyFails_CheckedChanged" /></b>
+        <b><asp:CheckBox ID="chkIncludeArchived" runat="server" Text="Include Archived" AutoPostBack="true" OnCheckedChanged="chkIncludeArchived_CheckedChanged" /></b>
         <asp:Label runat="server" ID="lblInfo" Text="<font size='1'><br />Use '*' in filter box as wildcard</font>"></asp:Label>
     </div>
 

@@ -368,4 +368,12 @@ Public Class Measurements
         Helpers.ExportToExcel(Helpers.GetDateTimeFileName("ResultSummary", "xls"), RelabManager.ResultSummaryExport(BatchID, ResultID))
     End Sub
 #End Region
+
+    Protected Sub chkOnlyFails_CheckedChanged(sender As Object, e As EventArgs)
+        DataBind()
+    End Sub
+
+    Protected Sub chkIncludeArchived_CheckedChanged(sender As Object, e As EventArgs)
+        DataBind()
+    End Sub
 End Class

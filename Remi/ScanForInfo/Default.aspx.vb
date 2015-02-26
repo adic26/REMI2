@@ -649,14 +649,14 @@ Partial Class ScanForInfo_Default
         grdJIRAS.EditIndex = e.NewEditIndex
         JIRABindData()
         Dim lblDisplayName As Label = grdJIRAS.Rows(e.NewEditIndex).FindControl("lblDisplayName")
-        Dim lblLink As Label = grdJIRAS.Rows(e.NewEditIndex).FindControl("lblLink")
+        Dim hypLink As HyperLink = grdJIRAS.Rows(e.NewEditIndex).FindControl("hypLink")
         Dim lblTitle As Label = grdJIRAS.Rows(e.NewEditIndex).FindControl("lblTitle")
         Dim txtDisplayName As TextBox = grdJIRAS.Rows(e.NewEditIndex).FindControl("txtDisplayName")
         Dim txtLink As TextBox = grdJIRAS.Rows(e.NewEditIndex).FindControl("txtLink")
         Dim txtTitle As TextBox = grdJIRAS.Rows(e.NewEditIndex).FindControl("txtTitle")
 
         lblDisplayName.Visible = False
-        lblLink.Visible = False
+        hypLink.Visible = False
         lblTitle.Visible = False
         txtDisplayName.Visible = True
         txtLink.Visible = True
