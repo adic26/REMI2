@@ -298,14 +298,38 @@ Namespace REMI.BusinessEntities
                     dr("Stage") = TestStageName
 
                     For Each k In f.Keys
-                        dr(k) = f.Item(k)
+                        If (dt.Columns(k) Is Nothing) Then
+                            dt.Columns.Add(k, GetType(String))
+                        End If
+
+                        Dim val As String = f.Item(k)
+
+                        dr(k) = If(val Is Nothing Or val Is DBNull.Value, String.Empty, val)
                     Next
                     dt.Rows.Add(dr)
                 Next
 
                 If (dt.Columns("Failed 3rd Level") Is Nothing) Then
                     dt.Columns.Add("Failed 3rd Level", GetType(String))
+                    Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Failed 3rd Level") = " ")
                 End If
+
+                If (dt.Columns("Caused By") Is Nothing) Then
+                    dt.Columns.Add("Caused By", GetType(String))
+                    Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Caused By") = " ")
+                End If
+
+                If (dt.Columns("Root Cause") Is Nothing) Then
+                    dt.Columns.Add("Root Cause", GetType(String))
+                    Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Root Cause") = " ")
+                End If
+
+                If (dt.Columns("Other") Is Nothing) Then
+                    dt.Columns.Add("Other", GetType(String))
+                    Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Other") = " ")
+                End If
+
+                dt.AcceptChanges()
 
                 Return dt
             End Get
