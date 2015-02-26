@@ -56,7 +56,7 @@ BEGIN
 	SELECT t.TestName, ts.TestStageName, tu.BatchUnitNumber, ISNULL(ISNULL(ISNULL(lt.[Values], ltsf.[Values]), ltmf.[Values]), ltacc.[Values]) As Measurement, 
 		LowerLimit AS [Lower Limit], UpperLimit AS [Upper Limit], MeasurementValue AS Result, lu.[Values] As Unit, 
 		CASE WHEN rm.PassFail=1 THEN 'Pass' ELSE 'Fail' END AS [Pass/Fail], rm.ReTestNum AS [Test Num],
-		ISNULL(rmf.[File], 0) AS [Image], ISNULL(UPPER(SUBSTRING(rmf.ContentType,2,LEN(rmf.ContentType))), 'PNG') AS ContentType, 
+		(CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurementsFiles rmf WHERE rmf.ResultMeasurementID=rm.ID) > 0 THEN 1 ELSE 0 END) AS HasFiles,
 		rm.ID As measurementID, rm.Comment, p.*
 	FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
 		INNER JOIN Relab.Results r ON r.ID=rm.ResultID
@@ -70,7 +70,6 @@ BEGIN
 		LEFT OUTER JOIN Lookups ltsf WITH(NOLOCK) ON ltsf.LookupID=rm.MeasurementTypeID
 		LEFT OUTER JOIN Lookups ltmf WITH(NOLOCK) ON ltmf.LookupID=rm.MeasurementTypeID
 		LEFT OUTER JOIN Lookups ltacc WITH(NOLOCK) ON ltacc.LookupID=rm.MeasurementTypeID
-		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) ON rmf.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN #parameters p WITH(NOLOCK) ON p.ResultMeasurementID=rm.ID
 		LEFT OUTER JOIN Relab.ResultsXML x ON x.ID = rm.XMLID
 	WHERE b.QRANumber=@RequestNumber AND rm.Archived=@FalseBit

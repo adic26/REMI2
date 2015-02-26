@@ -10,7 +10,7 @@
 	[ReTestNum] [int] NOT NULL,
 	[Archived] [bit] NOT NULL,
 	[XMLID] [int] NULL,
-	[Comment] [nvarchar](400) NULL,
+	[Comment] [nvarchar](1000) NULL,
 	Description NVARCHAR(800) NULL,
 	LastUser NVARCHAR(255) NULL,
 	DegradationVal DECIMAL(10,3) NULL,

@@ -249,6 +249,7 @@
     <Folder Include="Scripts\February172015" />
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities" />
     <Folder Include="Oracle\DTATTA" />
+    <Folder Include="Scripts\February262015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2731,5 +2732,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Oracle\DTATTA\Data.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetBatchJIRAs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\BatchesJira.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchesJira_Batches.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\FK_BatchesJira_Batches.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\February262015\1.sql" />
+    <None Include="Scripts\February262015\migrationDTATTA.sql" />
   </ItemGroup>
 </Project>

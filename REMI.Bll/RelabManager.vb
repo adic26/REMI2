@@ -80,12 +80,22 @@ Namespace REMI.Bll
         Public Shared Function MeasurementFiles(ByVal MeasurementID As Int32, ByVal resultID As Int32) As DataTable
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
+                Dim dt As DataTable
 
                 If (resultID > 0) Then
-                    Return BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultsMeasurement.Result.ID = resultID Select mf).ToList(), "MeasurementFiles")
+                    dt = BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultsMeasurement.Result.ID = resultID Select mf).ToList(), "MeasurementFiles")
                 Else
-                    Return BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultMeasurementID = MeasurementID Select mf).ToList(), "MeasurementFiles")
+                    dt = BusinessEntities.Helpers.EQToDataTable((From mf In instance.ResultsMeasurementsFiles Where mf.ResultMeasurementID = MeasurementID Select mf).ToList(), "MeasurementFiles")
                 End If
+
+                If (dt.Rows.Count > 0) Then
+                    dt.Columns.Remove("EntityState")
+                    dt.Columns.Remove("EntityKey")
+                    dt.Columns.Remove("ResultsMeasurementReference")
+                    dt.Columns.Remove("ResultsMeasurement")
+                End If
+
+                Return dt
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

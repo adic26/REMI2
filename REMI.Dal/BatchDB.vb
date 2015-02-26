@@ -460,7 +460,7 @@ Namespace REMI.Dal
         End Function
 
         Public Shared Function GetBatchUnitsInStage(ByVal QRANumber As String) As DataTable
-            Dim dt As New DataTable()
+            Dim dt As New DataTable("BatchUnitsInStage")
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetBatchUnitsInStage", myConnection)
@@ -478,7 +478,7 @@ Namespace REMI.Dal
         End Function
 
         Public Shared Function GetBatchDocuments(ByVal QRANumber As String) As DataTable
-            Dim dt As New DataTable()
+            Dim dt As New DataTable("BatchDocuments")
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetBatchDocuments", myConnection)
@@ -495,8 +495,26 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetBatchJIRA(ByVal batchID As Int32) As DataTable
+            Dim dt As New DataTable("BatchJIRA")
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetBatchJIRAs", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@BatchID", batchID)
+                    myConnection.Open()
+
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "BatchJIRA"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
         Public Shared Function GetYourActiveBatchesDataTable(ByVal UserID As Integer, ByVal byPass As Boolean, ByVal year As Int32, ByVal onlyShowQRAWithResults As Boolean) As DataTable
-            Dim dt As New DataTable()
+            Dim dt As New DataTable("ActiveBatches")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispYourBatchesGetActiveBatches", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure

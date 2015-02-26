@@ -347,7 +347,7 @@ BEGIN
 					l.LookupID AS UnitTypeID,
 					T.c.query('FileName').value('.', 'nvarchar(max)') AS [FileName], 
 					[Relab].[ResultsXMLParametersComma] ((select T.c.query('.') from @xmlPart.nodes('/Measurement/Parameters') T(c))) AS Parameters,
-					T.c.query('Comments').value('.', 'nvarchar(400)') AS [Comment],
+					T.c.query('Comments').value('.', 'nvarchar(1000)') AS [Comment],
 					T.c.query('Description').value('.', 'nvarchar(800)') AS [Description],
 					CAST(NULL AS DECIMAL(10,3)) AS DegradationVal
 				INTO #measurement

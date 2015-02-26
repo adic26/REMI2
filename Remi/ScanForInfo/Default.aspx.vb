@@ -14,6 +14,10 @@ Partial Class ScanForInfo_Default
         Helpers.MakeAccessable(grdTrackingLog)
     End Sub
 
+    Protected Sub grdJIRASGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdJIRAS.PreRender
+        Helpers.MakeAccessable(grdJIRAS)
+    End Sub
+
     Protected Sub gvwRequestInfoGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwRequestInfo.PreRender
         Helpers.MakeAccessable(gvwRequestInfo)
     End Sub
@@ -190,6 +194,7 @@ Partial Class ScanForInfo_Default
                     grdDetail.DataBind()
                     lblQRANumber.Text = bc.BatchNumber
                     hdnQRANumber.Value = bc.ToString
+                    hdnBatchID.Value = b.ID
                     hdnDepartmentID.Value = b.DepartmentID
                     grdTrackingLog.DataBind()
 
@@ -281,8 +286,10 @@ Partial Class ScanForInfo_Default
                     gvwTestExceptions.DataSource = REMI.Dal.TestExceptionDB.ExceptionSearch(es)
                     gvwTestExceptions.DataBind()
 
+                    JIRABindData()
+
                     'sets the accordion open pane
-                    accMain.SelectedIndex = 6
+                    accMain.SelectedIndex = 7
 
                     updComments.Update()
                     SetupMenuItems(b)
@@ -329,6 +336,11 @@ Partial Class ScanForInfo_Default
 
         Return hasSuccess
     End Function
+
+    Protected Sub JIRABindData()
+        grdJIRAS.DataSource = BatchManager.GetBatchJIRA(hdnBatchID.Value, True)
+        grdJIRAS.DataBind()
+    End Sub
 
     Protected Sub Page_PreRender() Handles Me.PreRender
         For Each r As GridViewRow In gvwTestingSummary.Rows
@@ -631,5 +643,49 @@ Partial Class ScanForInfo_Default
                 End If
             Next
         End If
+    End Sub
+
+    Protected Sub grdJIRAS_OnRowEditing(ByVal sender As Object, ByVal e As GridViewEditEventArgs)
+        grdJIRAS.EditIndex = e.NewEditIndex
+        JIRABindData()
+        Dim lblDisplayName As Label = grdJIRAS.Rows(e.NewEditIndex).FindControl("lblDisplayName")
+        Dim lblLink As Label = grdJIRAS.Rows(e.NewEditIndex).FindControl("lblLink")
+        Dim lblTitle As Label = grdJIRAS.Rows(e.NewEditIndex).FindControl("lblTitle")
+        Dim txtDisplayName As TextBox = grdJIRAS.Rows(e.NewEditIndex).FindControl("txtDisplayName")
+        Dim txtLink As TextBox = grdJIRAS.Rows(e.NewEditIndex).FindControl("txtLink")
+        Dim txtTitle As TextBox = grdJIRAS.Rows(e.NewEditIndex).FindControl("txtTitle")
+
+        lblDisplayName.Visible = False
+        lblLink.Visible = False
+        lblTitle.Visible = False
+        txtDisplayName.Visible = True
+        txtLink.Visible = True
+        txtTitle.Visible = True
+    End Sub
+
+    Protected Sub grdJIRAS_OnRowCancelingEdit(ByVal sender As Object, ByVal e As GridViewCancelEditEventArgs)
+        grdJIRAS.EditIndex = -1
+        JIRABindData()
+    End Sub
+
+    Protected Sub grdJIRAS_RowUpdating(ByVal sender As Object, ByVal e As GridViewUpdateEventArgs)
+        Dim txtDisplayName As TextBox = grdJIRAS.Rows(e.RowIndex).FindControl("txtDisplayName")
+        Dim txtLink As TextBox = grdJIRAS.Rows(e.RowIndex).FindControl("txtLink")
+        Dim txtTitle As TextBox = grdJIRAS.Rows(e.RowIndex).FindControl("txtTitle")
+        Dim jiraID As Int32
+        Dim batchID As Int32
+        Int32.TryParse(grdJIRAS.DataKeys(e.RowIndex).Values(0), jiraID)
+        Int32.TryParse(grdJIRAS.DataKeys(e.RowIndex).Values(1), batchID)
+
+        Dim isSaved As Boolean = BatchManager.AddEditJira(batchID, jiraID, txtDisplayName.Text, txtLink.Text, txtTitle.Text)
+
+        If (isSaved) Then
+            notMain.Notifications.Add(New Notification("i2", NotificationType.Information, "The JIRA Was Added/Updated Successfully"))
+        Else
+            notMain.Notifications.Add(New Notification("e1", NotificationType.Warning, "The JIRA Was Not Added/Updated Successfully"))
+        End If
+
+        grdJIRAS.EditIndex = -1
+        JIRABindData()
     End Sub
 End Class

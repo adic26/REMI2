@@ -26,6 +26,7 @@ function jsonRequest(url, requestData) {
     return $.ajax({
         url: url,
         type: "POST",
+        async: false,
         //contentType: "text/plain",
         contentType: "application/json; charset=utf-8",
         data: (requestData === null ? "{}" : requestData),

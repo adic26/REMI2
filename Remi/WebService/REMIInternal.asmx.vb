@@ -7,6 +7,8 @@ Imports REMI.Bll
 Imports log4net
 Imports REMI.Contracts
 Imports System.Data
+Imports System.Drawing
+Imports System.IO
 Imports System.Web.Script.Services
 
 <System.Web.Services.WebService(Name:="REMIInternal", Namespace:="http://go/remi/")> _
@@ -195,15 +197,12 @@ Public Class REMIInternal
 
     <System.Web.Services.WebMethod()> _
     <System.Web.Script.Services.ScriptMethod()> _
-    Public Function GetSlides(ByVal contextKey As String) As AjaxControlToolkit.Slide()
+    Public Function GetSlidesJS(ByVal contextKey As String) As List(Of String)
         Dim dt As New DataTable
-        Dim photos(0) As AjaxControlToolkit.Slide
-        Dim imageCount As Int32 = 0
+        Dim imgBuilder As New List(Of String)
 
         If (contextKey <> "0") Then
             dt = RelabManager.MeasurementFiles(contextKey, 0)
-
-            ReDim Preserve photos(dt.Rows.Count)
 
             For i = 0 To dt.Rows.Count - 1
                 Dim imageDataURL As String = String.Format("http://{0}:{1}/Handlers/ImageHandler.ashx?img={2}&width=1024&height=768", System.Web.HttpContext.Current.Request.ServerVariables("SERVER_Name"), System.Web.HttpContext.Current.Request.ServerVariables("SERVER_PORT"), dt.Rows(i)("ID"))
@@ -211,31 +210,11 @@ Public Class REMIInternal
                 Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)
 
                 If (Helpers.IsRecognisedImageFile(fileName)) Then
-                    photos(i) = New AjaxControlToolkit.Slide(imageDataURL, fileName, "<a href='" + downloadURL + "'>Download</a>")
-                Else
-                    Select Case (IO.Path.GetExtension(fileName).ToUpper)
-                        Case "CSV"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/csv_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "XLS"
-                        Case "XLSX"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xls_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "XML"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/xml_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "PPT"
-                        Case "PPTX"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/ppt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "PDF"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/pdf_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case "TXT"
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                        Case Else
-                            photos(i) = New AjaxControlToolkit.Slide("../Design/Icons/png/128x128/txt_file.png", fileName, "<a href='" + downloadURL + "'>Download</a>")
-                    End Select
+                    imgBuilder.Add(imageDataURL.ToString())
                 End If
-                imageCount = imageCount + 1
             Next
         End If
 
-        Return photos
+        Return imgBuilder
     End Function
 End Class

@@ -21,6 +21,7 @@
           <EntitySet Name="BatchComments" EntityType="remiModel.Store.BatchComments" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Batches" EntityType="remiModel.Store.Batches" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="BatchesAudit" EntityType="remiModel.Store.BatchesAudit" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="BatchesJira" EntityType="remiModel.Store.BatchesJira" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="BatchSpecificTestDurations" EntityType="remiModel.Store.BatchSpecificTestDurations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Calibration" EntityType="remiModel.Store.Calibration" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Configurations" EntityType="remiModel.Store.Configurations" store:Type="Tables" Schema="dbo" />
@@ -281,6 +282,10 @@
           <AssociationSet Name="FK_Batches_TestCenterLocation" Association="remiModel.Store.FK_Batches_TestCenterLocation">
             <End Role="Lookups" EntitySet="Lookups" />
             <End Role="Batches" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchesJira_Batches" Association="remiModel.Store.FK_BatchesJira_Batches">
+            <End Role="Batches" EntitySet="Batches" />
+            <End Role="BatchesJira" EntitySet="BatchesJira" />
           </AssociationSet>
           <AssociationSet Name="FK_BatchSpecificTestDurations_Batches" Association="remiModel.Store.FK_BatchSpecificTestDurations_Batches">
             <End Role="Batches" EntitySet="Batches" />
@@ -862,6 +867,16 @@
           <Property Name="MechanicalTools" Type="nvarchar" MaxLength="10" />
           <Property Name="Order" Type="int" />
           <Property Name="DepartmentID" Type="int" />
+        </EntityType>
+        <EntityType Name="BatchesJira">
+          <Key>
+            <PropertyRef Name="JIRAID" />
+          </Key>
+          <Property Name="JIRAID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BatchID" Type="int" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Link" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="255" />
         </EntityType>
         <EntityType Name="BatchSpecificTestDurations">
           <Key>
@@ -1480,7 +1495,7 @@
           <Property Name="ReTestNum" Type="int" Nullable="false" />
           <Property Name="Archived" Type="bit" Nullable="false" />
           <Property Name="XMLID" Type="int" />
-          <Property Name="Comment" Type="nvarchar" MaxLength="400" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="1000" />
           <Property Name="Description" Type="nvarchar" MaxLength="800" />
           <Property Name="LastUser" Type="nvarchar" MaxLength="255" />
           <Property Name="DegradationVal" Type="decimal" Precision="10" Scale="3" />
@@ -2062,6 +2077,18 @@
             </Principal>
             <Dependent Role="Batches">
               <PropertyRef Name="TestCenterLocationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BatchesJira_Batches">
+          <End Role="Batches" Type="remiModel.Store.Batches" Multiplicity="1" />
+          <End Role="BatchesJira" Type="remiModel.Store.BatchesJira" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BatchesJira">
+              <PropertyRef Name="BatchID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3780,6 +3807,11 @@
             <End Role="ResultsXML" EntitySet="ResultsXMLs" />
             <End Role="ResultsInformation" EntitySet="ResultsInformations" />
           </AssociationSet>
+          <EntitySet Name="BatchesJiras" EntityType="REMI.Entities.BatchesJira" />
+          <AssociationSet Name="FK_BatchesJira_Batches" Association="REMI.Entities.FK_BatchesJira_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="BatchesJira" EntitySet="BatchesJiras" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
           <Key>
@@ -3942,7 +3974,7 @@
           <Property Type="Int32" Name="ReTestNum" Nullable="false" />
           <Property Type="Boolean" Name="Archived" Nullable="false" />
           <Property Type="Int32" Name="XMLID" />
-          <Property Type="String" Name="Comment" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Comment" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Description" MaxLength="800" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="DegradationVal" Precision="10" Scale="3" />
@@ -5190,6 +5222,7 @@
           <NavigationProperty Name="Requests" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Batch" ToRole="Request" />
           <NavigationProperty Name="ResultsStatus" Relationship="REMI.Entities.FK_ResultsStatus_Batches" FromRole="Batch" ToRole="ResultsStatu" />
           <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_Batches_Products" FromRole="Batch" ToRole="Product" />
+          <NavigationProperty Name="BatchesJiras" Relationship="REMI.Entities.FK_BatchesJira_Batches" FromRole="Batch" ToRole="BatchesJira" />
         </EntityType>
         <Association Name="FK_BatchComments_Batches">
           <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
@@ -6486,6 +6519,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BatchesJira">
+          <Key>
+            <PropertyRef Name="JIRAID" />
+          </Key>
+          <Property Type="Int32" Name="JIRAID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="BatchID" Nullable="false" />
+          <Property Type="String" Name="DisplayName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Link" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_BatchesJira_Batches" FromRole="BatchesJira" ToRole="Batch" />
+        </EntityType>
+        <Association Name="FK_BatchesJira_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.BatchesJira" Role="BatchesJira" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BatchesJira">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7657,6 +7713,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BatchesJiras">
+            <EntityTypeMapping TypeName="REMI.Entities.BatchesJira">
+              <MappingFragment StoreEntitySet="BatchesJira">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="JIRAID" ColumnName="JIRAID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7879,6 +7946,8 @@
         <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups1" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="10.448514069639385" PointY="8.9410736155421819" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchesJira" Width="1.5" PointX="3.2143627271123054" PointY="23.923243474179525" />
+        <AssociationConnector Association="REMI.Entities.FK_BatchesJira_Batches" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

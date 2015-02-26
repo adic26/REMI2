@@ -275,6 +275,15 @@ Partial Public Class ScanForInfo_Default
     Protected WithEvents submitform As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
+    '''hdnBatchID control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnBatchID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''hdnQRANumber control.
     '''</summary>
     '''<remarks>
@@ -399,6 +408,24 @@ Partial Public Class ScanForInfo_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents upExecutiveSummary As Global.System.Web.UI.UpdateProgress
+
+    '''<summary>
+    '''acpJiras control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents acpJiras As Global.AjaxControlToolkit.AccordionPane
+
+    '''<summary>
+    '''grdJIRAS control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdJIRAS As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''acpRequest control.

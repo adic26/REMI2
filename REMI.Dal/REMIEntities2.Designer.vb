@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("d3ad2682-4514-417b-9dfb-d1531d654cb2")>
+<Assembly: EdmSchemaAttribute("276021d4-3dc4-4d18-85cd-8005e8bf48fb")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -135,6 +135,7 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups1", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsInformation_ResultsXML", "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ResultsXML), "ResultsInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsInformation), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchesJira_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchesJira", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchesJira), True)>
 
 #End Region
 
@@ -1388,6 +1389,20 @@ Namespace REMI.Entities
         End Property
     
         Private _ResultsInformations As ObjectSet(Of ResultsInformation)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property BatchesJiras() As ObjectSet(Of BatchesJira)
+            Get
+                If (_BatchesJiras Is Nothing) Then
+                    _BatchesJiras = MyBase.CreateObjectSet(Of BatchesJira)("BatchesJiras")
+                End If
+                Return _BatchesJiras
+            End Get
+        End Property
+    
+        Private _BatchesJiras As ObjectSet(Of BatchesJira)
 
         #End Region
 
@@ -1993,6 +2008,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToResultsInformations(ByVal resultsInformation As ResultsInformation)
             MyBase.AddObject("ResultsInformations", resultsInformation)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the BatchesJiras EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToBatchesJiras(ByVal batchesJira As BatchesJira)
+            MyBase.AddObject("BatchesJiras", batchesJira)
         End Sub
 
         #End Region
@@ -5263,6 +5285,24 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_BatchesJira_Batches", "BatchesJira")>
+         Public Property BatchesJiras() As EntityCollection(Of BatchesJira)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of BatchesJira)("REMI.Entities.FK_BatchesJira_Batches", "BatchesJira")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of BatchesJira)("REMI.Entities.FK_BatchesJira_Batches", "BatchesJira", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -6113,6 +6153,204 @@ Namespace REMI.Entities
     
         Private Partial Sub OnDepartmentIDChanged()
         End Sub
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="BatchesJira")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class BatchesJira
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new BatchesJira object.
+        ''' </summary>
+        ''' <param name="jIRAID">Initial value of the JIRAID property.</param>
+        ''' <param name="batchID">Initial value of the BatchID property.</param>
+        ''' <param name="displayName">Initial value of the DisplayName property.</param>
+        ''' <param name="link">Initial value of the Link property.</param>
+        ''' <param name="title">Initial value of the Title property.</param>
+        Public Shared Function CreateBatchesJira(jIRAID As Global.System.Int32, batchID As Global.System.Int32, displayName As Global.System.String, link As Global.System.String, title As Global.System.String) As BatchesJira
+            Dim batchesJira as BatchesJira = New BatchesJira
+            batchesJira.JIRAID = jIRAID
+            batchesJira.BatchID = batchID
+            batchesJira.DisplayName = displayName
+            batchesJira.Link = link
+            batchesJira.Title = title
+            Return batchesJira
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property JIRAID() As Global.System.Int32
+            Get
+                Return _JIRAID
+            End Get
+            Set
+                If (_JIRAID <> Value) Then
+                    OnJIRAIDChanging(value)
+                    ReportPropertyChanging("JIRAID")
+                    _JIRAID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("JIRAID")
+                    OnJIRAIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _JIRAID As Global.System.Int32
+        Private Partial Sub OnJIRAIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnJIRAIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property BatchID() As Global.System.Int32
+            Get
+                Return _BatchID
+            End Get
+            Set
+                OnBatchIDChanging(value)
+                ReportPropertyChanging("BatchID")
+                _BatchID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("BatchID")
+                OnBatchIDChanged()
+            End Set
+        End Property
+    
+        Private _BatchID As Global.System.Int32
+        Private Partial Sub OnBatchIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnBatchIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property DisplayName() As Global.System.String
+            Get
+                Return _DisplayName
+            End Get
+            Set
+                OnDisplayNameChanging(value)
+                ReportPropertyChanging("DisplayName")
+                _DisplayName = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("DisplayName")
+                OnDisplayNameChanged()
+            End Set
+        End Property
+    
+        Private _DisplayName As Global.System.String
+        Private Partial Sub OnDisplayNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnDisplayNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Link() As Global.System.String
+            Get
+                Return _Link
+            End Get
+            Set
+                OnLinkChanging(value)
+                ReportPropertyChanging("Link")
+                _Link = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Link")
+                OnLinkChanged()
+            End Set
+        End Property
+    
+        Private _Link As Global.System.String
+        Private Partial Sub OnLinkChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnLinkChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property Title() As Global.System.String
+            Get
+                Return _Title
+            End Get
+            Set
+                OnTitleChanging(value)
+                ReportPropertyChanging("Title")
+                _Title = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("Title")
+                OnTitleChanged()
+            End Set
+        End Property
+    
+        Private _Title As Global.System.String
+        Private Partial Sub OnTitleChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnTitleChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_BatchesJira_Batches", "Batch")>
+        Public Property Batch() As Batch
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_BatchesJira_Batches", "Batch").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_BatchesJira_Batches", "Batch").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property BatchReference() As EntityReference(Of Batch)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_BatchesJira_Batches", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_BatchesJira_Batches", "Batch", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 

@@ -34,6 +34,9 @@ Partial Class ES_Default
                 grdApproval.DataSource = ds.Tables(1)
                 grdApproval.DataBind()
 
+                grdJIRAS.DataSource = BatchManager.GetBatchJIRA(b.ID, False)
+                grdJIRAS.DataBind()
+
                 Dim bs As New REMI.BusinessEntities.BatchSearch
                 bs.ProductID = b.ProductID
                 bs.JobName = b.JobName
@@ -114,6 +117,10 @@ Partial Class ES_Default
 
     Protected Sub gvwRequestInfoGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwRequestInfo.PreRender
         Helpers.MakeAccessable(gvwRequestInfo)
+    End Sub
+
+    Protected Sub grdJIRASGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdJIRAS.PreRender
+        Helpers.MakeAccessable(grdJIRAS)
     End Sub
 
     Protected Sub gvwResultSummaryGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwResultSummary.PreRender

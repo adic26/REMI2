@@ -197,7 +197,7 @@ BEGIN
 			ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
 				TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
 				MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
-				LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(400), 
+				LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
 				DegradationVal DECIMAL(10,3), Description NVARCHAR(800), PassFail BIT, ReTestNum INT,
 				MeasurementUnitType NVARCHAR(150)
 		END
@@ -259,7 +259,7 @@ BEGIN
 				LEFT OUTER JOIN dbo.Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
 				INNER JOIN dbo.Tests t WITH(NOLOCK) ON rs.TestID=t.ID
 				INNER JOIN dbo.TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
-				INNER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
+				LEFT OUTER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
 			WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) ')
 
 			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType = 'Measurement') > 0)
@@ -344,6 +344,7 @@ BEGIN
 
 		SET @SQL =  REPLACE(REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <'),'&amp;','&')
 		EXEC sp_executesql @SQL
+
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
 
@@ -670,7 +671,7 @@ BEGIN
 			WHERE ((' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 1 AND i.RID IS NOT NULL ))
 				AND ((' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 1 AND p.ResultMeasurementID IS NOT NULL )) '
 		
-		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
 																	AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
@@ -679,7 +680,7 @@ BEGIN
 																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
 		END
 		
-		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
 															FROM UserDetails ud
@@ -713,14 +714,14 @@ BEGIN
 			WHERE (TABLE_NAME like '#Request%') AND COLUMN_NAME NOT IN ('RequestID', 'BatchID')
 			ORDER BY TABLE_NAME
 		END
-		
+
 		SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr))
 
 		SET @SQL = 'SELECT DISTINCT ' + CASE WHEN @RecordCount = 0 THEN 'TOP 20' ELSE '' END + @whereStr + ' 
 					FROM dbo.#Request r 
 					WHERE (1=1)'
 
-		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%')
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
 															AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
@@ -729,7 +730,7 @@ BEGIN
 																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
 		END
 		
-		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%')
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%' AND @UserID IS NOT NULL)
 		BEGIN
 			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
 															FROM UserDetails ud
@@ -754,7 +755,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES ('Request', 51, '*Windermere')
+VALUES-- ('Request', 51, '*ontario')
 --,('Request', 51, '-Windermere E R135')
 --,('Request', 51, '3G SIMs')
 -- ,('Request', 51, '*Lisbon')
@@ -762,27 +763,27 @@ VALUES ('Request', 51, '*Windermere')
 --,('Request', 49, '*Accessory')
 --,('Test', 1099, 'Sensor Test')
 --,('Test', 1280, 'Functional')
-,('Test', 1020, 'Radiated RF Test')
+--,('Test', 1020, 'Radiated RF Test')
 --('Test', 1561, 'Display Test')
 --,('Test', 1103, 'Camera Front')
---,('Stage', 3218, 'Post 360hrs')
+('Stage', 3616, '1 Drop')
 --,('Stage', 2246, 'Analysis')
 --,('Stage', 3220, 'Post 720hrs')
 --,('BSN', 0, '1151185790')
---,('ReqNum', 0, 'QRA-14-0081')
+--,('ReqNum', 0, 'QRA-14-0038')
 --,('ReqNum', 0, 'QRA-14-0597')
 --,('Unit', 0, '5')
 --,('Unit', 0, '1')
 --,('IMEI', 0, '')
 --,('ResultArchived', 0, '')
-,('Param:Band', 0, 'GPRS1800')
+--,('Param:Band', 0, 'GPRS1800')
 --,('Param:Band', 0, 'LTE17')
-,('Param:Channel', 0, '*700')
-,('Param:Channel', 0, '-512')
+--,('Param:Channel', 0, '*700')
+--,('Param:Channel', 0, '-512')
 --,('ResultInfoArchived', 0, '')
 --,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
-,('Info:HardwareID', 0, '*Rohde&Schwarz')
-,('Info:OSVersion', 0, 'NA')
+--,('Info:HardwareID', 0, '*Rohde&Schwarz')
+--,('Info:OSVersion', 0, 'NA')
 --,('Info:OSVersion', 0, 'adsf')
 --,('Info:CameraID', 0, 'Not Reported')
 --,('Info:hoursintest', 0, '10')
@@ -790,4 +791,4 @@ VALUES ('Request', 51, '*Windermere')
 --, ('TestRunEndDate', 0, '2015-01-19')
 --,('Measurement', 0, '*RxBER')
 --('Info:', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
-EXEC [Req].[RequestSearch] 1, @table--, 251
+EXEC [Req].[RequestSearch] 1, @table, 251

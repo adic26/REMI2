@@ -11,6 +11,8 @@ Public Class Search1
     End Sub
 
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
+        hdnUser.Value = UserManager.GetCurrentUser.UserName
+        hdnUserID.Value = UserManager.GetCurrentUser.ID
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.GetType(), "jQuery")) Then
             Page.ClientScript.RegisterClientScriptInclude(Me.GetType(), "jQuery", ResolveClientUrl(JQueryScript))
         End If
@@ -18,8 +20,6 @@ Public Class Search1
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.GetType(), "SearchScript")) Then
             Page.ClientScript.RegisterClientScriptInclude(Me.GetType(), "SearchScript", ResolveClientUrl(SearchScript))
         End If
-        hdnUser.Value = UserManager.GetCurrentUser.UserName
-        hdnUserID.Value = UserManager.GetCurrentUser.ID
     End Sub
 
     Public Property ExecuteTop As Boolean
