@@ -44,10 +44,22 @@
             "contextKey": contextKey
         });
 
-        var myRequest = jsonRequest("/webservice/REMIInternal.asmx/GetSlidesJS", requestParams).success(function (data) {
-            var results = data;
-            myImage = $(data);
+        //var myRequest = jsonRequest("/webservice/REMIInternal.asmx/GetSlidesJS", requestParams).success(function (data) {
+        //    var results = data;
+        //    myImage = $(data);
+        //});
+
+        $.ajax({
+            type: "POST",
+            url: "/webservice/REMIInternal.asmx/GetSlidesJS",
+            async: false,
+            data: requestParams,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                myImage = $(response.d);
+            }
         });
+
 
         var myGallery = $('.test-popup-link').magnificPopup({
             type: 'image',
