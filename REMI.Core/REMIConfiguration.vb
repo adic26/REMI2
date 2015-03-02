@@ -95,11 +95,6 @@ Namespace REMI.Core
                 Return ConfigurationManager.AppSettings("RemiBatchInfoLink")
             End Get
         End Property
-        Public Shared ReadOnly Property REMIBatchCommentsEditLink() As String
-            Get
-                Return ConfigurationManager.AppSettings("RemiSetBatchCommentsLink")
-            End Get
-        End Property
         
         Public Shared ReadOnly Property REMIProductGroupLink() As String
             Get

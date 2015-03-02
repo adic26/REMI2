@@ -305,9 +305,6 @@
     <Compile Include="ManageBatches\EditExceptions.aspx.designer.vb">
       <DependentUpon>EditExceptions.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ManageBatches\ModifyComments.aspx.designer.vb">
-      <DependentUpon>ModifyComments.aspx</DependentUpon>
-    </Compile>
     <Compile Include="ManageBatches\ModifyPriority.aspx.designer.vb">
       <DependentUpon>ModifyPriority.aspx</DependentUpon>
     </Compile>
@@ -409,10 +406,6 @@
     </Compile>
     <Compile Include="ManageBatches\EditExceptions.aspx.vb">
       <DependentUpon>EditExceptions.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ManageBatches\ModifyComments.aspx.vb">
-      <DependentUpon>ModifyComments.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ManageBatches\ModifyPriority.aspx.vb">
@@ -720,7 +713,6 @@
     <Content Include="Inventory\Default.aspx" />
     <Content Include="Inventory\InventoryReport.aspx" />
     <Content Include="ManageBatches\EditExceptions.aspx" />
-    <Content Include="ManageBatches\ModifyComments.aspx" />
     <Content Include="ManageBatches\ModifyPriority.aspx" />
     <Content Include="ManageBatches\ModifyStatus.aspx" />
     <Content Include="ManageBatches\ModifyTestDurations.aspx" />

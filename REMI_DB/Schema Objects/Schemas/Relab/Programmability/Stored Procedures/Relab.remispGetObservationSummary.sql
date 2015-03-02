@@ -14,15 +14,15 @@ BEGIN
 
 	INSERT INTO #Observations
 	SELECT DISTINCT Relab.ResultsObservation (m.ID) AS Observation
-	FROM Relab.ResultsMeasurements m
-		INNER JOIN Relab.Results r ON r.ID=m.ResultID
-		INNER JOIN TestUnits tu ON r.TestUnitID=tu.ID
-		INNER JOIN TestStages ts ON ts.ID=r.TestStageID
-		INNER JOIN Tests t ON t.ID=r.TestID
-		INNER JOIN Lookups lm ON lm.LookupID=m.MeasurementTypeID
-		INNER JOIN Batches b ON b.ID=tu.BatchID
-		LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
-		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
+	FROM Relab.ResultsMeasurements m WITH(NOLOCK)
+		INNER JOIN Relab.Results r WITH(NOLOCK) ON r.ID=m.ResultID
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON r.TestUnitID=tu.ID
+		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
+		INNER JOIN Tests t WITH(NOLOCK) ON t.ID=r.TestID
+		INNER JOIN Lookups lm WITH(NOLOCK) ON lm.LookupID=m.MeasurementTypeID
+		INNER JOIN Batches b WITH(NOLOCK) ON b.ID=tu.BatchID
+		LEFT OUTER JOIN JobOrientation jo WITH(NOLOCK) ON jo.ID=b.OrientationID
+		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf WITH(NOLOCK) ON mf.ResultMeasurementID=m.ID
 	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] = 'Observation') AND b.ID=@BatchID
 
 	SELECT @RowID = MIN(RowID) FROM #units
@@ -36,21 +36,21 @@ BEGIN
 		
 		SET @query = 'UPDATE #Observations SET [' + CONVERT(VARCHAR,@BatchUnitNumber) + '] = ISNULL((
 			SELECT TOP 1 REPLACE(REPLACE(REPLACE(REPLACE(ISNULL(ts.TestStageName,''''),''drops'',''''),''drop'',''''),''tumbles'',''''),''tumble'','''')
-			FROM Relab.ResultsMeasurements m
-				INNER JOIN Relab.Results r ON r.ID=m.ResultID
-				INNER JOIN TestUnits tu ON r.TestUnitID=tu.ID
-				INNER JOIN TestStages ts ON ts.ID=r.TestStageID
-				INNER JOIN Tests t ON t.ID=r.TestID
-				INNER JOIN Lookups lm ON lm.LookupID=m.MeasurementTypeID
-				INNER JOIN Batches b ON b.ID=tu.BatchID
-				LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
-				LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
+			FROM Relab.ResultsMeasurements m WITH(NOLOCK)
+				INNER JOIN Relab.Results r WITH(NOLOCK) ON r.ID=m.ResultID
+				INNER JOIN TestUnits tu WITH(NOLOCK) ON r.TestUnitID=tu.ID
+				INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
+				INNER JOIN Tests t WITH(NOLOCK) ON t.ID=r.TestID
+				INNER JOIN Lookups lm WITH(NOLOCK) ON lm.LookupID=m.MeasurementTypeID
+				INNER JOIN Batches b WITH(NOLOCK) ON b.ID=tu.BatchID
+				LEFT OUTER JOIN JobOrientation jo WITH(NOLOCK) ON jo.ID=b.OrientationID
+				LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf WITH(NOLOCK) ON mf.ResultMeasurementID=m.ID
 			WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 
 				AND [values] = ''Observation'') AND b.ID=' + CONVERT(VARCHAR, @BatchID) + ' 
 				AND tu.batchunitnumber=' + CONVERT(VARCHAR,@BatchUnitNumber) + ' 
 				AND Relab.ResultsObservation (m.ID) = #Observations.Observation
 			ORDER BY ts.ProcessOrder ASC
-		), 0)'
+		), ''-'')'
 		
 		EXECUTE (@query)
 			

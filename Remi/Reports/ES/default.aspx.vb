@@ -24,7 +24,7 @@ Partial Class ES_Default
                 hdnBatchID.Value = b.ID
                 hdnRequestNumber.Value = b.QRANumber
                 lblRequestNumber.Text = b.QRANumber
-                lblESText.Text = If(b.ExecutiveSummary Is Nothing, String.Empty, b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))
+                lblESText.Text = If(b.ExecutiveSummary Is Nothing, "No Summary Available!", b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))
 
                 gvwRequestInfo.DataSource = b.ReqData
                 gvwRequestInfo.DataBind()

@@ -394,7 +394,7 @@ Partial Class ScanForInfo_Default
         mi = New MenuItem
         mi.Text = "Executive Summary"
         mi.Target = "_blank"
-        mi.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?RN={0}", b.QRANumber)
+        mi.NavigateUrl = b.ExecutiveSummaryLink()
         myMenu.Items(0).ChildItems.Add(mi)
 
         mi = New MenuItem
@@ -422,7 +422,7 @@ Partial Class ScanForInfo_Default
         hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
         hypTRSLink.NavigateUrl = b.RequestLink()
         hypRefresh.NavigateUrl = b.BatchInfoLink
-        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?RN={0}", b.QRANumber)
+        hpyES.NavigateUrl = b.ExecutiveSummaryLink()
         hypRelabLink.NavigateUrl = b.RelabResultLink
         hypProductGroupLink.NavigateUrl = b.ProductGroupLink
         hypTestRecords.NavigateUrl = b.TestRecordsLink

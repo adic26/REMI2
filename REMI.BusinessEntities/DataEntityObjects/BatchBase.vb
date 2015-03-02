@@ -1080,13 +1080,6 @@ Namespace REMI.BusinessEntities
         End Property
 
         <XmlIgnore()> _
-        Public ReadOnly Property SetCommentsManagerLink() As String
-            Get
-                Return REMIWebLinks.GetSetBatchCommentsLink(QRANumber)
-            End Get
-        End Property
-
-        <XmlIgnore()> _
         Public ReadOnly Property SetTestDurationsManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchSpecificTestDurationsLink(QRANumber)
@@ -1100,6 +1093,13 @@ Namespace REMI.BusinessEntities
         Public ReadOnly Property SetTestStageManagerLink() As String
             Get
                 Return REMIWebLinks.GetSetBatchTestStageLink(QRANumber)
+            End Get
+        End Property
+
+        <XmlIgnore()> _
+        Public ReadOnly Property ExecutiveSummaryLink() As String
+            Get
+                Return REMIWebLinks.GetExecutiveSummaryLink(QRANumber)
             End Get
         End Property
 
