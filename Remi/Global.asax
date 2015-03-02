@@ -30,7 +30,7 @@
     Sub RequestHandlerExecute(ByVal sender As Object, ByVal e As EventArgs) Handles Me.PreRequestHandlerExecute
         Dim httpApp As HttpApplication = DirectCast(sender, HttpApplication) 'get the http app
 
-        If httpApp.Context.Request.Path.Contains("/Reports/ES/Default.aspx") Then
+        If httpApp.Context.Request.Path.ToLower.Contains("/reports/es/default.aspx") Then
         ElseIf httpApp.Context.Request.Path.Contains(".aspx") Then
             If Not UserManager.SessionUserIsSet Then
                 If httpApp.Context.Request.Path.ToLower <> "/badgeaccess/default.aspx" AndAlso httpApp.Context.Request.Path.ToLower <> "/badgeaccess/error.aspx" Then

@@ -11,7 +11,7 @@ Partial Class ES_Default
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
             Dim tmpStr As String = Request.QueryString.Get("RN")
-            Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr))
+            Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 
             If bc.Validate Then
                 Dim mi As New MenuItem

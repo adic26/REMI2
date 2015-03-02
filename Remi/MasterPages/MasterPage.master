@@ -52,7 +52,10 @@
                 <LevelMenuItemStyles>
                     <asp:MenuItemStyle CssClass="menuItemLevel1" />
                     <asp:MenuItemStyle CssClass="menuItemLevel2" />
+                    <asp:MenuItemStyle CssClass="menuItemLevel3" />
                 </LevelMenuItemStyles>
+                <DynamicHoverStyle ForeColor="LightBlue" />
+                <StaticHoverStyle ForeColor="LightBlue" />
                 <Items>
                     <asp:MenuItem ImageUrl="../Design/Icons/ic_overflow_tab.png"></asp:MenuItem>
                     <asp:MenuItem Text="Overview" NavigateUrl="~/Overview.aspx" Value="Overview"></asp:MenuItem>

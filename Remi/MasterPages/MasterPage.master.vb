@@ -21,12 +21,15 @@ Partial Class MasterPages_MasterPage
                 hlUser.Visible = False
                 lnkLogout.Visible = False
 
-                pnlHead.Enabled = False
                 pnlLeftNav.CssClass = "leftSidebarES"
                 pnlContent.CssClass = "contentExpandedES"
                 pnlExpColLefNav.Style.Add("Display", "none")
-                pnlLeftNavContent.Width = 75
-                menuHeader.Enabled = False
+                'pnlLeftNavContent.Width = 75
+
+                If (UserManager.GetCurrentValidUserID = 0) Then
+                    pnlHead.Enabled = False
+                    menuHeader.Enabled = False
+                End If
             End If
 
             If (menuHeader.FindItem("admin") IsNot Nothing) Then
