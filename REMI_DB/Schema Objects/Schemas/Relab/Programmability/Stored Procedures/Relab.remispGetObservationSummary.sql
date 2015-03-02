@@ -13,7 +13,7 @@ BEGIN
 	WHERE BatchID=@BatchID
 
 	INSERT INTO #Observations
-	SELECT DISTINCT lm.[Values] AS Observation
+	SELECT DISTINCT Relab.ResultsObservation (m.ID) AS Observation
 	FROM Relab.ResultsMeasurements m
 		INNER JOIN Relab.Results r ON r.ID=m.ResultID
 		INNER JOIN TestUnits tu ON r.TestUnitID=tu.ID
@@ -23,7 +23,7 @@ BEGIN
 		INNER JOIN Batches b ON b.ID=tu.BatchID
 		LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
 		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
-	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] like '%\%') AND b.ID=@BatchID
+	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] = 'Observation') AND b.ID=@BatchID
 
 	SELECT @RowID = MIN(RowID) FROM #units
 				
@@ -46,8 +46,9 @@ BEGIN
 				LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
 				LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
 			WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 
-				AND [values] = #Observations.Observation) AND b.ID=' + CONVERT(VARCHAR, @BatchID) + ' 
+				AND [values] = ''Observation'') AND b.ID=' + CONVERT(VARCHAR, @BatchID) + ' 
 				AND tu.batchunitnumber=' + CONVERT(VARCHAR,@BatchUnitNumber) + ' 
+				AND Relab.ResultsObservation (m.ID) = #Observations.Observation
 			ORDER BY ts.ProcessOrder ASC
 		), 0)'
 		

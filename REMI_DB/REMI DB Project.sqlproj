@@ -249,6 +249,7 @@
     <Folder Include="Scripts\February172015" />
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities" />
     <Folder Include="Oracle\DTATTA" />
+    <Folder Include="Scripts\February252015" />
     <Folder Include="Scripts\February262015" />
   </ItemGroup>
   <ItemGroup>
@@ -1332,6 +1333,7 @@
     <None Include="Scripts\November262014\1.sql" />
     <None Include="Scripts\January292015\2.sql" />
     <None Include="Scripts\February042015\2.sql" />
+    <None Include="Scripts\February262015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -2746,7 +2748,11 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\FK_BatchesJira_Batches.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\February262015\1.sql" />
+    <None Include="Scripts\February252015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Scripts\February262015\1.sql" />
     <None Include="Scripts\February262015\migrationDTATTA.sql" />
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Functions\Relab.ResultsObservation.sql" />
   </ItemGroup>
 </Project>
