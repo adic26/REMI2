@@ -638,6 +638,8 @@ Namespace REMI.Dal
             End If
 
             myFields.HasIntegration = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("HasIntegration"))
+            myFields.ReqFieldDataID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldDataID"))
+            myFields.HasDistribution = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("HasDistribution"))
 
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField

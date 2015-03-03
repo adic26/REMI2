@@ -7,17 +7,17 @@ BEGIN
 	SELECT @rows=  ISNULL(STUFF(
 		( 
 		SELECT DISTINCT '],[' + rfm.IntField
-		FROM Req.ReqFieldSetup rfs
-			INNER JOIN Req.ReqFieldMapping rfm ON rfm.ExtField = rfs.Name AND rfm.RequestTypeID=@RequestTypeID
+		FROM Req.ReqFieldSetup rfs WITH(NOLOCK)
+			INNER JOIN Req.ReqFieldMapping rfm WITH(NOLOCK) ON rfm.ExtField = rfs.Name AND rfm.RequestTypeID=@RequestTypeID
 		WHERE rfs.RequestTypeID=@RequestTypeID
 		ORDER BY '],[' +  rfm.IntField
 		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 		
 	SELECT @Count = COUNT(*)
-	FROM Req.Request r
-		INNER JOIN Req.ReqFieldData rfd ON rfd.RequestID=r.RequestID
-		INNER JOIN Req.ReqFieldSetup rfs ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
-		INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID
+	FROM Req.Request r WITH(NOLOCK)
+		INNER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.RequestID=r.RequestID
+		INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
+		INNER JOIN Req.RequestType rt WITH(NOLOCK) ON rt.RequestTypeID=rfs.RequestTypeID
 	WHERE rt.RequestTypeID=@RequestTypeID
 
 	IF (@Count > 0)
@@ -29,11 +29,11 @@ BEGIN
 			FROM 
 				(
 				SELECT r.RequestID, r.RequestNumber, rfd.Value, rfm.IntField
-				FROM Req.Request r
-					INNER JOIN Req.ReqFieldData rfd ON rfd.RequestID=r.RequestID
-					INNER JOIN Req.ReqFieldSetup rfs ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
-					INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID
-					INNER JOIN Req.ReqFieldMapping rfm ON rfm.ExtField = rfs.Name
+				FROM Req.Request r WITH(NOLOCK)
+					INNER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.RequestID=r.RequestID
+					INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
+					INNER JOIN Req.RequestType rt WITH(NOLOCK) ON rt.RequestTypeID=rfs.RequestTypeID
+					INNER JOIN Req.ReqFieldMapping rfm WITH(NOLOCK) ON rfm.ExtField = rfs.Name
 				WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID) + '
 				) req PIVOT (MAX(Value) FOR IntField IN (' + @rows + ')) AS pvt
 			WHERE [Department] = ''' + @Department + ''' AND

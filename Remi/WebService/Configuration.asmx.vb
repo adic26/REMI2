@@ -388,7 +388,7 @@ Public Class ProductConfiguration
     Public Function SaveRequest(ByVal requestName As String, ByRef request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Return RequestManager.SaveRequest(requestName, request, userIdentification)
+                Return RequestManager.SaveRequest(requestName, request, userIdentification, Nothing)
             End If
         Catch ex As Exception
             RequestManager.LogIssue("SaveRequest", "e1", NotificationType.Errors, ex, String.Format("RequestName: {0} User: {1}", requestName, userIdentification))

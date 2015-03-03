@@ -217,6 +217,11 @@
                         <asp:DropDownList runat="server" ID="ddlNewParentField" DataTextField="Name" DataValueField="ReqFieldSetupID" Visible="true" DataSourceID="odsParents"></asp:DropDownList>
                     </FooterTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="Has Distribution" SortExpression="">
+                    <ItemTemplate>
+                        <asp:CheckBox runat="server" Checked='<%# Eval("HasDistribution")%>' ID="chkDistribution" Enabled="false" />
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="Integrated Remi" SortExpression="Integrated Remi">
                     <ItemTemplate>
                         <asp:CheckBox runat="server" Checked='<%# Eval("HasIntegration")%>' ID="chkIntegrated" Enabled="false" />

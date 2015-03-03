@@ -1,4 +1,4 @@
-﻿<%@ Page Language="vb" EnableViewState="true" AutoEventWireup="false" CodeBehind="Request.aspx.vb" Inherits="Remi.Request" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" %>
+﻿<%@ Page Language="vb" EnableViewState="true" AutoEventWireup="false" CodeBehind="Request.aspx.vb" EnableEventValidation="false" Inherits="Remi.Request" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="NotificationList" TagPrefix="uc1" %>
 <%@ Register Src="../Controls/RequestSetup.ascx" TagName="RequestSetup" TagPrefix="rs" %>
@@ -6,6 +6,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
     <h1><asp:Label runat="server" ID="lblRequest"></asp:Label></h1>
+    <script type="text/javascript" src="../Design/scripts/jQuery/jquery-1.11.1.js"></script>
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
     <asp:Panel ID="pnlLeftMenuActions" runat="server">
@@ -36,7 +37,23 @@
     <asp:HiddenField runat="server" ID="hdnRequestType" />
     <asp:HiddenField runat="server" ID="hdnRequestTypeID" />
     <asp:HiddenField runat="server" ID="hdnRequestNumber" />
-    
+    <asp:HiddenField runat="server" ID="hdnDistribution" />
+
+    <script type="text/javascript">
+        function GetValue(source, eventArgs)
+        {
+            var txt = document.getElementById(source._element.id);
+            txt.value = '';
+
+            var o = new Option(eventArgs.get_value(), eventArgs.get_value());
+            $(o).html(eventArgs.get_value());
+            $('#ctl00_Content_lstDistribution').append(o);
+
+            var dist = document.getElementById('<%= hdnDistribution.ClientID%>');
+            dist.value += eventArgs.get_value() + ",";
+        }
+    </script>
+
     <uc1:NotificationList ID="notMain" runat="server" />
         
     <asp:Panel runat="server" ID="pnlDisplayChanges" Visible="false">

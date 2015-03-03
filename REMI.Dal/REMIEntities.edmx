@@ -94,6 +94,7 @@
           <EntitySet Name="ResultsParameters" EntityType="remiModel.Store.ResultsParameters" store:Type="Tables" Schema="Relab" />
           <EntitySet Name="ResultsStatus" EntityType="remiModel.Store.ResultsStatus" store:Type="Tables" Schema="Relab" />
           <EntitySet Name="ResultsXML" EntityType="remiModel.Store.ResultsXML" store:Type="Tables" Schema="Relab" />
+          <EntitySet Name="ReqDistribution" EntityType="remiModel.Store.ReqDistribution" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldData" EntityType="remiModel.Store.ReqFieldData" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldDataAudit" EntityType="remiModel.Store.ReqFieldDataAudit" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldMapping" EntityType="remiModel.Store.ReqFieldMapping" store:Type="Tables" Schema="Req" />
@@ -418,6 +419,10 @@
           <AssociationSet Name="FK_ProductTestReady_Tests" Association="remiModel.Store.FK_ProductTestReady_Tests">
             <End Role="Tests" EntitySet="Tests" />
             <End Role="ProductTestReady" EntitySet="ProductTestReady" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReqDistribution_Request" Association="remiModel.Store.FK_ReqDistribution_Request">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="ReqDistribution" EntitySet="ReqDistribution" />
           </AssociationSet>
           <AssociationSet Name="FK_ReqFieldData_ReqFieldSetup" Association="remiModel.Store.FK_ReqFieldData_ReqFieldSetup">
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetup" />
@@ -1573,10 +1578,17 @@
           <Property Name="TestXML" Type="xml" />
           <Property Name="SequenceXML" Type="xml" />
         </EntityType>
+        <EntityType Name="ReqDistribution">
+          <Key>
+            <PropertyRef Name="DistributionID" />
+          </Key>
+          <Property Name="DistributionID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="255" />
+        </EntityType>
         <EntityType Name="ReqFieldData">
           <Key>
-            <PropertyRef Name="RequestID" />
-            <PropertyRef Name="ReqFieldSetupID" />
+            <PropertyRef Name="ReqFieldDataID" />
           </Key>
           <Property Name="RequestID" Type="int" Nullable="false" />
           <Property Name="ReqFieldSetupID" Type="int" Nullable="false" />
@@ -1584,6 +1596,7 @@
           <Property Name="LastUser" Type="nvarchar" MaxLength="255" />
           <Property Name="InsertTime" Type="datetime" />
           <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ReqFieldDataID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="ReqFieldDataAudit">
           <Key>
@@ -1665,7 +1678,7 @@
           <Property Name="DBType" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="HasIntegration" Type="bit" Nullable="false" />
           <Property Name="CanReport" Type="bit" Nullable="false" />
-          <Property Name="HasApproval" Type="bit" Nullable="false" />
+          <Property Name="HasDistribution" Type="bit" Nullable="false" />
           <Property Name="IsExternal" Type="bit" Nullable="false" />
           <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
@@ -2485,6 +2498,18 @@
             </Principal>
             <Dependent Role="ProductTestReady">
               <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReqDistribution_Request">
+          <End Role="Request" Type="remiModel.Store.Request" Multiplicity="1" />
+          <End Role="ReqDistribution" Type="remiModel.Store.ReqDistribution" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="RequestID" />
+            </Principal>
+            <Dependent Role="ReqDistribution">
+              <PropertyRef Name="RequestID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3567,12 +3592,7 @@
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="UserTraining" EntitySet="UserTrainings" />
           </AssociationSet>
-          <EntitySet Name="ReqFieldDatas" EntityType="REMI.Entities.ReqFieldData" />
           <EntitySet Name="Requests" EntityType="REMI.Entities.Request" />
-          <AssociationSet Name="FK_ReqFieldData_Request" Association="REMI.Entities.FK_ReqFieldData_Request">
-            <End Role="Request" EntitySet="Requests" />
-            <End Role="ReqFieldData" EntitySet="ReqFieldDatas" />
-          </AssociationSet>
           <EntitySet Name="RequestTypes" EntityType="REMI.Entities.RequestType" />
           <AssociationSet Name="FK_RequestType_TypeID" Association="REMI.Entities.FK_RequestType_TypeID">
             <End Role="Lookup" EntitySet="Lookups" />
@@ -3587,10 +3607,6 @@
           <AssociationSet Name="FK_ReqFieldSetup_FieldValidationID" Association="REMI.Entities.FK_ReqFieldSetup_FieldValidationID">
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ReqFieldData_ReqFieldSetup" Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup">
-            <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
-            <End Role="ReqFieldData" EntitySet="ReqFieldDatas" />
           </AssociationSet>
           <AssociationSet Name="FK_ReqFieldSetup_RequestType" Association="REMI.Entities.FK_ReqFieldSetup_RequestType">
             <End Role="RequestType" EntitySet="RequestTypes" />
@@ -3811,6 +3827,20 @@
           <AssociationSet Name="FK_BatchesJira_Batches" Association="REMI.Entities.FK_BatchesJira_Batches">
             <End Role="Batch" EntitySet="Batches" />
             <End Role="BatchesJira" EntitySet="BatchesJiras" />
+          </AssociationSet>
+          <EntitySet Name="ReqFieldDatas" EntityType="REMI.Entities.ReqFieldData" />
+          <AssociationSet Name="FK_ReqFieldData_ReqFieldSetup" Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup">
+            <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
+            <End Role="ReqFieldData" EntitySet="ReqFieldDatas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReqFieldData_Request" Association="REMI.Entities.FK_ReqFieldData_Request">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="ReqFieldData" EntitySet="ReqFieldDatas" />
+          </AssociationSet>
+          <EntitySet Name="ReqDistributions" EntityType="REMI.Entities.ReqDistribution" />
+          <AssociationSet Name="FK_ReqDistribution_Request" Association="REMI.Entities.FK_ReqDistribution_Request">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="ReqDistribution" EntitySet="ReqDistributions" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
@@ -5530,43 +5560,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ReqFieldData">
-          <Key>
-            <PropertyRef Name="RequestID" />
-            <PropertyRef Name="ReqFieldSetupID" />
-          </Key>
-          <Property Type="Int32" Name="RequestID" Nullable="false" />
-          <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
-          <Property Type="String" Name="Value" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Request" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="ReqFieldData" ToRole="Request" />
-          <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldData" ToRole="ReqFieldSetup" />
-          <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="InsertTime" Precision="3" />
-          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-        </EntityType>
         <EntityType Name="Request">
           <Key>
             <PropertyRef Name="RequestID" />
           </Key>
           <Property Type="Int32" Name="RequestID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="RequestNumber" MaxLength="11" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="Request" ToRole="ReqFieldData" />
           <Property Type="Int32" Name="BatchID" />
           <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Request" ToRole="Batch" />
           <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="Request" ToRole="ReqFieldData" />
+          <NavigationProperty Name="ReqDistributions" Relationship="REMI.Entities.FK_ReqDistribution_Request" FromRole="Request" ToRole="ReqDistribution" />
         </EntityType>
-        <Association Name="FK_ReqFieldData_Request">
-          <End Type="REMI.Entities.Request" Role="Request" Multiplicity="1" />
-          <End Type="REMI.Entities.ReqFieldData" Role="ReqFieldData" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Request">
-              <PropertyRef Name="RequestID" />
-            </Principal>
-            <Dependent Role="ReqFieldData">
-              <PropertyRef Name="RequestID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="RequestType">
           <Key>
             <PropertyRef Name="RequestTypeID" />
@@ -5577,7 +5582,6 @@
           <Property Type="String" Name="DBType" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="HasIntegration" Nullable="false" />
           <Property Type="Boolean" Name="CanReport" Nullable="false" />
-          <Property Type="Boolean" Name="HasApproval" Nullable="false" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_RequestType_TypeID" FromRole="RequestType" ToRole="Lookup" />
           <NavigationProperty Name="ReqFieldSetups" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="RequestType" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="ReqFieldMappings" Relationship="REMI.Entities.FK_ReqFieldMapping_RequestType" FromRole="RequestType" ToRole="ReqFieldMapping" />
@@ -5586,6 +5590,7 @@
           <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_RequestType" FromRole="RequestType" ToRole="LookupsHierarchy" />
           <NavigationProperty Name="UserSearchFilters" Relationship="REMI.Entities.FK_UserSearchFilter_RequestType" FromRole="RequestType" ToRole="UserSearchFilter" />
           <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Boolean" Name="HasDistribution" Nullable="false" />
         </EntityType>
         <Association Name="FK_RequestType_TypeID">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -5615,13 +5620,13 @@
           <Property Type="Int32" Name="OptionsTypeID" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" FromRole="ReqFieldSetup" ToRole="Lookup" />
           <NavigationProperty Name="Lookup1" Relationship="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" FromRole="ReqFieldSetup" ToRole="Lookup" />
-          <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldData" />
           <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_ReqFieldSetup_RequestType" FromRole="ReqFieldSetup" ToRole="RequestType" />
           <NavigationProperty Name="ReqFieldSetupRoles" Relationship="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldSetupRole" />
           <Property Type="Int32" Name="ColumnOrder" Nullable="false" />
           <Property Type="String" Name="Category" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ParentReqFieldSetupID" />
           <Property Type="String" Name="DefaultValue" MaxLength="400" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldData" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -5654,18 +5659,6 @@
             </Principal>
             <Dependent Role="ReqFieldSetup">
               <PropertyRef Name="FieldValidationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ReqFieldData_ReqFieldSetup">
-          <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="1" />
-          <End Type="REMI.Entities.ReqFieldData" Role="ReqFieldData" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ReqFieldSetup">
-              <PropertyRef Name="ReqFieldSetupID" />
-            </Principal>
-            <Dependent Role="ReqFieldData">
-              <PropertyRef Name="ReqFieldSetupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6542,6 +6535,65 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ReqFieldData">
+          <Key>
+            <PropertyRef Name="ReqFieldDataID" />
+          </Key>
+          <Property Type="Int32" Name="RequestID" Nullable="false" />
+          <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="InsertTime" Precision="3" />
+          <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ReqFieldDataID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldData" ToRole="ReqFieldSetup" />
+          <NavigationProperty Name="Request" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="ReqFieldData" ToRole="Request" />
+        </EntityType>
+        <Association Name="FK_ReqFieldData_ReqFieldSetup">
+          <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldData" Role="ReqFieldData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReqFieldSetup">
+              <PropertyRef Name="ReqFieldSetupID" />
+            </Principal>
+            <Dependent Role="ReqFieldData">
+              <PropertyRef Name="ReqFieldSetupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReqFieldData_Request">
+          <End Type="REMI.Entities.Request" Role="Request" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldData" Role="ReqFieldData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="RequestID" />
+            </Principal>
+            <Dependent Role="ReqFieldData">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ReqDistribution">
+          <Key>
+            <PropertyRef Name="DistributionID" />
+          </Key>
+          <Property Type="Int32" Name="DistributionID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="RequestID" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Request" Relationship="REMI.Entities.FK_ReqDistribution_Request" FromRole="ReqDistribution" ToRole="Request" />
+        </EntityType>
+        <Association Name="FK_ReqDistribution_Request">
+          <End Type="REMI.Entities.Request" Role="Request" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqDistribution" Role="ReqDistribution" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="RequestID" />
+            </Principal>
+            <Dependent Role="ReqDistribution">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7375,18 +7427,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ReqFieldDatas">
-            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldData">
-              <MappingFragment StoreEntitySet="ReqFieldData">
-                <ScalarProperty Name="rv" ColumnName="rv" />
-                <ScalarProperty Name="InsertTime" ColumnName="InsertTime" />
-                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
-                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Requests">
             <EntityTypeMapping TypeName="REMI.Entities.Request">
               <MappingFragment StoreEntitySet="Request">
@@ -7400,9 +7440,9 @@
           <EntitySetMapping Name="RequestTypes">
             <EntityTypeMapping TypeName="REMI.Entities.RequestType">
               <MappingFragment StoreEntitySet="RequestType">
+                <ScalarProperty Name="HasDistribution" ColumnName="HasDistribution" />
                 <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="IsExternal" ColumnName="IsExternal" />
-                <ScalarProperty Name="HasApproval" ColumnName="HasApproval" />
                 <ScalarProperty Name="CanReport" ColumnName="CanReport" />
                 <ScalarProperty Name="HasIntegration" ColumnName="HasIntegration" />
                 <ScalarProperty Name="DBType" ColumnName="DBType" />
@@ -7724,6 +7764,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ReqFieldDatas">
+            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldData">
+              <MappingFragment StoreEntitySet="ReqFieldData">
+                <ScalarProperty Name="ReqFieldDataID" ColumnName="ReqFieldDataID" />
+                <ScalarProperty Name="rv" ColumnName="rv" />
+                <ScalarProperty Name="InsertTime" ColumnName="InsertTime" />
+                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReqDistributions">
+            <EntityTypeMapping TypeName="REMI.Entities.ReqDistribution">
+              <MappingFragment StoreEntitySet="ReqDistribution">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+                <ScalarProperty Name="DistributionID" ColumnName="DistributionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7750,14 +7812,14 @@
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfo" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfoCompleted" Width="1.5" PointX="0.75" PointY="5.75" />
         <EntityTypeShape EntityType="REMI.Entities.vw_TestRecordAudit" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="21" PointY="73.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="25.5" PointY="69.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="27.75" PointY="68.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="27.75" PointY="71.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="18" PointY="99.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="22.5" PointY="86.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="24.75" PointY="84.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="24.75" PointY="87.875" />
         <EntityTypeShape EntityType="REMI.Entities.ResultsOrphaned" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="27.75" PointY="74.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="23.25" PointY="82.25" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="15.75" PointY="64.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="24.75" PointY="91" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="20.25" PointY="107.625" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="15.75" PointY="102.625" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultXML_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID" />
@@ -7765,48 +7827,48 @@
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsFiles_ResultsMeasurements" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsParameters_ResultsMeasurements" />
         <EntityTypeShape EntityType="REMI.Entities.ApplicationLog" Width="1.5" PointX="6.75" PointY="4.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="15" PointY="45.25" />
-        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="10.5" PointY="37.375" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="12.75" PointY="37.125" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="16" PointY="92.375" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="13.375" PointY="116" />
+        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="8.875" PointY="134.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="11.125" PointY="134" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="16" PointY="52.5" />
         <EntityTypeShape EntityType="REMI.Entities.aspnet_SchemaVersions" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="2.5" PointX="12.75" PointY="92" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="15.75" PointY="70.125" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="2.5" PointX="12.75" PointY="52.125" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="12.75" PointY="100.75" />
         <EntityTypeShape EntityType="REMI.Entities.BatchesAudit" Width="1.5" PointX="8.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="18.75" PointY="61.125" />
-        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="7.5" PointY="53.125" />
-        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="18" PointY="69.25" />
-        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="64.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="70.25" />
-        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="61.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="2.375" PointX="12.75" PointY="48.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="2.375" PointX="10.5" PointY="53.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="2" PointX="10.375" PointY="44.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="53.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="10.5" PointY="61.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="7.5" PointY="57.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="9.75" PointY="57" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="15.75" PointY="90.375" />
+        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="7.5" PointY="121.25" />
+        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="15" PointY="86.25" />
+        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="8.25" PointY="63.125" />
+        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="6" PointY="57.625" />
+        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="68.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="2.375" PointX="10.625" PointY="119" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="2.375" PointX="7.5" PointY="117.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="2" PointX="10.625" PointY="115.875" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="5.25" PointY="65.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="7.5" PointY="92.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="7.5" PointY="130.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="9.75" PointY="123.375" />
         <EntityTypeShape EntityType="REMI.Entities.StationConfigurationUpload" Width="1.5" PointX="4.75" PointY="8.75" />
         <EntityTypeShape EntityType="REMI.Entities.sysdiagram" Width="1.5" PointX="10.75" PointY="0.75" />
         <EntityTypeShape EntityType="REMI.Entities.TargetAccess" Width="1.5" PointX="10.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="15.75" PointY="61.125" />
-        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="106.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="12.75" PointY="90.375" />
+        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="121.25" />
         <EntityTypeShape EntityType="REMI.Entities.TestExceptionsAudit" Width="1.5" PointX="10.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="18" PointY="73.75" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="18" PointY="103.375" />
         <EntityTypeShape EntityType="REMI.Entities.TestRecordsAudit" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="23.25" PointY="73" />
-        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="8.25" PointY="47" />
-        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="13.5" PointY="72.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="11.25" PointY="64.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="18.25" PointY="57.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="13.5" PointY="69.125" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="15.75" PointY="81.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="21" PointY="70.25" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="13.5" PointY="82" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="11.25" PointY="73.25" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="9" PointY="72.875" />
-        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="7.5" PointY="61.5" />
-        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="13.25" PointY="53" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="20.25" PointY="96.25" />
+        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="5.25" PointY="110" />
+        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="10.5" PointY="80.75" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="8.25" PointY="67.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="8.25" PointY="88.875" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="10.5" PointY="72.5" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="12.75" PointY="64" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="15" PointY="67.625" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="10.5" PointY="64.375" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="8.25" PointY="80.625" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="6" PointY="78.25" />
+        <EntityTypeShape EntityType="REMI.Entities.UsersProduct" Width="1.5" PointX="7.5" PointY="113.625" />
+        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="11.25" PointY="68.375" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ApplicationVersions" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ProductConfigurationVersion" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationVersions_Applications" />
@@ -7841,13 +7903,13 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfiguration_TrackingLocationsPlugin" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationTypePermissions_TrackingLocationTypes" />
-        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="13.5" PointY="57" />
+        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="10.5" PointY="86.125" />
         <AssociationConnector Association="REMI.Entities.FK_BatchComments_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_JobOrientation" />
         <AssociationConnector Association="REMI.Entities.FK_BatchSpecificTestDurations_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_TaskAssignment_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="58.625" />
+        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="65.75" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_AccessoryGroup" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Department" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Priority" />
@@ -7865,65 +7927,62 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_LookupsLevel" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldData" Width="1.5" PointX="18" PointY="82.875" />
-        <EntityTypeShape EntityType="REMI.Entities.Request" Width="1.5" PointX="15.75" PointY="77.875" />
-        <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_Request" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="109.5" />
+        <EntityTypeShape EntityType="REMI.Entities.Request" Width="1.5" PointX="12.75" PointY="108.5" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="124.5" />
         <AssociationConnector Association="REMI.Entities.FK_RequestType_TypeID" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="10.5" PointY="85.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="2.875" PointX="12.75" PointY="87" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="7.5" PointY="99.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="2.875" PointX="12.75" PointY="96.125" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" />
-        <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_RequestType" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="125.5" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="140.75" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="3" PointY="70.5" />
-        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="5.25" PointY="67.5" />
-        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="11" PointY="40.75" />
+        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="3" PointY="74.875" />
+        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="5.25" PointY="71.875" />
+        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="9" PointY="76.125" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Menu" />
         <AssociationConnector Association="REMI.Entities.FK_UsersProducts_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Users" />
-        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="15.75" PointY="73.25" />
+        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="12.75" PointY="103.75" />
         <EntityTypeShape EntityType="REMI.Entities.UsersAudit" Width="1.5" PointX="8.75" PointY="10.75" />
         <AssociationConnector Association="REMI.Entities.FK_TestUnits_Batches" />
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecords_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_Results_TestUnits" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="7.5" PointY="84.875" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="10.5" PointY="99" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="8.25" PointY="69.5" />
+        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="8.25" PointY="72.875" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Jobs" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Lookups" />
-        <EntityTypeShape EntityType="REMI.Entities.Service" Width="1.5" PointX="3" PointY="67.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ServicesAccess" Width="1.5" PointX="5.25" PointY="64.5" />
+        <EntityTypeShape EntityType="REMI.Entities.Service" Width="1.5" PointX="3" PointY="62.875" />
+        <EntityTypeShape EntityType="REMI.Entities.ServicesAccess" Width="1.5" PointX="5.25" PointY="62.875" />
         <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Services" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="7.375" PointY="91.375" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="7.375" PointY="51.5" />
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="2.375" PointX="9.625" PointY="92.5" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="2.375" PointX="9.625" PointY="52.625" />
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Ro__Appli__40058253" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="7.375" PointY="94.5" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="7.375" PointY="54.625" />
         <AssociationConnector Association="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" />
         <AssociationConnector Association="REMI.Entities.aspnet_PermissionsInRoles" />
         <AssociationConnector Association="REMI.Entities.aspnet_UsersInRoles" />
-        <EntityTypeShape EntityType="REMI.Entities.LookupsHierarchy" Width="1.5" PointX="10.5" PointY="81.375" />
+        <EntityTypeShape EntityType="REMI.Entities.LookupsHierarchy" Width="1.5" PointX="7.5" PointY="95.5" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_Lookups1" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType1" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_RequestType" />
         <AssociationConnector Association="REMI.Entities.FK_Request_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsStatu" Width="1.5" PointX="15.75" PointY="56.125" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsStatu" Width="1.5" PointX="12.75" PointY="86.75" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsStatus_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.UserSearchFilter" Width="1.5" PointX="7.5" PointY="110.25" />
+        <EntityTypeShape EntityType="REMI.Entities.UserSearchFilter" Width="1.5" PointX="7.5" PointY="125.25" />
         <AssociationConnector Association="REMI.Entities.FK_UserSearchFilter_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UserSearchFilter_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="5.25" PointY="56.75" />
+        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="5.25" PointY="116.875" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Products" />
         <AssociationConnector Association="REMI.Entities.FK_Calibration_Products" />
         <AssociationConnector Association="REMI.Entities.FK_Products_Lookups" />
@@ -7933,21 +7992,26 @@
         <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_Products" />
         <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Products" />
         <AssociationConnector Association="REMI.Entities.FK_UsersProducts_Products" />
-        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="5.25" PointY="61.25" />
+        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="5.25" PointY="74.625" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Users" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldDataAudit" Width="1.5" PointX="10.75" PointY="9.75" />
-        <EntityTypeShape EntityType="REMI.Entities.vw_RequestDataAudit" Width="1.5" PointX="2.625" PointY="8.875" />
-        <EntityTypeShape EntityType="REMI.Entities.TestsAccess" Width="1.5" PointX="0.51571959281140922" PointY="9.61177495569539" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldDataAudit" Width="2.875" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="REMI.Entities.vw_RequestDataAudit" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="REMI.Entities.TestsAccess" Width="1.5" PointX="5.25" PointY="68.875" />
         <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Tests" />
-        <EntityTypeShape EntityType="REMI.Entities.Configuration" Width="1.5" PointX="6.956855343169" PointY="18.403342195974357" />
+        <EntityTypeShape EntityType="REMI.Entities.Configuration" Width="1.5" PointX="5.25" PointY="94.125" />
         <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups1" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="10.448514069639385" PointY="8.9410736155421819" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="22.5" PointY="108.75" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchesJira" Width="1.5" PointX="3.2143627271123054" PointY="23.923243474179525" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchesJira" Width="1.5" PointX="12.75" PointY="83.75" />
         <AssociationConnector Association="REMI.Entities.FK_BatchesJira_Batches" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldData" Width="1.5" PointX="15" PointY="98.875" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_Request" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqDistribution" Width="1.5" PointX="15" PointY="108.75" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqDistribution_Request" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

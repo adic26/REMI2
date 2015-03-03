@@ -24,6 +24,7 @@ namespace REMI.Contracts
         String IntField { get; set; }
         String ExtField  { get; set; }
         String RequestNumber { get; set; }
+        Int32 ReqFieldDataID { get; set; }
         String Category { get; set; }
         String Value { get; set; }
         String Description { get; set; }
@@ -32,6 +33,7 @@ namespace REMI.Contracts
         bool IsArchived { get; set; }
         bool IsFromExternalSystem { get; set; }
         bool HasIntegration { get; set; }
+        bool HasDistribution { get; set; }
         List<String> OptionsType  { get; set; }
         bool NewRequest { get; set; }
         Int32 ParentFieldSetupID { get; set; }

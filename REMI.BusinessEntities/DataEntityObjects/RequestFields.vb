@@ -17,6 +17,7 @@ Namespace REMI.BusinessEntities
         Private _optionsTypeID As Int32
         Private _requestTypeID As Int32
         Private _requestID As Int32
+        Private _reqFieldDataID As Int32
         Private _internalField As Int32
         Private _requestType As String
         Private _defaultValue As String
@@ -33,6 +34,7 @@ Namespace REMI.BusinessEntities
         Private _parentFieldSetupName As String
         Private _isRequired As Boolean
         Private _isArchived As Boolean
+        Private _hasDistribution As Boolean
         Private _isFromExternalSystem As Boolean
         Private _hasIntegration As Boolean
         Private _optionsType As List(Of String)
@@ -83,6 +85,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As Int32)
                 _requestTypeID = value
+            End Set
+        End Property
+
+        Public Property ReqFieldDataID() As Int32 Implements IRequestFields.ReqFieldDataID
+            Get
+                Return _reqFieldDataID
+            End Get
+            Set(ByVal value As Int32)
+                _reqFieldDataID = value
             End Set
         End Property
 
@@ -308,6 +319,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(value As Boolean)
                 _hasIntegration = value
+            End Set
+        End Property
+
+        Public Property HasDistribution() As Boolean Implements IRequestFields.HasDistribution
+            Get
+                Return _hasDistribution
+            End Get
+            Set(value As Boolean)
+                _hasDistribution = value
             End Set
         End Property
 

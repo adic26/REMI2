@@ -53,6 +53,8 @@ Public Class ReqAdmin
         Dim intField As String = Request.Form(grdRequestAdmin.FooterRow.FindControl("ddlNewIntField").UniqueID)
         Dim isRequired As Boolean = False
         Dim isArchived As Boolean = False
+        Dim hasREMIIntegration As Boolean = False
+        Dim hasDistribution As Boolean = False
 
         Int32.TryParse(Request.Form(grdRequestAdmin.FooterRow.FindControl("ddlNewParentField").UniqueID), parentFieldID)
         Int32.TryParse(Request.Form(grdRequestAdmin.FooterRow.FindControl("ddlNewFieldType").UniqueID), fieldTypeID)
@@ -67,7 +69,15 @@ Public Class ReqAdmin
             isArchived = True
         End If
 
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, True, intField, description, String.Empty)
+        Dim instance = New REMI.Dal.Entities().Instance()
+        Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = hdnRequestTypeID.Value Select rt).FirstOrDefault()
+
+        If requestType IsNot Nothing Then
+            hasREMIIntegration = requestType.HasIntegration
+            hasDistribution = requestType.HasDistribution
+        End If
+
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, hasREMIIntegration, intField, description, String.Empty, hasDistribution)
 
         BindRequest()
     End Sub
@@ -249,6 +259,7 @@ Public Class ReqAdmin
         Dim chkIsRequired As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIsRequired")
         Dim chkArch As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkArchived")
         Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIntegrated")
+        Dim chkDistribution As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkDistribution")
 
         lblName.Visible = False
         lblFieldType.Visible = False
@@ -271,6 +282,7 @@ Public Class ReqAdmin
         chkArch.Enabled = True
         chkIsRequired.Enabled = True
         chkIntegrated.Enabled = True
+        chkDistribution.Enabled = True
 
         If (UserManager.GetCurrentUser.IsAdmin) Then
             lblIntField.Visible = False
@@ -293,6 +305,7 @@ Public Class ReqAdmin
         Dim chkIsRequired As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkIsRequired")
         Dim chkArchived As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkArchived")
         Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkIntegrated")
+        Dim chkDistribution As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkDistribution")
 
         Dim ddlIntField As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlIntField")
         Dim ddlParentField As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlParentField")
@@ -312,7 +325,7 @@ Public Class ReqAdmin
         Int32.TryParse(ddlOptionsType.SelectedValue, optionsTypeID)
         Int32.TryParse(grdRequestAdmin.DataKeys(e.RowIndex).Values(0), fieldSetupID)
 
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, chkIntegrated.Checked, ddlIntField.SelectedValue, txtDescription.Text, ddlDefaultValue.SelectedItem.Text)
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, chkIntegrated.Checked, ddlIntField.SelectedValue, txtDescription.Text, ddlDefaultValue.SelectedItem.Text, chkDistribution.Checked)
         grdRequestAdmin.EditIndex = -1
         BindRequest()
     End Sub

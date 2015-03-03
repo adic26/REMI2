@@ -1,7 +1,7 @@
 ﻿Imports Remi.Bll
 Imports Remi.Validation
 Imports Remi.Contracts
-Imports Remi.BusinessEntities 
+Imports Remi.BusinessEntities
 
 Public Class Request
     Inherits System.Web.UI.Page
@@ -54,13 +54,16 @@ Public Class Request
                 Dim tCell2 As New TableCell()
                 Dim lblName As New Label
                 Dim rfv As New RequiredFieldValidator
+                Dim id As Int32 = 0
 
                 tCell.CssClass = "RequestCell1"
                 tCell2.CssClass = "RequestCell2"
 
+                id = res.FieldSetupID
+
                 lblName.Text = String.Format("{0}{1}", If(res.IsRequired, "<b><font color='red'>*</font></b>", ""), res.Name)
                 lblName.EnableViewState = True
-                lblName.ID = String.Format("lbl{0}", res.FieldSetupID)
+                lblName.ID = String.Format("lbl{0}", id)
                 tCell.Controls.Add(lblName)
                 tRow.Cells.Add(tCell)
 
@@ -68,14 +71,14 @@ Public Class Request
                     rfv.EnableViewState = True
                     rfv.Enabled = True
                     rfv.ErrorMessage = "This Field Is Requierd"
-                    rfv.ID = String.Format("rfv{0}", res.FieldSetupID)
+                    rfv.ID = String.Format("rfv{0}", id)
                     rfv.Display = ValidatorDisplay.Static
                 End If
 
                 Select Case res.FieldType.ToUpper()
                     Case "CHECKBOX"
                         Dim chk As New CheckBox
-                        chk.ID = String.Format("chk{0}", res.FieldSetupID)
+                        chk.ID = String.Format("chk{0}", id)
                         chk.EnableViewState = True
 
                         Dim checked As Boolean = False
@@ -93,13 +96,13 @@ Public Class Request
                         Dim dt As New TextBox
                         dt.Text = res.Value
                         dt.EnableViewState = True
-                        dt.ID = String.Format("dt{0}", res.FieldSetupID)
+                        dt.ID = String.Format("dt{0}", id)
                         dt.Width = 500
 
                         Dim ce As New AjaxControlToolkit.CalendarExtender
                         ce.Enabled = True
                         ce.EnableViewState = True
-                        ce.ID = String.Format("ce{0}", res.FieldSetupID)
+                        ce.ID = String.Format("ce{0}", id)
                         ce.TargetControlID = dt.ID
 
                         tCell2.Controls.Add(dt)
@@ -110,7 +113,7 @@ Public Class Request
                         End If
                     Case "DROPDOWN"
                         Dim ddl As New DropDownList
-                        ddl.ID = String.Format("ddl{0}", res.FieldSetupID)
+                        ddl.ID = String.Format("ddl{0}", id)
                         ddl.EnableViewState = True
                         AddHandler ddl.SelectedIndexChanged, AddressOf Me.ddl_SelectedIndexChanged
                         ddl.AutoPostBack = True
@@ -187,7 +190,7 @@ Public Class Request
                         End If
                     Case "LINK"
                         Dim lnk As New HyperLink
-                        lnk.ID = String.Format("lnk{0}", res.FieldSetupID)
+                        lnk.ID = String.Format("lnk{0}", id)
                         lnk.EnableViewState = True
                         lnk.Text = res.Name
                         lnk.Target = "_blank"
@@ -197,11 +200,13 @@ Public Class Request
                         Dim lnktxt As New TextBox
                         lnktxt.Text = res.Value
                         lnktxt.EnableViewState = True
-                        lnktxt.ID = String.Format("lnktxt{0}", res.FieldSetupID)
+                        lnktxt.ID = String.Format("lnktxt{0}", id)
                         lnktxt.Width = 500
+
                         If (res.IntField = "RequestLink") Then
                             lnktxt.Style.Add("display", "none")
                         End If
+
                         tCell2.Controls.Add(lnktxt)
 
                         If (res.IsRequired) Then
@@ -209,7 +214,7 @@ Public Class Request
                         End If
                     Case "RADIOBUTTON"
                         Dim rb As New RadioButtonList
-                        rb.ID = String.Format("rb{0}", res.FieldSetupID)
+                        rb.ID = String.Format("rb{0}", id)
                         rb.EnableViewState = True
                         rb.RepeatDirection = RepeatDirection.Horizontal
                         rb.CssClass = "RemoveBorder"
@@ -228,7 +233,7 @@ Public Class Request
                     Case "TEXTAREA"
                         Dim txtArea As New TextBox
                         txtArea.EnableViewState = True
-                        txtArea.ID = String.Format("txtArea{0}", res.FieldSetupID)
+                        txtArea.ID = String.Format("txtArea{0}", id)
                         txtArea.TextMode = TextBoxMode.MultiLine
                         txtArea.Width = Unit.Percentage(70)
                         txtArea.Rows = 20
@@ -242,12 +247,12 @@ Public Class Request
                         Dim txt As New TextBox
                         txt.Text = res.Value
                         txt.EnableViewState = True
-                        txt.ID = String.Format("txt{0}", res.FieldSetupID)
+                        txt.ID = String.Format("txt{0}", id)
                         txt.Width = 500
                         tCell2.Controls.Add(txt)
 
                         Dim cv As New CompareValidator
-                        cv.ID = String.Format("cv{0}", res.FieldSetupID)
+                        cv.ID = String.Format("cv{0}", id)
                         cv.Operator = ValidationCompareOperator.DataTypeCheck
                         cv.ControlToValidate = txt.ID
 
@@ -277,6 +282,64 @@ Public Class Request
                 tRow.Cells.Add(tCell2)
                 tbl.Rows.Add(tRow)
             Next
+
+            If (rf(0).HasDistribution) Then
+                Dim tRowDistribution As New TableRow()
+                Dim tCellDistribution As New TableCell()
+                Dim tCell2Distribution As New TableCell()
+                tCellDistribution.CssClass = "RequestCell1"
+                tCell2Distribution.CssClass = "RequestCell2"
+                Dim lblDistribution As New Label
+                lblDistribution.Text = "Distribution"
+                lblDistribution.EnableViewState = True
+                lblDistribution.ID = "lblDistribution"
+                tCellDistribution.Controls.Add(lblDistribution)
+                tRowDistribution.Cells.Add(tCellDistribution)
+
+                Dim txtDistribution As New TextBox
+                txtDistribution.Text = String.Empty
+                txtDistribution.EnableViewState = True
+                txtDistribution.ID = String.Format("txtDistribution")
+                txtDistribution.Width = 150
+
+                Dim aceDistribution As New AjaxControlToolkit.AutoCompleteExtender
+                aceDistribution.TargetControlID = "txtDistribution"
+                aceDistribution.ServiceMethod = "GetActiveDirectoryNames"
+                aceDistribution.ServicePath = "~/webservice/AutoCompleteService.asmx"
+                aceDistribution.MinimumPrefixLength = 1
+                aceDistribution.CompletionSetCount = 20
+                aceDistribution.OnClientItemSelected = "GetValue"
+
+                Dim lst As New ListBox
+                lst.ID = "lstDistribution"
+                lst.EnableViewState = True
+                lst.Style.Add("border-style", "none")
+                lst.Style.Add("border-width", "0px")
+                lst.Style.Add("border", "none")
+
+                If (Not String.IsNullOrEmpty(Request.Form(hdnDistribution.UniqueID))) Then
+                    Dim distribution() As String = Regex.Split(Request.Form(hdnDistribution.UniqueID), ",")
+
+                    If (distribution.Count > 0) Then
+                        For Each s As String In distribution
+                            lst.Items.Add(s)
+                        Next
+                    End If
+                Else
+                    Dim valueDist As List(Of String) = RequestManager.GetRequestDistribution(rf(0).RequestID)
+                    lst.DataSource = valueDist
+                    lst.DataBind()
+
+                    hdnDistribution.Value = String.Join(",", New List(Of String)(valueDist).ToArray())
+                End If
+
+                tCell2Distribution.Controls.Add(txtDistribution)
+                tCell2Distribution.Controls.Add(aceDistribution)
+                tCell2Distribution.Controls.Add(New LiteralControl("<br />"))
+                tCell2Distribution.Controls.Add(lst)
+                tRowDistribution.Cells.Add(tCell2Distribution)
+                tbl.Rows.Add(tRowDistribution)
+            End If
 
             pnlRequest.Controls.Add(tbl)
         End If
@@ -416,12 +479,20 @@ Public Class Request
                 End If
             Next
 
-            Dim saveSuccess As Boolean = RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName)
+            Dim distribution() As String
+
+            If (Not String.IsNullOrEmpty(hdnDistribution.Value)) Then
+                distribution = Request.Form(hdnDistribution.UniqueID).ToString().Split(New [Char]() {","c}, StringSplitOptions.RemoveEmptyEntries)
+            Else
+                distribution = New String() {""}
+            End If
+
+            Dim saveSuccess As Boolean = RequestManager.SaveRequest(hdnRequestType.Value, rf, UserManager.GetCurrentUser.UserName, distribution.Where(Function(s) s <> String.Empty).ToList())
 
             If (saveSuccess) Then
                 notMain.Notifications.AddWithMessage("Saved Request Successful!", NotificationType.Information)
                 Dim requestNumber As String = rf(0).RequestNumber
-                Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+                Dim rec = (From rb In New REMI.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
 
                 If (rec IsNot Nothing) Then
                     If (setup.Visible) Then
