@@ -7,6 +7,7 @@
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
     <h1><asp:Label runat="server" ID="lblRequest"></asp:Label></h1>
     <script type="text/javascript" src="../Design/scripts/jQuery/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="../Design/scripts/wz_tooltip.js"></script>
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
     <asp:Panel ID="pnlLeftMenuActions" runat="server">

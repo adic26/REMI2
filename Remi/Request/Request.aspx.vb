@@ -320,6 +320,16 @@ Public Class Request
                     End If
                 Next
 
+                If (Not String.IsNullOrEmpty(res.Description)) Then
+                    Dim img As New Image
+                    img.ID = String.Format("img{0}", res.FieldSetupID)
+                    img.ImageUrl = "~\Design\Icons\png\24x24\help.png"
+                    img.Attributes.Add("onmouseover", String.Format("Tip('{0}',true,null,true,true,WIDTH,'',TITLEBGCOLOR,'#6494C8')", res.Description))
+                    img.Attributes.Add("onmouseout", "UnTip()")
+
+                    tCell2.Controls.Add(img)
+                End If
+
                 If (res.IsRequired) Then
                     tCell2.Controls.Add(rfv)
                 End If
