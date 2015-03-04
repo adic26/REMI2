@@ -65,14 +65,13 @@ Namespace REMI.Bll
 
         Public Shared Function GetRequestParent(ByVal requestTypeID As Int32, ByVal includeArchived As Boolean, ByVal includeSelect As Boolean) As DataTable
             Try
-                Dim fields = (From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID And (r.Archived = False Or (includeArchived)) Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).ToList()
-
                 If (includeSelect) Then
-                    Dim list2 = (From t In New String() {String.Empty} Select New With {.Name = "Select...", .ReqFieldSetupID = 0})
-                    Dim union = list2.Union(fields)
+                    Dim list = (From t In New String() {String.Empty} Select New With {.Name = "Select...", .ReqFieldSetupID = 0}).Union((From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID And (r.Archived = False Or (includeArchived)) Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).OrderBy(Function(map) map.Name).Distinct.ToList())
 
-                    Return REMI.BusinessEntities.Helpers.EQToDataTable(union.OrderBy(Function(r) r.Name), "RequestSetupParent")
+                    Return REMI.BusinessEntities.Helpers.EQToDataTable(list, "RequestSetupParent")
                 Else
+                    Dim fields = (From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID And (r.Archived = False Or (includeArchived)) Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).ToList()
+
                     Return REMI.BusinessEntities.Helpers.EQToDataTable(fields.OrderBy(Function(r) r.Name), "RequestSetupParent")
                 End If
             Catch ex As Exception
@@ -94,7 +93,7 @@ Namespace REMI.Bll
             Return New DataTable("RequestMappingFields")
         End Function
 
-        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal hasREMIIntegration As Boolean, ByVal intField As String, ByVal description As String, ByVal defaultValue As String, ByVal hasDistribution As Boolean) As Boolean
+        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal hasREMIIntegration As Boolean, ByVal intField As String, ByVal description As String, ByVal defaultValue As String, ByVal hasDistribution As Boolean, ByVal defaultDisplayNum As Int32, ByVal maxDisplayNum As Int32) As Boolean
             Try
                 Dim oldName As String = String.Empty
                 Dim instance = New REMI.Dal.Entities().Instance()
@@ -123,9 +122,38 @@ Namespace REMI.Bll
                     Dim requestFieldMapping As REMI.Entities.ReqFieldMapping = (From fm In instance.ReqFieldMappings Where fm.ExtField = oldName Select fm).FirstOrDefault()
 
                     If (requestFieldMapping IsNot Nothing) Then
-                        requestFieldMapping.ExtField = name
-                        requestFieldMapping.IntField = intField
+                        If (Not String.IsNullOrEmpty(intField)) Then
+                            requestFieldMapping.ExtField = name
+                            requestFieldMapping.IntField = intField
+                        Else
+                            instance.DeleteObject(requestFieldMapping)
+                        End If
+                    Else
+                        Dim rfm As New REMI.Entities.ReqFieldMapping
+                        rfm.IntField = intField
+                        rfm.ExtField = name
+                        rfm.RequestTypeID = requestTypeID
+                        rfm.IsActive = True
+
+                        instance.AddToReqFieldMappings(rfm)
                     End If
+
+                    Dim sibling As REMI.Entities.ReqFieldSetupSibling = (From s In instance.ReqFieldSetupSiblings Where s.ReqFieldSetupID = fieldSetupID Select s).FirstOrDefault()
+
+                    If (sibling IsNot Nothing) Then
+                        sibling.DefaultDisplayNum = defaultDisplayNum
+                        sibling.MaxDisplayNum = maxDisplayNum
+                    Else
+                        If (maxDisplayNum > 1) Then
+                            sibling = New REMI.Entities.ReqFieldSetupSibling
+                            sibling.DefaultDisplayNum = defaultDisplayNum
+                            sibling.MaxDisplayNum = maxDisplayNum
+                            sibling.ReqFieldSetupID = fieldSetupID
+
+                            instance.AddToReqFieldSetupSiblings(sibling)
+                        End If
+                    End If
+
                 Else
                     Dim rfs As New REMI.Entities.ReqFieldSetup()
                     rfs.Name = name
@@ -152,6 +180,15 @@ Namespace REMI.Bll
                         rfm.IsActive = True
 
                         instance.AddToReqFieldMappings(rfm)
+                    End If
+
+                    If (maxDisplayNum > 1) Then
+                        Dim Sibling As New REMI.Entities.ReqFieldSetupSibling
+                        Sibling.DefaultDisplayNum = defaultDisplayNum
+                        Sibling.MaxDisplayNum = maxDisplayNum
+                        Sibling.ReqFieldSetupID = fieldSetupID
+
+                        instance.AddToReqFieldSetupSiblings(Sibling)
                     End If
                 End If
 

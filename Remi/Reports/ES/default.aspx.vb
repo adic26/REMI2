@@ -10,6 +10,10 @@ Partial Class ES_Default
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
+            If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then
+                Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("/Design/scripts/jQuery/jquery-1.10.2.js"))
+            End If
+
             Dim tmpStr As String = Request.QueryString.Get("RN")
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 
@@ -58,6 +62,10 @@ Partial Class ES_Default
                 Next
 
                 rboQRASlider.SelectedValue = b.ID
+
+                If (rboQRASlider.Items.Count = 0) Then
+                    pnlQRASlider.Visible = False
+                End If
 
                 SetStatus(ds.Tables(2).Rows(0)(0).ToString())
 
@@ -172,6 +180,48 @@ Partial Class ES_Default
                     dc.Text = "Fail"
                 End If
             Next
+        End If
+    End Sub
+
+    Protected Sub gvwRequestInfo_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwRequestInfo.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim lblValue As Label = DirectCast(e.Row.FindControl("lblValue"), Label)
+            Dim hylValue As HyperLink = DirectCast(e.Row.FindControl("hylValue"), HyperLink)
+            Dim hdnType As HiddenField = DirectCast(e.Row.FindControl("hdnType"), HiddenField)
+
+            If (DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling.Count > 0) Then
+                hylValue.Visible = False
+
+                For Each s As Sibling In DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling
+                    If (Not String.IsNullOrEmpty(s.Value)) Then
+                        If (hdnType.Value = "Link") Then
+                            Dim hyp As New HyperLink
+                            hyp.Text = s.Value
+                            hyp.Target = "_blank"
+                            hyp.NavigateUrl = s.Value
+                            hyp.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(hyp)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        Else
+                            Dim lbl As New Label
+                            lbl.Text = s.Value
+                            lbl.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(lbl)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        End If
+                    End If
+                Next
+            Else
+                If (hdnType.Value = "Link") Then
+                    lblValue.Visible = False
+                    hylValue.Visible = True
+                Else
+                    lblValue.Visible = True
+                    hylValue.Visible = False
+                End If
+            End If
         End If
     End Sub
 

@@ -90,12 +90,38 @@ Partial Class ScanForInfo_Default
             Dim hylValue As HyperLink = DirectCast(e.Row.FindControl("hylValue"), HyperLink)
             Dim hdnType As HiddenField = DirectCast(e.Row.FindControl("hdnType"), HiddenField)
 
-            If (hdnType.Value = "Link") Then
-                lblValue.Visible = False
-                hylValue.Visible = True
-            Else
-                lblValue.Visible = True
+            If (DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling.Count > 0) Then
                 hylValue.Visible = False
+
+                For Each s As Sibling In DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling
+                    If (Not String.IsNullOrEmpty(s.Value)) Then
+                        If (hdnType.Value = "Link") Then
+                            Dim hyp As New HyperLink
+                            hyp.Text = s.Value
+                            hyp.Target = "_blank"
+                            hyp.NavigateUrl = s.Value
+                            hyp.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(hyp)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        Else
+                            Dim lbl As New Label
+                            lbl.Text = s.Value
+                            lbl.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(lbl)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        End If
+                    End If
+                Next
+            Else
+                If (hdnType.Value = "Link") Then
+                    lblValue.Visible = False
+                    hylValue.Visible = True
+                Else
+                    lblValue.Visible = True
+                    hylValue.Visible = False
+                End If
             End If
         End If
     End Sub

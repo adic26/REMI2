@@ -31,27 +31,40 @@ BEGIN
 		
 			SET @RequestNumber = @RequestType + '-' + Right(Year(getDate()),2) + '-' + @RequestNumber
 		END
+	
+	SELECT rfd.ReqFieldSetupID, rfd.InstanceID, rfd.Value
+	FROM Req.ReqFieldData rfd WITH(NOLOCK)
+		INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
+		INNER JOIN Req.ReqFieldSetupSibling rfss WITH(NOLOCK) ON rfss.ReqFieldSetupID=rfs.ReqFieldSetupID
+	WHERE RequestID = @RequestID
 
 	SELECT rfs.ReqFieldSetupID, @RequestType AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
 			lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, ISNULL(rfs.DisplayOrder, 0) AS DisplayOrder,
 			rfs.ColumnOrder, ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, @RequestTypeID AS RequestTypeID,
 			@RequestNumber AS RequestNumber, @RequestID AS RequestID, 
-			CASE WHEN rfm.IntField = 'RequestLink' AND Value IS NULL THEN 'http://go/requests/' + @RequestNumber ELSE rfd.Value END AS Value, 
+			CASE WHEN rfm.IntField = 'RequestLink' AND Value IS NULL THEN 'http://go/requests/' + @RequestNumber ELSE CASE WHEN ISNULL(rfss.DefaultDisplayNum, 1) = 1 THEN rfd.Value ELSE '' END END AS Value, 
 			rfm.IntField, rfm.ExtField,
 			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
-			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, Req.RequestType.IsExternal AS IsFromExternalSystem, rfs.Category,
-			rfs.ParentReqFieldSetupID, Req.RequestType.HasIntegration, rfsp.Name As ParentFieldSetupName, rfs.DefaultValue, 
-			ISNULL(rfd.ReqFieldDataID, -1) AS ReqFieldDataID, Req.RequestType.HasDistribution
-	FROM Req.RequestType WITH(NOLOCK)
-		INNER JOIN Lookups lrt WITH(NOLOCK) ON lrt.LookupID=Req.RequestType.TypeID
-		INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.RequestTypeID=Req.RequestType.RequestTypeID                  
+			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, rt.IsExternal AS IsFromExternalSystem, rfs.Category,
+			rfs.ParentReqFieldSetupID, rt.HasIntegration, rfsp.Name As ParentFieldSetupName, rfs.DefaultValue, 
+			ISNULL(rfd.ReqFieldDataID, -1) AS ReqFieldDataID, rt.HasDistribution,
+			CASE
+				WHEN (SELECT MAX(InstanceID) FROM Req.ReqFieldData d WHERE d.RequestID=@RequestID AND d.ReqFieldSetupID=rfs.ReqFieldSetupID) > ISNULL(rfss.DefaultDisplayNum, 1)
+				THEN (SELECT MAX(InstanceID) FROM Req.ReqFieldData d WHERE d.RequestID=@RequestID AND d.ReqFieldSetupID=rfs.ReqFieldSetupID)
+				ELSE ISNULL(rfss.DefaultDisplayNum, 1)
+				END AS DefaultDisplayNum, 
+			ISNULL(rfss.MaxDisplayNum, 1) AS MaxDisplayNum 
+	FROM Req.RequestType rt WITH(NOLOCK)
+		INNER JOIN Lookups lrt WITH(NOLOCK) ON lrt.LookupID=rt.TypeID
+		INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.RequestTypeID=rt.RequestTypeID                  
 		INNER JOIN Lookups lft WITH(NOLOCK) ON lft.LookupID=rfs.FieldTypeID
 		LEFT OUTER JOIN Lookups lvt WITH(NOLOCK) ON lvt.LookupID=rfs.FieldValidationID
-		LEFT OUTER JOIN Req.ReqFieldSetupRole WITH(NOLOCK) ON Req.ReqFieldSetupRole.ReqFieldSetupID=rfs.ReqFieldSetupID
-		LEFT OUTER JOIN Req.Request WITH(NOLOCK) ON RequestNumber=@RequestNumber
-		LEFT OUTER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.ReqFieldSetupID=rfs.ReqFieldSetupID AND rfd.RequestID=Req.Request.RequestID
-		LEFT OUTER JOIN Req.ReqFieldMapping rfm WITH(NOLOCK) ON rfm.RequestTypeID=Req.RequestType.RequestTypeID AND rfm.ExtField=rfs.Name AND ISNULL(rfm.IsActive, 0) = 1
+		LEFT OUTER JOIN Req.ReqFieldSetupRole rfsr WITH(NOLOCK) ON rfsr.ReqFieldSetupID=rfs.ReqFieldSetupID
+		LEFT OUTER JOIN Req.Request r WITH(NOLOCK) ON RequestNumber=@RequestNumber
+		LEFT OUTER JOIN Req.ReqFieldMapping rfm WITH(NOLOCK) ON rfm.RequestTypeID=rt.RequestTypeID AND rfm.ExtField=rfs.Name AND ISNULL(rfm.IsActive, 0) = 1
 		LEFT OUTER JOIN Req.ReqFieldSetup rfsp WITH(NOLOCK) ON rfsp.ReqFieldSetupID=rfs.ParentReqFieldSetupID
+		LEFT OUTER JOIN Req.ReqFieldSetupSibling rfss WITH(NOLOCK) ON rfss.ReqFieldSetupID=rfs.ReqFieldSetupID
+		LEFT OUTER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.ReqFieldSetupID=rfs.ReqFieldSetupID AND rfd.RequestID=r.RequestID AND ISNULL(rfd.InstanceID, 1) = 1
 	WHERE (lrt.[Values] = @RequestType) AND 
 		(
 			(@IncludeArchived = @TrueBit)

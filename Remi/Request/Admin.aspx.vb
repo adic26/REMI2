@@ -47,6 +47,8 @@ Public Class ReqAdmin
         Dim fieldTypeID As Int32
         Dim fieldValidationID As Int32
         Dim optionsTypeID As Int32
+        Dim defaultDisplayNum As Int32
+        Dim maxDisplayNum As Int32
         Dim name As String = Request.Form(grdRequestAdmin.FooterRow.FindControl("txtNewName").UniqueID)
         Dim description As String = Request.Form(grdRequestAdmin.FooterRow.FindControl("txtNewDescription").UniqueID)
         Dim category As String = Request.Form(grdRequestAdmin.FooterRow.FindControl("txtNewCategory").UniqueID)
@@ -60,6 +62,8 @@ Public Class ReqAdmin
         Int32.TryParse(Request.Form(grdRequestAdmin.FooterRow.FindControl("ddlNewFieldType").UniqueID), fieldTypeID)
         Int32.TryParse(Request.Form(grdRequestAdmin.FooterRow.FindControl("ddlNewValidationType").UniqueID), fieldValidationID)
         Int32.TryParse(Request.Form(grdRequestAdmin.FooterRow.FindControl("ddlNewOptionsType").UniqueID), optionsTypeID)
+        Int32.TryParse(Request.Form(grdRequestAdmin.FooterRow.FindControl("txtNewDisplayNum").UniqueID), defaultDisplayNum)
+        Int32.TryParse(Request.Form(grdRequestAdmin.FooterRow.FindControl("txtNewDisplayMax").UniqueID), maxDisplayNum)
 
         If (Request.Form(grdRequestAdmin.FooterRow.FindControl("chkNewIsRequired").UniqueID) = "on") Then
             isRequired = True
@@ -67,6 +71,10 @@ Public Class ReqAdmin
 
         If (Request.Form(grdRequestAdmin.FooterRow.FindControl("chkNewArchived").UniqueID) = "on") Then
             isArchived = True
+        End If
+
+        If (intField = "Select...") Then
+            intField = String.Empty
         End If
 
         Dim instance = New REMI.Dal.Entities().Instance()
@@ -77,7 +85,7 @@ Public Class ReqAdmin
             hasDistribution = requestType.HasDistribution
         End If
 
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, hasREMIIntegration, intField, description, String.Empty, hasDistribution)
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, hasREMIIntegration, intField, description, String.Empty, hasDistribution, defaultDisplayNum, maxDisplayNum)
 
         BindRequest()
     End Sub
@@ -222,6 +230,8 @@ Public Class ReqAdmin
         Dim lblParentField As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblParentField")
         Dim lblIntField As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblIntField")
         Dim lblDefaultValue As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblDefaultValue")
+        Dim lblDisplayNum As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblDisplayNum")
+        Dim lblDisplayMax As Label = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("lblDisplayMax")
 
         Dim hdnFieldTypeID As HiddenField = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("hdnFieldTypeID")
         Dim hdnValidationTypeID As HiddenField = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("hdnValidationTypeID")
@@ -256,6 +266,9 @@ Public Class ReqAdmin
         Dim txtName As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtName")
         Dim txtDescription As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtDescription")
         Dim txtCategory As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtCategory")
+        Dim txtDisplayNum As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtDisplayNum")
+        Dim txtDisplayMax As TextBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("txtDisplayMax")
+
         Dim chkIsRequired As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIsRequired")
         Dim chkArch As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkArchived")
         Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIntegrated")
@@ -269,10 +282,14 @@ Public Class ReqAdmin
         lblParentField.Visible = False
         lblDescription.Visible = False
         lblDefaultValue.Visible = False
+        lblDisplayMax.Visible = False
+        lblDisplayNum.Visible = False
 
         txtName.Visible = True
         txtCategory.Visible = True
         txtDescription.Visible = True
+        txtDisplayNum.Visible = True
+        txtDisplayMax.Visible = True
 
         ddlParentField.Visible = True
         ddlValidationType.Visible = True
@@ -302,6 +319,9 @@ Public Class ReqAdmin
         Dim txtName As TextBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("txtName")
         Dim txtDescription As TextBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("txtDescription")
         Dim txtCategory As TextBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("txtCategory")
+        Dim txtDisplayNum As TextBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("txtDisplayNum")
+        Dim txtDisplayMax As TextBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("txtDisplayMax")
+
         Dim chkIsRequired As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkIsRequired")
         Dim chkArchived As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkArchived")
         Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkIntegrated")
@@ -319,13 +339,24 @@ Public Class ReqAdmin
         Dim fieldValidationID As Int32
         Dim optionsTypeID As Int32
         Dim fieldSetupID As Int32
+        Dim defaultDisplayNum As Int32
+        Dim maxDisplayNum As Int32
         Int32.TryParse(ddlParentField.SelectedValue, parentFieldID)
         Int32.TryParse(ddlFieldType.SelectedValue, fieldTypeID)
         Int32.TryParse(ddlValidationType.SelectedValue, fieldValidationID)
         Int32.TryParse(ddlOptionsType.SelectedValue, optionsTypeID)
         Int32.TryParse(grdRequestAdmin.DataKeys(e.RowIndex).Values(0), fieldSetupID)
+        Int32.TryParse(txtDisplayMax.Text, maxDisplayNum)
+        Int32.TryParse(txtDisplayNum.Text, defaultDisplayNum)
 
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, chkIntegrated.Checked, ddlIntField.SelectedValue, txtDescription.Text, ddlDefaultValue.SelectedItem.Text, chkDistribution.Checked)
+        Dim intField As String
+        intField = ddlIntField.SelectedValue
+
+        If (intField = "Select...") Then
+            intField = String.Empty
+        End If
+
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, chkIntegrated.Checked, intField, txtDescription.Text, ddlDefaultValue.SelectedItem.Text, chkDistribution.Checked, defaultDisplayNum, maxDisplayNum)
         grdRequestAdmin.EditIndex = -1
         BindRequest()
     End Sub

@@ -1133,6 +1133,7 @@
     <None Include="Scripts\ImageShrink\ImageShrink.sql">
       <SubType>NotInBuild</SubType>
     </None>
+    <None Include="Scripts\2015\March172015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -2798,5 +2799,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\2014\February062014\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldSetupSibling.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Triggers\Req.ReqFieldDataAuditDelete.sql" />
   </ItemGroup>
 </Project>

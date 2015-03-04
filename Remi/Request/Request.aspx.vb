@@ -1,7 +1,7 @@
-﻿Imports Remi.Bll
-Imports Remi.Validation
-Imports Remi.Contracts
-Imports Remi.BusinessEntities
+﻿Imports REMI.Bll
+Imports REMI.Validation
+Imports REMI.Contracts
+Imports REMI.BusinessEntities
 
 Public Class Request
     Inherits System.Web.UI.Page
@@ -54,7 +54,8 @@ Public Class Request
                 Dim tCell2 As New TableCell()
                 Dim lblName As New Label
                 Dim rfv As New RequiredFieldValidator
-                Dim id As Int32 = 0
+                Dim id As String = "0"
+                Dim fieldCount As Int32 = 1
 
                 tCell.CssClass = "RequestCell1"
                 tCell2.CssClass = "RequestCell2"
@@ -70,210 +71,254 @@ Public Class Request
                 If (res.IsRequired) Then
                     rfv.EnableViewState = True
                     rfv.Enabled = True
-                    rfv.ErrorMessage = "This Field Is Requierd"
+                    rfv.ErrorMessage = "This Field Is Required"
                     rfv.ID = String.Format("rfv{0}", id)
                     rfv.Display = ValidatorDisplay.Static
                 End If
 
-                Select Case res.FieldType.ToUpper()
-                    Case "CHECKBOX"
-                        Dim chk As New CheckBox
-                        chk.ID = String.Format("chk{0}", id)
-                        chk.EnableViewState = True
-
-                        Dim checked As Boolean = False
-                        Boolean.TryParse(res.Value, checked)
-
-                        chk.Checked = checked
-                        chk.Text = String.Empty
-
-                        tCell2.Controls.Add(chk)
-
-                        If (res.IsRequired) Then
-                            rfv.ControlToValidate = chk.ID
+                If Request.Form(hdnAddMore.UniqueID) IsNot Nothing Then
+                    If (Request.Form(hdnAddMore.UniqueID).ToString() = res.FieldSetupID.ToString()) Then
+                        Dim val As String = (From s In Request.Form.AllKeys Where s.Contains(String.Format("hdn{0}", res.FieldSetupID)) Select s).FirstOrDefault()
+                        If (String.IsNullOrEmpty(val)) Then
+                            val = res.DefaultDisplayNum.ToString()
+                        Else
+                            val = Request.Form(val)
                         End If
-                    Case "DATETIME"
-                        Dim dt As New TextBox
-                        dt.Text = res.Value
-                        dt.EnableViewState = True
-                        dt.ID = String.Format("dt{0}", id)
-                        dt.Width = 500
 
-                        Dim ce As New AjaxControlToolkit.CalendarExtender
-                        ce.Enabled = True
-                        ce.EnableViewState = True
-                        ce.ID = String.Format("ce{0}", id)
-                        ce.TargetControlID = dt.ID
+                        res.DefaultDisplayNum = val
+                    End If
+                End If
 
-                        tCell2.Controls.Add(dt)
-                        tCell2.Controls.Add(ce)
+                For i As Int32 = 1 To res.DefaultDisplayNum
+                    If (res.DefaultDisplayNum > 1) Then
+                        id = String.Format("{0}-{1}", res.FieldSetupID.ToString(), fieldCount.ToString())
 
-                        If (res.IsRequired) Then
-                            rfv.ControlToValidate = dt.ID
+                        If (fieldCount > 1) Then
+                            tCell2.Controls.Add(New LiteralControl("<br />"))
                         End If
-                    Case "DROPDOWN"
-                        Dim ddl As New DropDownList
-                        ddl.ID = String.Format("ddl{0}", id)
-                        ddl.EnableViewState = True
-                        AddHandler ddl.SelectedIndexChanged, AddressOf Me.ddl_SelectedIndexChanged
-                        ddl.AutoPostBack = True
 
-                        If (res.ParentFieldSetupID > 0) Then
-                            For Each rec In (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p)
-                                If (res.CustomLookupHierarchy IsNot Nothing) Then
-                                    For Each ch In res.CustomLookupHierarchy
-                                        If (ch.ParentLookup = (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p.Value).FirstOrDefault()) Then
-                                            ddl.Items.Add(ch.ChildLookup)
-                                        End If
-                                    Next
+                        res.Value = res.Sibling(i - 1).Value
+                    End If
 
-                                    If (ddl.Items.Count = 0) Then
-                                        For Each o In res.OptionsType
-                                            ddl.Items.Add(o)
+                    Select Case res.FieldType.ToUpper()
+                        Case "CHECKBOX"
+                            Dim chk As New CheckBox
+                            chk.ID = String.Format("chk{0}", id)
+                            chk.EnableViewState = True
+
+                            Dim checked As Boolean = False
+                            Boolean.TryParse(res.Value, checked)
+
+                            chk.Checked = checked
+                            chk.Text = String.Empty
+
+                            tCell2.Controls.Add(chk)
+
+                            If (res.IsRequired) Then
+                                rfv.ControlToValidate = chk.ID
+                            End If
+                        Case "DATETIME"
+                            Dim dt As New TextBox
+                            dt.Text = res.Value
+                            dt.EnableViewState = True
+                            dt.ID = String.Format("dt{0}", id)
+                            dt.Width = 500
+
+                            Dim ce As New AjaxControlToolkit.CalendarExtender
+                            ce.Enabled = True
+                            ce.EnableViewState = True
+                            ce.ID = String.Format("ce{0}", id)
+                            ce.TargetControlID = dt.ID
+
+                            tCell2.Controls.Add(dt)
+                            tCell2.Controls.Add(ce)
+
+                            If (res.IsRequired) Then
+                                rfv.ControlToValidate = dt.ID
+                            End If
+                        Case "DROPDOWN"
+                            Dim ddl As New DropDownList
+                            ddl.ID = String.Format("ddl{0}", id)
+                            ddl.EnableViewState = True
+                            AddHandler ddl.SelectedIndexChanged, AddressOf Me.ddl_SelectedIndexChanged
+                            ddl.AutoPostBack = True
+
+                            If (res.ParentFieldSetupID > 0) Then
+                                For Each rec In (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p)
+                                    If (res.CustomLookupHierarchy IsNot Nothing) Then
+                                        For Each ch In res.CustomLookupHierarchy
+                                            If (ch.ParentLookup = (From p In rf Where p.FieldSetupID = res.ParentFieldSetupID Select p.Value).FirstOrDefault()) Then
+                                                ddl.Items.Add(ch.ChildLookup)
+                                            End If
                                         Next
+
+                                        If (ddl.Items.Count = 0) Then
+                                            For Each o In res.OptionsType
+                                                ddl.Items.Add(o)
+                                            Next
+                                        End If
                                     End If
-                                End If
-                            Next
-                        Else
+                                Next
+                            Else
+                                For Each o In res.OptionsType
+                                    ddl.Items.Add(o)
+                                Next
+                            End If
+
+                            If (String.IsNullOrEmpty(res.Value) And Not String.IsNullOrEmpty(res.DefaultValue)) Then
+                                ddl.SelectedValue = res.DefaultValue
+                            Else
+                                ddl.SelectedValue = res.Value
+                            End If
+
+                            tCell2.Controls.Add(ddl)
+
+                            If (res.IsRequired) Then
+                                rfv.ControlToValidate = ddl.ID
+                            End If
+
+                            If (res.IntField = "RequestedTest" And res.HasIntegration And res.NewRequest) Then
+                                Dim jobID As Int32 = JobManager.GetJobByName(ddl.SelectedValue).ID
+
+                                setup.Visible = True
+                                setupEnv.Visible = True
+                                pnlSetup.Visible = True
+                                setup.JobID = jobID
+                                setup.ProductID = 0
+                                setup.JobName = ddl.SelectedValue
+                                setup.ProductName = String.Empty
+                                setup.QRANumber = lblRequest.Text
+                                setup.BatchID = 0
+                                setup.TestStageType = TestStageType.Parametric
+                                setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                                setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                                setup.HasEditItemAuthority = True
+                                setup.OrientationID = 0
+                                setup.RequestTypeID = hdnRequestTypeID.Value
+                                setup.UserID = UserManager.GetCurrentUser.ID
+                                setup.DataBind()
+
+                                setupEnv.JobID = jobID
+                                setupEnv.BatchID = 0
+                                setupEnv.ProductID = 0
+                                setupEnv.JobName = ddl.SelectedValue
+                                setupEnv.ProductName = String.Empty
+                                setupEnv.QRANumber = lblRequest.Text
+                                setupEnv.TestStageType = TestStageType.EnvironmentalStress
+                                setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                                setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+                                setup.HasEditItemAuthority = True
+                                setupEnv.OrientationID = 0
+                                setupEnv.RequestTypeID = hdnRequestTypeID.Value
+                                setupEnv.UserID = UserManager.GetCurrentUser.ID
+                                setupEnv.DataBind()
+                            End If
+                        Case "LINK"
+                            Dim lnk As New HyperLink
+                            lnk.ID = String.Format("lnk{0}", id)
+                            lnk.EnableViewState = True
+                            lnk.Text = res.Name
+                            lnk.Target = "_blank"
+                            lnk.NavigateUrl = res.Value
+                            tCell2.Controls.Add(lnk)
+
+                            Dim lnktxt As New TextBox
+                            lnktxt.Text = res.Value
+                            lnktxt.EnableViewState = True
+                            lnktxt.ID = String.Format("lnktxt{0}", id)
+                            lnktxt.Width = 250
+
+                            If (res.IntField = "RequestLink") Then
+                                lnktxt.Style.Add("display", "none")
+                            End If
+
+                            tCell2.Controls.Add(lnktxt)
+
+                            If (res.IsRequired) Then
+                                rfv.ControlToValidate = lnktxt.ID
+                            End If
+                        Case "RADIOBUTTON"
+                            Dim rb As New RadioButtonList
+                            rb.ID = String.Format("rb{0}", id)
+                            rb.EnableViewState = True
+                            rb.RepeatDirection = RepeatDirection.Horizontal
+                            rb.CssClass = "RemoveBorder"
+
                             For Each o In res.OptionsType
-                                ddl.Items.Add(o)
+                                rb.Items.Add(o)
                             Next
+
+                            rb.SelectedValue = res.Value
+
+                            tCell2.Controls.Add(rb)
+
+                            If (res.IsRequired) Then
+                                rfv.ControlToValidate = rb.ID
+                            End If
+                        Case "TEXTAREA"
+                            Dim txtArea As New TextBox
+                            txtArea.EnableViewState = True
+                            txtArea.ID = String.Format("txtArea{0}", id)
+                            txtArea.TextMode = TextBoxMode.MultiLine
+                            txtArea.Width = Unit.Percentage(70)
+                            txtArea.Rows = 20
+                            txtArea.Text = res.Value
+                            tCell2.Controls.Add(txtArea)
+
+                            If (res.IsRequired) Then
+                                rfv.ControlToValidate = txtArea.ID
+                            End If
+                        Case "TEXTBOX"
+                            Dim txt As New TextBox
+                            txt.Text = res.Value
+                            txt.EnableViewState = True
+                            txt.ID = String.Format("txt{0}", id)
+                            txt.Width = 500
+                            tCell2.Controls.Add(txt)
+
+                            Dim cv As New CompareValidator
+                            cv.ID = String.Format("cv{0}", id)
+                            cv.Operator = ValidationCompareOperator.DataTypeCheck
+                            cv.ControlToValidate = txt.ID
+
+                            Select Case res.FieldValidation.ToUpper
+                                Case "INT"
+                                    cv.Type = ValidationDataType.Integer
+                                    cv.ErrorMessage = "Value Must Be Numeric"
+                                Case "DOUBLE"
+                                    cv.Type = ValidationDataType.Double
+                                    cv.ErrorMessage = "Value Must Be Double"
+                                Case "STRING"
+                                    cv.Type = ValidationDataType.String
+                                    cv.ErrorMessage = "Value Must Be String"
+                            End Select
+
+                            tCell2.Controls.Add(cv)
+
+                            If (res.IsRequired) Then
+                                rfv.ControlToValidate = txt.ID
+                            End If
+                    End Select
+
+                    If (res.MaxDisplayNum > 1) Then
+                        If (res.DefaultDisplayNum = fieldCount) Then
+                            Dim hdnMore As New HiddenField
+                            hdnMore.ID = String.Format("hdn{0}", res.FieldSetupID)
+                            hdnMore.Value = res.DefaultDisplayNum.ToString()
+                            tCell2.Controls.Add(hdnMore)
+
+                            Dim btnMore As New Button
+                            btnMore.ID = res.FieldSetupID
+                            btnMore.Text = "Add More"
+                            btnMore.CssClass = "buttonSmall"
+                            btnMore.Visible = res.DefaultDisplayNum <> res.MaxDisplayNum
+                            btnMore.OnClientClick = "SetAddMore(" + res.FieldSetupID.ToString() + ")"
+                            tCell2.Controls.Add(New LiteralControl("<br />"))
+                            tCell2.Controls.Add(btnMore)
                         End If
-
-                        If (String.IsNullOrEmpty(res.Value) And Not String.IsNullOrEmpty(res.DefaultValue)) Then
-                            ddl.SelectedValue = res.DefaultValue
-                        Else
-                            ddl.SelectedValue = res.Value
-                        End If
-
-                        tCell2.Controls.Add(ddl)
-
-                        If (res.IsRequired) Then
-                            rfv.ControlToValidate = ddl.ID
-                        End If
-
-                        If (res.IntField = "RequestedTest" And res.HasIntegration And res.NewRequest) Then
-                            Dim jobID As Int32 = JobManager.GetJobByName(ddl.SelectedValue).ID
-
-                            setup.Visible = True
-                            setupEnv.Visible = True
-                            pnlSetup.Visible = True
-                            setup.JobID = jobID
-                            setup.ProductID = 0
-                            setup.JobName = ddl.SelectedValue
-                            setup.ProductName = String.Empty
-                            setup.QRANumber = lblRequest.Text
-                            setup.BatchID = 0
-                            setup.TestStageType = TestStageType.Parametric
-                            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
-                            setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-                            setup.HasEditItemAuthority = True
-                            setup.OrientationID = 0
-                            setup.RequestTypeID = hdnRequestTypeID.Value
-                            setup.UserID = UserManager.GetCurrentUser.ID
-                            setup.DataBind()
-
-                            setupEnv.JobID = jobID
-                            setupEnv.BatchID = 0
-                            setupEnv.ProductID = 0
-                            setupEnv.JobName = ddl.SelectedValue
-                            setupEnv.ProductName = String.Empty
-                            setupEnv.QRANumber = lblRequest.Text
-                            setupEnv.TestStageType = TestStageType.EnvironmentalStress
-                            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
-                            setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-                            setup.HasEditItemAuthority = True
-                            setupEnv.OrientationID = 0
-                            setupEnv.RequestTypeID = hdnRequestTypeID.Value
-                            setupEnv.UserID = UserManager.GetCurrentUser.ID
-                            setupEnv.DataBind()
-                        End If
-                    Case "LINK"
-                        Dim lnk As New HyperLink
-                        lnk.ID = String.Format("lnk{0}", id)
-                        lnk.EnableViewState = True
-                        lnk.Text = res.Name
-                        lnk.Target = "_blank"
-                        lnk.NavigateUrl = res.Value
-                        tCell2.Controls.Add(lnk)
-
-                        Dim lnktxt As New TextBox
-                        lnktxt.Text = res.Value
-                        lnktxt.EnableViewState = True
-                        lnktxt.ID = String.Format("lnktxt{0}", id)
-                        lnktxt.Width = 500
-
-                        If (res.IntField = "RequestLink") Then
-                            lnktxt.Style.Add("display", "none")
-                        End If
-
-                        tCell2.Controls.Add(lnktxt)
-
-                        If (res.IsRequired) Then
-                            rfv.ControlToValidate = lnktxt.ID
-                        End If
-                    Case "RADIOBUTTON"
-                        Dim rb As New RadioButtonList
-                        rb.ID = String.Format("rb{0}", id)
-                        rb.EnableViewState = True
-                        rb.RepeatDirection = RepeatDirection.Horizontal
-                        rb.CssClass = "RemoveBorder"
-
-                        For Each o In res.OptionsType
-                            rb.Items.Add(o)
-                        Next
-
-                        rb.SelectedValue = res.Value
-
-                        tCell2.Controls.Add(rb)
-
-                        If (res.IsRequired) Then
-                            rfv.ControlToValidate = rb.ID
-                        End If
-                    Case "TEXTAREA"
-                        Dim txtArea As New TextBox
-                        txtArea.EnableViewState = True
-                        txtArea.ID = String.Format("txtArea{0}", id)
-                        txtArea.TextMode = TextBoxMode.MultiLine
-                        txtArea.Width = Unit.Percentage(70)
-                        txtArea.Rows = 20
-                        txtArea.Text = res.Value
-                        tCell2.Controls.Add(txtArea)
-
-                        If (res.IsRequired) Then
-                            rfv.ControlToValidate = txtArea.ID
-                        End If
-                    Case "TEXTBOX"
-                        Dim txt As New TextBox
-                        txt.Text = res.Value
-                        txt.EnableViewState = True
-                        txt.ID = String.Format("txt{0}", id)
-                        txt.Width = 500
-                        tCell2.Controls.Add(txt)
-
-                        Dim cv As New CompareValidator
-                        cv.ID = String.Format("cv{0}", id)
-                        cv.Operator = ValidationCompareOperator.DataTypeCheck
-                        cv.ControlToValidate = txt.ID
-
-                        Select Case res.FieldValidation.ToUpper
-                            Case "INT"
-                                cv.Type = ValidationDataType.Integer
-                                cv.ErrorMessage = "Value Must Be Numeric"
-                            Case "DOUBLE"
-                                cv.Type = ValidationDataType.Double
-                                cv.ErrorMessage = "Value Must Be Double"
-                            Case "STRING"
-                                cv.Type = ValidationDataType.String
-                                cv.ErrorMessage = "Value Must Be String"
-                        End Select
-
-                        tCell2.Controls.Add(cv)
-
-                        If (res.IsRequired) Then
-                            rfv.ControlToValidate = txt.ID
-                        End If
-                End Select
+                        fieldCount += 1
+                    End If
+                Next
 
                 If (res.IsRequired) Then
                     tCell2.Controls.Add(rfv)
@@ -282,6 +327,8 @@ Public Class Request
                 tRow.Cells.Add(tCell2)
                 tbl.Rows.Add(tRow)
             Next
+
+            hdnAddMore.Value = String.Empty
 
             If (rf(0).HasDistribution) Then
                 Dim tRowDistribution As New TableRow()
@@ -360,7 +407,7 @@ Public Class Request
         mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
         myMenu.Items(0).ChildItems.Add(mi)
 
-        Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+        Dim rec = (From rb In New REMI.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
 
         If (rec IsNot Nothing) Then
             mi = New MenuItem
@@ -453,30 +500,45 @@ Public Class Request
 
         If (rf IsNot Nothing) Then
             For Each res In rf
-                Dim con As New Control
+                Dim id As String = "0"
+                Dim fieldCount As Int32 = 1
+                id = res.FieldSetupID
 
-                Select Case res.FieldType.ToUpper()
-                    Case "CHECKBOX"
-                        con = Helpers.FindControlRecursive(tbl, String.Format("chk{0}", res.FieldSetupID))
-                    Case "DATETIME"
-                        con = Helpers.FindControlRecursive(tbl, String.Format("dt{0}", res.FieldSetupID))
-                    Case "DROPDOWN"
-                        con = Helpers.FindControlRecursive(tbl, String.Format("ddl{0}", res.FieldSetupID))
-                    Case "LINK"
-                        con = Helpers.FindControlRecursive(tbl, String.Format("lnktxt{0}", res.FieldSetupID))
-                    Case "RADIOBUTTON"
-                        con = Helpers.FindControlRecursive(tbl, String.Format("rb{0}", res.FieldSetupID))
-                    Case "TEXTAREA"
-                        con = Helpers.FindControlRecursive(tbl, String.Format("txtArea{0}", res.FieldSetupID))
-                    Case "TEXTBOX"
-                        con = Helpers.FindControlRecursive(tbl, String.Format("txt{0}", res.FieldSetupID))
-                End Select
+                For i As Int32 = 1 To res.MaxDisplayNum
+                    Dim con As New Control
 
-                If (res.FieldType.ToUpper() = "CHECKBOX") Then
-                    res.Value = If(Request.Form(con.UniqueID) = "on", True, False)
-                Else
-                    res.Value = Request.Form(con.UniqueID)
-                End If
+                    If (res.DefaultDisplayNum > 1) Then
+                        id = String.Format("{0}-{1}", res.FieldSetupID.ToString(), fieldCount.ToString())
+                    End If
+
+                    Select Case res.FieldType.ToUpper()
+                        Case "CHECKBOX"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("chk{0}", id))
+                        Case "DATETIME"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("dt{0}", id))
+                        Case "DROPDOWN"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("ddl{0}", id))
+                        Case "LINK"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("lnktxt{0}", id))
+                        Case "RADIOBUTTON"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("rb{0}", id))
+                        Case "TEXTAREA"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("txtArea{0}", id))
+                        Case "TEXTBOX"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("txt{0}", id))
+                    End Select
+
+                    If (res.FieldType.ToUpper() = "CHECKBOX") Then
+                        res.Value = If(Request.Form(con.UniqueID) = "on", True, False)
+                    Else
+                        res.Value = Request.Form(con.UniqueID)
+                    End If
+
+                    If (res.DefaultDisplayNum > 1) Then
+                        res.Sibling(fieldCount - 1).Value = res.Value
+                        fieldCount += 1
+                    End If
+                Next
             Next
 
             Dim distribution() As String

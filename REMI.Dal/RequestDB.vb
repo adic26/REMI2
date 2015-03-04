@@ -456,20 +456,46 @@ Namespace REMI.Dal
             End If
 
             For Each rec In request
-                Dim fieldData = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID).FirstOrDefault()
+                If (rec.DefaultDisplayNum > 1) Then
+                    For Each sib As Sibling In rec.Sibling
+                        Dim fieldDataSib = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID And fd.InstanceID = sib.ID).FirstOrDefault()
 
-                If (fieldData Is Nothing) Then
-                    Dim sfd As New REMI.Entities.ReqFieldData()
-                    sfd.ReqFieldSetupID = rec.FieldSetupID
-                    sfd.RequestID = reqID
-                    sfd.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
-                    sfd.InsertTime = DateTime.Now
-                    sfd.LastUser = userIdentification
-                    instance.AddToReqFieldDatas(sfd)
+                        If (fieldDataSib Is Nothing And Not String.IsNullOrEmpty(sib.Value)) Then
+                            fieldDataSib = New REMI.Entities.ReqFieldData()
+                            fieldDataSib.ReqFieldSetupID = rec.FieldSetupID
+                            fieldDataSib.RequestID = reqID
+                            fieldDataSib.InstanceID = sib.ID
+                            fieldDataSib.Value = If(sib.Value Is Nothing, String.Empty, sib.Value)
+                            fieldDataSib.InsertTime = DateTime.Now
+                            fieldDataSib.LastUser = userIdentification
+                            instance.AddToReqFieldDatas(fieldDataSib)
+                        ElseIf (fieldDataSib IsNot Nothing And String.IsNullOrEmpty(sib.Value)) Then
+                            instance.DeleteObject(fieldDataSib)
+                        ElseIf (fieldDataSib IsNot Nothing) Then
+                            fieldDataSib.Value = If(sib.Value Is Nothing, String.Empty, sib.Value)
+                            fieldDataSib.InsertTime = DateTime.Now
+                            fieldDataSib.LastUser = userIdentification
+                            fieldDataSib.InstanceID = sib.ID
+                        End If
+                    Next
                 Else
-                    fieldData.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
-                    fieldData.InsertTime = DateTime.Now
-                    fieldData.LastUser = userIdentification
+                    Dim fieldData = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID).FirstOrDefault()
+
+                    If (fieldData Is Nothing) Then
+                        fieldData = New REMI.Entities.ReqFieldData()
+                        fieldData.ReqFieldSetupID = rec.FieldSetupID
+                        fieldData.RequestID = reqID
+                        fieldData.InstanceID = 1
+                        fieldData.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
+                        fieldData.InsertTime = DateTime.Now
+                        fieldData.LastUser = userIdentification
+                        instance.AddToReqFieldDatas(fieldData)
+                    Else
+                        fieldData.Value = If(rec.Value Is Nothing, String.Empty, rec.Value)
+                        fieldData.InsertTime = DateTime.Now
+                        fieldData.LastUser = userIdentification
+                        fieldData.InstanceID = 1
+                    End If
                 End If
             Next
 
@@ -501,15 +527,16 @@ Namespace REMI.Dal
                         End If
 
                         myConnection.Open()
+                        Dim ds As DataSet = New DataSet()
 
                         Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                            If myReader.HasRows Then
-                                fieldData = New RequestFieldsCollection()
+                            fieldData = New RequestFieldsCollection()
 
-                                While myReader.Read()
-                                    fieldData.Add(FillFieldData(myReader, user))
-                                End While
-                            End If
+                            ds.Load(myReader, LoadOption.OverwriteChanges, New String() {"Sibling", "Fields"})
+
+                            For Each dr As DataRow In ds.Tables("Fields").Rows
+                                fieldData.Add(FillFieldData(dr, user, ds.Tables("Sibling")))
+                            Next
                         End Using
                     End Using
                 End Using
@@ -518,53 +545,53 @@ Namespace REMI.Dal
             Return fieldData
         End Function
 
-        Private Shared Function FillFieldData(ByVal myDataRecord As IDataRecord, ByVal user As User) As BusinessEntities.RequestFields
+        Private Shared Function FillFieldData(ByVal myDataRecord As DataRow, ByVal user As User, ByVal siblings As DataTable) As BusinessEntities.RequestFields
             Dim instance = New REMI.Dal.Entities().Instance()
             Dim myFields As RequestFields = New BusinessEntities.RequestFields()
 
-            myFields.FieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldSetupID"))
-            myFields.RequestType = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestType"))
-            myFields.RequestTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestTypeID"))
+            myFields.FieldSetupID = myDataRecord.Field(Of Int32)("ReqFieldSetupID")
+            myFields.RequestType = myDataRecord.Field(Of String)("RequestType")
+            myFields.RequestTypeID = myDataRecord.Field(Of Int32)("RequestTypeID")
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Description")) Then
-                myFields.Description = myDataRecord.GetString(myDataRecord.GetOrdinal("Description"))
+            If myDataRecord.Item("Description") IsNot DBNull.Value Then
+                myFields.Description = myDataRecord.Field(Of String)("Description")
             Else
                 myFields.Description = String.Empty
             End If
 
-            myFields.DisplayOrder = myDataRecord.GetInt32(myDataRecord.GetOrdinal("DisplayOrder"))
-            myFields.ColumnOrder = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ColumnOrder"))
-            myFields.FieldType = myDataRecord.GetString(myDataRecord.GetOrdinal("FieldType"))
-            myFields.FieldTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldTypeID"))
+            myFields.DisplayOrder = myDataRecord.Field(Of Int32)("DisplayOrder")
+            myFields.ColumnOrder = myDataRecord.Field(Of Int32)("ColumnOrder")
+            myFields.FieldType = myDataRecord.Field(Of String)("FieldType")
+            myFields.FieldTypeID = myDataRecord.Field(Of Int32)("FieldTypeID")
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("FieldValidationID")) Then
-                myFields.FieldValidation = myDataRecord.GetString(myDataRecord.GetOrdinal("ValidationType"))
-                myFields.FieldValidationID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("FieldValidationID"))
+            If myDataRecord.Item("FieldValidationID") IsNot DBNull.Value Then
+                myFields.FieldValidation = myDataRecord.Field(Of String)("ValidationType")
+                myFields.FieldValidationID = myDataRecord.Field(Of Int32)("FieldValidationID")
             Else
                 myFields.FieldValidation = String.Empty
                 myFields.FieldValidationID = 0
             End If
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ExtField")) Then
-                myFields.ExtField = myDataRecord.GetString(myDataRecord.GetOrdinal("ExtField"))
+            If myDataRecord.Item("ExtField") IsNot DBNull.Value Then
+                myFields.ExtField = myDataRecord.Field(Of String)("ExtField")
             Else
                 myFields.ExtField = String.Empty
             End If
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("IntField")) Then
-                myFields.IntField = myDataRecord.GetString(myDataRecord.GetOrdinal("IntField"))
+            If myDataRecord.Item("IntField") IsNot DBNull.Value Then
+                myFields.IntField = myDataRecord.Field(Of String)("IntField")
             Else
                 myFields.IntField = String.Empty
             End If
 
-            myFields.InternalField = myDataRecord.GetInt32(myDataRecord.GetOrdinal("InternalField"))
-            myFields.IsFromExternalSystem = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsFromExternalSystem"))
-            myFields.IsArchived = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("Archived"))
-            myFields.IsRequired = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("IsRequired"))
-            myFields.Name = myDataRecord.GetString(myDataRecord.GetOrdinal("Name"))
+            myFields.InternalField = myDataRecord.Field(Of Int32)("InternalField")
+            myFields.IsFromExternalSystem = myDataRecord.Field(Of Boolean)("IsFromExternalSystem")
+            myFields.IsArchived = myDataRecord.Field(Of Boolean)("Archived")
+            myFields.IsRequired = myDataRecord.Field(Of Boolean)("IsRequired")
+            myFields.Name = myDataRecord.Field(Of String)("Name")
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("OptionsTypeID")) Then
-                myFields.OptionsTypeID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("OptionsTypeID"))
+            If myDataRecord.Item("OptionsTypeID") IsNot DBNull.Value Then
+                myFields.OptionsTypeID = myDataRecord.Field(Of Int32)("OptionsTypeID")
                 Dim options As New List(Of String)
                 Dim filteredOptions As New List(Of String)
                 Dim onlylh As List(Of String) = (From l In instance.LookupsHierarchies.Include("Lookup1") Where l.RequestTypeID = myFields.RequestTypeID And l.ChildLookupTypeID = myFields.OptionsTypeID And l.ParentLookupTypeID = myFields.OptionsTypeID Select l.Lookup1.Values).ToList()
@@ -593,8 +620,8 @@ Namespace REMI.Dal
                 myFields.OptionsTypeName = (From lo In instance.Lookups Where lo.LookupTypeID = myFields.OptionsTypeID Select lo.LookupType.Name).FirstOrDefault()
                 myFields.OptionsType = filteredOptions
 
-                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("DefaultValue")) Then
-                    myFields.DefaultValue = myDataRecord.GetString(myDataRecord.GetOrdinal("DefaultValue"))
+                If myDataRecord.Field(Of String)("DefaultValue") IsNot Nothing Then
+                    myFields.DefaultValue = myDataRecord.Field(Of String)("DefaultValue")
                 Else
                     myFields.DefaultValue = String.Empty
                 End If
@@ -614,13 +641,13 @@ Namespace REMI.Dal
                 myFields.OptionsType = New List(Of String)()
             End If
 
-            myFields.RequestID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("RequestID"))
-            myFields.RequestNumber = myDataRecord.GetString(myDataRecord.GetOrdinal("RequestNumber"))
-            myFields.NewRequest = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("NewRequest"))
-            myFields.Category = myDataRecord.GetString(myDataRecord.GetOrdinal("Category"))
+            myFields.RequestID = myDataRecord.Field(Of Int32)("RequestID")
+            myFields.RequestNumber = myDataRecord.Field(Of String)("RequestNumber")
+            myFields.NewRequest = myDataRecord.Field(Of Boolean)("NewRequest")
+            myFields.Category = myDataRecord.Field(Of String)("Category")
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("Value")) Then
-                myFields.Value = myDataRecord.GetString(myDataRecord.GetOrdinal("Value"))
+            If myDataRecord.Item("Value") IsNot DBNull.Value Then
+                myFields.Value = myDataRecord.Field(Of String)("Value")
             Else
                 myFields.Value = String.Empty
             End If
@@ -629,17 +656,31 @@ Namespace REMI.Dal
                 myFields.Value = user.FullName
             End If
 
-            If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ParentReqFieldSetupID")) Then
-                myFields.ParentFieldSetupID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ParentReqFieldSetupID"))
+            If myDataRecord.Item("ParentReqFieldSetupID") IsNot DBNull.Value Then
+                myFields.ParentFieldSetupID = myDataRecord.Field(Of Int32)("ParentReqFieldSetupID")
 
-                If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("ParentFieldSetupName")) Then
-                    myFields.ParentFieldSetupName = myDataRecord.GetString(myDataRecord.GetOrdinal("ParentFieldSetupName"))
+                If myDataRecord.Field(Of String)("ParentFieldSetupName") IsNot Nothing Then
+                    myFields.ParentFieldSetupName = myDataRecord.Field(Of String)("ParentFieldSetupName")
                 End If
             End If
 
-            myFields.HasIntegration = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("HasIntegration"))
-            myFields.ReqFieldDataID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("ReqFieldDataID"))
-            myFields.HasDistribution = myDataRecord.GetBoolean(myDataRecord.GetOrdinal("HasDistribution"))
+            myFields.HasIntegration = myDataRecord.Field(Of Boolean)("HasIntegration")
+            myFields.ReqFieldDataID = myDataRecord.Field(Of Int32)("ReqFieldDataID")
+            myFields.HasDistribution = myDataRecord.Field(Of Boolean)("HasDistribution")
+            myFields.DefaultDisplayNum = myDataRecord.Field(Of Int32)("DefaultDisplayNum")
+            myFields.MaxDisplayNum = myDataRecord.Field(Of Int32)("MaxDisplayNum")
+
+            If (myFields.DefaultDisplayNum > 1) Then
+                Dim sib As New List(Of Sibling)
+                For i As Int32 = 1 To myFields.MaxDisplayNum
+                    Dim val As String = (From s As DataRow In siblings.AsEnumerable Where s.Field(Of Int32)("InstanceID") = i And s.Field(Of Int32)("ReqFieldSetupID") = myFields.FieldSetupID Select s.Field(Of String)("Value")).FirstOrDefault()
+                    sib.Add(New Sibling(i, myFields.FieldSetupID, val))
+                Next
+
+                myFields.Sibling = sib
+            Else
+                myFields.Sibling = New List(Of Sibling)
+            End If
 
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField

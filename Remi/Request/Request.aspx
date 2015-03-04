@@ -38,8 +38,15 @@
     <asp:HiddenField runat="server" ID="hdnRequestTypeID" />
     <asp:HiddenField runat="server" ID="hdnRequestNumber" />
     <asp:HiddenField runat="server" ID="hdnDistribution" />
+    <asp:HiddenField runat="server" ID="hdnAddMore" />
 
     <script type="text/javascript">
+        function SetAddMore(id) {
+            document.getElementById('<%= hdnAddMore.ClientID%>').value = id;
+            var hdn = $("[id$='hdn" + id + "']");
+            hdn[0].value = parseInt(hdn[0].value) + 1;
+        }
+
         function GetValue(source, eventArgs)
         {
             var txt = document.getElementById(source._element.id);

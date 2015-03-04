@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("4fb8ddd3-50af-477d-8503-f6b602a292c3")>
+<Assembly: EdmSchemaAttribute("6a003506-934d-4fbf-8077-b5e7f66cfe14")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -137,6 +137,7 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqDistribution_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqDistribution", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqDistribution), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldSetupSibling", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupSibling), True)>
 
 #End Region
 
@@ -1418,6 +1419,20 @@ Namespace REMI.Entities
         End Property
     
         Private _ReqDistributions As ObjectSet(Of ReqDistribution)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ReqFieldSetupSiblings() As ObjectSet(Of ReqFieldSetupSibling)
+            Get
+                If (_ReqFieldSetupSiblings Is Nothing) Then
+                    _ReqFieldSetupSiblings = MyBase.CreateObjectSet(Of ReqFieldSetupSibling)("ReqFieldSetupSiblings")
+                End If
+                Return _ReqFieldSetupSiblings
+            End Get
+        End Property
+    
+        Private _ReqFieldSetupSiblings As ObjectSet(Of ReqFieldSetupSibling)
 
         #End Region
 
@@ -2037,6 +2052,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToReqDistributions(ByVal reqDistribution As ReqDistribution)
             MyBase.AddObject("ReqDistributions", reqDistribution)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ReqFieldSetupSiblings EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToReqFieldSetupSiblings(ByVal reqFieldSetupSibling As ReqFieldSetupSibling)
+            MyBase.AddObject("ReqFieldSetupSiblings", reqFieldSetupSibling)
         End Sub
 
         #End Region
@@ -12531,6 +12553,31 @@ Namespace REMI.Entities
     
         Private Partial Sub OnReqFieldDataIDChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property InstanceID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _InstanceID
+            End Get
+            Set
+                OnInstanceIDChanging(value)
+                ReportPropertyChanging("InstanceID")
+                _InstanceID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("InstanceID")
+                OnInstanceIDChanged()
+            End Set
+        End Property
+    
+        Private _InstanceID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnInstanceIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnInstanceIDChanged()
+        End Sub
 
         #End Region
 
@@ -12813,6 +12860,56 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnUserNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ReqFieldDataID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _ReqFieldDataID
+            End Get
+            Set
+                OnReqFieldDataIDChanging(value)
+                ReportPropertyChanging("ReqFieldDataID")
+                _ReqFieldDataID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ReqFieldDataID")
+                OnReqFieldDataIDChanged()
+            End Set
+        End Property
+    
+        Private _ReqFieldDataID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnReqFieldDataIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnReqFieldDataIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property InstanceID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _InstanceID
+            End Get
+            Set
+                OnInstanceIDChanging(value)
+                ReportPropertyChanging("InstanceID")
+                _InstanceID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("InstanceID")
+                OnInstanceIDChanged()
+            End Set
+        End Property
+    
+        Private _InstanceID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnInstanceIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnInstanceIDChanged()
         End Sub
 
         #End Region
@@ -13541,6 +13638,24 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetupSibling")>
+         Public Property ReqFieldSetupSiblings() As EntityCollection(Of ReqFieldSetupSibling)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ReqFieldSetupSibling)("REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetupSibling")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqFieldSetupSibling)("REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetupSibling", value)
+                End If
+            End Set
+        End Property
 
         #End Region
 
@@ -13713,6 +13828,177 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of aspnet_Roles)("REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles", "aspnet_Roles", value)
+                End If
+            End Set
+        End Property
+
+        #End Region
+
+    End Class
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="ReqFieldSetupSibling")>
+    <Serializable()>
+    <DataContractAttribute(IsReference:=True)>
+    Public Partial Class ReqFieldSetupSibling
+        Inherits EntityObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new ReqFieldSetupSibling object.
+        ''' </summary>
+        ''' <param name="reqFieldSiblingID">Initial value of the ReqFieldSiblingID property.</param>
+        ''' <param name="reqFieldSetupID">Initial value of the ReqFieldSetupID property.</param>
+        ''' <param name="defaultDisplayNum">Initial value of the DefaultDisplayNum property.</param>
+        ''' <param name="maxDisplayNum">Initial value of the MaxDisplayNum property.</param>
+        Public Shared Function CreateReqFieldSetupSibling(reqFieldSiblingID As Global.System.Int32, reqFieldSetupID As Global.System.Int32, defaultDisplayNum As Global.System.Int32, maxDisplayNum As Global.System.Int32) As ReqFieldSetupSibling
+            Dim reqFieldSetupSibling as ReqFieldSetupSibling = New ReqFieldSetupSibling
+            reqFieldSetupSibling.ReqFieldSiblingID = reqFieldSiblingID
+            reqFieldSetupSibling.ReqFieldSetupID = reqFieldSetupID
+            reqFieldSetupSibling.DefaultDisplayNum = defaultDisplayNum
+            reqFieldSetupSibling.MaxDisplayNum = maxDisplayNum
+            Return reqFieldSetupSibling
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ReqFieldSiblingID() As Global.System.Int32
+            Get
+                Return _ReqFieldSiblingID
+            End Get
+            Set
+                If (_ReqFieldSiblingID <> Value) Then
+                    OnReqFieldSiblingIDChanging(value)
+                    ReportPropertyChanging("ReqFieldSiblingID")
+                    _ReqFieldSiblingID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ReqFieldSiblingID")
+                    OnReqFieldSiblingIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ReqFieldSiblingID As Global.System.Int32
+        Private Partial Sub OnReqFieldSiblingIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnReqFieldSiblingIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ReqFieldSetupID() As Global.System.Int32
+            Get
+                Return _ReqFieldSetupID
+            End Get
+            Set
+                OnReqFieldSetupIDChanging(value)
+                ReportPropertyChanging("ReqFieldSetupID")
+                _ReqFieldSetupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ReqFieldSetupID")
+                OnReqFieldSetupIDChanged()
+            End Set
+        End Property
+    
+        Private _ReqFieldSetupID As Global.System.Int32
+        Private Partial Sub OnReqFieldSetupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnReqFieldSetupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property DefaultDisplayNum() As Global.System.Int32
+            Get
+                Return _DefaultDisplayNum
+            End Get
+            Set
+                OnDefaultDisplayNumChanging(value)
+                ReportPropertyChanging("DefaultDisplayNum")
+                _DefaultDisplayNum = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("DefaultDisplayNum")
+                OnDefaultDisplayNumChanged()
+            End Set
+        End Property
+    
+        Private _DefaultDisplayNum As Global.System.Int32
+        Private Partial Sub OnDefaultDisplayNumChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnDefaultDisplayNumChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property MaxDisplayNum() As Global.System.Int32
+            Get
+                Return _MaxDisplayNum
+            End Get
+            Set
+                OnMaxDisplayNumChanging(value)
+                ReportPropertyChanging("MaxDisplayNum")
+                _MaxDisplayNum = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("MaxDisplayNum")
+                OnMaxDisplayNumChanged()
+            End Set
+        End Property
+    
+        Private _MaxDisplayNum As Global.System.Int32
+        Private Partial Sub OnMaxDisplayNumChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnMaxDisplayNumChanged()
+        End Sub
+
+        #End Region
+
+        #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup")>
+        Public Property ReqFieldSetup() As ReqFieldSetup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property ReqFieldSetupReference() As EntityReference(Of ReqFieldSetup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of ReqFieldSetup)("REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup", value)
                 End If
             End Set
         End Property
@@ -27188,6 +27474,56 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnInsertTimeChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property RecordNum() As Nullable(Of Global.System.Int32)
+            Get
+                Return _RecordNum
+            End Get
+            Set
+                OnRecordNumChanging(value)
+                ReportPropertyChanging("RecordNum")
+                _RecordNum = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("RecordNum")
+                OnRecordNumChanged()
+            End Set
+        End Property
+    
+        Private _RecordNum As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnRecordNumChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnRecordNumChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property Action() As Global.System.String
+            Get
+                Return _Action
+            End Get
+            Set
+                OnActionChanging(value)
+                ReportPropertyChanging("Action")
+                _Action = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("Action")
+                OnActionChanged()
+            End Set
+        End Property
+    
+        Private _Action As Global.System.String
+        Private Partial Sub OnActionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnActionChanged()
         End Sub
 
         #End Region

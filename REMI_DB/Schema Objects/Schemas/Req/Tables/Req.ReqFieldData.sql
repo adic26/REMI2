@@ -6,6 +6,7 @@
 	[InsertTime] [datetime] NULL,
 	[rv] [timestamp] NOT NULL,
 	[ReqFieldDataID] [int] IDENTITY(1,1) NOT NULL,
+	[InstanceID] [int] NULL,
  CONSTRAINT [PK_ReqFieldData] PRIMARY KEY CLUSTERED 
 (
 	[ReqFieldDataID] ASC

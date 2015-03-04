@@ -100,6 +100,7 @@
           <EntitySet Name="ReqFieldMapping" EntityType="remiModel.Store.ReqFieldMapping" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldSetup" EntityType="remiModel.Store.ReqFieldSetup" store:Type="Tables" Schema="Req" />
           <EntitySet Name="ReqFieldSetupRole" EntityType="remiModel.Store.ReqFieldSetupRole" store:Type="Tables" Schema="Req" />
+          <EntitySet Name="ReqFieldSetupSibling" EntityType="remiModel.Store.ReqFieldSetupSibling" store:Type="Tables" Schema="Req" />
           <EntitySet Name="Request" EntityType="remiModel.Store.Request" store:Type="Tables" Schema="Req" />
           <EntitySet Name="RequestSetup" EntityType="remiModel.Store.RequestSetup" store:Type="Tables" Schema="Req" />
           <EntitySet Name="RequestType" EntityType="remiModel.Store.RequestType" store:Type="Tables" Schema="Req" />
@@ -201,7 +202,9 @@
       [vw_RequestDataAudit].[Name] AS [Name], 
       [vw_RequestDataAudit].[Value] AS [Value], 
       [vw_RequestDataAudit].[UserName] AS [UserName], 
-      [vw_RequestDataAudit].[InsertTime] AS [InsertTime]
+      [vw_RequestDataAudit].[InsertTime] AS [InsertTime], 
+      [vw_RequestDataAudit].[RecordNum] AS [RecordNum], 
+      [vw_RequestDataAudit].[Action] AS [Action]
       FROM [Req].[vw_RequestDataAudit] AS [vw_RequestDataAudit]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK__aspnet_Pr__UserI__3F115E1A" Association="remiModel.Store.FK__aspnet_Pr__UserI__3F115E1A">
@@ -455,6 +458,10 @@
           <AssociationSet Name="FK_ReqFieldSetupRole_ReqFieldSetup" Association="remiModel.Store.FK_ReqFieldSetupRole_ReqFieldSetup">
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetup" />
             <End Role="ReqFieldSetupRole" EntitySet="ReqFieldSetupRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReqFieldSetupSibling_ReqFieldSetup" Association="remiModel.Store.FK_ReqFieldSetupSibling_ReqFieldSetup">
+            <End Role="ReqFieldSetup" EntitySet="ReqFieldSetup" />
+            <End Role="ReqFieldSetupSibling" EntitySet="ReqFieldSetupSibling" />
           </AssociationSet>
           <AssociationSet Name="FK_Request_Batches" Association="remiModel.Store.FK_Request_Batches">
             <End Role="Batches" EntitySet="Batches" />
@@ -1597,6 +1604,7 @@
           <Property Name="InsertTime" Type="datetime" />
           <Property Name="rv" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="ReqFieldDataID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="InstanceID" Type="int" />
         </EntityType>
         <EntityType Name="ReqFieldDataAudit">
           <Key>
@@ -1609,6 +1617,8 @@
           <Property Name="InsertTime" Type="datetime" Nullable="false" />
           <Property Name="Action" Type="char" Nullable="false" MaxLength="1" />
           <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="ReqFieldDataID" Type="int" />
+          <Property Name="InstanceID" Type="int" />
         </EntityType>
         <EntityType Name="ReqFieldMapping">
           <Key>
@@ -1646,6 +1656,15 @@
           <Property Name="ReqFieldSetupRoleID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="ReqFieldSetupID" Type="int" Nullable="false" />
           <Property Name="RoleID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReqFieldSetupSibling">
+          <Key>
+            <PropertyRef Name="ReqFieldSiblingID" />
+          </Key>
+          <Property Name="ReqFieldSiblingID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ReqFieldSetupID" Type="int" Nullable="false" />
+          <Property Name="DefaultDisplayNum" Type="int" Nullable="false" />
+          <Property Name="MaxDisplayNum" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -1852,6 +1871,8 @@
           <Property Name="Value" Type="nvarchar" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="InsertTime" Type="datetime" Nullable="false" />
+          <Property Name="RecordNum" Type="int" />
+          <Property Name="Action" Type="varchar" MaxLength="8" />
         </EntityType>
         <Association Name="FK__aspnet_Pr__UserI__3F115E1A">
           <End Role="aspnet_Users" Type="remiModel.Store.aspnet_Users" Multiplicity="1" />
@@ -2605,6 +2626,18 @@
               <PropertyRef Name="ReqFieldSetupID" />
             </Principal>
             <Dependent Role="ReqFieldSetupRole">
+              <PropertyRef Name="ReqFieldSetupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReqFieldSetupSibling_ReqFieldSetup">
+          <End Role="ReqFieldSetup" Type="remiModel.Store.ReqFieldSetup" Multiplicity="1" />
+          <End Role="ReqFieldSetupSibling" Type="remiModel.Store.ReqFieldSetupSibling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReqFieldSetup">
+              <PropertyRef Name="ReqFieldSetupID" />
+            </Principal>
+            <Dependent Role="ReqFieldSetupSibling">
               <PropertyRef Name="ReqFieldSetupID" />
             </Dependent>
           </ReferentialConstraint>
@@ -3841,6 +3874,11 @@
           <AssociationSet Name="FK_ReqDistribution_Request" Association="REMI.Entities.FK_ReqDistribution_Request">
             <End Role="Request" EntitySet="Requests" />
             <End Role="ReqDistribution" EntitySet="ReqDistributions" />
+          </AssociationSet>
+          <EntitySet Name="ReqFieldSetupSiblings" EntityType="REMI.Entities.ReqFieldSetupSibling" />
+          <AssociationSet Name="FK_ReqFieldSetupSibling_ReqFieldSetup" Association="REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup">
+            <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
+            <End Role="ReqFieldSetupSibling" EntitySet="ReqFieldSetupSiblings" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
@@ -5627,6 +5665,7 @@
           <Property Type="Int32" Name="ParentReqFieldSetupID" />
           <Property Type="String" Name="DefaultValue" MaxLength="400" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldData" />
+          <NavigationProperty Name="ReqFieldSetupSiblings" Relationship="REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup" FromRole="ReqFieldSetup" ToRole="ReqFieldSetupSibling" />
         </EntityType>
         <EntityType Name="ReqFieldSetupRole">
           <Key>
@@ -6403,6 +6442,8 @@
           <Property Type="DateTime" Name="InsertTime" Nullable="false" Precision="3" />
           <Property Type="String" Name="Action" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ReqFieldDataID" />
+          <Property Type="Int32" Name="InstanceID" />
         </EntityType>
         <EntityType Name="vw_RequestDataAudit">
           <Key>
@@ -6416,6 +6457,8 @@
           <Property Type="String" Name="Value" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="InsertTime" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="RecordNum" />
+          <Property Type="String" Name="Action" MaxLength="8" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="TestsAccess">
           <Key>
@@ -6548,6 +6591,7 @@
           <Property Type="Int32" Name="ReqFieldDataID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" FromRole="ReqFieldData" ToRole="ReqFieldSetup" />
           <NavigationProperty Name="Request" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="ReqFieldData" ToRole="Request" />
+          <Property Type="Int32" Name="InstanceID" />
         </EntityType>
         <Association Name="FK_ReqFieldData_ReqFieldSetup">
           <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="1" />
@@ -6591,6 +6635,28 @@
             </Principal>
             <Dependent Role="ReqDistribution">
               <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ReqFieldSetupSibling">
+          <Key>
+            <PropertyRef Name="ReqFieldSiblingID" />
+          </Key>
+          <Property Type="Int32" Name="ReqFieldSiblingID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="ReqFieldSetupID" Nullable="false" />
+          <Property Type="Int32" Name="DefaultDisplayNum" Nullable="false" />
+          <Property Type="Int32" Name="MaxDisplayNum" Nullable="false" />
+          <NavigationProperty Name="ReqFieldSetup" Relationship="REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup" FromRole="ReqFieldSetupSibling" ToRole="ReqFieldSetup" />
+        </EntityType>
+        <Association Name="FK_ReqFieldSetupSibling_ReqFieldSetup">
+          <End Type="REMI.Entities.ReqFieldSetup" Role="ReqFieldSetup" Multiplicity="1" />
+          <End Type="REMI.Entities.ReqFieldSetupSibling" Role="ReqFieldSetupSibling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReqFieldSetup">
+              <PropertyRef Name="ReqFieldSetupID" />
+            </Principal>
+            <Dependent Role="ReqFieldSetupSibling">
+              <PropertyRef Name="ReqFieldSetupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7699,6 +7765,8 @@
           <EntitySetMapping Name="ReqFieldDataAudits">
             <EntityTypeMapping TypeName="REMI.Entities.ReqFieldDataAudit">
               <MappingFragment StoreEntitySet="ReqFieldDataAudit">
+                <ScalarProperty Name="InstanceID" ColumnName="InstanceID" />
+                <ScalarProperty Name="ReqFieldDataID" ColumnName="ReqFieldDataID" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Action" ColumnName="Action" />
                 <ScalarProperty Name="InsertTime" ColumnName="InsertTime" />
@@ -7712,6 +7780,8 @@
           <EntitySetMapping Name="vw_RequestDataAudit">
             <EntityTypeMapping TypeName="REMI.Entities.vw_RequestDataAudit">
               <MappingFragment StoreEntitySet="vw_RequestDataAudit">
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="RecordNum" ColumnName="RecordNum" />
                 <ScalarProperty Name="RequestNumber" ColumnName="RequestNumber" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
@@ -7767,6 +7837,7 @@
           <EntitySetMapping Name="ReqFieldDatas">
             <EntityTypeMapping TypeName="REMI.Entities.ReqFieldData">
               <MappingFragment StoreEntitySet="ReqFieldData">
+                <ScalarProperty Name="InstanceID" ColumnName="InstanceID" />
                 <ScalarProperty Name="ReqFieldDataID" ColumnName="ReqFieldDataID" />
                 <ScalarProperty Name="rv" ColumnName="rv" />
                 <ScalarProperty Name="InsertTime" ColumnName="InsertTime" />
@@ -7783,6 +7854,16 @@
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="RequestID" ColumnName="RequestID" />
                 <ScalarProperty Name="DistributionID" ColumnName="DistributionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReqFieldSetupSiblings">
+            <EntityTypeMapping TypeName="REMI.Entities.ReqFieldSetupSibling">
+              <MappingFragment StoreEntitySet="ReqFieldSetupSibling">
+                <ScalarProperty Name="MaxDisplayNum" ColumnName="MaxDisplayNum" />
+                <ScalarProperty Name="DefaultDisplayNum" ColumnName="DefaultDisplayNum" />
+                <ScalarProperty Name="ReqFieldSetupID" ColumnName="ReqFieldSetupID" />
+                <ScalarProperty Name="ReqFieldSiblingID" ColumnName="ReqFieldSiblingID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -8012,6 +8093,8 @@
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_Request" />
         <EntityTypeShape EntityType="REMI.Entities.ReqDistribution" Width="1.5" PointX="15" PointY="108.75" />
         <AssociationConnector Association="REMI.Entities.FK_ReqDistribution_Request" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupSibling" Width="1.5" PointX="9.5568776640840234" PointY="11.232882609233672" />
+        <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

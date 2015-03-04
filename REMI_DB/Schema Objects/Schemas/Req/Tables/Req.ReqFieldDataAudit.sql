@@ -6,6 +6,8 @@
 	[InsertTime] [DateTime] NOT NULL,
 	[Action] [char](1) NOT NULL,
 	[UserName] [nvarchar](255) NOT NULL,
+	[ReqFieldDataID] [int] NULL,
+	[InstanceID] [int] NULL,
  CONSTRAINT [PK_ReqFieldDataAuditID] PRIMARY KEY CLUSTERED 
 (
 	[ReqFieldDataAuditID] ASC
