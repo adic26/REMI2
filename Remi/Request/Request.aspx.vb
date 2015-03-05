@@ -1,17 +1,94 @@
-﻿Imports REMI.Bll
-Imports REMI.Validation
-Imports REMI.Contracts
-Imports REMI.BusinessEntities
+﻿Imports Remi.Bll
+Imports Remi.Validation
+Imports Remi.Contracts
+Imports Remi.BusinessEntities
+Imports System.Reflection
+Imports System.IO
 
 Public Class Request
     Inherits System.Web.UI.Page
 
-    Protected Sub ValidateBtn_Click(sender As Object, e As EventArgs)
-        If Page.IsValid Then
-        Else
+#Region "Methods"
+    Protected Sub BuildMenu()
+        Dim requestNumber As String = hdnRequestNumber.Value
+        Dim myMenu As WebControls.Menu
+        Dim mi As New MenuItem
+        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+        hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+
+        mi = New MenuItem
+        mi.Text = "Create Request"
+        mi.Target = "_blank"
+        mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
+        myMenu.Items(0).ChildItems.Add(mi)
+
+        Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+
+        If (rec IsNot Nothing) Then
+            mi = New MenuItem
+            mi.Text = "Batch"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypBatch.Visible = True
+            hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
+
+            Dim batch As BatchView = BatchManager.GetViewBatch(requestNumber)
+            setup.Visible = True
+            setupEnv.Visible = True
+            pnlSetup.Visible = True
+            setup.JobID = batch.JobID
+            setup.ProductID = batch.ProductID
+            setup.JobName = batch.JobName
+            setup.ProductName = batch.ProductGroup
+            setup.QRANumber = rec.RequestNumber
+            setup.BatchID = rec.BatchID
+            setup.TestStageType = TestStageType.Parametric
+            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
+            setup.OrientationID = 0
+            setup.RequestTypeID = hdnRequestTypeID.Value
+            setup.UserID = UserManager.GetCurrentUser.ID
+            setup.DataBind()
+
+            setupEnv.JobID = batch.JobID
+            setupEnv.BatchID = rec.BatchID
+            setupEnv.ProductID = batch.ProductID
+            setupEnv.JobName = batch.JobName
+            setupEnv.ProductName = batch.ProductGroup
+            setupEnv.QRANumber = batch.QRANumber
+            setupEnv.TestStageType = TestStageType.EnvironmentalStress
+            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            setupEnv.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
+            setupEnv.OrientationID = 0
+            setupEnv.RequestTypeID = hdnRequestTypeID.Value
+            setupEnv.UserID = UserManager.GetCurrentUser.ID
+            setupEnv.DataBind()
+
+            mi = New MenuItem
+            mi.Text = "Results"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypResults.Visible = True
+            hypResults.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
+        End If
+
+        If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
+            mi = New MenuItem
+            mi.Text = "Admin"
+            mi.Target = "_blank"
+            mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
+            myMenu.Items(0).ChildItems.Add(mi)
+            hypAdmin.Visible = True
+            hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
         End If
     End Sub
+#End Region
 
+#Region "Page Load"
     Protected Overrides Sub OnInit(e As System.EventArgs)
         Dim req As String = IIf(Request.QueryString.Item("req") Is Nothing, String.Empty, Request.QueryString.Item("req"))
         Dim type As String = IIf(Request.QueryString.Item("type") Is Nothing, String.Empty, Request.QueryString.Item("type"))
@@ -26,6 +103,7 @@ Public Class Request
         Else
             rf = RequestManager.GetRequestFieldSetup(type, False, String.Empty)
         End If
+        Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
 
         If (rf IsNot Nothing) Then
             hdnRequestNumber.Value = rf(0).RequestNumber
@@ -90,17 +168,76 @@ Public Class Request
                 End If
 
                 For i As Int32 = 1 To res.DefaultDisplayNum
-                    If (res.DefaultDisplayNum > 1) Then
+                    If (res.MaxDisplayNum > 1) Then
                         id = String.Format("{0}-{1}", res.FieldSetupID.ToString(), fieldCount.ToString())
 
                         If (fieldCount > 1) Then
                             tCell2.Controls.Add(New LiteralControl("<br />"))
                         End If
 
-                        res.Value = res.Sibling(i - 1).Value
+                        If (res.Sibling.Count > 0) Then
+                            res.Value = res.Sibling(i - 1).Value
+                        End If
                     End If
 
                     Select Case res.FieldType.ToUpper()
+                        Case "ATTACHMENT"
+                            Dim fu As New FileUpload
+                            fu.ID = String.Format("fu{0}", id)
+                            fu.EnableViewState = True
+
+                            Dim btnfu As New Button
+                            btnfu.ID = String.Format("btnfu{0}", id)
+                            btnfu.Text = "Upload"
+                            btnfu.CssClass = "buttonSmall"
+                            btnfu.EnableViewState = True
+                            AddHandler btnfu.Click, AddressOf upload_Click
+
+                            Dim hyp As New HyperLink
+                            hyp.ID = String.Format("hyp{0}", id)
+                            hyp.Text = res.Value
+                            hyp.EnableViewState = True
+                            hyp.NavigateUrl = String.Format("~\Handlers\Download.ashx?file={0}&path={1}", hyp.Text, String.Concat(Server.MapPath("~\UploadDir\"), lblRequest.Text))
+
+                            Dim txt As New TextBox
+                            txt.ID = String.Format("txt{0}", id)
+                            txt.Width = 250
+                            txt.Text = res.Value
+                            txt.EnableViewState = True
+                            txt.Style.Add("display", "none")
+
+                            Dim img As New Image
+                            img.EnableViewState = True
+                            img.ID = String.Format("img{0}", id)
+                            img.ImageUrl = "~\Design\Icons\png\24x24\delete.png"
+                            img.EnableViewState = True
+                            img.Attributes.Add("onclick", "Javascript: Img_Click('" + id + "')")
+
+                            If (Not String.IsNullOrEmpty(res.Value)) Then
+                                fu.Style.Add("display", "none")
+                                btnfu.Style.Add("display", "none")
+                                hyp.Style.Add("display", "")
+                                img.Style.Add("display", "")
+                            Else
+                                hyp.Style.Add("display", "none")
+                                img.Style.Add("display", "none")
+                            End If
+
+                            asm.RegisterPostBackControl(btnfu)
+
+                            Dim up As New UpdatePanel
+                            up.ID = String.Format("up{0}", id)
+                            up.UpdateMode = UpdatePanelUpdateMode.Conditional
+                            up.ChildrenAsTriggers = True
+                            up.EnableViewState = True
+                            up.ContentTemplateContainer.Controls.Add(fu)
+                            up.ContentTemplateContainer.Controls.Add(btnfu)
+                            up.ContentTemplateContainer.Controls.Add(txt)
+                            up.ContentTemplateContainer.Controls.Add(hyp)
+                            up.ContentTemplateContainer.Controls.Add(img)
+                            AddHandler up.Unload, AddressOf UpdatePanel_Unload
+
+                            tCell2.Controls.Add(up)
                         Case "CHECKBOX"
                             Dim chk As New CheckBox
                             chk.ID = String.Format("chk{0}", id)
@@ -305,9 +442,11 @@ Public Class Request
                             Dim hdnMore As New HiddenField
                             hdnMore.ID = String.Format("hdn{0}", res.FieldSetupID)
                             hdnMore.Value = res.DefaultDisplayNum.ToString()
+                            hdnMore.EnableViewState = True
                             tCell2.Controls.Add(hdnMore)
 
                             Dim btnMore As New Button
+                            btnMore.EnableViewState = True
                             btnMore.ID = res.FieldSetupID
                             btnMore.Text = "Add More"
                             btnMore.CssClass = "buttonSmall"
@@ -322,6 +461,7 @@ Public Class Request
 
                 If (Not String.IsNullOrEmpty(res.Description)) Then
                     Dim img As New Image
+                    img.EnableViewState = True
                     img.ID = String.Format("img{0}", res.FieldSetupID)
                     img.ImageUrl = "~\Design\Icons\png\24x24\help.png"
                     img.Attributes.Add("onmouseover", String.Format("Tip('{0}',true,null,true,true,WIDTH,'',TITLEBGCOLOR,'#6494C8')", res.Description))
@@ -404,84 +544,6 @@ Public Class Request
         MyBase.OnInit(e)
     End Sub
 
-    Protected Sub BuildMenu()
-        Dim requestNumber As String = hdnRequestNumber.Value
-        Dim myMenu As WebControls.Menu
-        Dim mi As New MenuItem
-        myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
-        hypNew.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
-
-        mi = New MenuItem
-        mi.Text = "Create Request"
-        mi.Target = "_blank"
-        mi.NavigateUrl = String.Format("/Request/Request.aspx?type={0}", hdnRequestType.Value)
-        myMenu.Items(0).ChildItems.Add(mi)
-
-        Dim rec = (From rb In New REMI.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
-
-        If (rec IsNot Nothing) Then
-            mi = New MenuItem
-            mi.Text = "Batch"
-            mi.Target = "_blank"
-            mi.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
-            myMenu.Items(0).ChildItems.Add(mi)
-            hypBatch.Visible = True
-            hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
-
-            Dim batch As BatchView = BatchManager.GetViewBatch(requestNumber)
-            setup.Visible = True
-            setupEnv.Visible = True
-            pnlSetup.Visible = True
-            setup.JobID = batch.JobID
-            setup.ProductID = batch.ProductID
-            setup.JobName = batch.JobName
-            setup.ProductName = batch.ProductGroup
-            setup.QRANumber = rec.RequestNumber
-            setup.BatchID = rec.BatchID
-            setup.TestStageType = TestStageType.Parametric
-            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
-            setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-            setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
-            setup.OrientationID = 0
-            setup.RequestTypeID = hdnRequestTypeID.Value
-            setup.UserID = UserManager.GetCurrentUser.ID
-            setup.DataBind()
-
-            setupEnv.JobID = batch.JobID
-            setupEnv.BatchID = rec.BatchID
-            setupEnv.ProductID = batch.ProductID
-            setupEnv.JobName = batch.JobName
-            setupEnv.ProductName = batch.ProductGroup
-            setupEnv.QRANumber = batch.QRANumber
-            setupEnv.TestStageType = TestStageType.EnvironmentalStress
-            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
-            setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-            setupEnv.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
-            setupEnv.OrientationID = 0
-            setupEnv.RequestTypeID = hdnRequestTypeID.Value
-            setupEnv.UserID = UserManager.GetCurrentUser.ID
-            setupEnv.DataBind()
-
-            mi = New MenuItem
-            mi.Text = "Results"
-            mi.Target = "_blank"
-            mi.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
-            myMenu.Items(0).ChildItems.Add(mi)
-            hypResults.Visible = True
-            hypResults.NavigateUrl = String.Format("/Relab/Results.aspx?Batch={0}", rec.BatchID)
-        End If
-
-        If ((From dr As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where dr.Field(Of Boolean)("IsAdmin") = True And dr.Field(Of Int32)("RequestTypeID") = hdnRequestTypeID.Value).FirstOrDefault() IsNot Nothing) Then
-            mi = New MenuItem
-            mi.Text = "Admin"
-            mi.Target = "_blank"
-            mi.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
-            myMenu.Items(0).ChildItems.Add(mi)
-            hypAdmin.Visible = True
-            hypAdmin.NavigateUrl = String.Format("/Request/Admin.aspx?rt={0}&id={1}", hdnRequestType.Value, hdnRequestTypeID.Value)
-        End If
-    End Sub
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
         notMain.Notifications.Clear()
 
@@ -495,6 +557,36 @@ Public Class Request
             End If
 
             BuildMenu()
+        End If
+    End Sub
+#End Region
+
+#Region "Button Events"
+    Protected Sub upload_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim id As String = DirectCast(sender, Button).ID
+        Dim fu As FileUpload = DirectCast(Helpers.FindControlRecursive(tbl, id.Replace("btnfu", "fu")), FileUpload)
+        Dim txt As TextBox = DirectCast(Helpers.FindControlRecursive(tbl, id.Replace("btnfu", "txt")), TextBox)
+        Dim hyp As HyperLink = DirectCast(Helpers.FindControlRecursive(tbl, id.Replace("btnfu", "hyp")), HyperLink)
+        Dim img As Image = DirectCast(Helpers.FindControlRecursive(tbl, id.Replace("btnfu", "img")), Image)
+
+        If (Not String.IsNullOrEmpty(fu.PostedFile.FileName)) Then
+            hyp.Style.Add("display", "")
+            img.Style.Add("display", "")
+            fu.Style.Add("display", "none")
+            DirectCast(sender, Button).Style.Add("display", "none")
+            hyp.Text = fu.FileName
+            hyp.NavigateUrl = String.Format("~\Handlers\Download.ashx?file={0}&path={1}", hyp.Text, String.Concat(Server.MapPath("~\UploadDir\"), lblRequest.Text))
+
+            Dim uploadDir = String.Concat(Remi.Core.REMIConfiguration.UploadDirectory(), lblRequest.Text)
+
+            If (Not Directory.Exists(uploadDir)) Then
+                Directory.CreateDirectory(uploadDir)
+            End If
+
+            fu.SaveAs(String.Concat(uploadDir, "\", fu.FileName))
+            txt.Text = fu.FileName
+        Else
+            txt.Text = String.Empty
         End If
     End Sub
 
@@ -517,11 +609,13 @@ Public Class Request
                 For i As Int32 = 1 To res.MaxDisplayNum
                     Dim con As New Control
 
-                    If (res.DefaultDisplayNum > 1) Then
+                    If (res.MaxDisplayNum > 1) Then
                         id = String.Format("{0}-{1}", res.FieldSetupID.ToString(), fieldCount.ToString())
                     End If
 
                     Select Case res.FieldType.ToUpper()
+                        Case "ATTACHMENT"
+                            con = Helpers.FindControlRecursive(tbl, String.Format("txt{0}", id))
                         Case "CHECKBOX"
                             con = Helpers.FindControlRecursive(tbl, String.Format("chk{0}", id))
                         Case "DATETIME"
@@ -538,13 +632,17 @@ Public Class Request
                             con = Helpers.FindControlRecursive(tbl, String.Format("txt{0}", id))
                     End Select
 
-                    If (res.FieldType.ToUpper() = "CHECKBOX") Then
-                        res.Value = If(Request.Form(con.UniqueID) = "on", True, False)
+                    If (con IsNot Nothing) Then
+                        If (res.FieldType.ToUpper() = "CHECKBOX") Then
+                            res.Value = If(Request.Form(con.UniqueID) = "on", True, False)
+                        Else
+                            res.Value = Request.Form(con.UniqueID)
+                        End If
                     Else
-                        res.Value = Request.Form(con.UniqueID)
+                        res.Value = String.Empty
                     End If
 
-                    If (res.DefaultDisplayNum > 1) Then
+                    If (res.MaxDisplayNum > 1) Then
                         res.Sibling(fieldCount - 1).Value = res.Value
                         fieldCount += 1
                     End If
@@ -564,7 +662,7 @@ Public Class Request
             If (saveSuccess) Then
                 notMain.Notifications.AddWithMessage("Saved Request Successful!", NotificationType.Information)
                 Dim requestNumber As String = rf(0).RequestNumber
-                Dim rec = (From rb In New REMI.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
+                Dim rec = (From rb In New Remi.Dal.Entities().Instance().Requests Where rb.RequestNumber = requestNumber And rb.BatchID > 0).FirstOrDefault()
 
                 If (rec IsNot Nothing) Then
                     If (setup.Visible) Then
@@ -591,6 +689,13 @@ Public Class Request
                 notMain.Notifications.AddWithMessage("Saved Failed!", NotificationType.Errors)
             End If
         End If
+    End Sub
+#End Region
+
+#Region "Events"
+    Protected Sub UpdatePanel_Unload(ByVal sender As Object, ByVal e As EventArgs)
+        Dim mi As MethodInfo = GetType(ScriptManager).GetMethods((BindingFlags.NonPublic Or BindingFlags.Instance)).Where(Function(i) i.Name.Equals("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel")).FirstOrDefault()
+        mi.Invoke(ScriptManager.GetCurrent(Page), New Object() {CType(sender, UpdatePanel)})
     End Sub
 
     Protected Sub ddl_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs)
@@ -684,4 +789,5 @@ Public Class Request
     Protected Sub grdDisplayChanges_PreRender() Handles grdDisplayChanges.PreRender
         Helpers.MakeAccessable(grdDisplayChanges)
     End Sub
+#End Region
 End Class

@@ -171,7 +171,7 @@ Public Class ProductConfiguration
 
 #Region "Configuration"
     <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfig")> _
-    Public Function GetConfig(ByVal Name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32) As String
+    Public Function GetConfig(ByVal name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32) As String
         Dim xml As String = String.Empty
 
         Try
@@ -185,7 +185,7 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(Description:="Retrieves Configuration", MessageName:="GetConfigByNames")> _
-    Public Function GetConfig(ByVal Name As String, ByVal version As String, ByVal mode As String, ByVal type As String) As String
+    Public Function GetConfig(ByVal name As String, ByVal version As String, ByVal mode As String, ByVal type As String) As String
         Dim xml As String = String.Empty
 
         Try
@@ -202,7 +202,7 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(Description:="Saves Configuration", MessageName:="SaveConfig")> _
-    Public Function SaveConfig(ByVal Name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32, ByVal definition As String) As Boolean
+    Public Function SaveConfig(ByVal name As String, ByVal version As String, ByVal mode As Int32, ByVal type As Int32, ByVal definition As String) As Boolean
         Try
             Dim verNum As New Version(version)
             Return ConfigManager.SaveConfig(Name, verNum, mode, type, definition)
@@ -214,7 +214,7 @@ Public Class ProductConfiguration
     End Function
 
     <WebMethod(Description:="Saves Configuration", MessageName:="SaveConfigByNames")> _
-    Public Function SaveConfig(ByVal Name As String, ByVal version As String, ByVal mode As String, ByVal type As String, ByVal definition As String) As Boolean
+    Public Function SaveConfig(ByVal name As String, ByVal version As String, ByVal mode As String, ByVal type As String, ByVal definition As String) As Boolean
         Try
             Dim verNum As New Version(version)
             Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
@@ -228,22 +228,22 @@ Public Class ProductConfiguration
         Return False
     End Function
 
-    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigMode")> _
-    Public Function DuplicateConfigMode(ByVal Name As String, ByVal version As String, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
+    <WebMethod(Description:="Clones Configuration", MessageName:="CloneConfigMode")> _
+    Public Function CloneConfigMode(ByVal name As String, ByVal version As String, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
         Dim publishSucceeded As Boolean = False
 
         Try
             Dim verNum As New Version(version)
-            publishSucceeded = ConfigManager.DuplicateConfigMode(Name, verNum, fromMode, type, toMode)
+            publishSucceeded = ConfigManager.CloneConfigMode(Name, verNum, fromMode, type, toMode)
         Catch ex As Exception
-            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+            ConfigManager.LogIssue("CloneConfigMode", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
         End Try
 
         Return publishSucceeded
     End Function
 
-    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigModeByNames")> _
-    Public Function DuplicateConfigMode(ByVal Name As String, ByVal version As String, ByVal fromMode As String, ByVal type As String, ByVal toMode As String) As Boolean
+    <WebMethod(Description:="Clones Configuration", MessageName:="CloneConfigModeByNames")> _
+    Public Function CloneConfigMode(ByVal name As String, ByVal version As String, ByVal fromMode As String, ByVal type As String, ByVal toMode As String) As Boolean
         Dim publishSucceeded As Boolean = False
 
         Try
@@ -252,31 +252,31 @@ Public Class ProductConfiguration
             Dim toModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", toMode, Nothing)
             Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            publishSucceeded = ConfigManager.DuplicateConfigMode(Name, verNum, fromModeID, typeID, toModeID)
+            publishSucceeded = ConfigManager.CloneConfigMode(Name, verNum, fromModeID, typeID, toModeID)
         Catch ex As Exception
-            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+            ConfigManager.LogIssue("CloneConfigMode", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
         End Try
 
         Return publishSucceeded
     End Function
 
-    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigVersion")> _
-    Public Function DuplicateConfigVersion(ByVal Name As String, ByVal fromVersion As String, ByVal mode As Int32, ByVal type As Int32, ByVal toVersion As String) As Boolean
+    <WebMethod(Description:="Clones Configuration", MessageName:="CloneConfigVersion")> _
+    Public Function CloneConfigVersion(ByVal name As String, ByVal fromVersion As String, ByVal mode As Int32, ByVal type As Int32, ByVal toVersion As String) As Boolean
         Dim publishSucceeded As Boolean = False
 
         Try
             Dim fromVer As New Version(fromVersion)
             Dim toVer As New Version(toVersion)
-            publishSucceeded = ConfigManager.DuplicateConfigVersion(Name, fromVer, mode, type, toVer)
+            publishSucceeded = ConfigManager.CloneConfigVersion(Name, fromVer, mode, type, toVer)
         Catch ex As Exception
-            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
+            ConfigManager.LogIssue("CloneConfigVersion", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
         End Try
 
         Return publishSucceeded
     End Function
 
-    <WebMethod(Description:="Duplicates Configuration", MessageName:="DuplicateConfigVersionByNames")> _
-    Public Function DuplicateConfigVersion(ByVal Name As String, ByVal fromVersion As String, ByVal mode As String, ByVal type As String, ByVal toVersion As String) As Boolean
+    <WebMethod(Description:="Clones Configuration", MessageName:="CloneConfigVersionByNames")> _
+    Public Function CloneConfigVersion(ByVal name As String, ByVal fromVersion As String, ByVal mode As String, ByVal type As String, ByVal toVersion As String) As Boolean
         Dim publishSucceeded As Boolean = False
 
         Try
@@ -285,9 +285,9 @@ Public Class ProductConfiguration
             Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
             Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            publishSucceeded = ConfigManager.DuplicateConfigVersion(Name, fromVer, modeID, typeID, toVer)
+            publishSucceeded = ConfigManager.CloneConfigVersion(Name, fromVer, modeID, typeID, toVer)
         Catch ex As Exception
-            ConfigManager.LogIssue("PublishConfig", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
+            ConfigManager.LogIssue("CloneConfigVersion", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
         End Try
 
         Return publishSucceeded

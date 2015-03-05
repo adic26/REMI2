@@ -29,7 +29,7 @@
                 <asp:CheckBox runat="server" ID="chkDisplayChanges" Text="Display Changes" Visible="false" TextAlign="Right" AutoPostBack="true" OnCheckedChanged="chkDisplayChanges_CheckedChanged" />
             </li>
             <li>
-                <asp:Button runat="server" ID="btnSave" Text="Save Request" CssClass="buttonSmall" OnClick="ValidateBtn_Click" />
+                <asp:Button runat="server" ID="btnSave" Text="Save Request" CssClass="buttonSmall" />
             </li>
         </ul>
     </asp:Panel>
@@ -42,6 +42,20 @@
     <asp:HiddenField runat="server" ID="hdnAddMore" />
 
     <script type="text/javascript">
+        function Img_Click(id) {
+            var txt = $("[id$='txt" + id + "']")[0];
+            var img = $("[id$='img" + id + "']")[0];
+            var hyp = $("[id$='hyp" + id + "']")[0];
+            var btnfu = $("[id$='fu" + id + "']")[1];
+            var fu = $("[id$='fu" + id + "']")[0];
+
+            txt.value = '';
+            img.style.display = 'none';
+            hyp.style.display = 'none';
+            fu.style.display = '';
+            btnfu.style.display = '';
+        }
+
         function SetAddMore(id) {
             document.getElementById('<%= hdnAddMore.ClientID%>').value = id;
             var hdn = $("[id$='hdn" + id + "']");
@@ -65,7 +79,15 @@
     <uc1:NotificationList ID="notMain" runat="server" />
         
     <asp:Panel runat="server" ID="pnlDisplayChanges" Visible="false">
-        <asp:GridView ID="grdDisplayChanges" runat="server" DataSourceID="odsDisplayChanges" AutoGenerateColumns="True" EnableViewState="False" EmptyDataText="No Changes">
+        <asp:GridView ID="grdDisplayChanges" runat="server" DataSourceID="odsDisplayChanges" AutoGenerateColumns="False" EnableViewState="False" EmptyDataText="No Changes">
+            <Columns>
+                <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" />
+                <asp:BoundField DataField="Value" HeaderText="Value" ReadOnly="True" />
+                <asp:BoundField DataField="UserName" HeaderText="User" ReadOnly="True" />
+                <asp:BoundField DataField="InsertTime" HeaderText="Inserted" ReadOnly="True" />
+                <asp:BoundField DataField="RecordNum" HeaderText="Version" ReadOnly="True" />
+                <asp:BoundField DataField="Action" HeaderText="Action" ReadOnly="True" />
+            </Columns>
         </asp:GridView>
         <asp:ObjectDataSource ID="odsDisplayChanges" runat="server" SelectMethod="GetRequestAuditLogs" TypeName="REMI.Bll.RequestManager">
             <SelectParameters>

@@ -60,7 +60,7 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function DuplicateConfigMode(ByVal Name As String, ByVal version As Version, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
+        Public Shared Function CloneConfigMode(ByVal Name As String, ByVal version As Version, ByVal fromMode As Int32, ByVal type As Int32, ByVal toMode As Int32) As Boolean
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
                 Dim ver As String = version.ToString()
@@ -88,7 +88,7 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function DuplicateConfigVersion(ByVal Name As String, ByVal fromVersion As Version, ByVal mode As Int32, ByVal type As Int32, ByVal toVersion As Version) As Boolean
+        Public Shared Function CloneConfigVersion(ByVal Name As String, ByVal fromVersion As Version, ByVal mode As Int32, ByVal type As Int32, ByVal toVersion As Version) As Boolean
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
                 Dim fromVer As String = fromVersion.ToString()

@@ -26,11 +26,12 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetRequestAuditLogs(ByVal requestNumber As String) As DataTable
             Try
-                Return BusinessEntities.Helpers.EQToDataTable((From rda In New REMI.Dal.Entities().Instance().vw_RequestDataAudit Where rda.RequestNumber = requestNumber Select rda).ToList(), "RequestAudit")
+                Dim dt As DataTable = BusinessEntities.Helpers.EQToDataTable((From rda In New REMI.Dal.Entities().Instance().vw_RequestDataAudit Where rda.RequestNumber = requestNumber Select rda).ToList(), "RequestAudit")
+                Return dt
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber)
             End Try
-            Return New DataTable
+            Return New DataTable("RequestAudit")
         End Function
 
         Public Shared Function GetRequestsForDashBoard(ByVal searchStr As String) As DataTable
@@ -183,6 +184,7 @@ Namespace REMI.Bll
                     End If
 
                     If (maxDisplayNum > 1) Then
+                        instance.SaveChanges()
                         Dim Sibling As New REMI.Entities.ReqFieldSetupSibling
                         Sibling.DefaultDisplayNum = defaultDisplayNum
                         Sibling.MaxDisplayNum = maxDisplayNum

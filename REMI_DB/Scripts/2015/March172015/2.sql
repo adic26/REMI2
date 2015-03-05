@@ -154,7 +154,7 @@ GO
 PRINT N'Altering [Req].[vw_RequestDataAudit]'
 GO
 ALTER VIEW [req].[vw_RequestDataAudit] AS
-SELECT r.RequestNumber, fs.Name, fda.Value, fda.UserName, fda.InsertTime, fda.InstanceID AS RecordNum, 
+SELECT fda.ReqFieldDataAuditID, r.RequestNumber, fs.Name, fda.Value, fda.UserName, fda.InsertTime, fda.InstanceID AS RecordNum, 
 	CASE fda.Action WHEN 'U' THEN 'Updated' WHEN 'D' THEN 'Deleted' WHEN 'I' THEN 'Inserted' END AS Action
 FROM Req.ReqFieldDataAudit fda
 	INNER JOIN Req.Request r ON fda.RequestID=r.RequestID
@@ -235,6 +235,12 @@ BEGIN
 END
 GO
 DELETE FROM Req.ReqFieldMapping WHERE IntField='Select...'
+GO
+DECLARE @LookupTypeID INT
+DECLARE @MaxLookupID INT
+SELECT @LookupTypeID=LookupTypeID FROM LookupType WHERE Name='FieldTypes'
+SELECT @MaxLookupID = MAX(LookupID) +1 FROM Lookups
+INSERT INTO Lookups (LookupID,LookupTypeID,[Values],IsActive) VALUES (@MaxLookupID,@LookupTypeID,'Attachment',1)
 GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO

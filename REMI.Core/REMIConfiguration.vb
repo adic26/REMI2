@@ -22,51 +22,67 @@ Namespace REMI.Core
                 Return "remstar 1"
             End Get
         End Property
+
+        Public Shared ReadOnly Property UploadDirectory() As String
+            Get
+                Return ConfigurationManager.AppSettings("UploadDirectory")
+            End Get
+        End Property
+
         Public Shared ReadOnly Property REMIAccountPassword() As String
             Get
                 Return ConfigurationManager.AppSettings("REMIAccountPassword")
             End Get
         End Property
+
         Public Shared ReadOnly Property REMIAccountName() As String
             Get
                 Return ConfigurationManager.AppSettings("REMIAccountName")
             End Get
         End Property
+
         Public Shared ReadOnly Property ADConnectionString() As String
             Get
                 Return ConfigurationManager.AppSettings("ADConnectionString")
             End Get
         End Property
+
         Public Shared ReadOnly Property DefaultRedirectPage() As String
             Get
                 Return ConfigurationManager.AppSettings("DefaultRedirectPage")
             End Get
         End Property
+
         Public Shared ReadOnly Property TRSLinkCreationString() As String
             Get
                 Return ConfigurationManager.AppSettings("TRSLinkCreationString")
             End Get
         End Property
+
         Public Shared ReadOnly Property REMITestRecordsLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiTestRecordsLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property REMITestRecordsAddLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiTestRecordsAddLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property BaseTRSLink() As String
             Get
                 Return ConfigurationManager.AppSettings("BaseTRSLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property MfgWebLink() As String
             Get
                 Return ConfigurationManager.AppSettings("MfgWebLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property ConnectionStringReq(ByVal connectName As String) As String
             Get
                 Return ConfigurationManager.ConnectionStrings(connectName).ConnectionString
@@ -84,6 +100,7 @@ Namespace REMI.Core
                 Return ConfigurationManager.ConnectionStrings("REMIEntities").ConnectionString
             End Get
         End Property
+
         Public Shared ReadOnly Property ConnectionStringREMSTAR() As String
             Get
                 Return ConfigurationManager.ConnectionStrings("REMSTARDBConnectionString").ConnectionString
@@ -125,41 +142,49 @@ Namespace REMI.Core
                 Return ConfigurationManager.AppSettings("RemiSetBatchStatusLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiSetTestUnitExceptionsLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiSetTestUnitExceptionsLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiSetProductSettingsLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiSetProductSettingsLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiSetProductConfigLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiSetProductConfigLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiSetStationConfigLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiSetStationConfigLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiSetProductExceptionsLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiSetProductExceptionsLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiTestRecordsDetailLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiTestRecordsEditDetailLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiSetBatchPriorityLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiSetBatchPriorityLink")
             End Get
         End Property
+
         Public Shared ReadOnly Property RemiUserScanBadgeLink() As String
             Get
                 Return ConfigurationManager.AppSettings("RemiUserScanBadgeLink")

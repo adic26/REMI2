@@ -456,7 +456,7 @@ Namespace REMI.Dal
             End If
 
             For Each rec In request
-                If (rec.DefaultDisplayNum > 1) Then
+                If (rec.MaxDisplayNum > 1) Then
                     For Each sib As Sibling In rec.Sibling
                         Dim fieldDataSib = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID And fd.InstanceID = sib.ID).FirstOrDefault()
 
@@ -670,7 +670,7 @@ Namespace REMI.Dal
             myFields.DefaultDisplayNum = myDataRecord.Field(Of Int32)("DefaultDisplayNum")
             myFields.MaxDisplayNum = myDataRecord.Field(Of Int32)("MaxDisplayNum")
 
-            If (myFields.DefaultDisplayNum > 1) Then
+            If (myFields.MaxDisplayNum > 1) Then
                 Dim sib As New List(Of Sibling)
                 For i As Int32 = 1 To myFields.MaxDisplayNum
                     Dim val As String = (From s As DataRow In siblings.AsEnumerable Where s.Field(Of Int32)("InstanceID") = i And s.Field(Of Int32)("ReqFieldSetupID") = myFields.FieldSetupID Select s.Field(Of String)("Value")).FirstOrDefault()

@@ -14,14 +14,16 @@
         Dim ex As Exception = HttpContext.Current.Server.GetLastError()
         
         If (Not REMIConfiguration.Debug) Then
-            If (ex.GetType().Name = "HttpException") Then
-                If (DirectCast(ex, HttpException).GetHttpCode() = "404") Then
-                    Response.Redirect("~/")
-                Else
-                    LogUnhandledException(ex)
+            If (ex IsNot Nothing) Then
+                If (ex.GetType().Name = "HttpException") Then
+                    If (DirectCast(ex, HttpException).GetHttpCode() = "404") Then
+                        Response.Redirect("~/")
+                    Else
+                        LogUnhandledException(ex)
+                    End If
                 End If
             End If
-        End If
+        End if
     End Sub
     
     Sub Application_AuthenticateRequest(ByVal sender As Object, ByVal e As EventArgs)
