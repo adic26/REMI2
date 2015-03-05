@@ -95,7 +95,7 @@ Public Class ReqAdmin
     Protected Sub btnSaveLookup_Click(sender As Object, e As EventArgs)
         If Not String.IsNullOrEmpty(txtNewChildLookup.Text) And ddlChildType.SelectedValue > 0 Then
             If (LookupsManager.SaveLookup(ddlChildType.SelectedItem.Text, txtNewChildLookup.Text, 1, String.Empty, Nothing)) Then
-                cblChild.DataSource = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1)
+                cblChild.DataSource = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1, False)
                 cblChild.DataBind()
 
                 txtNewChildLookup.Text = String.Empty
@@ -104,7 +104,7 @@ Public Class ReqAdmin
 
         If Not String.IsNullOrEmpty(txtNewParentLookup.Text) And ddlParentType.SelectedValue > 0 Then
             If (LookupsManager.SaveLookup(ddlParentType.SelectedItem.Text, txtNewParentLookup.Text, 1, String.Empty, Nothing)) Then
-                cblParent.DataSource = LookupsManager.GetLookups(ddlParentType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1)
+                cblParent.DataSource = LookupsManager.GetLookups(ddlParentType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1, False)
                 cblParent.DataBind()
 
                 txtNewParentLookup.Text = String.Empty
@@ -388,7 +388,7 @@ Public Class ReqAdmin
     Protected Sub ddlParentType_SelectedIndexChanged(sender As Object, e As EventArgs)
         Dim ddl As DropDownList = DirectCast(sender, DropDownList)
 
-        cblParent.DataSource = LookupsManager.GetLookups(ddl.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1)
+        cblParent.DataSource = LookupsManager.GetLookups(ddl.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, False, 1, False)
         cblParent.DataBind()
 
         ddlChildType.DataSource = LookupsManager.GetLookupTypes(False)
@@ -405,7 +405,7 @@ Public Class ReqAdmin
             cblChild.Items.Clear()
             cblParent.Enabled = False
         Else
-            cblChild.DataSource = LookupsManager.GetLookups(ddl.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, True, 0)
+            cblChild.DataSource = LookupsManager.GetLookups(ddl.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, True, 0, False)
             cblChild.DataBind()
             cblParent.Enabled = True
         End If
@@ -419,7 +419,7 @@ Public Class ReqAdmin
         Dim cbl As CheckBoxList = DirectCast(sender, CheckBoxList)
 
         If (cbl.SelectedItem Is Nothing) Then
-            cblChild.DataSource = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, True, 0)
+            cblChild.DataSource = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, String.Empty, String.Empty, -1, True, 0, False)
             cblChild.DataBind()
         Else
             Dim requestTypeID As Int32
@@ -432,7 +432,7 @@ Public Class ReqAdmin
                 End If
             Next
 
-            Dim dtLookups As DataTable = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, ddlParentType.SelectedItem.Text, cbl.SelectedItem.Text, requestTypeID, True, 0)
+            Dim dtLookups As DataTable = LookupsManager.GetLookups(ddlChildType.SelectedItem.Text, -1, -1, ddlParentType.SelectedItem.Text, cbl.SelectedItem.Text, requestTypeID, True, 0, False)
             cblChild.DataSource = dtLookups
             cblChild.DataBind()
 

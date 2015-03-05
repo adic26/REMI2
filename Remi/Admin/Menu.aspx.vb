@@ -12,7 +12,7 @@ Public Class Menu
                 Response.Redirect("~/")
             End If
 
-            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             ddlDepartments.DataBind()
 
             MenuBindData()

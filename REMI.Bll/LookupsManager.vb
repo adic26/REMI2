@@ -8,9 +8,9 @@ Namespace REMI.Bll
         Inherits REMIManagerBase
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
+        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean, ByVal RemoveFirst As Int32, ByVal showArchived As Boolean) As DataTable
             Try
-                Return GetLookups(type.ToString(), productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected, RemoveFirst)
+                Return GetLookups(type.ToString(), productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected, RemoveFirst, showArchived)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -30,10 +30,10 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], True)> _
-        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean, Optional ByVal RemoveFirst As Int32 = 0) As DataTable
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean, ByVal RemoveFirst As Int32, ByVal showArchived As Boolean) As DataTable
             Try
                 'All Test Centers
-                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected)
+                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected, showArchived)
 
                 If (type = "TestCenter") Then
                     dt.Rows(0).Item("LookupType") = "All Test Centers"

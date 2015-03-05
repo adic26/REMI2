@@ -4,7 +4,7 @@ Imports Remi.Contracts
 
 Partial Class Admin_Users
     Inherits System.Web.UI.Page
-    Dim level As DataTable = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0)
+    Dim level As DataTable = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
 
     Protected Sub Page_Load() Handles Me.Load
         If Not Page.IsPostBack AndAlso Not UserManager.GetCurrentUser.IsAdmin And Not UserManager.GetCurrentUser.IsTestCenterAdmin Then
@@ -110,10 +110,10 @@ Partial Class Admin_Users
             chkIsActive.Checked = True
             chkByPassProduct.Checked = False
             chkWA.Checked = True
-            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             grdTestCenter.DataBind()
 
-            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             grdDepartments.DataBind()
         Else
             lblHeaderText.Text = String.Format("Editing {0}", CurrentUser.LDAPName)
@@ -147,10 +147,10 @@ Partial Class Admin_Users
             gvRequestTypes.DataSource = CurrentUser.RequestTypes()
             gvRequestTypes.DataBind()
 
-            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             grdTestCenter.DataBind()
 
-            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             grdDepartments.DataBind()
 
             For Each drtc As GridViewRow In grdTestCenter.Rows

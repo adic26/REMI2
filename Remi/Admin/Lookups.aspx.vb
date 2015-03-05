@@ -37,7 +37,7 @@ Public Class Admin_Lookups
 
     Protected Sub BindLookups(ByVal type As String, ByVal removeFirst As Int32)
         If (type <> "SELECT...") Then
-            gdvLookups.DataSource = LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, removeFirst)
+            gdvLookups.DataSource = LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, removeFirst, True)
             gdvLookups.DataBind()
 
             If (gdvLookups.Rows.Count = 1 And gdvLookups.Rows(0).Cells(1).Text = "0") Then
@@ -46,6 +46,20 @@ Public Class Admin_Lookups
         Else
             gdvLookups.DataSource = Nothing
             gdvLookups.DataBind()
+        End If
+    End Sub
+
+    Protected Sub gdvLookups_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gdvLookups.RowCreated
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim active As Int32 = 0
+
+            If (DataBinder.Eval(e.Row.DataItem, "IsActive") IsNot Nothing) Then
+                Int32.TryParse(DataBinder.Eval(e.Row.DataItem, "IsActive").ToString(), active)
+            End If
+
+            If (active = 0) Then
+                e.Row.BackColor = Drawing.Color.Yellow
+            End If
         End If
     End Sub
 
@@ -58,12 +72,14 @@ Public Class Admin_Lookups
         Dim txtDescription As TextBox = gdvLookups.Rows(e.NewEditIndex).FindControl("txtDescription")
         Dim hdnParentID As HiddenField = gdvLookups.Rows(e.NewEditIndex).FindControl("hdnParentID")
         Dim chkActive As CheckBox = gdvLookups.Rows(e.NewEditIndex).FindControl("chkActive")
+        Dim lblActive As Label = gdvLookups.Rows(e.NewEditIndex).FindControl("lblActive")
 
-        ddlParentID.DataSource = LookupsManager.GetLookups(ddlLookupList.SelectedValue, 0, 0, String.Empty, String.Empty, 0, False, 0)
+        ddlParentID.DataSource = LookupsManager.GetLookups(ddlLookupList.SelectedValue, 0, 0, String.Empty, String.Empty, 0, False, 0, False)
         ddlParentID.DataBind()
 
-        chkActive.Enabled = True
+        chkActive.Visible = True
         lblDescription.Visible = False
+        lblActive.Visible = False
         lblParent.Visible = False
         txtDescription.Visible = True
         ddlParentID.Visible = True
