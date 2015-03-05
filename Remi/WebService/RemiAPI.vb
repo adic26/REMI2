@@ -470,9 +470,9 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a test id this function returns all departments that have access for this test.")> _
     Public Function GetTestAccess(ByVal testID As Int32) As DataTable
         Try
-            Return TestManager.GetTestAccess(testID)
+            Return TestManager.GetTestAccess(testID, True)
         Catch ex As Exception
-            JobManager.LogIssue("REMI API GetTestAccess", "e3", NotificationType.Errors, ex, String.Format("TestID: {0}", testID))
+            TestManager.LogIssue("REMI API GetTestAccess", "e3", NotificationType.Errors, ex, String.Format("TestID: {0}", testID))
         End Try
 
         Return New DataTable("TestAccess")

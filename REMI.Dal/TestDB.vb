@@ -47,7 +47,7 @@ Namespace REMI.Dal
                 Using myCommand As New SqlCommand("remispGetTestsAccess", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
 
-                    If (testID > 0) Then
+                    If (testID > 0 Or testID = -1) Then
                         myCommand.Parameters.AddWithValue("@TestID", testID)
                     End If
 
