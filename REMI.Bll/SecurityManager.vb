@@ -185,9 +185,16 @@ Namespace REMI.Bll
             Return New DataTable("Services")
         End Function
 
-        Public Shared Function GetServicesAccess(ByVal departmentID As Int32) As DataTable
+        Public Shared Function GetServicesAccess(ByVal departmentID As Int32, ByVal removeFirst As Boolean) As DataTable
             Try
-                Return SecurityDB.GetServicesAccess(departmentID)
+                Dim dt As DataTable = SecurityDB.GetServicesAccess(departmentID)
+
+                If removeFirst Or dt.Rows.Count > 1 Then
+                    dt.Rows(0).Delete()
+                    dt.AcceptChanges()
+                End If
+
+                Return dt
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

@@ -1686,7 +1686,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets The Services Associated With A Department")> _
     Public Function GetServicesAccess(ByVal departmentID As Int32) As DataTable
         Try
-            Return SecurityManager.GetServicesAccess(departmentID)
+            Return SecurityManager.GetServicesAccess(departmentID, True)
         Catch ex As Exception
             RequestManager.LogIssue("GetServicesAccess", "e3", NotificationType.Errors, ex, String.Format("DepartmentID: {0}", departmentID))
         End Try
