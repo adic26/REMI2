@@ -468,9 +468,9 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(Description:="Given a test id this function returns all departments that have access for this test.")> _
-    Public Function GetTestAccess(ByVal testID As Int32) As DataTable
+    Public Function GetTestAccess(ByVal testID As Int32, ByVal removeFirst As Boolean) As DataTable
         Try
-            Return TestManager.GetTestAccess(testID, True)
+            Return TestManager.GetTestAccess(testID, removeFirst)
         Catch ex As Exception
             TestManager.LogIssue("REMI API GetTestAccess", "e3", NotificationType.Errors, ex, String.Format("TestID: {0}", testID))
         End Try
