@@ -812,11 +812,11 @@ table
     text-align: center;
 }
 
-thead th
-{
+thead th {
     white-space: nowrap;
-    background: #050505;
+    background: #800000;
     color: #FFF;
+    padding: 1.0em 0.5em;
     font-size: 12px;
     font-weight: bold;
     text-align: center;
@@ -1046,9 +1046,8 @@ table tr td input
 
 .removeStyleWithCenter
 {
-    text-align: center;
-    white-space:normal;
-    vertical-align:top;
+    /*text-align: center;
+    padding: 0.5em 0.2em;*/
 }
 
 .removeStyleWithLeftSameLine

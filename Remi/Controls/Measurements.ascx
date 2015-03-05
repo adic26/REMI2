@@ -54,15 +54,15 @@
         <asp:Label runat="server" ID="lblInfo" Text="<font size='1'><br />Use '*' in filter box as wildcard</font>"></asp:Label>
     </div>
 
-    <asp:GridView ID="grdResultMeasurements" runat="server" Width="100%" EmptyDataText="There were no measurements found for this result." AllowPaging="False" AllowSorting="False" EnableViewState="True" AutoGenerateColumns="true" DataKeyNames="MeasurementTypeID,ID" CssClass="FilterableTable">
+    <asp:GridView ID="grdResultMeasurements" runat="server" EmptyDataText="There were no measurements found for this result." DataKeyNames="MeasurementTypeID,ID" CssClass="FilterableTable" Width="298px">
         <RowStyle CssClass="evenrow" />
         <Columns>
-            <asp:TemplateField HeaderText="Image" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
+            <asp:TemplateField HeaderText="Image"  ControlStyle-CssClass="removeStyle" >
                 <ItemTemplate>                    
                     <input type="image" src="../Design/Icons/png/24x24/png_file.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("ID") %>' pageID='<%# Me.ClientID %>' role="button" />
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Measurement" SortExpression="Measurement" ItemStyle-Width="250px" ItemStyle-HorizontalAlign="Left" ItemStyle-Wrap="true" ItemStyle-CssClass="removeStyle">
+            <asp:TemplateField HeaderText="Measurement" SortExpression="Measurement"   ItemStyle-Wrap="true">
                 <ItemTemplate>
                     <asp:Label runat="server" Visible="false" ID="lblMeasurementType" Text='<%# Eval("Measurement") %>' />
                     <asp:HyperLink ID="hplMeasurementType" runat="server" Text='<%# Eval("Measurement") %>' Target="_blank"></asp:HyperLink>

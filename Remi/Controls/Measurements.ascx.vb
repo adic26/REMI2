@@ -262,18 +262,6 @@ Public Class Measurements
             grdResultMeasurements.HeaderRow.Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
             grdResultMeasurements.HeaderRow.Cells(19).Visible = False 'HasFiles
             grdResultMeasurements.HeaderRow.Cells(20).Visible = False 'ResultMeasurementID
-            grdResultMeasurements.HeaderRow.Cells(4).Width = 10
-            grdResultMeasurements.HeaderRow.Cells(5).Width = 10
-            grdResultMeasurements.HeaderRow.Cells(6).Width = 10
-            grdResultMeasurements.HeaderRow.Cells(6).CssClass = "removeStyleWithCenter"
-            grdResultMeasurements.HeaderRow.Cells(6).Wrap = True
-            grdResultMeasurements.HeaderRow.Cells(6).HorizontalAlign = HorizontalAlign.Center
-
-            For i As Int32 = 15 To grdResultMeasurements.HeaderRow.Cells.Count - 1
-                grdResultMeasurements.HeaderRow.Cells(i).Wrap = True
-                grdResultMeasurements.HeaderRow.Cells(i).ControlStyle.Width = 10
-                grdResultMeasurements.HeaderRow.Cells(i).ControlStyle.CssClass = "removeStyleWithCenter"
-            Next i
 
             If (grdResultMeasurements.Rows.Count > 0) Then
                 For i As Int32 = 0 To grdResultMeasurements.Rows.Count - 1
@@ -289,21 +277,6 @@ Public Class Measurements
                     grdResultMeasurements.Rows(i).Cells(18).Visible = UserManager.GetCurrentUser.IsDeveloper() ' VerNum
                     grdResultMeasurements.Rows(i).Cells(19).Visible = False 'HasFiles
                     grdResultMeasurements.Rows(i).Cells(20).Visible = False 'ResultMeasurementID
-                    grdResultMeasurements.Rows(i).Cells(6).ControlStyle.CssClass = "removeStyleWithCenter" 'Result
-                    grdResultMeasurements.Rows(i).Cells(6).Wrap = True 'Result
-                    grdResultMeasurements.Rows(i).Cells(6).HorizontalAlign = HorizontalAlign.Center 'Result
-                    grdResultMeasurements.Rows(i).Cells(6).ControlStyle.Width = 220 'Result
-                    grdResultMeasurements.Rows(i).Cells(4).ControlStyle.Width = 60 'LL
-                    grdResultMeasurements.Rows(i).Cells(5).ControlStyle.Width = 60 'UL
-                    grdResultMeasurements.Rows(i).Cells(7).ControlStyle.Width = 50 'Unit
-                    grdResultMeasurements.Rows(i).Cells(8).ControlStyle.Width = 50 'Pass/Fail
-                    grdResultMeasurements.Rows(i).Cells(10).ControlStyle.Width = 50 'Test Num
-
-                    For j As Int32 = 21 To grdResultMeasurements.Rows(i).Cells.Count - 1 'The Parameter columns
-                        grdResultMeasurements.Rows(i).Cells(j).Wrap = True
-                        grdResultMeasurements.Rows(i).Cells(j).ControlStyle.CssClass = "removeStyleWithCenter"
-                        grdResultMeasurements.Rows(i).Cells(j).ControlStyle.Width = 70
-                    Next
                 Next
             End If
         End If
