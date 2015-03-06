@@ -94,9 +94,16 @@ Namespace REMI.Bll
 #End Region
 
 #Region "Menu"
-        Public Shared Function GetMenuAccessByDepartment(ByVal pageName As String, ByVal departmentID As Int32) As DataTable
+        Public Shared Function GetMenuAccessByDepartment(ByVal pageName As String, ByVal departmentID As Int32, ByVal removeFirst As Boolean) As DataTable
             Try
-                Return SecurityDB.GetMenuAccessByDepartment(pageName, departmentID)
+                Dim dt As DataTable = SecurityDB.GetMenuAccessByDepartment(pageName, departmentID)
+
+                If removeFirst Or dt.Rows.Count > 1 Then
+                    dt.Rows(0).Delete()
+                    dt.AcceptChanges()
+                End If
+
+                Return dt
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -124,6 +131,29 @@ Namespace REMI.Bll
                         newAccess.DepartmentID = departmentID
 
                         instance.AddToMenuDepartments(newAccess)
+                    End If
+
+                    instance.SaveChanges()
+                    Return True
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+            Return False
+        End Function
+
+        Public Shared Function AddNewMenu(ByVal menuName As String, ByVal url As String) As Boolean
+            Try
+                If (UserManager.GetCurrentUser.IsAdmin And menuName.Trim().Length > 0) Then
+                    Dim instance = New REMI.Dal.Entities().Instance()
+                    Dim m As REMI.Entities.Menu = (From mer In instance.Menus Where mer.Name = menuName Select mer).FirstOrDefault()
+
+                    If (m Is Nothing) Then
+                        m = New REMI.Entities.Menu
+                        m.Name = menuName
+                        m.Url = url
+
+                        instance.AddToMenus(m)
                     End If
 
                     instance.SaveChanges()

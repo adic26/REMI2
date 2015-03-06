@@ -96,7 +96,7 @@ Partial Class Admin_Users
         pnlViewAllUsers.Visible = False
         pnlLeftMenuActions.Visible = True
 
-        ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
+        ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID, True)
         ddlDefaultPage.DataBind()
 
         If CurrentUser Is Nothing Then

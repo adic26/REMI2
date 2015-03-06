@@ -49,20 +49,29 @@
     <uc1:Notifications runat="server" ID="notMain" EnableViewState="false" />
     <br />
     <h2>Menu Options</h2>
-    <asp:GridView runat="server" ID="grdMenu" AutoGenerateEditButton="true" DataKeyNames="MenuID" OnRowEditing="grdMenu_OnRowEditing" OnRowCancelingEdit="grdMenu_OnRowCancelingEdit" OnRowUpdating="grdMenu_RowUpdating" AutoGenerateColumns="false">
+    <asp:GridView runat="server" ID="grdMenu" AutoGenerateEditButton="true" ShowFooter="true" DataKeyNames="MenuID" OnRowEditing="grdMenu_OnRowEditing" OnRowCancelingEdit="grdMenu_OnRowCancelingEdit" OnRowUpdating="grdMenu_RowUpdating" AutoGenerateColumns="false">
         <Columns>
             <asp:BoundField DataField="MenuID" HeaderText="MenuID" Visible="false" SortExpression="MenuID" />
             <asp:TemplateField HeaderText="Name" SortExpression="Name">
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lblName" Text='<%# Eval("Name")%>' Visible="true" />
-                        <asp:TextBox runat="server" ID="txtName" Text='<%# Eval("Name")%>' Visible="false" />
-                    </ItemTemplate>
-                </asp:TemplateField>
+                <ItemTemplate>
+                    <asp:Label runat="server" ID="lblName" Text='<%# Eval("Name")%>' Visible="true" />
+                    <asp:TextBox runat="server" ID="txtName" Text='<%# Eval("Name")%>' Visible="false" />
+                </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtMenuName" ></asp:TextBox>
+                </FooterTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Url" SortExpression="Url">
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lblUrl" Text='<%# Eval("Url")%>' Visible="true" />
-                        <asp:TextBox runat="server" ID="txtUrl" Text='<%# Eval("Url")%>' Visible="false" />
-                    </ItemTemplate>
+                <ItemTemplate>
+                    <asp:Label runat="server" ID="lblUrl" Text='<%# Eval("Url")%>' Visible="true" />
+                    <asp:TextBox runat="server" ID="txtUrl" Text='<%# Eval("Url")%>' Visible="false" />
+                </ItemTemplate>
+                <FooterStyle HorizontalAlign="Right" />
+                <FooterTemplate>
+                    <asp:TextBox runat="server" ID="txtMenuUrl" ></asp:TextBox>
+                    <asp:Button ID="btnAddMenu" CssClass="buttonSmall" runat="server" Text="Add Menu" OnClick="btnAddMenu_Click" CausesValidation="true" />
+                </FooterTemplate>
             </asp:TemplateField>
         </Columns>
     </asp:GridView>

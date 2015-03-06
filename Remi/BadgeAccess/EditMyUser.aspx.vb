@@ -13,7 +13,7 @@ Partial Class BadgeAccess_EditMyUser
         notMain.Notifications.Clear()
 
         If (Not Page.IsPostBack) Then
-            ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
+            ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID, True)
             ddlDefaultPage.DataBind()
 
             ddlTraining.Items.Clear()

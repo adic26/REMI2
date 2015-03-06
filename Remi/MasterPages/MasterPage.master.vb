@@ -57,7 +57,7 @@ Partial Class MasterPages_MasterPage
             End If
 
             If (REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID) Is Nothing) Then
-                REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID))
+                REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID, True))
             End If
 
             Dim dtMenuAccess As DataTable = REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID)
