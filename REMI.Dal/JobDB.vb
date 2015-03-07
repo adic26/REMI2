@@ -22,25 +22,6 @@ Namespace REMI.Dal
         End Sub
 
 #Region "Public Methods"
-        Public Shared Function GetREMIJobList() As List(Of String)
-            Dim jobs As New List(Of String)
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("SELECT JobName FROM Jobs WHERE ISNULL(IsActive, 0) = 1 ORDER BY JobName ASC", myConnection)
-                    myCommand.CommandType = CommandType.Text
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                jobs.Add(myReader.GetString(0))
-                            End While
-                        End If
-                    End Using
-                End Using
-            End Using
-            Return jobs
-        End Function
-
         Public Shared Function GetJobOrientationLists(ByVal jobID As Int32, ByVal jobName As String) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)

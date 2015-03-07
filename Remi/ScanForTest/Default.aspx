@@ -20,12 +20,15 @@
                     Select Job (If Applicable):
                 </td>
                 <td>
-                    <asp:DropDownList ID="ddlJobs" runat="server" AppendDataBoundItems="True" AutoPostBack="True"
-                        DataSourceID="odsJobs" Width="305px">
+                    <asp:DropDownList ID="ddlJobs" runat="server" AppendDataBoundItems="True" AutoPostBack="True" DataTextField="Name" DataValueField="Name" DataSourceID="odsJobs" Width="305px">
                         <asp:ListItem>Not Applicable</asp:ListItem>
                     </asp:DropDownList>
-                    <asp:ObjectDataSource ID="odsJobs" runat="server" OldValuesParameterFormatString="original_{0}"
-                        SelectMethod="GetJobList" TypeName="REMI.Bll.JobManager"></asp:ObjectDataSource>
+                    <asp:ObjectDataSource ID="odsJobs" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetJobListDT" TypeName="REMI.Bll.JobManager">
+                        <SelectParameters>
+                            <asp:Parameter Name="requestTypeID" DefaultValue="0" Type="Int32" />
+                            <asp:Parameter Name="UserID" DefaultValue="0" Type="Int32" />
+                        </SelectParameters>
+                    </asp:ObjectDataSource>
                 </td>
             </tr>
             <tr>

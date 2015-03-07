@@ -664,7 +664,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns a list of the Jobs (Test Types) available. Represented as a list of strings. This method can be used to populate lists.")> _
     Public Function GetJobs() As String()
         Try
-            Return JobManager.GetJobList().ToArray
+            Return (From j As Job In JobManager.GetJobListDT(0, 0) Select j.Name).ToArray
         Catch ex As Exception
             JobManager.LogIssue("REMI API Get jobs", "e3", NotificationType.Errors, ex)
         End Try

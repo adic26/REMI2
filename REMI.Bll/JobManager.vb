@@ -58,21 +58,6 @@ Namespace REMI.Bll
             Return String.Empty
         End Function
 
-        ''' <summary>
-        ''' Gets the current list of active jobs from the TRS database.
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobList() As List(Of String)
-            Try
-                Return JobDB.GetREMIJobList
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return New List(Of String)
-            End Try
-        End Function
-
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetJobOrientationLists(ByVal jobID As Int32, ByVal jobName As String) As DataTable
             Try

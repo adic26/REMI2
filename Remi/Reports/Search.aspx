@@ -93,7 +93,7 @@
         Request: <asp:DropDownList ID="ddlRequestReason" runat="server" Width="239px" AppendDataBoundItems="True" AutoPostBack="False" DataTextField="Description" DataValueField="LookupID">
         </asp:DropDownList>
         <br />
-        Jobs: <asp:DropDownList ID="ddlJobs" runat="server" DataSourceID="odsJobs" AutoPostBack="True" Width="239px" AppendDataBoundItems="True">
+        Jobs: <asp:DropDownList ID="ddlJobs" runat="server" DataSourceID="odsJobs" DataTextField="Name" DataValueField="Name" AutoPostBack="True" Width="239px" AppendDataBoundItems="True">
             <asp:ListItem>All</asp:ListItem>
         </asp:DropDownList>
         <br />
@@ -356,7 +356,12 @@
         </SelectParameters>
     </asp:ObjectDataSource>
 
-    <asp:ObjectDataSource ID="odsJobs" runat="server" SelectMethod="GetJobList" TypeName="Remi.Bll.JobManager" OldValuesParameterFormatString="original_{0}"></asp:ObjectDataSource>
+    <asp:ObjectDataSource ID="odsJobs" runat="server" SelectMethod="GetJobListDT" TypeName="Remi.Bll.JobManager" OldValuesParameterFormatString="original_{0}">
+        <SelectParameters>
+            <asp:Parameter Name="requestTypeID" DefaultValue="0" Type="Int32" />
+            <asp:Parameter Name="UserID" DefaultValue="0" Type="Int32" />
+        </SelectParameters>
+    </asp:ObjectDataSource>
         
     <asp:ObjectDataSource ID="odsTestCenters" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
         <SelectParameters>
