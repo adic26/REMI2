@@ -120,7 +120,7 @@ Namespace REMI.Bll
 
                         If b.ID <= 0 AndAlso b.Validate Then
                             'set the test stage to the first possible one
-                            b.Job = JobManager.GetJobByName(b.JobName)
+                            b.Job = JobManager.GetJob(b.JobName)
                             b.TestStageName = (From ts In b.Job.TestStages Where ts.ProcessOrder >= 0 And ts.IsArchived = False Order By ts.ProcessOrder Ascending Select ts.Name).FirstOrDefault()
 
                             'check if this is a legacy batch, remstar inventory from pre remi days

@@ -35,7 +35,7 @@ Public Class REMIInternal
     Public Function GetJobs(ByVal userIdentification As String, ByVal requestTypeID As Int32) As String()
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Dim jobs As String() = (From j As Job In JobManager.GetJobListDT(requestTypeID) Select j.Name).ToArray
+                Dim jobs As String() = (From j As Job In JobManager.GetJobListDT(requestTypeID, UserManager.GetCurrentUser.ID) Select j.Name).ToArray
                 Return jobs
             End If
         Catch ex As Exception

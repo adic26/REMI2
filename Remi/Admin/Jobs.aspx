@@ -1,4 +1,5 @@
-﻿<%@ Page Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" Inherits="Remi.Admin_TestStages" Title="Jobs" Codebehind="Jobs.aspx.vb" ValidateRequest="false" %>
+﻿<%@ Page Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" AutoEventWireup="false" Inherits="Remi.Admin_TestStages" Title="Jobs" CodeBehind="Jobs.aspx.vb" ValidateRequest="false" %>
+
 <%@ Register Assembly="System.Web.Ajax" Namespace="System.Web.UI" TagPrefix="asp" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="Notifications" TagPrefix="uc1" %>
@@ -15,7 +16,7 @@
                 caseSensitive: false,
                 underline: true,
                 wildCard: '*',
-                excludeColumns: [4,5],
+                excludeColumns: [4, 5],
                 alternateRowClassNames: ['evenrow', 'oddrow']
             });
         });
@@ -28,7 +29,7 @@
     <asp:Panel ID="pnlLeftMenuviews" runat="server">
         <h3>Admin Menu</h3>
         <ul>
-             <li>
+            <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="Image4" runat="server" />
                 <asp:HyperLink ID="Hyperlink3" runat="Server" Text="Tracking Locs" NavigateUrl="~/Admin/trackinglocations.aspx" /></li>
             <li>
@@ -36,7 +37,7 @@
                 <asp:HyperLink ID="Hyperlink5" runat="Server" Text="Tracking Types" NavigateUrl="~/Admin/trackinglocationtypes.aspx" /></li>
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="Image8" runat="server" />
-                <asp:hyperlink ID="Hyperlink7" runat="Server" Text="Tracking Tests" navigateurl="~/Admin/TrackingLocationTests.aspx"/></li>
+                <asp:HyperLink ID="Hyperlink7" runat="Server" Text="Tracking Tests" NavigateUrl="~/Admin/TrackingLocationTests.aspx" /></li>
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/users.png" ID="Image5" runat="server" />
                 <asp:HyperLink ID="Hyperlink4" runat="Server" Text="Users" NavigateUrl="~/Admin/users.aspx" /></li>
@@ -56,82 +57,78 @@
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="Image9" runat="server" />
                 <asp:HyperLink ID="HyperLink9" runat="Server" Text="Menu" NavigateUrl="~/Admin/Menu.aspx" /></li>
         </ul>
-        <h3>Test Stages</h3>
-        <ul>         
-            <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgViewParametricTestStages" runat="server" />
-                <asp:LinkButton ID="lnkViewTestStages" runat="Server" Text="Refresh" /></li>
-            <li>
-                <asp:Image ImageUrl="../Design/ruler_add.png" ID="imgAddParametricTestStage" runat="server" />
-                <asp:LinkButton ID="lnkAddTestStage" runat="Server" Text="Add Test Stage" /></li>
-        </ul>
     </asp:Panel>
     <asp:Panel ID="pnlLeftMenuActions" runat="server">
         <h3>Actions</h3>
         <ul>
             <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgAddTestStageAction"
-                    runat="server" />
-                <asp:LinkButton ID="lnkAddTestStageAction" runat="Server" Text="Confirm and Save" /></li><li>
-                    <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
-                    <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" /></li></ul>
+                <asp:Image ImageUrl="../Design/ruler_add.png" ID="imgAddTestStage" runat="server" />
+                <asp:LinkButton ID="lnkAddTestStage" runat="Server" Text="New Test Stage" />
+            </li>
+            <li>
+                <asp:Image ImageUrl="../Design/ruler_add.png" ID="imgJob" runat="server" />
+                <asp:LinkButton ID="lnkAddJob" runat="Server" Text="New Job" />
+            </li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgSaveAction" runat="server" />
+                <asp:LinkButton ID="lnkSaveAction" runat="Server" Text="Confirm and Save" />
+            </li>
+            <li>
+                <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
+                <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" />
+            </li>
+        </ul>
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <uc1:Notifications ID="notMain" runat="server" EnableViewState="False" />
     <asp:HiddenField ID="hdnJobID" runat="server" Value="" />
+
     <asp:Panel ID="pnlViewAllTestStages" runat="server" Wrap="False" Width="1000">
         <br />
         <table style="width: 65%;">
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Select Job:
-                </td>
+                <td class="HorizTableFirstcolumn">Select Job:</td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlJobs" runat="server" DataSourceID="odsJobsList" Width="369px"
-                        AutoPostBack="True">
-                    </asp:DropDownList>
-                    <asp:ObjectDataSource ID="odsJobsList" runat="server" OldValuesParameterFormatString="original_{0}"
-                        SelectMethod="GetJobList" TypeName="REMI.Bll.JobManager" DeleteMethod="DeleteJob">
+                    <asp:TextBox runat="server" ID="txtJobName" Visible="false" Width="507px"></asp:TextBox>
+                    <asp:DropDownList ID="ddlJobs" runat="server" DataTextField="Name" DataValueField="ID" Width="369px" AutoPostBack="True" Visible="true"></asp:DropDownList>
+                    <asp:ObjectDataSource ID="odsJobsList" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetJobListDT" TypeName="REMI.Bll.JobManager" DeleteMethod="DeleteJob">
                         <DeleteParameters>
                             <asp:Parameter Name="ID" Type="Int32" />
                         </DeleteParameters>
+                        <SelectParameters>
+                            <asp:Parameter Name="requestTypeID" DefaultValue="0" Type="Int32" />
+                            <asp:Parameter Name="UserID" DefaultValue="0" Type="Int32" />
+                        </SelectParameters>
                     </asp:ObjectDataSource>
                 </td>
             </tr>
-            <tr >
-                <td class="HorizTableFirstcolumn">
-                    Job WI Location:
-                </td>
+            <tr>
+                <td class="HorizTableFirstcolumn">Job WI Location:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:TextBox ID="txtJobWILocation" runat="server" Width="507px" Rows="3"></asp:TextBox>
                 </td>
             </tr>
-            <tr >
-                <td class="HorizTableFirstcolumn">
-                    Procedure Location:
-                </td>
+            <tr>
+                <td class="HorizTableFirstcolumn">Procedure Location:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:TextBox ID="txtProcedureLocation" runat="server" Width="507px" Rows="3"></asp:TextBox>
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Is Drop/Tumble Test:</td>
+                <td class="HorizTableFirstcolumn">Is Drop/Tumble Test:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:CheckBox ID="chkIsOperationsTest" runat="server" />
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Is Environmental Test:</td>
+                <td class="HorizTableFirstcolumn">Is Environmental Test:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:CheckBox ID="chkIsTechOperationsTest" runat="server" />
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Is Mechanical Test:</td>
+                <td class="HorizTableFirstcolumn">Is Mechanical Test:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:CheckBox ID="chkIsMechanicalTest" runat="server" />
                 </td>
@@ -149,17 +146,15 @@
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Is Active:</td>
+                <td class="HorizTableFirstcolumn">Is Active:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:CheckBox runat="server" ID="chkIsActive" />
                 </td>
             </tr>
         </table>
-        
-        <div style="float:left">
-            <asp:Accordion ID="accTestStages" runat="server" CssClass="Accordion" HeaderCssClass="AccordionHeader"
-                ContentCssClass="AccordionContent" FadeTransitions="true" TransitionDuration="250"
+
+        <div style="float: left">
+            <asp:Accordion ID="accTestStages" runat="server" CssClass="Accordion" HeaderCssClass="AccordionHeader" ContentCssClass="AccordionContent" FadeTransitions="true" TransitionDuration="250"
                 FramesPerSecond="40" RequireOpenedPane="false" AutoSize="None" Width="800px" SelectedIndex="1">
                 <Panes>
                     <asp:AccordionPane ID="acpBatches" runat="server">
@@ -172,13 +167,12 @@
                     </asp:AccordionPane>
                     <asp:AccordionPane ID="acpTestStages" runat="server">
                         <Header>
-                            <h2><asp:Label ID="lblViewAllTitle" runat="server"></asp:Label></h2>
+                            <h2>
+                                <asp:Label ID="lblViewAllTitle" runat="server"></asp:Label></h2>
                         </Header>
                         <Content>
-                            <asp:GridView ID="gvwMain" runat="server" AutoGenerateColumns="False" CssClass="FilterableTable" 
-                                DataKeyNames="ID" OnRowCommand="gvMain_RowCommand" EnableViewState="True" 
-                                EmptyDataText="There are no test stages set for this job." 
-                                DataSourceID="odsTestStage">
+                            <asp:GridView ID="gvwMain" runat="server" AutoGenerateColumns="False" CssClass="FilterableTable" DataKeyNames="ID" OnRowCommand="gvMain_RowCommand" EnableViewState="True"
+                                EmptyDataText="There are no test stages set for this job.">
                                 <RowStyle CssClass="evenrow" />
                                 <AlternatingRowStyle CssClass="oddrow" />
                                 <Columns>
@@ -198,25 +192,18 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField ShowHeader="False">
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="lnkDelete" runat="server"  
-                                                CommandArgument='<%# Eval("ID") %>' onclientclick="return confirm('Are you sure you want to delete this Test Stage?');" CommandName="DeleteItem" Enabled='<%# Not Remi.Bll.UserManager.GetCurrentUser.HasAdminReadOnlyAuthority %>' Visible='<%# Eval("CanDelete") %>'>Delete</asp:LinkButton>
+                                            <asp:LinkButton ID="lnkDelete" runat="server"
+                                                CommandArgument='<%# Eval("ID") %>' OnClientClick="return confirm('Are you sure you want to delete this Test Stage?');" CommandName="DeleteItem" Enabled='<%# Not Remi.Bll.UserManager.GetCurrentUser.HasAdminReadOnlyAuthority %>' Visible='<%# Eval("CanDelete") %>'>Delete</asp:LinkButton>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
-                            </asp:GridView>        
-       
-                            <asp:ObjectDataSource ID="odsTestStage" runat="server" OldValuesParameterFormatString="original_{0}" SelectMethod="GetList" TypeName="REMI.Bll.TestStageManager">
-                                <SelectParameters>
-                                    <asp:Parameter Name="type" DefaultValue="0" Type="Int32" />
-                                    <asp:ControlParameter ControlID="ddlJobs" Name="jobName" PropertyName="SelectedValue" Type="String" />
-                                    <asp:Parameter Type="Boolean" Name="ShowArchived" DefaultValue="True" />
-                                </SelectParameters>
-                            </asp:ObjectDataSource>
+                            </asp:GridView>
                         </Content>
                     </asp:AccordionPane>
                     <asp:AccordionPane runat="server" ID="acpSetup">
                         <Header>
-                            <h2><asp:Label ID="lblSetup" runat="server" Text="Parametric Setup"></asp:Label></h2>
+                            <h2>
+                                <asp:Label ID="lblSetup" runat="server" Text="Parametric Setup"></asp:Label></h2>
                         </Header>
                         <Content>
                             <rs:RequestSetup ID="JobSetup" runat="server" Visible="true" DisplayMode="Job" />
@@ -224,7 +211,8 @@
                     </asp:AccordionPane>
                     <asp:AccordionPane runat="server" ID="acpEnvSetup">
                         <Header>
-                            <h2><asp:Label ID="lblEnvSetup" runat="server" Text="Env Setup"></asp:Label></h2>
+                            <h2>
+                                <asp:Label ID="lblEnvSetup" runat="server" Text="Env Setup"></asp:Label></h2>
                         </Header>
                         <Content>
                             <rs:RequestSetup ID="JobEnvSetup" runat="server" Visible="true" DisplayMode="Job" />
@@ -232,7 +220,8 @@
                     </asp:AccordionPane>
                     <asp:AccordionPane runat="server" ID="acpOrientation">
                         <Header>
-                            <h2><asp:Label runat="server" ID="lblOrientation" Text="Orientations"></asp:Label></h2>
+                            <h2>
+                                <asp:Label runat="server" ID="lblOrientation" Text="Orientations"></asp:Label></h2>
                         </Header>
                         <Content>
                             <asp:GridView runat="server" ShowFooter="true" ID="gdvOrientations" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="ID" AutoGenerateEditButton="true" OnRowEditing="gdvOrientations_OnRowEditing" OnRowCancelingEdit="gdvOrientations_OnRowCancelingEdit" OnRowUpdating="gdvOrientations_RowUpdating">
@@ -271,29 +260,34 @@
                                         </ItemTemplate>
                                         <FooterStyle HorizontalAlign="Right" />
                                         <FooterTemplate>
-                                         <asp:Button ID="btnAddOrientation" CssClass="buttonSmall" runat="server" Text="Add Orientation" OnClick="btnAddOrientation_Click" CausesValidation="true" />
+                                            <asp:Button ID="btnAddOrientation" CssClass="buttonSmall" runat="server" Text="Add Orientation" OnClick="btnAddOrientation_Click" CausesValidation="true" />
                                         </FooterTemplate>
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
-                            <br /><br />
+                            <br />
+                            <br />
                             <asp:Panel runat="server" ID="pnlOrientationAdd" Visible="false">
                                 <table>
                                     <tr>
                                         <td class="HorizTableFirstcolumn">Name:</td>
-                                        <td class="HorizTableSecondColumn"><asp:TextBox runat="server" ID="txtOrientationName" MaxLength="150" Width="250px" Rows="3" /></td>
+                                        <td class="HorizTableSecondColumn">
+                                            <asp:TextBox runat="server" ID="txtOrientationName" MaxLength="150" Width="250px" Rows="3" /></td>
                                     </tr>
                                     <tr>
                                         <td class="HorizTableFirstcolumn">Product Type:</td>
-                                        <td class="HorizTableSecondColumn"><asp:DropDownList runat="server" ID="ddlPT" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList></td>
+                                        <td class="HorizTableSecondColumn">
+                                            <asp:DropDownList runat="server" ID="ddlPT" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList></td>
                                     </tr>
                                     <tr>
                                         <td class="HorizTableFirstcolumn">Description</td>
-                                        <td class="HorizTableSecondColumn"><asp:TextBox runat="server" ID="txtOrientationDescription" MaxLength="250" Width="250px" Rows="3" /></td>
+                                        <td class="HorizTableSecondColumn">
+                                            <asp:TextBox runat="server" ID="txtOrientationDescription" MaxLength="250" Width="250px" Rows="3" /></td>
                                     </tr>
                                     <tr>
                                         <td class="HorizTableFirstcolumn">Definition</td>
-                                        <td class="HorizTableSecondColumn"><asp:TextBox runat="server" ID="txtDefinition" TextMode="MultiLine" Rows="40" Columns="60"></asp:TextBox></td>
+                                        <td class="HorizTableSecondColumn">
+                                            <asp:TextBox runat="server" ID="txtDefinition" TextMode="MultiLine" Rows="40" Columns="60"></asp:TextBox></td>
                                     </tr>
                                 </table>
                             </asp:Panel>
@@ -301,7 +295,8 @@
                     </asp:AccordionPane>
                     <asp:AccordionPane runat="server" ID="acpAccess">
                         <Header>
-                            <h2><asp:Label runat="server" ID="lblAccess" Text="Access"></asp:Label></h2>
+                            <h2>
+                                <asp:Label runat="server" ID="lblAccess" Text="Access"></asp:Label></h2>
                         </Header>
                         <Content>
                             <asp:GridView runat="server" ID="grdAccess" ShowFooter="true" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="JobAccessID">
@@ -310,7 +305,7 @@
                                     <asp:BoundField DataField="JobName" HeaderText="JobName" SortExpression="JobName" />
                                     <asp:TemplateField HeaderText="Department" SortExpression="">
                                         <ItemTemplate>
-                                                <asp:Label runat="server" ID="lblDepartment" Text='<%# Eval("Department")%>' Visible="true" />
+                                            <asp:Label runat="server" ID="lblDepartment" Text='<%# Eval("Department")%>' Visible="true" />
                                         </ItemTemplate>
                                         <FooterStyle HorizontalAlign="Right" />
                                         <FooterTemplate>
@@ -319,7 +314,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField ShowHeader="False">
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("JobAccessID")%>' onclientclick="return confirm('Are you sure you want to delete this department?');" CommandName="DeleteAccess" CausesValidation="false">Delete</asp:LinkButton>
+                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("JobAccessID")%>' OnClientClick="return confirm('Are you sure you want to delete this department?');" CommandName="DeleteAccess" CausesValidation="false">Delete</asp:LinkButton>
                                         </ItemTemplate>
                                         <FooterTemplate>
                                             <asp:Button ID="btnAddAccess" CssClass="buttonSmall" runat="server" Text="Add Access" OnClick="btnAddAccess_Click" CausesValidation="true" />
@@ -347,94 +342,73 @@
         </div>
     </asp:Panel>
     <asp:Panel ID="pnlAddEditTestStage" runat="server" Visible="False">
-        <h2>
-            <asp:Label ID="lblAddEditTitle" runat="server" Text="Add a new Test Stage"></asp:Label></h2>
+        <h2><asp:Label ID="lblAddEditTitle" runat="server" Text="Add a new Test Stage"></asp:Label></h2>
         <table style="width: 25%;">
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Name:
-                </td>
+                <td class="HorizTableFirstcolumn">Name:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:TextBox ID="txtName" runat="server" Width="252px"></asp:TextBox>
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Type:
-                </td>
+                <td class="HorizTableFirstcolumn">Type:</td>
                 <td class="HorizTableSecondColumn">
-                    <asp:DropDownList ID="ddlTestStageType" runat="server" Width="178px" AutoPostBack="True">
-                    </asp:DropDownList>
+                    <asp:DropDownList ID="ddlTestStageType" runat="server" Width="178px" AutoPostBack="True"></asp:DropDownList>
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Process Order:</td>
+                <td class="HorizTableFirstcolumn">Process Order:</td>
                 <td class="HorizTableSecondColumn">
                     <asp:TextBox ID="txtProcessOrder" runat="server"></asp:TextBox>
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Archive:
-                </td>
-               <td class="HorizTableSecondColumn">
+                <td class="HorizTableFirstcolumn">Archive:</td>
+                <td class="HorizTableSecondColumn">
                     <asp:CheckBox ID="chkArchived" runat="server" />
-               </td>                
+                </td>
             </tr>
         </table>
         <asp:Panel runat="server" ID="pnlAddEditTest" Visible="False">
             <table style="width: 80%;">
                 <tr>
-                    <td class="HorizTableFirstcolumn">
-                        Duration (h):
-                    </td>
+                    <td class="HorizTableFirstcolumn">Duration (h):</td>
                     <td class="HorizTableSecondColumn">
-                       <asp:TextBox ID="txtHours" runat="server" Width="60px">0</asp:TextBox>&nbsp;</td>
+                        <asp:TextBox ID="txtHours" runat="server" Width="60px">0</asp:TextBox>
+                    </td>
                 </tr>
-                           
+
                 <tr>
-                    <td class="HorizTableFirstcolumn">
-                        Result Is Time Based:</td>
+                    <td class="HorizTableFirstcolumn">Result Is Time Based:</td>
                     <td class="HorizTableSecondColumn">
                         <asp:CheckBox ID="chkResultIsTimeBased" runat="server" />
                     </td>
                 </tr>
                 <tr>
-                    <td class="HorizTableFirstcolumn">
-                        Work Instruction Address:
-                    </td>
+                    <td class="HorizTableFirstcolumn">Work Instruction Address:</td>
                     <td class="HorizTableSecondColumn">
-                        <asp:TextBox ID="txtWorkInstructionLocation" runat="server" Width="424px" Rows="3"
-                            TextMode="MultiLine"></asp:TextBox>
+                        <asp:TextBox ID="txtWorkInstructionLocation" runat="server" Width="424px" Rows="3" TextMode="MultiLine"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
-                    <td class="HorizTableFirstcolumn">
-                        Applicable Test Fixtures:
-                    </td>
+                    <td class="HorizTableFirstcolumn">Applicable Test Fixtures:</td>
                     <td>
-                        <asp:ObjectDataSource ID="odsTestStationTypes" runat="server" SelectMethod="GetTrackingLocationTypes"
-                            TypeName="REMI.Bll.TrackingLocationManager" OldValuesParameterFormatString="original_{0}">
-                        </asp:ObjectDataSource>
-                        
+                        <asp:ObjectDataSource ID="odsTestStationTypes" runat="server" SelectMethod="GetTrackingLocationTypes" TypeName="REMI.Bll.TrackingLocationManager" OldValuesParameterFormatString="original_{0}"></asp:ObjectDataSource>
                         <table>
-                                <tr>
-                                    <td >
-                                        <asp:ListBox ID="lstAllTLTypes" runat="server" Width="340px" Height="250px" 
-                                            DataSourceID="odsTestStationTypes" DataTextField="Name" 
-                                            DataValueField="ID"></asp:ListBox>
-                                    </td>
-                                    <td  >
-                                        <asp:Button ID="btnAddTLType" runat="server" Text="Add ->" class="button"/>
-                                        <br />
-                                        <asp:Button ID="btnRemoveTLType" runat="server" Text="<- Remove" class="button"/>
-                                    </td>
-                                    <td>
-                                        <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="340px" Height="250px" DataTextField="Name" DataValueField="ID" ></asp:ListBox>
-                                    </td>
-                                </tr>
-                            </table>
+                            <tr>
+                                <td>
+                                    <asp:ListBox ID="lstAllTLTypes" runat="server" Width="340px" Height="250px" DataSourceID="odsTestStationTypes" DataTextField="Name" DataValueField="ID"></asp:ListBox>
+                                </td>
+                                <td>
+                                    <asp:Button ID="btnAddTLType" runat="server" Text="Add ->" class="button" />
+                                    <br />
+                                    <asp:Button ID="btnRemoveTLType" runat="server" Text="<- Remove" class="button" />
+                                </td>
+                                <td>
+                                    <asp:ListBox ID="lstAddedTLTypes" runat="server" Width="340px" Height="250px" DataTextField="Name" DataValueField="ID"></asp:ListBox>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
@@ -442,8 +416,6 @@
         <asp:HiddenField ID="hdnTestStageID" runat="server" Value="0" />
         <asp:HiddenField ID="hdnTestID" runat="server" Value="0" />
     </asp:Panel>
-    <br />
-    <br />
+    <br /><br />
 </asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server">
-</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="rightSidebarContent" runat="Server"></asp:Content>

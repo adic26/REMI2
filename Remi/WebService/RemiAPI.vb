@@ -674,7 +674,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a job name this function returns all the known details of a job.")> _
     Public Function GetJob(ByVal Name As String) As Job
         Try
-            Return JobManager.GetJobByName(Name)
+            Return JobManager.GetJob(Name)
         Catch ex As Exception
             JobManager.LogIssue("REMI API Get job", "e3", NotificationType.Errors, ex, String.Format("Name: {0}", Name))
         End Try

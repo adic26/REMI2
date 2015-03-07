@@ -113,14 +113,14 @@ Namespace REMI.Dal
             Return success
         End Function
 
-        Public Shared Function GetJobListDT(ByVal user As User, ByVal requestTypeID As Int32) As JobCollection
+        Public Shared Function GetJobListDT(ByVal userID As Int32, ByVal requestTypeID As Int32) As JobCollection
             Dim tempList As New JobCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myConnection.Open()
                 Using myCommand As New SqlCommand("remispJobsList", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@UserID", user.ID)
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
                     myCommand.Parameters.AddWithValue("@RequestTypeID", requestTypeID)
 
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
@@ -139,23 +139,17 @@ Namespace REMI.Dal
         ''' <summary>Gets an instance of Job. Creates a new connection.</summary> 
         ''' <param name="JobName">The unique JobName of the Job in the database.</param> 
         ''' <returns>A Job if the jobname was found in the database, or Nothing otherwise.</returns> 
-        Public Shared Function GetItem(ByVal JobName As String) As Job
+        Public Shared Function GetItem(ByVal JobName As String, Optional ByVal jobID As Int32 = 0) As Job
             Dim myJob As Job = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myConnection.Open()
-                myJob = GetItem(JobName, myConnection, 0)
-            End Using
 
-            Return myJob
-        End Function
-
-        Public Shared Function GetItem(ByVal JobID As Int32) As Job
-            Dim myJob As Job = Nothing
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                myConnection.Open()
-                myJob = GetItem(String.Empty, myConnection, JobID)
+                If (jobID > 0) Then
+                    myJob = GetItem(String.Empty, myConnection, jobID)
+                Else
+                    myJob = GetItem(JobName, myConnection, 0)
+                End If
             End Using
 
             Return myJob

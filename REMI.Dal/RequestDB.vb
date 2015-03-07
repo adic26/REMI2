@@ -685,7 +685,7 @@ Namespace REMI.Dal
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "RequestedTest"
-                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user, myFields.RequestTypeID).AsEnumerable() Select j.Name).ToList()
+                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user.ID, myFields.RequestTypeID).AsEnumerable() Select j.Name).ToList()
                 End Select
             End If
 

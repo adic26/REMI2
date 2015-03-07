@@ -185,31 +185,22 @@ Partial Public Class Admin_TestStages
     Protected WithEvents HyperLink9 As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
-    '''imgViewParametricTestStages control.
+    '''pnlLeftMenuActions control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents imgViewParametricTestStages As Global.System.Web.UI.WebControls.Image
+    Protected WithEvents pnlLeftMenuActions As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
-    '''lnkViewTestStages control.
+    '''imgAddTestStage control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lnkViewTestStages As Global.System.Web.UI.WebControls.LinkButton
-
-    '''<summary>
-    '''imgAddParametricTestStage control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgAddParametricTestStage As Global.System.Web.UI.WebControls.Image
+    Protected WithEvents imgAddTestStage As Global.System.Web.UI.WebControls.Image
 
     '''<summary>
     '''lnkAddTestStage control.
@@ -221,31 +212,40 @@ Partial Public Class Admin_TestStages
     Protected WithEvents lnkAddTestStage As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
-    '''pnlLeftMenuActions control.
+    '''imgJob control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents pnlLeftMenuActions As Global.System.Web.UI.WebControls.Panel
+    Protected WithEvents imgJob As Global.System.Web.UI.WebControls.Image
 
     '''<summary>
-    '''imgAddTestStageAction control.
+    '''lnkAddJob control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents imgAddTestStageAction As Global.System.Web.UI.WebControls.Image
+    Protected WithEvents lnkAddJob As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
-    '''lnkAddTestStageAction control.
+    '''imgSaveAction control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lnkAddTestStageAction As Global.System.Web.UI.WebControls.LinkButton
+    Protected WithEvents imgSaveAction As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''lnkSaveAction control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lnkSaveAction As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
     '''imgCancelAction control.
@@ -291,6 +291,15 @@ Partial Public Class Admin_TestStages
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents pnlViewAllTestStages As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''txtJobName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtJobName As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''ddlJobs control.
@@ -435,15 +444,6 @@ Partial Public Class Admin_TestStages
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gvwMain As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''odsTestStage control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsTestStage As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''acpSetup control.

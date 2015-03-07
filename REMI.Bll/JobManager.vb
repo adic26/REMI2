@@ -22,15 +22,16 @@ Namespace REMI.Bll
         ''' <returns></returns>
         ''' <remarks></remarks>
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobByName(ByVal jobName As String) As Job
+        Public Shared Function GetJob(ByVal jobName As String, Optional jobID As Int32 = 0) As Job
             Try
                 Dim tmpjob As Job = Nothing
-                'If JobManager.GetJobList.Contains(jobName) Then 'check if this is a valid job name (exists in trs)
-                tmpjob = JobDB.GetItem(jobName) 'try to get it from remi
-                'End If
+                If (jobID > 0) Then
+                    tmpjob = JobDB.GetItem(String.Empty, jobID)
+                Else
+                    tmpjob = JobDB.GetItem(jobName)
+                End If
 
                 If tmpjob Is Nothing Then
-                    'if we cant get this job from the trs then  return a job with no info and error
                     tmpjob = New Job(jobName)
                     LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "w36", NotificationType.Warning, "Jobname: " + jobName)
                 End If
@@ -139,9 +140,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobListDT(ByVal requestTypeID As Int32) As JobCollection
+        Public Shared Function GetJobListDT(ByVal requestTypeID As Int32, ByVal userID As Int32) As JobCollection
             Try
-                Return JobDB.GetJobListDT(UserManager.GetCurrentUser, requestTypeID)
+                Return JobDB.GetJobListDT(userID, requestTypeID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return New JobCollection
@@ -161,7 +162,7 @@ Namespace REMI.Bll
 
                     If Job.Validate Then
                         Job.ID = JobDB.Save(Job)
-                        Job = JobDB.GetItem(Job.ID)
+                        Job = JobDB.GetItem(String.Empty, Job.ID)
 
                         If (Job.TestStages.Count = 0) Then
                             Dim tmpTestStage As New TestStage

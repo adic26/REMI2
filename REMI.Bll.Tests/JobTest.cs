@@ -30,7 +30,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetJobByName()
         {
-            Assert.That(JobManager.GetJobByName("T101 Internal Use Only").ID > 0);
+            Assert.That(JobManager.GetJob("T101 Internal Use Only").ID > 0);
         }
 
         [Test]
@@ -48,13 +48,13 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetJobListDT()
         {
-            Assert.That(JobManager.GetJobListDT(1).Count > 0);
+            Assert.That(JobManager.GetJobListDT(1, 0).Count > 0);
         }
 
         [Test]
         public void SaveJob()
         {
-            Job j = JobManager.GetJobByName("T101 Internal Use Only");
+            Job j = JobManager.GetJob("T101 Internal Use Only");
 
             Assert.That(JobManager.SaveJob(j) > 0);
         }

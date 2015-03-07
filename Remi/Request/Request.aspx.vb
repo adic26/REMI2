@@ -315,7 +315,7 @@ Public Class Request
                             End If
 
                             If (res.IntField = "RequestedTest" And res.HasIntegration And res.NewRequest) Then
-                                Dim jobID As Int32 = JobManager.GetJobByName(ddl.SelectedValue).ID
+                                Dim jobID As Int32 = JobManager.GetJob(ddl.SelectedValue).ID
 
                                 setup.Visible = True
                                 setupEnv.Visible = True
@@ -716,7 +716,7 @@ Public Class Request
 
         For Each field In rf
             If (field.IntField = "RequestedTest" And field.HasIntegration And field.NewRequest And field.FieldSetupID = id) Then
-                Dim jobID As Int32 = JobManager.GetJobByName(val).ID
+                Dim jobID As Int32 = JobManager.GetJob(val).ID
 
                 setup.Visible = True
                 setupEnv.Visible = True
