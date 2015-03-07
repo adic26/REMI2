@@ -781,6 +781,8 @@ Public Class Request
     Protected Sub chkDisplayChanges_CheckedChanged(sender As Object, e As EventArgs)
         If (DirectCast(sender, CheckBox).Checked) Then
             pnlDisplayChanges.Visible = True
+            grdDisplayChanges.DataSource = RequestManager.GetRequestAuditLogs(lblRequest.Text)
+            grdDisplayChanges.DataBind()
         Else
             pnlDisplayChanges.Visible = False
         End If

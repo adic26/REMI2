@@ -14,6 +14,24 @@ Option Explicit On
 Partial Public Class Scanning_Default
 
     '''<summary>
+    '''imgDepartmentView control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgDepartmentView As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''ddlDepartment control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlDepartment As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
     '''notMain control.
     '''</summary>
     '''<remarks>
@@ -48,15 +66,6 @@ Partial Public Class Scanning_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlJobs As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
-    '''odsJobs control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsJobs As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''ddlTestStage control.

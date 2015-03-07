@@ -26,8 +26,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetRequestAuditLogs(ByVal requestNumber As String) As DataTable
             Try
-                Dim dt As DataTable = BusinessEntities.Helpers.EQToDataTable((From rda In New REMI.Dal.Entities().Instance().vw_RequestDataAudit Where rda.RequestNumber = requestNumber Select rda).ToList(), "RequestAudit")
-                Return dt
+                Return RequestDB.GetRequestAuditLogs(requestNumber)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber)
             End Try

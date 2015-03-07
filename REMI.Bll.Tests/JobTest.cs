@@ -42,7 +42,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetJobListDT()
         {
-            Assert.That(JobManager.GetJobListDT(1, 0).Count > 0);
+            Assert.That(JobManager.GetJobListDT(1, 0, 0).Count > 0);
         }
 
         [Test]

@@ -36,6 +36,22 @@ Namespace REMI.Dal
             Return dt
         End Function
 
+        Public Shared Function GetRequestAuditLogs(ByVal requestNumber As String) As DataTable
+            Dim dt As New DataTable("RequestDataAudit")
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("Req.RequestDataAudit", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "RequestDataAudit"
+                End Using
+            End Using
+
+            Return dt
+        End Function
+
         Public Shared Function GetRequestTypes(ByVal userIdentification As String) As DataTable
             Dim dt As New DataTable("RequestTypes")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -685,7 +701,7 @@ Namespace REMI.Dal
             If (myFields.OptionsTypeID = 0 And Not String.IsNullOrEmpty(myFields.IntField)) Then
                 Select Case myFields.IntField
                     Case "RequestedTest"
-                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user.ID, myFields.RequestTypeID).AsEnumerable() Select j.Name).ToList()
+                        myFields.OptionsType = (From j In JobDB.GetJobListDT(user.ID, myFields.RequestTypeID, 0).AsEnumerable() Select j.Name).ToList()
                 End Select
             End If
 

@@ -2806,4 +2806,7 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\Req\Tables\Triggers\Req.ReqFieldDataAuditDelete.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.RequestDataAudit.sql" />
+  </ItemGroup>
 </Project>

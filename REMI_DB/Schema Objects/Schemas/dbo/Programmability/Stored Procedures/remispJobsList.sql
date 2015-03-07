@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [dbo].remispJobsList @UserID INT, @RequestTypeID INT
+﻿ALTER PROCEDURE [dbo].remispJobsList @UserID INT, @RequestTypeID INT, @DepartmentID INT
 AS
 BEGIN
 	DECLARE @TrueBit BIT
@@ -23,6 +23,7 @@ BEGIN
 			INNER JOIN JobAccess ja WITH(NOLOCK) ON ja.LookupID=ud.LookupID
 			INNER JOIN Req.RequestTypeAccess rta WITH(NOLOCK) ON rta.LookupID = ja.LookupID
 		WHERE (@UserID = 0 OR ud.UserID=@UserID) AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
+			AND (@DepartmentID = 0 OR rta.LookupID=@DepartmentID)
 	
 		SELECT j.ID, j.JobName, j.IsActive, j.ContinueOnFailures, j.LastUser, j.NoBSN, j.TechnicalOperationsTest, j.ProcedureLocation, j.MechanicalTest,
 			j.WILocation, j.OperationsTest, j.Comment

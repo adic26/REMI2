@@ -79,7 +79,7 @@
     <uc1:NotificationList ID="notMain" runat="server" />
         
     <asp:Panel runat="server" ID="pnlDisplayChanges" Visible="false">
-        <asp:GridView ID="grdDisplayChanges" runat="server" DataSourceID="odsDisplayChanges" AutoGenerateColumns="False" EnableViewState="False" EmptyDataText="No Changes">
+        <asp:GridView ID="grdDisplayChanges" runat="server" AutoGenerateColumns="False" EnableViewState="False" EmptyDataText="No Changes">
             <Columns>
                 <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" />
                 <asp:BoundField DataField="Value" HeaderText="Value" ReadOnly="True" />
@@ -89,11 +89,6 @@
                 <asp:BoundField DataField="Action" HeaderText="Action" ReadOnly="True" />
             </Columns>
         </asp:GridView>
-        <asp:ObjectDataSource ID="odsDisplayChanges" runat="server" SelectMethod="GetRequestAuditLogs" TypeName="REMI.Bll.RequestManager">
-            <SelectParameters>
-                <asp:ControlParameter ControlID="hdnRequestNumber" Name="requestNumber" PropertyName="Value" Type="String" />
-            </SelectParameters>
-        </asp:ObjectDataSource>
     </asp:Panel>
     <br />
     <asp:Panel runat="server" ID="pnlRequest" EnableViewState="true" style="display:inline-block;vertical-align:top;">

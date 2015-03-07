@@ -94,7 +94,7 @@ Namespace REMI.Dal
             Return success
         End Function
 
-        Public Shared Function GetJobListDT(ByVal userID As Int32, ByVal requestTypeID As Int32) As JobCollection
+        Public Shared Function GetJobListDT(ByVal userID As Int32, ByVal requestTypeID As Int32, ByVal departmentID As Int32) As JobCollection
             Dim tempList As New JobCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -103,6 +103,7 @@ Namespace REMI.Dal
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@UserID", userID)
                     myCommand.Parameters.AddWithValue("@RequestTypeID", requestTypeID)
+                    myCommand.Parameters.AddWithValue("@DepartmentID", departmentID)
 
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then

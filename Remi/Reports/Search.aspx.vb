@@ -817,7 +817,7 @@ Partial Class Search
 
                 ddlJobs2.Items.Clear()
                 ddlJobs2.Items.Add("ALL")
-                ddlJobs2.DataSource = JobManager.GetJobListDT(0, 0)
+                ddlJobs2.DataSource = JobManager.GetJobListDT(0, 0, 0)
                 ddlJobs2.DataBind()
 
                 ddlProductType2.Items.Clear()

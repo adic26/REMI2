@@ -360,6 +360,7 @@
         <SelectParameters>
             <asp:Parameter Name="requestTypeID" DefaultValue="0" Type="Int32" />
             <asp:Parameter Name="UserID" DefaultValue="0" Type="Int32" />
+            <asp:Parameter Name="departmentID" DefaultValue="0" Type="Int32" />
         </SelectParameters>
     </asp:ObjectDataSource>
         

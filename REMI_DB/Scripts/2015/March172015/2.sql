@@ -153,9 +153,10 @@ IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION
 GO
 PRINT N'Altering [Req].[vw_RequestDataAudit]'
 GO
-ALTER VIEW [req].[vw_RequestDataAudit] AS
-SELECT fda.ReqFieldDataAuditID, r.RequestNumber, fs.Name, fda.Value, fda.UserName, fda.InsertTime, fda.InstanceID AS RecordNum, 
-	CASE fda.Action WHEN 'U' THEN 'Updated' WHEN 'D' THEN 'Deleted' WHEN 'I' THEN 'Inserted' END AS Action
+ALTER VIEW [req].[vw_RequestDataAudit] WITH SCHEMABINDING
+AS
+SELECT ISNULL((ROW_NUMBER() OVER (ORDER BY r.RequestNumber)), 0) AS ID, r.RequestNumber, fs.Name, fda.Value, fda.UserName, fda.InsertTime, 
+	ISNULL(fda.InstanceID,1) AS RecordNum, CASE fda.Action WHEN 'U' THEN 'Updated' WHEN 'D' THEN 'Deleted' WHEN 'I' THEN 'Inserted' ELSE '' END AS Action
 FROM Req.ReqFieldDataAudit fda
 	INNER JOIN Req.Request r ON fda.RequestID=r.RequestID
 	INNER JOIN Req.ReqFieldSetup fs ON fs.ReqFieldSetupID=fda.ReqFieldSetupID
@@ -443,7 +444,7 @@ AS
 	DELETE FROM UserTraining WHERE UserID=@userIDToDelete
 	DELETE FROM users WHERE ID = @userIDToDelete
 GO
-ALTER PROCEDURE [dbo].remispJobsList @UserID INT, @RequestTypeID INT
+ALTER PROCEDURE [dbo].remispJobsList @UserID INT, @RequestTypeID INT, @DepartmentID INT
 AS
 BEGIN
 	DECLARE @TrueBit BIT
@@ -468,6 +469,7 @@ BEGIN
 			INNER JOIN JobAccess ja WITH(NOLOCK) ON ja.LookupID=ud.LookupID
 			INNER JOIN Req.RequestTypeAccess rta WITH(NOLOCK) ON rta.LookupID = ja.LookupID
 		WHERE (@UserID = 0 OR ud.UserID=@UserID) AND (@RequestTypeID = 0 OR rta.RequestTypeID=@RequestTypeID)
+			AND (@DepartmentID = 0 OR rta.LookupID=@DepartmentID)
 	
 		SELECT j.ID, j.JobName, j.IsActive, j.ContinueOnFailures, j.LastUser, j.NoBSN, j.TechnicalOperationsTest, j.ProcedureLocation, j.MechanicalTest,
 			j.WILocation, j.OperationsTest, j.Comment
@@ -481,6 +483,23 @@ END
 Go
 GRANT EXECUTE ON remispJobsList TO REMI
 GO
+ALTER PROCEDURE [Req].[RequestDataAudit] @RequestNumber NVARCHAR(11)
+AS
+BEGIN
+	SELECT *
+	FROM Req.vw_RequestDataAudit
+	WHERE RequestNumber=@RequestNumber
+	ORDER BY InsertTime ASC
+END
+GO
+GRANT EXECUTE ON [Req].[RequestDataAudit] TO REMI
+GO
+update Req.ReqFieldDataAudit set InstanceID=1
+update a
+set a.ReqFieldDataID=d.ReqFieldDataID
+from Req.ReqFieldDataAudit a
+inner join Req.ReqFieldData d on d.RequestID=a.RequestID
+where a.ReqFieldDataID is null
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

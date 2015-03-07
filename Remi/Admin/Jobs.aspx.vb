@@ -29,7 +29,7 @@ Partial Class Admin_TestStages
                 End If
             End If
 
-            ddlJobs.DataSource = JobManager.GetJobListDT(0, 0)
+            ddlJobs.DataSource = JobManager.GetJobListDT(0, 0, 0)
             ddlJobs.DataBind()
 
             ddlTestStageType.DataSource = Helpers.GetTestStageTypes

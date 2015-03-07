@@ -158,15 +158,6 @@ Partial Public Class Request
     Protected WithEvents grdDisplayChanges As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''odsDisplayChanges control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsDisplayChanges As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
     '''pnlRequest control.
     '''</summary>
     '''<remarks>
