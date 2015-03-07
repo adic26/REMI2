@@ -89,35 +89,17 @@
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgAddUserAction" runat="server" />
                 <asp:LinkButton ID="lnkAddUserAction" runat="Server" Text="Confirm and Save" />
             </li>
-            <li>
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
-                <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" />
-            </li>
         </ul>
     </asp:Panel>
     <h3>Filter</h3>
     <ul>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgTestCenterView" runat="server" />
-            <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True" DataTextField="LookupType" DataValueField="LookupID"
-                AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsTestCenters">
+            <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True" DataTextField="LookupType" DataValueField="LookupID" AutoPostBack="True" Width="120px" ForeColor="#0033CC">
             </asp:DropDownList>
-            <asp:ObjectDataSource ID="odsTestCenters" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
-                <SelectParameters>
-                    <asp:Parameter Type="String" Name="Type" DefaultValue="TestCenter" />
-                    <asp:Parameter Type="Int32" Name="productID" DefaultValue="0" />
-                    <asp:Parameter Type="Int32" Name="parentID" DefaultValue="0" />
-                    <asp:Parameter Type="String" Name="ParentLookupType" DefaultValue=" " />
-                    <asp:Parameter Type="String" Name="ParentLookupValue" DefaultValue=" " />
-                    <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
-                    <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
-                    <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
-                    <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
-                </SelectParameters>
-            </asp:ObjectDataSource>
         </li>
         <li>
-            <asp:CheckBox runat="server" ID="chkArchived" Text="Archived" TextAlign="Left" AutoPostBack="true" />
+            <asp:CheckBox runat="server" ID="chkArchived" Text="Archived" TextAlign="Left" AutoPostBack="true" OnCheckedChanged="chkArchived_CheckedChanged" />
         </li>
     </ul>
 </asp:Content>
