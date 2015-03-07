@@ -38,7 +38,14 @@ Partial Class Admin_Users
             If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("userid"))) Then
                 chkArchived.Enabled = False
                 ddlTestCenters.Enabled = False
-                SetupPageAddEditUser(UserManager.GetUser(String.Empty, Request.QueryString.Get("userid")))
+                Dim userid As Int32
+                Int32.TryParse(Request.QueryString.Get("userid"), userid)
+
+                If (userid = 0) Then
+                    SetupPageAddEditUser(Nothing)
+                Else
+                    SetupPageAddEditUser(UserManager.GetUser(String.Empty, userid))
+                End If
             Else
                 chkArchived.Enabled = True
                 ddlTestCenters.Enabled = True
@@ -201,7 +208,7 @@ Partial Class Admin_Users
 
     Protected Sub lnkAddNewUser_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddNewUser.Click
         hdnUserID.Value = String.Empty
-        SetupPageAddEditUser(Nothing)
+        Response.Redirect("~\Admin\Users.aspx?UserID=0")
     End Sub
 
     Protected Sub gvwTraining_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwTraining.RowDataBound

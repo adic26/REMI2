@@ -426,6 +426,23 @@ END
 GO
 GRANT EXECUTE ON remispMenuAccessByDepartment TO REMI
 GO
+ALTER PROCEDURE [dbo].[remispUsersDeleteSingleItem] @userIDToDelete nvarchar(255), @UserID INT
+AS
+	UPDATE UsersProducts 
+	SET LastUser = (SELECT LDAPLogin FROM Users WHERE ID=@UserID) 
+	FROM UsersProducts
+	WHERE UserID = @userIDToDelete
+	
+	UPDATE Users 
+	SET LastUser = (SELECT LDAPLogin FROM Users WHERE ID=@UserID)
+	WHERE ID = @userIDToDelete
+
+	DELETE FROM UsersProducts WHERE UserID = @userIDToDelete
+	DELETE FROM UserSearchFilter WHERE UserID = @userIDToDelete
+	DELETE FROM UserDetails WHERE UserID=@userIDToDelete
+	DELETE FROM UserTraining WHERE UserID=@userIDToDelete
+	DELETE FROM users WHERE ID = @userIDToDelete
+GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
