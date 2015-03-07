@@ -56,6 +56,7 @@ Partial Class Admin_TestStages
         HideEditTestStagePanel()
 
         If (jobID > 0) Then
+            lnkAddTestStage.Enabled = True
             Dim j As Job = JobManager.GetJob(String.Empty, jobID)
             gvwMain.EmptyDataText = "There are no test stages for " + j.Name
             lblViewAllTitle.Text = "Test Stages for " + j.Name
@@ -109,6 +110,7 @@ Partial Class Admin_TestStages
             BindOrientations()
             BindAccess()
         Else
+            lnkAddTestStage.Enabled = False
             ddlJobs.Visible = False
             txtJobName.Visible = True
             txtJobWILocation.Text = String.Empty
