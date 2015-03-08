@@ -39,7 +39,7 @@ Public Class REMIInternal
                 Return jobs
             End If
         Catch ex As Exception
-            JobManager.LogIssue("REMI Internal Get jobs", "e3", NotificationType.Errors, ex)
+            JobManager.LogIssue("REMI Internal GetJobs", "e3", NotificationType.Errors, ex, String.Format("requestTypeID: {0} userIdentification: {1} ", requestTypeID, userIdentification))
         End Try
         Return Nothing
     End Function
@@ -117,7 +117,7 @@ Public Class REMIInternal
                 response.AppendLine(str)
             Next
 
-            ReportManager.LogIssue("REMIInternal Search", "e3", NotificationType.Errors, ex, String.Format("requestTypeID: {0} Fields: {1} ", requestTypeID, response))
+            ReportManager.LogIssue("REMIInternal customSearch", "e3", NotificationType.Errors, ex, String.Format("requestTypeID: {0} Fields: {1} userID: {2}", requestTypeID, response, userID))
         End Try
 
         Return tableTags.ToString()
@@ -161,7 +161,7 @@ Public Class REMIInternal
                 response.AppendLine(str)
             Next
 
-            ReportManager.LogIssue("REMIInternal Search", "e3", NotificationType.Errors, ex, String.Format("requestTypeID: {0} Fields: {1} ", requestTypeID, response))
+            ReportManager.LogIssue("REMIInternal colSearch", "e3", NotificationType.Errors, ex, String.Format("requestTypeID: {0} Fields: {1} userID: {2}", requestTypeID, response, userID))
         End Try
 
         Return theads.ToString()

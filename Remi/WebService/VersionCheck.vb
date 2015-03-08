@@ -17,7 +17,7 @@ Public Class VersionCheck
         Try
             Return VersionManager.CheckVersion(application, versionNumber)
         Catch ex As Exception
-            VersionManager.LogIssue("Version Manager CheckVersion", "e3", NotificationType.Errors, ex)
+            VersionManager.LogIssue("Version Manager CheckVersion", "e3", NotificationType.Errors, ex, String.Format("application: {0} versionNumber: {1}", application, versionNumber))
         End Try
         Return Nothing
     End Function
@@ -28,7 +28,7 @@ Public Class VersionCheck
             Dim pcvID As Int32 = VersionManager.GetProductConfigXMLByAppVersion(application, versionNumber, productID, testID, pcName)
             Return ProductGroupManager.GetProductConfigurationXMLVersion(pcvID).ToString()
         Catch ex As Exception
-            VersionManager.LogIssue("Version Manager ApplicableConfigForVersionByProductTest", "e3", NotificationType.Errors, ex)
+            VersionManager.LogIssue("Version Manager ApplicableConfigForVersionByProductTest", "e3", NotificationType.Errors, ex, String.Format("application: {0} versionNumber: {1} productID: {2} testID: {3} pcName: {4}", application, versionNumber, productID, testID, pcName))
         End Try
         Return Nothing
     End Function
