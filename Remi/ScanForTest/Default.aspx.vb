@@ -29,10 +29,8 @@ Partial Class Scanning_Default
 
     Protected Sub Page_PreRender() Handles Me.PreLoad
         If Not Page.IsPostBack Then
-            ddlDepartment.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
-            ddlDepartment.DataBind()
-
-            ddlDepartment.SelectedValue = UserManager.GetCurrentUser.DepartmentID
+            ddlRequestType.DataSource = UserManager.GetCurrentUser.RequestTypes
+            ddlRequestType.DataBind()
             BindJobs()
         End If
     End Sub
@@ -42,7 +40,7 @@ Partial Class Scanning_Default
     Protected Sub BindJobs()
         Dim jc As New JobCollection
         jc.Add(New Job("Not Applicable"))
-        jc.AddRange(JobManager.GetJobListDT(0, UserManager.GetCurrentUser.ID, ddlDepartment.SelectedItem.Value))
+        jc.AddRange(JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0))
 
         ddlJobs.DataSource = jc
         ddlJobs.DataBind()
@@ -112,7 +110,7 @@ Partial Class Scanning_Default
         ddlTestStage.DataBind()
     End Sub
 
-    Protected Sub ddlDepartment_SelectedIndexChanged(sender As Object, e As EventArgs)
+    Protected Sub ddlRequestType_SelectedIndexChanged(sender As Object, e As EventArgs)
         BindJobs()
     End Sub
 #End Region
@@ -159,8 +157,8 @@ Partial Class Scanning_Default
                     End If
                 End If
 
-                If (ddlDepartment.SelectedValue <> deptID) Then
-                    notMain.Notifications.AddWithMessage("That Request Isn't Part Of The Department You Selected!", NotificationType.Warning)
+                If (Not bc.BatchNumber.Contains(ddlRequestType.SelectedItem.Text)) Then
+                    notMain.Notifications.AddWithMessage("You Are Not In The Correct Request Area!", NotificationType.Warning)
                 Else
                     If (bc.UnitNumber = 0) Then
                         bc = New DeviceBarcodeNumber(String.Format("{0}-{1:d3}", bc.Number, 1))

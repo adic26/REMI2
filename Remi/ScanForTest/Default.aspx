@@ -12,7 +12,7 @@
     <ul>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgDepartmentView" runat="server" />
-            <asp:DropDownList ID="ddlDepartment" runat="server" AppendDataBoundItems="false" DataTextField="LookupType" OnSelectedIndexChanged="ddlDepartment_SelectedIndexChanged" DataValueField="LookupID" AutoPostBack="true" Width="120px" ForeColor="#0033CC" EnableViewState="true"></asp:DropDownList>
+            <asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
         </li>
     </ul>
 </asp:Content>

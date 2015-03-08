@@ -23,13 +23,13 @@ Partial Public Class Scanning_Default
     Protected WithEvents imgDepartmentView As Global.System.Web.UI.WebControls.Image
 
     '''<summary>
-    '''ddlDepartment control.
+    '''ddlRequestType control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ddlDepartment As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents ddlRequestType As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''notMain control.
