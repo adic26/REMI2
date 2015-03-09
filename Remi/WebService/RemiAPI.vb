@@ -695,7 +695,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a job id this function returns all departments that have access for this job.")> _
     Public Function GetJobAccess(ByVal jobID As Int32) As DataTable
         Try
-            Return JobManager.GetJobAccess(jobID)
+            Return JobManager.GetJobAccess(jobID, True)
         Catch ex As Exception
             JobManager.LogIssue("REMI API GetJobAccess", "e3", NotificationType.Errors, ex, String.Format("JobID: {0}", jobID))
         End Try

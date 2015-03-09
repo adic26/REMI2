@@ -31,6 +31,15 @@ Partial Class Scanning_Default
         If Not Page.IsPostBack Then
             ddlRequestType.DataSource = UserManager.GetCurrentUser.RequestTypes
             ddlRequestType.DataBind()
+
+            If (ddlRequestType.Items.Count > 0 And ddlRequestType.SelectedIndex = -1) Then
+                ddlRequestType.SelectedIndex = 0
+            End If
+
+            If (ddlRequestType.Items.Count = 1) Then
+                ddlRequestType.Enabled = False
+            End If
+
             BindJobs()
         End If
     End Sub

@@ -35,27 +35,46 @@ Partial Class Admin_TestStages
             ddlTestStageType.DataSource = Helpers.GetTestStageTypes
             ddlTestStageType.DataBind()
 
-            If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("AddJob"))) Then
-                LoadJob(0)
-            ElseIf (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("JobID"))) Then
-                If (ddlJobs.Items.Count > 0) Then
-                    Dim jobID As Int32
-                    Int32.TryParse(Request.QueryString("JobID"), jobID)
-                    ddlJobs.Items.FindByValue(jobID).Selected = True
-                    LoadJob(jobID)
-                End If
-            Else
-                LoadJob(ddlJobs.SelectedItem.Value)
-            End If
+            'If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("AddJob"))) Then
+            '    LoadJob(0)
+            'ElseIf (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("JobID"))) Then
+            '    If (ddlJobs.Items.Count > 0) Then
+            '        Dim jobID As Int32
+            '        Int32.TryParse(Request.QueryString("JobID"), jobID)
+            '        ddlJobs.Items.FindByValue(jobID).Selected = True
+            '        LoadJob(jobID)
+            '    End If
+            'Else
+            '    LoadJob(ddlJobs.SelectedItem.Value)
+            'End If
+            LoadJob()
+            'ElseIf (Helpers.GetPostBackControl(Me) IsNot Nothing) Then
+            '    If (Helpers.GetPostBackControl(Me).ID = "lnkSaveAction") Then
+            '        LoadJob()
+            '    End If
         End If
     End Sub
 #End Region
 
 #Region "Methods"
-    Protected Sub LoadJob(ByVal jobID As Int32)
+    Protected Sub LoadJob()
+        Dim jobID As Int32
+
+        If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("AddJob"))) Then
+            jobID = 0
+        ElseIf (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("JobID"))) Then
+            If (ddlJobs.Items.Count > 0) Then
+                Int32.TryParse(Request.QueryString("JobID"), jobID)
+                ddlJobs.Items.FindByValue(jobID).Selected = True
+            End If
+        Else
+            jobID = ddlJobs.SelectedItem.Value
+        End If
+
         HideEditTestStagePanel()
 
         If (jobID > 0) Then
+            lnkAddJob.Enabled = True
             lnkAddTestStage.Enabled = True
             Dim j As Job = JobManager.GetJob(String.Empty, jobID)
             gvwMain.EmptyDataText = "There are no test stages for " + j.Name
@@ -93,6 +112,8 @@ Partial Class Admin_TestStages
             JobSetup.UserID = 0
             JobSetup.DataBind()
 
+            acpSetup.Visible = JobSetup.Visible
+
             JobEnvSetup.JobID = j.ID
             JobEnvSetup.BatchID = 0
             JobEnvSetup.ProductID = 0
@@ -107,9 +128,12 @@ Partial Class Admin_TestStages
             JobEnvSetup.UserID = 0
             JobEnvSetup.DataBind()
 
+            acpEnvSetup.Visible = JobEnvSetup.Visible
+
             BindOrientations()
             BindAccess()
         Else
+            lnkAddJob.Enabled = False
             lnkAddTestStage.Enabled = False
             ddlJobs.Visible = False
             txtJobName.Visible = True
@@ -193,7 +217,9 @@ Partial Class Admin_TestStages
             lstAddedTLTypes.Items.Clear()
             pnlAddEditTestStage.Visible = True
             pnlViewAllTestStages.Visible = False
+            lnkAddTestStage.Enabled = False
         Else
+            lnkAddTestStage.Enabled = True
             hdnTestStageID.Value = tmpTestStage.ID
             lblAddEditTitle.Text = "Editing the " & tmpTestStage.Name & " Test Stage"
 
@@ -330,7 +356,7 @@ Partial Class Admin_TestStages
     End Sub
 
     Protected Sub BindAccess()
-        grdAccess.DataSource = JobManager.GetJobAccess(hdnJobID.Value)
+        grdAccess.DataSource = JobManager.GetJobAccess(hdnJobID.Value, False)
         grdAccess.DataBind()
     End Sub
 #End Region
@@ -357,32 +383,31 @@ Partial Class Admin_TestStages
             If (txtJobName.Visible) Then
                 Response.Redirect(String.Format("~\Admin\Jobs.aspx?JobID={0}", jobID))
             End If
-        End If
 
-        If (pnlOrientationAdd.Visible And Not String.IsNullOrEmpty(txtOrientationName.Text)) Then
-            Dim productTypeID As Int32
-            Int32.TryParse(ddlPT.SelectedValue, productTypeID)
+            If (pnlOrientationAdd.Visible And Not String.IsNullOrEmpty(txtOrientationName.Text)) Then
+                Dim productTypeID As Int32
+                Int32.TryParse(ddlPT.SelectedValue, productTypeID)
 
-            If (productTypeID > 0 And Not String.IsNullOrEmpty(txtDefinition.Text)) Then
-                Dim success As Boolean = JobManager.SaveOrientation(hdnJobID.Value, 0, txtOrientationName.Text, productTypeID, txtOrientationDescription.Text, True, txtDefinition.Text)
+                If (productTypeID > 0 And Not String.IsNullOrEmpty(txtDefinition.Text)) Then
+                    Dim success As Boolean = JobManager.SaveOrientation(hdnJobID.Value, 0, txtOrientationName.Text, productTypeID, txtOrientationDescription.Text, True, txtDefinition.Text)
 
-                If (success) Then
-                    txtOrientationName.Text = String.Empty
-                    txtOrientationDescription.Text = String.Empty
-                    txtDefinition.Text = String.Empty
+                    If (success) Then
+                        txtOrientationName.Text = String.Empty
+                        txtOrientationDescription.Text = String.Empty
+                        txtDefinition.Text = String.Empty
 
-                    notMain.Add("Successfully Created New Orientation", NotificationType.Information)
+                        notMain.Add("Successfully Created New Orientation", NotificationType.Information)
+                    Else
+                        notMain.Add("Failed To Create New Orientation", NotificationType.Errors)
+                    End If
                 Else
-                    notMain.Add("Failed To Create New Orientation", NotificationType.Errors)
+                    notMain.Add("Orientation Can't Be Created. Please ensure you have entered product type and definition!", NotificationType.Warning)
                 End If
-            Else
-                notMain.Add("Orientation Can't Be Created. Please ensure you have entered product type and definition!", NotificationType.Warning)
             End If
         End If
 
         If Not notMain.HasErrors Then
-            HideEditTestStagePanel()
-            LoadJob(ddlJobs.SelectedItem.Value)
+            Response.Redirect(String.Format("~\Admin\Jobs.aspx?JobID={0}", hdnJobID.Value))
         End If
     End Sub
 

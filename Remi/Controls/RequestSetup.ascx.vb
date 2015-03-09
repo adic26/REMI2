@@ -223,6 +223,8 @@ Partial Class RequestSetup
 
             If (dt.Rows.Count = 0) Then
                 Me.Visible = False
+            Else
+                Me.Visible = True
             End If
 
             AddTopNodes(dt)

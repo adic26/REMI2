@@ -296,8 +296,7 @@
                     </asp:AccordionPane>
                     <asp:AccordionPane runat="server" ID="acpAccess">
                         <Header>
-                            <h2>
-                                <asp:Label runat="server" ID="lblAccess" Text="Access"></asp:Label></h2>
+                            <h2><asp:Label runat="server" ID="lblAccess" Text="Access"></asp:Label></h2>
                         </Header>
                         <Content>
                             <asp:GridView runat="server" ID="grdAccess" ShowFooter="true" AutoGenerateColumns="false" EnableViewState="true" DataKeyNames="JobAccessID">

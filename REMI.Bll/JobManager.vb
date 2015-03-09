@@ -64,18 +64,25 @@ Namespace REMI.Bll
                 Return JobDB.GetJobOrientationLists(jobID, jobName)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return Nothing
             End Try
+            Return New DataTable("JobOrietnation")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetJobAccess(ByVal jobID As Int32) As DataTable
+        Public Shared Function GetJobAccess(ByVal jobID As Int32, ByVal removeFirst As Boolean) As DataTable
             Try
-                Return JobDB.GetJobAccess(jobID)
+                Dim dtAccess As DataTable = JobDB.GetJobAccess(jobID)
+
+                If removeFirst Or dtAccess.Rows.Count > 1 Then
+                    dtAccess.Rows(0).Delete()
+                    dtAccess.AcceptChanges()
+                End If
+
+                Return dtAccess
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return Nothing
             End Try
+            Return New DataTable("JobAccess")
         End Function
 
         Public Shared Function DeleteAccess(ByVal jobAccessID As Int32) As Boolean
