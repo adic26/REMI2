@@ -92,6 +92,7 @@ Public Class Request
     Protected Overrides Sub OnInit(e As System.EventArgs)
         Dim req As String = IIf(Request.QueryString.Item("req") Is Nothing, String.Empty, Request.QueryString.Item("req"))
         Dim type As String = IIf(Request.QueryString.Item("type") Is Nothing, String.Empty, Request.QueryString.Item("type"))
+        Dim debug As Boolean = IIf(Request.QueryString.Item("debug") Is Nothing, False, Request.QueryString.Item("debug"))
         Dim rf As RequestFieldsCollection
 
         If ((From rt As DataRow In UserManager.GetCurrentUser.RequestTypes.Rows Where rt.Field(Of String)("RequestType") = type Select rt).FirstOrDefault() Is Nothing) Then
@@ -103,6 +104,7 @@ Public Class Request
         Else
             rf = RequestManager.GetRequestFieldSetup(type, False, String.Empty)
         End If
+
         Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
 
         If (rf IsNot Nothing) Then
@@ -114,7 +116,7 @@ Public Class Request
                 chkDisplayChanges.Visible = True
             End If
 
-            If (rf(0).IsFromExternalSystem) Then
+            If (rf(0).IsFromExternalSystem And Not debug) Then
                 If (rf(0).NewRequest) Then
                     Response.Redirect(String.Format("/Request/Default.aspx?rt={0}", type), True)
                 Else

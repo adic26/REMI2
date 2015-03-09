@@ -31,13 +31,21 @@ Public Class ReqAdmin
 #End Region
 
 #Region "Methods"
+    Protected Sub SetGvwRequestHeader() Handles grdRequest.PreRender
+        Helpers.MakeAccessable(grdRequest)
+    End Sub
+
     Protected Sub SetGvwHeader() Handles grdRequestAdmin.PreRender
         Helpers.MakeAccessable(grdRequestAdmin)
     End Sub
 
     Protected Sub BindRequest()
-        grdRequestAdmin.DataSource = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, chkArchived.Checked, String.Empty)
+        Dim rf As RequestFieldsCollection = RequestManager.GetRequestFieldSetup(hdnRequestType.Value, chkArchived.Checked, String.Empty)
+        grdRequestAdmin.DataSource = rf
         grdRequestAdmin.DataBind()
+
+        grdRequest.DataSource = rf.Take(1)
+        grdRequest.DataBind()
     End Sub
 #End Region
 
@@ -77,15 +85,7 @@ Public Class ReqAdmin
             intField = String.Empty
         End If
 
-        Dim instance = New REMI.Dal.Entities().Instance()
-        Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = hdnRequestTypeID.Value Select rt).FirstOrDefault()
-
-        If requestType IsNot Nothing Then
-            hasREMIIntegration = requestType.HasIntegration
-            hasDistribution = requestType.HasDistribution
-        End If
-
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, hasREMIIntegration, intField, description, String.Empty, hasDistribution, defaultDisplayNum, maxDisplayNum)
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, -1, name, fieldTypeID, fieldValidationID, isRequired, isArchived, optionsTypeID, category, parentFieldID, intField, description, String.Empty, defaultDisplayNum, maxDisplayNum)
 
         BindRequest()
     End Sub
@@ -212,6 +212,18 @@ Public Class ReqAdmin
         End Select
     End Sub
 
+    Protected Sub grdRequest_OnRowEditing(ByVal sender As Object, ByVal e As GridViewEditEventArgs)
+        grdRequest.EditIndex = e.NewEditIndex
+        BindRequest()
+
+        Dim chkExternalSystem As CheckBox = grdRequest.Rows(e.NewEditIndex).FindControl("chkExternalSystem")
+        Dim chkIntegrated As CheckBox = grdRequest.Rows(e.NewEditIndex).FindControl("chkIntegrated")
+        Dim chkDistribution As CheckBox = grdRequest.Rows(e.NewEditIndex).FindControl("chkDistribution")
+        chkIntegrated.Enabled = True
+        chkDistribution.Enabled = True
+        chkExternalSystem.Enabled = True
+    End Sub
+
     Protected Sub grdRequestAdmin_OnRowEditing(ByVal sender As Object, ByVal e As GridViewEditEventArgs)
         grdRequestAdmin.EditIndex = e.NewEditIndex
         BindRequest()
@@ -271,8 +283,6 @@ Public Class ReqAdmin
 
         Dim chkIsRequired As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIsRequired")
         Dim chkArch As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkArchived")
-        Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkIntegrated")
-        Dim chkDistribution As CheckBox = grdRequestAdmin.Rows(e.NewEditIndex).FindControl("chkDistribution")
 
         lblName.Visible = False
         lblFieldType.Visible = False
@@ -298,8 +308,6 @@ Public Class ReqAdmin
         ddlOptionsType.Visible = True
         chkArch.Enabled = True
         chkIsRequired.Enabled = True
-        chkIntegrated.Enabled = True
-        chkDistribution.Enabled = True
 
         If (UserManager.GetCurrentUser.IsAdmin) Then
             lblIntField.Visible = False
@@ -310,8 +318,23 @@ Public Class ReqAdmin
         End If
     End Sub
 
+    Protected Sub grdRequest_OnRowCancelingEdit(ByVal sender As Object, ByVal e As GridViewCancelEditEventArgs)
+        grdRequest.EditIndex = -1
+        BindRequest()
+    End Sub
+
     Protected Sub grdRequestAdmin_OnRowCancelingEdit(ByVal sender As Object, ByVal e As GridViewCancelEditEventArgs)
         grdRequestAdmin.EditIndex = -1
+        BindRequest()
+    End Sub
+
+    Protected Sub grdRequest_RowUpdating(ByVal sender As Object, ByVal e As GridViewUpdateEventArgs)
+        Dim chkIntegrated As CheckBox = grdRequest.Rows(e.RowIndex).FindControl("chkIntegrated")
+        Dim chkDistribution As CheckBox = grdRequest.Rows(e.RowIndex).FindControl("chkDistribution")
+        Dim chkExternalSystem As CheckBox = grdRequest.Rows(e.RowIndex).FindControl("chkExternalSystem")
+
+        RequestManager.SaveRequestHeaderSetup(chkIntegrated.Checked, chkExternalSystem.Checked, chkDistribution.Checked, grdRequest.DataKeys(e.RowIndex).Values(0))
+        grdRequest.EditIndex = -1
         BindRequest()
     End Sub
 
@@ -324,8 +347,6 @@ Public Class ReqAdmin
 
         Dim chkIsRequired As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkIsRequired")
         Dim chkArchived As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkArchived")
-        Dim chkIntegrated As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkIntegrated")
-        Dim chkDistribution As CheckBox = grdRequestAdmin.Rows(e.RowIndex).FindControl("chkDistribution")
 
         Dim ddlIntField As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlIntField")
         Dim ddlParentField As DropDownList = grdRequestAdmin.Rows(e.RowIndex).FindControl("ddlParentField")
@@ -356,7 +377,7 @@ Public Class ReqAdmin
             intField = String.Empty
         End If
 
-        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, chkIntegrated.Checked, intField, txtDescription.Text, ddlDefaultValue.SelectedItem.Text, chkDistribution.Checked, defaultDisplayNum, maxDisplayNum)
+        RequestManager.SaveFieldSetup(hdnRequestTypeID.Value, fieldSetupID, txtName.Text, fieldTypeID, fieldValidationID, chkIsRequired.Checked, chkArchived.Checked, optionsTypeID, txtCategory.Text, parentFieldID, intField, txtDescription.Text, ddlDefaultValue.SelectedItem.Text, defaultDisplayNum, maxDisplayNum)
         grdRequestAdmin.EditIndex = -1
         BindRequest()
     End Sub

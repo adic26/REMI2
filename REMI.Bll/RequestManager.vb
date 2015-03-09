@@ -93,7 +93,26 @@ Namespace REMI.Bll
             Return New DataTable("RequestMappingFields")
         End Function
 
-        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal hasREMIIntegration As Boolean, ByVal intField As String, ByVal description As String, ByVal defaultValue As String, ByVal hasDistribution As Boolean, ByVal defaultDisplayNum As Int32, ByVal maxDisplayNum As Int32) As Boolean
+        Public Shared Function SaveRequestHeaderSetup(ByVal hasREMIIntegration As Boolean, ByVal isExternal As Boolean, ByVal hasDistribution As Boolean, ByVal requestTypeID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
+
+                If requestType IsNot Nothing Then
+                    requestType.HasIntegration = hasREMIIntegration
+                    requestType.HasDistribution = hasDistribution
+                    requestType.IsExternal = isExternal
+                End If
+                instance.SaveChanges()
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal intField As String, ByVal description As String, ByVal defaultValue As String, ByVal defaultDisplayNum As Int32, ByVal maxDisplayNum As Int32) As Boolean
             Try
                 Dim oldName As String = String.Empty
                 Dim instance = New REMI.Dal.Entities().Instance()
@@ -113,12 +132,6 @@ Namespace REMI.Bll
                     setup.DefaultValue = defaultValue
 
                     Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
-
-                    If requestType IsNot Nothing Then
-                        requestType.HasIntegration = hasREMIIntegration
-                        requestType.HasDistribution = hasDistribution
-                    End If
-
                     Dim requestFieldMapping As REMI.Entities.ReqFieldMapping = (From fm In instance.ReqFieldMappings Where fm.ExtField = oldName Select fm).FirstOrDefault()
 
                     If (requestFieldMapping IsNot Nothing) Then

@@ -79,6 +79,26 @@
     </asp:Panel>
     
     <div class="Scrollgrid">
+        <asp:GridView runat="server" ID="grdRequest" AutoGenerateColumns="false" DataKeyNames="RequestTypeID" ShowFooter="false" EnableViewState="true" OnRowEditing="grdRequest_OnRowEditing" AutoGenerateEditButton="true" OnRowCancelingEdit="grdRequest_OnRowCancelingEdit" OnRowUpdating="grdRequest_RowUpdating">
+            <Columns>
+                <asp:TemplateField HeaderText="External System" SortExpression="External System">
+                    <ItemTemplate>
+                        <asp:CheckBox runat="server" Checked='<%# Eval("IsFromExternalSystem")%>' ID="chkExternalSystem" Enabled="false" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Has Distribution" SortExpression="">
+                    <ItemTemplate>
+                        <asp:CheckBox runat="server" Checked='<%# Eval("HasDistribution")%>' ID="chkDistribution" Enabled="false" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Integrated Remi" SortExpression="Integrated Remi">
+                    <ItemTemplate>
+                        <asp:CheckBox runat="server" Checked='<%# Eval("HasIntegration")%>' ID="chkIntegrated" Enabled="false" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+
         <asp:GridView runat="server" ID="grdRequestAdmin" AutoGenerateColumns="false" ShowFooter="true" EnableViewState="true" OnRowCommand="grdRequestAdmin_RowDataCommand" DataKeyNames="FieldSetupID" OnRowEditing="grdRequestAdmin_OnRowEditing" AutoGenerateEditButton="true" OnRowCancelingEdit="grdRequestAdmin_OnRowCancelingEdit" OnRowUpdating="grdRequestAdmin_RowUpdating">
             <Columns>
                 <asp:BoundField DataField="FieldSetupID" HeaderText="FieldSetupID" InsertVisible="False" ReadOnly="True" Visible="false" />
@@ -235,21 +255,6 @@
                     <FooterTemplate>
                         <asp:DropDownList runat="server" ID="ddlNewIntField" Visible="true" DataTextField="IntField" DataValueField="IntField" DataSourceID="odsFieldMapping"></asp:DropDownList>
                     </FooterTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="External System" SortExpression="External System">
-                    <ItemTemplate>
-                        <asp:CheckBox runat="server" Checked='<%# Eval("IsFromExternalSystem")%>' ID="chkExternalSystem" Enabled="false" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Has Distribution" SortExpression="">
-                    <ItemTemplate>
-                        <asp:CheckBox runat="server" Checked='<%# Eval("HasDistribution")%>' ID="chkDistribution" Enabled="false" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Integrated Remi" SortExpression="Integrated Remi">
-                    <ItemTemplate>
-                        <asp:CheckBox runat="server" Checked='<%# Eval("HasIntegration")%>' ID="chkIntegrated" Enabled="false" />
-                    </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
         </asp:GridView>

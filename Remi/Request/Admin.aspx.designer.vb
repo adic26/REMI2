@@ -149,6 +149,15 @@ Partial Public Class ReqAdmin
     Protected WithEvents btnSaveLookup As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
+    '''grdRequest control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdRequest As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
     '''grdRequestAdmin control.
     '''</summary>
     '''<remarks>
