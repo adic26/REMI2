@@ -28,7 +28,6 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="content" ContentPlaceHolderID="Content" runat="Server">
-    
     <a class="test-popup-link" visible="false">popup</a> 
 
     <asp:HiddenField ID="hdnBatchID" runat="server" />
@@ -225,7 +224,8 @@
                 <asp:Label ID="lblbservationSummary" runat="server" Text="Observation<br/><font color='rgb(0,124,186)'>Summary</font>" /><asp:Image runat="server" ID="imgObservationSummary" />
             </asp:Panel>
             <asp:Panel runat="server" ID="pnlObservationSummaryInfo" CssClass="CollapseBody">
-                <asp:GridView ID="gvwObservationSummary" runat="server" DataSourceID="odsObservations" OnDataBound="gvwObservationSummary_DataBound" EnableViewState="true" AutoGenerateColumns="true" ShowHeader="true" style="width:100%">
+                <p>This report gives which drop the observation first occured at and gives a count of how many units had that observation.</p>
+                <asp:GridView ID="gvwObservationSummary" runat="server" DataSourceID="odsObservations" OnDataBound="gvwObservationSummary_DataBound" EnableViewState="true" AutoGenerateColumns="true" ShowHeader="true">
                 </asp:GridView>
                 <asp:ObjectDataSource ID="odsObservations" runat="server" SelectMethod="GetObservationSummary" TypeName="REMI.Bll.RelabManager" OldValuesParameterFormatString="original_{0}">
                     <SelectParameters>
@@ -240,7 +240,7 @@
                 <asp:Label ID="lblbservations" runat="server" Text="Observations" /><asp:Image runat="server" ID="imgObservations" />
             </asp:Panel>
             <asp:Panel runat="server" ID="pnlObservationsInfo" CssClass="CollapseBody">
-                <asp:GridView ID="gvwObservations" runat="server" EnableViewState="true" OnDataBound="gvwObservations_DataBound" DataSourceID="odsObservationInfo" AutoGenerateColumns="false" ShowHeader="true" style="width:100%">
+                <asp:GridView ID="gvwObservations" runat="server" EnableViewState="true" OnDataBound="gvwObservations_DataBound" DataSourceID="odsObservationInfo" AutoGenerateColumns="false" ShowHeader="true">
                     <Columns>
                         <asp:TemplateField HeaderText="Unit">
                             <ItemTemplate>
