@@ -500,6 +500,22 @@ set a.ReqFieldDataID=d.ReqFieldDataID
 from Req.ReqFieldDataAudit a
 inner join Req.ReqFieldData d on d.RequestID=a.RequestID
 where a.ReqFieldDataID is null
+GO
+ALTER PROCEDURE [dbo].[remispGetJobAccess] @JobID INT = 0
+AS
+BEGIN
+	SELECT 0 AS JobAccessID, '' AS JobName, '' As Department
+	UNION
+	SELECT ja.JobAccessID, j.JobName, l.[Values] As Department
+	FROM JobAccess ja
+		INNER JOIN Jobs j ON j.ID=ja.JobID
+		INNER JOIN Lookups l ON l.LookupID=ja.LookupID
+	WHERE (@JobID > 0 AND ja.JobID=@JobID) OR (@JobID = 0)
+	ORDER BY 2
+END
+GO
+GRANT EXECUTE ON [dbo].[remispGetJobAccess] TO REMI
+GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
