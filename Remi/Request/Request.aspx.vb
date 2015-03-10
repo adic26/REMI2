@@ -156,17 +156,20 @@ Public Class Request
                     rfv.Display = ValidatorDisplay.Static
                 End If
 
+                Dim hdnUniqueID As String = (From s In Request.Form.AllKeys Where s.Contains(String.Format("hdn{0}", res.FieldSetupID)) Select s).FirstOrDefault()
+
                 If Request.Form(hdnAddMore.UniqueID) IsNot Nothing Then
                     If (Request.Form(hdnAddMore.UniqueID).ToString() = res.FieldSetupID.ToString()) Then
-                        Dim val As String = (From s In Request.Form.AllKeys Where s.Contains(String.Format("hdn{0}", res.FieldSetupID)) Select s).FirstOrDefault()
-                        If (String.IsNullOrEmpty(val)) Then
-                            val = res.DefaultDisplayNum.ToString()
+                        If (String.IsNullOrEmpty(hdnUniqueID)) Then
+                            res.DefaultDisplayNum = res.DefaultDisplayNum.ToString()
                         Else
-                            val = Request.Form(val)
+                            res.DefaultDisplayNum = Request.Form(hdnUniqueID)
                         End If
-
-                        res.DefaultDisplayNum = val
+                    ElseIf (Request.Form(hdnUniqueID) IsNot Nothing) Then
+                        res.DefaultDisplayNum = Request.Form(hdnUniqueID)
                     End If
+                ElseIf (Request.Form(hdnUniqueID) IsNot Nothing) Then
+                    res.DefaultDisplayNum = Request.Form(hdnUniqueID)
                 End If
 
                 For i As Int32 = 1 To res.DefaultDisplayNum
