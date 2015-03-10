@@ -256,7 +256,7 @@ Public Class Request
 
                             tCell2.Controls.Add(chk)
 
-                            If (res.IsRequired) Then
+                            If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = chk.ID
                             End If
                         Case "DATETIME"
@@ -275,7 +275,7 @@ Public Class Request
                             tCell2.Controls.Add(dt)
                             tCell2.Controls.Add(ce)
 
-                            If (res.IsRequired) Then
+                            If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = dt.ID
                             End If
                         Case "DROPDOWN"
@@ -315,7 +315,7 @@ Public Class Request
 
                             tCell2.Controls.Add(ddl)
 
-                            If (res.IsRequired) Then
+                            If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = ddl.ID
                             End If
 
@@ -376,7 +376,7 @@ Public Class Request
 
                             tCell2.Controls.Add(lnktxt)
 
-                            If (res.IsRequired) Then
+                            If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = lnktxt.ID
                             End If
                         Case "RADIOBUTTON"
@@ -394,7 +394,7 @@ Public Class Request
 
                             tCell2.Controls.Add(rb)
 
-                            If (res.IsRequired) Then
+                            If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = rb.ID
                             End If
                         Case "TEXTAREA"
@@ -407,7 +407,7 @@ Public Class Request
                             txtArea.Text = res.Value
                             tCell2.Controls.Add(txtArea)
 
-                            If (res.IsRequired) Then
+                            If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = txtArea.ID
                             End If
                         Case "TEXTBOX"
@@ -437,7 +437,7 @@ Public Class Request
 
                             tCell2.Controls.Add(cv)
 
-                            If (res.IsRequired) Then
+                            If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = txt.ID
                             End If
                     End Select

@@ -474,7 +474,7 @@ Namespace REMI.Dal
             For Each rec In request
                 If (rec.MaxDisplayNum > 1) Then
                     For Each sib As Sibling In rec.Sibling
-                        Dim fieldDataSib = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID And fd.InstanceID = sib.ID).FirstOrDefault()
+                        Dim fieldDataSib = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID And (fd.InstanceID = sib.ID Or fd.InstanceID Is Nothing)).FirstOrDefault()
 
                         If (fieldDataSib Is Nothing And Not String.IsNullOrEmpty(sib.Value)) Then
                             fieldDataSib = New REMI.Entities.ReqFieldData()
@@ -493,6 +493,8 @@ Namespace REMI.Dal
                             fieldDataSib.LastUser = userIdentification
                             fieldDataSib.InstanceID = sib.ID
                         End If
+
+                        instance.SaveChanges()
                     Next
                 Else
                     Dim fieldData = (From fd In instance.ReqFieldDatas Where fd.RequestID = reqID And fd.ReqFieldSetupID = rec.FieldSetupID).FirstOrDefault()
@@ -512,10 +514,9 @@ Namespace REMI.Dal
                         fieldData.LastUser = userIdentification
                         fieldData.InstanceID = 1
                     End If
+                    instance.SaveChanges()
                 End If
             Next
-
-            instance.SaveChanges()
 
             Return True
         End Function
