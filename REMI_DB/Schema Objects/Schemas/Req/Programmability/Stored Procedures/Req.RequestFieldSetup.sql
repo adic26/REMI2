@@ -32,11 +32,11 @@ BEGIN
 			SET @RequestNumber = @RequestType + '-' + Right(Year(getDate()),2) + '-' + @RequestNumber
 		END
 	
-	SELECT rfd.ReqFieldSetupID, rfd.InstanceID, rfd.Value
+	SELECT rfd.ReqFieldSetupID, ISNULL(rfd.InstanceID, 1) AS InstanceID, rfd.Value
 	FROM Req.ReqFieldData rfd WITH(NOLOCK)
 		INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
 		INNER JOIN Req.ReqFieldSetupSibling rfss WITH(NOLOCK) ON rfss.ReqFieldSetupID=rfs.ReqFieldSetupID
-	WHERE RequestID = @RequestID
+	WHERE RequestID = @RequestID AND rfss.MaxDisplayNum> 1
 
 	SELECT rfs.ReqFieldSetupID, @RequestType AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
 			lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, ISNULL(rfs.DisplayOrder, 0) AS DisplayOrder,

@@ -93,11 +93,11 @@ BEGIN
 			SET @RequestNumber = @RequestType + '-' + Right(Year(getDate()),2) + '-' + @RequestNumber
 		END
 	
-	SELECT rfd.ReqFieldSetupID, rfd.InstanceID, rfd.Value
+	SELECT rfd.ReqFieldSetupID, ISNULL(rfd.InstanceID, 1) AS InstanceID, rfd.Value
 	FROM Req.ReqFieldData rfd WITH(NOLOCK)
 		INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
 		INNER JOIN Req.ReqFieldSetupSibling rfss WITH(NOLOCK) ON rfss.ReqFieldSetupID=rfs.ReqFieldSetupID
-	WHERE RequestID = @RequestID
+	WHERE RequestID = @RequestID AND rfss.MaxDisplayNum> 1
 
 	SELECT rfs.ReqFieldSetupID, @RequestType AS RequestType, rfs.Name, lft.[Values] AS FieldType, rfs.FieldTypeID, 
 			lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, ISNULL(rfs.DisplayOrder, 0) AS DisplayOrder,
@@ -136,6 +136,8 @@ BEGIN
 		)
 	ORDER BY 22, 9 ASC
 END
+GO
+GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI
 GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
@@ -591,6 +593,50 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON Relab.remispGetObservationSummary TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispSaveLookup] @LookupType NVARCHAR(150), @Value NVARCHAR(150), @IsActive INT = 1, @Description NVARCHAR(200) = NULL, @ParentID INT = NULL, @Success AS BIT = NULL OUTPUT
+AS
+BEGIN
+	DECLARE @LookupID INT
+	DECLARE @LookupTypeID INT
+	SELECT @LookupID = MAX(LookupID) + 1 FROM Lookups
+	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@LookupType
+
+	IF (@ParentID = 0)
+	BEGIN
+		SET @ParentID = NULL
+	END
+	
+	IF LTRIM(RTRIM(@Value)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE LookupTypeID=@LookupTypeID AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Value)))
+	BEGIN
+		INSERT INTO Lookups (LookupID, LookupTypeID, [Values], IsActive, Description, ParentID) 
+		VALUES (@LookupID, @LookupTypeID, LTRIM(RTRIM(@Value)), @IsActive, @Description, @ParentID)
+	
+		IF (@LookupType = 'Products')
+		BEGIN
+			INSERT INTO Products (LookupID) Values (@LookupID)
+		END
+		
+		SET @Success = 1
+	END
+	ELSE
+	BEGIN
+		UPDATE Lookups
+		SET IsActive=@IsActive, Description=@Description, ParentID=@ParentID
+		WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value))
+		
+		IF NOT EXISTS (SELECT 1 FROM Products p INNER JOIN Lookups l ON l.LookupID=p.LookupID WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value)))
+		BEGIN
+			INSERT INTO Products (LookupID) Values (@LookupID)
+		END
+		
+		SET @Success = 1
+	END
+
+	PRINT @Success
+END
+GO
+GRANT EXECUTE ON remispSaveLookup TO Remi
 GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO

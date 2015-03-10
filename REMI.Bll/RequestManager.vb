@@ -154,8 +154,12 @@ Namespace REMI.Bll
                     Dim sibling As REMI.Entities.ReqFieldSetupSibling = (From s In instance.ReqFieldSetupSiblings Where s.ReqFieldSetupID = fieldSetupID Select s).FirstOrDefault()
 
                     If (sibling IsNot Nothing) Then
-                        sibling.DefaultDisplayNum = defaultDisplayNum
-                        sibling.MaxDisplayNum = maxDisplayNum
+                        If (maxDisplayNum = 1) Then
+                            instance.DeleteObject(sibling)
+                        Else
+                            sibling.DefaultDisplayNum = defaultDisplayNum
+                            sibling.MaxDisplayNum = maxDisplayNum
+                        End If
                     Else
                         If (maxDisplayNum > 1) Then
                             sibling = New REMI.Entities.ReqFieldSetupSibling
