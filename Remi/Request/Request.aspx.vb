@@ -202,7 +202,7 @@ Public Class Request
                             hyp.ID = String.Format("hyp{0}", id)
                             hyp.Text = res.Value
                             hyp.EnableViewState = True
-                            hyp.NavigateUrl = String.Format("~\Handlers\Download.ashx?file={0}&path={1}", hyp.Text, String.Concat(Server.MapPath("~\UploadDir\"), lblRequest.Text))
+                            hyp.NavigateUrl = String.Format("~\Handlers\Download.ashx?file={0}&path={1}", hyp.Text, String.Concat(Server.MapPath(Remi.Core.REMIConfiguration.UploadDirectory()), lblRequest.Text))
 
                             Dim txt As New TextBox
                             txt.ID = String.Format("txt{0}", id)
@@ -580,9 +580,9 @@ Public Class Request
             fu.Style.Add("display", "none")
             DirectCast(sender, Button).Style.Add("display", "none")
             hyp.Text = fu.FileName
-            hyp.NavigateUrl = String.Format("~\Handlers\Download.ashx?file={0}&path={1}", hyp.Text, String.Concat(Server.MapPath("~\UploadDir\"), lblRequest.Text))
+            hyp.NavigateUrl = String.Format("~\Handlers\Download.ashx?file={0}&path={1}", hyp.Text, String.Concat(Server.MapPath(Remi.Core.REMIConfiguration.UploadDirectory()), lblRequest.Text))
 
-            Dim uploadDir = String.Concat(Remi.Core.REMIConfiguration.UploadDirectory(), lblRequest.Text)
+            Dim uploadDir = Server.MapPath(String.Concat(Remi.Core.REMIConfiguration.UploadDirectory(), lblRequest.Text))
 
             If (Not Directory.Exists(uploadDir)) Then
                 Directory.CreateDirectory(uploadDir)
