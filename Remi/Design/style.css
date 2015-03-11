@@ -843,7 +843,7 @@ table tr td
     white-space: nowrap;
     padding: 0.1em;
     border: 1px #362d2d solid;
-    text-align: center;
+    /*text-align: center;*/
     margin: 0px;
     vertical-align: middle;
 }

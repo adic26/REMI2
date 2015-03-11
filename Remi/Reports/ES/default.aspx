@@ -229,6 +229,9 @@
             <asp:Panel runat="server" ID="pnlObservationSummaryInfo" CssClass="CollapseBody">
                 <p>This report gives which drop the observation first occured at and gives a count of how many units had that observation.</p>
                 <asp:GridView ID="gvwObservationSummary" runat="server" DataSourceID="odsObservations" OnDataBound="gvwObservationSummary_DataBound" EnableViewState="true" AutoGenerateColumns="true" ShowHeader="true">
+                    <Columns>
+                        <asp:BoundField DataField="Observation" HeaderText="Observation" ItemStyle-HorizontalAlign="Left" />
+                    </Columns>
                 </asp:GridView>
                 <asp:ObjectDataSource ID="odsObservations" runat="server" SelectMethod="GetObservationSummary" TypeName="REMI.Bll.RelabManager" OldValuesParameterFormatString="original_{0}">
                     <SelectParameters>
@@ -260,7 +263,7 @@
                                 <asp:Label runat="server" Visible="true" ID="lblTestStage" Text='<%# Eval("TestStageName")%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Observation">
+                        <asp:TemplateField HeaderText="Observation" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
                                 <asp:Label runat="server" Visible="true" ID="lblObservation" Text='<%# Eval("Observation")%>' />
                             </ItemTemplate>
@@ -270,15 +273,15 @@
                                 <asp:Label runat="server" Visible="true" ID="lblOrientation" Text='<%# Eval("Orientation")%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Notes">
+                        <asp:TemplateField HeaderText="Notes" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
                                 <asp:Label runat="server" Visible="true" ID="lblComment" Text='<%# Eval("Comment")%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Attachment" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
+                        <asp:TemplateField HeaderText="Attachment">
                             <ItemTemplate>
-                                <asp:Image Visible="false" runat="server" ImageUrl="" ID="img" />
-                                <asp:HiddenField runat="server" ID="hdnImgStr" Value='<%# "data:image/" + Eval("ContentType") + ";base64," + Convert.ToBase64String(Eval("Image"))%>' />
+                                <asp:HiddenField runat="server" ID="hdnHasFiles" Value='<%# Eval("HasFiles") %>' />
+                                <input type="image" src="../../Design/Icons/png/24x24/png_file.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("MeasurementID") %>' pageID='<%# Me.ClientID %>' role="button" />
                             </ItemTemplate>
                         </asp:TemplateField>           
                     </Columns>
@@ -289,7 +292,6 @@
                     </SelectParameters>
                 </asp:ObjectDataSource>
             </asp:Panel>
-            <br /><br />
         </ContentTemplate>
     </asp:UpdatePanel>
 

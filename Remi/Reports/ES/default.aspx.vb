@@ -8,6 +8,10 @@ Imports System.Drawing
 Partial Class ES_Default
     Inherits System.Web.UI.Page
 
+    'Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
+    '    gvwObservationSummary.Columns(1).Visible = False
+    'End Sub
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
             If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then
@@ -269,17 +273,11 @@ Partial Class ES_Default
 
     Protected Sub gvwObservations_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwObservations.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
-            Dim hdnImgStr As HiddenField = DirectCast(e.Row.FindControl("hdnImgStr"), HiddenField)
-            If (Not (String.IsNullOrEmpty(hdnImgStr.Value))) Then
-                If (Not (hdnImgStr.Value.Contains(";base64,AAAAAA=="))) Then
-                    Dim img As WebControls.Image = DirectCast(e.Row.FindControl("img"), WebControls.Image)
-                    img.Visible = True
-                    img.ImageUrl = hdnImgStr.Value
-                    img.Width = 30
-                    img.Height = 30
-                    img.Attributes.Add("onmouseover", String.Format("Tip('<img src=""{0}""/>',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'',TITLEBGCOLOR,'#6494C8')", hdnImgStr.Value))
-                    img.Attributes.Add("onmouseout", "UnTip()")
-                End If
+            Dim hdnHasFiles As HiddenField = DirectCast(e.Row.FindControl("hdnHasFiles"), HiddenField)
+
+            If (hdnHasFiles.Value = "1") Then
+                Dim img As HtmlInputImage = DirectCast(e.Row.FindControl("viewImages"), HtmlInputImage)
+                img.Visible = True
             End If
         End If
     End Sub
@@ -289,6 +287,11 @@ Partial Class ES_Default
 
         If (count > 0) Then
             pnlObservationSummary.Enabled = True
+            gvwObservationSummary.HeaderRow.Cells(1).Visible = False
+
+            For r As Int32 = 0 To gvwObservationSummary.Rows.Count - 1
+                gvwObservationSummary.Rows(r).Cells(1).Visible = False
+            Next
 
             If (ESMenu.FindItem("Observation Summary") Is Nothing) Then
                 Dim mi As MenuItem = New MenuItem
