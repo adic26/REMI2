@@ -73,7 +73,7 @@ BEGIN
 			OR
 			(@IncludeArchived = @FalseBit AND rfd.Value IS NOT NULL AND ISNULL(rfs.Archived, @FalseBit) = @TrueBit)
 		)
-	ORDER BY 22, 9 ASC
+	ORDER BY 23, 9 ASC
 END
 GO
 GRANT EXECUTE ON [Req].[RequestFieldSetup] TO REMI

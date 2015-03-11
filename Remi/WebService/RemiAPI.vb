@@ -408,6 +408,16 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(Description:="Returns a set of test station(s) for the current test center.")> _
+    Public Function GetLocationsByTestCenterLocationType(ByVal testCenterID As Int32, ByVal tlt As TrackingLocationType) As TrackingLocationCollection
+        Try
+            Return TrackingLocationManager.GetLocationsWithoutHost(testCenterID, 1, tlt.ID)
+        Catch ex As Exception
+            TrackingLocationManager.LogIssue("REMI API GetLocationsByTestCenter", "e3", NotificationType.Errors, ex, String.Format("testCenterLocationID: {0}", testCenterID))
+        End Try
+        Return Nothing
+    End Function
+
     <WebMethod(Description:="Returns All tracking Locations Types By Function.")> _
     Public Function GetTrackingLocationTypesByFunction(ByVal tlf As TrackingLocationFunction) As TrackingLocationTypeCollection
         Try
@@ -431,7 +441,24 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Adds A New Trackign Location.")> _
-    Public Function SaveTrackingLocation(ByVal hostName As String, ByVal tlt As TrackingLocationType, ByVal name As String, ByVal userIdentification As String) As Boolean
+    Public Function AddHostToTrackingLocation(ByVal hostName As String, ByVal trackingLocationID As Int32, ByVal userIdentification As String, ByVal testCenterID As Int32) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                
+                Dim notifications As NotificationCollection = TrackingLocationManager.SaveTrackingLocationHost(trackingLocationID, hostName)
+                Dim notification As Notification = (From n In notifications Where n.Type = NotificationType.Errors Or n.Type = NotificationType.Fatal Select n).FirstOrDefault()
+
+                Return IIf(notification Is Nothing, True, False)
+            End If
+        Catch ex As Exception
+            TrackingLocationManager.LogIssue("REMI API SaveTrackingLocation", "e3", NotificationType.Errors, ex, String.Format("hostName: {0} trackingLocationID: {1} testCenterID: {2} userIdentification: {3}", hostName, trackingLocationID, testCenterID, userIdentification))
+        End Try
+
+        Return False
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Adds A New Trackign Location.")> _
+    Public Function SaveTrackingLocation(ByVal hostName As String, ByVal tlt As TrackingLocationType, ByVal name As String, ByVal userIdentification As String, ByVal testCenterID As Int32) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
                 Dim tl As New TrackingLocation()
@@ -440,8 +467,7 @@ Public Class RemiAPI
                 tl.TrackingLocationType = tlt
                 tl.Status = TrackingLocationStatus.Available
                 tl.Decommissioned = False
-                tl.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
-                tl.GeoLocationName = UserManager.GetCurrentUser.TestCentre
+                tl.GeoLocationID = testCenterID
 
                 Dim tlc As New TrackingLocationCollection()
                 tlc.Add(tl)
@@ -449,7 +475,7 @@ Public Class RemiAPI
                 Return TrackingLocationManager.SaveTrackingLocation(tlc)
             End If
         Catch ex As Exception
-            TrackingLocationManager.LogIssue("REMI API SaveTrackingLocation", "e3", NotificationType.Errors, ex, String.Format("tlt: {0", tlt))
+            TrackingLocationManager.LogIssue("REMI API SaveTrackingLocation", "e3", NotificationType.Errors, ex, String.Format("tlt: {0}", tlt.Name))
         End Try
 
         Return False
