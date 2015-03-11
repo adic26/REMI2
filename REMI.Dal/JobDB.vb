@@ -171,7 +171,7 @@ Namespace REMI.Dal
 
                 'get the teststages
                 If myJob IsNot Nothing Then
-                    myJob.TestStages = TestStageDB.GetList(TestStageType.NotSet, myJob.Name, False, myconnection)
+                    myJob.TestStages = TestStageDB.GetList(TestStageType.NotSet, String.Empty, False, myconnection, myJob.ID)
                     REMIAppCache.SetJob(myJob)
                 End If
             End If

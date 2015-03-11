@@ -94,7 +94,6 @@ Namespace REMI.Dal
 #End Region
 
 #Region "Public Methods"
-
         ''' <summary>Gets an instance of TestStage from the underlying datasource.</summary> 
         ''' <param name="id">The unique ID of the TestStage in the database.</param> 
         ''' <returns>A TestStage if the ID was found in the database, or Nothing otherwise.</returns> 
@@ -170,18 +169,18 @@ Namespace REMI.Dal
         ''' <returns> 
         ''' A TestStageCollection. 
         ''' </returns> 
-        Public Shared Function GetList(ByVal type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean) As TestStageCollection
+        Public Shared Function GetList(ByVal type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean, ByVal jobID As Int32) As TestStageCollection
             Dim tmpList As New TestStageCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myConnection.Open()
-                tmpList = GetList(type, jobName, ShowArchived, myConnection)
+                tmpList = GetList(type, jobName, ShowArchived, myConnection, jobID)
             End Using
 
             Return tmpList
         End Function
 
-        Public Shared Function GetList(ByVal Type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean, ByVal myconnection As SqlConnection) As TestStageCollection
+        Public Shared Function GetList(ByVal Type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean, ByVal myconnection As SqlConnection, ByVal jobID As Int32) As TestStageCollection
             Dim tempList As New TestStageCollection
 
             Using myCommand As New SqlCommand("remispTestStagesSelectList", myconnection)
@@ -193,6 +192,10 @@ Namespace REMI.Dal
 
                 If Not String.IsNullOrEmpty(jobName) Then
                     myCommand.Parameters.AddWithValue("@Jobname", jobName)
+                End If
+
+                If (jobID > 0) Then
+                    myCommand.Parameters.AddWithValue("@JobID", jobID)
                 End If
 
                 myCommand.Parameters.AddWithValue("@ShowArchived", ShowArchived)
@@ -384,9 +387,7 @@ Namespace REMI.Dal
         End Sub
 #End Region
 
-
         Public Shared Function GetListOfNamesForChambers(ByVal jobName As String) As List(Of String)
-
             Dim tempList As New List(Of String)
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
@@ -402,14 +403,9 @@ Namespace REMI.Dal
                         End If
                     End Using
                 End Using
-
-
             End Using
 
             Return tempList
-
         End Function
-
-
     End Class
 End Namespace

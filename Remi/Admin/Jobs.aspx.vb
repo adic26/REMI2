@@ -35,23 +35,7 @@ Partial Class Admin_TestStages
             ddlTestStageType.DataSource = Helpers.GetTestStageTypes
             ddlTestStageType.DataBind()
 
-            'If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("AddJob"))) Then
-            '    LoadJob(0)
-            'ElseIf (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("JobID"))) Then
-            '    If (ddlJobs.Items.Count > 0) Then
-            '        Dim jobID As Int32
-            '        Int32.TryParse(Request.QueryString("JobID"), jobID)
-            '        ddlJobs.Items.FindByValue(jobID).Selected = True
-            '        LoadJob(jobID)
-            '    End If
-            'Else
-            '    LoadJob(ddlJobs.SelectedItem.Value)
-            'End If
             LoadJob()
-            'ElseIf (Helpers.GetPostBackControl(Me) IsNot Nothing) Then
-            '    If (Helpers.GetPostBackControl(Me).ID = "lnkSaveAction") Then
-            '        LoadJob()
-            '    End If
         End If
     End Sub
 #End Region
@@ -87,7 +71,7 @@ Partial Class Admin_TestStages
             chkIsActive.Checked = j.IsActive
             chkNoBSN.Checked = j.NoBSN
             chkContinueFailure.Checked = j.ContinueOnFailures
-            gvwMain.DataSource = TestStageManager.GetList(TestStageType.NotSet, j.Name, chkArchived.Checked)
+            gvwMain.DataSource = TestStageManager.GetList(TestStageType.NotSet, String.Empty, True, j.ID)
             gvwMain.DataBind()
 
             Dim bs As New BatchSearch()
@@ -454,7 +438,7 @@ Partial Class Admin_TestStages
                 FillFormFieldsforTestStage(tmpTestStage)
             Case "deleteitem"
                 notMain.Notifications.Add(TestStageManager.DeleteTestStage(Convert.ToInt32(e.CommandArgument)))
-                gvwMain.DataSource = TestStageManager.GetList(TestStageType.NotSet, ddlJobs.SelectedItem.Text, chkArchived.Checked)
+                gvwMain.DataSource = TestStageManager.GetList(TestStageType.NotSet, String.Empty, True, ddlJobs.SelectedItem.Value)
                 gvwMain.DataBind()
         End Select
     End Sub

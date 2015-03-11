@@ -663,14 +663,14 @@ Partial Class Search
     Protected Sub ddlJobs_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlJobs.SelectedIndexChanged
         ddlTestStages.Items.Clear()
         ddlTestStages.Items.Add(New ListItem("All", 0))
-        ddlTestStages.DataSource = TestStageManager.GetList(0, ddlJobs.SelectedValue, False)
+        ddlTestStages.DataSource = TestStageManager.GetList(0, ddlJobs.SelectedValue, False, 0)
         ddlTestStages.DataBind()
     End Sub
 
     Protected Sub ddlJobs2_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlJobs2.SelectedIndexChanged
         ddlTestStages2.Items.Clear()
         ddlTestStages2.Items.Add(New ListItem("All", 0))
-        ddlTestStages2.DataSource = TestStageManager.GetList(0, ddlJobs2.SelectedValue, False)
+        ddlTestStages2.DataSource = TestStageManager.GetList(0, ddlJobs2.SelectedValue, False, 0)
         ddlTestStages2.DataBind()
 
         gvwTestExceptions.DataSource = Nothing
