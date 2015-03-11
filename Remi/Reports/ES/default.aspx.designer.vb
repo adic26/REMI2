@@ -104,6 +104,15 @@ Partial Public Class ES_Default
     Protected WithEvents lblRequestNumber As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''lblPrinted control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblPrinted As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''pnlES control.
     '''</summary>
     '''<remarks>

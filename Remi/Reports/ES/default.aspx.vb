@@ -14,6 +14,8 @@ Partial Class ES_Default
                 Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("/Design/scripts/jQuery/jquery-1.10.2.js"))
             End If
 
+            lblPrinted.Text = String.Format("<b>Printed:</b> {0}", DateTime.Now.ToLongDateString())
+
             Dim tmpStr As String = Request.QueryString.Get("RN")
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 

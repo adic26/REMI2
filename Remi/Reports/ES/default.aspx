@@ -39,7 +39,8 @@
     <asp:CollapsiblePanelExtender runat="server" ID="cpeApprovals" CollapseControlID="pnlApprovalHeader" TargetControlID="pnlApproval" TextLabelID="lblApprove" ExpandControlID="pnlApprovalHeader" ImageControlID="imgApprovals" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>
       
     <a name="top"></a>
-    <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label>
+    <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label><br /><br />
+    <asp:Label runat="server" ID="lblPrinted"></asp:Label>
     <br /><br /><br />
     <asp:Panel runat="server" ID="pnlES" CssClass="CollapseHeader" style="cursor:none;">
         <table class="TableNoBorders" width="100%">
