@@ -118,7 +118,7 @@ Namespace REMI.Core
         End Function
         Public Shared Function GetTestRecordsLink(ByVal qraNumber As String, ByVal testName As String, ByVal testStageName As String, ByVal jobName As String, ByVal testUnitID As Int32) As String
             Dim str As New Text.StringBuilder
-            str.Append(REMIConfiguration.REMITestRecordsLink)
+            str.Append(String.Format("~\{0}", REMIConfiguration.REMITestRecordsLink))
             str.Append("?RN=")
             str.Append(qraNumber)
             If Not String.IsNullOrEmpty(testName) Then

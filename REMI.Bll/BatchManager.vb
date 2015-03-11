@@ -619,7 +619,7 @@ Namespace REMI.Bll
         ''' <param name="batchQRANumber">The QRA number of the batch.</param>
         ''' <returns>A batch</returns>
         ''' <remarks>This function always returns an object. Check the ID for a null batch!</remarks>
-        Public Shared Function GetItem(ByVal batchQRANumber As String, Optional ByVal userIdentification As String = "", Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
+        Public Shared Function GetItem(ByVal batchQRANumber As String, Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
             Dim b As Batch
 
             If refreshCache Then

@@ -413,7 +413,7 @@ Namespace REMI.Bll
                     Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
 
                     If (saved And requestType.HasIntegration) Then
-                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, userIdentification, False, True, False)
+                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, False, True, False)
 
                         If (req.BatchID Is Nothing) Then
                             req.BatchID = b.ID
