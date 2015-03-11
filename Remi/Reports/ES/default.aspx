@@ -53,6 +53,8 @@
                         <asp:ListItem Text="Pass" Value="1" />
                         <asp:ListItem Text="Fail" Value="2" />
                         <asp:ListItem Text="No Result" Value="3" />
+                        <asp:ListItem Text="Preliminary Pass" Value="4" />
+                        <asp:ListItem Text="Preliminary Fail" Value="5" />
                     </asp:DropDownList>
                 </td>
             </tr>

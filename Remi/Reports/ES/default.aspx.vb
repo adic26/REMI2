@@ -115,8 +115,10 @@ Partial Class ES_Default
 
         Select Case lblResult.Text.ToLower
             Case "pass"
+            Case "preliminary pass"
                 lblResult.CssClass = "ESPass"
             Case "fail"
+            Case "preliminary fail"
                 lblResult.CssClass = "ESFail"
             Case "no result"
                 lblResult.CssClass = "ESNoResult"

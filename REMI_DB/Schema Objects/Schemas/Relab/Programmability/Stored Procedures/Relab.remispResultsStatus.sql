@@ -1,7 +1,7 @@
 ﻿ALTER PROCEDURE [Relab].[remispResultsStatus] @BatchID INT
 AS
 BEGIN
-	DECLARE @Status NVARCHAR(15)
+	DECLARE @Status NVARCHAR(18)
 	
 	SELECT CASE WHEN r.PassFail = 0 THEN 'Fail' ELSE 'Pass' END AS Result, COUNT(*) AS NumRecords
 	INTO #ResultCount
@@ -24,9 +24,9 @@ BEGIN
 	ELSE
 		BEGIN
 			IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Fail'))
-				SET @Status = 'Fail'
+				SET @Status = 'Preliminary Fail'
 			ELSE IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Pass'))
-				SET @Status = 'Pass'
+				SET @Status = 'Preliminary Pass'
 			ELSE
 				SET @Status = 'No Result'
 		END
