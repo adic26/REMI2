@@ -73,18 +73,23 @@ Partial Class ES_Default
 
                 For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Select New With {tr.ID, tr.FailDocDS})
                     pnlFA.Style.Add("Display", "block")
-                    Dim fac As FAControl
-                    fac = CType(LoadControl("..\..\Controls\FAControl.ascx"), FAControl)
-                    fac.EmptyDataText = "Error Loading FA!"
 
-                    If (fa.FailDocDS.Columns.Count > 8) Then
-                        fac.SetDataSource(fa.FailDocDS)
-                    End If
+                    Try
+                        Dim fac As FAControl
+                        fac = CType(LoadControl("..\..\Controls\FAControl.ascx"), FAControl)
+                        fac.EmptyDataText = "Error Loading FA!"
 
-                    fac.Visible = True
-                    fac.ID = fa.ID
+                        If (fa.FailDocDS.Columns.Count > 8) Then
+                            fac.SetDataSource(fa.FailDocDS)
+                        End If
 
-                    pnlFAInfo.Controls.Add(fac)
+                        fac.Visible = True
+                        fac.ID = fa.ID
+
+                        pnlFAInfo.Controls.Add(fac)
+                    Catch ex As Exception
+                        BatchManager.LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                    End Try
                 Next
 
                 If (pnlFA.Style.Item("Display") = "block") Then

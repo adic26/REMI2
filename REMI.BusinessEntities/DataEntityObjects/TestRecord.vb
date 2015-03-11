@@ -329,6 +329,11 @@ Namespace REMI.BusinessEntities
                     Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Other") = " ")
                 End If
 
+                If (dt.Columns("Analysis") Is Nothing) Then
+                    dt.Columns.Add("Analysis", GetType(String))
+                    Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Analysis") = " ")
+                End If
+
                 dt.AcceptChanges()
 
                 Return dt
