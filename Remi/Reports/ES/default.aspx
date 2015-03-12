@@ -294,7 +294,8 @@
             </asp:Panel>
         </ContentTemplate>
     </asp:UpdatePanel>
-
+    
+    <br /><br />
     <a name="fa"></a>
     <asp:Panel ID="pnlFA" runat="server" style="display:none;" CssClass="CollapseHeader" Height="75" HorizontalAlign="Left">
         <asp:Label ID="lblFA" runat="server" Text="Failure<br/><font color='rgb(0,124,186)'>Analysis</font>" /><asp:Image runat="server" ID="imgFA" />

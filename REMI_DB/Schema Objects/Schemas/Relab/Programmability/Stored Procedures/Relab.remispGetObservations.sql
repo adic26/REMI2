@@ -21,7 +21,7 @@ BEGIN
 		INNER JOIN Batches b ON b.ID=tu.BatchID
 		LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
 	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] = 'Observation')
-		AND b.ID=@BatchID
+		AND b.ID=@BatchID AND ISNULL(m.Archived,0) = 0
 	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder
 END
 GO

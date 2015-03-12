@@ -75,7 +75,7 @@ Partial Class ES_Default
 
                 SetStatus(ds.Tables(2).Rows(0)(0).ToString())
 
-                For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Select New With {tr.ID, tr.FailDocDS})
+                For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Distinct Select New With {tr.FailDocDS})
                     pnlFA.Style.Add("Display", "block")
 
                     Try
@@ -88,7 +88,6 @@ Partial Class ES_Default
                         End If
 
                         fac.Visible = True
-                        fac.ID = fa.ID
 
                         pnlFAInfo.Controls.Add(fac)
                     Catch ex As Exception

@@ -24,6 +24,7 @@ BEGIN
 		LEFT OUTER JOIN JobOrientation jo WITH(NOLOCK) ON jo.ID=b.OrientationID
 		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf WITH(NOLOCK) ON mf.ResultMeasurementID=m.ID
 	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] = 'Observation') AND b.ID=@BatchID
+		AND ISNULL(m.Archived, 0) = 0
 	GROUP BY Relab.ResultsObservation (m.ID)
 	
 	SELECT @RowID = MIN(RowID) FROM #units
@@ -50,6 +51,7 @@ BEGIN
 				AND [values] = ''Observation'') AND b.ID=' + CONVERT(VARCHAR, @BatchID) + ' 
 				AND tu.batchunitnumber=' + CONVERT(VARCHAR,@BatchUnitNumber) + ' 
 				AND Relab.ResultsObservation (m.ID) = #Observations.Observation
+				AND ISNULL(m.Archived, 0) = 0
 			ORDER BY ts.ProcessOrder ASC
 		), ''-'')'
 		
