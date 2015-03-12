@@ -170,7 +170,7 @@
                 <asp:Label ID="lblResultSummary" runat="server" Text="Results<br/><font color='rgb(0,124,186)'>Summary</font>" /><asp:Image runat="server" ID="imgResultSummary" />
             </asp:Panel>
             <asp:Panel runat="server" ID="pnlResultSummary" CssClass="CollapseBody">
-                <asp:GridView ID="gvwResultSummary" DataSourceID="odsResultSummary" runat="server" AutoGenerateColumns="true" ShowHeader="true" Width="1200">
+                <asp:GridView ID="gvwResultSummary" DataSourceID="odsResultSummary" runat="server" AutoGenerateColumns="true" ShowHeader="true">
                 </asp:GridView>
                 <asp:ObjectDataSource ID="odsResultSummary" runat="server" SelectMethod="ESResultSummary" TypeName="REMI.Bll.ReportManager" OldValuesParameterFormatString="original_{0}">
                     <SelectParameters>
@@ -197,7 +197,7 @@
                     });
                 </script>
 
-                <asp:GridView ID="gvwResultBreakDown" runat="server" DataSourceID="odsResultBreakdown" EnableViewState="true" AutoGenerateColumns="false" DataKeyNames="ID" ShowHeader="true" style="width:100%">
+                <asp:GridView ID="gvwResultBreakDown" runat="server" DataSourceID="odsResultBreakdown" EnableViewState="true" AutoGenerateColumns="false" DataKeyNames="ID" ShowHeader="true">
                     <Columns>
                         <asp:TemplateField>
                             <ItemTemplate>
