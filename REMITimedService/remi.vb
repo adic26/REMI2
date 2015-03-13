@@ -11,7 +11,7 @@
                 _remiInstance = New remiAPI.RemiAPI
                 _remiInstance.PreAuthenticate = True
 
-                _remiInstance.Credentials = New System.Net.NetworkCredential("remi", "qahUS8Ag", "rimnet")
+                _remiInstance.Credentials = New System.Net.NetworkCredential("remi", "Zaq12wsx", "rimnet")
                 _remiInstance.CookieContainer = New System.Net.CookieContainer
             End If
             Return _remiInstance
