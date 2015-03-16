@@ -31,12 +31,22 @@ Public Class REMIInternal
         Return response
     End Function
 
+
+    <WebMethod(Description:="Given a job name this function returns all the known stages of the job.")> _
+    Public Function GetJobStages(ByVal jobID As Int32) As TestStageCollection
+        Try
+            Return TestStageManager.GetList(TestStageType.NotSet, String.Empty, False, jobID)
+        Catch ex As Exception
+            JobManager.LogIssue("REMI Internal GetJobStages", "e3", NotificationType.Errors, ex, String.Format("jobID: {0}", jobID.ToString()))
+        End Try
+        Return Nothing
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Returns a list of the Jobs (Test Types) available. Represented as a list of strings. This method can be used to populate lists.")> _
-    Public Function GetJobs(ByVal userIdentification As String, ByVal requestTypeID As Int32) As String()
+    Public Function GetJobs(ByVal userIdentification As String, ByVal requestTypeID As Int32) As JobCollection
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Dim jobs As String() = (From j As Job In JobManager.GetJobListDT(requestTypeID, UserManager.GetCurrentUser.ID, 0) Select j.Name).ToArray
-                Return jobs
+                Return JobManager.GetJobListDT(requestTypeID, UserManager.GetCurrentUser.ID, 0)
             End If
         Catch ex As Exception
             JobManager.LogIssue("REMI Internal GetJobs", "e3", NotificationType.Errors, ex, String.Format("requestTypeID: {0} userIdentification: {1} ", requestTypeID, userIdentification))
@@ -165,29 +175,6 @@ Public Class REMIInternal
         End Try
 
         Return theads.ToString()
-    End Function
-
-    <System.Web.Services.WebMethod()> _
-    Public Function GetAllStages(ByVal requestTypeID As Int32) As String
-        Dim searchField As New SearchFieldResponseDefinition()
-        Try
-            searchField.Results = Search_FieldResponse(requestTypeID)
-            searchField.Success = True
-        Catch ex As Exception
-            Console.WriteLine(ex.Message)
-        End Try
-
-        Dim query = From x In searchField.Results
-                    Where x.Type = "Stage"
-                    Select "<option>" + x.Name + "</option>"
-
-        Dim responseBuilder As New StringBuilder()
-
-        For Each x As String In query
-            responseBuilder.Append(x)
-        Next
-
-        Return responseBuilder.ToString()
     End Function
 
     <System.Web.Services.WebMethod()> _

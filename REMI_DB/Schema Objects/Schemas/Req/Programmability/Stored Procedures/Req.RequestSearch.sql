@@ -239,6 +239,7 @@ BEGIN
 			LEFT OUTER JOIN dbo.Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
 			INNER JOIN dbo.Tests t WITH(NOLOCK) ON rs.TestID=t.ID
 			INNER JOIN dbo.TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
+			INNER JOIN dbo.Jobs j WITH(NOLOCK) ON j.ID=ts.JobID
 			LEFT OUTER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
 		WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) ')
 
@@ -319,6 +320,18 @@ BEGIN
 
 			INSERT INTO #executeSQL (sqlvar)
 			VALUES (' AND ts.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
+		END
+		
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Job') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + LTRIM(RTRIM(ID)) + ','
+			FROM dbo.#temp
+			WHERE TableType = 'Job'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND j.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
 		END
 		
 		SET @SQL =  REPLACE(REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <'),'&amp;','&')
@@ -731,7 +744,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES-- ('Request', 51, '*ontario')
+VALUES ('Request', 51, '*Windermere')
 --,('Request', 51, '-Windermere E R135')
 --,('Request', 51, '3G SIMs')
 -- ,('Request', 51, '*Lisbon')
@@ -739,10 +752,12 @@ VALUES-- ('Request', 51, '*ontario')
 --,('Request', 49, '*Accessory')
 --,('Test', 1099, 'Sensor Test')
 --,('Test', 1280, 'Functional')
---,('Test', 1020, 'Radiated RF Test')
+,('Test', 1020, 'Radiated RF Test')
 --('Test', 1561, 'Display Test')
 --,('Test', 1103, 'Camera Front')
-('Stage', 3616, '1 Drop')
+--('Stage', 3616, '1 Drop')
+--,('Job', 179, 'T004 DIRT RASS Drop')
+--,('Job', 215, 'T013 Mechanical Suite')
 --,('Stage', 2246, 'Analysis')
 --,('Stage', 3220, 'Post 720hrs')
 --,('BSN', 0, '1151185790')
