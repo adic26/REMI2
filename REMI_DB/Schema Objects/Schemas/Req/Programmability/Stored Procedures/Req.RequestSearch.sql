@@ -184,7 +184,7 @@ BEGIN
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
 
-		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, IMEI NVARCHAR(150), BSN BIGINT, ID INT, ResultID INT, XMLID INT)
+		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, UnitIMEI NVARCHAR(150), UnitBSN BIGINT, ID INT, ResultID INT, XMLID INT)
 		CREATE TABLE dbo.#RRParameters (ResultMeasurementID INT)
 		CREATE TABLE dbo.#RRInformation (RID INT, ResultInfoArchived BIT)
 		

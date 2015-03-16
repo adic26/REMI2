@@ -837,6 +837,199 @@ END
 GO
 GRANT EXECUTE ON [Req].[GetRequestSetupInfo] TO REMI
 GO
+ALTER VIEW [dbo].[vw_GetTaskInfo]
+AS
+SELECT qranumber, processorder, BatchID,
+	   tsname, 
+	   tname, 
+	   testtype, 
+	   teststagetype, 
+	   resultbasedontime, 
+	   testunitsfortest, 
+	   (SELECT CASE WHEN specifictestduration IS NULL THEN generictestduration ELSE specifictestduration END) AS expectedDuration,
+	   TestStageID, TestWI, TestID, IsArchived, ISNULL(RecordExists, 0) AS RecordExists, TestIsArchived, ISNULL(TestRecordExists, 0) AS TestRecordExists,
+TestCounts
+FROM   
+	(
+		SELECT b.qranumber,b.ID AS BatchID,
+		ts.processorder, ts.teststagename AS tsname, t.testname AS tname, t.testtype, ts.teststagetype, t.duration AS genericTestDuration, ts.ID AS TestStageID,t.ID AS TestID,
+		t.WILocation As TestWI, ISNULL(ts.IsArchived, 0) AS IsArchived, ISNULL(t.IsArchived, 0) AS TestIsArchived, 
+			t.resultbasedontime, 
+			(
+				SELECT bstd.duration 
+				FROM   batchspecifictestdurations AS bstd WITH(NOLOCK)
+				WHERE  bstd.testid = t.id 
+					   AND bstd.batchid = b.id
+			) AS specificTestDuration,
+			(
+				SELECT CONVERT(NVARCHAR, tur.BatchUnitNumber) + ':' + CONVERT(NVARCHAR, ISNULL((SELECT MAX(x.VerNum) FROM Relab.ResultsXML x WHERE x.ResultID=r.ID), 1)) + '-' + CONVERT(NVARCHAR, CASE WHEN tr.RelabVersion = 0 THEN 1 ELSE ISNULL(tr.RelabVersion,1) END) + ','
+				FROM TestUnits tur
+					LEFT OUTER JOIN Relab.Results r ON r.TestUnitID=tur.ID AND r.TestID=t.ID AND r.TestStageID=ts.ID
+					LEFT OUTER JOIN TestRecords tr ON tr.TestID=r.TestID AND tr.TestStageID=r.TestStageID AND tr.TestUnitID=r.TestUnitID
+				WHERE tur.BatchID=b.id
+				FOR xml path ('')	
+			) AS TestCounts,
+			(				
+				SELECT Cast(tu.batchunitnumber AS VARCHAR(MAX)) + ', ' 
+				FROM testunits AS tu WITH(NOLOCK)
+				WHERE tu.batchid = b.id 
+					AND 
+					(
+						NOT EXISTS 
+						(
+							SELECT DISTINCT 1
+							FROM vw_ExceptionsPivoted as pvt WITH(NOLOCK)
+							where pvt.ID IN (SELECT ID FROM TestExceptions WITH(NOLOCK) WHERE LookupID=3 AND Value = tu.ID) AND
+							(
+								(pvt.TestStageID IS NULL AND pvt.Test = t.ID ) 
+								OR 
+								(pvt.Test IS NULL AND pvt.TestStageID = ts.id) 
+								OR 
+								(pvt.TestStageID = ts.id AND pvt.Test = t.ID)
+								OR
+								(pvt.TestStageID IS NULL AND pvt.Test IS NULL)
+							)
+						)
+					)
+				FOR xml path ('')
+			) AS TestUnitsForTest,
+			(SELECT TOP 1 1
+			FROM TestRecords tr WITH(NOLOCK)
+				INNER JOIN TestUnits tu ON tr.TestUnitID = tu.ID
+			WHERE tr.TestStageID=ts.ID AND tu.BatchID=b.ID) AS RecordExists,
+			(SELECT TOP 1 1
+			FROM TestRecords tr WITH(NOLOCK)
+				INNER JOIN TestUnits tu ON tr.TestUnitID = tu.ID
+			WHERE tr.TestID=t.ID AND tu.BatchID=b.ID AND tr.TestStageID = ts.ID) AS TestRecordExists
+		FROM TestStages ts WITH(NOLOCK)
+		INNER JOIN Jobs j WITH(NOLOCK) ON ts.JobID=j.ID
+		INNER JOIN Batches b WITH(NOLOCK) on j.jobname = b.jobname 
+		INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
+		INNER JOIN Products p WITH(NOLOCK) ON b.ProductID=p.ID
+		WHERE EXISTS 
+			(
+				SELECT DISTINCT 1
+				FROM Req.RequestSetup rs
+				WHERE
+					(
+						(rs.JobID IS NULL )
+						OR
+						(rs.JobID IS NOT NULL AND rs.JobID = j.ID)
+					)
+					AND
+					(
+						(rs.ProductID IS NULL)
+						OR
+						(rs.ProductID IS NOT NULL AND rs.ProductID = p.ID)
+					)
+					AND
+					(
+						(rs.TestID IS NULL)
+						OR
+						(rs.TestID IS NOT NULL AND rs.TestID = t.ID)
+					)
+					AND
+					(
+						(rs.TestStageID IS NULL)
+						OR
+						(rs.TestStageID IS NOT NULL AND rs.TestStageID = ts.ID)
+					)
+					AND
+					(
+						(rs.BatchID IS NULL) AND NOT EXISTS(SELECT 1 
+															FROM Req.RequestSetup rs2 
+																INNER JOIN TestStages ts2 ON ts2.ID=rs2.TestStageID AND ts2.TestStageType=ts.TestStageType
+															WHERE rs2.BatchID = b.ID )
+						OR
+						(rs.BatchID IS NOT NULL AND rs.BatchID = b.ID)
+					)
+			)
+	) AS unitData
+WHERE TestUnitsForTest IS NOT NULL AND 
+	(
+		(ISNULL(RecordExists,0) > 0 AND IsArchived = 1 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 1)
+		OR
+		(ISNULL(IsArchived, 0) = 0 AND ISNULL(TestIsArchived, 0) = 0)
+		OR
+		(ISNULL(RecordExists,0) > 0 AND IsArchived = 0 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 1)
+		OR
+		(ISNULL(RecordExists,0) > 0 AND IsArchived = 1 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 0)
+	)
+GO
+ALTER PROCEDURE [remispBatchGetTaskInfo] @BatchID INT, @TestStageID INT = 0
+AS
+BEGIN
+	DECLARE @BatchStatus INT
+	SELECT @BatchStatus = BatchStatus FROM Batches WHERE ID=@BatchID
+
+	IF (@BatchStatus = 5)
+	BEGIN
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, '' AS TestCounts
+		FROM vw_GetTaskInfoCompleted
+		WHERE BatchID = @BatchID
+			AND
+			(
+				(@TestStageID = 0)
+				OR
+				(@TestStageID <> 0 AND TestStageID=@TestStageID)
+			)
+		ORDER BY ProcessOrder
+	END
+	ELSE
+	BEGIN
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, TestCounts
+		FROM vw_GetTaskInfo 
+		WHERE BatchID = @BatchID
+			AND
+			(
+				(@TestStageID = 0)
+				OR
+				(@TestStageID <> 0 AND TestStageID=@TestStageID)
+			)
+		ORDER BY ProcessOrder
+	END
+END
+GO
+GRANT EXECUTE ON remispBatchGetTaskInfo TO Remi
+GO
+ALTER PROCEDURE [dbo].remispGetBatchDocuments @QRANumber nvarchar(11)
+AS
+BEGIN
+	DECLARE @JobName NVARCHAR(400)
+	DECLARE @ProductID INT
+	DECLARE @ID INT
+	SELECT @JobName = JobName, @ProductID = ProductID, @ID = ID FROM Batches WITH(NOLOCK) WHERE QRANumber=@QRANumber
+
+	CREATE TABLE #view (QRANumber NVARCHAR(11), expectedDuration REAL, processorder INT, resultbasedontime INT, TestName NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, testtype INT, teststagetype INT, TestStageName NVARCHAR(400), testunitsfortest NVARCHAR(MAX), TestID INT, TestStageID INT, IsArchived BIT, TestIsArchived BIT, TestWI NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, TestCounts NVARCHAR(MAX))
+
+	insert into #view (QRANumber, expectedDuration, processorder, resultbasedontime, TestName, testtype, teststagetype, TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, TestIsArchived, TestWI, TestCounts)
+	exec remispBatchGetTaskInfo @BatchID=@ID
+
+	SELECT (j.JobName + ' WI') AS WIType, j.WILocation AS Location
+	FROM Jobs j WITH(NOLOCK)
+	WHERE j.JobName=@JobName AND LTRIM(RTRIM(ISNULL(j.WILocation, ''))) <> ''
+	UNION
+	SELECT DISTINCT TestName AS WIType, TestWI AS Location
+	FROM #view WITH(NOLOCK)
+	WHERE QRANumber=@QRANumber and processorder > 0 AND testtype IN (1,2) AND LTRIM(RTRIM(ISNULL(TestWI,''))) <> ''
+	UNION
+	SELECT (j.JobName + ' Procedure') AS WIType, j.ProcedureLocation AS Location
+	FROM Jobs j WITH(NOLOCK)
+	WHERE j.JobName=@JobName AND LTRIM(RTRIM(ISNULL(j.ProcedureLocation, ''))) <> ''
+	UNION
+	SELECT 'Specification' AS WIType, 'https://hwqaweb.rim.net/pls/trs/data_entry.main?req=QRA-ENG-SP-11-0001' AS Location
+	UNION
+	SELECT 'QAP' As WIType, p.QAPLocation AS Location
+	FROM Products p WITH(NOLOCK)
+	WHERE p.ID=@ProductID AND LTRIM(RTRIM(ISNULL(QAPLocation, ''))) <> ''
+
+	DROP TABLE #view
+END
+GO
+GRANT EXECUTE ON remispGetBatchDocuments TO REMI
+GO
 ALTER PROCEDURE [Req].[RequestSearch] @RequestTypeID INT, @tv dbo.SearchFields READONLY, @UserID INT = NULL
 AS
 BEGIN
@@ -1023,7 +1216,7 @@ BEGIN
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
 
-		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, IMEI NVARCHAR(150), BSN BIGINT, ID INT, ResultID INT, XMLID INT)
+		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, UnitIMEI NVARCHAR(150), UnitBSN BIGINT, ID INT, ResultID INT, XMLID INT)
 		CREATE TABLE dbo.#RRParameters (ResultMeasurementID INT)
 		CREATE TABLE dbo.#RRInformation (RID INT, ResultInfoArchived BIT)
 		
@@ -1078,6 +1271,7 @@ BEGIN
 			LEFT OUTER JOIN dbo.Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
 			INNER JOIN dbo.Tests t WITH(NOLOCK) ON rs.TestID=t.ID
 			INNER JOIN dbo.TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
+			INNER JOIN dbo.Jobs j WITH(NOLOCK) ON j.ID=ts.JobID
 			LEFT OUTER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
 		WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) ')
 
@@ -1158,6 +1352,18 @@ BEGIN
 
 			INSERT INTO #executeSQL (sqlvar)
 			VALUES (' AND ts.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
+		END
+		
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Job') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + LTRIM(RTRIM(ID)) + ','
+			FROM dbo.#temp
+			WHERE TableType = 'Job'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND j.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
 		END
 		
 		SET @SQL =  REPLACE(REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <'),'&amp;','&')
@@ -1567,199 +1773,6 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
-GO
-ALTER VIEW [dbo].[vw_GetTaskInfo]
-AS
-SELECT qranumber, processorder, BatchID,
-	   tsname, 
-	   tname, 
-	   testtype, 
-	   teststagetype, 
-	   resultbasedontime, 
-	   testunitsfortest, 
-	   (SELECT CASE WHEN specifictestduration IS NULL THEN generictestduration ELSE specifictestduration END) AS expectedDuration,
-	   TestStageID, TestWI, TestID, IsArchived, ISNULL(RecordExists, 0) AS RecordExists, TestIsArchived, ISNULL(TestRecordExists, 0) AS TestRecordExists,
-TestCounts
-FROM   
-	(
-		SELECT b.qranumber,b.ID AS BatchID,
-		ts.processorder, ts.teststagename AS tsname, t.testname AS tname, t.testtype, ts.teststagetype, t.duration AS genericTestDuration, ts.ID AS TestStageID,t.ID AS TestID,
-		t.WILocation As TestWI, ISNULL(ts.IsArchived, 0) AS IsArchived, ISNULL(t.IsArchived, 0) AS TestIsArchived, 
-			t.resultbasedontime, 
-			(
-				SELECT bstd.duration 
-				FROM   batchspecifictestdurations AS bstd WITH(NOLOCK)
-				WHERE  bstd.testid = t.id 
-					   AND bstd.batchid = b.id
-			) AS specificTestDuration,
-			(
-				SELECT CONVERT(NVARCHAR, tur.BatchUnitNumber) + ':' + CONVERT(NVARCHAR, ISNULL((SELECT MAX(x.VerNum) FROM Relab.ResultsXML x WHERE x.ResultID=r.ID), 1)) + '-' + CONVERT(NVARCHAR, CASE WHEN tr.RelabVersion = 0 THEN 1 ELSE ISNULL(tr.RelabVersion,1) END) + ','
-				FROM TestUnits tur
-					LEFT OUTER JOIN Relab.Results r ON r.TestUnitID=tur.ID AND r.TestID=t.ID AND r.TestStageID=ts.ID
-					LEFT OUTER JOIN TestRecords tr ON tr.TestID=r.TestID AND tr.TestStageID=r.TestStageID AND tr.TestUnitID=r.TestUnitID
-				WHERE tur.BatchID=b.id
-				FOR xml path ('')	
-			) AS TestCounts,
-			(				
-				SELECT Cast(tu.batchunitnumber AS VARCHAR(MAX)) + ', ' 
-				FROM testunits AS tu WITH(NOLOCK)
-				WHERE tu.batchid = b.id 
-					AND 
-					(
-						NOT EXISTS 
-						(
-							SELECT DISTINCT 1
-							FROM vw_ExceptionsPivoted as pvt WITH(NOLOCK)
-							where pvt.ID IN (SELECT ID FROM TestExceptions WITH(NOLOCK) WHERE LookupID=3 AND Value = tu.ID) AND
-							(
-								(pvt.TestStageID IS NULL AND pvt.Test = t.ID ) 
-								OR 
-								(pvt.Test IS NULL AND pvt.TestStageID = ts.id) 
-								OR 
-								(pvt.TestStageID = ts.id AND pvt.Test = t.ID)
-								OR
-								(pvt.TestStageID IS NULL AND pvt.Test IS NULL)
-							)
-						)
-					)
-				FOR xml path ('')
-			) AS TestUnitsForTest,
-			(SELECT TOP 1 1
-			FROM TestRecords tr WITH(NOLOCK)
-				INNER JOIN TestUnits tu ON tr.TestUnitID = tu.ID
-			WHERE tr.TestStageID=ts.ID AND tu.BatchID=b.ID) AS RecordExists,
-			(SELECT TOP 1 1
-			FROM TestRecords tr WITH(NOLOCK)
-				INNER JOIN TestUnits tu ON tr.TestUnitID = tu.ID
-			WHERE tr.TestID=t.ID AND tu.BatchID=b.ID AND tr.TestStageID = ts.ID) AS TestRecordExists
-		FROM TestStages ts WITH(NOLOCK)
-		INNER JOIN Jobs j WITH(NOLOCK) ON ts.JobID=j.ID
-		INNER JOIN Batches b WITH(NOLOCK) on j.jobname = b.jobname 
-		INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
-		INNER JOIN Products p WITH(NOLOCK) ON b.ProductID=p.ID
-		WHERE EXISTS 
-			(
-				SELECT DISTINCT 1
-				FROM Req.RequestSetup rs
-				WHERE
-					(
-						(rs.JobID IS NULL )
-						OR
-						(rs.JobID IS NOT NULL AND rs.JobID = j.ID)
-					)
-					AND
-					(
-						(rs.ProductID IS NULL)
-						OR
-						(rs.ProductID IS NOT NULL AND rs.ProductID = p.ID)
-					)
-					AND
-					(
-						(rs.TestID IS NULL)
-						OR
-						(rs.TestID IS NOT NULL AND rs.TestID = t.ID)
-					)
-					AND
-					(
-						(rs.TestStageID IS NULL)
-						OR
-						(rs.TestStageID IS NOT NULL AND rs.TestStageID = ts.ID)
-					)
-					AND
-					(
-						(rs.BatchID IS NULL) AND NOT EXISTS(SELECT 1 
-															FROM Req.RequestSetup rs2 
-																INNER JOIN TestStages ts2 ON ts2.ID=rs2.TestStageID AND ts2.TestStageType=ts.TestStageType
-															WHERE rs2.BatchID = b.ID )
-						OR
-						(rs.BatchID IS NOT NULL AND rs.BatchID = b.ID)
-					)
-			)
-	) AS unitData
-WHERE TestUnitsForTest IS NOT NULL AND 
-	(
-		(ISNULL(RecordExists,0) > 0 AND IsArchived = 1 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 1)
-		OR
-		(ISNULL(IsArchived, 0) = 0 AND ISNULL(TestIsArchived, 0) = 0)
-		OR
-		(ISNULL(RecordExists,0) > 0 AND IsArchived = 0 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 1)
-		OR
-		(ISNULL(RecordExists,0) > 0 AND IsArchived = 1 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 0)
-	)
-GO
-ALTER PROCEDURE [remispBatchGetTaskInfo] @BatchID INT, @TestStageID INT = 0
-AS
-BEGIN
-	DECLARE @BatchStatus INT
-	SELECT @BatchStatus = BatchStatus FROM Batches WHERE ID=@BatchID
-
-	IF (@BatchStatus = 5)
-	BEGIN
-		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
-			TestIsArchived, TestWI, '' AS TestCounts
-		FROM vw_GetTaskInfoCompleted
-		WHERE BatchID = @BatchID
-			AND
-			(
-				(@TestStageID = 0)
-				OR
-				(@TestStageID <> 0 AND TestStageID=@TestStageID)
-			)
-		ORDER BY ProcessOrder
-	END
-	ELSE
-	BEGIN
-		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
-			TestIsArchived, TestWI, TestCounts
-		FROM vw_GetTaskInfo 
-		WHERE BatchID = @BatchID
-			AND
-			(
-				(@TestStageID = 0)
-				OR
-				(@TestStageID <> 0 AND TestStageID=@TestStageID)
-			)
-		ORDER BY ProcessOrder
-	END
-END
-GO
-GRANT EXECUTE ON remispBatchGetTaskInfo TO Remi
-GO
-ALTER PROCEDURE [dbo].remispGetBatchDocuments @QRANumber nvarchar(11)
-AS
-BEGIN
-	DECLARE @JobName NVARCHAR(400)
-	DECLARE @ProductID INT
-	DECLARE @ID INT
-	SELECT @JobName = JobName, @ProductID = ProductID, @ID = ID FROM Batches WITH(NOLOCK) WHERE QRANumber=@QRANumber
-
-	CREATE TABLE #view (QRANumber NVARCHAR(11), expectedDuration REAL, processorder INT, resultbasedontime INT, TestName NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, testtype INT, teststagetype INT, TestStageName NVARCHAR(400), testunitsfortest NVARCHAR(MAX), TestID INT, TestStageID INT, IsArchived BIT, TestIsArchived BIT, TestWI NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, TestCounts NVARCHAR(MAX))
-
-	insert into #view (QRANumber, expectedDuration, processorder, resultbasedontime, TestName, testtype, teststagetype, TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, TestIsArchived, TestWI, TestCounts)
-	exec remispBatchGetTaskInfo @BatchID=@ID
-
-	SELECT (j.JobName + ' WI') AS WIType, j.WILocation AS Location
-	FROM Jobs j WITH(NOLOCK)
-	WHERE j.JobName=@JobName AND LTRIM(RTRIM(ISNULL(j.WILocation, ''))) <> ''
-	UNION
-	SELECT DISTINCT TestName AS WIType, TestWI AS Location
-	FROM #view WITH(NOLOCK)
-	WHERE QRANumber=@QRANumber and processorder > 0 AND testtype IN (1,2) AND LTRIM(RTRIM(ISNULL(TestWI,''))) <> ''
-	UNION
-	SELECT (j.JobName + ' Procedure') AS WIType, j.ProcedureLocation AS Location
-	FROM Jobs j WITH(NOLOCK)
-	WHERE j.JobName=@JobName AND LTRIM(RTRIM(ISNULL(j.ProcedureLocation, ''))) <> ''
-	UNION
-	SELECT 'Specification' AS WIType, 'https://hwqaweb.rim.net/pls/trs/data_entry.main?req=QRA-ENG-SP-11-0001' AS Location
-	UNION
-	SELECT 'QAP' As WIType, p.QAPLocation AS Location
-	FROM Products p WITH(NOLOCK)
-	WHERE p.ID=@ProductID AND LTRIM(RTRIM(ISNULL(QAPLocation, ''))) <> ''
-
-	DROP TABLE #view
-END
-GO
-GRANT EXECUTE ON remispGetBatchDocuments TO REMI
 GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
