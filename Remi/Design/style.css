@@ -460,8 +460,6 @@ img.right
 /************ Test Overview Result Table Cells *******/
 /*###################################################*/
 
-/*(Pale-Green Back)*/
-
 .Pass
 {
     font-weight: bold;
@@ -481,7 +479,25 @@ img.right
     text-decoration: underline;
 }
 
-/*(Light Pink Back)*/
+.Pending
+{
+    font-weight: bold;
+    background-color: yellow;
+    color: #006400;
+}
+.Pending a
+{
+    color: #006400;
+    background-color: yellow
+}
+.Pending a:hover
+{
+    color: #006400;
+    background-color: yellow;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .Fail
 {
     font-weight: bold;

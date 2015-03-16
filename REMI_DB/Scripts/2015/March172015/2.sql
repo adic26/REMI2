@@ -837,6 +837,930 @@ END
 GO
 GRANT EXECUTE ON [Req].[GetRequestSetupInfo] TO REMI
 GO
+ALTER PROCEDURE [Req].[RequestSearch] @RequestTypeID INT, @tv dbo.SearchFields READONLY, @UserID INT = NULL
+AS
+BEGIN
+	SET NOCOUNT ON
+	CREATE TABLE dbo.#executeSQL (ID INT IDENTITY(1,1), sqlvar NTEXT)
+	CREATE TABLE dbo.#Request (RequestID INT PRIMARY KEY, BatchID INT, RequestNumber NVARCHAR(11))
+	CREATE TABLE dbo.#Infos (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS)
+	CREATE TABLE dbo.#Params (Name NVARCHAR(150) COLLATE SQL_Latin1_General_CP1_CI_AS, Val NVARCHAR(250) COLLATE SQL_Latin1_General_CP1_CI_AS)
+	CREATE TABLE dbo.#ReqNum (RequestNumber NVARCHAR(11) COLLATE SQL_Latin1_General_CP1_CI_AS)
+
+	SELECT * INTO dbo.#temp FROM @tv
+	
+	UPDATE t
+	SET t.ColumnName= '[' + rfs.Name + ']'
+	FROM Req.ReqFieldSetup rfs WITH(NOLOCK)
+		INNER JOIN dbo.#temp t WITH(NOLOCK) ON rfs.ReqFieldSetupID=t.ID
+	WHERE rfs.RequestTypeID=@RequestTypeID AND t.TableType='Request'
+	
+	DECLARE @ProductGroupColumn NVARCHAR(150) 
+	DECLARE @DepartmentColumn NVARCHAR(150)
+	DECLARE @ColumnName NVARCHAR(255)
+	DECLARE @whereStr NVARCHAR(MAX)
+	DECLARE @whereStr2 NVARCHAR(MAX)
+	DECLARE @whereStr3 NVARCHAR(MAX)
+	DECLARE @rows NVARCHAR(MAX)
+	DECLARE @ParameterColumnNames NVARCHAR(MAX)
+	DECLARE @InformationColumnNames NVARCHAR(MAX)
+	DECLARE @SQL NVARCHAR(MAX)
+	DECLARE @RecordCount INT
+	DECLARE @ByPassProductCheck INT
+	SELECT @RecordCount = COUNT(*) FROM dbo.#temp 
+	SET @ByPassProductCheck = 0
+	SELECT @ByPassProductCheck = u.ByPassProduct FROM Users u WHERE u.ID=@UserID
+	
+	SELECT @ProductGroupColumn = fs.Name
+	FROM Req.ReqFieldSetup fs 
+		INNER JOIN Req.ReqFieldMapping fm ON fs.Name=fm.ExtField AND fs.RequestTypeID=fm.RequestTypeID
+	WHERE fs.RequestTypeID = @RequestTypeID AND fm.IntField='ProductGroup'
+	
+	SELECT @DepartmentColumn = fs.Name
+	FROM Req.ReqFieldSetup fs
+		INNER JOIN Req.ReqFieldMapping fm ON fs.Name=fm.ExtField AND fs.RequestTypeID=fm.RequestTypeID
+	WHERE fs.RequestTypeID = @RequestTypeID AND fm.IntField='Department'
+	
+	SELECT @rows=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + rfs.Name
+		FROM Req.ReqFieldSetup rfs WITH(NOLOCK)
+		WHERE rfs.RequestTypeID=@RequestTypeID AND ISNULL(rfs.Archived, 0) = CONVERT(BIT, 0)
+		ORDER BY '],[' +  rfs.Name
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
+
+	SET @SQL = 'ALTER TABLE dbo.#Request ADD '+ replace(@rows, ']', '] NVARCHAR(4000)')
+	EXEC sp_executesql @SQL	
+	
+	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType = 'ReqNum') > 0)
+		BEGIN
+			INSERT INTO dbo.#ReqNum (RequestNumber)
+			SELECT SearchTerm
+			FROM dbo.#temp
+			WHERE TableType = 'ReqNum'
+		END
+
+	SET @SQL = 'INSERT INTO dbo.#Request SELECT *
+		FROM 
+			(
+			SELECT r.RequestID, r.BatchID, r.RequestNumber, rfd.Value, rfs.Name 
+			FROM Req.Request r WITH(NOLOCK)
+				INNER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.RequestID=r.RequestID
+				INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
+				INNER JOIN Req.RequestType rt WITH(NOLOCK) ON rt.RequestTypeID=rfs.RequestTypeID '
+			
+			IF ((SELECT COUNT(*) FROM dbo.#ReqNum) > 0)
+				BEGIN
+					SET @SQL += ' INNER JOIN dbo.#ReqNum rn WITH(NOLOCK) ON rn.RequestNumber=r.RequestNumber '
+				END
+				
+			SET @SQL += ' WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID) + '
+			) req PIVOT (MAX(Value) FOR Name IN (' + REPLACE(@rows, ',', ',
+			') + ')) AS pvt '
+
+	INSERT INTO #executeSQL (sqlvar)
+	VALUES (@SQL)
+	
+	SET @SQL = ''
+	
+	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Request') > 0)
+	BEGIN
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (' WHERE ')
+
+		DECLARE @ID INT
+		SELECT @ID = MIN(ID) FROM dbo.#temp WHERE TableType='Request'
+
+		WHILE (@ID IS NOT NULL)
+		BEGIN
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES ('
+				(')
+
+			IF ((SELECT TOP 1 1 FROM dbo.#temp WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) NOT LIKE '-%') = 1)
+			BEGIN
+				INSERT INTO #executeSQL (sqlvar)
+				VALUES ('
+						(')
+			END
+
+			DECLARE @NOLIKE INT
+			SET @NOLIKE = 0
+			SET @ColumnName = ''
+			SET @whereStr = ''
+			SELECT @ColumnName=ColumnName FROM dbo.#temp WHERE ID = @ID AND TableType='Request'
+
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+			FROM dbo.#temp
+			WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) NOT LIKE '*%' AND LTRIM(RTRIM(SearchTerm)) NOT LIKE '-%'
+
+			IF (LEN(LTRIM(RTRIM(@whereStr))) > 0)
+			BEGIN
+				INSERT INTO #executeSQL (sqlvar)
+				VALUES (@ColumnName + ' IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')')
+				SET @NOLIKE = 1
+			END
+
+			SET @whereStr = ''
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+			FROM dbo.#temp
+			WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) LIKE '*%'
+
+			SET @whereStr = REPLACE(REPLACE(REPLACE(@whereStr, '''*', 'LIKE ''%'), ''',', '%'''), 'LIKE ', ' OR ' + @ColumnName + ' LIKE ')
+
+			IF (LEN(LTRIM(RTRIM(@whereStr))) > 0)
+			BEGIN
+				INSERT INTO #executeSQL (sqlvar)
+				VALUES (CASE WHEN @NOLIKE = 0 THEN SUBSTRING(@whereStr,4, LEN(@whereStr)) ELSE @whereStr END)
+			END
+
+			IF ((SELECT TOP 1 1 FROM dbo.#temp WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) NOT LIKE '-%') = 1)
+			BEGIN
+				INSERT INTO #executeSQL (sqlvar)
+				VALUES (')
+						')
+			END
+
+			SET @whereStr = ''
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+			FROM dbo.#temp
+			WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) LIKE '-%'
+
+			SET @whereStr = REPLACE(REPLACE(REPLACE(@whereStr, '''-', 'NOT LIKE ''%'), ''',', '%'''), 'NOT LIKE ', ' AND ' + @ColumnName + ' NOT LIKE ')
+
+			IF (LEN(LTRIM(RTRIM(@whereStr))) > 0)
+			BEGIN
+				IF ((SELECT TOP 1 1 FROM dbo.#temp WHERE ID = @ID AND TableType='Request' AND LTRIM(RTRIM(SearchTerm)) NOT LIKE '-%') = 1)
+				BEGIN
+					INSERT INTO #executeSQL (sqlvar)
+					VALUES (@whereStr)
+				END
+				ELSE
+				BEGIN
+					INSERT INTO #executeSQL (sqlvar)
+					VALUES (SUBSTRING(@whereStr, 6, LEN(@whereStr)))
+				END
+			END
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES ('
+				) AND ')
+
+			SELECT @ID = MIN(ID) FROM dbo.#temp WHERE ID > @ID AND TableType='Request'
+		END
+
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (' 1=1 ')
+	END
+
+	SET @SQL = REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;','')
+
+	EXEC sp_executesql @SQL
+
+	--START BUILDING MEASUREMENTS
+	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType NOT IN ('Request','ReqNum')) > 0)
+	BEGIN
+		SET @SQL = ''
+		TRUNCATE TABLE dbo.#executeSQL
+
+		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, IMEI NVARCHAR(150), BSN BIGINT, ID INT, ResultID INT, XMLID INT)
+		CREATE TABLE dbo.#RRParameters (ResultMeasurementID INT)
+		CREATE TABLE dbo.#RRInformation (RID INT, ResultInfoArchived BIT)
+		
+		CREATE INDEX [Request_BatchID] ON dbo.#Request([BatchID])
+
+		SET @SQL = 'ALTER TABLE dbo.#RR ADD ' + replace(@rows, ']', '] NVARCHAR(4000)')
+		EXEC sp_executesql @SQL
+
+		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
+			TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
+			MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
+			LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
+			DegradationVal DECIMAL(10,3), MeasurementDescription NVARCHAR(800), PassFail BIT, ReTestNum INT,
+			MeasurementUnitType NVARCHAR(150)
+
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES ('INSERT INTO dbo.#RR 
+		SELECT r.RequestID, r.BatchID, r.RequestNumber, tu.BatchUnitNumber, tu.IMEI, tu.BSN, m.ID, rs.ID AS ResultID, x.ID AS XMLID, ')
+
+		SET @rows = REPLACE(@rows, '[', 'r.[')
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (@rows)
+
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (', (''http://go/remi/Relab/Measurements.aspx?ID='' + CONVERT(VARCHAR, rs.ID) + ''&Batch='' + CONVERT(VARCHAR, b.ID)) AS ResultLink ')
+		
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (', t.TestName, ts.TestStageName, x.StartDate AS TestRunStartDate, x.EndDate AS TestRunEndDate, 
+			mn.[Values] As MeasurementName, m.MeasurementValue, m.LowerLimit, m.UpperLimit, m.Archived, m.Comment, m.DegradationVal, m.Description AS MeasurementDescription, m.PassFail, m.ReTestNum, 
+			mut.[Values] As MeasurementUnitType ')
+
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (' FROM dbo.#Request r WITH(NOLOCK)
+			INNER JOIN dbo.Batches b WITH(NOLOCK) ON b.ID=r.BatchID
+			INNER JOIN dbo.TestUnits tu WITH(NOLOCK) ON tu.BatchID=b.ID ')
+
+		DECLARE @ResultArchived INT
+		DECLARE @TestRunStartDate NVARCHAR(12)
+		DECLARE @TestRunEndDate NVARCHAR(12)
+
+		SELECT @ResultArchived = ID FROM dbo.#temp WHERE TableType='ResultArchived'
+		SELECT @TestRunStartDate = SearchTerm FROM dbo.#temp WHERE TableType='TestRunStartDate'
+		SELECT @TestRunEndDate = SearchTerm FROM dbo.#temp WHERE TableType='TestRunEndDate'
+
+		IF @ResultArchived IS NULL
+			SET @ResultArchived = 0
+
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES ('INNER JOIN Relab.Results rs WITH(NOLOCK) ON rs.TestUnitID=tu.ID
+			INNER JOIN Relab.ResultsMeasurements m WITH(NOLOCK) ON m.ResultID=rs.ID
+			INNER JOIN dbo.Lookups mn WITH(NOLOCK) ON mn.LookupID = m.MeasurementTypeID 
+			LEFT OUTER JOIN dbo.Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
+			INNER JOIN dbo.Tests t WITH(NOLOCK) ON rs.TestID=t.ID
+			INNER JOIN dbo.TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
+			LEFT OUTER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
+		WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) ')
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType = 'Measurement') > 0)
+		BEGIN				
+			SET @whereStr = ''
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+			FROM dbo.#temp
+			WHERE TableType='Measurement' AND LTRIM(RTRIM(SearchTerm)) LIKE '*%'
+
+			SET @whereStr = REPLACE(REPLACE(REPLACE(@whereStr, '''*', 'LIKE ''%'), ''',', '%'''), 'LIKE ', ' OR mn.[Values] LIKE ')
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES ('AND ( ' + SUBSTRING(@whereStr,4, LEN(@whereStr)) + ' )')
+		END
+
+		IF (@TestRunStartDate IS NOT NULL AND @TestRunEndDate IS NOT NULL)
+		BEGIN
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND (x.StartDate >= ''' + CONVERT(NVARCHAR,@TestRunStartDate) + ' 00:00:00.000'' AND x.EndDate <= ''' + CONVERT(NVARCHAR,@TestRunEndDate) + ' 23:59:59'') ')
+		END
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Unit') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(ISNULL(SearchTerm, ''))) + ''','
+			FROM dbo.#temp
+			WHERE TableType = 'Unit'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND tu.BatchUnitNumber IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')')
+		END
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='IMEI') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(ISNULL(SearchTerm, ''))) + ''','
+			FROM dbo.#temp
+			WHERE TableType = 'IMEI'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND tu.IMEI IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')')
+		END
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='BSN') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+			FROM dbo.#temp
+			WHERE TableType = 'BSN'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND tu.BSN IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')')
+		END
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Test') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + LTRIM(RTRIM(ID)) + ','
+			FROM dbo.#temp
+			WHERE TableType = 'Test'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND t.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')')
+		END
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Stage') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + LTRIM(RTRIM(ID)) + ','
+			FROM dbo.#temp
+			WHERE TableType = 'Stage'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND ts.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
+		END
+		
+		SET @SQL =  REPLACE(REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <'),'&amp;','&')
+		EXEC sp_executesql @SQL
+
+		SET @SQL = ''
+		TRUNCATE TABLE dbo.#executeSQL
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Param:%') > 0)
+		BEGIN
+			INSERT INTO dbo.#Params (Name, Val)
+			SELECT REPLACE(TableType, 'Param:', ''), SearchTerm
+			FROM dbo.#temp
+			WHERE TableType LIKE 'Param:%'
+		END
+		
+		SELECT @ParameterColumnNames=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + rp.ParameterName
+		FROM dbo.#RR rr WITH(NOLOCK)
+			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
+		WHERE rp.ParameterName <> 'Command'
+		ORDER BY '],[' +  rp.ParameterName
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
+
+		IF (@ParameterColumnNames <> '[na]')
+		BEGIN
+			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
+			EXEC sp_executesql @SQL
+			SET @whereStr = ''
+			
+			DELETE p 
+			FROM dbo.#Params p
+			WHERE p.Name IN (SELECT Name
+					FROM 
+						(
+							SELECT Name
+							FROM #Params
+						) param
+					WHERE param.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@ParameterColumnNames, '[', ''), ']', ''))))))
+			
+			IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
+			BEGIN
+				SET @whereStr = ' WHERE '
+				SET @whereStr2 = ''
+				SET @whereStr3 = ''
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+				INTO #buildparamtable
+				FROM #Params
+				GROUP BY name
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+				INTO #buildparamtable2
+				FROM #Params
+				GROUP BY name
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+				INTO #buildparamtable3
+				FROM #Params
+				GROUP BY name
+				
+				UPDATE bt
+				SET bt.params = REPLACE(REPLACE((
+						SELECT ('''' + p.Val + ''',') As Val
+						FROM #Params p
+						WHERE p.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildparamtable bt
+				WHERE Params = ''
+				
+				UPDATE bt
+				SET bt.params = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(p.Val, '*','%') + '%'' OR ') As Val
+						FROM #Params p
+						WHERE p.Name = bt.Name AND Val LIKE '*%' AND Val NOT LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildparamtable2 bt
+				WHERE Params = '' OR Params IS NULL
+				
+				UPDATE bt
+				SET bt.params = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(p.Val, '-','%') + '%'' OR ') As Val
+						FROM #Params p
+						WHERE p.Name = bt.Name AND Val LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildparamtable3 bt
+				WHERE Params = '' OR Params IS NULL
+				
+				SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(params, 0, LEN(params)) + ') AND ' 
+				FROM dbo.#buildparamtable 
+				WHERE Params IS NOT NULL
+				
+				IF (@whereStr <> ' WHERE ')
+					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+
+				SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
+				FROM dbo.#buildparamtable2 
+				WHERE Params IS NOT NULL
+				
+				IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
+				BEGIN						
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr2 = ' AND ' + @whereStr2
+					ELSE
+						SET @whereStr2 = @whereStr2
+				END
+				
+				SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
+				FROM dbo.#buildparamtable3
+				WHERE Params IS NOT NULL
+				
+				IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
+				BEGIN						
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr3 = ' AND ' + @whereStr3
+					ELSE
+						SET @whereStr3 = @whereStr3
+				END
+											
+				SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')				
+
+				DROP TABLE #buildparamtable
+				DROP TABLE #buildparamtable2
+			END
+
+			SET @SQL = 'INSERT INTO dbo.#RRParameters SELECT *
+			FROM (
+				SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
+				FROM dbo.#RR rr WITH(NOLOCK)
+					INNER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
+				) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt
+			 ' + @whereStr
+				
+			EXEC sp_executesql @SQL
+		END
+		ELSE
+		BEGIN
+			SET @ParameterColumnNames = NULL
+		END
+
+		DECLARE @ResultInfoArchived INT
+		SELECT @ResultInfoArchived = ID FROM dbo.#temp WHERE TableType='ResultInfoArchived'
+
+		IF @ResultInfoArchived IS NULL
+			SET @ResultInfoArchived = 0
+							
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Info:%') > 0)
+		BEGIN
+			INSERT INTO dbo.#Infos (Name, Val)
+			SELECT REPLACE(TableType, 'Info:', ''), SearchTerm
+			FROM dbo.#temp
+			WHERE TableType LIKE 'Info:%'
+		END
+
+		SELECT @InformationColumnNames=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + ri.Name
+		FROM dbo.#RR rr WITH(NOLOCK)
+			INNER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ResultID = rr.ResultID
+			LEFT OUTER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON x.ID=ri.XMLID
+		WHERE ri.Name NOT IN ('Start UTC','Start','End', 'STEF Plugin Version')
+			AND ((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1))
+		ORDER BY '],[' +  ri.Name
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
+
+		IF (@InformationColumnNames <> '[na]')
+		BEGIN
+			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
+			EXEC sp_executesql @SQL
+			
+			SET @whereStr = ''
+			
+			DELETE i 
+			FROM dbo.#infos i
+			WHERE i.Name IN (SELECT Name
+					FROM 
+						(
+							SELECT Name
+							FROM #Infos
+						) inf
+					WHERE inf.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@InformationColumnNames, '[', ''), ']', ''))))))
+
+			IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
+			BEGIN
+				SET @whereStr = ' WHERE '
+				SET @whereStr2 = ''
+				SET @whereStr3 = ''
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+				INTO #buildinfotable
+				FROM dbo.#infos
+				GROUP BY name
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+				INTO #buildinfotable2
+				FROM dbo.#infos
+				GROUP BY name
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+				INTO #buildinfotable3
+				FROM dbo.#infos
+				GROUP BY name
+				
+				UPDATE bt
+				SET bt.info = REPLACE(REPLACE((
+						SELECT ('''' + i.Val + ''',') As Val
+						FROM dbo.#infos i
+						WHERE i.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildinfotable bt
+				WHERE info = ''
+				
+				UPDATE bt
+				SET bt.info = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(i.Val, '*','%') + '%'' OR ') As Val
+						FROM dbo.#infos i
+						WHERE i.Name = bt.Name AND Val LIKE '*%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildinfotable2 bt
+				WHERE info = '' OR info IS NULL
+				
+				UPDATE bt
+				SET bt.info = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(i.Val, '-','%') + '%'' OR ') As Val
+						FROM dbo.#infos i
+						WHERE i.Name = bt.Name AND Val LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildinfotable3 bt
+				WHERE info = '' OR info IS NULL
+									
+				SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(info, 0, LEN(info)) + ') AND ' 
+				FROM dbo.#buildinfotable 
+				WHERE info IS NOT NULL 
+				
+				IF (@whereStr <> ' WHERE ')
+					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+									
+				SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
+				FROM dbo.#buildinfotable2 
+				WHERE info IS NOT NULL 
+				
+				IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
+				BEGIN						
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr2 = ' AND ' + @whereStr2
+					ELSE
+						SET @whereStr2 = @whereStr2
+				END						
+				
+				SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
+				FROM dbo.#buildinfotable3 
+				WHERE info IS NOT NULL 
+				
+				IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
+				BEGIN						
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr3 = ' AND ' + @whereStr3
+					ELSE
+						SET @whereStr3 = @whereStr3
+				END
+											
+				SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')
+
+				DROP TABLE #buildinfotable
+				DROP TABLE #buildinfotable2
+			END
+
+			SET @SQL = N'INSERT INTO dbo.#RRInformation SELECT *
+			FROM (
+				SELECT rr.ResultID AS RID, ri.IsArchived AS ResultInfoArchived, ri.Name, ri.Value
+				FROM dbo.#RR rr WITH(NOLOCK)
+					INNER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON rr.XMLID=ri.XMLID
+					WHERE ri.Name NOT IN (''Start UTC'',''Start'',''End'', ''STEF Plugin Version'') AND
+						((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1)) 
+				) te PIVOT (MAX(Value) FOR Name IN ('+ @InformationColumnNames +')) AS pvt
+			' + @whereStr
+
+			EXEC sp_executesql @SQL, N'@ResultInfoArchived int', @ResultInfoArchived
+		END
+		ELSE
+		BEGIN
+			SET @InformationColumnNames = NULL
+		END
+
+		SET @whereStr = ''
+
+		IF (@UserID > 0 AND @UserID IS NOT NULL)
+		BEGIN
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + LTRIM(RTRIM(ColumnName)) + ','
+			FROM dbo.UserSearchFilter
+			WHERE UserID=@UserID AND RequestTypeID=@RequestTypeID
+			ORDER BY SortOrder
+		END
+		
+		DECLARE @LimitedByInfo INT
+		DECLARE @LimitedByParam INT
+		SET @LimitedByParam = 0
+		SET @LimitedByInfo = 0
+		
+		IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
+			SET @LimitedByInfo = 1
+		
+		IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
+			SET @LimitedByParam = 1
+
+		SET @whereStr = REPLACE(REPLACE(@whereStr 
+				, 'Params', CASE WHEN (SELECT 1 FROM UserSearchFilter WHERE FilterType=3) = 1 THEN @ParameterColumnNames ELSE '' END)
+				, 'Info', CASE WHEN (SELECT 1 FROM UserSearchFilter WHERE FilterType=4) = 1 THEN @InformationColumnNames ELSE '' END)
+
+		IF (ISNULL(@whereStr, '') = '')
+		BEGIN
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + COLUMN_NAME + '],' 
+			FROM tempdb.INFORMATION_SCHEMA.COLUMNS 
+			WHERE (TABLE_NAME like '#RR%' OR TABLE_NAME LIKE '#RRParameters%' OR TABLE_NAME LIKE '#RRInformation%')
+				AND COLUMN_NAME NOT IN ('RequestID', 'XMLID', 'ID', 'BatchID', 'ResultID', 'RID', 'ResultMeasurementID')
+			ORDER BY TABLE_NAME
+		END
+		
+		SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr))
+
+		SET @SQL = 'SELECT DISTINCT ' + @whereStr + '
+			FROM dbo.#RR rr 
+				LEFT OUTER JOIN dbo.#RRParameters p ON rr.ID=p.ResultMeasurementID
+				LEFT OUTER JOIN dbo.#RRInformation i ON i.RID = rr.ResultID
+			WHERE ((' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByInfo) + ' = 1 AND i.RID IS NOT NULL ))
+				AND ((' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 0) OR (' + CONVERT(NVARCHAR, @LimitedByParam) + ' = 1 AND p.ResultMeasurementID IS NOT NULL )) '
+		
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%' AND @UserID IS NOT NULL)
+		BEGIN
+			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
+																	AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
+																FROM UsersProducts up 
+																	INNER JOIN Lookups p ON p.LookupID=up.ProductID 
+																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
+		END
+		
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%' AND @UserID IS NOT NULL)
+		BEGIN
+			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
+															FROM UserDetails ud
+																INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
+															WHERE ud.UserID=' + CONVERT(NVARCHAR, @UserID) + ')) '
+		END
+		
+		print @SQL
+		EXEC sp_executesql @SQL
+
+		DROP TABLE dbo.#RRParameters
+		DROP TABLE dbo.#RRInformation
+		DROP TABLE dbo.#RR
+	END
+	ELSE
+	BEGIN
+		SET @whereStr = ''
+
+		IF (@UserID > 0 AND @UserID IS NOT NULL)
+		BEGIN
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + LTRIM(RTRIM(ColumnName)) + ','
+			FROM dbo.UserSearchFilter
+			WHERE UserID=@UserID AND FilterType = 1 AND RequestTypeID=@RequestTypeID 
+			ORDER BY SortOrder
+		END
+
+		IF (ISNULL(@whereStr, '') = '')
+		BEGIN
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + '[' + COLUMN_NAME + '],' 
+			FROM tempdb.INFORMATION_SCHEMA.COLUMNS 
+			WHERE (TABLE_NAME like '#Request%') AND COLUMN_NAME NOT IN ('RequestID', 'BatchID')
+			ORDER BY TABLE_NAME
+		END
+
+		SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr))
+
+		SET @SQL = 'SELECT DISTINCT ' + CASE WHEN @RecordCount = 0 THEN 'TOP 20' ELSE '' END + @whereStr + ' 
+					FROM dbo.#Request r 
+					WHERE (1=1)'
+
+		IF (@SQL LIKE '%[' + @ProductGroupColumn + ']%' AND @UserID IS NOT NULL)
+		BEGIN
+			SET @SQL += 'AND (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 1 OR (' + CONVERT(NVARCHAR, @ByPassProductCheck) + ' = 0 
+															AND [' + @ProductGroupColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT p.[values] 
+																FROM UsersProducts up 
+																	INNER JOIN Lookups p ON p.LookupID=up.ProductID 
+																WHERE UserID=' + CONVERT(NVARCHAR, @UserID) + '))) '
+		END
+		
+		IF (@SQL LIKE '%[' + @DepartmentColumn + ']%' AND @UserID IS NOT NULL)
+		BEGIN
+			SET @SQL += ' AND ([' + @DepartmentColumn + '] COLLATE SQL_Latin1_General_CP1_CI_AS IN (SELECT lt.[Values]
+															FROM UserDetails ud
+																INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
+															WHERE ud.UserID=' + CONVERT(NVARCHAR, @UserID) + ')) '
+		END
+		
+		SET @SQL += ' ORDER BY RequestNumber DESC '
+		EXEC sp_executesql @SQL
+	END
+
+	DROP TABLE dbo.#executeSQL
+	DROP TABLE dbo.#temp
+	DROP TABLE dbo.#Request
+	DROP TABLE dbo.#Infos
+	DROP TABLE dbo.#ReqNum
+	DROP TABLE dbo.#Params
+	SET NOCOUNT OFF
+END
+GO
+GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
+GO
+ALTER VIEW [dbo].[vw_GetTaskInfo]
+AS
+SELECT qranumber, processorder, BatchID,
+	   tsname, 
+	   tname, 
+	   testtype, 
+	   teststagetype, 
+	   resultbasedontime, 
+	   testunitsfortest, 
+	   (SELECT CASE WHEN specifictestduration IS NULL THEN generictestduration ELSE specifictestduration END) AS expectedDuration,
+	   TestStageID, TestWI, TestID, IsArchived, ISNULL(RecordExists, 0) AS RecordExists, TestIsArchived, ISNULL(TestRecordExists, 0) AS TestRecordExists,
+TestCounts
+FROM   
+	(
+		SELECT b.qranumber,b.ID AS BatchID,
+		ts.processorder, ts.teststagename AS tsname, t.testname AS tname, t.testtype, ts.teststagetype, t.duration AS genericTestDuration, ts.ID AS TestStageID,t.ID AS TestID,
+		t.WILocation As TestWI, ISNULL(ts.IsArchived, 0) AS IsArchived, ISNULL(t.IsArchived, 0) AS TestIsArchived, 
+			t.resultbasedontime, 
+			(
+				SELECT bstd.duration 
+				FROM   batchspecifictestdurations AS bstd WITH(NOLOCK)
+				WHERE  bstd.testid = t.id 
+					   AND bstd.batchid = b.id
+			) AS specificTestDuration,
+			(
+				SELECT CONVERT(NVARCHAR, tur.BatchUnitNumber) + ':' + CONVERT(NVARCHAR, ISNULL((SELECT MAX(x.VerNum) FROM Relab.ResultsXML x WHERE x.ResultID=r.ID), 1)) + '-' + CONVERT(NVARCHAR, CASE WHEN tr.RelabVersion = 0 THEN 1 ELSE ISNULL(tr.RelabVersion,1) END) + ','
+				FROM TestUnits tur
+					LEFT OUTER JOIN Relab.Results r ON r.TestUnitID=tur.ID AND r.TestID=t.ID AND r.TestStageID=ts.ID
+					LEFT OUTER JOIN TestRecords tr ON tr.TestID=r.TestID AND tr.TestStageID=r.TestStageID AND tr.TestUnitID=r.TestUnitID
+				WHERE tur.BatchID=b.id
+				FOR xml path ('')	
+			) AS TestCounts,
+			(				
+				SELECT Cast(tu.batchunitnumber AS VARCHAR(MAX)) + ', ' 
+				FROM testunits AS tu WITH(NOLOCK)
+				WHERE tu.batchid = b.id 
+					AND 
+					(
+						NOT EXISTS 
+						(
+							SELECT DISTINCT 1
+							FROM vw_ExceptionsPivoted as pvt WITH(NOLOCK)
+							where pvt.ID IN (SELECT ID FROM TestExceptions WITH(NOLOCK) WHERE LookupID=3 AND Value = tu.ID) AND
+							(
+								(pvt.TestStageID IS NULL AND pvt.Test = t.ID ) 
+								OR 
+								(pvt.Test IS NULL AND pvt.TestStageID = ts.id) 
+								OR 
+								(pvt.TestStageID = ts.id AND pvt.Test = t.ID)
+								OR
+								(pvt.TestStageID IS NULL AND pvt.Test IS NULL)
+							)
+						)
+					)
+				FOR xml path ('')
+			) AS TestUnitsForTest,
+			(SELECT TOP 1 1
+			FROM TestRecords tr WITH(NOLOCK)
+				INNER JOIN TestUnits tu ON tr.TestUnitID = tu.ID
+			WHERE tr.TestStageID=ts.ID AND tu.BatchID=b.ID) AS RecordExists,
+			(SELECT TOP 1 1
+			FROM TestRecords tr WITH(NOLOCK)
+				INNER JOIN TestUnits tu ON tr.TestUnitID = tu.ID
+			WHERE tr.TestID=t.ID AND tu.BatchID=b.ID AND tr.TestStageID = ts.ID) AS TestRecordExists
+		FROM TestStages ts WITH(NOLOCK)
+		INNER JOIN Jobs j WITH(NOLOCK) ON ts.JobID=j.ID
+		INNER JOIN Batches b WITH(NOLOCK) on j.jobname = b.jobname 
+		INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
+		INNER JOIN Products p WITH(NOLOCK) ON b.ProductID=p.ID
+		WHERE EXISTS 
+			(
+				SELECT DISTINCT 1
+				FROM Req.RequestSetup rs
+				WHERE
+					(
+						(rs.JobID IS NULL )
+						OR
+						(rs.JobID IS NOT NULL AND rs.JobID = j.ID)
+					)
+					AND
+					(
+						(rs.ProductID IS NULL)
+						OR
+						(rs.ProductID IS NOT NULL AND rs.ProductID = p.ID)
+					)
+					AND
+					(
+						(rs.TestID IS NULL)
+						OR
+						(rs.TestID IS NOT NULL AND rs.TestID = t.ID)
+					)
+					AND
+					(
+						(rs.TestStageID IS NULL)
+						OR
+						(rs.TestStageID IS NOT NULL AND rs.TestStageID = ts.ID)
+					)
+					AND
+					(
+						(rs.BatchID IS NULL) AND NOT EXISTS(SELECT 1 
+															FROM Req.RequestSetup rs2 
+																INNER JOIN TestStages ts2 ON ts2.ID=rs2.TestStageID AND ts2.TestStageType=ts.TestStageType
+															WHERE rs2.BatchID = b.ID )
+						OR
+						(rs.BatchID IS NOT NULL AND rs.BatchID = b.ID)
+					)
+			)
+	) AS unitData
+WHERE TestUnitsForTest IS NOT NULL AND 
+	(
+		(ISNULL(RecordExists,0) > 0 AND IsArchived = 1 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 1)
+		OR
+		(ISNULL(IsArchived, 0) = 0 AND ISNULL(TestIsArchived, 0) = 0)
+		OR
+		(ISNULL(RecordExists,0) > 0 AND IsArchived = 0 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 1)
+		OR
+		(ISNULL(RecordExists,0) > 0 AND IsArchived = 1 AND ISNULL(TestRecordExists, 0) > 0 AND TestIsArchived = 0)
+	)
+GO
+ALTER PROCEDURE [remispBatchGetTaskInfo] @BatchID INT, @TestStageID INT = 0
+AS
+BEGIN
+	DECLARE @BatchStatus INT
+	SELECT @BatchStatus = BatchStatus FROM Batches WHERE ID=@BatchID
+
+	IF (@BatchStatus = 5)
+	BEGIN
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, '' AS TestCounts
+		FROM vw_GetTaskInfoCompleted
+		WHERE BatchID = @BatchID
+			AND
+			(
+				(@TestStageID = 0)
+				OR
+				(@TestStageID <> 0 AND TestStageID=@TestStageID)
+			)
+		ORDER BY ProcessOrder
+	END
+	ELSE
+	BEGIN
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, TestCounts
+		FROM vw_GetTaskInfo 
+		WHERE BatchID = @BatchID
+			AND
+			(
+				(@TestStageID = 0)
+				OR
+				(@TestStageID <> 0 AND TestStageID=@TestStageID)
+			)
+		ORDER BY ProcessOrder
+	END
+END
+GO
+GRANT EXECUTE ON remispBatchGetTaskInfo TO Remi
+GO
+ALTER PROCEDURE [dbo].remispGetBatchDocuments @QRANumber nvarchar(11)
+AS
+BEGIN
+	DECLARE @JobName NVARCHAR(400)
+	DECLARE @ProductID INT
+	DECLARE @ID INT
+	SELECT @JobName = JobName, @ProductID = ProductID, @ID = ID FROM Batches WITH(NOLOCK) WHERE QRANumber=@QRANumber
+
+	CREATE TABLE #view (QRANumber NVARCHAR(11), expectedDuration REAL, processorder INT, resultbasedontime INT, TestName NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, testtype INT, teststagetype INT, TestStageName NVARCHAR(400), testunitsfortest NVARCHAR(MAX), TestID INT, TestStageID INT, IsArchived BIT, TestIsArchived BIT, TestWI NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, TestCounts NVARCHAR(MAX))
+
+	insert into #view (QRANumber, expectedDuration, processorder, resultbasedontime, TestName, testtype, teststagetype, TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, TestIsArchived, TestWI, TestCounts)
+	exec remispBatchGetTaskInfo @BatchID=@ID
+
+	SELECT (j.JobName + ' WI') AS WIType, j.WILocation AS Location
+	FROM Jobs j WITH(NOLOCK)
+	WHERE j.JobName=@JobName AND LTRIM(RTRIM(ISNULL(j.WILocation, ''))) <> ''
+	UNION
+	SELECT DISTINCT TestName AS WIType, TestWI AS Location
+	FROM #view WITH(NOLOCK)
+	WHERE QRANumber=@QRANumber and processorder > 0 AND testtype IN (1,2) AND LTRIM(RTRIM(ISNULL(TestWI,''))) <> ''
+	UNION
+	SELECT (j.JobName + ' Procedure') AS WIType, j.ProcedureLocation AS Location
+	FROM Jobs j WITH(NOLOCK)
+	WHERE j.JobName=@JobName AND LTRIM(RTRIM(ISNULL(j.ProcedureLocation, ''))) <> ''
+	UNION
+	SELECT 'Specification' AS WIType, 'https://hwqaweb.rim.net/pls/trs/data_entry.main?req=QRA-ENG-SP-11-0001' AS Location
+	UNION
+	SELECT 'QAP' As WIType, p.QAPLocation AS Location
+	FROM Products p WITH(NOLOCK)
+	WHERE p.ID=@ProductID AND LTRIM(RTRIM(ISNULL(QAPLocation, ''))) <> ''
+
+	DROP TABLE #view
+END
+GO
+GRANT EXECUTE ON remispGetBatchDocuments TO REMI
+GO
 IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END

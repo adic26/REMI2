@@ -136,6 +136,33 @@ Namespace REMI.BusinessEntities
         End Property
 
 #Region "Public Table Views"
+        Public Function GetOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String) As String
+            If (From t In Tasks Where t.TestStageName = testStageName AndAlso t.TestName = TestName Select t).FirstOrDefault() Is Nothing Then
+                If (Me.Status = BatchStatus.Complete) Then
+                    Return "N/A"
+                Else
+                    Return "DNP"
+                End If
+            Else
+                Dim overallStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageName, TestName, NumberOfTestableUnits(testStageName, TestName))
+
+                If overallStatus <> TestRecordStatus.NotSet Then
+                    Return overallStatus.ToString
+                Else
+                    Return String.Empty
+                End If
+            End If
+        End Function
+
+        Public Function NumberOfTestableUnits(ByVal testStageName As String, ByVal testName As String) As Integer
+            Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testName Select t).FirstOrDefault
+
+            If task IsNot Nothing Then
+                Return task.UnitsForTask.Count
+            End If
+            Return 0
+        End Function
+
         ''' <summary>
         ''' This function returns a link which is placed in the daily list tables. 
         ''' It contains the overview of testing for each test unit in a batch for the particular test.
@@ -164,6 +191,7 @@ Namespace REMI.BusinessEntities
                         retStr.Append("<br />")
                     Else
                         Dim tr As TestRecord = TestRecords.GetItem(Me.JobName, testStageName, testName, tu.BatchUnitNumber)
+                        Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testName Select t).FirstOrDefault
 
                         If (tr IsNot Nothing) Then
                             retStr = retStr.Replace("###TESTID####", tr.TestID.ToString()).Replace("###TESTSTAGEID####", tr.TestStageID.ToString())
@@ -180,14 +208,22 @@ Namespace REMI.BusinessEntities
                                 retStr.Append(String.Format("<a target=&quot;_blank&quot; href=&quot;/Relab/Measurements.aspx?ID={0}&Batch={1}&quot;>RQ</a> - ", resultID, Me.ID))
                             End If
 
+                            If (task.ResultCheck.Count > 0) Then
+                                Dim resultComparison() As String = (From tsk In task.ResultCheck Where tsk.Split(New Char() {":"c}, System.StringSplitOptions.RemoveEmptyEntries)(0) = tu.BatchUnitNumber.ToString() Select tsk.Split(New Char() {":"c}, System.StringSplitOptions.RemoveEmptyEntries)(1).Split(New Char() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)).FirstOrDefault()
+
+                                If (resultComparison.Count > 0 AndAlso resultComparison(0) <> resultComparison(1)) Then
+                                    retStr.Append("Pending")
+                                Else
+                                    retStr.Append(tr.Status.ToString)
+                                End If
+                            Else
+                                retStr.Append(tr.Status.ToString)
+                            End If
+
                             If tr.FailDocs.Count > 0 Then
                                 For fdNumber As Integer = tr.FailDocs.Count - 1 To 0 Step -1
                                     If tr.FailDocs(fdNumber) IsNot Nothing Then
-                                        Select Case tr.FailDocs(fdNumber).Item("RequestType")
-                                            Case "FA" 'if its an FA then display the number and link too
-                                                retStr.Append("FA (<a href=&quot;")
-                                        End Select
-                                        retStr.Append(tr.FailDocs(fdNumber).Item("Request Link"))
+                                        retStr.Append(String.Format(" (<a href=&quot;", tr.FailDocs(fdNumber).Item("Request Link")))
                                         retStr.Append("&quot;>")
                                         retStr.Append(tr.FailDocs(fdNumber).Item("RequestNumber"))
                                         retStr.Append("</a>)")
@@ -196,22 +232,24 @@ Namespace REMI.BusinessEntities
                                         End If
                                     End If
                                 Next
-                            Else
-                                retStr.Append(tr.Status.ToString) 'otherwise just put in the status)
                             End If
+
                             If Not (Me.TestStageName = tu.CurrentTestStageName) Then
                                 retStr.Append(" *") 'indicate if the unit is at a different ts to the batch
                             End If
-                            Dim i As Integer = tu.BatchUnitNumber
-                            If (From trF In Me.TestRecords Where trF.BatchUnitNumber.Equals(i) AndAlso trF.Status.Equals(TestRecordStatus.FARaised) Select trF).Count > 0 Then
+
+                            If (From trF In Me.TestRecords Where trF.BatchUnitNumber.Equals(tu.BatchUnitNumber) AndAlso trF.Status.Equals(TestRecordStatus.FARaised) Select trF).Count > 0 Then
                                 retStr.Append(" ^") 'indicate if the unit is currently in FA for a different test/teststage
                             End If
+
                             retStr.Append(String.Format("&nbsp;{0}", tr.CurrentRelabResultVersion))
+
                             If tr.ResultSource = TestResultSource.Manual Then
                                 retStr.Append("<img src=&quot;" + System.Web.VirtualPathUtility.ToAbsolute("~/Design/Icons/png/16x16/user.png") + "&quot; title=&quot;" + tr.LastUser + "&quot;/>")
                             End If
 
                             retStr.Append("<br />") 'add the testing comments
+
                             If Not String.IsNullOrEmpty(tr.Comments) Then
                                 retStr.Append(System.Web.HttpContext.Current.Server.HtmlEncode(tr.Comments))
                                 retStr.Append("<br />")
@@ -238,20 +276,26 @@ Namespace REMI.BusinessEntities
                     End If
                 Else
                     Dim numTestableUnits As Integer = NumberOfTestableUnits(testStageName, TestName)
-                    Dim overallStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageName, TestName, numTestableUnits)
+                    Dim overallTestRecordStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageName, TestName, numTestableUnits)
+                    Dim overallStatus As String = String.Empty
 
-                    If overallStatus <> TestRecordStatus.NotSet Then
+                    If overallTestRecordStatus <> TestRecordStatus.NotSet Then
                         Dim popUpString As String = GetPopupStringForDailyListTableCell(TestName, testStageName, rqResults)
 
                         Dim baseLinkAll As String = String.Format("<a href=""{0}"" onmouseover=""Tip('{1}',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'-600',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()"">{{0}}</a>", REMIWebLinks.GetTestRecordsLink(System.Web.HttpContext.Current.Server.UrlEncode(Me.QRANumber), TestName, testStageName, Me.JobName, 0), popUpString)
                         'finally get the actual text displayed in the cell and format it in.
+
+                        If (popUpString.ToLower.Contains("pending")) Then
+                            overallStatus = "Pending"
+                        Else
+                            overallStatus = overallTestRecordStatus.ToString()
+                        End If
 
                         If (showHyperlinks) Then
                             Return String.Format(baseLinkAll, overallStatus)
                         Else
                             Return overallStatus.ToString()
                         End If
-
                     Else
                         Dim exceptionedUnits As Integer = Me.NumberOfUnits - numTestableUnits
                         If (hasEditAuthority Or isTestCenterAdmin Or hasBatchSetupAuthority) Then
@@ -264,33 +308,6 @@ Namespace REMI.BusinessEntities
             End If
         End Function
 
-        Public Function GetOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String) As String
-            If (From t In Tasks Where t.TestStageName = testStageName AndAlso t.TestName = TestName Select t).FirstOrDefault() Is Nothing Then
-                If (Me.Status = BatchStatus.Complete) Then
-                    Return "N/A"
-                Else
-                    Return "DNP"
-                End If
-            Else
-                Dim overallStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageName, TestName, NumberOfTestableUnits(testStageName, TestName))
-
-                If overallStatus <> TestRecordStatus.NotSet Then
-                    Return overallStatus.ToString
-                Else
-                    Return String.Empty
-                End If
-            End If
-        End Function
-
-        Public Function NumberOfTestableUnits(ByVal testStageName As String, ByVal testName As String) As Integer
-            Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testName Select t).FirstOrDefault
-
-            If task IsNot Nothing Then
-                Return task.UnitsForTask.Count
-            End If
-            Return 0
-        End Function
-
         Public Function GetEnvTestOverviewCellString(ByVal unitNumber As Integer, ByVal testStageName As String, ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal hasBatchSetupAuthority As Boolean) As String
             Dim tr As TestRecord = TestRecords.GetItem(Me.JobName, testStageName, testStageName, unitNumber)
             Dim TestTimeRemaining As Double = 0
@@ -300,11 +317,24 @@ Namespace REMI.BusinessEntities
             If (Array.IndexOf(units.ToArray(0), unitNumber) < 0) Then
                 Return "DNP"
             ElseIf tr IsNot Nothing AndAlso tr.Status <> TestRecordStatus.NotSet Then
-                Dim retString As String = tr.Status.ToString
+                Dim retString As String = String.Empty
                 Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testStageName Select t).FirstOrDefault
+
+                If (task.ResultCheck.Count > 0) Then
+                    Dim resultComparison() As String = (From tsk In task.ResultCheck Where tsk.Split(New Char() {":"c}, System.StringSplitOptions.RemoveEmptyEntries)(0) = unitNumber.ToString() Select tsk.Split(New Char() {":"c}, System.StringSplitOptions.RemoveEmptyEntries)(1).Split(New Char() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)).FirstOrDefault()
+
+                    If (resultComparison.Count > 0 AndAlso resultComparison(0) <> resultComparison(1)) Then
+                        retString = "Pending"
+                    Else
+                        retString = tr.Status.ToString
+                    End If
+                Else
+                    retString = tr.Status.ToString
+                End If
 
                 If task IsNot Nothing AndAlso task.ResultBaseOnTime Then
                     TestTimeRemaining = task.ExpectedDuration.TotalHours - tr.TotalTestTimeInHours
+
                     If TestTimeRemaining >= 24 And tr.Status = TestRecordStatus.InProgress Then
                         outDate = " (" + DateTime.Now.AddHours(TestTimeRemaining).ToString("dd/MM/yy") + ")"
                     End If
@@ -380,35 +410,38 @@ Namespace REMI.BusinessEntities
             dt.Columns.Add("Test Unit")
             Dim applicableTestStages = (From task In Tasks Where task.TestStageType = TestType.EnvironmentalStress AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName).Distinct
 
-            'add all the columns
-            For Each ts In applicableTestStages
-                dt.Columns.Add(ts)
-            Next
-
-            'add the data
-            For Each tu As TestUnit In Me.TestUnits
-                Dim r As DataRow = dt.NewRow
-
-                If (showHyperlinks) Then
-                    r.Item("Test Unit") = String.Format("<A href=""{0}"" target=""_blank"">{1}</A>", REMI.Core.REMIWebLinks.GetTestRecordsLink(Me.QRANumber, Nothing, Nothing, Nothing, tu.ID), tu.BatchUnitNumber)
-                Else
-                    r.Item("Test Unit") = tu.BatchUnitNumber
-                End If
-
+            If (applicableTestStages.Count > 0) Then
+                'add all the columns
                 For Each ts In applicableTestStages
-                    Dim drop As String = ts.ToLower.Replace("drops", String.Empty).Replace("drop", String.Empty).Replace("tumbles", String.Empty).Replace("tumble", String.Empty).Trim()
-                    r.Item(ts) = GetEnvTestOverviewCellString(tu.BatchUnitNumber, ts, hasEditItemAuthority, isTestCenterAdmin, hasBatchSetupAuthority)
-
-                    Dim orientationDesc As String = GetOrientationSetting(drop, tu.BatchUnitNumber.ToString(), orientationXML)
-
-                    If (Not String.IsNullOrEmpty(orientationDesc)) Then
-                        r.Item(ts) = String.Format("{0} {1}{2}{3}", r.Item(ts).ToString(), If(showHyperlinks, "<b>", String.Empty), orientationDesc, If(showHyperlinks, "</b>", String.Empty))
-                    End If
+                    dt.Columns.Add(ts)
                 Next
-                dt.Rows.Add(r)
-            Next
 
-            Return dt
+                'add the data
+                For Each tu As TestUnit In Me.TestUnits
+                    Dim r As DataRow = dt.NewRow
+
+                    If (showHyperlinks) Then
+                        r.Item("Test Unit") = String.Format("<A href=""{0}"" target=""_blank"">{1}</A>", REMI.Core.REMIWebLinks.GetTestRecordsLink(Me.QRANumber, Nothing, Nothing, Nothing, tu.ID), tu.BatchUnitNumber)
+                    Else
+                        r.Item("Test Unit") = tu.BatchUnitNumber
+                    End If
+
+                    For Each ts In applicableTestStages
+                        Dim drop As String = ts.ToLower.Replace("drops", String.Empty).Replace("drop", String.Empty).Replace("tumbles", String.Empty).Replace("tumble", String.Empty).Trim()
+                        r.Item(ts) = GetEnvTestOverviewCellString(tu.BatchUnitNumber, ts, hasEditItemAuthority, isTestCenterAdmin, hasBatchSetupAuthority)
+
+                        Dim orientationDesc As String = GetOrientationSetting(drop, tu.BatchUnitNumber.ToString(), orientationXML)
+
+                        If (Not String.IsNullOrEmpty(orientationDesc)) Then
+                            r.Item(ts) = String.Format("{0} {1}{2}{3}", r.Item(ts).ToString(), If(showHyperlinks, "<b>", String.Empty), orientationDesc, If(showHyperlinks, "</b>", String.Empty))
+                        End If
+                    Next
+                    dt.Rows.Add(r)
+                Next
+                Return dt
+            Else
+                Return Nothing
+            End If
         End Function
 
         Public Function GetOrientationSetting(ByVal drop As String, ByVal unit As String, ByVal doc As XDocument) As String

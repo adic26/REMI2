@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("8d0bc788-7ad9-4214-83a1-19e2ba8429bc")>
+<Assembly: EdmSchemaAttribute("ef0b181f-75fd-42d8-93ea-cae5c4a49c21")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -26795,6 +26795,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnTestRecordExistsChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property TestCounts() As Global.System.String
+            Get
+                Return _TestCounts
+            End Get
+            Set
+                OnTestCountsChanging(value)
+                ReportPropertyChanging("TestCounts")
+                _TestCounts = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("TestCounts")
+                OnTestCountsChanged()
+            End Set
+        End Property
+    
+        Private _TestCounts As Global.System.String
+        Private Partial Sub OnTestCountsChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnTestCountsChanged()
         End Sub
 
         #End Region

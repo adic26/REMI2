@@ -6,7 +6,8 @@ BEGIN
 
 	IF (@BatchStatus = 5)
 	BEGIN
-		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, TestIsArchived, TestWI
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, '' AS TestCounts
 		FROM vw_GetTaskInfoCompleted
 		WHERE BatchID = @BatchID
 			AND
@@ -19,7 +20,8 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, TestIsArchived, TestWI
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, TestCounts
 		FROM vw_GetTaskInfo 
 		WHERE BatchID = @BatchID
 			AND

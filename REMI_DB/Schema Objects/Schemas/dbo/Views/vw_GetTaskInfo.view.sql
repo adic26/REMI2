@@ -8,7 +8,8 @@ SELECT qranumber, processorder, BatchID,
 	   resultbasedontime, 
 	   testunitsfortest, 
 	   (SELECT CASE WHEN specifictestduration IS NULL THEN generictestduration ELSE specifictestduration END) AS expectedDuration,
-	   TestStageID, TestWI, TestID, IsArchived, ISNULL(RecordExists, 0) AS RecordExists, TestIsArchived, ISNULL(TestRecordExists, 0) AS TestRecordExists
+	   TestStageID, TestWI, TestID, IsArchived, ISNULL(RecordExists, 0) AS RecordExists, TestIsArchived, ISNULL(TestRecordExists, 0) AS TestRecordExists,
+TestCounts
 FROM   
 	(
 		SELECT b.qranumber,b.ID AS BatchID,
@@ -21,6 +22,14 @@ FROM
 				WHERE  bstd.testid = t.id 
 					   AND bstd.batchid = b.id
 			) AS specificTestDuration,
+			(
+				SELECT CONVERT(NVARCHAR, tur.BatchUnitNumber) + ':' + CONVERT(NVARCHAR, ISNULL((SELECT MAX(x.VerNum) FROM Relab.ResultsXML x WHERE x.ResultID=r.ID), 1)) + '-' + CONVERT(NVARCHAR, CASE WHEN tr.RelabVersion = 0 THEN 1 ELSE ISNULL(tr.RelabVersion,1) END) + ','
+				FROM TestUnits tur
+					LEFT OUTER JOIN Relab.Results r ON r.TestUnitID=tur.ID AND r.TestID=t.ID AND r.TestStageID=ts.ID
+					LEFT OUTER JOIN TestRecords tr ON tr.TestID=r.TestID AND tr.TestStageID=r.TestStageID AND tr.TestUnitID=r.TestUnitID
+				WHERE tur.BatchID=b.id
+				FOR xml path ('')	
+			) AS TestCounts,
 			(				
 				SELECT Cast(tu.batchunitnumber AS VARCHAR(MAX)) + ', ' 
 				FROM testunits AS tu WITH(NOLOCK)

@@ -226,6 +226,34 @@ Partial Class ScanForInfo_Default
                     hdnDepartmentID.Value = b.DepartmentID
                     grdTrackingLog.DataBind()
 
+                    If b.Status = BatchStatus.Complete Then
+                        lblTestingSummary.Text = "Testing Summary"
+
+                        If b.JobName.ToLower.Contains("drop") Then
+                            lblStressingSummary.Text = "Drop Summary"
+                            gvwStressingSummary.EmptyDataText = "No Drop Results"
+                        ElseIf b.JobName.ToLower.Contains("tumble") Then
+                            lblStressingSummary.Text = "Tumble Summary"
+                            gvwStressingSummary.EmptyDataText = "No Tumble Results"
+                        Else
+                            lblStressingSummary.Text = "Stressing Summary"
+                            gvwStressingSummary.EmptyDataText = "No Stressing Results"
+                        End If
+                    Else
+                        lblTestingSummary.Text = "Testing Status"
+
+                        If b.JobName.ToLower.Contains("drop") Then
+                            lblStressingSummary.Text = "Drop Status"
+                            gvwStressingSummary.EmptyDataText = "No Drop Results"
+                        ElseIf b.JobName.ToLower.Contains("tumble") Then
+                            lblStressingSummary.Text = "Tumble Status"
+                            gvwStressingSummary.EmptyDataText = "No Tumble Results"
+                        Else
+                            lblStressingSummary.Text = "Stressing Status"
+                            gvwStressingSummary.EmptyDataText = "No Stressing Results"
+                        End If
+                    End If
+
                     If (b.Orientation IsNot Nothing) Then
                         lblOrientation.Text = String.Format("Orientation/Sequence: {0}", b.Orientation.Name)
                     Else
@@ -593,7 +621,7 @@ Partial Class ScanForInfo_Default
     Protected Sub lnkCheckForUpdates_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates.Click
         If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
             REMIAppCache.RemoveReqData(hdnQRANumber.Value)
-            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
+            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value, False, True, True), True)
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
             Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
@@ -624,7 +652,7 @@ Partial Class ScanForInfo_Default
     Protected Sub lnkCheckForUpdates2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates2.Click
         If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
             REMIAppCache.RemoveReqData(hdnQRANumber.Value)
-            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
+            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value, False, True, True), True)
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
             gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))

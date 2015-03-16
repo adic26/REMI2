@@ -653,6 +653,15 @@ Partial Public Class ScanForInfo_Default
     Protected WithEvents acpTestingSummary As Global.AjaxControlToolkit.AccordionPane
 
     '''<summary>
+    '''lblTestingSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblTestingSummary As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''updSetupTesting control.
     '''</summary>
     '''<remarks>
@@ -723,6 +732,15 @@ Partial Public Class ScanForInfo_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents acpStressingSummary As Global.AjaxControlToolkit.AccordionPane
+
+    '''<summary>
+    '''lblStressingSummary control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblStressingSummary As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''updSetupStressing control.

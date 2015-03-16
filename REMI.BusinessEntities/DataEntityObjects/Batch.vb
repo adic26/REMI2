@@ -287,9 +287,7 @@ Namespace REMI.BusinessEntities
 
             If (testType = Contracts.TestType.IncomingEvaluation And currentTR Is Nothing) Then
                 Return False
-            ElseIf TestExceptions.UnitIsExempt(unitNumber, testStageName, testName, Me.Tasks) OrElse (currentTR IsNot Nothing AndAlso currentTR.RecordStatusIsProcessComplete) Then
-                Return True
-            ElseIf TestExceptions.UnitIsExempt(unitNumber, testStageName, testName, Me.Tasks) OrElse (currentTR IsNot Nothing AndAlso Me.Job.ContinueOnFailures AndAlso currentTR.RecordStatusIsProcessCompleteOrContinueOnFailure) Then
+            ElseIf TestExceptions.UnitIsExempt(unitNumber, testStageName, testName, Me.Tasks) Then
                 Return True
             Else
                 Return False
@@ -553,86 +551,6 @@ Namespace REMI.BusinessEntities
 #End Region
 
 #Region "Test Time Functions"
-        ' ''' <summary>
-        ' ''' returns the estimated time remaining for the given teststage for the entire batch.
-        ' ''' </summary>
-        ' ''' <returns></returns>
-        ' ''' <remarks></remarks>
-        'Public Function GetTimeRemaining(ByVal testStageName As String) As Double
-        '    Dim maxTime As Double = 0
-        '    If Not (Me.TestStageName = testStageName AndAlso Me.TestStageCompletion <> TestStageCompletionStatus.InProgress) Then
-        '        'we must get the maximum time remaining for each unit
-        '        Dim tuTime As Double
-        '        If TestUnits IsNot Nothing AndAlso TestUnits.Count > 0 Then
-        '            For Each tu As TestUnit In TestUnits
-        '                tuTime = Me.GetTimeRemaining(tu.BatchUnitNumber, testStageName)
-        '                If maxTime < tuTime Then
-        '                    maxTime = tuTime
-        '                End If
-        '            Next
-        '        End If
-        '    End If
-
-        '    Return maxTime
-        'End Function
-
-        ' ''' <summary>
-        ' ''' returns the estimated time remaining for a test unit at a specific teststage
-        ' ''' </summary>
-        ' ''' <param name="unitNumber"></param>
-        ' ''' <param name="tsName"></param>
-        ' ''' <returns></returns>
-        ' ''' <remarks></remarks>
-        'Public Function GetTimeRemaining(ByVal unitNumber As Integer, ByVal tsName As String) As Double
-        '    Dim totalTimeremaining As Double
-        '    If Not String.IsNullOrEmpty(tsName) AndAlso unitNumber > 0 AndAlso Job.TestStages.FindByName(tsName) IsNot Nothing Then
-        '        For Each t As Test In Job.TestStages.FindByName(tsName).Tests
-        '            totalTimeremaining += GetTimeRemaining(unitNumber, t.Name, tsName)
-        '        Next
-        '    End If
-        '    Return totalTimeremaining
-        'End Function
-
-        ' ''' <summary>
-        ' ''' gets the time remaining for a test for a test unit
-        ' ''' </summary>
-        ' ''' <param name="unitNumber"></param>
-        ' ''' <param name="testName"></param>
-        ' ''' <param name="testStageName"></param>
-        ' ''' <returns></returns>
-        ' ''' <remarks></remarks>
-        'Public Function GetTimeRemaining(ByVal unitNumber As Integer, ByVal testName As String, ByVal testStageName As String) As Double
-        '    If Me.TestingIsCompleteAndReviewedOrNotRequired(testStageName, testName, unitNumber) Then
-        '        Return 0
-        '    Else
-        '        Dim selectedTestStage As TestStage = Job.TestStages.FindByName(testStageName)
-        '        Dim currentTR As TestRecord = TestRecords.GetItem(Me.JobName, testStageName, testName, unitNumber)
-
-        '        If selectedTestStage IsNot Nothing AndAlso Not String.IsNullOrEmpty(testName) Then
-        '            Dim selectedTest As Test = selectedTestStage.GetTest(testName) 'test sand stage exist
-        '            Dim expectedDuration As Double
-
-        '            If selectedTest IsNot Nothing Then
-        '                expectedDuration = GetExpectedTestDuration(selectedTest)
-        '            End If
-
-        '            If currentTR Is Nothing Then
-        '                'this unit has not tested this test yet so return the full time
-        '                Return expectedDuration
-        '            Else
-        '                Dim tt As Double = (expectedDuration - currentTR.TotalTestTimeInHours) ' Get the estimated time remaining for the test
-        '                If tt >= 0 Then 'make sure it is not less than 0 (this would mess up all other calculations) we dont care about finishing early for now
-        '                    Return tt
-        '                Else
-        '                    Return 0
-        '                End If
-        '            End If
-        '        Else
-        '            Return 0
-        '        End If
-        '    End If
-        'End Function
-
         Public Function GetTotalTestTime(ByVal unitNumber As Integer, ByVal TestStageName As String, ByVal testName As String) As Double
             Return TestRecords.GetTotalTestTime(Me.JobName, TestStageName, testName, unitNumber)
         End Function

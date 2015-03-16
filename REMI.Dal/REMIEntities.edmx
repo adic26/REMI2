@@ -157,7 +157,8 @@
       [vw_GetTaskInfo].[IsArchived] AS [IsArchived], 
       [vw_GetTaskInfo].[RecordExists] AS [RecordExists], 
       [vw_GetTaskInfo].[TestIsArchived] AS [TestIsArchived], 
-      [vw_GetTaskInfo].[TestRecordExists] AS [TestRecordExists]
+      [vw_GetTaskInfo].[TestRecordExists] AS [TestRecordExists], 
+      [vw_GetTaskInfo].[TestCounts] AS [TestCounts]
       FROM [dbo].[vw_GetTaskInfo] AS [vw_GetTaskInfo]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_GetTaskInfoCompleted" EntityType="remiModel.Store.vw_GetTaskInfoCompleted" store:Type="Views" store:Schema="dbo" store:Name="vw_GetTaskInfoCompleted">
@@ -1784,6 +1785,7 @@
           <Property Name="RecordExists" Type="int" Nullable="false" />
           <Property Name="TestIsArchived" Type="bit" Nullable="false" />
           <Property Name="TestRecordExists" Type="int" Nullable="false" />
+          <Property Name="TestCounts" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'REMILocal.dbo.vw_GetTaskInfoCompleted' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -1844,9 +1846,6 @@
           <Property Name="InsertTime" Type="datetime" />
           <Property Name="ResultSource" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'REMILocal.Req.vw_RequestDataAudit' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
         <Association Name="FK__aspnet_Pr__UserI__3F115E1A">
           <End Role="aspnet_Users" Type="remiModel.Store.aspnet_Users" Multiplicity="1" />
           <End Role="aspnet_Profile" Type="remiModel.Store.aspnet_Profile" Multiplicity="0..1" />
@@ -3929,6 +3928,7 @@
           <Property Type="Int32" Name="RecordExists" Nullable="false" />
           <Property Type="Boolean" Name="TestIsArchived" Nullable="false" />
           <Property Type="Int32" Name="TestRecordExists" Nullable="false" />
+          <Property Type="String" Name="TestCounts" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="vw_GetTaskInfoCompleted">
           <Key>
@@ -6664,6 +6664,7 @@
           <EntitySetMapping Name="vw_GetTaskInfo">
             <EntityTypeMapping TypeName="REMI.Entities.vw_GetTaskInfo">
               <MappingFragment StoreEntitySet="vw_GetTaskInfo">
+                <ScalarProperty Name="TestCounts" ColumnName="TestCounts" />
                 <ScalarProperty Name="TestRecordExists" ColumnName="TestRecordExists" />
                 <ScalarProperty Name="TestIsArchived" ColumnName="TestIsArchived" />
                 <ScalarProperty Name="RecordExists" ColumnName="RecordExists" />
