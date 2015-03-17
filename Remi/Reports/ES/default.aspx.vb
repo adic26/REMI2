@@ -21,100 +21,110 @@ Partial Class ES_Default
             lblPrinted.Text = String.Format("<b>Printed:</b> {0}", DateTime.Now.ToLongDateString())
 
             Dim tmpStr As String = Request.QueryString.Get("RN")
-            Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 
-            If bc.Validate Then
-                Dim mi As New MenuItem
-                Dim b As BatchView
-                Dim bcol As New BatchCollection
-                b = BatchManager.GetViewBatch(bc.BatchNumber)
-                bcol.Add(b)
+            If (tmpStr IsNot Nothing) Then
+                Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 
-                hdnPartName.Value = (From rd In b.ReqData Where rd.Name.ToLower = "part name under test" Select rd.Value).FirstOrDefault()
-                hdnBatchID.Value = b.ID
-                hdnRequestNumber.Value = b.QRANumber
-                lblRequestNumber.Text = b.QRANumber
-                lblESText.Text = If(b.ExecutiveSummary Is Nothing, "No Summary Available!", b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))
+                If bc.Validate Then
+                    Dim mi As New MenuItem
+                    Dim b As BatchView
+                    Dim bcol As New BatchCollection
+                    b = BatchManager.GetViewBatch(bc.BatchNumber)
+                    bcol.Add(b)
 
-                gvwRequestInfo.DataSource = b.ReqData
-                gvwRequestInfo.DataBind()
-                rptRequestSummary.DataSource = bcol
-                rptRequestSummary.DataBind()
-                Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
-                grdApproval.DataSource = ds.Tables(1)
-                grdApproval.DataBind()
+                    hdnPartName.Value = (From rd In b.ReqData Where rd.Name.ToLower = "part name under test" Select rd.Value).FirstOrDefault()
+                    hdnBatchID.Value = b.ID
+                    hdnRequestNumber.Value = b.QRANumber
+                    lblRequestNumber.Text = b.QRANumber
+                    lblESText.Text = If(b.ExecutiveSummary Is Nothing, "No Summary Available!", b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))
 
-                grdJIRAS.DataSource = BatchManager.GetBatchJIRA(b.ID, False)
-                grdJIRAS.DataBind()
+                    gvwRequestInfo.DataSource = b.ReqData
+                    gvwRequestInfo.DataBind()
+                    rptRequestSummary.DataSource = bcol
+                    rptRequestSummary.DataBind()
+                    Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
+                    grdApproval.DataSource = ds.Tables(1)
+                    grdApproval.DataBind()
 
-                Dim bs As New REMI.BusinessEntities.BatchSearch
-                bs.ProductID = b.ProductID
-                bs.JobName = b.JobName
-                bs.ProductTypeID = b.ProductTypeID
+                    grdJIRAS.DataSource = BatchManager.GetBatchJIRA(b.ID, False)
+                    grdJIRAS.DataBind()
 
-                Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
+                    Dim bs As New REMI.BusinessEntities.BatchSearch
+                    bs.ProductID = b.ProductID
+                    bs.JobName = b.JobName
+                    bs.ProductTypeID = b.ProductTypeID
 
-                For Each batch As Batch In batchCol.Take(10)
-                    Dim l As New ListItem
+                    Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
 
-                    If (b.ID = batch.ID) Then
-                        l.Text = "<b><img src='../../Design/Icons/png/SliderOn.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber + "</b>"
-                    Else
-                        l.Text = "<img src='../../Design/Icons/png/SliderOff.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber
-                    End If
+                    For Each batch As Batch In batchCol.Take(10)
+                        Dim l As New ListItem
 
-                    l.Value = batch.ID
-                    rboQRASlider.Items.Add(l)
-                Next
-
-                rboQRASlider.SelectedValue = b.ID
-
-                If (rboQRASlider.Items.Count = 0) Then
-                    pnlQRASlider.Visible = False
-                End If
-
-                SetStatus(ds.Tables(2).Rows(0)(0).ToString())
-
-                For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Distinct Select New With {tr.FailDocDS})
-                    pnlFA.Style.Add("Display", "block")
-
-                    Try
-                        Dim fac As FAControl
-                        fac = CType(LoadControl("..\..\Controls\FAControl.ascx"), FAControl)
-                        fac.EmptyDataText = "Error Loading FA!"
-
-                        If (fa.FailDocDS.Columns.Count > 8) Then
-                            fac.SetDataSource(fa.FailDocDS)
+                        If (b.ID = batch.ID) Then
+                            l.Text = "<b><img src='../../Design/Icons/png/SliderOn.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber + "</b>"
+                        Else
+                            l.Text = "<img src='../../Design/Icons/png/SliderOff.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber
                         End If
 
-                        fac.Visible = True
+                        l.Value = batch.ID
+                        rboQRASlider.Items.Add(l)
+                    Next
 
-                        pnlFAInfo.Controls.Add(fac)
-                    Catch ex As Exception
-                        BatchManager.LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                    End Try
-                Next
+                    If (rboQRASlider.Items.FindByValue(b.ID) Is Nothing) Then
+                        Dim lb As New ListItem
+                        lb.Text = "<b><img src='../../Design/Icons/png/SliderOn.png' alt='" + b.QRANumber + "' title='" + b.QRANumber + "'/>" + b.QRANumber + "</b>"
+                        lb.Value = b.ID
+                        rboQRASlider.Items.Add(lb)
+                    End If
 
-                If (pnlFA.Style.Item("Display") = "block") Then
+                    rboQRASlider.SelectedValue = b.ID
+
+                    If (rboQRASlider.Items.Count = 0) Then
+                        pnlQRASlider.Visible = False
+                    End If
+
+                    SetStatus(ds.Tables(2).Rows(0)(0).ToString())
+
+                    For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Distinct Select New With {tr.FailDocDS})
+                        pnlFA.Style.Add("Display", "block")
+
+                        Try
+                            Dim fac As FAControl
+                            fac = CType(LoadControl("..\..\Controls\FAControl.ascx"), FAControl)
+                            fac.EmptyDataText = "Error Loading FA!"
+
+                            If (fa.FailDocDS.Columns.Count > 8) Then
+                                fac.SetDataSource(fa.FailDocDS)
+                            End If
+
+                            fac.Visible = True
+
+                            pnlFAInfo.Controls.Add(fac)
+                        Catch ex As Exception
+                            BatchManager.LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                        End Try
+                    Next
+
+                    If (pnlFA.Style.Item("Display") = "block") Then
+                        mi = New MenuItem
+                        mi.NavigateUrl = "#fa"
+                        mi.Text = "FA Summary"
+
+                        ESMenu.Items(0).ChildItems.Add(mi)
+                    End If
+
                     mi = New MenuItem
-                    mi.NavigateUrl = "#fa"
-                    mi.Text = "FA Summary"
-
+                    mi.Text = "Links"
                     ESMenu.Items(0).ChildItems.Add(mi)
+
+                    For Each rec As DataRow In BatchManager.GetBatchDocuments(b.QRANumber).Rows
+                        mi = New MenuItem
+                        mi.NavigateUrl = rec.Field(Of String)("Location")
+                        mi.Text = rec.Field(Of String)("WIType")
+                        mi.Target = "_blank"
+
+                        ESMenu.Items(0).ChildItems(ESMenu.Items(0).ChildItems.Count - 1).ChildItems.Add(mi)
+                    Next
                 End If
-
-                mi = New MenuItem
-                mi.Text = "Links"
-                ESMenu.Items(0).ChildItems.Add(mi)
-
-                For Each rec As DataRow In BatchManager.GetBatchDocuments(b.QRANumber).Rows
-                    mi = New MenuItem
-                    mi.NavigateUrl = rec.Field(Of String)("Location")
-                    mi.Text = rec.Field(Of String)("WIType")
-                    mi.Target = "_blank"
-
-                    ESMenu.Items(0).ChildItems(ESMenu.Items(0).ChildItems.Count - 1).ChildItems.Add(mi)
-                Next
             End If
         End If
     End Sub
