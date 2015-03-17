@@ -240,23 +240,37 @@ Partial Class ScanForInfo_ProductGroup
 
     Protected Sub SetupMenuItems(ByVal productGroup As String, ByVal id As Int32)
         Dim myMenu As WebControls.Menu
-        Dim mi As New MenuItem
+        Dim mi As MenuItem
         myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
 
         If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
             liEditSettings.Visible = True
 
-            mi.Text = "Edit Product"
-            mi.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(id)
-            myMenu.Items(0).ChildItems.Add(mi)
+            mi = (From m As MenuItem In myMenu.Items(0).ChildItems Where m.Text = "Edit Product" Select m).FirstOrDefault()
+
+            If (mi IsNot Nothing) Then
+                mi.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(id)
+            Else
+                mi = New MenuItem
+                mi.Text = "Edit Product"
+                mi.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(id)
+                myMenu.Items(0).ChildItems.Add(mi)
+            End If
         End If
 
         If (UserManager.GetCurrentUser.HasUploadConfigXML() Or UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0)) Then
             liEditConfigSettings.Visible = True
-            mi = New MenuItem
-            mi.Text = "Edit Config"
-            mi.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
-            myMenu.Items(0).ChildItems.Add(mi)
+
+            mi = (From m As MenuItem In myMenu.Items(0).ChildItems Where m.Text = "Edit Config" Select m).FirstOrDefault()
+
+            If (mi IsNot Nothing) Then
+                mi.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
+            Else
+                mi = New MenuItem
+                mi.Text = "Edit Config"
+                mi.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
+                myMenu.Items(0).ChildItems.Add(mi)
+            End If
         End If
     End Sub
 

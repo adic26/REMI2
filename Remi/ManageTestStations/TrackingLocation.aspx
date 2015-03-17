@@ -79,6 +79,7 @@
             <SelectParameters>
                 <asp:ControlParameter ControlID="ctl00$leftSidebarContent$ddlTestCenters" DefaultValue="0" Name="TestCenterLocationID" PropertyName="SelectedValue" Type="Int32" />
                 <asp:Parameter Type="Int32" Name="onlyActive" DefaultValue="1" />
+                <asp:Parameter Type="Int32" Name="trackingLocationTypeID" DefaultValue="0" />
             </SelectParameters>
         </asp:ObjectDataSource>
    <br /> <br />

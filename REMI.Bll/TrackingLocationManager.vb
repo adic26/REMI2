@@ -83,7 +83,7 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetLocationsWithoutHost(Optional ByVal TestCenterLocationID As Int32 = 0, Optional ByVal onlyActive As Int32 = 0, Optional ByVal trackingLocationTypeID As Int32 = 0) As TrackingLocationCollection
+        Public Shared Function GetLocationsWithoutHost(ByVal TestCenterLocationID As Int32, ByVal onlyActive As Int32, ByVal trackingLocationTypeID As Int32) As TrackingLocationCollection
             Dim sCriteria As New TrackingLocationCriteria
             sCriteria.GeoLocationID = TestCenterLocationID
 
