@@ -1523,6 +1523,45 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetBatchJIRA">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBatchJIRAResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBatchJIRAResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddEditJira">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="jiraID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="displayName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="link" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="title" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddEditJiraResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddEditJiraResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetBatchUnitsInStage">
         <s:complexType>
           <s:sequence>
@@ -2886,6 +2925,18 @@
   <wsdl:message name="GetProductSettingByProductIDSoapOut">
     <wsdl:part name="parameters" element="tns:GetProductSettingByProductIDResponse" />
   </wsdl:message>
+  <wsdl:message name="GetBatchJIRASoapIn">
+    <wsdl:part name="parameters" element="tns:GetBatchJIRA" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchJIRASoapOut">
+    <wsdl:part name="parameters" element="tns:GetBatchJIRAResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddEditJiraSoapIn">
+    <wsdl:part name="parameters" element="tns:AddEditJira" />
+  </wsdl:message>
+  <wsdl:message name="AddEditJiraSoapOut">
+    <wsdl:part name="parameters" element="tns:AddEditJiraResponse" />
+  </wsdl:message>
   <wsdl:message name="GetBatchUnitsInStageSoapIn">
     <wsdl:part name="parameters" element="tns:GetBatchUnitsInStage" />
   </wsdl:message>
@@ -3559,6 +3610,22 @@
   </wsdl:message>
   <wsdl:message name="GetProductSettingByProductIDHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchJIRAHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchJIRAHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="AddEditJiraHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="jiraID" type="s:string" />
+    <wsdl:part name="displayName" type="s:string" />
+    <wsdl:part name="link" type="s:string" />
+    <wsdl:part name="title" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddEditJiraHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetBatchUnitsInStageHttpGetIn">
     <wsdl:part name="requestNumber" type="s:string" />
@@ -4270,6 +4337,22 @@
   <wsdl:message name="GetProductSettingByProductIDHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
+  <wsdl:message name="GetBatchJIRAHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBatchJIRAHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="AddEditJiraHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="jiraID" type="s:string" />
+    <wsdl:part name="displayName" type="s:string" />
+    <wsdl:part name="link" type="s:string" />
+    <wsdl:part name="title" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddEditJiraHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:message name="GetBatchUnitsInStageHttpPostIn">
     <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
@@ -4894,6 +4977,16 @@
       <wsdl:input message="tns:GetProductSettingByProductIDSoapIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetBatchJIRA">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The list of JIRA's for requestNumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchJIRASoapIn" />
+      <wsdl:output message="tns:GetBatchJIRASoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddEditJira">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Saves?Edits JIRA for requestNumber.</wsdl:documentation>
+      <wsdl:input message="tns:AddEditJiraSoapIn" />
+      <wsdl:output message="tns:AddEditJiraSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetBatchUnitsInStage">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
       <wsdl:input message="tns:GetBatchUnitsInStageSoapIn" />
@@ -5416,6 +5509,16 @@
       <wsdl:input message="tns:GetProductSettingByProductIDHttpGetIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetBatchJIRA">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The list of JIRA's for requestNumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchJIRAHttpGetIn" />
+      <wsdl:output message="tns:GetBatchJIRAHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddEditJira">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Saves?Edits JIRA for requestNumber.</wsdl:documentation>
+      <wsdl:input message="tns:AddEditJiraHttpGetIn" />
+      <wsdl:output message="tns:AddEditJiraHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetBatchUnitsInStage">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
       <wsdl:input message="tns:GetBatchUnitsInStageHttpGetIn" />
@@ -5932,6 +6035,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a specific setting for a product.</wsdl:documentation>
       <wsdl:input message="tns:GetProductSettingByProductIDHttpPostIn" />
       <wsdl:output message="tns:GetProductSettingByProductIDHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchJIRA">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The list of JIRA's for requestNumber.</wsdl:documentation>
+      <wsdl:input message="tns:GetBatchJIRAHttpPostIn" />
+      <wsdl:output message="tns:GetBatchJIRAHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddEditJira">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Saves?Edits JIRA for requestNumber.</wsdl:documentation>
+      <wsdl:input message="tns:AddEditJiraHttpPostIn" />
+      <wsdl:output message="tns:AddEditJiraHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetBatchUnitsInStage">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns The Parametric Testing Summary By QRANumber.</wsdl:documentation>
@@ -6708,6 +6821,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetProductSettingByProductID">
       <soap:operation soapAction="http://go/remi/GetProductSettingByProductID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchJIRA">
+      <soap:operation soapAction="http://go/remi/GetBatchJIRA" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddEditJira">
+      <soap:operation soapAction="http://go/remi/AddEditJira" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -7690,6 +7821,24 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetBatchJIRA">
+      <soap12:operation soapAction="http://go/remi/GetBatchJIRA" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddEditJira">
+      <soap12:operation soapAction="http://go/remi/AddEditJira" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetBatchUnitsInStage">
       <soap12:operation soapAction="http://go/remi/GetBatchUnitsInStage" style="document" />
       <wsdl:input>
@@ -8629,6 +8778,24 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetBatchJIRA">
+      <http:operation location="/GetBatchJIRA" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddEditJira">
+      <http:operation location="/AddEditJira" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetBatchUnitsInStage">
       <http:operation location="/GetBatchUnitsInStage" />
       <wsdl:input>
@@ -9546,6 +9713,24 @@
     </wsdl:operation>
     <wsdl:operation name="GetProductSettingByProductID">
       <http:operation location="/GetProductSettingByProductID" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBatchJIRA">
+      <http:operation location="/GetBatchJIRA" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddEditJira">
+      <http:operation location="/AddEditJira" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>

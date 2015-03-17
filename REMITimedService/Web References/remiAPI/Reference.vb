@@ -155,6 +155,10 @@ Namespace RemiAPI
         
         Private GetProductSettingByProductIDOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetBatchJIRAOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private AddEditJiraOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetBatchUnitsInStageOperationCompleted As System.Threading.SendOrPostCallback
         
         Private BatchUpdateOrientationOperationCompleted As System.Threading.SendOrPostCallback
@@ -469,6 +473,12 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetProductSettingByProductIDCompleted As GetProductSettingByProductIDCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetBatchJIRACompleted As GetBatchJIRACompletedEventHandler
+        
+        '''<remarks/>
+        Public Event AddEditJiraCompleted As AddEditJiraCompletedEventHandler
         
         '''<remarks/>
         Public Event GetBatchUnitsInStageCompleted As GetBatchUnitsInStageCompletedEventHandler
@@ -2322,6 +2332,60 @@ Namespace RemiAPI
             If (Not (Me.GetProductSettingByProductIDCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetProductSettingByProductIDCompleted(Me, New GetProductSettingByProductIDCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchJIRA", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetBatchJIRA(ByVal requestNumber As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetBatchJIRA", New Object() {requestNumber})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchJIRAAsync(ByVal requestNumber As String)
+            Me.GetBatchJIRAAsync(requestNumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetBatchJIRAAsync(ByVal requestNumber As String, ByVal userState As Object)
+            If (Me.GetBatchJIRAOperationCompleted Is Nothing) Then
+                Me.GetBatchJIRAOperationCompleted = AddressOf Me.OnGetBatchJIRAOperationCompleted
+            End If
+            Me.InvokeAsync("GetBatchJIRA", New Object() {requestNumber}, Me.GetBatchJIRAOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetBatchJIRAOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetBatchJIRACompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetBatchJIRACompleted(Me, New GetBatchJIRACompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/AddEditJira", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function AddEditJira(ByVal requestNumber As String, ByVal jiraID As Integer, ByVal displayName As String, ByVal link As String, ByVal title As String) As Boolean
+            Dim results() As Object = Me.Invoke("AddEditJira", New Object() {requestNumber, jiraID, displayName, link, title})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub AddEditJiraAsync(ByVal requestNumber As String, ByVal jiraID As Integer, ByVal displayName As String, ByVal link As String, ByVal title As String)
+            Me.AddEditJiraAsync(requestNumber, jiraID, displayName, link, title, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub AddEditJiraAsync(ByVal requestNumber As String, ByVal jiraID As Integer, ByVal displayName As String, ByVal link As String, ByVal title As String, ByVal userState As Object)
+            If (Me.AddEditJiraOperationCompleted Is Nothing) Then
+                Me.AddEditJiraOperationCompleted = AddressOf Me.OnAddEditJiraOperationCompleted
+            End If
+            Me.InvokeAsync("AddEditJira", New Object() {requestNumber, jiraID, displayName, link, title}, Me.AddEditJiraOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnAddEditJiraOperationCompleted(ByVal arg As Object)
+            If (Not (Me.AddEditJiraCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent AddEditJiraCompleted(Me, New AddEditJiraCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -9022,6 +9086,60 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),String)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetBatchJIRACompletedEventHandler(ByVal sender As Object, ByVal e As GetBatchJIRACompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetBatchJIRACompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub AddEditJiraCompletedEventHandler(ByVal sender As Object, ByVal e As AddEditJiraCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class AddEditJiraCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
             End Get
         End Property
     End Class

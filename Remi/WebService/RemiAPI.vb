@@ -897,6 +897,30 @@ Public Class RemiAPI
 #End Region
 
 #Region "Batch"
+    <WebMethod(EnableSession:=True, Description:="Returns The list of JIRA's for requestNumber.")> _
+    Public Function GetBatchJIRA(ByVal requestNumber As String) As DataTable
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+            Return BatchManager.GetBatchJIRA(batch.ID, False)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetBatchJIRA", "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
+        End Try
+
+        Return New DataTable("BatchJIRA")
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Saves?Edits JIRA for requestNumber.")> _
+    Public Function AddEditJira(ByVal requestNumber As String, ByVal jiraID As Int32, ByVal displayName As String, ByVal link As String, ByVal title As String) As Boolean
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+            Return BatchManager.AddEditJira(batch.ID, jiraID, displayName, link, title)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API AddEditJira", "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
+        End Try
+
+        Return False
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Returns The Parametric Testing Summary By QRANumber.")> _
     Public Function GetBatchUnitsInStage(ByVal requestNumber As String) As DataTable
         Try
