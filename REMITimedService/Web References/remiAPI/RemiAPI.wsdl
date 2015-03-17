@@ -7,24 +7,24 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="AccessoryGroup" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="BatchStart" type="s:dateTime" />
-            <s:element minOccurs="1" maxOccurs="1" name="BatchEnd" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="accessoryGroup" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="batchStart" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="batchEnd" type="s:dateTime" />
             <s:element minOccurs="0" maxOccurs="1" name="department" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="TestCenter" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="Priority" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="Product" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="ProductType" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="Revision" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="TestName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="TestStage" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="TrackingLocationName" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="NotInTrackingLocationFunction" type="tns:TrackingLocationFunction" />
-            <s:element minOccurs="0" maxOccurs="1" name="RequestReason" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testCenter" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="jobName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="priority" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="product" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="productType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="revision" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testStage" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="trackingLocationName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="notInTrackingLocationFunction" type="tns:TrackingLocationFunction" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestReason" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="status" type="tns:BatchStatus" />
-            <s:element minOccurs="1" maxOccurs="1" name="TrackingLocationFunction" type="tns:TrackingLocationFunction" />
+            <s:element minOccurs="1" maxOccurs="1" name="trackingLocationFunction" type="tns:TrackingLocationFunction" />
             <s:element minOccurs="0" maxOccurs="1" name="exTestStageType" type="tns:ArrayOfBatchSearchTestStageType" />
             <s:element minOccurs="0" maxOccurs="1" name="exBatchStatus" type="tns:ArrayOfBatchSearchBatchStatus" />
             <s:element minOccurs="1" maxOccurs="1" name="testStageType" type="tns:TestStageType" />
@@ -231,10 +231,7 @@
           <s:extension base="tns:LoggedItemBase">
             <s:sequence>
               <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="WILocation" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="UnitCapacity" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="CanDelete" type="s:int" />
               <s:element minOccurs="1" maxOccurs="1" name="TrackingLocationFunction" type="tns:TrackingLocationFunction" />
             </s:sequence>
           </s:extension>
@@ -324,6 +321,7 @@
           <s:extension base="tns:LoggedItemBase">
             <s:sequence>
               <s:element minOccurs="1" maxOccurs="1" name="RequestTypeID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="ReqFieldDataID" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="RequestType" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="RequestID" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="RequestNumber" type="s:string" />
@@ -341,15 +339,22 @@
               <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="OptionsTypeID" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="OptionsType" type="tns:ArrayOfString" />
+              <s:element minOccurs="0" maxOccurs="1" name="OptionsTypeName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="DefaultValue" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="CustomLookupHierarchy" type="tns:ArrayOfRequestFieldObjectHeirarchy" />
+              <s:element minOccurs="0" maxOccurs="1" name="Sibling" type="tns:ArrayOfSibling" />
               <s:element minOccurs="1" maxOccurs="1" name="IsArchived" type="s:boolean" />
               <s:element minOccurs="0" maxOccurs="1" name="IntField" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="ExtField" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="IsFromExternalSystem" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="HasIntegration" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="HasDistribution" type="s:boolean" />
               <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="NewRequest" type="s:boolean" />
               <s:element minOccurs="1" maxOccurs="1" name="ParentFieldSetupID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="ParentFieldSetupName" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="DefaultDisplayNum" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="MaxDisplayNum" type="s:int" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -377,6 +382,18 @@
           <s:element minOccurs="0" maxOccurs="1" name="ChildLookupType" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:complexType name="ArrayOfSibling">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Sibling" nillable="true" type="tns:Sibling" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Sibling">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="FieldSetupID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
       <s:complexType name="ArrayOfRequestFields">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="unbounded" name="RequestFields" nillable="true" type="tns:RequestFields" />
@@ -391,7 +408,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="TestName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="testName" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -406,8 +423,8 @@
       <s:element name="UpdateUnitIMEI">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="IMEI" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="iMEI" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -419,11 +436,44 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="UpdateUnitBSN">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="bsn" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateUnitBSNResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateUnitBSNResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateUnitBSNIMEI">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="bsn" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="iMEI" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateUnitBSNIMEIResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateUnitBSNIMEIResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="AddUnit">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="BSN" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="bsn" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -461,6 +511,21 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetAvailableUnitsExcludedResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUnitIMEI">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="batchUnitNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUnitIMEIResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetUnitIMEIResult" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -526,7 +591,7 @@
       <s:element name="DTATTAAddRemoveUnit">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qranumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="testStage" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="test" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
@@ -642,6 +707,35 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
+      <s:element name="GetLocationsByTestCenterLocationType">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="testCenterID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="tlt" type="tns:TrackingLocationType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLocationsByTestCenterLocationTypeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLocationsByTestCenterLocationTypeResult" type="tns:ArrayOfTrackingLocation" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTrackingLocationTypesByFunction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="tlf" type="tns:TrackingLocationFunction" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTrackingLocationTypesByFunctionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTrackingLocationTypesByFunctionResult" type="tns:ArrayOfTrackingLocationType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetSpecificLocationForCurrentUsersTestCenter">
         <s:complexType>
           <s:sequence>
@@ -657,10 +751,45 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="AddHostToTrackingLocation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="hostName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="trackingLocationID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="testCenterID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddHostToTrackingLocationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddHostToTrackingLocationResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveTrackingLocation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="hostName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tlt" type="tns:TrackingLocationType" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="testCenterID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveTrackingLocationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SaveTrackingLocationResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetTest">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -668,6 +797,28 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetTestResult" type="tns:Test" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestAccess">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="testID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="removeFirst" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestAccessResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestAccessResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1014,7 +1165,7 @@
       <s:element name="GetJob">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1047,7 +1198,7 @@
       <s:element name="GetOrientationsByJob">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="JobName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="jobName" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1212,6 +1363,23 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="CreateUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="testCenterID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="departmentID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="badgeNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateUserResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetFriendlyUserID">
         <s:complexType>
           <s:sequence>
@@ -1358,7 +1526,7 @@
       <s:element name="GetBatchUnitsInStage">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1394,7 +1562,7 @@
       <s:element name="GetTestingSummary">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -1416,7 +1584,7 @@
       <s:element name="GetStressingSummary">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -1438,7 +1606,7 @@
       <s:element name="BatchStartedBeforeAssigned">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1469,10 +1637,38 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetDefaultReqNumByRequestType">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RequestType" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDefaultReqNumByRequestTypeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDefaultReqNumByRequestTypeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDefaultReqNumWithUnitByRequestType">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RequestType" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDefaultReqNumWithUnitByRequestTypeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDefaultReqNumWithUnitByRequestTypeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetProductTypeID">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1486,7 +1682,7 @@
       <s:element name="GetTestCenterID">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1500,7 +1696,7 @@
       <s:element name="GetAccessoryTypeID">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1514,7 +1710,7 @@
       <s:element name="GetBatch">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1528,7 +1724,7 @@
       <s:element name="GetBatchNotifications">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1542,7 +1738,7 @@
       <s:element name="GetBatchComments">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1563,7 +1759,7 @@
       <s:element name="GetHardwareRevision">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1577,7 +1773,7 @@
       <s:element name="GetCPRNumber">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1691,7 +1887,7 @@
       <s:element name="SaveBatchComment">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="comment" type="s:string" />
           </s:sequence>
@@ -1707,7 +1903,7 @@
       <s:element name="DNPParametricForBatch">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="unitNumber" type="s:int" />
           </s:sequence>
@@ -1723,7 +1919,7 @@
       <s:element name="GetPercentageCompleteForBatch">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1789,7 +1985,7 @@
       <s:element name="CheckBatchForStatusUpdates">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -1888,7 +2084,7 @@
       <s:element name="GetBatchResultsOverview">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1931,7 +2127,7 @@
       <s:element name="IncomingGetAndSaveBatch">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qraNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -1977,10 +2173,25 @@
             <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="messageBody" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="isHTML" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="bcc" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
       <s:element name="SendMailAdvancedResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="SendMailAdvanced2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="destinations" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sender" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="messageBody" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="isHTML" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendMailAdvanced2Response">
         <s:complexType />
       </s:element>
       <s:element name="GetAllAccessByWorkstation">
@@ -2030,7 +2241,7 @@
       <s:element name="GetTestRecords">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="QRANumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -2098,7 +2309,7 @@
       <s:element name="TestRecordAdd">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="qranumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="requestNumber" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="unitNumber" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="userIdentification" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="testRecordStatus" type="tns:TestRecordStatus" />
@@ -2269,9 +2480,8 @@
       <s:element name="string" nillable="true" type="s:string" />
       <s:element name="TestUnit" nillable="true" type="tns:TestUnit" />
       <s:element name="ArrayOfTrackingLocation" nillable="true" type="tns:ArrayOfTrackingLocation" />
+      <s:element name="ArrayOfTrackingLocationType" nillable="true" type="tns:ArrayOfTrackingLocationType" />
       <s:element name="Test" nillable="true" type="tns:Test" />
-      <s:element name="TestStage" nillable="true" type="tns:TestStage" />
-      <s:element name="ArrayOfTestStage" nillable="true" type="tns:ArrayOfTestStage" />
       <s:element name="DataTable" nillable="true">
         <s:complexType>
           <s:sequence>
@@ -2280,6 +2490,8 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="TestStage" nillable="true" type="tns:TestStage" />
+      <s:element name="ArrayOfTestStage" nillable="true" type="tns:ArrayOfTestStage" />
       <s:element name="Job" nillable="true" type="tns:Job" />
       <s:element name="UserDetails" type="tns:UserDetails" />
       <s:element name="User" nillable="true" type="tns:User" />
@@ -2326,6 +2538,18 @@
   <wsdl:message name="UpdateUnitIMEISoapOut">
     <wsdl:part name="parameters" element="tns:UpdateUnitIMEIResponse" />
   </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateUnitBSN" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateUnitBSNResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNIMEISoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateUnitBSNIMEI" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNIMEISoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateUnitBSNIMEIResponse" />
+  </wsdl:message>
   <wsdl:message name="AddUnitSoapIn">
     <wsdl:part name="parameters" element="tns:AddUnit" />
   </wsdl:message>
@@ -2343,6 +2567,12 @@
   </wsdl:message>
   <wsdl:message name="GetAvailableUnitsExcludedSoapOut">
     <wsdl:part name="parameters" element="tns:GetAvailableUnitsExcludedResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitIMEISoapIn">
+    <wsdl:part name="parameters" element="tns:GetUnitIMEI" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitIMEISoapOut">
+    <wsdl:part name="parameters" element="tns:GetUnitIMEIResponse" />
   </wsdl:message>
   <wsdl:message name="GetUnitBSNSoapIn">
     <wsdl:part name="parameters" element="tns:GetUnitBSN" />
@@ -2404,17 +2634,47 @@
   <wsdl:message name="ReturnMultipleStationNamesByTypeSoapOut">
     <wsdl:part name="parameters" element="tns:ReturnMultipleStationNamesByTypeResponse" />
   </wsdl:message>
+  <wsdl:message name="GetLocationsByTestCenterLocationTypeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLocationsByTestCenterLocationType" />
+  </wsdl:message>
+  <wsdl:message name="GetLocationsByTestCenterLocationTypeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLocationsByTestCenterLocationTypeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTrackingLocationTypesByFunctionSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTrackingLocationTypesByFunction" />
+  </wsdl:message>
+  <wsdl:message name="GetTrackingLocationTypesByFunctionSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTrackingLocationTypesByFunctionResponse" />
+  </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterSoapIn">
     <wsdl:part name="parameters" element="tns:GetSpecificLocationForCurrentUsersTestCenter" />
   </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterSoapOut">
     <wsdl:part name="parameters" element="tns:GetSpecificLocationForCurrentUsersTestCenterResponse" />
   </wsdl:message>
+  <wsdl:message name="AddHostToTrackingLocationSoapIn">
+    <wsdl:part name="parameters" element="tns:AddHostToTrackingLocation" />
+  </wsdl:message>
+  <wsdl:message name="AddHostToTrackingLocationSoapOut">
+    <wsdl:part name="parameters" element="tns:AddHostToTrackingLocationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveTrackingLocationSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveTrackingLocation" />
+  </wsdl:message>
+  <wsdl:message name="SaveTrackingLocationSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveTrackingLocationResponse" />
+  </wsdl:message>
   <wsdl:message name="GetTestSoapIn">
     <wsdl:part name="parameters" element="tns:GetTest" />
   </wsdl:message>
   <wsdl:message name="GetTestSoapOut">
     <wsdl:part name="parameters" element="tns:GetTestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTestAccessSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestAccess" />
+  </wsdl:message>
+  <wsdl:message name="GetTestAccessSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestAccessResponse" />
   </wsdl:message>
   <wsdl:message name="GetTestByIDSoapIn">
     <wsdl:part name="parameters" element="tns:GetTestByID" />
@@ -2566,6 +2826,12 @@
   <wsdl:message name="GetUserSoapOut">
     <wsdl:part name="parameters" element="tns:GetUserResponse" />
   </wsdl:message>
+  <wsdl:message name="CreateUserSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateUser" />
+  </wsdl:message>
+  <wsdl:message name="CreateUserSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateUserResponse" />
+  </wsdl:message>
   <wsdl:message name="GetFriendlyUserIDSoapIn">
     <wsdl:part name="parameters" element="tns:GetFriendlyUserID" />
   </wsdl:message>
@@ -2661,6 +2927,18 @@
   </wsdl:message>
   <wsdl:message name="GetDefaultReqNumWithUnitSoapOut">
     <wsdl:part name="parameters" element="tns:GetDefaultReqNumWithUnitResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumByRequestTypeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDefaultReqNumByRequestType" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumByRequestTypeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDefaultReqNumByRequestTypeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumWithUnitByRequestTypeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDefaultReqNumWithUnitByRequestType" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumWithUnitByRequestTypeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDefaultReqNumWithUnitByRequestTypeResponse" />
   </wsdl:message>
   <wsdl:message name="GetProductTypeIDSoapIn">
     <wsdl:part name="parameters" element="tns:GetProductTypeID" />
@@ -2824,6 +3102,12 @@
   <wsdl:message name="SendMailAdvancedSoapOut">
     <wsdl:part name="parameters" element="tns:SendMailAdvancedResponse" />
   </wsdl:message>
+  <wsdl:message name="SendMailAdvanced2SoapIn">
+    <wsdl:part name="parameters" element="tns:SendMailAdvanced2" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAdvanced2SoapOut">
+    <wsdl:part name="parameters" element="tns:SendMailAdvanced2Response" />
+  </wsdl:message>
   <wsdl:message name="GetAllAccessByWorkstationSoapIn">
     <wsdl:part name="parameters" element="tns:GetAllAccessByWorkstation" />
   </wsdl:message>
@@ -2886,23 +3170,40 @@
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpGetIn">
     <wsdl:part name="qraNumber" type="s:string" />
-    <wsdl:part name="TestName" type="s:string" />
+    <wsdl:part name="testName" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpGetOut">
     <wsdl:part name="Body" element="tns:Notification" />
   </wsdl:message>
   <wsdl:message name="UpdateUnitIMEIHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
-    <wsdl:part name="IMEI" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="iMEI" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="UpdateUnitIMEIHttpGetOut">
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="bsn" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNIMEIHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="bsn" type="s:string" />
+    <wsdl:part name="iMEI" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNIMEIHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:message name="AddUnitHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
-    <wsdl:part name="BSN" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="bsn" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="AddUnitHttpGetOut">
@@ -2920,6 +3221,13 @@
   </wsdl:message>
   <wsdl:message name="GetAvailableUnitsExcludedHttpGetOut">
     <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitIMEIHttpGetIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="batchUnitNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitIMEIHttpGetOut">
+    <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetUnitBSNHttpGetIn">
     <wsdl:part name="QRANumber" type="s:string" />
@@ -2949,7 +3257,7 @@
     <wsdl:part name="Body" element="tns:TestUnit" />
   </wsdl:message>
   <wsdl:message name="DTATTAAddRemoveUnitHttpGetIn">
-    <wsdl:part name="qranumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="testStage" type="s:string" />
     <wsdl:part name="test" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
@@ -2991,6 +3299,12 @@
   <wsdl:message name="ReturnMultipleStationNamesByTypeHttpGetOut">
     <wsdl:part name="Body" element="tns:ArrayOfTrackingLocation" />
   </wsdl:message>
+  <wsdl:message name="GetTrackingLocationTypesByFunctionHttpGetIn">
+    <wsdl:part name="tlf" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTrackingLocationTypesByFunctionHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfTrackingLocationType" />
+  </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpGetIn">
     <wsdl:part name="stationName" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
@@ -2998,11 +3312,27 @@
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
+  <wsdl:message name="AddHostToTrackingLocationHttpGetIn">
+    <wsdl:part name="hostName" type="s:string" />
+    <wsdl:part name="trackingLocationID" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+    <wsdl:part name="testCenterID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddHostToTrackingLocationHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:message name="GetTestHttpGetIn">
-    <wsdl:part name="Name" type="s:string" />
+    <wsdl:part name="name" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestHttpGetOut">
     <wsdl:part name="Body" element="tns:Test" />
+  </wsdl:message>
+  <wsdl:message name="GetTestAccessHttpGetIn">
+    <wsdl:part name="testID" type="s:string" />
+    <wsdl:part name="removeFirst" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestAccessHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetTestByIDHttpGetIn">
     <wsdl:part name="id" type="s:string" />
@@ -3129,13 +3459,13 @@
     <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="GetJobHttpGetIn">
-    <wsdl:part name="Name" type="s:string" />
+    <wsdl:part name="name" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetJobHttpGetOut">
     <wsdl:part name="Body" element="tns:Job" />
   </wsdl:message>
   <wsdl:message name="GetOrientationsByJobHttpGetIn">
-    <wsdl:part name="JobName" type="s:string" />
+    <wsdl:part name="jobName" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetOrientationsByJobHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
@@ -3166,6 +3496,15 @@
   </wsdl:message>
   <wsdl:message name="GetUserHttpGetOut">
     <wsdl:part name="Body" element="tns:User" />
+  </wsdl:message>
+  <wsdl:message name="CreateUserHttpGetIn">
+    <wsdl:part name="userIdentification" type="s:string" />
+    <wsdl:part name="testCenterID" type="s:string" />
+    <wsdl:part name="departmentID" type="s:string" />
+    <wsdl:part name="badgeNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetFriendlyUserIDHttpGetIn">
     <wsdl:part name="userIdentification" type="s:string" />
@@ -3222,7 +3561,7 @@
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchUnitsInStageHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchUnitsInStageHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
@@ -3235,21 +3574,21 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetTestingSummaryHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestingSummaryHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetStressingSummaryHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetStressingSummaryHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="BatchStartedBeforeAssignedHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="BatchStartedBeforeAssignedHttpGetOut">
     <wsdl:part name="Body" element="tns:boolean" />
@@ -3262,50 +3601,62 @@
   <wsdl:message name="GetDefaultReqNumWithUnitHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumByRequestTypeHttpGetIn">
+    <wsdl:part name="RequestType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumByRequestTypeHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumWithUnitByRequestTypeHttpGetIn">
+    <wsdl:part name="RequestType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumWithUnitByRequestTypeHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
   <wsdl:message name="GetProductTypeIDHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetProductTypeIDHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetTestCenterIDHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestCenterIDHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetAccessoryTypeIDHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetAccessoryTypeIDHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetBatchHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchHttpGetOut">
     <wsdl:part name="Body" element="tns:BatchView" />
   </wsdl:message>
   <wsdl:message name="GetBatchNotificationsHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchNotificationsHttpGetOut">
     <wsdl:part name="Body" element="tns:ArrayOfNotification" />
   </wsdl:message>
   <wsdl:message name="GetBatchCommentsHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchCommentsHttpGetOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetHardwareRevisionHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetHardwareRevisionHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
   <wsdl:message name="GetCPRNumberHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetCPRNumberHttpGetOut">
     <wsdl:part name="Body" element="tns:string" />
@@ -3349,7 +3700,7 @@
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="SaveBatchCommentHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
     <wsdl:part name="comment" type="s:string" />
   </wsdl:message>
@@ -3357,7 +3708,7 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="DNPParametricForBatchHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
     <wsdl:part name="unitNumber" type="s:string" />
   </wsdl:message>
@@ -3365,7 +3716,7 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetPercentageCompleteForBatchHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetPercentageCompleteForBatchHttpGetOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -3387,7 +3738,7 @@
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="CheckBatchForStatusUpdatesHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="CheckBatchForStatusUpdatesHttpGetOut">
@@ -3420,13 +3771,13 @@
     <wsdl:part name="Body" element="tns:ScanReturnData" />
   </wsdl:message>
   <wsdl:message name="GetBatchResultsOverviewHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchResultsOverviewHttpGetOut">
     <wsdl:part name="Body" element="tns:ArrayOfTestStageResultOverview" />
   </wsdl:message>
   <wsdl:message name="IncomingGetAndSaveBatchHttpGetIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="IncomingGetAndSaveBatchHttpGetOut">
@@ -3445,8 +3796,17 @@
     <wsdl:part name="subject" type="s:string" />
     <wsdl:part name="messageBody" type="s:string" />
     <wsdl:part name="isHTML" type="s:string" />
+    <wsdl:part name="bcc" type="s:string" />
   </wsdl:message>
   <wsdl:message name="SendMailAdvancedHttpGetOut" />
+  <wsdl:message name="SendMailAdvanced2HttpGetIn">
+    <wsdl:part name="destinations" type="s:string" />
+    <wsdl:part name="sender" type="s:string" />
+    <wsdl:part name="subject" type="s:string" />
+    <wsdl:part name="messageBody" type="s:string" />
+    <wsdl:part name="isHTML" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAdvanced2HttpGetOut" />
   <wsdl:message name="GetAllAccessByWorkstationHttpGetIn">
     <wsdl:part name="workstationName" type="s:string" />
     <wsdl:part name="getGlobalAccess" type="s:string" />
@@ -3468,14 +3828,14 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetTestRecordsHttpGetIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestRecordsHttpGetOut">
     <wsdl:part name="Body" element="tns:ArrayOfTestRecord" />
   </wsdl:message>
   <wsdl:message name="TestRecordAddHttpGetIn">
-    <wsdl:part name="qranumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="unitNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
     <wsdl:part name="testRecordStatus" type="s:string" />
@@ -3520,23 +3880,40 @@
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpPostIn">
     <wsdl:part name="qraNumber" type="s:string" />
-    <wsdl:part name="TestName" type="s:string" />
+    <wsdl:part name="testName" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="AddUnitExceptionHttpPostOut">
     <wsdl:part name="Body" element="tns:Notification" />
   </wsdl:message>
   <wsdl:message name="UpdateUnitIMEIHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
-    <wsdl:part name="IMEI" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="iMEI" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="UpdateUnitIMEIHttpPostOut">
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="bsn" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNIMEIHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="bsn" type="s:string" />
+    <wsdl:part name="iMEI" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateUnitBSNIMEIHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:message name="AddUnitHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
-    <wsdl:part name="BSN" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="bsn" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="AddUnitHttpPostOut">
@@ -3554,6 +3931,13 @@
   </wsdl:message>
   <wsdl:message name="GetAvailableUnitsExcludedHttpPostOut">
     <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitIMEIHttpPostIn">
+    <wsdl:part name="requestNumber" type="s:string" />
+    <wsdl:part name="batchUnitNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUnitIMEIHttpPostOut">
+    <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetUnitBSNHttpPostIn">
     <wsdl:part name="QRANumber" type="s:string" />
@@ -3583,7 +3967,7 @@
     <wsdl:part name="Body" element="tns:TestUnit" />
   </wsdl:message>
   <wsdl:message name="DTATTAAddRemoveUnitHttpPostIn">
-    <wsdl:part name="qranumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="testStage" type="s:string" />
     <wsdl:part name="test" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
@@ -3625,6 +4009,12 @@
   <wsdl:message name="ReturnMultipleStationNamesByTypeHttpPostOut">
     <wsdl:part name="Body" element="tns:ArrayOfTrackingLocation" />
   </wsdl:message>
+  <wsdl:message name="GetTrackingLocationTypesByFunctionHttpPostIn">
+    <wsdl:part name="tlf" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTrackingLocationTypesByFunctionHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfTrackingLocationType" />
+  </wsdl:message>
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpPostIn">
     <wsdl:part name="stationName" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
@@ -3632,11 +4022,27 @@
   <wsdl:message name="GetSpecificLocationForCurrentUsersTestCenterHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
+  <wsdl:message name="AddHostToTrackingLocationHttpPostIn">
+    <wsdl:part name="hostName" type="s:string" />
+    <wsdl:part name="trackingLocationID" type="s:string" />
+    <wsdl:part name="userIdentification" type="s:string" />
+    <wsdl:part name="testCenterID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddHostToTrackingLocationHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:message name="GetTestHttpPostIn">
-    <wsdl:part name="Name" type="s:string" />
+    <wsdl:part name="name" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestHttpPostOut">
     <wsdl:part name="Body" element="tns:Test" />
+  </wsdl:message>
+  <wsdl:message name="GetTestAccessHttpPostIn">
+    <wsdl:part name="testID" type="s:string" />
+    <wsdl:part name="removeFirst" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTestAccessHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetTestByIDHttpPostIn">
     <wsdl:part name="id" type="s:string" />
@@ -3763,13 +4169,13 @@
     <wsdl:part name="Body" element="tns:ArrayOfString" />
   </wsdl:message>
   <wsdl:message name="GetJobHttpPostIn">
-    <wsdl:part name="Name" type="s:string" />
+    <wsdl:part name="name" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetJobHttpPostOut">
     <wsdl:part name="Body" element="tns:Job" />
   </wsdl:message>
   <wsdl:message name="GetOrientationsByJobHttpPostIn">
-    <wsdl:part name="JobName" type="s:string" />
+    <wsdl:part name="jobName" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetOrientationsByJobHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
@@ -3800,6 +4206,15 @@
   </wsdl:message>
   <wsdl:message name="GetUserHttpPostOut">
     <wsdl:part name="Body" element="tns:User" />
+  </wsdl:message>
+  <wsdl:message name="CreateUserHttpPostIn">
+    <wsdl:part name="userIdentification" type="s:string" />
+    <wsdl:part name="testCenterID" type="s:string" />
+    <wsdl:part name="departmentID" type="s:string" />
+    <wsdl:part name="badgeNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetFriendlyUserIDHttpPostIn">
     <wsdl:part name="userIdentification" type="s:string" />
@@ -3856,7 +4271,7 @@
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchUnitsInStageHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchUnitsInStageHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
@@ -3869,21 +4284,21 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetTestingSummaryHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestingSummaryHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetStressingSummaryHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetStressingSummaryHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="BatchStartedBeforeAssignedHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="BatchStartedBeforeAssignedHttpPostOut">
     <wsdl:part name="Body" element="tns:boolean" />
@@ -3896,50 +4311,62 @@
   <wsdl:message name="GetDefaultReqNumWithUnitHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumByRequestTypeHttpPostIn">
+    <wsdl:part name="RequestType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumByRequestTypeHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumWithUnitByRequestTypeHttpPostIn">
+    <wsdl:part name="RequestType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultReqNumWithUnitByRequestTypeHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
   <wsdl:message name="GetProductTypeIDHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetProductTypeIDHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetTestCenterIDHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestCenterIDHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetAccessoryTypeIDHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetAccessoryTypeIDHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
   </wsdl:message>
   <wsdl:message name="GetBatchHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchHttpPostOut">
     <wsdl:part name="Body" element="tns:BatchView" />
   </wsdl:message>
   <wsdl:message name="GetBatchNotificationsHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchNotificationsHttpPostOut">
     <wsdl:part name="Body" element="tns:ArrayOfNotification" />
   </wsdl:message>
   <wsdl:message name="GetBatchCommentsHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchCommentsHttpPostOut">
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="GetHardwareRevisionHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetHardwareRevisionHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
   </wsdl:message>
   <wsdl:message name="GetCPRNumberHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetCPRNumberHttpPostOut">
     <wsdl:part name="Body" element="tns:string" />
@@ -3983,7 +4410,7 @@
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="SaveBatchCommentHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
     <wsdl:part name="comment" type="s:string" />
   </wsdl:message>
@@ -3991,7 +4418,7 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="DNPParametricForBatchHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
     <wsdl:part name="unitNumber" type="s:string" />
   </wsdl:message>
@@ -3999,7 +4426,7 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetPercentageCompleteForBatchHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetPercentageCompleteForBatchHttpPostOut">
     <wsdl:part name="Body" element="tns:int" />
@@ -4021,7 +4448,7 @@
     <wsdl:part name="Body" element="tns:DataTable" />
   </wsdl:message>
   <wsdl:message name="CheckBatchForStatusUpdatesHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="CheckBatchForStatusUpdatesHttpPostOut">
@@ -4054,13 +4481,13 @@
     <wsdl:part name="Body" element="tns:ScanReturnData" />
   </wsdl:message>
   <wsdl:message name="GetBatchResultsOverviewHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetBatchResultsOverviewHttpPostOut">
     <wsdl:part name="Body" element="tns:ArrayOfTestStageResultOverview" />
   </wsdl:message>
   <wsdl:message name="IncomingGetAndSaveBatchHttpPostIn">
-    <wsdl:part name="qraNumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="IncomingGetAndSaveBatchHttpPostOut">
@@ -4079,8 +4506,17 @@
     <wsdl:part name="subject" type="s:string" />
     <wsdl:part name="messageBody" type="s:string" />
     <wsdl:part name="isHTML" type="s:string" />
+    <wsdl:part name="bcc" type="s:string" />
   </wsdl:message>
   <wsdl:message name="SendMailAdvancedHttpPostOut" />
+  <wsdl:message name="SendMailAdvanced2HttpPostIn">
+    <wsdl:part name="destinations" type="s:string" />
+    <wsdl:part name="sender" type="s:string" />
+    <wsdl:part name="subject" type="s:string" />
+    <wsdl:part name="messageBody" type="s:string" />
+    <wsdl:part name="isHTML" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAdvanced2HttpPostOut" />
   <wsdl:message name="GetAllAccessByWorkstationHttpPostIn">
     <wsdl:part name="workstationName" type="s:string" />
     <wsdl:part name="getGlobalAccess" type="s:string" />
@@ -4102,14 +4538,14 @@
     <wsdl:part name="Body" element="tns:boolean" />
   </wsdl:message>
   <wsdl:message name="GetTestRecordsHttpPostIn">
-    <wsdl:part name="QRANumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
   </wsdl:message>
   <wsdl:message name="GetTestRecordsHttpPostOut">
     <wsdl:part name="Body" element="tns:ArrayOfTestRecord" />
   </wsdl:message>
   <wsdl:message name="TestRecordAddHttpPostIn">
-    <wsdl:part name="qranumber" type="s:string" />
+    <wsdl:part name="requestNumber" type="s:string" />
     <wsdl:part name="unitNumber" type="s:string" />
     <wsdl:part name="userIdentification" type="s:string" />
     <wsdl:part name="testRecordStatus" type="s:string" />
@@ -4168,6 +4604,16 @@
       <wsdl:input message="tns:UpdateUnitIMEISoapIn" />
       <wsdl:output message="tns:UpdateUnitIMEISoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSN">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the IMEI for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateUnitBSNSoapIn" />
+      <wsdl:output message="tns:UpdateUnitBSNSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSNIMEI">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the IMEI for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateUnitBSNIMEISoapIn" />
+      <wsdl:output message="tns:UpdateUnitBSNIMEISoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="AddUnit">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the BSN for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
       <wsdl:input message="tns:AddUnitSoapIn" />
@@ -4182,6 +4628,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets all units that are available for scanning except the unit number you pass in.</wsdl:documentation>
       <wsdl:input message="tns:GetAvailableUnitsExcludedSoapIn" />
       <wsdl:output message="tns:GetAvailableUnitsExcludedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitIMEI">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get IMEI for unit.</wsdl:documentation>
+      <wsdl:input message="tns:GetUnitIMEISoapIn" />
+      <wsdl:output message="tns:GetUnitIMEISoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetUnitBSN">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit BSN.</wsdl:documentation>
@@ -4233,15 +4684,40 @@
       <wsdl:input message="tns:ReturnMultipleStationNamesByTypeSoapIn" />
       <wsdl:output message="tns:ReturnMultipleStationNamesByTypeSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetLocationsByTestCenterLocationType">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a set of test station(s) for the current test center.</wsdl:documentation>
+      <wsdl:input message="tns:GetLocationsByTestCenterLocationTypeSoapIn" />
+      <wsdl:output message="tns:GetLocationsByTestCenterLocationTypeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackingLocationTypesByFunction">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns All tracking Locations Types By Function.</wsdl:documentation>
+      <wsdl:input message="tns:GetTrackingLocationTypesByFunctionSoapIn" />
+      <wsdl:output message="tns:GetTrackingLocationTypesByFunctionSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetSpecificLocationForCurrentUsersTestCenter">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge &amp; Lab - Bochum. If you want a specific location id for a given user use "Lab" and their username with this method.</wsdl:documentation>
       <wsdl:input message="tns:GetSpecificLocationForCurrentUsersTestCenterSoapIn" />
       <wsdl:output message="tns:GetSpecificLocationForCurrentUsersTestCenterSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="AddHostToTrackingLocation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds A New Trackign Location.</wsdl:documentation>
+      <wsdl:input message="tns:AddHostToTrackingLocationSoapIn" />
+      <wsdl:output message="tns:AddHostToTrackingLocationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveTrackingLocation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds A New Trackign Location.</wsdl:documentation>
+      <wsdl:input message="tns:SaveTrackingLocationSoapIn" />
+      <wsdl:output message="tns:SaveTrackingLocationSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetTest">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test name this method returns all the known details of a specific test.</wsdl:documentation>
       <wsdl:input message="tns:GetTestSoapIn" />
       <wsdl:output message="tns:GetTestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test id this function returns all departments that have access for this test.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestAccessSoapIn" />
+      <wsdl:output message="tns:GetTestAccessSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestByID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test name this method returns all the known details of a specific test.</wsdl:documentation>
@@ -4344,7 +4820,7 @@
       <wsdl:output message="tns:GetOrientationsByJobSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetJobAccess">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all orientations for this job.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all departments that have access for this job.</wsdl:documentation>
       <wsdl:input message="tns:GetJobAccessSoapIn" />
       <wsdl:output message="tns:GetJobAccessSoapOut" />
     </wsdl:operation>
@@ -4367,6 +4843,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user's login name and their permissions for accessing the test station at the hostname given.</wsdl:documentation>
       <wsdl:input message="tns:GetUserSoapIn" />
       <wsdl:output message="tns:GetUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates A New REMI User.</wsdl:documentation>
+      <wsdl:input message="tns:CreateUserSoapIn" />
+      <wsdl:output message="tns:CreateUserSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a badge number returns a user's login name.</wsdl:documentation>
@@ -4434,7 +4915,7 @@
       <wsdl:output message="tns:GetStressingSummarySoapOut" />
     </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned in TRS.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned.</wsdl:documentation>
       <wsdl:input message="tns:BatchStartedBeforeAssignedSoapIn" />
       <wsdl:output message="tns:BatchStartedBeforeAssignedSoapOut" />
     </wsdl:operation>
@@ -4447,6 +4928,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number With Unit.</wsdl:documentation>
       <wsdl:input message="tns:GetDefaultReqNumWithUnitSoapIn" />
       <wsdl:output message="tns:GetDefaultReqNumWithUnitSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNum">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number.</wsdl:documentation>
+      <wsdl:input name="GetDefaultReqNumByRequestType" message="tns:GetDefaultReqNumByRequestTypeSoapIn" />
+      <wsdl:output name="GetDefaultReqNumByRequestType" message="tns:GetDefaultReqNumByRequestTypeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNumWithUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number With Unit.</wsdl:documentation>
+      <wsdl:input name="GetDefaultReqNumWithUnitByRequestType" message="tns:GetDefaultReqNumWithUnitByRequestTypeSoapIn" />
+      <wsdl:output name="GetDefaultReqNumWithUnitByRequestType" message="tns:GetDefaultReqNumWithUnitByRequestTypeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetProductTypeID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets product type Information.</wsdl:documentation>
@@ -4578,10 +5069,15 @@
       <wsdl:input message="tns:SendMailSoapIn" />
       <wsdl:output message="tns:SendMailSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="SendMail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sends an email via smtp. Comma delimit destinations.</wsdl:documentation>
+      <wsdl:input name="SendMailAdvanced" message="tns:SendMailAdvancedSoapIn" />
+      <wsdl:output name="SendMailAdvanced" message="tns:SendMailAdvancedSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="SendMailAdvanced">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sends an email via smtp. Comma delimit destinations.</wsdl:documentation>
-      <wsdl:input message="tns:SendMailAdvancedSoapIn" />
-      <wsdl:output message="tns:SendMailAdvancedSoapOut" />
+      <wsdl:input name="SendMailAdvanced2" message="tns:SendMailAdvanced2SoapIn" />
+      <wsdl:output name="SendMailAdvanced2" message="tns:SendMailAdvanced2SoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetAllAccessByWorkstation">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves all target access for a workstation and you can include the global target access.</wsdl:documentation>
@@ -4645,6 +5141,16 @@
       <wsdl:input message="tns:UpdateUnitIMEIHttpGetIn" />
       <wsdl:output message="tns:UpdateUnitIMEIHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSN">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the IMEI for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateUnitBSNHttpGetIn" />
+      <wsdl:output message="tns:UpdateUnitBSNHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSNIMEI">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the IMEI for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateUnitBSNIMEIHttpGetIn" />
+      <wsdl:output message="tns:UpdateUnitBSNIMEIHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="AddUnit">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the BSN for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
       <wsdl:input message="tns:AddUnitHttpGetIn" />
@@ -4659,6 +5165,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets all units that are available for scanning except the unit number you pass in.</wsdl:documentation>
       <wsdl:input message="tns:GetAvailableUnitsExcludedHttpGetIn" />
       <wsdl:output message="tns:GetAvailableUnitsExcludedHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitIMEI">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get IMEI for unit.</wsdl:documentation>
+      <wsdl:input message="tns:GetUnitIMEIHttpGetIn" />
+      <wsdl:output message="tns:GetUnitIMEIHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetUnitBSN">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit BSN.</wsdl:documentation>
@@ -4710,15 +5221,30 @@
       <wsdl:input message="tns:ReturnMultipleStationNamesByTypeHttpGetIn" />
       <wsdl:output message="tns:ReturnMultipleStationNamesByTypeHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTrackingLocationTypesByFunction">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns All tracking Locations Types By Function.</wsdl:documentation>
+      <wsdl:input message="tns:GetTrackingLocationTypesByFunctionHttpGetIn" />
+      <wsdl:output message="tns:GetTrackingLocationTypesByFunctionHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetSpecificLocationForCurrentUsersTestCenter">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge &amp; Lab - Bochum. If you want a specific location id for a given user use "Lab" and their username with this method.</wsdl:documentation>
       <wsdl:input message="tns:GetSpecificLocationForCurrentUsersTestCenterHttpGetIn" />
       <wsdl:output message="tns:GetSpecificLocationForCurrentUsersTestCenterHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="AddHostToTrackingLocation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds A New Trackign Location.</wsdl:documentation>
+      <wsdl:input message="tns:AddHostToTrackingLocationHttpGetIn" />
+      <wsdl:output message="tns:AddHostToTrackingLocationHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetTest">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test name this method returns all the known details of a specific test.</wsdl:documentation>
       <wsdl:input message="tns:GetTestHttpGetIn" />
       <wsdl:output message="tns:GetTestHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test id this function returns all departments that have access for this test.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestAccessHttpGetIn" />
+      <wsdl:output message="tns:GetTestAccessHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestByID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test name this method returns all the known details of a specific test.</wsdl:documentation>
@@ -4821,7 +5347,7 @@
       <wsdl:output message="tns:GetOrientationsByJobHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetJobAccess">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all orientations for this job.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all departments that have access for this job.</wsdl:documentation>
       <wsdl:input message="tns:GetJobAccessHttpGetIn" />
       <wsdl:output message="tns:GetJobAccessHttpGetOut" />
     </wsdl:operation>
@@ -4839,6 +5365,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user's login name and their permissions for accessing the test station at the hostname given.</wsdl:documentation>
       <wsdl:input message="tns:GetUserHttpGetIn" />
       <wsdl:output message="tns:GetUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates A New REMI User.</wsdl:documentation>
+      <wsdl:input message="tns:CreateUserHttpGetIn" />
+      <wsdl:output message="tns:CreateUserHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a badge number returns a user's login name.</wsdl:documentation>
@@ -4906,7 +5437,7 @@
       <wsdl:output message="tns:GetStressingSummaryHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned in TRS.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned.</wsdl:documentation>
       <wsdl:input message="tns:BatchStartedBeforeAssignedHttpGetIn" />
       <wsdl:output message="tns:BatchStartedBeforeAssignedHttpGetOut" />
     </wsdl:operation>
@@ -4919,6 +5450,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number With Unit.</wsdl:documentation>
       <wsdl:input message="tns:GetDefaultReqNumWithUnitHttpGetIn" />
       <wsdl:output message="tns:GetDefaultReqNumWithUnitHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNum">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number.</wsdl:documentation>
+      <wsdl:input name="GetDefaultReqNumByRequestType" message="tns:GetDefaultReqNumByRequestTypeHttpGetIn" />
+      <wsdl:output name="GetDefaultReqNumByRequestType" message="tns:GetDefaultReqNumByRequestTypeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNumWithUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number With Unit.</wsdl:documentation>
+      <wsdl:input name="GetDefaultReqNumWithUnitByRequestType" message="tns:GetDefaultReqNumWithUnitByRequestTypeHttpGetIn" />
+      <wsdl:output name="GetDefaultReqNumWithUnitByRequestType" message="tns:GetDefaultReqNumWithUnitByRequestTypeHttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetProductTypeID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets product type Information.</wsdl:documentation>
@@ -5050,10 +5591,15 @@
       <wsdl:input message="tns:SendMailHttpGetIn" />
       <wsdl:output message="tns:SendMailHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="SendMail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sends an email via smtp. Comma delimit destinations.</wsdl:documentation>
+      <wsdl:input name="SendMailAdvanced" message="tns:SendMailAdvancedHttpGetIn" />
+      <wsdl:output name="SendMailAdvanced" message="tns:SendMailAdvancedHttpGetOut" />
+    </wsdl:operation>
     <wsdl:operation name="SendMailAdvanced">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sends an email via smtp. Comma delimit destinations.</wsdl:documentation>
-      <wsdl:input message="tns:SendMailAdvancedHttpGetIn" />
-      <wsdl:output message="tns:SendMailAdvancedHttpGetOut" />
+      <wsdl:input name="SendMailAdvanced2" message="tns:SendMailAdvanced2HttpGetIn" />
+      <wsdl:output name="SendMailAdvanced2" message="tns:SendMailAdvanced2HttpGetOut" />
     </wsdl:operation>
     <wsdl:operation name="GetAllAccessByWorkstation">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves all target access for a workstation and you can include the global target access.</wsdl:documentation>
@@ -5112,6 +5658,16 @@
       <wsdl:input message="tns:UpdateUnitIMEIHttpPostIn" />
       <wsdl:output message="tns:UpdateUnitIMEIHttpPostOut" />
     </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSN">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the IMEI for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateUnitBSNHttpPostIn" />
+      <wsdl:output message="tns:UpdateUnitBSNHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSNIMEI">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the IMEI for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
+      <wsdl:input message="tns:UpdateUnitBSNIMEIHttpPostIn" />
+      <wsdl:output message="tns:UpdateUnitBSNIMEIHttpPostOut" />
+    </wsdl:operation>
     <wsdl:operation name="AddUnit">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets the BSN for a unit. The given user badge number will override the windows login if available.</wsdl:documentation>
       <wsdl:input message="tns:AddUnitHttpPostIn" />
@@ -5126,6 +5682,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets all units that are available for scanning except the unit number you pass in.</wsdl:documentation>
       <wsdl:input message="tns:GetAvailableUnitsExcludedHttpPostIn" />
       <wsdl:output message="tns:GetAvailableUnitsExcludedHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitIMEI">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get IMEI for unit.</wsdl:documentation>
+      <wsdl:input message="tns:GetUnitIMEIHttpPostIn" />
+      <wsdl:output message="tns:GetUnitIMEIHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetUnitBSN">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Unit BSN.</wsdl:documentation>
@@ -5177,15 +5738,30 @@
       <wsdl:input message="tns:ReturnMultipleStationNamesByTypeHttpPostIn" />
       <wsdl:output message="tns:ReturnMultipleStationNamesByTypeHttpPostOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetTrackingLocationTypesByFunction">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns All tracking Locations Types By Function.</wsdl:documentation>
+      <wsdl:input message="tns:GetTrackingLocationTypesByFunctionHttpPostIn" />
+      <wsdl:output message="tns:GetTrackingLocationTypesByFunctionHttpPostOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetSpecificLocationForCurrentUsersTestCenter">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge &amp; Lab - Bochum. If you want a specific location id for a given user use "Lab" and their username with this method.</wsdl:documentation>
       <wsdl:input message="tns:GetSpecificLocationForCurrentUsersTestCenterHttpPostIn" />
       <wsdl:output message="tns:GetSpecificLocationForCurrentUsersTestCenterHttpPostOut" />
     </wsdl:operation>
+    <wsdl:operation name="AddHostToTrackingLocation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds A New Trackign Location.</wsdl:documentation>
+      <wsdl:input message="tns:AddHostToTrackingLocationHttpPostIn" />
+      <wsdl:output message="tns:AddHostToTrackingLocationHttpPostOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetTest">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test name this method returns all the known details of a specific test.</wsdl:documentation>
       <wsdl:input message="tns:GetTestHttpPostIn" />
       <wsdl:output message="tns:GetTestHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestAccess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test id this function returns all departments that have access for this test.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestAccessHttpPostIn" />
+      <wsdl:output message="tns:GetTestAccessHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestByID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a test name this method returns all the known details of a specific test.</wsdl:documentation>
@@ -5288,7 +5864,7 @@
       <wsdl:output message="tns:GetOrientationsByJobHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetJobAccess">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all orientations for this job.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a job id this function returns all departments that have access for this job.</wsdl:documentation>
       <wsdl:input message="tns:GetJobAccessHttpPostIn" />
       <wsdl:output message="tns:GetJobAccessHttpPostOut" />
     </wsdl:operation>
@@ -5306,6 +5882,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user's login name and their permissions for accessing the test station at the hostname given.</wsdl:documentation>
       <wsdl:input message="tns:GetUserHttpPostIn" />
       <wsdl:output message="tns:GetUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Creates A New REMI User.</wsdl:documentation>
+      <wsdl:input message="tns:CreateUserHttpPostIn" />
+      <wsdl:output message="tns:CreateUserHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Given a badge number returns a user's login name.</wsdl:documentation>
@@ -5373,7 +5954,7 @@
       <wsdl:output message="tns:GetStressingSummaryHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="BatchStartedBeforeAssigned">
-      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned in TRS.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines whether the batch was started before assigned.</wsdl:documentation>
       <wsdl:input message="tns:BatchStartedBeforeAssignedHttpPostIn" />
       <wsdl:output message="tns:BatchStartedBeforeAssignedHttpPostOut" />
     </wsdl:operation>
@@ -5386,6 +5967,16 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number With Unit.</wsdl:documentation>
       <wsdl:input message="tns:GetDefaultReqNumWithUnitHttpPostIn" />
       <wsdl:output message="tns:GetDefaultReqNumWithUnitHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNum">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number.</wsdl:documentation>
+      <wsdl:input name="GetDefaultReqNumByRequestType" message="tns:GetDefaultReqNumByRequestTypeHttpPostIn" />
+      <wsdl:output name="GetDefaultReqNumByRequestType" message="tns:GetDefaultReqNumByRequestTypeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNumWithUnit">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets Default Request Number With Unit.</wsdl:documentation>
+      <wsdl:input name="GetDefaultReqNumWithUnitByRequestType" message="tns:GetDefaultReqNumWithUnitByRequestTypeHttpPostIn" />
+      <wsdl:output name="GetDefaultReqNumWithUnitByRequestType" message="tns:GetDefaultReqNumWithUnitByRequestTypeHttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetProductTypeID">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets product type Information.</wsdl:documentation>
@@ -5517,10 +6108,15 @@
       <wsdl:input message="tns:SendMailHttpPostIn" />
       <wsdl:output message="tns:SendMailHttpPostOut" />
     </wsdl:operation>
+    <wsdl:operation name="SendMail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sends an email via smtp. Comma delimit destinations.</wsdl:documentation>
+      <wsdl:input name="SendMailAdvanced" message="tns:SendMailAdvancedHttpPostIn" />
+      <wsdl:output name="SendMailAdvanced" message="tns:SendMailAdvancedHttpPostOut" />
+    </wsdl:operation>
     <wsdl:operation name="SendMailAdvanced">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sends an email via smtp. Comma delimit destinations.</wsdl:documentation>
-      <wsdl:input message="tns:SendMailAdvancedHttpPostIn" />
-      <wsdl:output message="tns:SendMailAdvancedHttpPostOut" />
+      <wsdl:input name="SendMailAdvanced2" message="tns:SendMailAdvanced2HttpPostIn" />
+      <wsdl:output name="SendMailAdvanced2" message="tns:SendMailAdvanced2HttpPostOut" />
     </wsdl:operation>
     <wsdl:operation name="GetAllAccessByWorkstation">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves all target access for a workstation and you can include the global target access.</wsdl:documentation>
@@ -5597,6 +6193,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSN">
+      <soap:operation soapAction="http://go/remi/UpdateUnitBSN" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSNIMEI">
+      <soap:operation soapAction="http://go/remi/UpdateUnitBSNIMEI" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="AddUnit">
       <soap:operation soapAction="http://go/remi/AddUnit" style="document" />
       <wsdl:input>
@@ -5617,6 +6231,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAvailableUnitsExcluded">
       <soap:operation soapAction="http://go/remi/GetAvailableUnitsExcluded" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitIMEI">
+      <soap:operation soapAction="http://go/remi/GetUnitIMEI" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5714,6 +6337,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetLocationsByTestCenterLocationType">
+      <soap:operation soapAction="http://go/remi/GetLocationsByTestCenterLocationType" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackingLocationTypesByFunction">
+      <soap:operation soapAction="http://go/remi/GetTrackingLocationTypesByFunction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetSpecificLocationForCurrentUsersTestCenter">
       <soap:operation soapAction="http://go/remi/GetSpecificLocationForCurrentUsersTestCenter" style="document" />
       <wsdl:input>
@@ -5723,8 +6364,35 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="AddHostToTrackingLocation">
+      <soap:operation soapAction="http://go/remi/AddHostToTrackingLocation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveTrackingLocation">
+      <soap:operation soapAction="http://go/remi/SaveTrackingLocation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetTest">
       <soap:operation soapAction="http://go/remi/GetTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestAccess">
+      <soap:operation soapAction="http://go/remi/GetTestAccess" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -5957,6 +6625,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CreateUser">
+      <soap:operation soapAction="http://go/remi/CreateUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <soap:operation soapAction="http://go/remi/GetFriendlyUserID" style="document" />
       <wsdl:input>
@@ -6098,6 +6775,24 @@
         <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNum">
+      <soap:operation soapAction="http://go/remi/GetDefaultReqNumByRequestType" style="document" />
+      <wsdl:input name="GetDefaultReqNumByRequestType">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumByRequestType">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNumWithUnit">
+      <soap:operation soapAction="http://go/remi/GetDefaultReqNumWithUnitByRequestType" style="document" />
+      <wsdl:input name="GetDefaultReqNumWithUnitByRequestType">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumWithUnitByRequestType">
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -6335,12 +7030,21 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SendMailAdvanced">
+    <wsdl:operation name="SendMail">
       <soap:operation soapAction="http://go/remi/SendMailAdvanced" style="document" />
-      <wsdl:input>
+      <wsdl:input name="SendMailAdvanced">
         <soap:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
+      <wsdl:output name="SendMailAdvanced">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAdvanced">
+      <soap:operation soapAction="http://go/remi/SendMailAdvanced2" style="document" />
+      <wsdl:input name="SendMailAdvanced2">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="SendMailAdvanced2">
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -6464,6 +7168,24 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSN">
+      <soap12:operation soapAction="http://go/remi/UpdateUnitBSN" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSNIMEI">
+      <soap12:operation soapAction="http://go/remi/UpdateUnitBSNIMEI" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="AddUnit">
       <soap12:operation soapAction="http://go/remi/AddUnit" style="document" />
       <wsdl:input>
@@ -6484,6 +7206,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAvailableUnitsExcluded">
       <soap12:operation soapAction="http://go/remi/GetAvailableUnitsExcluded" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitIMEI">
+      <soap12:operation soapAction="http://go/remi/GetUnitIMEI" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6581,6 +7312,24 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetLocationsByTestCenterLocationType">
+      <soap12:operation soapAction="http://go/remi/GetLocationsByTestCenterLocationType" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackingLocationTypesByFunction">
+      <soap12:operation soapAction="http://go/remi/GetTrackingLocationTypesByFunction" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetSpecificLocationForCurrentUsersTestCenter">
       <soap12:operation soapAction="http://go/remi/GetSpecificLocationForCurrentUsersTestCenter" style="document" />
       <wsdl:input>
@@ -6590,8 +7339,35 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="AddHostToTrackingLocation">
+      <soap12:operation soapAction="http://go/remi/AddHostToTrackingLocation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveTrackingLocation">
+      <soap12:operation soapAction="http://go/remi/SaveTrackingLocation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetTest">
       <soap12:operation soapAction="http://go/remi/GetTest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestAccess">
+      <soap12:operation soapAction="http://go/remi/GetTestAccess" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -6824,6 +7600,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CreateUser">
+      <soap12:operation soapAction="http://go/remi/CreateUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <soap12:operation soapAction="http://go/remi/GetFriendlyUserID" style="document" />
       <wsdl:input>
@@ -6965,6 +7750,24 @@
         <soap12:body use="literal" />
       </wsdl:input>
       <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNum">
+      <soap12:operation soapAction="http://go/remi/GetDefaultReqNumByRequestType" style="document" />
+      <wsdl:input name="GetDefaultReqNumByRequestType">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumByRequestType">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNumWithUnit">
+      <soap12:operation soapAction="http://go/remi/GetDefaultReqNumWithUnitByRequestType" style="document" />
+      <wsdl:input name="GetDefaultReqNumWithUnitByRequestType">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumWithUnitByRequestType">
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -7202,12 +8005,21 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SendMailAdvanced">
+    <wsdl:operation name="SendMail">
       <soap12:operation soapAction="http://go/remi/SendMailAdvanced" style="document" />
-      <wsdl:input>
+      <wsdl:input name="SendMailAdvanced">
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
+      <wsdl:output name="SendMailAdvanced">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAdvanced">
+      <soap12:operation soapAction="http://go/remi/SendMailAdvanced2" style="document" />
+      <wsdl:input name="SendMailAdvanced2">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="SendMailAdvanced2">
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
@@ -7322,6 +8134,24 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSN">
+      <http:operation location="/UpdateUnitBSN" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSNIMEI">
+      <http:operation location="/UpdateUnitBSNIMEI" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="AddUnit">
       <http:operation location="/AddUnit" />
       <wsdl:input>
@@ -7342,6 +8172,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAvailableUnitsExcluded">
       <http:operation location="/GetAvailableUnitsExcluded" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitIMEI">
+      <http:operation location="/GetUnitIMEI" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -7439,6 +8278,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTrackingLocationTypesByFunction">
+      <http:operation location="/GetTrackingLocationTypesByFunction" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetSpecificLocationForCurrentUsersTestCenter">
       <http:operation location="/GetSpecificLocationForCurrentUsersTestCenter" />
       <wsdl:input>
@@ -7448,8 +8296,26 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="AddHostToTrackingLocation">
+      <http:operation location="/AddHostToTrackingLocation" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetTest">
       <http:operation location="/GetTest" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestAccess">
+      <http:operation location="/GetTestAccess" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -7673,6 +8539,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CreateUser">
+      <http:operation location="/CreateUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <http:operation location="/GetFriendlyUserID" />
       <wsdl:input>
@@ -7814,6 +8689,24 @@
         <http:urlEncoded />
       </wsdl:input>
       <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNum">
+      <http:operation location="/GetDefaultReqNumByRequestType" />
+      <wsdl:input name="GetDefaultReqNumByRequestType">
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumByRequestType">
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNumWithUnit">
+      <http:operation location="/GetDefaultReqNumWithUnitByRequestType" />
+      <wsdl:input name="GetDefaultReqNumWithUnitByRequestType">
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumWithUnitByRequestType">
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
@@ -8049,12 +8942,19 @@
       </wsdl:input>
       <wsdl:output />
     </wsdl:operation>
-    <wsdl:operation name="SendMailAdvanced">
+    <wsdl:operation name="SendMail">
       <http:operation location="/SendMailAdvanced" />
-      <wsdl:input>
+      <wsdl:input name="SendMailAdvanced">
         <http:urlEncoded />
       </wsdl:input>
-      <wsdl:output />
+      <wsdl:output name="SendMailAdvanced" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAdvanced">
+      <http:operation location="/SendMailAdvanced2" />
+      <wsdl:input name="SendMailAdvanced2">
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output name="SendMailAdvanced2" />
     </wsdl:operation>
     <wsdl:operation name="GetAllAccessByWorkstation">
       <http:operation location="/GetAllAccessByWorkstation" />
@@ -8158,6 +9058,24 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSN">
+      <http:operation location="/UpdateUnitBSN" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUnitBSNIMEI">
+      <http:operation location="/UpdateUnitBSNIMEI" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="AddUnit">
       <http:operation location="/AddUnit" />
       <wsdl:input>
@@ -8178,6 +9096,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAvailableUnitsExcluded">
       <http:operation location="/GetAvailableUnitsExcluded" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitIMEI">
+      <http:operation location="/GetUnitIMEI" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -8275,6 +9202,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetTrackingLocationTypesByFunction">
+      <http:operation location="/GetTrackingLocationTypesByFunction" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetSpecificLocationForCurrentUsersTestCenter">
       <http:operation location="/GetSpecificLocationForCurrentUsersTestCenter" />
       <wsdl:input>
@@ -8284,8 +9220,26 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="AddHostToTrackingLocation">
+      <http:operation location="/AddHostToTrackingLocation" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetTest">
       <http:operation location="/GetTest" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestAccess">
+      <http:operation location="/GetTestAccess" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
@@ -8509,6 +9463,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CreateUser">
+      <http:operation location="/CreateUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetFriendlyUserID">
       <http:operation location="/GetFriendlyUserID" />
       <wsdl:input>
@@ -8650,6 +9613,24 @@
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
       <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNum">
+      <http:operation location="/GetDefaultReqNumByRequestType" />
+      <wsdl:input name="GetDefaultReqNumByRequestType">
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumByRequestType">
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultReqNumWithUnit">
+      <http:operation location="/GetDefaultReqNumWithUnitByRequestType" />
+      <wsdl:input name="GetDefaultReqNumWithUnitByRequestType">
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output name="GetDefaultReqNumWithUnitByRequestType">
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
@@ -8885,12 +9866,19 @@
       </wsdl:input>
       <wsdl:output />
     </wsdl:operation>
-    <wsdl:operation name="SendMailAdvanced">
+    <wsdl:operation name="SendMail">
       <http:operation location="/SendMailAdvanced" />
-      <wsdl:input>
+      <wsdl:input name="SendMailAdvanced">
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
-      <wsdl:output />
+      <wsdl:output name="SendMailAdvanced" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAdvanced">
+      <http:operation location="/SendMailAdvanced2" />
+      <wsdl:input name="SendMailAdvanced2">
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output name="SendMailAdvanced2" />
     </wsdl:operation>
     <wsdl:operation name="GetAllAccessByWorkstation">
       <http:operation location="/GetAllAccessByWorkstation" />

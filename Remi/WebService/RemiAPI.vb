@@ -139,13 +139,13 @@ Public Class RemiAPI
 
 #Region "Units"
     <WebMethod(EnableSession:=True, Description:="Adds an exception for a specific unit for a test.")> _
-    Public Function AddUnitException(ByVal requestNumber As String, ByVal testName As String, ByVal userIdentification As String) As Notification
+    Public Function AddUnitException(ByVal qraNumber As String, ByVal testName As String, ByVal userIdentification As String) As Notification
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Return ExceptionManager.AddException(Helpers.CleanInputText(requestNumber, 21), testName, userIdentification)
+                Return ExceptionManager.AddException(Helpers.CleanInputText(qraNumber, 21), testName, userIdentification)
             End If
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API AddUnitException", "e7", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} TestName: {2}", userIdentification, requestNumber, testName))
+            TestUnitManager.LogIssue("REMI API AddUnitException", "e7", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} TestName: {2}", userIdentification, qraNumber, testName))
         End Try
         Return Nothing
     End Function
@@ -154,7 +154,7 @@ Public Class RemiAPI
     Public Function UpdateUnitIMEI(ByVal requestNumber As String, ByVal iMEI As String, ByVal userIdentification As String) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(requestNumber), 30))
+                Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(RequestNumber), 30))
 
                 If bc.Validate Then
                     If bc.HasTestUnitNumber Then
@@ -168,7 +168,7 @@ Public Class RemiAPI
 
             Return False
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API UpdateUnitIMEI", "e1", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} IMEI: {2}", userIdentification, requestNumber, iMEI))
+            TestUnitManager.LogIssue("REMI API UpdateUnitIMEI", "e1", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} IMEI: {2}", userIdentification, RequestNumber, iMEI))
         End Try
         Return False
     End Function
@@ -253,21 +253,21 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets all units that are available for scanning.")> _
-    Public Function GetAvailableUnits(ByVal requestNumber As String) As List(Of String)
+    Public Function GetAvailableUnits(ByVal QRANumber As String) As List(Of String)
         Try
-            Return TestUnitManager.GetAvailableUnits(requestNumber, 0)
+            Return TestUnitManager.GetAvailableUnits(QRANumber, 0)
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetAvailableUnits", "e3", NotificationType.Errors, ex, String.Format("Request: {0}", requestNumber))
+            TestUnitManager.LogIssue("REMI API GetAvailableUnits", "e3", NotificationType.Errors, ex, String.Format("Request: {0}", QRANumber))
         End Try
         Return New List(Of String)
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets all units that are available for scanning except the unit number you pass in.")> _
-    Public Function GetAvailableUnitsExcluded(ByVal requestNumber As String, ByVal excludedUnitNumber As String) As List(Of String)
+    Public Function GetAvailableUnitsExcluded(ByVal QRANumber As String, ByVal excludedUnitNumber As String) As List(Of String)
         Try
-            Return TestUnitManager.GetAvailableUnits(requestNumber, excludedUnitNumber)
+            Return TestUnitManager.GetAvailableUnits(QRANumber, excludedUnitNumber)
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetAvailableUnitsExcluded", "e3", NotificationType.Errors, ex, String.Format("Request: {0}", requestNumber))
+            TestUnitManager.LogIssue("REMI API GetAvailableUnitsExcluded", "e3", NotificationType.Errors, ex, String.Format("Request: {0}", QRANumber))
         End Try
         Return New List(Of String)
     End Function
@@ -287,45 +287,45 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets Unit BSN.")> _
-    Public Function GetUnitBSN(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As Int32
+    Public Function GetUnitBSN(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As Int32
         Try
-            Return TestUnitManager.GetUnitBSN(requestNumber, batchUnitNumber)
+            Return TestUnitManager.GetUnitBSN(QRANumber, batchUnitNumber)
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetUnitBSN", "e13", NotificationType.Errors, ex, String.Format("Request: {0}", requestNumber))
+            TestUnitManager.LogIssue("REMI API GetUnitBSN", "e13", NotificationType.Errors, ex, String.Format("Request: {0}", QRANumber))
         End Try
         Return Nothing
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets # Of Units Assigned To This Batch.")> _
-    Public Function GetNumOfUnits(ByVal requestNumber As String) As Int32
+    Public Function GetNumOfUnits(ByVal QRANumber As String) As Int32
         Try
-            Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
+            Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
 
             If (barcode.Validate()) Then
                 Return TestUnitManager.GetNumOfUnits(barcode.BatchNumber)
             End If
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetNumOfUnits", "e13", NotificationType.Errors, ex, String.Format("Request: {0}", requestNumber))
+            TestUnitManager.LogIssue("REMI API GetNumOfUnits", "e13", NotificationType.Errors, ex, String.Format("Request: {0}", QRANumber))
         End Try
         Return 0
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets Unit Assigned To.")> _
-    Public Function GetUnitAssignedTo(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As String
+    Public Function GetUnitAssignedTo(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As String
         Try
-            Return TestUnitManager.GetUnitAssignedTo(requestNumber, batchUnitNumber)
+            Return TestUnitManager.GetUnitAssignedTo(QRANumber, batchUnitNumber)
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetUnitAssignedTo", "e13", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + requestNumber, batchUnitNumber))
+            TestUnitManager.LogIssue("REMI API GetUnitAssignedTo", "e13", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + QRANumber, batchUnitNumber))
         End Try
         Return Nothing
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets Unit.")> _
-    Public Function GetUnit(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As TestUnit
+    Public Function GetUnit(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As TestUnit
         Try
-            Return TestUnitManager.GetUnit(requestNumber, batchUnitNumber)
+            Return TestUnitManager.GetUnit(QRANumber, batchUnitNumber)
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API GetUnit", "e13", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + requestNumber, batchUnitNumber))
+            TestUnitManager.LogIssue("REMI API GetUnit", "e13", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + QRANumber, batchUnitNumber))
         End Try
         Return Nothing
     End Function
@@ -1347,9 +1347,9 @@ Public Class RemiAPI
 
     <Obsolete("Don't use this routine any more. Use ScanAdvanced instead."), _
     WebMethod(EnableSession:=True, Description:="Used to scan a device in to a test in the REMI system. Input Values are: Request [(*REQUIRED*): ""QRA-yy-bbbb-uuu-lllll""],SelectedTestID [Optional (0 treated as null):""TestID""],OverallTestResult [ ** OBSOLETE ** - REMI only uses relab for results],UserIdentification [Optional (Empty String Treated as Null): ""BadgeScan Number""] ,locationIdentification [optional (Empty String is treated as null): the hostname of the pc]")> _
-    Public Function Scan(ByVal requestNumber As String, ByVal testStageName As String, ByVal testName As String, ByVal overallTestResult As String, _
+    Public Function Scan(ByVal qraNumber As String, ByVal testStageName As String, ByVal testName As String, ByVal overallTestResult As String, _
                                 ByVal userIdentification As String, ByVal locationIdenitifcation As String, ByVal trackingLocationName As String) As ScanReturnData
-        Return ScanAdvanced(requestNumber, testStageName, testName, overallTestResult, userIdentification, locationIdenitifcation, trackingLocationName, String.Empty, String.Empty)
+        Return ScanAdvanced(qraNumber, testStageName, testName, overallTestResult, userIdentification, locationIdenitifcation, trackingLocationName, String.Empty, String.Empty)
     End Function
 
     ''' <summary>
@@ -1363,16 +1363,16 @@ Public Class RemiAPI
     ''' <returns></returns>
     ''' <remarks></remarks>
     <WebMethod(EnableSession:=True, Description:="Used to scan a device in to a test in the REMI system. Input Values are: Request [(*REQUIRED*): ""QRA-yy-bbbb-uuu-lllll""],SelectedTestID [Optional (0 treated as null):""TestID""],OverallTestResult [ ** OBSOLETE ** - REMI only uses relab for results],UserIdentification [Optional (Empty String Treated as Null): ""BadgeScan Number""] ,locationIdentification [optional (Empty String is treated as null): the hostname of the pc]")> _
-    Public Function ScanAdvanced(ByVal requestNumber As String, ByVal testStageName As String, ByVal testName As String, ByVal overallTestResult As String, _
+    Public Function ScanAdvanced(ByVal qraNumber As String, ByVal testStageName As String, ByVal testName As String, ByVal overallTestResult As String, _
                                 ByVal userIdentification As String, ByVal locationIdenitifcation As String, ByVal trackingLocationName As String, ByVal jobName As String, ByVal productGroup As String) As ScanReturnData
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Dim sd As ScanReturnData = ScanManager.Scan(Helpers.CleanInputText(requestNumber, 21), Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
+                Dim sd As ScanReturnData = ScanManager.Scan(Helpers.CleanInputText(qraNumber, 21), Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
 
                 Return sd
             End If
         Catch ex As Exception
-            ScanManager.LogIssue("REMI API - Scan", "NA", NotificationType.Errors, ex, "Request: " + requestNumber + " TS: " + testStageName + " Test: " + testName + " Result: " + overallTestResult + " UID: " + userIdentification + " Location ID: " + locationIdenitifcation)
+            ScanManager.LogIssue("REMI API - Scan", "NA", NotificationType.Errors, ex, "Request: " + qraNumber + " TS: " + testStageName + " Test: " + testName + " Result: " + overallTestResult + " UID: " + userIdentification + " Location ID: " + locationIdenitifcation)
         End Try
         Return Nothing
     End Function

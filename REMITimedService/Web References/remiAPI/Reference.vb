@@ -39,11 +39,17 @@ Namespace RemiAPI
         
         Private UpdateUnitIMEIOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private UpdateUnitBSNOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private UpdateUnitBSNIMEIOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private AddUnitOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetAvailableUnitsOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetAvailableUnitsExcludedOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetUnitIMEIOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetUnitBSNOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -65,9 +71,19 @@ Namespace RemiAPI
         
         Private ReturnMultipleStationNamesByTypeOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetLocationsByTestCenterLocationTypeOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetTrackingLocationTypesByFunctionOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetSpecificLocationForCurrentUsersTestCenterOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private AddHostToTrackingLocationOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private SaveTrackingLocationOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetTestOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetTestAccessOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetTestByIDOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -119,6 +135,8 @@ Namespace RemiAPI
         
         Private GetUserOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private CreateUserOperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetFriendlyUserIDOperationCompleted As System.Threading.SendOrPostCallback
         
         Private UpdateProductOperationCompleted As System.Threading.SendOrPostCallback
@@ -150,6 +168,10 @@ Namespace RemiAPI
         Private GetDefaultReqNumOperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetDefaultReqNumWithUnitOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetDefaultReqNum1OperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private GetDefaultReqNumWithUnit1OperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetProductTypeIDOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -202,6 +224,8 @@ Namespace RemiAPI
         Private IncomingGetAndSaveBatchOperationCompleted As System.Threading.SendOrPostCallback
         
         Private SendMailOperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private SendMail1OperationCompleted As System.Threading.SendOrPostCallback
         
         Private SendMailAdvancedOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -273,6 +297,12 @@ Namespace RemiAPI
         Public Event UpdateUnitIMEICompleted As UpdateUnitIMEICompletedEventHandler
         
         '''<remarks/>
+        Public Event UpdateUnitBSNCompleted As UpdateUnitBSNCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event UpdateUnitBSNIMEICompleted As UpdateUnitBSNIMEICompletedEventHandler
+        
+        '''<remarks/>
         Public Event AddUnitCompleted As AddUnitCompletedEventHandler
         
         '''<remarks/>
@@ -280,6 +310,9 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetAvailableUnitsExcludedCompleted As GetAvailableUnitsExcludedCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetUnitIMEICompleted As GetUnitIMEICompletedEventHandler
         
         '''<remarks/>
         Public Event GetUnitBSNCompleted As GetUnitBSNCompletedEventHandler
@@ -312,10 +345,25 @@ Namespace RemiAPI
         Public Event ReturnMultipleStationNamesByTypeCompleted As ReturnMultipleStationNamesByTypeCompletedEventHandler
         
         '''<remarks/>
+        Public Event GetLocationsByTestCenterLocationTypeCompleted As GetLocationsByTestCenterLocationTypeCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetTrackingLocationTypesByFunctionCompleted As GetTrackingLocationTypesByFunctionCompletedEventHandler
+        
+        '''<remarks/>
         Public Event GetSpecificLocationForCurrentUsersTestCenterCompleted As GetSpecificLocationForCurrentUsersTestCenterCompletedEventHandler
         
         '''<remarks/>
+        Public Event AddHostToTrackingLocationCompleted As AddHostToTrackingLocationCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event SaveTrackingLocationCompleted As SaveTrackingLocationCompletedEventHandler
+        
+        '''<remarks/>
         Public Event GetTestCompleted As GetTestCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetTestAccessCompleted As GetTestAccessCompletedEventHandler
         
         '''<remarks/>
         Public Event GetTestByIDCompleted As GetTestByIDCompletedEventHandler
@@ -393,6 +441,9 @@ Namespace RemiAPI
         Public Event GetUserCompleted As GetUserCompletedEventHandler
         
         '''<remarks/>
+        Public Event CreateUserCompleted As CreateUserCompletedEventHandler
+        
+        '''<remarks/>
         Public Event GetFriendlyUserIDCompleted As GetFriendlyUserIDCompletedEventHandler
         
         '''<remarks/>
@@ -439,6 +490,12 @@ Namespace RemiAPI
         
         '''<remarks/>
         Public Event GetDefaultReqNumWithUnitCompleted As GetDefaultReqNumWithUnitCompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetDefaultReqNum1Completed As GetDefaultReqNum1CompletedEventHandler
+        
+        '''<remarks/>
+        Public Event GetDefaultReqNumWithUnit1Completed As GetDefaultReqNumWithUnit1CompletedEventHandler
         
         '''<remarks/>
         Public Event GetProductTypeIDCompleted As GetProductTypeIDCompletedEventHandler
@@ -519,6 +576,9 @@ Namespace RemiAPI
         Public Event SendMailCompleted As SendMailCompletedEventHandler
         
         '''<remarks/>
+        Public Event SendMail1Completed As SendMail1CompletedEventHandler
+        
+        '''<remarks/>
         Public Event SendMailAdvancedCompleted As SendMailAdvancedCompletedEventHandler
         
         '''<remarks/>
@@ -555,79 +615,79 @@ Namespace RemiAPI
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SearchBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function SearchBatch( _
                     ByVal userIdentification As String,  _
-                    ByVal AccessoryGroup As String,  _
-                    ByVal BatchStart As Date,  _
-                    ByVal BatchEnd As Date,  _
+                    ByVal accessoryGroup As String,  _
+                    ByVal batchStart As Date,  _
+                    ByVal batchEnd As Date,  _
                     ByVal department As String,  _
-                    ByVal TestCenter As String,  _
-                    ByVal JobName As String,  _
-                    ByVal Priority As String,  _
-                    ByVal Product As String,  _
-                    ByVal ProductType As String,  _
-                    ByVal Revision As String,  _
-                    ByVal TestName As String,  _
-                    ByVal TestStage As String,  _
-                    ByVal UserName As String,  _
-                    ByVal TrackingLocationName As String,  _
-                    ByVal NotInTrackingLocationFunction As TrackingLocationFunction,  _
-                    ByVal RequestReason As String,  _
+                    ByVal testCenter As String,  _
+                    ByVal jobName As String,  _
+                    ByVal priority As String,  _
+                    ByVal product As String,  _
+                    ByVal productType As String,  _
+                    ByVal revision As String,  _
+                    ByVal testName As String,  _
+                    ByVal testStage As String,  _
+                    ByVal userName As String,  _
+                    ByVal trackingLocationName As String,  _
+                    ByVal notInTrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal requestReason As String,  _
                     ByVal status As BatchStatus,  _
-                    ByVal TrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal trackingLocationFunction As TrackingLocationFunction,  _
                     ByVal exTestStageType() As BatchSearchTestStageType,  _
                     ByVal exBatchStatus() As BatchSearchBatchStatus,  _
                     ByVal testStageType As TestStageType) As BatchView()
-            Dim results() As Object = Me.Invoke("SearchBatch", New Object() {userIdentification, AccessoryGroup, BatchStart, BatchEnd, department, TestCenter, JobName, Priority, Product, ProductType, Revision, TestName, TestStage, UserName, TrackingLocationName, NotInTrackingLocationFunction, RequestReason, status, TrackingLocationFunction, exTestStageType, exBatchStatus, testStageType})
+            Dim results() As Object = Me.Invoke("SearchBatch", New Object() {userIdentification, accessoryGroup, batchStart, batchEnd, department, testCenter, jobName, priority, product, productType, revision, testName, testStage, userName, trackingLocationName, notInTrackingLocationFunction, requestReason, status, trackingLocationFunction, exTestStageType, exBatchStatus, testStageType})
             Return CType(results(0),BatchView())
         End Function
         
         '''<remarks/>
         Public Overloads Sub SearchBatchAsync( _
                     ByVal userIdentification As String,  _
-                    ByVal AccessoryGroup As String,  _
-                    ByVal BatchStart As Date,  _
-                    ByVal BatchEnd As Date,  _
+                    ByVal accessoryGroup As String,  _
+                    ByVal batchStart As Date,  _
+                    ByVal batchEnd As Date,  _
                     ByVal department As String,  _
-                    ByVal TestCenter As String,  _
-                    ByVal JobName As String,  _
-                    ByVal Priority As String,  _
-                    ByVal Product As String,  _
-                    ByVal ProductType As String,  _
-                    ByVal Revision As String,  _
-                    ByVal TestName As String,  _
-                    ByVal TestStage As String,  _
-                    ByVal UserName As String,  _
-                    ByVal TrackingLocationName As String,  _
-                    ByVal NotInTrackingLocationFunction As TrackingLocationFunction,  _
-                    ByVal RequestReason As String,  _
+                    ByVal testCenter As String,  _
+                    ByVal jobName As String,  _
+                    ByVal priority As String,  _
+                    ByVal product As String,  _
+                    ByVal productType As String,  _
+                    ByVal revision As String,  _
+                    ByVal testName As String,  _
+                    ByVal testStage As String,  _
+                    ByVal userName As String,  _
+                    ByVal trackingLocationName As String,  _
+                    ByVal notInTrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal requestReason As String,  _
                     ByVal status As BatchStatus,  _
-                    ByVal TrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal trackingLocationFunction As TrackingLocationFunction,  _
                     ByVal exTestStageType() As BatchSearchTestStageType,  _
                     ByVal exBatchStatus() As BatchSearchBatchStatus,  _
                     ByVal testStageType As TestStageType)
-            Me.SearchBatchAsync(userIdentification, AccessoryGroup, BatchStart, BatchEnd, department, TestCenter, JobName, Priority, Product, ProductType, Revision, TestName, TestStage, UserName, TrackingLocationName, NotInTrackingLocationFunction, RequestReason, status, TrackingLocationFunction, exTestStageType, exBatchStatus, testStageType, Nothing)
+            Me.SearchBatchAsync(userIdentification, accessoryGroup, batchStart, batchEnd, department, testCenter, jobName, priority, product, productType, revision, testName, testStage, userName, trackingLocationName, notInTrackingLocationFunction, requestReason, status, trackingLocationFunction, exTestStageType, exBatchStatus, testStageType, Nothing)
         End Sub
         
         '''<remarks/>
         Public Overloads Sub SearchBatchAsync( _
                     ByVal userIdentification As String,  _
-                    ByVal AccessoryGroup As String,  _
-                    ByVal BatchStart As Date,  _
-                    ByVal BatchEnd As Date,  _
+                    ByVal accessoryGroup As String,  _
+                    ByVal batchStart As Date,  _
+                    ByVal batchEnd As Date,  _
                     ByVal department As String,  _
-                    ByVal TestCenter As String,  _
-                    ByVal JobName As String,  _
-                    ByVal Priority As String,  _
-                    ByVal Product As String,  _
-                    ByVal ProductType As String,  _
-                    ByVal Revision As String,  _
-                    ByVal TestName As String,  _
-                    ByVal TestStage As String,  _
-                    ByVal UserName As String,  _
-                    ByVal TrackingLocationName As String,  _
-                    ByVal NotInTrackingLocationFunction As TrackingLocationFunction,  _
-                    ByVal RequestReason As String,  _
+                    ByVal testCenter As String,  _
+                    ByVal jobName As String,  _
+                    ByVal priority As String,  _
+                    ByVal product As String,  _
+                    ByVal productType As String,  _
+                    ByVal revision As String,  _
+                    ByVal testName As String,  _
+                    ByVal testStage As String,  _
+                    ByVal userName As String,  _
+                    ByVal trackingLocationName As String,  _
+                    ByVal notInTrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal requestReason As String,  _
                     ByVal status As BatchStatus,  _
-                    ByVal TrackingLocationFunction As TrackingLocationFunction,  _
+                    ByVal trackingLocationFunction As TrackingLocationFunction,  _
                     ByVal exTestStageType() As BatchSearchTestStageType,  _
                     ByVal exBatchStatus() As BatchSearchBatchStatus,  _
                     ByVal testStageType As TestStageType,  _
@@ -635,7 +695,7 @@ Namespace RemiAPI
             If (Me.SearchBatchOperationCompleted Is Nothing) Then
                 Me.SearchBatchOperationCompleted = AddressOf Me.OnSearchBatchOperationCompleted
             End If
-            Me.InvokeAsync("SearchBatch", New Object() {userIdentification, AccessoryGroup, BatchStart, BatchEnd, department, TestCenter, JobName, Priority, Product, ProductType, Revision, TestName, TestStage, UserName, TrackingLocationName, NotInTrackingLocationFunction, RequestReason, status, TrackingLocationFunction, exTestStageType, exBatchStatus, testStageType}, Me.SearchBatchOperationCompleted, userState)
+            Me.InvokeAsync("SearchBatch", New Object() {userIdentification, accessoryGroup, batchStart, batchEnd, department, testCenter, jobName, priority, product, productType, revision, testName, testStage, userName, trackingLocationName, notInTrackingLocationFunction, requestReason, status, trackingLocationFunction, exTestStageType, exBatchStatus, testStageType}, Me.SearchBatchOperationCompleted, userState)
         End Sub
         
         Private Sub OnSearchBatchOperationCompleted(ByVal arg As Object)
@@ -647,22 +707,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/AddUnitException", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function AddUnitException(ByVal qraNumber As String, ByVal TestName As String, ByVal userIdentification As String) As Notification
-            Dim results() As Object = Me.Invoke("AddUnitException", New Object() {qraNumber, TestName, userIdentification})
+        Public Function AddUnitException(ByVal qraNumber As String, ByVal testName As String, ByVal userIdentification As String) As Notification
+            Dim results() As Object = Me.Invoke("AddUnitException", New Object() {qraNumber, testName, userIdentification})
             Return CType(results(0),Notification)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub AddUnitExceptionAsync(ByVal qraNumber As String, ByVal TestName As String, ByVal userIdentification As String)
-            Me.AddUnitExceptionAsync(qraNumber, TestName, userIdentification, Nothing)
+        Public Overloads Sub AddUnitExceptionAsync(ByVal qraNumber As String, ByVal testName As String, ByVal userIdentification As String)
+            Me.AddUnitExceptionAsync(qraNumber, testName, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub AddUnitExceptionAsync(ByVal qraNumber As String, ByVal TestName As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub AddUnitExceptionAsync(ByVal qraNumber As String, ByVal testName As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.AddUnitExceptionOperationCompleted Is Nothing) Then
                 Me.AddUnitExceptionOperationCompleted = AddressOf Me.OnAddUnitExceptionOperationCompleted
             End If
-            Me.InvokeAsync("AddUnitException", New Object() {qraNumber, TestName, userIdentification}, Me.AddUnitExceptionOperationCompleted, userState)
+            Me.InvokeAsync("AddUnitException", New Object() {qraNumber, testName, userIdentification}, Me.AddUnitExceptionOperationCompleted, userState)
         End Sub
         
         Private Sub OnAddUnitExceptionOperationCompleted(ByVal arg As Object)
@@ -674,22 +734,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/UpdateUnitIMEI", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function UpdateUnitIMEI(ByVal QRANumber As String, ByVal IMEI As String, ByVal userIdentification As String) As Boolean
-            Dim results() As Object = Me.Invoke("UpdateUnitIMEI", New Object() {QRANumber, IMEI, userIdentification})
+        Public Function UpdateUnitIMEI(ByVal requestNumber As String, ByVal iMEI As String, ByVal userIdentification As String) As Boolean
+            Dim results() As Object = Me.Invoke("UpdateUnitIMEI", New Object() {requestNumber, iMEI, userIdentification})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub UpdateUnitIMEIAsync(ByVal QRANumber As String, ByVal IMEI As String, ByVal userIdentification As String)
-            Me.UpdateUnitIMEIAsync(QRANumber, IMEI, userIdentification, Nothing)
+        Public Overloads Sub UpdateUnitIMEIAsync(ByVal requestNumber As String, ByVal iMEI As String, ByVal userIdentification As String)
+            Me.UpdateUnitIMEIAsync(requestNumber, iMEI, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub UpdateUnitIMEIAsync(ByVal QRANumber As String, ByVal IMEI As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub UpdateUnitIMEIAsync(ByVal requestNumber As String, ByVal iMEI As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.UpdateUnitIMEIOperationCompleted Is Nothing) Then
                 Me.UpdateUnitIMEIOperationCompleted = AddressOf Me.OnUpdateUnitIMEIOperationCompleted
             End If
-            Me.InvokeAsync("UpdateUnitIMEI", New Object() {QRANumber, IMEI, userIdentification}, Me.UpdateUnitIMEIOperationCompleted, userState)
+            Me.InvokeAsync("UpdateUnitIMEI", New Object() {requestNumber, iMEI, userIdentification}, Me.UpdateUnitIMEIOperationCompleted, userState)
         End Sub
         
         Private Sub OnUpdateUnitIMEIOperationCompleted(ByVal arg As Object)
@@ -700,23 +760,77 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/AddUnit", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function AddUnit(ByVal QRANumber As String, ByVal BSN As String, ByVal userIdentification As String) As Boolean
-            Dim results() As Object = Me.Invoke("AddUnit", New Object() {QRANumber, BSN, userIdentification})
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/UpdateUnitBSN", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function UpdateUnitBSN(ByVal requestNumber As String, ByVal bsn As Integer, ByVal userIdentification As String) As Boolean
+            Dim results() As Object = Me.Invoke("UpdateUnitBSN", New Object() {requestNumber, bsn, userIdentification})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub AddUnitAsync(ByVal QRANumber As String, ByVal BSN As String, ByVal userIdentification As String)
-            Me.AddUnitAsync(QRANumber, BSN, userIdentification, Nothing)
+        Public Overloads Sub UpdateUnitBSNAsync(ByVal requestNumber As String, ByVal bsn As Integer, ByVal userIdentification As String)
+            Me.UpdateUnitBSNAsync(requestNumber, bsn, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub AddUnitAsync(ByVal QRANumber As String, ByVal BSN As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub UpdateUnitBSNAsync(ByVal requestNumber As String, ByVal bsn As Integer, ByVal userIdentification As String, ByVal userState As Object)
+            If (Me.UpdateUnitBSNOperationCompleted Is Nothing) Then
+                Me.UpdateUnitBSNOperationCompleted = AddressOf Me.OnUpdateUnitBSNOperationCompleted
+            End If
+            Me.InvokeAsync("UpdateUnitBSN", New Object() {requestNumber, bsn, userIdentification}, Me.UpdateUnitBSNOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnUpdateUnitBSNOperationCompleted(ByVal arg As Object)
+            If (Not (Me.UpdateUnitBSNCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent UpdateUnitBSNCompleted(Me, New UpdateUnitBSNCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/UpdateUnitBSNIMEI", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function UpdateUnitBSNIMEI(ByVal requestNumber As String, ByVal bsn As Integer, ByVal iMEI As String, ByVal userIdentification As String) As Boolean
+            Dim results() As Object = Me.Invoke("UpdateUnitBSNIMEI", New Object() {requestNumber, bsn, iMEI, userIdentification})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub UpdateUnitBSNIMEIAsync(ByVal requestNumber As String, ByVal bsn As Integer, ByVal iMEI As String, ByVal userIdentification As String)
+            Me.UpdateUnitBSNIMEIAsync(requestNumber, bsn, iMEI, userIdentification, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub UpdateUnitBSNIMEIAsync(ByVal requestNumber As String, ByVal bsn As Integer, ByVal iMEI As String, ByVal userIdentification As String, ByVal userState As Object)
+            If (Me.UpdateUnitBSNIMEIOperationCompleted Is Nothing) Then
+                Me.UpdateUnitBSNIMEIOperationCompleted = AddressOf Me.OnUpdateUnitBSNIMEIOperationCompleted
+            End If
+            Me.InvokeAsync("UpdateUnitBSNIMEI", New Object() {requestNumber, bsn, iMEI, userIdentification}, Me.UpdateUnitBSNIMEIOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnUpdateUnitBSNIMEIOperationCompleted(ByVal arg As Object)
+            If (Not (Me.UpdateUnitBSNIMEICompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent UpdateUnitBSNIMEICompleted(Me, New UpdateUnitBSNIMEICompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/AddUnit", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function AddUnit(ByVal requestNumber As String, ByVal bsn As String, ByVal userIdentification As String) As Boolean
+            Dim results() As Object = Me.Invoke("AddUnit", New Object() {requestNumber, bsn, userIdentification})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub AddUnitAsync(ByVal requestNumber As String, ByVal bsn As String, ByVal userIdentification As String)
+            Me.AddUnitAsync(requestNumber, bsn, userIdentification, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub AddUnitAsync(ByVal requestNumber As String, ByVal bsn As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.AddUnitOperationCompleted Is Nothing) Then
                 Me.AddUnitOperationCompleted = AddressOf Me.OnAddUnitOperationCompleted
             End If
-            Me.InvokeAsync("AddUnit", New Object() {QRANumber, BSN, userIdentification}, Me.AddUnitOperationCompleted, userState)
+            Me.InvokeAsync("AddUnit", New Object() {requestNumber, bsn, userIdentification}, Me.AddUnitOperationCompleted, userState)
         End Sub
         
         Private Sub OnAddUnitOperationCompleted(ByVal arg As Object)
@@ -777,6 +891,33 @@ Namespace RemiAPI
             If (Not (Me.GetAvailableUnitsExcludedCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetAvailableUnitsExcludedCompleted(Me, New GetAvailableUnitsExcludedCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetUnitIMEI", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetUnitIMEI(ByVal requestNumber As String, ByVal batchUnitNumber As Integer) As Integer
+            Dim results() As Object = Me.Invoke("GetUnitIMEI", New Object() {requestNumber, batchUnitNumber})
+            Return CType(results(0),Integer)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetUnitIMEIAsync(ByVal requestNumber As String, ByVal batchUnitNumber As Integer)
+            Me.GetUnitIMEIAsync(requestNumber, batchUnitNumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetUnitIMEIAsync(ByVal requestNumber As String, ByVal batchUnitNumber As Integer, ByVal userState As Object)
+            If (Me.GetUnitIMEIOperationCompleted Is Nothing) Then
+                Me.GetUnitIMEIOperationCompleted = AddressOf Me.OnGetUnitIMEIOperationCompleted
+            End If
+            Me.InvokeAsync("GetUnitIMEI", New Object() {requestNumber, batchUnitNumber}, Me.GetUnitIMEIOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetUnitIMEIOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetUnitIMEICompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetUnitIMEICompleted(Me, New GetUnitIMEICompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -890,22 +1031,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/DTATTAAddRemoveUnit", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function DTATTAAddRemoveUnit(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult) As Boolean
-            Dim results() As Object = Me.Invoke("DTATTAAddRemoveUnit", New Object() {qranumber, testStage, test, userIdentification, result})
+        Public Function DTATTAAddRemoveUnit(ByVal requestNumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult) As Boolean
+            Dim results() As Object = Me.Invoke("DTATTAAddRemoveUnit", New Object() {requestNumber, testStage, test, userIdentification, result})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub DTATTAAddRemoveUnitAsync(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult)
-            Me.DTATTAAddRemoveUnitAsync(qranumber, testStage, test, userIdentification, result, Nothing)
+        Public Overloads Sub DTATTAAddRemoveUnitAsync(ByVal requestNumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult)
+            Me.DTATTAAddRemoveUnitAsync(requestNumber, testStage, test, userIdentification, result, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub DTATTAAddRemoveUnitAsync(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult, ByVal userState As Object)
+        Public Overloads Sub DTATTAAddRemoveUnitAsync(ByVal requestNumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult, ByVal userState As Object)
             If (Me.DTATTAAddRemoveUnitOperationCompleted Is Nothing) Then
                 Me.DTATTAAddRemoveUnitOperationCompleted = AddressOf Me.OnDTATTAAddRemoveUnitOperationCompleted
             End If
-            Me.InvokeAsync("DTATTAAddRemoveUnit", New Object() {qranumber, testStage, test, userIdentification, result}, Me.DTATTAAddRemoveUnitOperationCompleted, userState)
+            Me.InvokeAsync("DTATTAAddRemoveUnit", New Object() {requestNumber, testStage, test, userIdentification, result}, Me.DTATTAAddRemoveUnitOperationCompleted, userState)
         End Sub
         
         Private Sub OnDTATTAAddRemoveUnitOperationCompleted(ByVal arg As Object)
@@ -1051,6 +1192,60 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetLocationsByTestCenterLocationType", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetLocationsByTestCenterLocationType(ByVal testCenterID As Integer, ByVal tlt As TrackingLocationType) As TrackingLocation()
+            Dim results() As Object = Me.Invoke("GetLocationsByTestCenterLocationType", New Object() {testCenterID, tlt})
+            Return CType(results(0),TrackingLocation())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetLocationsByTestCenterLocationTypeAsync(ByVal testCenterID As Integer, ByVal tlt As TrackingLocationType)
+            Me.GetLocationsByTestCenterLocationTypeAsync(testCenterID, tlt, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetLocationsByTestCenterLocationTypeAsync(ByVal testCenterID As Integer, ByVal tlt As TrackingLocationType, ByVal userState As Object)
+            If (Me.GetLocationsByTestCenterLocationTypeOperationCompleted Is Nothing) Then
+                Me.GetLocationsByTestCenterLocationTypeOperationCompleted = AddressOf Me.OnGetLocationsByTestCenterLocationTypeOperationCompleted
+            End If
+            Me.InvokeAsync("GetLocationsByTestCenterLocationType", New Object() {testCenterID, tlt}, Me.GetLocationsByTestCenterLocationTypeOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetLocationsByTestCenterLocationTypeOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetLocationsByTestCenterLocationTypeCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetLocationsByTestCenterLocationTypeCompleted(Me, New GetLocationsByTestCenterLocationTypeCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTrackingLocationTypesByFunction", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetTrackingLocationTypesByFunction(ByVal tlf As TrackingLocationFunction) As TrackingLocationType()
+            Dim results() As Object = Me.Invoke("GetTrackingLocationTypesByFunction", New Object() {tlf})
+            Return CType(results(0),TrackingLocationType())
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetTrackingLocationTypesByFunctionAsync(ByVal tlf As TrackingLocationFunction)
+            Me.GetTrackingLocationTypesByFunctionAsync(tlf, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetTrackingLocationTypesByFunctionAsync(ByVal tlf As TrackingLocationFunction, ByVal userState As Object)
+            If (Me.GetTrackingLocationTypesByFunctionOperationCompleted Is Nothing) Then
+                Me.GetTrackingLocationTypesByFunctionOperationCompleted = AddressOf Me.OnGetTrackingLocationTypesByFunctionOperationCompleted
+            End If
+            Me.InvokeAsync("GetTrackingLocationTypesByFunction", New Object() {tlf}, Me.GetTrackingLocationTypesByFunctionOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetTrackingLocationTypesByFunctionOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetTrackingLocationTypesByFunctionCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetTrackingLocationTypesByFunctionCompleted(Me, New GetTrackingLocationTypesByFunctionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetSpecificLocationForCurrentUsersTestCenter", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String, ByVal userIdentification As String) As Integer
             Dim results() As Object = Me.Invoke("GetSpecificLocationForCurrentUsersTestCenter", New Object() {stationName, userIdentification})
@@ -1078,29 +1273,110 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/AddHostToTrackingLocation", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function AddHostToTrackingLocation(ByVal hostName As String, ByVal trackingLocationID As Integer, ByVal userIdentification As String, ByVal testCenterID As Integer) As Boolean
+            Dim results() As Object = Me.Invoke("AddHostToTrackingLocation", New Object() {hostName, trackingLocationID, userIdentification, testCenterID})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub AddHostToTrackingLocationAsync(ByVal hostName As String, ByVal trackingLocationID As Integer, ByVal userIdentification As String, ByVal testCenterID As Integer)
+            Me.AddHostToTrackingLocationAsync(hostName, trackingLocationID, userIdentification, testCenterID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub AddHostToTrackingLocationAsync(ByVal hostName As String, ByVal trackingLocationID As Integer, ByVal userIdentification As String, ByVal testCenterID As Integer, ByVal userState As Object)
+            If (Me.AddHostToTrackingLocationOperationCompleted Is Nothing) Then
+                Me.AddHostToTrackingLocationOperationCompleted = AddressOf Me.OnAddHostToTrackingLocationOperationCompleted
+            End If
+            Me.InvokeAsync("AddHostToTrackingLocation", New Object() {hostName, trackingLocationID, userIdentification, testCenterID}, Me.AddHostToTrackingLocationOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnAddHostToTrackingLocationOperationCompleted(ByVal arg As Object)
+            If (Not (Me.AddHostToTrackingLocationCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent AddHostToTrackingLocationCompleted(Me, New AddHostToTrackingLocationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SaveTrackingLocation", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function SaveTrackingLocation(ByVal hostName As String, ByVal tlt As TrackingLocationType, ByVal name As String, ByVal userIdentification As String, ByVal testCenterID As Integer) As Boolean
+            Dim results() As Object = Me.Invoke("SaveTrackingLocation", New Object() {hostName, tlt, name, userIdentification, testCenterID})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub SaveTrackingLocationAsync(ByVal hostName As String, ByVal tlt As TrackingLocationType, ByVal name As String, ByVal userIdentification As String, ByVal testCenterID As Integer)
+            Me.SaveTrackingLocationAsync(hostName, tlt, name, userIdentification, testCenterID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SaveTrackingLocationAsync(ByVal hostName As String, ByVal tlt As TrackingLocationType, ByVal name As String, ByVal userIdentification As String, ByVal testCenterID As Integer, ByVal userState As Object)
+            If (Me.SaveTrackingLocationOperationCompleted Is Nothing) Then
+                Me.SaveTrackingLocationOperationCompleted = AddressOf Me.OnSaveTrackingLocationOperationCompleted
+            End If
+            Me.InvokeAsync("SaveTrackingLocation", New Object() {hostName, tlt, name, userIdentification, testCenterID}, Me.SaveTrackingLocationOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSaveTrackingLocationOperationCompleted(ByVal arg As Object)
+            If (Not (Me.SaveTrackingLocationCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent SaveTrackingLocationCompleted(Me, New SaveTrackingLocationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTest", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetTest(ByVal Name As String) As Test
-            Dim results() As Object = Me.Invoke("GetTest", New Object() {Name})
+        Public Function GetTest(ByVal name As String) As Test
+            Dim results() As Object = Me.Invoke("GetTest", New Object() {name})
             Return CType(results(0),Test)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetTestAsync(ByVal Name As String)
-            Me.GetTestAsync(Name, Nothing)
+        Public Overloads Sub GetTestAsync(ByVal name As String)
+            Me.GetTestAsync(name, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetTestAsync(ByVal Name As String, ByVal userState As Object)
+        Public Overloads Sub GetTestAsync(ByVal name As String, ByVal userState As Object)
             If (Me.GetTestOperationCompleted Is Nothing) Then
                 Me.GetTestOperationCompleted = AddressOf Me.OnGetTestOperationCompleted
             End If
-            Me.InvokeAsync("GetTest", New Object() {Name}, Me.GetTestOperationCompleted, userState)
+            Me.InvokeAsync("GetTest", New Object() {name}, Me.GetTestOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetTestOperationCompleted(ByVal arg As Object)
             If (Not (Me.GetTestCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetTestCompleted(Me, New GetTestCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTestAccess", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetTestAccess(ByVal testID As Integer, ByVal removeFirst As Boolean) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetTestAccess", New Object() {testID, removeFirst})
+            Return CType(results(0),System.Data.DataTable)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestAccessAsync(ByVal testID As Integer, ByVal removeFirst As Boolean)
+            Me.GetTestAccessAsync(testID, removeFirst, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetTestAccessAsync(ByVal testID As Integer, ByVal removeFirst As Boolean, ByVal userState As Object)
+            If (Me.GetTestAccessOperationCompleted Is Nothing) Then
+                Me.GetTestAccessOperationCompleted = AddressOf Me.OnGetTestAccessOperationCompleted
+            End If
+            Me.InvokeAsync("GetTestAccess", New Object() {testID, removeFirst}, Me.GetTestAccessOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetTestAccessOperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetTestAccessCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetTestAccessCompleted(Me, New GetTestAccessCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -1592,22 +1868,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetJob", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetJob(ByVal Name As String) As Job
-            Dim results() As Object = Me.Invoke("GetJob", New Object() {Name})
+        Public Function GetJob(ByVal name As String) As Job
+            Dim results() As Object = Me.Invoke("GetJob", New Object() {name})
             Return CType(results(0),Job)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetJobAsync(ByVal Name As String)
-            Me.GetJobAsync(Name, Nothing)
+        Public Overloads Sub GetJobAsync(ByVal name As String)
+            Me.GetJobAsync(name, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetJobAsync(ByVal Name As String, ByVal userState As Object)
+        Public Overloads Sub GetJobAsync(ByVal name As String, ByVal userState As Object)
             If (Me.GetJobOperationCompleted Is Nothing) Then
                 Me.GetJobOperationCompleted = AddressOf Me.OnGetJobOperationCompleted
             End If
-            Me.InvokeAsync("GetJob", New Object() {Name}, Me.GetJobOperationCompleted, userState)
+            Me.InvokeAsync("GetJob", New Object() {name}, Me.GetJobOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetJobOperationCompleted(ByVal arg As Object)
@@ -1619,22 +1895,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetOrientationsByJob", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetOrientationsByJob(ByVal JobName As String) As System.Data.DataTable
-            Dim results() As Object = Me.Invoke("GetOrientationsByJob", New Object() {JobName})
+        Public Function GetOrientationsByJob(ByVal jobName As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetOrientationsByJob", New Object() {jobName})
             Return CType(results(0),System.Data.DataTable)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetOrientationsByJobAsync(ByVal JobName As String)
-            Me.GetOrientationsByJobAsync(JobName, Nothing)
+        Public Overloads Sub GetOrientationsByJobAsync(ByVal jobName As String)
+            Me.GetOrientationsByJobAsync(jobName, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetOrientationsByJobAsync(ByVal JobName As String, ByVal userState As Object)
+        Public Overloads Sub GetOrientationsByJobAsync(ByVal jobName As String, ByVal userState As Object)
             If (Me.GetOrientationsByJobOperationCompleted Is Nothing) Then
                 Me.GetOrientationsByJobOperationCompleted = AddressOf Me.OnGetOrientationsByJobOperationCompleted
             End If
-            Me.InvokeAsync("GetOrientationsByJob", New Object() {JobName}, Me.GetOrientationsByJobOperationCompleted, userState)
+            Me.InvokeAsync("GetOrientationsByJob", New Object() {jobName}, Me.GetOrientationsByJobOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetOrientationsByJobOperationCompleted(ByVal arg As Object)
@@ -1776,6 +2052,33 @@ Namespace RemiAPI
             If (Not (Me.GetUserCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent GetUserCompleted(Me, New GetUserCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/CreateUser", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function CreateUser(ByVal userIdentification As String, ByVal testCenterID As Integer, ByVal departmentID As Integer, ByVal badgeNumber As Integer) As Boolean
+            Dim results() As Object = Me.Invoke("CreateUser", New Object() {userIdentification, testCenterID, departmentID, badgeNumber})
+            Return CType(results(0),Boolean)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub CreateUserAsync(ByVal userIdentification As String, ByVal testCenterID As Integer, ByVal departmentID As Integer, ByVal badgeNumber As Integer)
+            Me.CreateUserAsync(userIdentification, testCenterID, departmentID, badgeNumber, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub CreateUserAsync(ByVal userIdentification As String, ByVal testCenterID As Integer, ByVal departmentID As Integer, ByVal badgeNumber As Integer, ByVal userState As Object)
+            If (Me.CreateUserOperationCompleted Is Nothing) Then
+                Me.CreateUserOperationCompleted = AddressOf Me.OnCreateUserOperationCompleted
+            End If
+            Me.InvokeAsync("CreateUser", New Object() {userIdentification, testCenterID, departmentID, badgeNumber}, Me.CreateUserOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnCreateUserOperationCompleted(ByVal arg As Object)
+            If (Not (Me.CreateUserCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent CreateUserCompleted(Me, New CreateUserCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -2024,22 +2327,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchUnitsInStage", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetBatchUnitsInStage(ByVal qraNumber As String) As System.Data.DataTable
-            Dim results() As Object = Me.Invoke("GetBatchUnitsInStage", New Object() {qraNumber})
+        Public Function GetBatchUnitsInStage(ByVal requestNumber As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetBatchUnitsInStage", New Object() {requestNumber})
             Return CType(results(0),System.Data.DataTable)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetBatchUnitsInStageAsync(ByVal qraNumber As String)
-            Me.GetBatchUnitsInStageAsync(qraNumber, Nothing)
+        Public Overloads Sub GetBatchUnitsInStageAsync(ByVal requestNumber As String)
+            Me.GetBatchUnitsInStageAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetBatchUnitsInStageAsync(ByVal qraNumber As String, ByVal userState As Object)
+        Public Overloads Sub GetBatchUnitsInStageAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetBatchUnitsInStageOperationCompleted Is Nothing) Then
                 Me.GetBatchUnitsInStageOperationCompleted = AddressOf Me.OnGetBatchUnitsInStageOperationCompleted
             End If
-            Me.InvokeAsync("GetBatchUnitsInStage", New Object() {qraNumber}, Me.GetBatchUnitsInStageOperationCompleted, userState)
+            Me.InvokeAsync("GetBatchUnitsInStage", New Object() {requestNumber}, Me.GetBatchUnitsInStageOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetBatchUnitsInStageOperationCompleted(ByVal arg As Object)
@@ -2078,22 +2381,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTestingSummary", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetTestingSummary(ByVal qraNumber As String, ByVal userIdentification As String) As System.Data.DataTable
-            Dim results() As Object = Me.Invoke("GetTestingSummary", New Object() {qraNumber, userIdentification})
+        Public Function GetTestingSummary(ByVal requestNumber As String, ByVal userIdentification As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetTestingSummary", New Object() {requestNumber, userIdentification})
             Return CType(results(0),System.Data.DataTable)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetTestingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String)
-            Me.GetTestingSummaryAsync(qraNumber, userIdentification, Nothing)
+        Public Overloads Sub GetTestingSummaryAsync(ByVal requestNumber As String, ByVal userIdentification As String)
+            Me.GetTestingSummaryAsync(requestNumber, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetTestingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub GetTestingSummaryAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.GetTestingSummaryOperationCompleted Is Nothing) Then
                 Me.GetTestingSummaryOperationCompleted = AddressOf Me.OnGetTestingSummaryOperationCompleted
             End If
-            Me.InvokeAsync("GetTestingSummary", New Object() {qraNumber, userIdentification}, Me.GetTestingSummaryOperationCompleted, userState)
+            Me.InvokeAsync("GetTestingSummary", New Object() {requestNumber, userIdentification}, Me.GetTestingSummaryOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetTestingSummaryOperationCompleted(ByVal arg As Object)
@@ -2105,22 +2408,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetStressingSummary", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetStressingSummary(ByVal qraNumber As String, ByVal userIdentification As String) As System.Data.DataTable
-            Dim results() As Object = Me.Invoke("GetStressingSummary", New Object() {qraNumber, userIdentification})
+        Public Function GetStressingSummary(ByVal requestNumber As String, ByVal userIdentification As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetStressingSummary", New Object() {requestNumber, userIdentification})
             Return CType(results(0),System.Data.DataTable)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetStressingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String)
-            Me.GetStressingSummaryAsync(qraNumber, userIdentification, Nothing)
+        Public Overloads Sub GetStressingSummaryAsync(ByVal requestNumber As String, ByVal userIdentification As String)
+            Me.GetStressingSummaryAsync(requestNumber, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetStressingSummaryAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub GetStressingSummaryAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.GetStressingSummaryOperationCompleted Is Nothing) Then
                 Me.GetStressingSummaryOperationCompleted = AddressOf Me.OnGetStressingSummaryOperationCompleted
             End If
-            Me.InvokeAsync("GetStressingSummary", New Object() {qraNumber, userIdentification}, Me.GetStressingSummaryOperationCompleted, userState)
+            Me.InvokeAsync("GetStressingSummary", New Object() {requestNumber, userIdentification}, Me.GetStressingSummaryOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetStressingSummaryOperationCompleted(ByVal arg As Object)
@@ -2132,22 +2435,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/BatchStartedBeforeAssigned", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function BatchStartedBeforeAssigned(ByVal qraNumber As String) As Boolean
-            Dim results() As Object = Me.Invoke("BatchStartedBeforeAssigned", New Object() {qraNumber})
+        Public Function BatchStartedBeforeAssigned(ByVal requestNumber As String) As Boolean
+            Dim results() As Object = Me.Invoke("BatchStartedBeforeAssigned", New Object() {requestNumber})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub BatchStartedBeforeAssignedAsync(ByVal qraNumber As String)
-            Me.BatchStartedBeforeAssignedAsync(qraNumber, Nothing)
+        Public Overloads Sub BatchStartedBeforeAssignedAsync(ByVal requestNumber As String)
+            Me.BatchStartedBeforeAssignedAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub BatchStartedBeforeAssignedAsync(ByVal qraNumber As String, ByVal userState As Object)
+        Public Overloads Sub BatchStartedBeforeAssignedAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.BatchStartedBeforeAssignedOperationCompleted Is Nothing) Then
                 Me.BatchStartedBeforeAssignedOperationCompleted = AddressOf Me.OnBatchStartedBeforeAssignedOperationCompleted
             End If
-            Me.InvokeAsync("BatchStartedBeforeAssigned", New Object() {qraNumber}, Me.BatchStartedBeforeAssignedOperationCompleted, userState)
+            Me.InvokeAsync("BatchStartedBeforeAssigned", New Object() {requestNumber}, Me.BatchStartedBeforeAssignedOperationCompleted, userState)
         End Sub
         
         Private Sub OnBatchStartedBeforeAssignedOperationCompleted(ByVal arg As Object)
@@ -2159,7 +2462,7 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetDefaultReqNum", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetDefaultReqNum() As String
+        Public Overloads Function GetDefaultReqNum() As String
             Dim results() As Object = Me.Invoke("GetDefaultReqNum", New Object(-1) {})
             Return CType(results(0),String)
         End Function
@@ -2186,7 +2489,7 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetDefaultReqNumWithUnit", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetDefaultReqNumWithUnit() As String
+        Public Overloads Function GetDefaultReqNumWithUnit() As String
             Dim results() As Object = Me.Invoke("GetDefaultReqNumWithUnit", New Object(-1) {})
             Return CType(results(0),String)
         End Function
@@ -2212,23 +2515,79 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.WebMethodAttribute(MessageName:="GetDefaultReqNum1"),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetDefaultReqNumByRequestType", RequestElementName:="GetDefaultReqNumByRequestType", RequestNamespace:="http://go/remi/", ResponseElementName:="GetDefaultReqNumByRequestTypeResponse", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Overloads Function GetDefaultReqNum(ByVal RequestType As String) As <System.Xml.Serialization.XmlElementAttribute("GetDefaultReqNumByRequestTypeResult")> String
+            Dim results() As Object = Me.Invoke("GetDefaultReqNum1", New Object() {RequestType})
+            Return CType(results(0),String)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetDefaultReqNum1Async(ByVal RequestType As String)
+            Me.GetDefaultReqNum1Async(RequestType, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetDefaultReqNum1Async(ByVal RequestType As String, ByVal userState As Object)
+            If (Me.GetDefaultReqNum1OperationCompleted Is Nothing) Then
+                Me.GetDefaultReqNum1OperationCompleted = AddressOf Me.OnGetDefaultReqNum1OperationCompleted
+            End If
+            Me.InvokeAsync("GetDefaultReqNum1", New Object() {RequestType}, Me.GetDefaultReqNum1OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetDefaultReqNum1OperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetDefaultReqNum1CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetDefaultReqNum1Completed(Me, New GetDefaultReqNum1CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.WebMethodAttribute(MessageName:="GetDefaultReqNumWithUnit1"),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetDefaultReqNumWithUnitByRequestType", RequestElementName:="GetDefaultReqNumWithUnitByRequestType", RequestNamespace:="http://go/remi/", ResponseElementName:="GetDefaultReqNumWithUnitByRequestTypeResponse", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Overloads Function GetDefaultReqNumWithUnit(ByVal RequestType As String) As <System.Xml.Serialization.XmlElementAttribute("GetDefaultReqNumWithUnitByRequestTypeResult")> String
+            Dim results() As Object = Me.Invoke("GetDefaultReqNumWithUnit1", New Object() {RequestType})
+            Return CType(results(0),String)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetDefaultReqNumWithUnit1Async(ByVal RequestType As String)
+            Me.GetDefaultReqNumWithUnit1Async(RequestType, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetDefaultReqNumWithUnit1Async(ByVal RequestType As String, ByVal userState As Object)
+            If (Me.GetDefaultReqNumWithUnit1OperationCompleted Is Nothing) Then
+                Me.GetDefaultReqNumWithUnit1OperationCompleted = AddressOf Me.OnGetDefaultReqNumWithUnit1OperationCompleted
+            End If
+            Me.InvokeAsync("GetDefaultReqNumWithUnit1", New Object() {RequestType}, Me.GetDefaultReqNumWithUnit1OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetDefaultReqNumWithUnit1OperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetDefaultReqNumWithUnit1CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetDefaultReqNumWithUnit1Completed(Me, New GetDefaultReqNumWithUnit1CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetProductTypeID", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetProductTypeID(ByVal qraNumber As String) As Integer
-            Dim results() As Object = Me.Invoke("GetProductTypeID", New Object() {qraNumber})
+        Public Function GetProductTypeID(ByVal requestNumber As String) As Integer
+            Dim results() As Object = Me.Invoke("GetProductTypeID", New Object() {requestNumber})
             Return CType(results(0),Integer)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetProductTypeIDAsync(ByVal qraNumber As String)
-            Me.GetProductTypeIDAsync(qraNumber, Nothing)
+        Public Overloads Sub GetProductTypeIDAsync(ByVal requestNumber As String)
+            Me.GetProductTypeIDAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetProductTypeIDAsync(ByVal qraNumber As String, ByVal userState As Object)
+        Public Overloads Sub GetProductTypeIDAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetProductTypeIDOperationCompleted Is Nothing) Then
                 Me.GetProductTypeIDOperationCompleted = AddressOf Me.OnGetProductTypeIDOperationCompleted
             End If
-            Me.InvokeAsync("GetProductTypeID", New Object() {qraNumber}, Me.GetProductTypeIDOperationCompleted, userState)
+            Me.InvokeAsync("GetProductTypeID", New Object() {requestNumber}, Me.GetProductTypeIDOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetProductTypeIDOperationCompleted(ByVal arg As Object)
@@ -2240,22 +2599,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTestCenterID", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetTestCenterID(ByVal qraNumber As String) As Integer
-            Dim results() As Object = Me.Invoke("GetTestCenterID", New Object() {qraNumber})
+        Public Function GetTestCenterID(ByVal requestNumber As String) As Integer
+            Dim results() As Object = Me.Invoke("GetTestCenterID", New Object() {requestNumber})
             Return CType(results(0),Integer)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetTestCenterIDAsync(ByVal qraNumber As String)
-            Me.GetTestCenterIDAsync(qraNumber, Nothing)
+        Public Overloads Sub GetTestCenterIDAsync(ByVal requestNumber As String)
+            Me.GetTestCenterIDAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetTestCenterIDAsync(ByVal qraNumber As String, ByVal userState As Object)
+        Public Overloads Sub GetTestCenterIDAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetTestCenterIDOperationCompleted Is Nothing) Then
                 Me.GetTestCenterIDOperationCompleted = AddressOf Me.OnGetTestCenterIDOperationCompleted
             End If
-            Me.InvokeAsync("GetTestCenterID", New Object() {qraNumber}, Me.GetTestCenterIDOperationCompleted, userState)
+            Me.InvokeAsync("GetTestCenterID", New Object() {requestNumber}, Me.GetTestCenterIDOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetTestCenterIDOperationCompleted(ByVal arg As Object)
@@ -2267,22 +2626,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetAccessoryTypeID", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetAccessoryTypeID(ByVal qraNumber As String) As Integer
-            Dim results() As Object = Me.Invoke("GetAccessoryTypeID", New Object() {qraNumber})
+        Public Function GetAccessoryTypeID(ByVal requestNumber As String) As Integer
+            Dim results() As Object = Me.Invoke("GetAccessoryTypeID", New Object() {requestNumber})
             Return CType(results(0),Integer)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetAccessoryTypeIDAsync(ByVal qraNumber As String)
-            Me.GetAccessoryTypeIDAsync(qraNumber, Nothing)
+        Public Overloads Sub GetAccessoryTypeIDAsync(ByVal requestNumber As String)
+            Me.GetAccessoryTypeIDAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetAccessoryTypeIDAsync(ByVal qraNumber As String, ByVal userState As Object)
+        Public Overloads Sub GetAccessoryTypeIDAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetAccessoryTypeIDOperationCompleted Is Nothing) Then
                 Me.GetAccessoryTypeIDOperationCompleted = AddressOf Me.OnGetAccessoryTypeIDOperationCompleted
             End If
-            Me.InvokeAsync("GetAccessoryTypeID", New Object() {qraNumber}, Me.GetAccessoryTypeIDOperationCompleted, userState)
+            Me.InvokeAsync("GetAccessoryTypeID", New Object() {requestNumber}, Me.GetAccessoryTypeIDOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetAccessoryTypeIDOperationCompleted(ByVal arg As Object)
@@ -2294,22 +2653,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetBatch(ByVal QRANumber As String) As BatchView
-            Dim results() As Object = Me.Invoke("GetBatch", New Object() {QRANumber})
+        Public Function GetBatch(ByVal requestNumber As String) As BatchView
+            Dim results() As Object = Me.Invoke("GetBatch", New Object() {requestNumber})
             Return CType(results(0),BatchView)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetBatchAsync(ByVal QRANumber As String)
-            Me.GetBatchAsync(QRANumber, Nothing)
+        Public Overloads Sub GetBatchAsync(ByVal requestNumber As String)
+            Me.GetBatchAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetBatchAsync(ByVal QRANumber As String, ByVal userState As Object)
+        Public Overloads Sub GetBatchAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetBatchOperationCompleted Is Nothing) Then
                 Me.GetBatchOperationCompleted = AddressOf Me.OnGetBatchOperationCompleted
             End If
-            Me.InvokeAsync("GetBatch", New Object() {QRANumber}, Me.GetBatchOperationCompleted, userState)
+            Me.InvokeAsync("GetBatch", New Object() {requestNumber}, Me.GetBatchOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetBatchOperationCompleted(ByVal arg As Object)
@@ -2321,22 +2680,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchNotifications", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetBatchNotifications(ByVal QRANumber As String) As Notification()
-            Dim results() As Object = Me.Invoke("GetBatchNotifications", New Object() {QRANumber})
+        Public Function GetBatchNotifications(ByVal requestNumber As String) As Notification()
+            Dim results() As Object = Me.Invoke("GetBatchNotifications", New Object() {requestNumber})
             Return CType(results(0),Notification())
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetBatchNotificationsAsync(ByVal QRANumber As String)
-            Me.GetBatchNotificationsAsync(QRANumber, Nothing)
+        Public Overloads Sub GetBatchNotificationsAsync(ByVal requestNumber As String)
+            Me.GetBatchNotificationsAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetBatchNotificationsAsync(ByVal QRANumber As String, ByVal userState As Object)
+        Public Overloads Sub GetBatchNotificationsAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetBatchNotificationsOperationCompleted Is Nothing) Then
                 Me.GetBatchNotificationsOperationCompleted = AddressOf Me.OnGetBatchNotificationsOperationCompleted
             End If
-            Me.InvokeAsync("GetBatchNotifications", New Object() {QRANumber}, Me.GetBatchNotificationsOperationCompleted, userState)
+            Me.InvokeAsync("GetBatchNotifications", New Object() {requestNumber}, Me.GetBatchNotificationsOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetBatchNotificationsOperationCompleted(ByVal arg As Object)
@@ -2348,22 +2707,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchComments", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetBatchComments(ByVal QRANumber As String) As System.Data.DataTable
-            Dim results() As Object = Me.Invoke("GetBatchComments", New Object() {QRANumber})
+        Public Function GetBatchComments(ByVal requestNumber As String) As System.Data.DataTable
+            Dim results() As Object = Me.Invoke("GetBatchComments", New Object() {requestNumber})
             Return CType(results(0),System.Data.DataTable)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetBatchCommentsAsync(ByVal QRANumber As String)
-            Me.GetBatchCommentsAsync(QRANumber, Nothing)
+        Public Overloads Sub GetBatchCommentsAsync(ByVal requestNumber As String)
+            Me.GetBatchCommentsAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetBatchCommentsAsync(ByVal QRANumber As String, ByVal userState As Object)
+        Public Overloads Sub GetBatchCommentsAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetBatchCommentsOperationCompleted Is Nothing) Then
                 Me.GetBatchCommentsOperationCompleted = AddressOf Me.OnGetBatchCommentsOperationCompleted
             End If
-            Me.InvokeAsync("GetBatchComments", New Object() {QRANumber}, Me.GetBatchCommentsOperationCompleted, userState)
+            Me.InvokeAsync("GetBatchComments", New Object() {requestNumber}, Me.GetBatchCommentsOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetBatchCommentsOperationCompleted(ByVal arg As Object)
@@ -2375,22 +2734,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetHardwareRevision", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetHardwareRevision(ByVal QRANumber As String) As String
-            Dim results() As Object = Me.Invoke("GetHardwareRevision", New Object() {QRANumber})
+        Public Function GetHardwareRevision(ByVal requestNumber As String) As String
+            Dim results() As Object = Me.Invoke("GetHardwareRevision", New Object() {requestNumber})
             Return CType(results(0),String)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetHardwareRevisionAsync(ByVal QRANumber As String)
-            Me.GetHardwareRevisionAsync(QRANumber, Nothing)
+        Public Overloads Sub GetHardwareRevisionAsync(ByVal requestNumber As String)
+            Me.GetHardwareRevisionAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetHardwareRevisionAsync(ByVal QRANumber As String, ByVal userState As Object)
+        Public Overloads Sub GetHardwareRevisionAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetHardwareRevisionOperationCompleted Is Nothing) Then
                 Me.GetHardwareRevisionOperationCompleted = AddressOf Me.OnGetHardwareRevisionOperationCompleted
             End If
-            Me.InvokeAsync("GetHardwareRevision", New Object() {QRANumber}, Me.GetHardwareRevisionOperationCompleted, userState)
+            Me.InvokeAsync("GetHardwareRevision", New Object() {requestNumber}, Me.GetHardwareRevisionOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetHardwareRevisionOperationCompleted(ByVal arg As Object)
@@ -2402,22 +2761,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetCPRNumber", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetCPRNumber(ByVal QRANumber As String) As String
-            Dim results() As Object = Me.Invoke("GetCPRNumber", New Object() {QRANumber})
+        Public Function GetCPRNumber(ByVal requestNumber As String) As String
+            Dim results() As Object = Me.Invoke("GetCPRNumber", New Object() {requestNumber})
             Return CType(results(0),String)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetCPRNumberAsync(ByVal QRANumber As String)
-            Me.GetCPRNumberAsync(QRANumber, Nothing)
+        Public Overloads Sub GetCPRNumberAsync(ByVal requestNumber As String)
+            Me.GetCPRNumberAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetCPRNumberAsync(ByVal QRANumber As String, ByVal userState As Object)
+        Public Overloads Sub GetCPRNumberAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetCPRNumberOperationCompleted Is Nothing) Then
                 Me.GetCPRNumberOperationCompleted = AddressOf Me.OnGetCPRNumberOperationCompleted
             End If
-            Me.InvokeAsync("GetCPRNumber", New Object() {QRANumber}, Me.GetCPRNumberOperationCompleted, userState)
+            Me.InvokeAsync("GetCPRNumber", New Object() {requestNumber}, Me.GetCPRNumberOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetCPRNumberOperationCompleted(ByVal arg As Object)
@@ -2591,22 +2950,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SaveBatchComment", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function SaveBatchComment(ByVal qraNumber As String, ByVal userIdentification As String, ByVal comment As String) As Boolean
-            Dim results() As Object = Me.Invoke("SaveBatchComment", New Object() {qraNumber, userIdentification, comment})
+        Public Function SaveBatchComment(ByVal requestNumber As String, ByVal userIdentification As String, ByVal comment As String) As Boolean
+            Dim results() As Object = Me.Invoke("SaveBatchComment", New Object() {requestNumber, userIdentification, comment})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub SaveBatchCommentAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal comment As String)
-            Me.SaveBatchCommentAsync(qraNumber, userIdentification, comment, Nothing)
+        Public Overloads Sub SaveBatchCommentAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal comment As String)
+            Me.SaveBatchCommentAsync(requestNumber, userIdentification, comment, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub SaveBatchCommentAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal comment As String, ByVal userState As Object)
+        Public Overloads Sub SaveBatchCommentAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal comment As String, ByVal userState As Object)
             If (Me.SaveBatchCommentOperationCompleted Is Nothing) Then
                 Me.SaveBatchCommentOperationCompleted = AddressOf Me.OnSaveBatchCommentOperationCompleted
             End If
-            Me.InvokeAsync("SaveBatchComment", New Object() {qraNumber, userIdentification, comment}, Me.SaveBatchCommentOperationCompleted, userState)
+            Me.InvokeAsync("SaveBatchComment", New Object() {requestNumber, userIdentification, comment}, Me.SaveBatchCommentOperationCompleted, userState)
         End Sub
         
         Private Sub OnSaveBatchCommentOperationCompleted(ByVal arg As Object)
@@ -2618,22 +2977,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/DNPParametricForBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function DNPParametricForBatch(ByVal qraNumber As String, ByVal userIdentification As String, ByVal unitNumber As Integer) As Boolean
-            Dim results() As Object = Me.Invoke("DNPParametricForBatch", New Object() {qraNumber, userIdentification, unitNumber})
+        Public Function DNPParametricForBatch(ByVal requestNumber As String, ByVal userIdentification As String, ByVal unitNumber As Integer) As Boolean
+            Dim results() As Object = Me.Invoke("DNPParametricForBatch", New Object() {requestNumber, userIdentification, unitNumber})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub DNPParametricForBatchAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal unitNumber As Integer)
-            Me.DNPParametricForBatchAsync(qraNumber, userIdentification, unitNumber, Nothing)
+        Public Overloads Sub DNPParametricForBatchAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal unitNumber As Integer)
+            Me.DNPParametricForBatchAsync(requestNumber, userIdentification, unitNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub DNPParametricForBatchAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal unitNumber As Integer, ByVal userState As Object)
+        Public Overloads Sub DNPParametricForBatchAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal unitNumber As Integer, ByVal userState As Object)
             If (Me.DNPParametricForBatchOperationCompleted Is Nothing) Then
                 Me.DNPParametricForBatchOperationCompleted = AddressOf Me.OnDNPParametricForBatchOperationCompleted
             End If
-            Me.InvokeAsync("DNPParametricForBatch", New Object() {qraNumber, userIdentification, unitNumber}, Me.DNPParametricForBatchOperationCompleted, userState)
+            Me.InvokeAsync("DNPParametricForBatch", New Object() {requestNumber, userIdentification, unitNumber}, Me.DNPParametricForBatchOperationCompleted, userState)
         End Sub
         
         Private Sub OnDNPParametricForBatchOperationCompleted(ByVal arg As Object)
@@ -2645,22 +3004,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetPercentageCompleteForBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetPercentageCompleteForBatch(ByVal qraNumber As String) As Integer
-            Dim results() As Object = Me.Invoke("GetPercentageCompleteForBatch", New Object() {qraNumber})
+        Public Function GetPercentageCompleteForBatch(ByVal requestNumber As String) As Integer
+            Dim results() As Object = Me.Invoke("GetPercentageCompleteForBatch", New Object() {requestNumber})
             Return CType(results(0),Integer)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetPercentageCompleteForBatchAsync(ByVal qraNumber As String)
-            Me.GetPercentageCompleteForBatchAsync(qraNumber, Nothing)
+        Public Overloads Sub GetPercentageCompleteForBatchAsync(ByVal requestNumber As String)
+            Me.GetPercentageCompleteForBatchAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetPercentageCompleteForBatchAsync(ByVal qraNumber As String, ByVal userState As Object)
+        Public Overloads Sub GetPercentageCompleteForBatchAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetPercentageCompleteForBatchOperationCompleted Is Nothing) Then
                 Me.GetPercentageCompleteForBatchOperationCompleted = AddressOf Me.OnGetPercentageCompleteForBatchOperationCompleted
             End If
-            Me.InvokeAsync("GetPercentageCompleteForBatch", New Object() {qraNumber}, Me.GetPercentageCompleteForBatchOperationCompleted, userState)
+            Me.InvokeAsync("GetPercentageCompleteForBatch", New Object() {requestNumber}, Me.GetPercentageCompleteForBatchOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetPercentageCompleteForBatchOperationCompleted(ByVal arg As Object)
@@ -2753,22 +3112,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/CheckBatchForStatusUpdates", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function CheckBatchForStatusUpdates(ByVal qraNumber As String, ByVal userIdentification As String) As Boolean
-            Dim results() As Object = Me.Invoke("CheckBatchForStatusUpdates", New Object() {qraNumber, userIdentification})
+        Public Function CheckBatchForStatusUpdates(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
+            Dim results() As Object = Me.Invoke("CheckBatchForStatusUpdates", New Object() {requestNumber, userIdentification})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub CheckBatchForStatusUpdatesAsync(ByVal qraNumber As String, ByVal userIdentification As String)
-            Me.CheckBatchForStatusUpdatesAsync(qraNumber, userIdentification, Nothing)
+        Public Overloads Sub CheckBatchForStatusUpdatesAsync(ByVal requestNumber As String, ByVal userIdentification As String)
+            Me.CheckBatchForStatusUpdatesAsync(requestNumber, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub CheckBatchForStatusUpdatesAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub CheckBatchForStatusUpdatesAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.CheckBatchForStatusUpdatesOperationCompleted Is Nothing) Then
                 Me.CheckBatchForStatusUpdatesOperationCompleted = AddressOf Me.OnCheckBatchForStatusUpdatesOperationCompleted
             End If
-            Me.InvokeAsync("CheckBatchForStatusUpdates", New Object() {qraNumber, userIdentification}, Me.CheckBatchForStatusUpdatesOperationCompleted, userState)
+            Me.InvokeAsync("CheckBatchForStatusUpdates", New Object() {requestNumber, userIdentification}, Me.CheckBatchForStatusUpdatesOperationCompleted, userState)
         End Sub
         
         Private Sub OnCheckBatchForStatusUpdatesOperationCompleted(ByVal arg As Object)
@@ -2834,22 +3193,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetBatchResultsOverview", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetBatchResultsOverview(ByVal qraNumber As String) As <System.Xml.Serialization.XmlArrayItemAttribute(IsNullable:=false)> TestStageResultOverview()
-            Dim results() As Object = Me.Invoke("GetBatchResultsOverview", New Object() {qraNumber})
+        Public Function GetBatchResultsOverview(ByVal requestNumber As String) As <System.Xml.Serialization.XmlArrayItemAttribute(IsNullable:=false)> TestStageResultOverview()
+            Dim results() As Object = Me.Invoke("GetBatchResultsOverview", New Object() {requestNumber})
             Return CType(results(0),TestStageResultOverview())
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal qraNumber As String)
-            Me.GetBatchResultsOverviewAsync(qraNumber, Nothing)
+        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal requestNumber As String)
+            Me.GetBatchResultsOverviewAsync(requestNumber, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal qraNumber As String, ByVal userState As Object)
+        Public Overloads Sub GetBatchResultsOverviewAsync(ByVal requestNumber As String, ByVal userState As Object)
             If (Me.GetBatchResultsOverviewOperationCompleted Is Nothing) Then
                 Me.GetBatchResultsOverviewOperationCompleted = AddressOf Me.OnGetBatchResultsOverviewOperationCompleted
             End If
-            Me.InvokeAsync("GetBatchResultsOverview", New Object() {qraNumber}, Me.GetBatchResultsOverviewOperationCompleted, userState)
+            Me.InvokeAsync("GetBatchResultsOverview", New Object() {requestNumber}, Me.GetBatchResultsOverviewOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetBatchResultsOverviewOperationCompleted(ByVal arg As Object)
@@ -2861,22 +3220,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/IncomingGetAndSaveBatch", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function IncomingGetAndSaveBatch(ByVal qraNumber As String, ByVal userIdentification As String) As IncomingAppBatchData
-            Dim results() As Object = Me.Invoke("IncomingGetAndSaveBatch", New Object() {qraNumber, userIdentification})
+        Public Function IncomingGetAndSaveBatch(ByVal requestNumber As String, ByVal userIdentification As String) As IncomingAppBatchData
+            Dim results() As Object = Me.Invoke("IncomingGetAndSaveBatch", New Object() {requestNumber, userIdentification})
             Return CType(results(0),IncomingAppBatchData)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub IncomingGetAndSaveBatchAsync(ByVal qraNumber As String, ByVal userIdentification As String)
-            Me.IncomingGetAndSaveBatchAsync(qraNumber, userIdentification, Nothing)
+        Public Overloads Sub IncomingGetAndSaveBatchAsync(ByVal requestNumber As String, ByVal userIdentification As String)
+            Me.IncomingGetAndSaveBatchAsync(requestNumber, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub IncomingGetAndSaveBatchAsync(ByVal qraNumber As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub IncomingGetAndSaveBatchAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.IncomingGetAndSaveBatchOperationCompleted Is Nothing) Then
                 Me.IncomingGetAndSaveBatchOperationCompleted = AddressOf Me.OnIncomingGetAndSaveBatchOperationCompleted
             End If
-            Me.InvokeAsync("IncomingGetAndSaveBatch", New Object() {qraNumber, userIdentification}, Me.IncomingGetAndSaveBatchOperationCompleted, userState)
+            Me.InvokeAsync("IncomingGetAndSaveBatch", New Object() {requestNumber, userIdentification}, Me.IncomingGetAndSaveBatchOperationCompleted, userState)
         End Sub
         
         Private Sub OnIncomingGetAndSaveBatchOperationCompleted(ByVal arg As Object)
@@ -2888,7 +3247,7 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SendMail", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Sub SendMail(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String)
+        Public Overloads Sub SendMail(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String)
             Me.Invoke("SendMail", New Object() {destinations, sender, subject, messageBody})
         End Sub
         
@@ -2913,7 +3272,34 @@ Namespace RemiAPI
         End Sub
         
         '''<remarks/>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SendMailAdvanced", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        <System.Web.Services.WebMethodAttribute(MessageName:="SendMail1"),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SendMailAdvanced", RequestElementName:="SendMailAdvanced", RequestNamespace:="http://go/remi/", ResponseElementName:="SendMailAdvancedResponse", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Overloads Sub SendMail(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean, ByVal bcc As String)
+            Me.Invoke("SendMail1", New Object() {destinations, sender, subject, messageBody, isHTML, bcc})
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SendMail1Async(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean, ByVal bcc As String)
+            Me.SendMail1Async(destinations, sender, subject, messageBody, isHTML, bcc, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SendMail1Async(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean, ByVal bcc As String, ByVal userState As Object)
+            If (Me.SendMail1OperationCompleted Is Nothing) Then
+                Me.SendMail1OperationCompleted = AddressOf Me.OnSendMail1OperationCompleted
+            End If
+            Me.InvokeAsync("SendMail1", New Object() {destinations, sender, subject, messageBody, isHTML, bcc}, Me.SendMail1OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSendMail1OperationCompleted(ByVal arg As Object)
+            If (Not (Me.SendMail1CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent SendMail1Completed(Me, New System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/SendMailAdvanced2", RequestElementName:="SendMailAdvanced2", RequestNamespace:="http://go/remi/", ResponseElementName:="SendMailAdvanced2Response", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Sub SendMailAdvanced(ByVal destinations As String, ByVal sender As String, ByVal subject As String, ByVal messageBody As String, ByVal isHTML As Boolean)
             Me.Invoke("SendMailAdvanced", New Object() {destinations, sender, subject, messageBody, isHTML})
         End Sub
@@ -3021,22 +3407,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/GetTestRecords", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function GetTestRecords(ByVal QRANumber As String, ByVal userIdentification As String) As TestRecord()
-            Dim results() As Object = Me.Invoke("GetTestRecords", New Object() {QRANumber, userIdentification})
+        Public Function GetTestRecords(ByVal requestNumber As String, ByVal userIdentification As String) As TestRecord()
+            Dim results() As Object = Me.Invoke("GetTestRecords", New Object() {requestNumber, userIdentification})
             Return CType(results(0),TestRecord())
         End Function
         
         '''<remarks/>
-        Public Overloads Sub GetTestRecordsAsync(ByVal QRANumber As String, ByVal userIdentification As String)
-            Me.GetTestRecordsAsync(QRANumber, userIdentification, Nothing)
+        Public Overloads Sub GetTestRecordsAsync(ByVal requestNumber As String, ByVal userIdentification As String)
+            Me.GetTestRecordsAsync(requestNumber, userIdentification, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub GetTestRecordsAsync(ByVal QRANumber As String, ByVal userIdentification As String, ByVal userState As Object)
+        Public Overloads Sub GetTestRecordsAsync(ByVal requestNumber As String, ByVal userIdentification As String, ByVal userState As Object)
             If (Me.GetTestRecordsOperationCompleted Is Nothing) Then
                 Me.GetTestRecordsOperationCompleted = AddressOf Me.OnGetTestRecordsOperationCompleted
             End If
-            Me.InvokeAsync("GetTestRecords", New Object() {QRANumber, userIdentification}, Me.GetTestRecordsOperationCompleted, userState)
+            Me.InvokeAsync("GetTestRecords", New Object() {requestNumber, userIdentification}, Me.GetTestRecordsOperationCompleted, userState)
         End Sub
         
         Private Sub OnGetTestRecordsOperationCompleted(ByVal arg As Object)
@@ -3048,22 +3434,22 @@ Namespace RemiAPI
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://go/remi/TestRecordAdd", RequestNamespace:="http://go/remi/", ResponseNamespace:="http://go/remi/", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
-        Public Function TestRecordAdd(ByVal qranumber As String, ByVal unitNumber As Integer, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String) As Boolean
-            Dim results() As Object = Me.Invoke("TestRecordAdd", New Object() {qranumber, unitNumber, userIdentification, testRecordStatus, jobName, testStageName, testName})
+        Public Function TestRecordAdd(ByVal requestNumber As String, ByVal unitNumber As Integer, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String) As Boolean
+            Dim results() As Object = Me.Invoke("TestRecordAdd", New Object() {requestNumber, unitNumber, userIdentification, testRecordStatus, jobName, testStageName, testName})
             Return CType(results(0),Boolean)
         End Function
         
         '''<remarks/>
-        Public Overloads Sub TestRecordAddAsync(ByVal qranumber As String, ByVal unitNumber As Integer, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String)
-            Me.TestRecordAddAsync(qranumber, unitNumber, userIdentification, testRecordStatus, jobName, testStageName, testName, Nothing)
+        Public Overloads Sub TestRecordAddAsync(ByVal requestNumber As String, ByVal unitNumber As Integer, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String)
+            Me.TestRecordAddAsync(requestNumber, unitNumber, userIdentification, testRecordStatus, jobName, testStageName, testName, Nothing)
         End Sub
         
         '''<remarks/>
-        Public Overloads Sub TestRecordAddAsync(ByVal qranumber As String, ByVal unitNumber As Integer, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal userState As Object)
+        Public Overloads Sub TestRecordAddAsync(ByVal requestNumber As String, ByVal unitNumber As Integer, ByVal userIdentification As String, ByVal testRecordStatus As TestRecordStatus, ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal userState As Object)
             If (Me.TestRecordAddOperationCompleted Is Nothing) Then
                 Me.TestRecordAddOperationCompleted = AddressOf Me.OnTestRecordAddOperationCompleted
             End If
-            Me.InvokeAsync("TestRecordAdd", New Object() {qranumber, unitNumber, userIdentification, testRecordStatus, jobName, testStageName, testName}, Me.TestRecordAddOperationCompleted, userState)
+            Me.InvokeAsync("TestRecordAdd", New Object() {requestNumber, unitNumber, userIdentification, testRecordStatus, jobName, testStageName, testName}, Me.TestRecordAddOperationCompleted, userState)
         End Sub
         
         Private Sub OnTestRecordAddOperationCompleted(ByVal arg As Object)
@@ -5319,13 +5705,7 @@ Namespace RemiAPI
         
         Private nameField As String
         
-        Private commentField As String
-        
-        Private wILocationField As String
-        
         Private unitCapacityField As Integer
-        
-        Private canDeleteField As Integer
         
         Private trackingLocationFunctionField As TrackingLocationFunction
         
@@ -5340,42 +5720,12 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
-        Public Property Comment() As String
-            Get
-                Return Me.commentField
-            End Get
-            Set
-                Me.commentField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property WILocation() As String
-            Get
-                Return Me.wILocationField
-            End Get
-            Set
-                Me.wILocationField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
         Public Property UnitCapacity() As Integer
             Get
                 Return Me.unitCapacityField
             End Get
             Set
                 Me.unitCapacityField = value
-            End Set
-        End Property
-        
-        '''<remarks/>
-        Public Property CanDelete() As Integer
-            Get
-                Return Me.canDeleteField
-            End Get
-            Set
-                Me.canDeleteField = value
             End Set
         End Property
         
@@ -5538,6 +5888,8 @@ Namespace RemiAPI
         
         Private requestTypeIDField As Integer
         
+        Private reqFieldDataIDField As Integer
+        
         Private requestTypeField As String
         
         Private requestIDField As Integer
@@ -5572,7 +5924,13 @@ Namespace RemiAPI
         
         Private optionsTypeField() As String
         
+        Private optionsTypeNameField As String
+        
+        Private defaultValueField As String
+        
         Private customLookupHierarchyField() As RequestFieldObjectHeirarchy
+        
+        Private siblingField() As Sibling
         
         Private isArchivedField As Boolean
         
@@ -5584,11 +5942,19 @@ Namespace RemiAPI
         
         Private hasIntegrationField As Boolean
         
+        Private hasDistributionField As Boolean
+        
         Private valueField As String
         
         Private newRequestField As Boolean
         
         Private parentFieldSetupIDField As Integer
+        
+        Private parentFieldSetupNameField As String
+        
+        Private defaultDisplayNumField As Integer
+        
+        Private maxDisplayNumField As Integer
         
         '''<remarks/>
         Public Property RequestTypeID() As Integer
@@ -5597,6 +5963,16 @@ Namespace RemiAPI
             End Get
             Set
                 Me.requestTypeIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ReqFieldDataID() As Integer
+            Get
+                Return Me.reqFieldDataIDField
+            End Get
+            Set
+                Me.reqFieldDataIDField = value
             End Set
         End Property
         
@@ -5771,12 +6147,42 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
+        Public Property OptionsTypeName() As String
+            Get
+                Return Me.optionsTypeNameField
+            End Get
+            Set
+                Me.optionsTypeNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property DefaultValue() As String
+            Get
+                Return Me.defaultValueField
+            End Get
+            Set
+                Me.defaultValueField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
         Public Property CustomLookupHierarchy() As RequestFieldObjectHeirarchy()
             Get
                 Return Me.customLookupHierarchyField
             End Get
             Set
                 Me.customLookupHierarchyField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Sibling() As Sibling()
+            Get
+                Return Me.siblingField
+            End Get
+            Set
+                Me.siblingField = value
             End Set
         End Property
         
@@ -5831,6 +6237,16 @@ Namespace RemiAPI
         End Property
         
         '''<remarks/>
+        Public Property HasDistribution() As Boolean
+            Get
+                Return Me.hasDistributionField
+            End Get
+            Set
+                Me.hasDistributionField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
         Public Property Value() As String
             Get
                 Return Me.valueField
@@ -5857,6 +6273,36 @@ Namespace RemiAPI
             End Get
             Set
                 Me.parentFieldSetupIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ParentFieldSetupName() As String
+            Get
+                Return Me.parentFieldSetupNameField
+            End Get
+            Set
+                Me.parentFieldSetupNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property DefaultDisplayNum() As Integer
+            Get
+                Return Me.defaultDisplayNumField
+            End Get
+            Set
+                Me.defaultDisplayNumField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property MaxDisplayNum() As Integer
+            Get
+                Return Me.maxDisplayNumField
+            End Get
+            Set
+                Me.maxDisplayNumField = value
             End Set
         End Property
     End Class
@@ -5974,6 +6420,51 @@ Namespace RemiAPI
             End Get
             Set
                 Me.childLookupTypeField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34234"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://go/remi/")>  _
+    Partial Public Class Sibling
+        
+        Private idField As Integer
+        
+        Private fieldSetupIDField As Integer
+        
+        Private valueField As String
+        
+        '''<remarks/>
+        Public Property ID() As Integer
+            Get
+                Return Me.idField
+            End Get
+            Set
+                Me.idField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FieldSetupID() As Integer
+            Get
+                Return Me.fieldSetupIDField
+            End Get
+            Set
+                Me.fieldSetupIDField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property Value() As String
+            Get
+                Return Me.valueField
+            End Get
+            Set
+                Me.valueField = value
             End Set
         End Property
     End Class
@@ -6971,6 +7462,60 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub UpdateUnitBSNCompletedEventHandler(ByVal sender As Object, ByVal e As UpdateUnitBSNCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class UpdateUnitBSNCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub UpdateUnitBSNIMEICompletedEventHandler(ByVal sender As Object, ByVal e As UpdateUnitBSNIMEICompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class UpdateUnitBSNIMEICompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub AddUnitCompletedEventHandler(ByVal sender As Object, ByVal e As AddUnitCompletedEventArgs)
     
     '''<remarks/>
@@ -7046,6 +7591,33 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),String())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetUnitIMEICompletedEventHandler(ByVal sender As Object, ByVal e As GetUnitIMEICompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetUnitIMEICompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Integer
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Integer)
             End Get
         End Property
     End Class
@@ -7322,6 +7894,60 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetLocationsByTestCenterLocationTypeCompletedEventHandler(ByVal sender As Object, ByVal e As GetLocationsByTestCenterLocationTypeCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetLocationsByTestCenterLocationTypeCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As TrackingLocation()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),TrackingLocation())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetTrackingLocationTypesByFunctionCompletedEventHandler(ByVal sender As Object, ByVal e As GetTrackingLocationTypesByFunctionCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetTrackingLocationTypesByFunctionCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As TrackingLocationType()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),TrackingLocationType())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetSpecificLocationForCurrentUsersTestCenterCompletedEventHandler(ByVal sender As Object, ByVal e As GetSpecificLocationForCurrentUsersTestCenterCompletedEventArgs)
     
     '''<remarks/>
@@ -7349,6 +7975,60 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub AddHostToTrackingLocationCompletedEventHandler(ByVal sender As Object, ByVal e As AddHostToTrackingLocationCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class AddHostToTrackingLocationCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub SaveTrackingLocationCompletedEventHandler(ByVal sender As Object, ByVal e As SaveTrackingLocationCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class SaveTrackingLocationCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetTestCompletedEventHandler(ByVal sender As Object, ByVal e As GetTestCompletedEventArgs)
     
     '''<remarks/>
@@ -7370,6 +8050,33 @@ Namespace RemiAPI
             Get
                 Me.RaiseExceptionIfNecessary
                 Return CType(Me.results(0),Test)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetTestAccessCompletedEventHandler(ByVal sender As Object, ByVal e As GetTestAccessCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetTestAccessCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As System.Data.DataTable
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),System.Data.DataTable)
             End Get
         End Property
     End Class
@@ -8051,6 +8758,33 @@ Namespace RemiAPI
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub CreateUserCompletedEventHandler(ByVal sender As Object, ByVal e As CreateUserCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class CreateUserCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Boolean
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Boolean)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub GetFriendlyUserIDCompletedEventHandler(ByVal sender As Object, ByVal e As GetFriendlyUserIDCompletedEventArgs)
     
     '''<remarks/>
@@ -8463,6 +9197,60 @@ Namespace RemiAPI
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class GetDefaultReqNumWithUnitCompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As String
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),String)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetDefaultReqNum1CompletedEventHandler(ByVal sender As Object, ByVal e As GetDefaultReqNum1CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetDefaultReqNum1CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As String
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),String)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub GetDefaultReqNumWithUnit1CompletedEventHandler(ByVal sender As Object, ByVal e As GetDefaultReqNumWithUnit1CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetDefaultReqNumWithUnit1CompletedEventArgs
         Inherits System.ComponentModel.AsyncCompletedEventArgs
         
         Private results() As Object
@@ -9159,6 +9947,10 @@ Namespace RemiAPI
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
     Public Delegate Sub SendMailCompletedEventHandler(ByVal sender As Object, ByVal e As System.ComponentModel.AsyncCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _
+    Public Delegate Sub SendMail1CompletedEventHandler(ByVal sender As Object, ByVal e As System.ComponentModel.AsyncCompletedEventArgs)
     
     '''<remarks/>
     <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")>  _

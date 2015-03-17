@@ -211,6 +211,9 @@
     <None Include="Web References\RemiAPI\TrackingLocation.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
+    <None Include="Web References\RemiAPI\TrackingLocationType.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\RemiAPI\User.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
