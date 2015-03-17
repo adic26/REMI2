@@ -223,7 +223,7 @@ Namespace REMI.BusinessEntities
         Public Function GetTestRecordsToCheckForRelabUpdates() As TestRecordCollection
             Dim trColl As New TestRecordCollection
             Dim tr As TestRecord
-            Dim testStage = (From t In Me.Tasks Where t.TestType = TestType.IncomingEvaluation Or t.TestType = TestType.Parametric Select t.TestStageName, t.TestStageID).Distinct().ToList()
+            Dim testStage = (From t In Me.Tasks Where t.TestType = TestType.IncomingEvaluation Or t.TestType = TestType.Parametric Or t.TestName.ToLower.Contains("drop") Or t.TestName.ToLower.Contains("tumble") Select t.TestStageName, t.TestStageID).Distinct().ToList()
 
             For Each ts In testStage
                 For Each t In (From test In Me.Tasks Where test.TestStageID = ts.TestStageID And test.TestStageName = ts.TestStageName Select test).ToList()
