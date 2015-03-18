@@ -6,6 +6,7 @@ Imports REMI.Contracts
 Partial Class Admin_TestStages
     Inherits System.Web.UI.Page
 
+#Region "Page Load"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             If Not UserManager.GetCurrentUser.IsAdmin And Not UserManager.GetCurrentUser.HasAdminReadOnlyAuthority Then
@@ -14,7 +15,7 @@ Partial Class Admin_TestStages
 
             If (UserManager.GetCurrentUser.HasAdminReadOnlyAuthority) Then
                 lnkAddTestStage.Enabled = False
-                lnkAddTestStageAction.Enabled = False
+                lnkSaveAction.Enabled = False
             End If
 
             If (UserManager.GetCurrentUser.IsTestCenterAdmin And Not (UserManager.GetCurrentUser.IsAdmin)) Then
@@ -28,82 +29,110 @@ Partial Class Admin_TestStages
                 End If
             End If
 
-            ddlTestStageType.DataSource = Helpers.GetTestStageTypes
-            ddlTestStageType.DataBind()
+            ddlJobs.DataSource = JobManager.GetJobListDT(0, 0, 0)
             ddlJobs.DataBind()
 
-            If (ddlJobs.Items.Count > 0) Then
-                Dim jobID As Int32
-                Dim jobName As String
-                Int32.TryParse(Request.QueryString("JobID"), jobID)
+            ddlTestStageType.DataSource = Helpers.GetTestStageTypes
+            ddlTestStageType.DataBind()
 
-                If (jobID > 0) Then
-                    jobName = JobManager.GetJobNameByID(jobID)
-                    ddlJobs.Items.FindByText(jobName).Selected = True
-                Else
-                    ddlJobs.Items(0).Selected = True
-                    jobName = ddlJobs.SelectedItem.Text
-                End If
-
-                LoadJob(jobName)
-            End If
+            LoadJob()
         End If
     End Sub
+#End Region
 
-#Region "Edit/View All Modes"
-    Protected Sub LoadJob(ByVal jobName As String)
+#Region "Methods"
+    Protected Sub LoadJob()
+        Dim jobID As Int32
+
+        If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("AddJob"))) Then
+            jobID = 0
+        ElseIf (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("JobID"))) Then
+            If (ddlJobs.Items.Count > 0) Then
+                Int32.TryParse(Request.QueryString("JobID"), jobID)
+                ddlJobs.Items.FindByValue(jobID).Selected = True
+            End If
+        Else
+            jobID = ddlJobs.SelectedItem.Value
+        End If
+
         HideEditTestStagePanel()
-        Dim j As Job = JobManager.GetJobByName(jobName)
-        gvwMain.EmptyDataText = "There are no test stages for " + j.Name
-        lblViewAllTitle.Text = "Test Stages for " + j.Name
-        txtJobWILocation.Text = j.WILocation
-        txtProcedureLocation.Text = j.ProcedureLocation
-        chkIsOperationsTest.Checked = j.IsOperationsTest
-        chkIsTechOperationsTest.Checked = j.IsTechOperationsTest
-        chkIsMechanicalTest.Checked = j.IsMechanicalTest
-        chkIsActive.Checked = j.IsActive
-        chkNoBSN.Checked = j.NoBSN
-        chkContinueFailure.Checked = j.ContinueOnFailures
-        gvwMain.DataBind()
 
-        Dim bs As New BatchSearch()
-        bs.JobName = jobName
-        bs.ExcludedStatus = BatchSearchBatchStatus.Complete
+        If (jobID > 0) Then
+            lnkAddJob.Enabled = True
+            lnkAddTestStage.Enabled = True
+            Dim j As Job = JobManager.GetJob(String.Empty, jobID)
+            gvwMain.EmptyDataText = "There are no test stages for " + j.Name
+            lblViewAllTitle.Text = "Test Stages for " + j.Name
+            txtJobWILocation.Text = j.WILocation
+            txtProcedureLocation.Text = j.ProcedureLocation
+            chkIsOperationsTest.Checked = j.IsOperationsTest
+            chkIsTechOperationsTest.Checked = j.IsTechOperationsTest
+            chkIsMechanicalTest.Checked = j.IsMechanicalTest
+            chkIsActive.Checked = j.IsActive
+            chkNoBSN.Checked = j.NoBSN
+            chkContinueFailure.Checked = j.ContinueOnFailures
+            gvwMain.DataSource = TestStageManager.GetList(TestStageType.NotSet, String.Empty, True, j.ID)
+            gvwMain.DataBind()
 
-        bscJobs.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+            Dim bs As New BatchSearch()
+            bs.JobName = j.Name
+            bs.ExcludedStatus = BatchSearchBatchStatus.Complete
 
-        hdnJobID.Value = j.ID
+            bscJobs.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
 
-        JobSetup.JobID = j.ID
-        JobSetup.BatchID = 0
-        JobSetup.ProductID = 0
-        JobSetup.JobName = j.Name
-        JobSetup.ProductName = String.Empty
-        JobSetup.QRANumber = String.Empty
-        JobSetup.TestStageType = TestStageType.Parametric
-        JobSetup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
-        JobSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-        JobSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
-        JobSetup.RequestTypeID = 0
-        JobSetup.UserID = 0
-        JobSetup.DataBind()
+            hdnJobID.Value = j.ID
 
-        JobEnvSetup.JobID = j.ID
-        JobEnvSetup.BatchID = 0
-        JobEnvSetup.ProductID = 0
-        JobEnvSetup.JobName = j.Name
-        JobEnvSetup.ProductName = String.Empty
-        JobEnvSetup.QRANumber = String.Empty
-        JobEnvSetup.TestStageType = TestStageType.EnvironmentalStress
-        JobEnvSetup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
-        JobEnvSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
-        JobEnvSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
-        JobEnvSetup.RequestTypeID = 0
-        JobEnvSetup.UserID = 0
-        JobEnvSetup.DataBind()
+            JobSetup.JobID = j.ID
+            JobSetup.BatchID = 0
+            JobSetup.ProductID = 0
+            JobSetup.JobName = j.Name
+            JobSetup.ProductName = String.Empty
+            JobSetup.QRANumber = String.Empty
+            JobSetup.TestStageType = TestStageType.Parametric
+            JobSetup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            JobSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            JobSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
+            JobSetup.RequestTypeID = 0
+            JobSetup.UserID = 0
+            JobSetup.DataBind()
 
-        BindOrientations()
-        BindAccess()
+            acpSetup.Visible = JobSetup.Visible
+
+            JobEnvSetup.JobID = j.ID
+            JobEnvSetup.BatchID = 0
+            JobEnvSetup.ProductID = 0
+            JobEnvSetup.JobName = j.Name
+            JobEnvSetup.ProductName = String.Empty
+            JobEnvSetup.QRANumber = String.Empty
+            JobEnvSetup.TestStageType = TestStageType.EnvironmentalStress
+            JobEnvSetup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            JobEnvSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
+            JobEnvSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
+            JobEnvSetup.RequestTypeID = 0
+            JobEnvSetup.UserID = 0
+            JobEnvSetup.DataBind()
+
+            acpEnvSetup.Visible = JobEnvSetup.Visible
+
+            BindOrientations()
+            BindAccess()
+        Else
+            lnkAddJob.Enabled = False
+            lnkAddTestStage.Enabled = False
+            ddlJobs.Visible = False
+            txtJobName.Visible = True
+            txtJobWILocation.Text = String.Empty
+            txtProcedureLocation.Text = String.Empty
+            chkIsOperationsTest.Checked = False
+            chkIsTechOperationsTest.Checked = False
+            chkIsMechanicalTest.Checked = False
+            chkIsActive.Checked = False
+            chkNoBSN.Checked = False
+            chkContinueFailure.Checked = False
+            hdnJobID.Value = String.Empty
+            accTestStages.Enabled = False
+            gvwMain.Enabled = False
+        End If
     End Sub
 
     Protected Sub FillFormFieldsforTestStage(ByVal tmpTestStage As TestStage)
@@ -172,7 +201,9 @@ Partial Class Admin_TestStages
             lstAddedTLTypes.Items.Clear()
             pnlAddEditTestStage.Visible = True
             pnlViewAllTestStages.Visible = False
+            lnkAddTestStage.Enabled = False
         Else
+            lnkAddTestStage.Enabled = True
             hdnTestStageID.Value = tmpTestStage.ID
             lblAddEditTitle.Text = "Editing the " & tmpTestStage.Name & " Test Stage"
 
@@ -186,67 +217,60 @@ Partial Class Admin_TestStages
 
             pnlAddEditTestStage.Visible = True
             pnlViewAllTestStages.Visible = False
-            End If
+        End If
     End Sub
 
     Protected Sub HideEditTestStagePanel()
-        'clear the edit id
         hdnTestID.Value = 0
         hdnTestStageID.Value = 0
         lblAddEditTitle.Text = "Add a new Test Stage"
         pnlAddEditTestStage.Visible = False
         pnlViewAllTestStages.Visible = True
         pnlAddEditTest.Visible = False
-        'clear the formfields
         FillFormFieldsforTestStage(New TestStage)
         FillFormFieldsForTest(New TestStage)
-    End Sub
-#End Region
-
-#Region "Actions"
-    Protected Sub gvMain_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
-        Select Case e.CommandName.ToLower()
-            Case "editrow"
-                notMain.Clear()
-                Dim tmpTestStage As TestStage = TestStageManager.GetTestStage(Convert.ToInt32(e.CommandArgument))
-                ShowAddEditTestStagePanel(tmpTestStage)
-                FillFormFieldsforTestStage(tmpTestStage)
-            Case "deleteitem"
-                notMain.Notifications.Add(TestStageManager.DeleteTestStage(Convert.ToInt32(e.CommandArgument)))
-                gvwMain.DataBind()
-        End Select
     End Sub
 
     Protected Sub SaveTestStage()
         Dim tmpTestStage As TestStage
         notMain.Clear()
-        'new or edit?
+
         If Integer.Parse(hdnTestStageID.Value) > 0 Then
             tmpTestStage = TestStageManager.GetTestStage(CInt(hdnTestStageID.Value))
         Else
             tmpTestStage = New TestStage
         End If
 
-        'set test stage params
         SetTestStageParametersForSave(tmpTestStage)
         tmpTestStage.ID = TestStageManager.SaveTestStage(tmpTestStage) 'save
         notMain.Notifications = tmpTestStage.Notifications
     End Sub
 
-    Protected Sub SaveJob()
+    Protected Function SaveJob() As Int32
         Dim j As Job = New Job
-        j.Name = ddlJobs.SelectedItem.Text
+
+        If (txtJobName.Visible) Then
+            j.Name = txtJobName.Text
+            j.IsActive = True
+        Else
+            j.Name = ddlJobs.SelectedItem.Text
+            j.ID = ddlJobs.SelectedItem.Value
+            j.IsActive = chkIsActive.Checked
+        End If
+
         j.WILocation = txtJobWILocation.Text
         j.IsOperationsTest = chkIsOperationsTest.Checked
         j.IsTechOperationsTest = chkIsTechOperationsTest.Checked
         j.IsMechanicalTest = chkIsMechanicalTest.Checked
         j.ProcedureLocation = txtProcedureLocation.Text
-        j.IsActive = chkIsActive.Checked
         j.NoBSN = chkNoBSN.Checked
         j.ContinueOnFailures = chkContinueFailure.Checked
-        JobManager.SaveJob(j)
+
+        Dim jobID As Int32 = JobManager.SaveJob(j)
         notMain.Notifications.Add(j.Notifications)
-    End Sub
+
+        Return jobID
+    End Function
 
     Protected Sub SetTestStageParametersForSave(ByVal tmpTestStage As TestStage)
         tmpTestStage.Name = txtName.Text
@@ -305,70 +329,96 @@ Partial Class Admin_TestStages
             End If
         End If
     End Sub
+
+    Protected Sub BindOrientations()
+        gdvOrientations.DataSource = JobManager.GetJobOrientationLists(hdnJobID.Value, String.Empty)
+        gdvOrientations.DataBind()
+
+        If (gdvOrientations.Rows.Count = 0) Then
+            btnAddOrientation_Click(Me, Nothing)
+        End If
+    End Sub
+
+    Protected Sub BindAccess()
+        grdAccess.DataSource = JobManager.GetJobAccess(hdnJobID.Value, False)
+        grdAccess.DataBind()
+    End Sub
 #End Region
 
-#Region "Page User Interaction Event Handling"
+#Region "Events"
     Protected Sub lnkAddTestStage_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddTestStage.Click
         ShowAddEditTestStagePanel(Nothing)
     End Sub
 
-    Protected Sub lnkAddTestStageAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddTestStageAction.Click
+    Protected Sub lnkAddJob_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddJob.Click
+        Response.Redirect("~\Admin\Jobs.aspx?AddJob=1")
+    End Sub
+
+    Protected Sub lnkCancelAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCancelAction.Click
+        Response.Redirect("~\Admin\Jobs.aspx")
+    End Sub
+
+    Protected Sub lnkSaveAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkSaveAction.Click
         If pnlAddEditTestStage.Visible Then
             SaveTestStage()
         Else
-            SaveJob()
-        End If
+            Dim jobID As Int32 = SaveJob()
 
-        If (pnlOrientationAdd.Visible And Not String.IsNullOrEmpty(txtOrientationName.Text)) Then
-            Dim productTypeID As Int32
-            Int32.TryParse(ddlPT.SelectedValue, productTypeID)
+            If (txtJobName.Visible) Then
+                Response.Redirect(String.Format("~\Admin\Jobs.aspx?JobID={0}", jobID))
+            End If
 
-            If (productTypeID > 0 And Not String.IsNullOrEmpty(txtDefinition.Text)) Then
-                Dim success As Boolean = JobManager.SaveOrientation(hdnJobID.Value, 0, txtOrientationName.Text, productTypeID, txtOrientationDescription.Text, True, txtDefinition.Text)
+            If (pnlOrientationAdd.Visible And Not String.IsNullOrEmpty(txtOrientationName.Text)) Then
+                Dim productTypeID As Int32
+                Int32.TryParse(ddlPT.SelectedValue, productTypeID)
 
-                If (success) Then
-                    txtOrientationName.Text = String.Empty
-                    txtOrientationDescription.Text = String.Empty
-                    txtDefinition.Text = String.Empty
+                If (productTypeID > 0 And Not String.IsNullOrEmpty(txtDefinition.Text)) Then
+                    Dim success As Boolean = JobManager.SaveOrientation(hdnJobID.Value, 0, txtOrientationName.Text, productTypeID, txtOrientationDescription.Text, True, txtDefinition.Text)
 
-                    notMain.Add("Successfully Created New Orientation", NotificationType.Information)
+                    If (success) Then
+                        txtOrientationName.Text = String.Empty
+                        txtOrientationDescription.Text = String.Empty
+                        txtDefinition.Text = String.Empty
+
+                        notMain.Add("Successfully Created New Orientation", NotificationType.Information)
+                    Else
+                        notMain.Add("Failed To Create New Orientation", NotificationType.Errors)
+                    End If
                 Else
-                    notMain.Add("Failed To Create New Orientation", NotificationType.Errors)
+                    notMain.Add("Orientation Can't Be Created. Please ensure you have entered product type and definition!", NotificationType.Warning)
                 End If
-            Else
-                notMain.Add("Orientation Can't Be Created. Please ensure you have entered product type and definition!", NotificationType.Warning)
             End If
         End If
 
         If Not notMain.HasErrors Then
-            HideEditTestStagePanel()
-            LoadJob(ddlJobs.SelectedItem.Text)
+            Response.Redirect(String.Format("~\Admin\Jobs.aspx?JobID={0}", hdnJobID.Value))
         End If
     End Sub
-    Protected Sub lnkCancelAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCancelAction.Click
-        HideEditTestStagePanel()
-    End Sub
-    Protected Sub lnkViewTestStages_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkViewTestStages.Click
-        HideEditTestStagePanel()
-    End Sub
+
     Protected Sub ddlTestStageType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTestStageType.SelectedIndexChanged
         If DirectCast([Enum].Parse(GetType(TestStageType), ddlTestStageType.SelectedItem.Text), TestStageType) = TestStageType.EnvironmentalStress Then
             pnlAddEditTest.Visible = True
-
             lstAllTLTypes.DataBind()
-
-
         Else
             pnlAddEditTest.Visible = False
         End If
     End Sub
-    Protected Sub ddlJobs_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlJobs.SelectedIndexChanged
-        LoadJob(ddlJobs.SelectedItem.Text)
-    End Sub
+
     Protected Sub SetGvwHeader() Handles gvwMain.PreRender
         Helpers.MakeAccessable(gvwMain)
     End Sub
-#End Region
+
+    Protected Sub gdvOrientationsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gdvOrientations.PreRender
+        Helpers.MakeAccessable(gdvOrientations)
+    End Sub
+
+    Protected Sub grdAccessGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdAccess.PreRender
+        Helpers.MakeAccessable(grdAccess)
+    End Sub
+
+    Protected Sub ddlJobs_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlJobs.SelectedIndexChanged
+        Response.Redirect(String.Format("~\Admin\Jobs.aspx?JobID={0}", ddlJobs.SelectedItem.Value))
+    End Sub
 
     Protected Sub btnAddTLType_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddTLType.Click
         Dim li As ListItem = lstAllTLTypes.SelectedItem
@@ -377,6 +427,20 @@ Partial Class Admin_TestStages
             lstAddedTLTypes.Items.Add(li)
             lstAllTLTypes.Items.Remove(li)
         End If
+    End Sub
+
+    Protected Sub gvMain_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
+        Select Case e.CommandName.ToLower()
+            Case "editrow"
+                notMain.Clear()
+                Dim tmpTestStage As TestStage = TestStageManager.GetTestStage(Convert.ToInt32(e.CommandArgument))
+                ShowAddEditTestStagePanel(tmpTestStage)
+                FillFormFieldsforTestStage(tmpTestStage)
+            Case "deleteitem"
+                notMain.Notifications.Add(TestStageManager.DeleteTestStage(Convert.ToInt32(e.CommandArgument)))
+                gvwMain.DataSource = TestStageManager.GetList(TestStageType.NotSet, String.Empty, True, ddlJobs.SelectedItem.Value)
+                gvwMain.DataBind()
+        End Select
     End Sub
 
     Protected Sub btnRemoveTLType_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnRemoveTLType.Click
@@ -400,14 +464,6 @@ Partial Class Admin_TestStages
                 e.Row.BackColor = Drawing.Color.Yellow
             End If
         End If
-    End Sub
-
-    Protected Sub gdvOrientationsGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gdvOrientations.PreRender
-        Helpers.MakeAccessable(gdvOrientations)
-    End Sub
-
-    Protected Sub grdAccessGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdAccess.PreRender
-        Helpers.MakeAccessable(grdAccess)
     End Sub
 
     Protected Sub grdAccess_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles grdAccess.RowCommand
@@ -443,7 +499,7 @@ Partial Class Admin_TestStages
         Dim ddlProductTypes As DropDownList = gdvOrientations.Rows(e.NewEditIndex).FindControl("ddlProductTypes")
         Dim chkActive As CheckBox = gdvOrientations.Rows(e.NewEditIndex).FindControl("chkActive")
 
-        ddlProductTypes.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, False, 0)
+        ddlProductTypes.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
         ddlProductTypes.DataBind()
 
         chkActive.Enabled = True
@@ -482,23 +538,9 @@ Partial Class Admin_TestStages
         BindOrientations()
     End Sub
 
-    Protected Sub BindOrientations()
-        gdvOrientations.DataSource = JobManager.GetJobOrientationLists(hdnJobID.Value, String.Empty)
-        gdvOrientations.DataBind()
-
-        If (gdvOrientations.Rows.Count = 0) Then
-            btnAddOrientation_Click(Me, Nothing)
-        End If
-    End Sub
-
-    Protected Sub BindAccess()
-        grdAccess.DataSource = JobManager.GetJobAccess(hdnJobID.Value)
-        grdAccess.DataBind()
-    End Sub
-
     Protected Sub btnAddOrientation_Click(ByVal sender As Object, ByVal e As EventArgs)
         pnlOrientationAdd.Visible = True
-        ddlPT.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, False, 0)
+        ddlPT.DataSource = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
         ddlPT.DataBind()
     End Sub
 
@@ -532,4 +574,5 @@ Partial Class Admin_TestStages
             End If
         End If
     End Sub
+#End Region
 End Class

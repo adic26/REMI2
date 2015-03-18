@@ -127,7 +127,7 @@ Partial Class TestRecords_Add
 
 #Region "Events"
     Protected Sub ddlTestStage_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTestStage.SelectedIndexChanged
-        Dim j As Job = JobManager.GetJobByName(lblJobName.Text)
+        Dim j As Job = JobManager.GetJob(lblJobName.Text)
         Dim tests As Object = TestManager.GetTestsByBatchStage(hdnBatchID.Value, ddlTestStage.SelectedItem.Text, True)
         Dim testID As Int32
         ddlTest.Items.Clear()

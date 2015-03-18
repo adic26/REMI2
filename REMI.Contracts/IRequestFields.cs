@@ -15,7 +15,11 @@ namespace REMI.Contracts
         Int32 OptionsTypeID { get; set; }
         Int32 RequestTypeID { get; set; }
         Int32 RequestID { get; set; }
-        Int32 InternalField  { get; set; }
+        Int32 InternalField { get; set; }
+        Int32 ParentFieldSetupID { get; set; }
+        Int32 ReqFieldDataID { get; set; }
+        Int32 MaxDisplayNum { get; set; }
+        Int32 DefaultDisplayNum { get; set; }
         String RequestType  { get; set; } 
         String Name  { get; set; }
         String FieldType { get; set; }
@@ -28,13 +32,13 @@ namespace REMI.Contracts
         String Value { get; set; }
         String Description { get; set; }
         String ParentFieldSetupName { get; set; }
+        String DefaultValue { get; set; }
         bool IsRequired  { get; set; }
         bool IsArchived { get; set; }
         bool IsFromExternalSystem { get; set; }
         bool HasIntegration { get; set; }
-        List<String> OptionsType  { get; set; }
+        bool HasDistribution { get; set; }
         bool NewRequest { get; set; }
-        Int32 ParentFieldSetupID { get; set; }
-        String DefaultValue { get; set; }
+        List<String> OptionsType  { get; set; }
     }
 }

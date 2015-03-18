@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports REMI.Contracts
 Imports REMI.Core
 Imports System.Reflection
+Imports System.Text
 
 Namespace REMI.Bll
     <DataObjectAttribute()> _
@@ -25,11 +26,11 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetRequestAuditLogs(ByVal requestNumber As String) As DataTable
             Try
-                Return BusinessEntities.Helpers.EQToDataTable((From rda In New REMI.Dal.Entities().Instance().vw_RequestDataAudit Where rda.RequestNumber = requestNumber Select rda).ToList(), "RequestAudit")
+                Return RequestDB.GetRequestAuditLogs(requestNumber)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber)
             End Try
-            Return New DataTable
+            Return New DataTable("RequestAudit")
         End Function
 
         Public Shared Function GetRequestsForDashBoard(ByVal searchStr As String) As DataTable
@@ -64,14 +65,13 @@ Namespace REMI.Bll
 
         Public Shared Function GetRequestParent(ByVal requestTypeID As Int32, ByVal includeArchived As Boolean, ByVal includeSelect As Boolean) As DataTable
             Try
-                Dim fields = (From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID And (r.Archived = False Or (includeArchived)) Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).ToList()
-
                 If (includeSelect) Then
-                    Dim list2 = (From t In New String() {String.Empty} Select New With {.Name = "Select...", .ReqFieldSetupID = 0})
-                    Dim union = list2.Union(fields)
+                    Dim list = (From t In New String() {String.Empty} Select New With {.Name = "Select...", .ReqFieldSetupID = 0}).Union((From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID And (r.Archived = False Or (includeArchived)) Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).OrderBy(Function(map) map.Name).Distinct.ToList())
 
-                    Return REMI.BusinessEntities.Helpers.EQToDataTable(union.OrderBy(Function(r) r.Name), "RequestSetupParent")
+                    Return REMI.BusinessEntities.Helpers.EQToDataTable(list, "RequestSetupParent")
                 Else
+                    Dim fields = (From r In New REMI.Dal.Entities().Instance().ReqFieldSetups Where r.RequestTypeID = requestTypeID And (r.Archived = False Or (includeArchived)) Select New With {.Name = r.Name, .ReqFieldSetupID = r.ReqFieldSetupID}).ToList()
+
                     Return REMI.BusinessEntities.Helpers.EQToDataTable(fields.OrderBy(Function(r) r.Name), "RequestSetupParent")
                 End If
             Catch ex As Exception
@@ -93,7 +93,26 @@ Namespace REMI.Bll
             Return New DataTable("RequestMappingFields")
         End Function
 
-        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal hasREMIIntegration As Boolean, ByVal intField As String, ByVal description As String, ByVal defaultValue As String) As Boolean
+        Public Shared Function SaveRequestHeaderSetup(ByVal hasREMIIntegration As Boolean, ByVal isExternal As Boolean, ByVal hasDistribution As Boolean, ByVal requestTypeID As Int32) As Boolean
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
+
+                If requestType IsNot Nothing Then
+                    requestType.HasIntegration = hasREMIIntegration
+                    requestType.HasDistribution = hasDistribution
+                    requestType.IsExternal = isExternal
+                End If
+                instance.SaveChanges()
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+            End Try
+
+            Return False
+        End Function
+
+        Public Shared Function SaveFieldSetup(ByVal requestTypeID As Int32, ByVal fieldSetupID As Int32, ByVal name As String, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal optionsTypeID As Int32, ByVal category As String, ByVal parentFieldID As Int32, ByVal intField As String, ByVal description As String, ByVal defaultValue As String, ByVal defaultDisplayNum As Int32, ByVal maxDisplayNum As Int32) As Boolean
             Try
                 Dim oldName As String = String.Empty
                 Dim instance = New REMI.Dal.Entities().Instance()
@@ -113,17 +132,45 @@ Namespace REMI.Bll
                     setup.DefaultValue = defaultValue
 
                     Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
-
-                    If requestType IsNot Nothing Then
-                        requestType.HasIntegration = hasREMIIntegration
-                    End If
-
                     Dim requestFieldMapping As REMI.Entities.ReqFieldMapping = (From fm In instance.ReqFieldMappings Where fm.ExtField = oldName Select fm).FirstOrDefault()
 
                     If (requestFieldMapping IsNot Nothing) Then
-                        requestFieldMapping.ExtField = name
-                        requestFieldMapping.IntField = intField
+                        If (Not String.IsNullOrEmpty(intField)) Then
+                            requestFieldMapping.ExtField = name
+                            requestFieldMapping.IntField = intField
+                        Else
+                            instance.DeleteObject(requestFieldMapping)
+                        End If
+                    Else
+                        Dim rfm As New REMI.Entities.ReqFieldMapping
+                        rfm.IntField = intField
+                        rfm.ExtField = name
+                        rfm.RequestTypeID = requestTypeID
+                        rfm.IsActive = True
+
+                        instance.AddToReqFieldMappings(rfm)
                     End If
+
+                    Dim sibling As REMI.Entities.ReqFieldSetupSibling = (From s In instance.ReqFieldSetupSiblings Where s.ReqFieldSetupID = fieldSetupID Select s).FirstOrDefault()
+
+                    If (sibling IsNot Nothing) Then
+                        If (maxDisplayNum = 1) Then
+                            instance.DeleteObject(sibling)
+                        Else
+                            sibling.DefaultDisplayNum = defaultDisplayNum
+                            sibling.MaxDisplayNum = maxDisplayNum
+                        End If
+                    Else
+                        If (maxDisplayNum > 1) Then
+                            sibling = New REMI.Entities.ReqFieldSetupSibling
+                            sibling.DefaultDisplayNum = defaultDisplayNum
+                            sibling.MaxDisplayNum = maxDisplayNum
+                            sibling.ReqFieldSetupID = fieldSetupID
+
+                            instance.AddToReqFieldSetupSiblings(sibling)
+                        End If
+                    End If
+
                 Else
                     Dim rfs As New REMI.Entities.ReqFieldSetup()
                     rfs.Name = name
@@ -150,6 +197,16 @@ Namespace REMI.Bll
                         rfm.IsActive = True
 
                         instance.AddToReqFieldMappings(rfm)
+                    End If
+
+                    If (maxDisplayNum > 1) Then
+                        instance.SaveChanges()
+                        Dim Sibling As New REMI.Entities.ReqFieldSetupSibling
+                        Sibling.DefaultDisplayNum = defaultDisplayNum
+                        Sibling.MaxDisplayNum = maxDisplayNum
+                        Sibling.ReqFieldSetupID = fieldSetupID
+
+                        instance.AddToReqFieldSetupSiblings(Sibling)
                     End If
                 End If
 
@@ -330,7 +387,19 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
-        Public Shared Function SaveRequest(ByVal requestName As String, ByRef request As RequestFieldsCollection, ByVal userIdentification As String) As Boolean
+        Public Shared Function GetRequestDistribution(ByVal requestID As Int32) As List(Of String)
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+
+                Return (From dist In instance.ReqDistributions Where dist.RequestID = requestID Select dist.UserName).ToList()
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return Nothing
+        End Function
+
+        Public Shared Function SaveRequest(ByVal requestName As String, ByRef request As RequestFieldsCollection, ByVal userIdentification As String, ByVal distribution As List(Of String)) As Boolean
             Dim saved As Boolean = False
 
             Try
@@ -339,17 +408,46 @@ Namespace REMI.Bll
                     Dim requestTypeID As Int32 = request(0).RequestTypeID
                     Dim requestNumber As String = request(0).RequestNumber
                     Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
-
                     saved = RequestDB.SaveRequest(requestName, request, userIdentification)
 
-                    If (saved And requestType.HasIntegration) Then
-                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, userIdentification, False, True, False)
+                    Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
 
-                        Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
+                    If (saved And requestType.HasIntegration) Then
+                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, False, True, False)
 
                         If (req.BatchID Is Nothing) Then
                             req.BatchID = b.ID
                             instance.SaveChanges()
+                        End If
+                    End If
+
+                    If (request(0).HasDistribution) Then
+                        If (distribution IsNot Nothing) Then
+                            For Each d In distribution
+                                Dim rd As REMI.Entities.ReqDistribution = (From dist In instance.ReqDistributions Where dist.RequestID = req.RequestID And dist.UserName = d Select dist).FirstOrDefault()
+
+                                If (rd Is Nothing) Then
+                                    rd = New REMI.Entities.ReqDistribution
+                                    rd.UserName = d
+                                    rd.RequestID = req.RequestID
+                                    instance.AddToReqDistributions(rd)
+                                    instance.SaveChanges()
+                                End If
+                            Next
+                        End If
+
+                        If (saved And distribution.Count > 0) Then
+                            Dim sb As New StringBuilder
+                            sb.AppendLine(String.Format("<a href='http://go/requests/{0}' target='_blank'>To Edit Or View This Item Click Here</a>", requestNumber))
+                            sb.AppendLine(String.Format("<br/>Submitted: {0}", (From rd In request Where rd.IntField = "DateCreated" Select rd.Value).FirstOrDefault()))
+                            sb.AppendLine(String.Format("<br/>Requestor: {0}", (From rd In request Where rd.IntField = "Requestor" Select rd.Value).FirstOrDefault()))
+                            sb.AppendLine(String.Format("<br/>Test Center: {0}", (From rd In request Where rd.IntField = "TestCenterLocation" Select rd.Value).FirstOrDefault()))
+                            sb.AppendLine(String.Format("<br/>Department: {0}", (From rd In request Where rd.IntField = "Department" Select rd.Value).FirstOrDefault()))
+                            sb.AppendLine(String.Format("<br/>Reason: {0}", (From rd In request Where rd.IntField = "ReasonForRequest" Select rd.Value).FirstOrDefault()))
+                            sb.AppendLine(String.Format("<br/>Product: {0}", (From rd In request Where rd.IntField = "ProductGroup" Select rd.Value).FirstOrDefault()))
+                            sb.AppendLine(String.Format("<br/>Product Type: {0}", (From rd In request Where rd.IntField = "ProductType" Select rd.Value).FirstOrDefault()))
+
+                            REMI.Core.Emailer.SendMail(String.Join(",", New List(Of String)(distribution).ToArray()), "remi@blackberry.com", String.Format("{0} Has Been Updated!", requestNumber), sb.ToString(), True, String.Empty)
                         End If
                     End If
                 End If

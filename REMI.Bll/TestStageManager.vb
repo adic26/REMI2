@@ -60,7 +60,7 @@ Namespace REMI.Bll
             Try
                 Dim stages As Dictionary(Of String, String) = (From ts In New REMI.Dal.Entities().Instance().vw_GetTaskInfo Where ts.BatchID = batchID And ts.IsArchived = False And ts.TestIsArchived = False And ts.processorder > -1 Select ts.processorder, ts.TestStageID, ts.tsname).Distinct().OrderBy(Function(o) o.processorder).ToDictionary(Function(k) k.TestStageID.ToString(), Function(v) v.tsname)
 
-                For Each s In GetList(TestStageType.IncomingEvaluation, jobName, False)
+                For Each s In GetList(TestStageType.IncomingEvaluation, jobName, False, 0)
                     stages.Add(s.ID.ToString(), s.Name)
                 Next
 
@@ -74,7 +74,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetAllTestStages() As TestStageCollection
             Try
-                Return TestStageDB.GetList(TestStageType.NotSet, String.Empty, False)
+                Return TestStageDB.GetList(TestStageType.NotSet, String.Empty, False, 0)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return New TestStageCollection
@@ -127,9 +127,9 @@ Namespace REMI.Bll
 #End Region
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetList(ByVal type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean) As TestStageCollection
+        Public Shared Function GetList(ByVal type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean, ByVal jobID As Int32) As TestStageCollection
             Try
-                Return TestStageDB.GetList(type, jobName, ShowArchived)
+                Return TestStageDB.GetList(type, jobName, ShowArchived, jobID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("JobName: {0}", jobName))
                 Return New TestStageCollection

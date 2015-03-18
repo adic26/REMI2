@@ -31,9 +31,16 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTestAccess(ByVal testID As Int32) As DataTable
+        Public Shared Function GetTestAccess(ByVal testID As Int32, ByVal removeFirst As Boolean) As DataTable
             Try
-                Return TestDB.GetTestAccess(testID)
+                Dim dt As DataTable = TestDB.GetTestAccess(testID)
+
+                If removeFirst Then
+                    dt.Rows(0).Delete()
+                    dt.AcceptChanges()
+                End If
+
+                Return dt
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
                 Return Nothing
@@ -95,10 +102,6 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetTestsByType(ByVal type As String, ByVal includeArchived As Boolean, ByVal userID As Int32, ByVal requestTypeID As Int32) As TestCollection
             Try
-                If (userID < 1) Then
-                    userID = UserManager.GetCurrentUser.ID
-                End If
-
                 Dim testTypeID As TestType = DirectCast(System.Enum.Parse(GetType(Contracts.TestType), type), Contracts.TestType)
                 Return TestDB.GetListByTestType(testTypeID, -1, -1, includeArchived, userID, requestTypeID)
             Catch ex As Exception

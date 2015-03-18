@@ -57,7 +57,7 @@
             </li>
             <li>
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/add.png" ID="imgAddTrackingLocation" runat="server" />
-                <asp:LinkButton ID="lnkAddTrackingLocation" runat="Server" Text="Add New TL" />
+                <asp:LinkButton ID="lnkAddTrackingLocation" runat="Server" Text="Add Location" />
             </li>
         </ul>
     </asp:Panel>
@@ -79,10 +79,6 @@
                         <asp:Image ImageUrl="../Design/Icons/png/24x24/accept.png" ID="imgAddTrackingLocationAction" runat="server" />
                         <asp:LinkButton ID="lnkAddTrackingLocationAction" runat="Server" Text="Confirm and Save" />
                     </li>
-                    <li>
-                        <asp:Image ImageUrl="../Design/Icons/png/24x24/block.png" ID="imgCancelAction" runat="server" />
-                        <asp:LinkButton ID="lnkCancelAction" runat="Server" Text="Cancel" />
-                    </li>
                 </ul>
             </asp:Panel>
             <h3>Filter</h3>
@@ -102,8 +98,12 @@
                             <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                             <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
                             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+                            <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
                         </SelectParameters>
                     </asp:ObjectDataSource>
+                </li>
+                <li>
+                    <asp:CheckBox runat="server" ID="chkArchived" Text="Archived" TextAlign="Left" AutoPostBack="true" OnCheckedChanged="chkArchived_CheckedChanged" />
                 </li>
             </ul>
         </ContentTemplate>
@@ -242,6 +242,7 @@
                                     <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                                     <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
                                     <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
+                                    <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
                                 </SelectParameters>
                             </asp:ObjectDataSource>
                         </td>

@@ -266,24 +266,6 @@ Partial Public Class Admin_TrackingLocation
     Protected WithEvents lnkAddTrackingLocationAction As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
-    '''imgCancelAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgCancelAction As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''lnkCancelAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lnkCancelAction As Global.System.Web.UI.WebControls.LinkButton
-
-    '''<summary>
     '''imgTestCenterView control.
     '''</summary>
     '''<remarks>
@@ -309,6 +291,15 @@ Partial Public Class Admin_TrackingLocation
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents odsTestCenters As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
+    '''chkArchived control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chkArchived As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
     '''upLoad control.

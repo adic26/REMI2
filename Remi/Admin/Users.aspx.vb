@@ -4,100 +4,75 @@ Imports Remi.Contracts
 
 Partial Class Admin_Users
     Inherits System.Web.UI.Page
-    Dim level As DataTable = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0)
+    Dim dtLevel As DataTable
 
+#Region "Load"
     Protected Sub Page_Load() Handles Me.Load
         If Not Page.IsPostBack AndAlso Not UserManager.GetCurrentUser.IsAdmin And Not UserManager.GetCurrentUser.IsTestCenterAdmin Then
             Response.Redirect("~/")
         End If
 
         If Not Page.IsPostBack Then
-            If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("userid"))) Then
-                SetupPageAddEditUser(UserManager.GetUser(String.Empty, Request.QueryString.Get("userid")))
-            End If
-        End If
-
-        If (UserManager.GetCurrentUser.IsTestCenterAdmin And Not (UserManager.GetCurrentUser.IsAdmin)) Then
-            Hyperlink1.Enabled = False
-            Hyperlink4.Enabled = False
-            ddlTestCenters.Enabled = False
-
-            If (Not UserManager.GetCurrentUser.HasAdminReadOnlyAuthority) Then
-                Hyperlink2.Enabled = False
-                HyperLink5.Enabled = False
-                Hyperlink7.Enabled = False
-                Hyperlink8.Enabled = False
-                HyperLink9.Enabled = False
-            End If
-        End If
-    End Sub
-
-    Protected Sub UpdateGvwHeader() Handles gvwUsers.PreRender
-        Helpers.MakeAccessable(gvwUsers)
-    End Sub
-
-    Protected Sub TestCenterHeader() Handles grdTestCenter.PreRender
-        Helpers.MakeAccessable(grdTestCenter)
-    End Sub
-
-    Protected Sub DeaprtmentHeader() Handles grdDepartments.PreRender
-        Helpers.MakeAccessable(grdDepartments)
-    End Sub
-
-    Protected Sub UpdatePermissionsGvw() Handles gvwPermissions.PreRender
-        Helpers.MakeAccessable(gvwPermissions)
-    End Sub
-
-    Protected Sub gvRequestTypes_PreRender() Handles gvRequestTypes.PreRender
-        Helpers.MakeAccessable(gvRequestTypes)
-    End Sub
-
-    Protected Sub UpdateTrainingGvw() Handles gvwTraining.PreRender
-        Helpers.MakeAccessable(gvwTraining)
-    End Sub
-
-    Protected Sub Page_PreRender() Handles Me.PreRender
-        If Not Page.IsPostBack Then
+            ddlTestCenters.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             ddlTestCenters.DataBind()
 
             Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
             If (ddlTestCenters.Items.Contains(l)) Then
                 ddlTestCenters.SelectedValue = UserManager.GetCurrentUser.TestCentreID
             End If
+
+            If (UserManager.GetCurrentUser.IsTestCenterAdmin And Not (UserManager.GetCurrentUser.IsAdmin)) Then
+                Hyperlink1.Enabled = False
+                Hyperlink4.Enabled = False
+                ddlTestCenters.Enabled = False
+
+                If (Not UserManager.GetCurrentUser.HasAdminReadOnlyAuthority) Then
+                    Hyperlink2.Enabled = False
+                    HyperLink5.Enabled = False
+                    Hyperlink7.Enabled = False
+                    Hyperlink8.Enabled = False
+                    HyperLink9.Enabled = False
+                End If
+            End If
+
+            If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("userid"))) Then
+                chkArchived.Enabled = False
+                ddlTestCenters.Enabled = False
+                Dim userid As Int32
+                Int32.TryParse(Request.QueryString.Get("userid"), userid)
+
+                If (userid = 0) Then
+                    SetupPageAddEditUser(Nothing)
+                Else
+                    SetupPageAddEditUser(UserManager.GetUser(String.Empty, userid))
+                End If
+            Else
+                chkArchived.Enabled = True
+                ddlTestCenters.Enabled = True
+                pnlAddNewUser.Visible = False
+                pnlViewAllUsers.Visible = True
+                pnlLeftMenuActions.Visible = False
+                lblHeaderText.Text = "View All Users"
+
+                BindUsers()
+            End If
+        Else
+            BindUsers()
         End If
-
-        Dim testCenterID As Int32 = 0
-        Int32.TryParse(ddlTestCenters.SelectedValue, testCenterID)
-
-        Dim us As New UserSearch
-        us.TestCenterID = testCenterID
-        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
-        gvwUsers.DataBind()
     End Sub
+#End Region
 
-    Protected Sub SetupPageViewAll()
-        pnlAddNewUser.Visible = False
-        pnlViewAllUsers.Visible = True
-        pnlLeftMenuActions.Visible = False
-        lblHeaderText.Text = "View All Users"
-
-        Dim testCenterID As Int32 = 0
-        Int32.TryParse(ddlTestCenters.SelectedValue, testCenterID)
-
-        Dim us As New UserSearch
-        us.TestCenterID = testCenterID
-        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
-        gvwUsers.DataBind()
-
-    End Sub
-
+#Region "Methods"
     Protected Sub SetupPageAddEditUser(ByVal CurrentUser As User)
         pnlAddNewUser.Visible = True
         pnlViewAllUsers.Visible = False
         pnlLeftMenuActions.Visible = True
 
-        ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
+        ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID, True)
         ddlDefaultPage.DataBind()
+
+        dtLevel = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
+        Dim dtDepartments As DataTable = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
 
         If CurrentUser Is Nothing Then
             lblHeaderText.Text = "Add New User"
@@ -110,18 +85,22 @@ Partial Class Admin_Users
             chkIsActive.Checked = True
             chkByPassProduct.Checked = False
             chkWA.Checked = True
-            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             grdTestCenter.DataBind()
 
-            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdDepartments.DataSource = dtDepartments
             grdDepartments.DataBind()
         Else
+            Dim testCenterAdmin As Boolean = UserManager.GetCurrentUser.IsTestCenterAdmin
             lblHeaderText.Text = String.Format("Editing {0}", CurrentUser.LDAPName)
             txtName.Visible = False
             lblUserName.Visible = True
             lblUserName.Text = CurrentUser.LDAPName
             chkWA.Checked = True
             txtBadgeNumber.Text = CurrentUser.BadgeNumber
+            hdnUserName.Value = CurrentUser.LDAPName
+            hdnUserID.Value = CurrentUser.ID
+
             If (CurrentUser.IsActive = 1) Then
                 chkIsActive.Checked = True
             Else
@@ -141,16 +120,13 @@ Partial Class Admin_Users
                 ddlDefaultPage.SelectedValue = sl.Value
             End If
 
-            hdnUserName.Value = CurrentUser.LDAPName
-            hdnUserID.Value = CurrentUser.ID
-
             gvRequestTypes.DataSource = CurrentUser.RequestTypes()
             gvRequestTypes.DataBind()
 
-            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdTestCenter.DataSource = LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             grdTestCenter.DataBind()
 
-            grdDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            grdDepartments.DataSource = dtDepartments
             grdDepartments.DataBind()
 
             For Each drtc As GridViewRow In grdTestCenter.Rows
@@ -190,7 +166,6 @@ Partial Class Admin_Users
                     End If
                 Next
             Next
-            Dim testCenterAdmin As Boolean = UserManager.GetCurrentUser.IsTestCenterAdmin
 
             'recheck appropriate roles.
             For Each r As String In CurrentUser.RolesList
@@ -206,6 +181,65 @@ Partial Class Admin_Users
                     End If
                 Next
             Next
+        End If
+    End Sub
+
+    Protected Sub BindUsers()
+        Dim testCenterID As Int32 = 0
+        Int32.TryParse(ddlTestCenters.SelectedValue, testCenterID)
+
+        Dim us As New UserSearch
+        us.TestCenterID = testCenterID
+        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
+        gvwUsers.DataBind()
+    End Sub
+#End Region
+
+#Region "Events"
+    Protected Sub chkArchived_CheckedChanged(sender As Object, e As EventArgs)
+        hdnUserID.Value = String.Empty
+        BindUsers()
+    End Sub
+
+    Protected Sub lnkViewAllUsers_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkViewAllUsers.Click
+        hdnUserID.Value = String.Empty
+        Response.Redirect("~\Admin\Users.aspx")
+    End Sub
+
+    Protected Sub lnkAddNewUser_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddNewUser.Click
+        hdnUserID.Value = String.Empty
+        Response.Redirect("~\Admin\Users.aspx?UserID=0")
+    End Sub
+
+    Protected Sub gvwTraining_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwTraining.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim ddlTrainingLevel As DropDownList = DirectCast(e.Row.FindControl("ddlTrainingLevel"), DropDownList)
+            Dim lblAddedBy As Label = DirectCast(e.Row.FindControl("lblAddedBy"), Label)
+            Dim chkTraining As CheckBox = DirectCast(e.Row.FindControl("chkTraining"), CheckBox)
+
+            If (chkTraining.Checked) Then
+                ddlTrainingLevel.Enabled = True
+            Else
+                ddlTrainingLevel.Enabled = False
+            End If
+
+            chkTraining.InputAttributes.Add("onclick", "EnableDisableCheckbox_Click('" & ddlTrainingLevel.ClientID & "', '" & chkTraining.ClientID & "', '" & UserManager.GetCurrentUser.UserName & "', '" & lblAddedBy.ClientID & "');")
+
+            ddlTrainingLevel.DataTextField = "LookupType"
+            ddlTrainingLevel.DataValueField = "LookupID"
+            ddlTrainingLevel.DataSource = dtLevel
+            ddlTrainingLevel.DataBind()
+            ddlTrainingLevel.SelectedValue = DirectCast(e.Row.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(e.Row.RowIndex).Values(0).ToString()
+        End If
+    End Sub
+
+    Protected Sub gvwUsers_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwUsers.RowCreated
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            If (DataBinder.Eval(e.Row.DataItem, "IsActive") IsNot Nothing) Then
+                If (DataBinder.Eval(e.Row.DataItem, "IsActive").ToString() = 0) Then
+                    e.Row.BackColor = Drawing.Color.Yellow
+                End If
+            End If
         End If
     End Sub
 
@@ -226,14 +260,36 @@ Partial Class Admin_Users
     Protected Sub gvwUsers_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
         Select Case e.CommandName.ToLower()
             Case "editrow"
-                SetupPageAddEditUser(UserManager.GetUser(String.Empty, e.CommandArgument.ToString))
+                Response.Redirect(String.Format("~\Admin\Users.aspx?userid={0}", e.CommandArgument.ToString()))
                 Exit Select
             Case "deleteitem"
-                Dim currentUser As String = UserManager.GetCurrentValidUserLDAPName
-                Dim userID As Int32 = (From u In New REMI.Dal.Entities().Instance().Users Where u.LDAPLogin = currentUser Select u.ID).FirstOrDefault()
-                notMain.Notifications.Add(UserManager.Delete(e.CommandArgument, userID))
-                SetupPageViewAll()
+                notMain.Notifications.Add(UserManager.Delete(e.CommandArgument, UserManager.GetCurrentUser.ID))
+                DirectCast(DirectCast(e.CommandSource, LinkButton).NamingContainer, GridViewRow).Visible = False
         End Select
+    End Sub
+
+    Protected Sub UpdateGvwHeader() Handles gvwUsers.PreRender
+        Helpers.MakeAccessable(gvwUsers)
+    End Sub
+
+    Protected Sub TestCenterHeader() Handles grdTestCenter.PreRender
+        Helpers.MakeAccessable(grdTestCenter)
+    End Sub
+
+    Protected Sub DeaprtmentHeader() Handles grdDepartments.PreRender
+        Helpers.MakeAccessable(grdDepartments)
+    End Sub
+
+    Protected Sub UpdatePermissionsGvw() Handles gvwPermissions.PreRender
+        Helpers.MakeAccessable(gvwPermissions)
+    End Sub
+
+    Protected Sub gvRequestTypes_PreRender() Handles gvRequestTypes.PreRender
+        Helpers.MakeAccessable(gvRequestTypes)
+    End Sub
+
+    Protected Sub UpdateTrainingGvw() Handles gvwTraining.PreRender
+        Helpers.MakeAccessable(gvwTraining)
     End Sub
 
     Protected Sub lnkAddUserAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddUserAction.Click
@@ -472,52 +528,9 @@ Partial Class Admin_Users
             If (Request.QueryString IsNot Nothing AndAlso Not String.IsNullOrEmpty(Request.QueryString.Get("userid"))) Then
                 SetupPageAddEditUser(UserManager.GetUser(String.Empty, Request.QueryString.Get("userid")))
             Else
-                SetupPageViewAll()
+                Response.Redirect("~\Admin\Users.aspx")
             End If
         End If
     End Sub
-
-    Protected Sub lnkCancelAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCancelAction.Click
-        SetupPageViewAll()
-    End Sub
-
-    Protected Sub lnkViewAllUsers_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkViewAllUsers.Click
-        SetupPageViewAll()
-    End Sub
-
-    Protected Sub lnkAddNewUser_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddNewUser.Click
-        SetupPageAddEditUser(Nothing)
-    End Sub
-
-    Protected Sub gvwTraining_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwTraining.RowDataBound
-        If e.Row.RowType = DataControlRowType.DataRow Then
-            Dim ddlTrainingLevel As DropDownList = DirectCast(e.Row.FindControl("ddlTrainingLevel"), DropDownList)
-            Dim lblAddedBy As Label = DirectCast(e.Row.FindControl("lblAddedBy"), Label)
-            Dim chkTraining As CheckBox = DirectCast(e.Row.FindControl("chkTraining"), CheckBox)
-
-            If (chkTraining.Checked) Then
-                ddlTrainingLevel.Enabled = True
-            Else
-                ddlTrainingLevel.Enabled = False
-            End If
-
-            chkTraining.InputAttributes.Add("onclick", "EnableDisableCheckbox_Click('" & ddlTrainingLevel.ClientID & "', '" & chkTraining.ClientID & "', '" & UserManager.GetCurrentUser.UserName & "', '" & lblAddedBy.ClientID & "');")
-
-            ddlTrainingLevel.DataTextField = "LookupType"
-            ddlTrainingLevel.DataValueField = "LookupID"
-            ddlTrainingLevel.DataSource = level
-            ddlTrainingLevel.DataBind()
-            ddlTrainingLevel.SelectedValue = DirectCast(e.Row.NamingContainer, System.Web.UI.WebControls.GridView).DataKeys(e.Row.RowIndex).Values(0).ToString()
-        End If
-    End Sub
-
-    Protected Sub gvwUsers_RowCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwUsers.RowCreated
-        If e.Row.RowType = DataControlRowType.DataRow Then
-            If (DataBinder.Eval(e.Row.DataItem, "IsActive") IsNot Nothing) Then
-                If (DataBinder.Eval(e.Row.DataItem, "IsActive").ToString() = 0) Then
-                    e.Row.BackColor = Drawing.Color.Yellow
-                End If
-            End If
-        End If
-    End Sub
+#End Region
 End Class

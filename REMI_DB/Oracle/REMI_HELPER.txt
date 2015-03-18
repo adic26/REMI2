@@ -701,4 +701,19 @@ FUNCTION get_Requests_For_Dashboard (p_search in trs.request_info.Text%type)
       return o_cur;
     END;
 
+	FUNCTION get_request_Links (p_reqnum in trs.request_header.reqnum%type)
+    RETURN sys_refcursor
+    IS
+        o_cur sys_refcursor;
+    BEGIN
+        -- Given the QRA number, grab metadata about that job from TRS & reliability systems.
+        open o_cur for
+        select rhd.rq_id, rhd.ReqNum, rt.Type
+        from trs.Related_Items ri, trs.request_header rh, TRS.request_header rhd, trs.request_types rt
+        WHERE ri.rq_id=rh.rq_Id and rh.reqnum = p_reqnum
+        and rhd.rq_id=ri.rel_rq_id and rt.rt_id=rhd.rt_id;
+            
+        -- return the cursor type.
+        return o_cur;
+    END;
 END;

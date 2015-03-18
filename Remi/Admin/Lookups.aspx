@@ -97,7 +97,8 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Active" SortExpression="Active">
                 <ItemTemplate>
-                    <asp:CheckBox runat="server" ID="chkActive" Checked="true" Enabled="false" />
+                    <asp:Label runat="server" ID="lblActive" Text='<%# Eval("IsActive")%>' Visible="true"></asp:Label>
+                    <asp:CheckBox runat="server" ID="chkActive" Checked='<%# Eval("IsActive")%>' Visible="false" />
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
@@ -113,6 +114,7 @@
             <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
             <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+            <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
         </SelectParameters>
     </asp:ObjectDataSource>
 

@@ -248,24 +248,6 @@ Partial Public Class Admin_Users
     Protected WithEvents lnkAddUserAction As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
-    '''imgCancelAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgCancelAction As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''lnkCancelAction control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lnkCancelAction As Global.System.Web.UI.WebControls.LinkButton
-
-    '''<summary>
     '''imgTestCenterView control.
     '''</summary>
     '''<remarks>
@@ -282,15 +264,6 @@ Partial Public Class Admin_Users
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlTestCenters As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
-    '''odsTestCenters control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsTestCenters As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''chkArchived control.

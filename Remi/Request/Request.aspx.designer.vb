@@ -113,6 +113,24 @@ Partial Public Class Request
     Protected WithEvents hdnRequestNumber As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''hdnDistribution control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnDistribution As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''hdnAddMore control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdnAddMore As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''notMain control.
     '''</summary>
     '''<remarks>
@@ -138,15 +156,6 @@ Partial Public Class Request
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents grdDisplayChanges As Global.System.Web.UI.WebControls.GridView
-
-    '''<summary>
-    '''odsDisplayChanges control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsDisplayChanges As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''pnlRequest control.

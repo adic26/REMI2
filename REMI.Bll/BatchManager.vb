@@ -120,7 +120,7 @@ Namespace REMI.Bll
 
                         If b.ID <= 0 AndAlso b.Validate Then
                             'set the test stage to the first possible one
-                            b.Job = JobManager.GetJobByName(b.JobName)
+                            b.Job = JobManager.GetJob(b.JobName)
                             b.TestStageName = (From ts In b.Job.TestStages Where ts.ProcessOrder >= 0 And ts.IsArchived = False Order By ts.ProcessOrder Ascending Select ts.Name).FirstOrDefault()
 
                             'check if this is a legacy batch, remstar inventory from pre remi days
@@ -237,6 +237,11 @@ Namespace REMI.Bll
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetReqString(ByVal Number As String) As String
+            Return GetReqString(Number, False)
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        Public Shared Function GetReqString(ByVal Number As String, ByVal byPassUserCheck As Boolean) As String
             Try
                 Dim isValid As Boolean = Number.Split("-"c).Length - 1 > 0
                 Dim userID As Int32 = UserManager.GetCurrentUser.ID
@@ -249,11 +254,11 @@ Namespace REMI.Bll
                 Select Case Number.Length
                     Case 4
                         Number = String.Format("{0}-{1}", DateTime.Now.Year.ToString().Substring(2), Number)
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
                     Case 7
                         If (isValid) Then
-                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
-                                Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                                Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
                             ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault() Is Nothing) Then
                                 Return Number.Trim()
                             Else
@@ -266,7 +271,7 @@ Namespace REMI.Bll
                         Dim reqNum As String = Number.Substring(0, 11).ToString().Trim()
 
                         If (isValid) Then
-                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
                                 Return Number
                             ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum Select b.QRANumber).FirstOrDefault() Is Nothing) Then
                                 Return Number
@@ -277,7 +282,7 @@ Namespace REMI.Bll
 
                         Return Number.Trim()
                     Case Else
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And departments.Contains(b.Department.LookupID) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
                 End Select
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, Number.ToString())
@@ -614,7 +619,7 @@ Namespace REMI.Bll
         ''' <param name="batchQRANumber">The QRA number of the batch.</param>
         ''' <returns>A batch</returns>
         ''' <remarks>This function always returns an object. Check the ID for a null batch!</remarks>
-        Public Shared Function GetItem(ByVal batchQRANumber As String, Optional ByVal userIdentification As String = "", Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
+        Public Shared Function GetItem(ByVal batchQRANumber As String, Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
             Dim b As Batch
 
             If refreshCache Then

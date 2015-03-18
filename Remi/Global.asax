@@ -14,14 +14,16 @@
         Dim ex As Exception = HttpContext.Current.Server.GetLastError()
         
         If (Not REMIConfiguration.Debug) Then
-            If (ex.GetType().Name = "HttpException") Then
-                If (DirectCast(ex, HttpException).GetHttpCode() = "404") Then
-                    Response.Redirect("~/")
-                Else
-                    LogUnhandledException(ex)
+            If (ex IsNot Nothing) Then
+                If (ex.GetType().Name = "HttpException") Then
+                    If (DirectCast(ex, HttpException).GetHttpCode() = "404") Then
+                        Response.Redirect("~/")
+                    Else
+                        LogUnhandledException(ex)
+                    End If
                 End If
             End If
-        End If
+        End if
     End Sub
     
     Sub Application_AuthenticateRequest(ByVal sender As Object, ByVal e As EventArgs)
@@ -30,7 +32,7 @@
     Sub RequestHandlerExecute(ByVal sender As Object, ByVal e As EventArgs) Handles Me.PreRequestHandlerExecute
         Dim httpApp As HttpApplication = DirectCast(sender, HttpApplication) 'get the http app
 
-        If httpApp.Context.Request.Path.Contains("/Reports/ES/Default.aspx") Then
+        If httpApp.Context.Request.Path.ToLower.Contains("/reports/es/default.aspx") Then
         ElseIf httpApp.Context.Request.Path.Contains(".aspx") Then
             If Not UserManager.SessionUserIsSet Then
                 If httpApp.Context.Request.Path.ToLower <> "/badgeaccess/default.aspx" AndAlso httpApp.Context.Request.Path.ToLower <> "/badgeaccess/error.aspx" Then
@@ -67,7 +69,7 @@
             
             If (UserManager.GetCurrentUser() IsNot Nothing) Then
                 If (REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID) Is Nothing) Then
-                    REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID))
+                    REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID, True))
                 End If
                 
                 Dim dtMenuAccess As DataTable = REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID)

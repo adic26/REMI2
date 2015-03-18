@@ -1,9 +1,9 @@
 ﻿Imports System.Web
+Imports System.Net
 
 Namespace REMI.Core
     Public Class REMIWebLinks
 
-        Private Shared _applicationPath As String = REMIConfiguration.DefaultUrlScheme + "://" + IIf(System.Net.Dns.GetHostName().Contains("CI0000001593275") Or System.Net.Dns.GetHostName().Contains("CI0000003603796"), "localhost:81", System.Net.Dns.GetHostName()) + "/"
         ''' <summary>
         ''' Returns the name of the "username" to associate with the application itself updating records.
         ''' For example when a test result is added automatically the this is the username that gets associated with
@@ -14,11 +14,11 @@ Namespace REMI.Core
         Public Shared Function GetREMIUserName() As String
             Return "RIMNET\remi"
         End Function
+
         Public Shared Function GetCurrentHostName() As String
-
             Return System.Net.Dns.GetHostName()
-
         End Function
+
         ''' <summary>
         ''' Used to be a custom hostname function that cycled through the old hostname records in the rimnet dns system
         ''' </summary>
@@ -52,92 +52,73 @@ Namespace REMI.Core
             Return hostName
         End Function
 
-        Public Shared Function GetFailDocLink(ByVal reqid As Integer) As String
-            If reqid > 0 Then
-                Return String.Format("{0}{1}", REMIConfiguration.TRSLinkCreationString, reqid)
-            Else
-                Return "http://go/fa/"
-            End If
-        End Function
-#Region "TRS Page Links"
+#Region "REMI Page Links"
         Public Shared Function GetMfgWebLink(ByVal BSN As String) As String
             Return REMIConfiguration.MfgWebLink + BSN
         End Function
-        'Public Shared Function GetRelabResultLink2(ByVal RelabResultJobID As Integer) As String
-        'Return REMIConfiguration.RelabResultLink + String.Format("?jobid={0}&stages=1&ordered=TEST&ad=a", RelabResultJobID)
-        'End Function
         Public Shared Function GetRelabResultLink(ByVal batchID As Integer) As String
             Return String.Format("/Relab/Results.aspx?Batch={0}", batchID)
         End Function
-#End Region
-#Region "REMI Page Links"
         Public Shared Function GetProductInfoLink(ByVal productID As Int32) As String
-            Return _applicationPath + REMIConfiguration.REMIProductGroupLink + "?Name=" + productID.ToString()
+            Return String.Format("/{0}?Name={1}", REMIConfiguration.REMIProductGroupLink, productID.ToString())
         End Function
         Public Shared Function GetJobLink(ByVal jobID As Int32) As String
-            Return _applicationPath + REMIConfiguration.REMIJobLink + "?JobID=" + JobID.ToString()
+            Return String.Format("/{0}?JobID={1}", REMIConfiguration.REMIJobLink, jobID.ToString())
         End Function
         Public Shared Function GetBatchInfoLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMIBatchInfoLink + "?RN=" + QRANumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.REMIBatchInfoLink, QRANumber)
         End Function
         Public Shared Function GetEditExceptionsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiExceptionsLink + "?RN=" + QRANumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.RemiExceptionsLink, QRANumber)
         End Function
         Public Shared Function GetTestRecordsAddLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMITestRecordsAddLink + "?RN=" + QRANumber
-        End Function
-        Public Shared Function GetBatchSchedulingLink(ByVal qraNumber As String) As String
-            Return _applicationPath + "ManageBatches/ViewTestStageSchedule.aspx?RN=" + qraNumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.REMITestRecordsAddLink, QRANumber)
         End Function
         Public Shared Function GetSetBatchStatusLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchStatusLink + "?RN=" + QRANumber
-        End Function
-        Public Shared Function GetSetBatchCommentsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMIBatchCommentsEditLink + "?RN=" + QRANumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.RemiSetBatchStatusLink, QRANumber)
         End Function
         Public Shared Function GetSetBatchTestStageLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchTestStageLink + "?RN=" + QRANumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.RemiSetBatchTestStageLink, QRANumber)
         End Function
         Public Shared Function GetSetBatchSpecificTestDurationsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchSpecificTestDurationLink + "?RN=" + QRANumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.RemiSetBatchSpecificTestDurationLink, QRANumber)
         End Function
         Public Shared Function GetSetBatchPriorityLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetBatchPriorityLink + "?RN=" + QRANumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.RemiSetBatchPriorityLink, QRANumber)
         End Function
         Public Shared Function GetTestRecordsEditDetailLink(ByVal trId As Integer) As String
-            Return _applicationPath + REMIConfiguration.RemiTestRecordsDetailLink + "?trID=" + trId.ToString
+            Return String.Format("/{0}?trID={1}", REMIConfiguration.RemiTestRecordsDetailLink, trId.ToString)
         End Function
         Public Shared Function GetTestUnitExceptionsLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.RemiSetTestUnitExceptionsLink + "?RN=" + QRANumber
-        End Function
-        Public Shared Function GetSetProductExceptionsLink(ByVal productID As Int32) As String
-            Return _applicationPath + REMIConfiguration.RemiSetProductExceptionsLink + "?product=" + productID.ToString()
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.RemiSetTestUnitExceptionsLink, QRANumber)
         End Function
         Public Shared Function GetSetProductSettingsLink(ByVal productID As Int32) As String
-            Return _applicationPath + REMIConfiguration.RemiSetProductSettingsLink + "?product=" + productID.ToString()
+            Return String.Format("/{0}?product={1}", REMIConfiguration.RemiSetProductSettingsLink, productID.ToString())
         End Function
         Public Shared Function GetSetProductConfigurationLink(ByVal productID As Int32) As String
-            Return _applicationPath + REMIConfiguration.RemiSetProductConfigLink + "?product=" + productID.ToString()
+            Return String.Format("/{0}?product={1}", REMIConfiguration.RemiSetProductConfigLink, productID.ToString())
         End Function
         Public Shared Function GetSetStationConfigurationLink(ByVal trackingLocationID As Int32) As String
-            Return _applicationPath + REMIConfiguration.RemiSetStationConfigLink + "?BarcodeSuffix=" + trackingLocationID.ToString()
+            Return String.Format("/{0}?BarcodeSuffix={1}", REMIConfiguration.RemiSetStationConfigLink, trackingLocationID.ToString())
         End Function
         Public Shared Function GetUnitInfoLink(ByVal QRANumber As String) As String
-            Return _applicationPath + REMIConfiguration.REMIUnitInfoLink + "?RN=" + QRANumber
+            Return String.Format("/{0}?RN={1}", REMIConfiguration.REMIUnitInfoLink, QRANumber)
         End Function
         Public Shared Function GetScannerProgrammingLink(ByVal TrackingLocationID As Integer) As String
-            Return _applicationPath + REMIConfiguration.REMIScannerProgrammingLink + "?ID=" + TrackingLocationID.ToString
+            Return String.Format("/{0}?ID={1}", REMIConfiguration.REMIScannerProgrammingLink, TrackingLocationID.ToString)
         End Function
         Public Shared Function GetTrackingLocationInfoLink(ByVal barcodeSuffix As String) As String
-            Return _applicationPath + REMIConfiguration.RemiTrackingLocationInfoLink + "?BarcodeSuffix=" + barcodeSuffix
+            Return String.Format("/{0}?BarcodeSuffix={1}", REMIConfiguration.RemiTrackingLocationInfoLink, barcodeSuffix)
         End Function
         Public Shared Function GetUserBadgeScanLink(ByVal redirectPage As String) As String
-            Return _applicationPath + REMIConfiguration.RemiUserScanBadgeLink + "?redirectPage=" + redirectPage
+            Return String.Format("/{0}?redirectPage={1}", REMIConfiguration.RemiUserScanBadgeLink, redirectPage)
+        End Function
+        Public Shared Function GetExecutiveSummaryLink(ByVal requestNumber As String) As String
+            Return String.Format("/Reports/ES/Default.aspx?RN={0}", requestNumber)
         End Function
         Public Shared Function GetTestRecordsLink(ByVal qraNumber As String, ByVal testName As String, ByVal testStageName As String, ByVal jobName As String, ByVal testUnitID As Int32) As String
             Dim str As New Text.StringBuilder
-            str.Append(_applicationPath)
-            str.Append(REMIConfiguration.REMITestRecordsLink)
+            str.Append(String.Format("/{0}", REMIConfiguration.REMITestRecordsLink))
             str.Append("?RN=")
             str.Append(qraNumber)
             If Not String.IsNullOrEmpty(testName) Then

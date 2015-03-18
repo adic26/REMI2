@@ -21,6 +21,7 @@ BEGIN
 				LEFT OUTER JOIN Req.RequestSetup rs ON rs.JobID=@JobID AND rs.ProductID=@ProductID AND rs.TestID=t.ID AND rs.TestStageID=ts.ID
 			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
 				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+				AND ISNULL(j.IsActive, 1) = 1
 			ORDER BY ts.ProcessOrder, t.TestName
 		END
 		ELSE IF @BlankSelected = 0 AND EXISTS(SELECT 1 FROM Req.RequestSetup rs INNER JOIN Tests t ON t.ID=rs.TestID WHERE JobID=@JobID AND ProductID IS NULL AND t.TestType=@TestStageType)
@@ -32,6 +33,7 @@ BEGIN
 				LEFT OUTER JOIN Req.RequestSetup rs ON rs.JobID=@JobID AND rs.ProductID IS NULL AND rs.TestID=t.ID AND rs.TestStageID=ts.ID
 			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
 				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+				AND ISNULL(j.IsActive, 1) = 1
 			ORDER BY ts.ProcessOrder, t.TestName
 		END
 		ELSE
@@ -42,6 +44,7 @@ BEGIN
 				INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
 			WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
 				AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+				AND ISNULL(j.IsActive, 1) = 1
 			ORDER BY ts.ProcessOrder, t.TestName
 		END
 	END
@@ -62,6 +65,7 @@ BEGIN
 											)
 		WHERE j.ID=@JobID AND ts.TestStageType=@TestStageType AND ts.ProcessOrder >= 0 AND ISNULL(ts.IsArchived, 0) = 0 AND ISNULL(t.IsArchived, 0) = 0
 			AND (@TestStageType <> 1 OR (@TestStageType = 1 AND t.ID IN (SELECT TestID FROM #Tests)))
+			AND ISNULL(j.IsActive, 1) = 1
 		ORDER BY ts.ProcessOrder, t.TestName		
 	END
 	

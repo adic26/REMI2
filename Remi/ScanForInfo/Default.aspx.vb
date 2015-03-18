@@ -90,12 +90,38 @@ Partial Class ScanForInfo_Default
             Dim hylValue As HyperLink = DirectCast(e.Row.FindControl("hylValue"), HyperLink)
             Dim hdnType As HiddenField = DirectCast(e.Row.FindControl("hdnType"), HiddenField)
 
-            If (hdnType.Value = "Link") Then
-                lblValue.Visible = False
-                hylValue.Visible = True
-            Else
-                lblValue.Visible = True
+            If (DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling.Count > 0) Then
                 hylValue.Visible = False
+
+                For Each s As Sibling In DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling
+                    If (Not String.IsNullOrEmpty(s.Value)) Then
+                        If (hdnType.Value = "Link") Then
+                            Dim hyp As New HyperLink
+                            hyp.Text = s.Value
+                            hyp.Target = "_blank"
+                            hyp.NavigateUrl = s.Value
+                            hyp.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(hyp)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        Else
+                            Dim lbl As New Label
+                            lbl.Text = s.Value
+                            lbl.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(lbl)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        End If
+                    End If
+                Next
+            Else
+                If (hdnType.Value = "Link") Then
+                    lblValue.Visible = False
+                    hylValue.Visible = True
+                Else
+                    lblValue.Visible = True
+                    hylValue.Visible = False
+                End If
             End If
         End If
     End Sub
@@ -178,8 +204,10 @@ Partial Class ScanForInfo_Default
 
                         Select Case lblResult.Text.ToLower
                             Case "pass"
+                            Case "preliminary pass"
                                 lblResult.CssClass = "ESPass"
                             Case "fail"
+                            Case "preliminary fail"
                                 lblResult.CssClass = "ESFail"
                             Case "no result"
                                 lblResult.CssClass = "ESNoResult"
@@ -197,6 +225,34 @@ Partial Class ScanForInfo_Default
                     hdnBatchID.Value = b.ID
                     hdnDepartmentID.Value = b.DepartmentID
                     grdTrackingLog.DataBind()
+
+                    If b.Status = BatchStatus.Complete Then
+                        lblTestingSummary.Text = "Testing Summary"
+
+                        If b.JobName.ToLower.Contains("drop") Then
+                            lblStressingSummary.Text = "Drop Summary"
+                            gvwStressingSummary.EmptyDataText = "No Drop Results"
+                        ElseIf b.JobName.ToLower.Contains("tumble") Then
+                            lblStressingSummary.Text = "Tumble Summary"
+                            gvwStressingSummary.EmptyDataText = "No Tumble Results"
+                        Else
+                            lblStressingSummary.Text = "Stressing Summary"
+                            gvwStressingSummary.EmptyDataText = "No Stressing Results"
+                        End If
+                    Else
+                        lblTestingSummary.Text = "Testing Status"
+
+                        If b.JobName.ToLower.Contains("drop") Then
+                            lblStressingSummary.Text = "Drop Status"
+                            gvwStressingSummary.EmptyDataText = "No Drop Results"
+                        ElseIf b.JobName.ToLower.Contains("tumble") Then
+                            lblStressingSummary.Text = "Tumble Status"
+                            gvwStressingSummary.EmptyDataText = "No Tumble Results"
+                        Else
+                            lblStressingSummary.Text = "Stressing Status"
+                            gvwStressingSummary.EmptyDataText = "No Stressing Results"
+                        End If
+                    End If
 
                     If (b.Orientation IsNot Nothing) Then
                         lblOrientation.Text = String.Format("Orientation/Sequence: {0}", b.Orientation.Name)
@@ -394,7 +450,7 @@ Partial Class ScanForInfo_Default
         mi = New MenuItem
         mi.Text = "Executive Summary"
         mi.Target = "_blank"
-        mi.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?RN={0}", b.QRANumber)
+        mi.NavigateUrl = b.ExecutiveSummaryLink()
         myMenu.Items(0).ChildItems.Add(mi)
 
         mi = New MenuItem
@@ -422,7 +478,7 @@ Partial Class ScanForInfo_Default
         hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
         hypTRSLink.NavigateUrl = b.RequestLink()
         hypRefresh.NavigateUrl = b.BatchInfoLink
-        hpyES.NavigateUrl = String.Format("~/Reports/ES/Default.aspx?RN={0}", b.QRANumber)
+        hpyES.NavigateUrl = b.ExecutiveSummaryLink()
         hypRelabLink.NavigateUrl = b.RelabResultLink
         hypProductGroupLink.NavigateUrl = b.ProductGroupLink
         hypTestRecords.NavigateUrl = b.TestRecordsLink
@@ -565,7 +621,7 @@ Partial Class ScanForInfo_Default
     Protected Sub lnkCheckForUpdates_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates.Click
         If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
             REMIAppCache.RemoveReqData(hdnQRANumber.Value)
-            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
+            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value, False, True, True), True)
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
             Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
@@ -596,7 +652,7 @@ Partial Class ScanForInfo_Default
     Protected Sub lnkCheckForUpdates2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates2.Click
         If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
             REMIAppCache.RemoveReqData(hdnQRANumber.Value)
-            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value), True)
+            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value, False, True, True), True)
 
             Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
             gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))

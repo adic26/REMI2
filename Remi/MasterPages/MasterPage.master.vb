@@ -21,12 +21,15 @@ Partial Class MasterPages_MasterPage
                 hlUser.Visible = False
                 lnkLogout.Visible = False
 
-                pnlHead.Enabled = False
                 pnlLeftNav.CssClass = "leftSidebarES"
                 pnlContent.CssClass = "contentExpandedES"
                 pnlExpColLefNav.Style.Add("Display", "none")
-                pnlLeftNavContent.Width = 75
-                menuHeader.Enabled = False
+                'pnlLeftNavContent.Width = 75
+
+                If (UserManager.GetCurrentValidUserID = 0) Then
+                    pnlHead.Enabled = False
+                    menuHeader.Enabled = False
+                End If
             End If
 
             If (menuHeader.FindItem("admin") IsNot Nothing) Then
@@ -54,7 +57,7 @@ Partial Class MasterPages_MasterPage
             End If
 
             If (REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID) Is Nothing) Then
-                REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID))
+                REMIAppCache.SetMenuAccess(UserManager.GetCurrentUser.DepartmentID, SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID, True))
             End If
 
             Dim dtMenuAccess As DataTable = REMIAppCache.GetMenuAccess(UserManager.GetCurrentUser.DepartmentID)

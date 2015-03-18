@@ -34,7 +34,7 @@ Partial Class TestRecords_Default
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRA))
 
             If bc.Validate Then
-                Dim b As Batch = BatchManager.GetItem(bc.BatchNumber)
+                Dim b As Batch = BatchManager.GetItem(bc.BatchNumber, False, True, True)
                 If b IsNot Nothing Then
                     Dim litTitle As Literal = Master.FindControl("litPageTitle")
                     If litTitle IsNot Nothing Then

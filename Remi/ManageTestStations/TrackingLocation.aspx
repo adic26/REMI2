@@ -63,6 +63,7 @@
                     <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                     <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
                     <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+                    <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
                 </SelectParameters>
             </asp:ObjectDataSource>
         </li></ul>
@@ -78,6 +79,7 @@
             <SelectParameters>
                 <asp:ControlParameter ControlID="ctl00$leftSidebarContent$ddlTestCenters" DefaultValue="0" Name="TestCenterLocationID" PropertyName="SelectedValue" Type="Int32" />
                 <asp:Parameter Type="Int32" Name="onlyActive" DefaultValue="1" />
+                <asp:Parameter Type="Int32" Name="trackingLocationTypeID" DefaultValue="0" />
             </SelectParameters>
         </asp:ObjectDataSource>
    <br /> <br />

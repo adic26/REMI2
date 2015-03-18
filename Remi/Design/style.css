@@ -460,8 +460,6 @@ img.right
 /************ Test Overview Result Table Cells *******/
 /*###################################################*/
 
-/*(Pale-Green Back)*/
-
 .Pass
 {
     font-weight: bold;
@@ -481,7 +479,25 @@ img.right
     text-decoration: underline;
 }
 
-/*(Light Pink Back)*/
+.Pending
+{
+    font-weight: bold;
+    background-color: yellow;
+    color: #006400;
+}
+.Pending a
+{
+    color: #006400;
+    background-color: yellow
+}
+.Pending a:hover
+{
+    color: #006400;
+    background-color: yellow;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .Fail
 {
     font-weight: bold;
@@ -815,8 +831,9 @@ table
 thead th
 {
     white-space: nowrap;
-    background: #050505;
+    background: #000000;
     color: #FFF;
+    padding: 1.0em 0.5em;
     font-size: 12px;
     font-weight: bold;
     text-align: center;
@@ -842,7 +859,7 @@ table tr td
     white-space: nowrap;
     padding: 0.1em;
     border: 1px #362d2d solid;
-    text-align: center;
+    /*text-align: center;*/
     margin: 0px;
     vertical-align: middle;
 }
@@ -1046,9 +1063,8 @@ table tr td input
 
 .removeStyleWithCenter
 {
-    text-align: center;
-    white-space:normal;
-    vertical-align:top;
+    /*text-align: center;
+    padding: 0.5em 0.2em;*/
 }
 
 .removeStyleWithLeftSameLine
@@ -1229,6 +1245,17 @@ table tr td input
 {
     background: url("leftMenuHeader.gif") repeat right top;
     width:130px;
+    padding-top: 5px;
+    text-align:left;
+    padding-bottom: 5px;
+    padding-left:5px;
+    color: #FFF;
+}
+
+.menuItemLevel3
+{
+    background: url("leftMenuHeader.gif") repeat right top;
+    width:170px;
     padding-top: 5px;
     text-align:left;
     padding-bottom: 5px;

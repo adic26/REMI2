@@ -15,6 +15,7 @@ Namespace REMI.BusinessEntities
         Private _unitsForTask As Integer()
         Private _testType As TestType
         Private _testStageType As REMI.Contracts.TestStageType
+        Private _unitResultCheck As String()
         Private _testID As Int32
         Private _isArchived As Boolean
         Private _testIsArchived As Boolean
@@ -121,13 +122,26 @@ Namespace REMI.BusinessEntities
                 _teststageName = value
             End Set
         End Property
+
+        Public Sub SetUnitResultCheck(ByVal testCounts As String) Implements Contracts.ITaskModel.SetUnitResultCheck
+            Dim strVals = testCounts.Split(New Char() {","c}, System.StringSplitOptions.RemoveEmptyEntries).TakeWhile(Function(str) (Not String.IsNullOrEmpty(str.Trim))).ToArray()
+            _unitResultCheck = Array.ConvertAll(strVals, Function(str) str)
+        End Sub
+
         Public Sub SetUnitsForTask(ByVal units As String) Implements Contracts.ITaskModel.SetUnitsForTask
             Dim strVals = units.Split(New Char() {","c}, System.StringSplitOptions.RemoveEmptyEntries).TakeWhile(Function(str) (Not String.IsNullOrEmpty(str.Trim))).ToArray()
             _unitsForTask = Array.ConvertAll(strVals, Function(str) Int32.Parse(str))
         End Sub
+
         Public ReadOnly Property UnitsForTask() As Integer() Implements Contracts.ITaskModel.UnitsForTask
             Get
                 Return _unitsForTask
+            End Get
+        End Property
+
+        Public ReadOnly Property ResultCheck() As String() Implements Contracts.ITaskModel.ResultCheck
+            Get
+                Return _unitResultCheck
             End Get
         End Property
     End Class

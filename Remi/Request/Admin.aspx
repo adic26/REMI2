@@ -79,6 +79,26 @@
     </asp:Panel>
     
     <div class="Scrollgrid">
+        <asp:GridView runat="server" ID="grdRequest" AutoGenerateColumns="false" DataKeyNames="RequestTypeID" ShowFooter="false" EnableViewState="true" OnRowEditing="grdRequest_OnRowEditing" AutoGenerateEditButton="true" OnRowCancelingEdit="grdRequest_OnRowCancelingEdit" OnRowUpdating="grdRequest_RowUpdating">
+            <Columns>
+                <asp:TemplateField HeaderText="External System" SortExpression="External System">
+                    <ItemTemplate>
+                        <asp:CheckBox runat="server" Checked='<%# Eval("IsFromExternalSystem")%>' ID="chkExternalSystem" Enabled="false" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Has Distribution" SortExpression="">
+                    <ItemTemplate>
+                        <asp:CheckBox runat="server" Checked='<%# Eval("HasDistribution")%>' ID="chkDistribution" Enabled="false" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Integrated Remi" SortExpression="Integrated Remi">
+                    <ItemTemplate>
+                        <asp:CheckBox runat="server" Checked='<%# Eval("HasIntegration")%>' ID="chkIntegrated" Enabled="false" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+
         <asp:GridView runat="server" ID="grdRequestAdmin" AutoGenerateColumns="false" ShowFooter="true" EnableViewState="true" OnRowCommand="grdRequestAdmin_RowDataCommand" DataKeyNames="FieldSetupID" OnRowEditing="grdRequestAdmin_OnRowEditing" AutoGenerateEditButton="true" OnRowCancelingEdit="grdRequestAdmin_OnRowCancelingEdit" OnRowUpdating="grdRequestAdmin_RowUpdating">
             <Columns>
                 <asp:BoundField DataField="FieldSetupID" HeaderText="FieldSetupID" InsertVisible="False" ReadOnly="True" Visible="false" />
@@ -88,6 +108,10 @@
                         <asp:LinkButton ID="btnUp" CommandName="Up" ToolTip="Up" Text="&uArr;" CssClass="Order" runat="server" CommandArgument='<%# CType(Container, GridViewRow).RowIndex%>' />
                         <asp:LinkButton ID="btnDown" CommandName="Down" ToolTip="Down" Text="&dArr;" CssClass="Order" runat="server" CommandArgument='<%# CType(Container, GridViewRow).RowIndex%>' />
                      </ItemTemplate>
+                    <FooterStyle HorizontalAlign="Right" />
+                    <FooterTemplate>
+                        <asp:Button runat="server" ID="btnSave" CssClass="buttonSmall" Text="Add Field" OnClick="btnSave_Click" CausesValidation="true" />
+                    </FooterTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Name" SortExpression="Name">
                     <ItemTemplate>
@@ -107,6 +131,16 @@
                     <FooterStyle HorizontalAlign="Right" />
                     <FooterTemplate>
                         <asp:TextBox runat="server" ID="txtNewDescription" Visible="true" />
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Category" SortExpression="Category">
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lblCategory" Text='<%# Eval("Category")%>' Visible="true"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtCategory" Text='<%# Eval("Category")%>' Visible="false" EnableViewState="true"></asp:TextBox>
+                    </ItemTemplate>
+                    <FooterStyle HorizontalAlign="Right" />
+                    <FooterTemplate>
+                        <asp:TextBox runat="server" ID="txtNewCategory" Visible="true" />
                     </FooterTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Field Type" SortExpression="FieldType">
@@ -174,16 +208,6 @@
                 <asp:BoundField DataField="RequestNumber" HeaderText="RequestNumber" InsertVisible="False" ReadOnly="True" Visible="false" />
                 <asp:BoundField DataField="RequestID" HeaderText="RequestID" InsertVisible="False" ReadOnly="True" Visible="false" />
                 <asp:BoundField DataField="Value" HeaderText="Value" InsertVisible="False" ReadOnly="True" Visible="false" />
-                <asp:TemplateField HeaderText="IntField" SortExpression="IntField">
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lblIntField" Text='<%# Eval("IntField")%>' Visible="true"></asp:Label>
-                        <asp:DropDownList runat="server" ID="ddlIntField" Visible="false" DataTextField="IntField" DataValueField="IntField" DataSourceID="odsFieldMapping"></asp:DropDownList>
-                    </ItemTemplate>
-                    <FooterStyle HorizontalAlign="Right" />
-                    <FooterTemplate>
-                        <asp:DropDownList runat="server" ID="ddlNewIntField" Visible="true" DataTextField="IntField" DataValueField="IntField" DataSourceID="odsFieldMapping"></asp:DropDownList>
-                    </FooterTemplate>
-                </asp:TemplateField>
                 <asp:BoundField DataField="ExtField" HeaderText="ExtField" InsertVisible="False" ReadOnly="True" Visible="false" />
                 <asp:TemplateField HeaderText="Internal" SortExpression="Internal">
                     <ItemTemplate>
@@ -191,21 +215,6 @@
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="NewRequest" HeaderText="NewRequest" InsertVisible="False" ReadOnly="True" Visible="false" />
-                <asp:TemplateField HeaderText="External System" SortExpression="External System">
-                    <ItemTemplate>
-                        <asp:CheckBox runat="server" Checked='<%# Eval("IsFromExternalSystem")%>' ID="chkExternalSystem" Enabled="false" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Category" SortExpression="Category">
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lblCategory" Text='<%# Eval("Category")%>' Visible="true"></asp:Label>
-                        <asp:TextBox runat="server" ID="txtCategory" Text='<%# Eval("Category")%>' Visible="false" EnableViewState="true"></asp:TextBox>
-                    </ItemTemplate>
-                    <FooterStyle HorizontalAlign="Right" />
-                    <FooterTemplate>
-                        <asp:TextBox runat="server" ID="txtNewCategory" Visible="true" />
-                    </FooterTemplate>
-                </asp:TemplateField>
                 <asp:TemplateField HeaderText="Parent Field" SortExpression="Parent Field">
                     <ItemTemplate>
                         <asp:HiddenField runat="server" ID="hdnParentFieldID" Value='<%# Eval("ParentFieldSetupID")%>' />
@@ -217,13 +226,34 @@
                         <asp:DropDownList runat="server" ID="ddlNewParentField" DataTextField="Name" DataValueField="ReqFieldSetupID" Visible="true" DataSourceID="odsParents"></asp:DropDownList>
                     </FooterTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Integrated Remi" SortExpression="Integrated Remi">
+                <asp:TemplateField HeaderText="Default To Display">
                     <ItemTemplate>
-                        <asp:CheckBox runat="server" Checked='<%# Eval("HasIntegration")%>' ID="chkIntegrated" Enabled="false" />
+                        <asp:Label runat="server" ID="lblDisplayNum" Text='<%# Eval("DefaultDisplayNum")%>' Visible="true"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtDisplayNum" Text='<%# Eval("DefaultDisplayNum")%>' Visible="false" EnableViewState="true"></asp:TextBox>
                     </ItemTemplate>
                     <FooterStyle HorizontalAlign="Right" />
                     <FooterTemplate>
-                        <asp:Button runat="server" ID="btnSave" CssClass="buttonSmall" Text="Add Field" OnClick="btnSave_Click" CausesValidation="true" />
+                        <asp:TextBox runat="server" ID="txtNewDisplayNum" Visible="true" />
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Max To Display">
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lblDisplayMax" Text='<%# Eval("MaxDisplayNum")%>' Visible="true"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtDisplayMax" Text='<%# Eval("MaxDisplayNum")%>' Visible="false" EnableViewState="true"></asp:TextBox>
+                    </ItemTemplate>
+                    <FooterStyle HorizontalAlign="Right" />
+                    <FooterTemplate>
+                        <asp:TextBox runat="server" ID="txtNewDisplayMax" Visible="true" />
+                    </FooterTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="IntField" SortExpression="IntField">
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lblIntField" Text='<%# Eval("IntField")%>' Visible="true"></asp:Label>
+                        <asp:DropDownList runat="server" ID="ddlIntField" Visible="false" DataTextField="IntField" DataValueField="IntField" DataSourceID="odsFieldMapping"></asp:DropDownList>
+                    </ItemTemplate>
+                    <FooterStyle HorizontalAlign="Right" />
+                    <FooterTemplate>
+                        <asp:DropDownList runat="server" ID="ddlNewIntField" Visible="true" DataTextField="IntField" DataValueField="IntField" DataSourceID="odsFieldMapping"></asp:DropDownList>
                     </FooterTemplate>
                 </asp:TemplateField>
             </Columns>
@@ -256,6 +286,7 @@
             <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
             <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+            <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
         </SelectParameters>
     </asp:ObjectDataSource>
 
@@ -269,6 +300,7 @@
             <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
             <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
             <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+            <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
         </SelectParameters>
 
     </asp:ObjectDataSource>

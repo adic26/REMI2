@@ -8,95 +8,123 @@ Imports System.Drawing
 Partial Class ES_Default
     Inherits System.Web.UI.Page
 
+    'Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
+    '    gvwObservationSummary.Columns(1).Visible = False
+    'End Sub
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
+            If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then
+                Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("/Design/scripts/jQuery/jquery-1.10.2.js"))
+            End If
+
+            lblPrinted.Text = String.Format("<b>Printed:</b> {0}", DateTime.Now.ToLongDateString())
+
             Dim tmpStr As String = Request.QueryString.Get("RN")
-            Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr))
 
-            If bc.Validate Then
-                Dim mi As New MenuItem
-                Dim b As BatchView
-                Dim bcol As New BatchCollection
-                b = BatchManager.GetViewBatch(bc.BatchNumber)
-                bcol.Add(b)
+            If (tmpStr IsNot Nothing) Then
+                Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 
-                hdnPartName.Value = (From rd In b.ReqData Where rd.Name.ToLower = "part name under test" Select rd.Value).FirstOrDefault()
-                hdnBatchID.Value = b.ID
-                hdnRequestNumber.Value = b.QRANumber
-                lblRequestNumber.Text = b.QRANumber
-                lblESText.Text = If(b.ExecutiveSummary Is Nothing, String.Empty, b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))
+                If bc.Validate Then
+                    Dim mi As New MenuItem
+                    Dim b As BatchView
+                    Dim bcol As New BatchCollection
+                    b = BatchManager.GetViewBatch(bc.BatchNumber)
+                    bcol.Add(b)
 
-                gvwRequestInfo.DataSource = b.ReqData
-                gvwRequestInfo.DataBind()
-                rptRequestSummary.DataSource = bcol
-                rptRequestSummary.DataBind()
-                Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
-                grdApproval.DataSource = ds.Tables(1)
-                grdApproval.DataBind()
+                    hdnPartName.Value = (From rd In b.ReqData Where rd.Name.ToLower = "part name under test" Select rd.Value).FirstOrDefault()
+                    hdnBatchID.Value = b.ID
+                    hdnRequestNumber.Value = b.QRANumber
+                    lblRequestNumber.Text = b.QRANumber
+                    lblESText.Text = If(b.ExecutiveSummary Is Nothing, "No Summary Available!", b.ExecutiveSummary.Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))
 
-                grdJIRAS.DataSource = BatchManager.GetBatchJIRA(b.ID, False)
-                grdJIRAS.DataBind()
+                    gvwRequestInfo.DataSource = b.ReqData
+                    gvwRequestInfo.DataBind()
+                    rptRequestSummary.DataSource = bcol
+                    rptRequestSummary.DataBind()
+                    Dim ds As DataSet = RelabManager.GetOverAllPassFail(b.ID)
+                    grdApproval.DataSource = ds.Tables(1)
+                    grdApproval.DataBind()
 
-                Dim bs As New REMI.BusinessEntities.BatchSearch
-                bs.ProductID = b.ProductID
-                bs.JobName = b.JobName
-                bs.ProductTypeID = b.ProductTypeID
+                    grdJIRAS.DataSource = BatchManager.GetBatchJIRA(b.ID, False)
+                    grdJIRAS.DataBind()
 
-                Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
+                    Dim bs As New REMI.BusinessEntities.BatchSearch
+                    bs.ProductID = b.ProductID
+                    bs.JobName = b.JobName
+                    bs.ProductTypeID = b.ProductTypeID
 
-                For Each batch As Batch In batchCol.Take(10)
-                    Dim l As New ListItem
+                    Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
 
-                    If (b.ID = batch.ID) Then
-                        l.Text = "<b><img src='../../Design/Icons/png/SliderOn.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber + "</b>"
-                    Else
-                        l.Text = "<img src='../../Design/Icons/png/SliderOff.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber
+                    For Each batch As Batch In batchCol.Take(10)
+                        Dim l As New ListItem
+
+                        If (b.ID = batch.ID) Then
+                            l.Text = "<b><img src='../../Design/Icons/png/SliderOn.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber + "</b>"
+                        Else
+                            l.Text = "<img src='../../Design/Icons/png/SliderOff.png' alt='" + batch.QRANumber + "' title='" + batch.QRANumber + "'/>" + batch.QRANumber
+                        End If
+
+                        l.Value = batch.ID
+                        rboQRASlider.Items.Add(l)
+                    Next
+
+                    If (rboQRASlider.Items.FindByValue(b.ID) Is Nothing) Then
+                        Dim lb As New ListItem
+                        lb.Text = "<b><img src='../../Design/Icons/png/SliderOn.png' alt='" + b.QRANumber + "' title='" + b.QRANumber + "'/>" + b.QRANumber + "</b>"
+                        lb.Value = b.ID
+                        rboQRASlider.Items.Add(lb)
                     End If
 
-                    l.Value = batch.ID
-                    rboQRASlider.Items.Add(l)
-                Next
+                    rboQRASlider.SelectedValue = b.ID
 
-                rboQRASlider.SelectedValue = b.ID
-
-                SetStatus(ds.Tables(2).Rows(0)(0).ToString())
-
-                For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Select New With {tr.ID, tr.FailDocDS})
-                    pnlFA.Style.Add("Display", "block")
-                    Dim fac As FAControl
-                    fac = CType(LoadControl("..\..\Controls\FAControl.ascx"), FAControl)
-                    fac.EmptyDataText = "Error Loading FA!"
-
-                    If (fa.FailDocDS.Columns.Count > 8) Then
-                        fac.SetDataSource(fa.FailDocDS)
+                    If (rboQRASlider.Items.Count = 0) Then
+                        pnlQRASlider.Visible = False
                     End If
 
-                    fac.Visible = True
-                    fac.ID = fa.ID
+                    SetStatus(ds.Tables(2).Rows(0)(0).ToString())
 
-                    pnlFAInfo.Controls.Add(fac)
-                Next
+                    For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Distinct Select New With {tr.FailDocDS})
+                        pnlFA.Style.Add("Display", "block")
 
-                If (pnlFA.Style.Item("Display") = "block") Then
+                        Try
+                            Dim fac As FAControl
+                            fac = CType(LoadControl("..\..\Controls\FAControl.ascx"), FAControl)
+                            fac.EmptyDataText = "Error Loading FA!"
+
+                            If (fa.FailDocDS.Columns.Count > 8) Then
+                                fac.SetDataSource(fa.FailDocDS)
+                            End If
+
+                            fac.Visible = True
+
+                            pnlFAInfo.Controls.Add(fac)
+                        Catch ex As Exception
+                            BatchManager.LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                        End Try
+                    Next
+
+                    If (pnlFA.Style.Item("Display") = "block") Then
+                        mi = New MenuItem
+                        mi.NavigateUrl = "#fa"
+                        mi.Text = "FA Summary"
+
+                        ESMenu.Items(0).ChildItems.Add(mi)
+                    End If
+
                     mi = New MenuItem
-                    mi.NavigateUrl = "#fa"
-                    mi.Text = "FA Summary"
-
+                    mi.Text = "Links"
                     ESMenu.Items(0).ChildItems.Add(mi)
+
+                    For Each rec As DataRow In BatchManager.GetBatchDocuments(b.QRANumber).Rows
+                        mi = New MenuItem
+                        mi.NavigateUrl = rec.Field(Of String)("Location")
+                        mi.Text = rec.Field(Of String)("WIType")
+                        mi.Target = "_blank"
+
+                        ESMenu.Items(0).ChildItems(ESMenu.Items(0).ChildItems.Count - 1).ChildItems.Add(mi)
+                    Next
                 End If
-
-                mi = New MenuItem
-                mi.Text = "Links"
-                ESMenu.Items(0).ChildItems.Add(mi)
-
-                For Each rec As DataRow In BatchManager.GetBatchDocuments(b.QRANumber).Rows
-                    mi = New MenuItem
-                    mi.NavigateUrl = rec.Field(Of String)("Location")
-                    mi.Text = rec.Field(Of String)("WIType")
-                    mi.Target = "_blank"
-
-                    ESMenu.Items(0).ChildItems(ESMenu.Items(0).ChildItems.Count - 1).ChildItems.Add(mi)
-                Next
             End If
         End If
     End Sub
@@ -107,8 +135,10 @@ Partial Class ES_Default
 
         Select Case lblResult.Text.ToLower
             Case "pass"
+            Case "preliminary pass"
                 lblResult.CssClass = "ESPass"
             Case "fail"
+            Case "preliminary fail"
                 lblResult.CssClass = "ESFail"
             Case "no result"
                 lblResult.CssClass = "ESNoResult"
@@ -175,6 +205,48 @@ Partial Class ES_Default
         End If
     End Sub
 
+    Protected Sub gvwRequestInfo_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwRequestInfo.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim lblValue As Label = DirectCast(e.Row.FindControl("lblValue"), Label)
+            Dim hylValue As HyperLink = DirectCast(e.Row.FindControl("hylValue"), HyperLink)
+            Dim hdnType As HiddenField = DirectCast(e.Row.FindControl("hdnType"), HiddenField)
+
+            If (DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling.Count > 0) Then
+                hylValue.Visible = False
+
+                For Each s As Sibling In DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling
+                    If (Not String.IsNullOrEmpty(s.Value)) Then
+                        If (hdnType.Value = "Link") Then
+                            Dim hyp As New HyperLink
+                            hyp.Text = s.Value
+                            hyp.Target = "_blank"
+                            hyp.NavigateUrl = s.Value
+                            hyp.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(hyp)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        Else
+                            Dim lbl As New Label
+                            lbl.Text = s.Value
+                            lbl.ID = String.Format("{0}_{1}", s.FieldSetupID, s.ID)
+                            e.Row.Cells(1).Style.Add("text-align", "left")
+                            e.Row.Cells(1).Controls.Add(lbl)
+                            e.Row.Cells(1).Controls.Add(New LiteralControl("<br />"))
+                        End If
+                    End If
+                Next
+            Else
+                If (hdnType.Value = "Link") Then
+                    lblValue.Visible = False
+                    hylValue.Visible = True
+                Else
+                    lblValue.Visible = True
+                    hylValue.Visible = False
+                End If
+            End If
+        End If
+    End Sub
+
     Protected Sub gvwResultBreakDown_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwResultBreakDown.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
             Dim resultID As Int32 = gvwResultBreakDown.DataKeys(e.Row.RowIndex).Values(0)
@@ -210,17 +282,11 @@ Partial Class ES_Default
 
     Protected Sub gvwObservations_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwObservations.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
-            Dim hdnImgStr As HiddenField = DirectCast(e.Row.FindControl("hdnImgStr"), HiddenField)
-            If (Not (String.IsNullOrEmpty(hdnImgStr.Value))) Then
-                If (Not (hdnImgStr.Value.Contains(";base64,AAAAAA=="))) Then
-                    Dim img As WebControls.Image = DirectCast(e.Row.FindControl("img"), WebControls.Image)
-                    img.Visible = True
-                    img.ImageUrl = hdnImgStr.Value
-                    img.Width = 30
-                    img.Height = 30
-                    img.Attributes.Add("onmouseover", String.Format("Tip('<img src=""{0}""/>',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'',TITLEBGCOLOR,'#6494C8')", hdnImgStr.Value))
-                    img.Attributes.Add("onmouseout", "UnTip()")
-                End If
+            Dim hdnHasFiles As HiddenField = DirectCast(e.Row.FindControl("hdnHasFiles"), HiddenField)
+
+            If (hdnHasFiles.Value = "1") Then
+                Dim img As HtmlInputImage = DirectCast(e.Row.FindControl("viewImages"), HtmlInputImage)
+                img.Visible = True
             End If
         End If
     End Sub
@@ -230,6 +296,11 @@ Partial Class ES_Default
 
         If (count > 0) Then
             pnlObservationSummary.Enabled = True
+            gvwObservationSummary.HeaderRow.Cells(1).Visible = False
+
+            For r As Int32 = 0 To gvwObservationSummary.Rows.Count - 1
+                gvwObservationSummary.Rows(r).Cells(1).Visible = False
+            Next
 
             If (ESMenu.FindItem("Observation Summary") Is Nothing) Then
                 Dim mi As MenuItem = New MenuItem

@@ -6,7 +6,7 @@ Imports System.Data.Common
 
 Namespace REMI.Dal
     Public Class LookupsDB
-        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean) As DataTable
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Int32, ByVal showAdminSelected As Boolean, ByVal showArchived As Boolean) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetLookups", MyConnection)
@@ -22,18 +22,19 @@ Namespace REMI.Dal
                     End If
 
                     If (ParentLookupType.Trim().Length > 0) Then
-                        myCommand.Parameters.AddWithValue("@ParentLookupType", ParentLookupType)
+                        myCommand.Parameters.AddWithValue("@ParentLookupType", parentLookupType)
                     End If
 
-                    If (ParentLookupValue.Trim().Length > 0) Then
-                        myCommand.Parameters.AddWithValue("@ParentLookup", ParentLookupValue)
+                    If (parentLookupValue.Trim().Length > 0) Then
+                        myCommand.Parameters.AddWithValue("@ParentLookup", parentLookupValue)
                     End If
 
-                    If (RequestTypeID > 0) Then
-                        myCommand.Parameters.AddWithValue("@RequestTypeID", RequestTypeID)
+                    If (requestTypeID > 0) Then
+                        myCommand.Parameters.AddWithValue("@RequestTypeID", requestTypeID)
                     End If
 
-                    myCommand.Parameters.AddWithValue("@ShowAdminSelected", ShowAdminSelected)
+                    myCommand.Parameters.AddWithValue("@ShowAdminSelected", showAdminSelected)
+                    myCommand.Parameters.AddWithValue("@ShowArchived", showArchived)
 
                     MyConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)

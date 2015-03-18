@@ -17,6 +17,9 @@ Namespace REMI.BusinessEntities
         Private _optionsTypeID As Int32
         Private _requestTypeID As Int32
         Private _requestID As Int32
+        Private _defaultDisplayNum As Int32
+        Private _maxDisplayNum As Int32
+        Private _reqFieldDataID As Int32
         Private _internalField As Int32
         Private _requestType As String
         Private _defaultValue As String
@@ -33,11 +36,13 @@ Namespace REMI.BusinessEntities
         Private _parentFieldSetupName As String
         Private _isRequired As Boolean
         Private _isArchived As Boolean
+        Private _hasDistribution As Boolean
         Private _isFromExternalSystem As Boolean
         Private _hasIntegration As Boolean
         Private _optionsType As List(Of String)
         Private _newRequest As Boolean
         Private _customLookupHierarchy As List(Of RequestFieldObjectHeirarchy)
+        Private _sibling As List(Of Sibling)
         Private _parentFieldSetupID As Int32
 #End Region
 
@@ -45,7 +50,7 @@ Namespace REMI.BusinessEntities
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean, ByVal parentFieldSetupID As Int32, ByVal hasIntegration As Boolean, ByVal parentFieldSetupName As String, ByVal defaultval As String)
+        Public Sub New(ByVal fieldSetupID As Int32, ByVal fieldTypeID As Int32, ByVal fieldValidationID As Int32, ByVal displayOrder As Int32, ByVal optionsTypeID As Int32, ByVal requestTypeID As Int32, ByVal requestType As String, ByVal name As String, ByVal fieldType As String, ByVal fieldValidation As String, ByVal isRequired As Boolean, ByVal isArchived As Boolean, ByVal description As String, ByVal optionsType As List(Of String), ByVal requestID As Int32, ByVal requestNumber As String, ByVal value As String, ByVal internalField As Int32, ByVal intField As String, ByVal extField As String, ByVal newRequest As Boolean, ByVal columnOrder As Int32, ByVal isFromExternalSystem As Boolean, ByVal parentFieldSetupID As Int32, ByVal hasIntegration As Boolean, ByVal parentFieldSetupName As String, ByVal defaultval As String, ByVal defaultDisplayNum As Int32, ByVal maxDisplayNum As Int32)
             _fieldSetupID = fieldSetupID
             _fieldTypeID = fieldTypeID
             _fieldValidationID = fieldValidationID
@@ -73,6 +78,8 @@ Namespace REMI.BusinessEntities
             _parentFieldSetupID = parentFieldSetupID
             _parentFieldSetupName = parentFieldSetupName
             _defaultValue = defaultval
+            _maxDisplayNum = MaxDisplayNum
+            _defaultDisplayNum = defaultDisplayNum
         End Sub
 #End Region
 
@@ -83,6 +90,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal value As Int32)
                 _requestTypeID = value
+            End Set
+        End Property
+
+        Public Property ReqFieldDataID() As Int32 Implements IRequestFields.ReqFieldDataID
+            Get
+                Return _reqFieldDataID
+            End Get
+            Set(ByVal value As Int32)
+                _reqFieldDataID = value
             End Set
         End Property
 
@@ -266,6 +282,15 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        Public Property Sibling() As List(Of Sibling)
+            Get
+                Return _sibling
+            End Get
+            Set(value As List(Of Sibling))
+                _sibling = value
+            End Set
+        End Property
+
         Public Property IsArchived() As Boolean Implements IRequestFields.IsArchived
             Get
                 Return _isArchived
@@ -311,6 +336,15 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        Public Property HasDistribution() As Boolean Implements IRequestFields.HasDistribution
+            Get
+                Return _hasDistribution
+            End Get
+            Set(value As Boolean)
+                _hasDistribution = value
+            End Set
+        End Property
+
         Public Property Value() As String Implements IRequestFields.Value
             Get
                 Return _value
@@ -346,11 +380,72 @@ Namespace REMI.BusinessEntities
                 _parentFieldSetupName = value
             End Set
         End Property
+
+        Public Property DefaultDisplayNum() As Int32 Implements IRequestFields.DefaultDisplayNum
+            Get
+                Return _defaultDisplayNum
+            End Get
+            Set(ByVal value As Int32)
+                _defaultDisplayNum = value
+            End Set
+        End Property
+
+        Public Property MaxDisplayNum() As Int32 Implements IRequestFields.MaxDisplayNum
+            Get
+                Return _maxDisplayNum
+            End Get
+            Set(ByVal value As Int32)
+                _maxDisplayNum = value
+            End Set
+        End Property
 #End Region
 
         Public Overrides Function ToString() As String
             Return String.Format("{0}", Me.Name)
         End Function
+    End Class
+
+    <Serializable()> _
+    Public Class Sibling
+        Private _id As Int32
+        Private _fieldSetupID As Int32
+        Private _value As String
+
+        Public Sub New(ByVal id As Int32, ByVal fieldSetupID As Int32, ByVal value As String)
+            _fieldSetupID = fieldSetupID
+            _id = id
+            _value = value
+        End Sub
+
+        Public Sub New()
+        End Sub
+
+        Public Property ID() As Int32
+            Get
+                Return _id
+            End Get
+            Set(ByVal value As Int32)
+                _id = value
+            End Set
+        End Property
+
+        Public Property FieldSetupID() As Int32
+            Get
+                Return _fieldSetupID
+            End Get
+            Set(ByVal value As Int32)
+                _fieldSetupID = value
+            End Set
+        End Property
+
+        Public Property Value() As String
+            Get
+                Return _value
+            End Get
+            Set(ByVal value As String)
+                _value = value
+            End Set
+        End Property
     End Class
 
     <Serializable()> _
@@ -461,4 +556,5 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
     End Class
+
 End Namespace

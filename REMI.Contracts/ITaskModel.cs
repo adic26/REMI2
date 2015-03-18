@@ -16,10 +16,11 @@ namespace REMI.Contracts
        TestType TestType { get; set; }
        TestStageType TestStageType { get; set; }
        int[] UnitsForTask { get; }
-       void SetUnitsForTask(string units);
+       string[] ResultCheck { get; }
        Boolean IsArchived { get; set; }
        Boolean TestIsArchived { get; set; }
-
        TimeSpan ExpectedDuration { get; set; }
+       void SetUnitsForTask(string units);
+       void SetUnitResultCheck(string testCounts);
     }
 }

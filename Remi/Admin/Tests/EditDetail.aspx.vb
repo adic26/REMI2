@@ -28,6 +28,7 @@ Partial Class Admin_Tests_EditDetail
         lblTitle.Text = "Add New Parametric Test"
         lblTestName.Visible = False
         txtName.Visible = True
+        BindAccess()
     End Sub
 
     Protected Sub ProcessTestID(ByVal tmpID As Integer)
@@ -113,7 +114,14 @@ Partial Class Admin_Tests_EditDetail
     End Sub
 
     Protected Sub BindAccess()
-        grdAccess.DataSource = TestManager.GetTestAccess(hdnEditID.Value)
+        Dim testid As Int32
+        Int32.TryParse(hdnEditID.Value, testid)
+
+        If (testid = 0) Then
+            testid = -1
+        End If
+
+        grdAccess.DataSource = TestManager.GetTestAccess(testid, False)
         grdAccess.DataBind()
     End Sub
 

@@ -158,65 +158,9 @@
     <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Utilities" />
     <Folder Include="Scripts\Product_Table_Release" />
     <Folder Include="Scripts\ProductType_AccessoryType_Release" />
-    <Folder Include="Scripts\April152013" />
-    <Folder Include="Scripts\April222013" />
-    <Folder Include="Scripts\May062013" />
-    <Folder Include="Scripts\June032013" />
-    <Folder Include="Scripts\June242013" />
-    <Folder Include="Scripts\June102013" />
     <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete" />
-    <Folder Include="Scripts\July022013" />
-    <Folder Include="Scripts\July082013" />
-    <Folder Include="Scripts\July152013" />
-    <Folder Include="Scripts\July092013" />
-    <Folder Include="Scripts\July222013" />
     <Folder Include="Oracle" />
-    <Folder Include="Scripts\July292013" />
-    <Folder Include="Scripts\August062013" />
-    <Folder Include="Scripts\August122013" />
-    <Folder Include="Scripts\September092013" />
-    <Folder Include="Scripts\September042013" />
-    <Folder Include="Scripts\August152013" />
-    <Folder Include="Scripts\August262013" />
-    <Folder Include="Scripts\September162013" />
-    <Folder Include="Scripts\September172013" />
-    <Folder Include="Scripts\September262013" />
-    <Folder Include="Scripts\September232013" />
-    <Folder Include="Scripts\October032013" />
-    <Folder Include="Scripts\October102013" />
-    <Folder Include="Scripts\October282013" />
-    <Folder Include="Scripts\November042013" />
-    <Folder Include="Scripts\November112013" />
     <Folder Include="Scripts\ImageShrink" />
-    <Folder Include="Scripts\November192013" />
-    <Folder Include="Scripts\November212013" />
-    <Folder Include="Scripts\November252013" />
-    <Folder Include="Scripts\December022013" />
-    <Folder Include="Scripts\December092013" />
-    <Folder Include="Scripts\December162013" />
-    <Folder Include="Scripts\January062014" />
-    <Folder Include="Scripts\January222014" />
-    <Folder Include="Scripts\February062014" />
-    <Folder Include="Scripts\February252014" />
-    <Folder Include="Scripts\May192014" />
-    <Folder Include="Scripts\June192014" />
-    <Folder Include="Scripts\June192014\RollBack" />
-    <Folder Include="Scripts\July142014" />
-    <Folder Include="Scripts\JUly232014" />
-    <Folder Include="Scripts\August132014" />
-    <Folder Include="Scripts\September222014" />
-    <Folder Include="Scripts\September302014" />
-    <Folder Include="Scripts\October032014" />
-    <Folder Include="Scripts\October162014" />
-    <Folder Include="Scripts\October172014" />
-    <Folder Include="Scripts\October202014" />
-    <Folder Include="Scripts\October282014" />
-    <Folder Include="Scripts\November032014" />
-    <Folder Include="Scripts\November172014" />
-    <Folder Include="Scripts\November182014" />
-    <Folder Include="Scripts\November262014" />
-    <Folder Include="Scripts\December022014" />
-    <Folder Include="Scripts\December152014" />
     <Folder Include="Schema Objects\Schemas\Req" />
     <Folder Include="Schema Objects\Schemas\Relab" />
     <Folder Include="Schema Objects\Schemas\Relab\Tables" />
@@ -237,20 +181,80 @@
     <Folder Include="Schema Objects\Schemas\Relab\Tables\Keys" />
     <Folder Include="Schema Objects\Schemas\Req\Programmability\Types" />
     <Folder Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types" />
-    <Folder Include="Scripts\January162015" />
-    <Folder Include="Scripts\January212015" />
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Obsolete" />
-    <Folder Include="Scripts\January262015" />
-    <Folder Include="Scripts\January292015" />
     <Folder Include="Schema Objects\Schemas\Req\Views" />
-    <Folder Include="Scripts\February042015" />
-    <Folder Include="Scripts\February112015" />
     <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\ASPNET" />
-    <Folder Include="Scripts\February172015" />
     <Folder Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities" />
     <Folder Include="Oracle\DTATTA" />
-    <Folder Include="Scripts\February252015" />
-    <Folder Include="Scripts\February262015" />
+    <Folder Include="Scripts\2015" />
+    <Folder Include="Scripts\2015\March172015" />
+    <Folder Include="Scripts\2013" />
+    <Folder Include="Scripts\2014" />
+    <Folder Include="Scripts\2014\November032014" />
+    <Folder Include="Scripts\2013\November042013" />
+    <Folder Include="Scripts\2013\November112013" />
+    <Folder Include="Scripts\2013\November192013" />
+    <Folder Include="Scripts\2013\November212013" />
+    <Folder Include="Scripts\2013\November252013" />
+    <Folder Include="Scripts\2013\October032013" />
+    <Folder Include="Scripts\2013\October102013" />
+    <Folder Include="Scripts\2014\November172014" />
+    <Folder Include="Scripts\2014\November182014" />
+    <Folder Include="Scripts\2014\November262014" />
+    <Folder Include="Scripts\2014\October032014" />
+    <Folder Include="Scripts\2014\October162014" />
+    <Folder Include="Scripts\2014\October172014" />
+    <Folder Include="Scripts\2014\October202014" />
+    <Folder Include="Scripts\2014\October282014" />
+    <Folder Include="Scripts\2014\September222014" />
+    <Folder Include="Scripts\2014\September302014" />
+    <Folder Include="Scripts\2013\September042013" />
+    <Folder Include="Scripts\2013\September092013" />
+    <Folder Include="Scripts\2013\September162013" />
+    <Folder Include="Scripts\2013\September172013" />
+    <Folder Include="Scripts\2013\September232013" />
+    <Folder Include="Scripts\2013\September262013" />
+    <Folder Include="Scripts\2013\October282013" />
+    <Folder Include="Scripts\2013\May062013" />
+    <Folder Include="Scripts\2013\June242013" />
+    <Folder Include="Scripts\2013\June102013" />
+    <Folder Include="Scripts\2013\June032013" />
+    <Folder Include="Scripts\2013\July292013" />
+    <Folder Include="Scripts\2013\July222013" />
+    <Folder Include="Scripts\2013\April152013" />
+    <Folder Include="Scripts\2013\April222013" />
+    <Folder Include="Scripts\2013\August062013" />
+    <Folder Include="Scripts\2013\August122013" />
+    <Folder Include="Scripts\2013\August152013" />
+    <Folder Include="Scripts\2013\August262013" />
+    <Folder Include="Scripts\2013\December022013" />
+    <Folder Include="Scripts\2013\December092013" />
+    <Folder Include="Scripts\2013\December162013" />
+    <Folder Include="Scripts\2013\July022013" />
+    <Folder Include="Scripts\2013\July082013" />
+    <Folder Include="Scripts\2013\July092013" />
+    <Folder Include="Scripts\2013\July152013" />
+    <Folder Include="Scripts\2014\May192014" />
+    <Folder Include="Scripts\2014\July142014" />
+    <Folder Include="Scripts\2014\JUly232014" />
+    <Folder Include="Scripts\2014\June192014" />
+    <Folder Include="Scripts\2014\June192014\RollBack" />
+    <Folder Include="Scripts\2014\January062014" />
+    <Folder Include="Scripts\2014\January222014" />
+    <Folder Include="Scripts\2014\February252014" />
+    <Folder Include="Scripts\2015\January162015" />
+    <Folder Include="Scripts\2015\January212015" />
+    <Folder Include="Scripts\2015\January262015" />
+    <Folder Include="Scripts\2015\January292015" />
+    <Folder Include="Scripts\2015\February262015" />
+    <Folder Include="Scripts\2015\February252015" />
+    <Folder Include="Scripts\2015\February172015" />
+    <Folder Include="Scripts\2015\February112015" />
+    <Folder Include="Scripts\2015\February042015" />
+    <Folder Include="Scripts\2014\August132014" />
+    <Folder Include="Scripts\2014\December022014" />
+    <Folder Include="Scripts\2014\December152014" />
+    <Folder Include="Scripts\2014\February062014" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -1123,217 +1127,13 @@
     <None Include="Scripts\ProductType_AccessoryType_Release\5_modified_SP.sql">
       <SubType>NotInBuild</SubType>
     </None>
-    <None Include="Scripts\April152013\1_Column_Rename.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\2_Column_Add.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\3_Index._Keys.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\4_Trigger.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\5_View.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\6_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\7_Exceptions.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\8_DataMove.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April152013\9_StationXML.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April222013\1_New.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April222013\2_TableModification.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April222013\3_Users.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\April222013\4_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\May062013\1_New_Column.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\May062013\2_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\May062013\3_DataUpdate.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June032013\1_Table_Modifications.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June032013\2_Table_Additions.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June032013\3_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June242013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June102013\1_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June242013\2.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July022013\1_DataFix.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July022013\2_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July082013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July152013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July092013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July222013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July222013\2.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
     <None Include="Oracle\REMI_HELPER.txt">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July292013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\August062013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\August122013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\September092013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\September042013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\August152013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\August262013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\September162013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\September172013\1_Delete_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\September172013\2_Update_SP.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\September232013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\September262013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\October032013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\October102013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\October102013\2.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\October282013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\October282013\2.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\November042013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\November112013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\November112013\2.sql">
       <SubType>NotInBuild</SubType>
     </None>
     <None Include="Scripts\ImageShrink\ImageShrink.sql">
       <SubType>NotInBuild</SubType>
     </None>
-    <None Include="Scripts\November192013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\November212013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\November252013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\December022013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\December092013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\December092013\2.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\December162013\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\January062014\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\January062014\2.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\January222014\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\February062014\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\February062014\2.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\February252014\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\May192014\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June192014\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\June192014\RollBack\1-ROLLBACK.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\July142014\1.sql">
-      <SubType>NotInBuild</SubType>
-    </None>
-    <None Include="Scripts\August132014\4.sql" />
-    <None Include="Scripts\November032014\3.sql" />
-    <None Include="Scripts\November032014\4.sql" />
-    <None Include="Scripts\November262014\1.sql" />
-    <None Include="Scripts\January292015\2.sql" />
-    <None Include="Scripts\February042015\2.sql" />
-    <None Include="Scripts\February262015\2.sql" />
+    <None Include="Scripts\2015\March172015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -1977,7 +1777,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\UserTrainingAudit.table.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Scripts\JUly232014\1.sql" />
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispJobsList.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -2001,11 +1800,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Functions\CompareXml.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\August132014\3.sql" />
-    <None Include="Scripts\August132014\1.sql" />
-    <None Include="Scripts\August132014\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\ApplicationVersions.sql" />
@@ -2052,25 +1846,7 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\UX_JobOrientation_JID_PID_Name.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\September222014\1.sql" />
-    <None Include="Scripts\September222014\2.sql" />
-    <None Include="Scripts\September222014\3.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\September302014\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetBatchUnitsInStage.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\October032014\1.sql" />
-    <None Include="Scripts\October032014\ObservationsInsert.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\October162014\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\October172014\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetBatchUnitNextTestStage.sql" />
@@ -2079,20 +1855,10 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsSelectByBatchUnitStage.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\October202014\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\October282014\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\LookupType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\UX_LookupType_Name.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\November032014\1.sql" />
-    <None Include="Scripts\November032014\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMenuAccessByDepartment.sql" />
@@ -2119,26 +1885,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\November172014\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetUserDetails.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\UserDetails.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\November172014\2_RequestQRASetup.sql" />
-    <None Include="Scripts\November172014\3_DataMigration.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\November172014\4.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTests.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\November182014\RFCRequestSetup.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\JobAccess.sql" />
@@ -2160,9 +1913,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetServices.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\December022014\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\LookupsHierarchy.sql" />
@@ -2196,9 +1946,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\UserSearchFilter.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\December152014\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldData.sql" />
@@ -2501,12 +2248,6 @@
     <None Include="Schema Objects\Schemas\Req\Programmability\Types\User Defined Table Types\SearchFields.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\January162015\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\January212015\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispKPIReports.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -2520,21 +2261,12 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispESResultSummary.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\January262015\LCDRequestSetup.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispEnvironmentalReport.proc.sql">
       <SubType>Code</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\January292015\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\Req\Views\Req.vw_RequestDataAudit.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\February042015\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\TestsAccess.sql" />
@@ -2547,12 +2279,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Configurations.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\February112015\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Scripts\February112015\2-sp.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Utilities\remispModifyUserToBasicAccess.sql" />
@@ -2721,9 +2447,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\February172015\1.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Utilities\remispDeleteAllResults.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -2748,11 +2471,342 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\FK_BatchesJira_Batches.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\February252015\1.sql" />
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Functions\Relab.ResultsObservation.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Scripts\February262015\1.sql" />
-    <None Include="Scripts\February262015\migrationDTATTA.sql" />
-    <None Include="Schema Objects\Schemas\Relab\Programmability\Functions\Relab.ResultsObservation.sql" />
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqDistribution.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\March172015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November032014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November032014\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November032014\3.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November032014\4.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\November042013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\November112013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\November112013\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\November192013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\November212013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\November252013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\October032013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\October102013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\October102013\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November172014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November172014\2_RequestQRASetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November172014\3_DataMigration.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November172014\4.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November182014\RFCRequestSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\November262014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\October032014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\October032014\ObservationsInsert.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\October162014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\October172014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\October202014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\October282014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\September222014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\September222014\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\September222014\3.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\September302014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\September042013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\September092013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\September162013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\September172013\1_Delete_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\September172013\2_Update_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\September232013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\September262013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\October282013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\October282013\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\May062013\1_New_Column.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\May062013\2_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\May062013\3_DataUpdate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\June242013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\June242013\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\June102013\1_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\June032013\1_Table_Modifications.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\June032013\2_Table_Additions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\June032013\3_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July292013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July222013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July222013\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\1_Column_Rename.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\2_Column_Add.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\3_Index._Keys.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\4_Trigger.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\5_View.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\6_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\7_Exceptions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\8_DataMove.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April152013\9_StationXML.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April222013\1_New.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April222013\2_TableModification.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April222013\3_Users.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\April222013\4_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\August062013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\August122013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\August152013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\August262013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\December022013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\December092013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\December092013\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\December162013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July022013\1_DataFix.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July022013\2_SP.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July082013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July092013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2013\July152013\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\May192014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\July142014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\JUly232014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\June192014\RollBack\1-ROLLBACK.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\June192014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\January062014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\January062014\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\January222014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\February252014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\January162015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\January212015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\January262015\LCDRequestSetup.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\January292015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\January292015\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February262015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February262015\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February262015\migrationDTATTA.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February252015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February172015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February112015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February112015\2-sp.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February042015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\February042015\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\August132014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\August132014\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\August132014\3.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\August132014\4.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\December022014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\December152014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\February062014\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2014\February062014\2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Req.ReqFieldSetupSibling.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Tables\Triggers\Req.ReqFieldDataAuditDelete.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.RequestDataAudit.sql" />
   </ItemGroup>
 </Project>

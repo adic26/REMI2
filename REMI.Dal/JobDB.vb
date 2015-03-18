@@ -22,25 +22,6 @@ Namespace REMI.Dal
         End Sub
 
 #Region "Public Methods"
-        Public Shared Function GetREMIJobList() As List(Of String)
-            Dim jobs As New List(Of String)
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("SELECT JobName FROM Jobs WHERE ISNULL(IsActive, 0) = 1 ORDER BY JobName ASC", myConnection)
-                    myCommand.CommandType = CommandType.Text
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                jobs.Add(myReader.GetString(0))
-                            End While
-                        End If
-                    End Using
-                End Using
-            End Using
-            Return jobs
-        End Function
-
         Public Shared Function GetJobOrientationLists(ByVal jobID As Int32, ByVal jobName As String) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -113,15 +94,16 @@ Namespace REMI.Dal
             Return success
         End Function
 
-        Public Shared Function GetJobListDT(ByVal user As User, ByVal requestTypeID As Int32) As JobCollection
+        Public Shared Function GetJobListDT(ByVal userID As Int32, ByVal requestTypeID As Int32, ByVal departmentID As Int32) As JobCollection
             Dim tempList As New JobCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myConnection.Open()
                 Using myCommand As New SqlCommand("remispJobsList", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@UserID", user.ID)
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
                     myCommand.Parameters.AddWithValue("@RequestTypeID", requestTypeID)
+                    myCommand.Parameters.AddWithValue("@DepartmentID", departmentID)
 
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then
@@ -139,23 +121,17 @@ Namespace REMI.Dal
         ''' <summary>Gets an instance of Job. Creates a new connection.</summary> 
         ''' <param name="JobName">The unique JobName of the Job in the database.</param> 
         ''' <returns>A Job if the jobname was found in the database, or Nothing otherwise.</returns> 
-        Public Shared Function GetItem(ByVal JobName As String) As Job
+        Public Shared Function GetItem(ByVal JobName As String, Optional ByVal jobID As Int32 = 0) As Job
             Dim myJob As Job = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myConnection.Open()
-                myJob = GetItem(JobName, myConnection, 0)
-            End Using
 
-            Return myJob
-        End Function
-
-        Public Shared Function GetItem(ByVal JobID As Int32) As Job
-            Dim myJob As Job = Nothing
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                myConnection.Open()
-                myJob = GetItem(String.Empty, myConnection, JobID)
+                If (jobID > 0) Then
+                    myJob = GetItem(String.Empty, myConnection, jobID)
+                Else
+                    myJob = GetItem(JobName, myConnection, 0)
+                End If
             End Using
 
             Return myJob
@@ -195,7 +171,7 @@ Namespace REMI.Dal
 
                 'get the teststages
                 If myJob IsNot Nothing Then
-                    myJob.TestStages = TestStageDB.GetList(TestStageType.NotSet, myJob.Name, False, myconnection)
+                    myJob.TestStages = TestStageDB.GetList(TestStageType.NotSet, String.Empty, False, myconnection, myJob.ID)
                     REMIAppCache.SetJob(myJob)
                 End If
             End If

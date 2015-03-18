@@ -25,9 +25,21 @@ Partial Class Admin_TrackingLocation
         Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
 
         If (asm.IsInAsyncPostBack) Then
-            gvMain.DataSource = TrackingLocationManager.GetList(ddlTestCenters.SelectedValue, 0)
-            gvMain.DataBind()
+            BindTrackingLocations()
         End If
+    End Sub
+
+    Protected Sub BindTrackingLocations()
+        Dim onlyActive As Int32 = 0
+
+        If (chkArchived.Checked) Then
+            onlyActive = 0
+        Else
+            onlyActive = 1
+        End If
+
+        gvMain.DataSource = TrackingLocationManager.GetList(ddlTestCenters.SelectedValue, onlyActive)
+        gvMain.DataBind()
     End Sub
 
     Protected Sub upTLLeftNav_PreRender() Handles upTLLeftNav.PreRender
@@ -80,9 +92,7 @@ Partial Class Admin_TrackingLocation
                 Exit Select
             Case "deleteitem"
                 notMain.Notifications.Add(TrackingLocationManager.Delete(ID))
-
-                gvMain.DataSource = TrackingLocationManager.GetList(ddlTestCenters.SelectedValue, 0)
-                gvMain.DataBind()
+                BindTrackingLocations()
                 Exit Select
             Case "checkavailability"
                 Dim row As GridViewRow = CType(CType(e.CommandSource, LinkButton).Parent.Parent, GridViewRow)
@@ -202,6 +212,11 @@ Partial Class Admin_TrackingLocation
                 grdPlugin.Visible = False
                 HostSubmit.Visible = False
             End If
+
+            lnkAddTrackingLocation.Enabled = False
+            ddlTestCenters.Enabled = False
+            chkArchived.Enabled = False
+
             notMain.Clear()
             If tlc(0).ID > 0 Then
                 lblAddEditTitle.Text = "Editing the " & tlc(0).Name & " Tracking Location"
@@ -221,6 +236,9 @@ Partial Class Admin_TrackingLocation
         pnlViewAllTrackingLocations.Visible = True
         pnlAddEditTrackingLocation.Visible = False
         pnlLeftMenuActions.Visible = False
+        lnkAddTrackingLocation.Enabled = True
+        ddlTestCenters.Enabled = True
+        chkArchived.Enabled = True
         gvMain.DataBind()
     End Sub
 
@@ -251,10 +269,6 @@ Partial Class Admin_TrackingLocation
         If Not notMain.HasErrors Then
             ShowAllTrackingLocations()
         End If
-    End Sub
-
-    Protected Sub lnkCancelAction_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCancelAction.Click
-        ShowAllTrackingLocations()
     End Sub
 
     Protected Sub lnkViewTrackingLocations_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkViewTrackingLocations.Click
@@ -312,5 +326,9 @@ Partial Class Admin_TrackingLocation
 
             e.Row.BackColor = color
         End If
+    End Sub
+
+    Protected Sub chkArchived_CheckedChanged(sender As Object, e As EventArgs)
+        BindTrackingLocations()
     End Sub
 End Class

@@ -44,6 +44,7 @@
             $(".ScrollTable >tbody tr td a:contains('FAComplete_InTest')").parent().removeClass().addClass("Pass")
             $(".ScrollTable >tbody tr td a:contains('InProgress')").parent().removeClass().addClass("WaitingForResult")
             $(".ScrollTable >tbody tr td a:contains('Quarantined')").parent().removeClass().addClass("Quarantined")
+            $(".ScrollTable >tbody tr td a:contains('Pending')").parent().removeClass().addClass("Pending")
         }
 
         $(document).ready(function () {
@@ -442,7 +443,7 @@
                 <asp:AccordionPane ID="acpTestingSummary" runat="server">
                     <Header>
                         <h2>
-                            Testing Summary
+                            <asp:Label runat="server" ID="lblTestingSummary" Text="Testing Summary"></asp:Label>
                         </h2>
                     </Header>
                     <Content>
@@ -481,7 +482,7 @@
                 <asp:AccordionPane ID="acpStressingSummary" runat="server">
                     <Header>
                         <h2>
-                            Stressing Summary
+                            <asp:Label runat="server" ID="lblStressingSummary" Text="Stressing Summary"></asp:Label>
                         </h2>
                     </Header>
                     <Content>
@@ -502,7 +503,7 @@
                                     <ContentTemplate>
                                         <asp:Label runat="server" ID="lblNote"><h4>If you see TestingSuspended it is due to the unit being scanned into that location more than once so the test record thinks an error has occured or you have removed the units prematurely. Reset the test record to In Progress</h4></asp:Label>
                                         
-                                        <asp:GridView ID="gvwStressingSummary" runat="server" CssClass="ScrollTable" EmptyDataText="No Data." HeaderStyle-Wrap="false" Width="100%" htmlencode="false">
+                                        <asp:GridView ID="gvwStressingSummary" runat="server" CssClass="ScrollTable" HeaderStyle-Wrap="false" Width="100%" htmlencode="false">
                                             <RowStyle CssClass="evenrow" />
                                             <AlternatingRowStyle CssClass="oddrow" />
                                         </asp:GridView>

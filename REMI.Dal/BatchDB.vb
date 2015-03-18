@@ -921,7 +921,7 @@ Namespace REMI.Dal
                 currentBatchTask.TestStageID = DirectCast(dr.Item("TestStageID"), Int32)
                 currentBatchTask.IsArchived = DirectCast(dr.Item("IsArchived"), Boolean)
                 currentBatchTask.TestIsArchived = DirectCast(dr.Item("TestIsArchived"), Boolean)
-
+                currentBatchTask.SetUnitResultCheck(dr.Item("TestCounts").ToString())
                 batchdata.Tasks.Add(currentBatchTask)
             Next
 
@@ -939,6 +939,7 @@ Namespace REMI.Dal
             currentBatchTask.TestStageType = DirectCast(myreader.GetInt32(myreader.GetOrdinal("teststagetype")), REMI.Contracts.TestStageType)
             currentBatchTask.TestStageName = myreader.GetString(myreader.GetOrdinal("TestStageName"))
             currentBatchTask.SetUnitsForTask(myreader.GetString(myreader.GetOrdinal("testunitsfortest")))
+            currentBatchTask.SetUnitResultCheck(myreader.GetString(myreader.GetOrdinal("TestCounts")))
             currentBatchTask.TestID = myreader.GetInt32(myreader.GetOrdinal("TestID"))
             currentBatchTask.TestStageID = myreader.GetInt32(myreader.GetOrdinal("TestStageID"))
             currentBatchTask.IsArchived = myreader.GetBoolean(myreader.GetOrdinal("IsArchived"))

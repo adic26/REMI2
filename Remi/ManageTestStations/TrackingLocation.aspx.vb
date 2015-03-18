@@ -46,10 +46,16 @@ Partial Class ManageTestStations_TrackingLocation
                     liEditConfig.Visible = True
                     HypEditStationConfiguration.NavigateUrl = REMIWebLinks.GetSetStationConfigurationLink(tl.ID)
 
-                    mi = New MenuItem
-                    mi.Text = "Edit Config"
-                    mi.NavigateUrl = REMIWebLinks.GetSetStationConfigurationLink(tl.ID)
-                    myMenu.Items(0).ChildItems.Add(mi)
+                    mi = (From m As MenuItem In myMenu.Items(0).ChildItems Where m.Text = "Edit Config" Select m).FirstOrDefault()
+
+                    If (mi IsNot Nothing) Then
+                        mi.NavigateUrl = REMIWebLinks.GetSetStationConfigurationLink(tl.ID)
+                    Else
+                        mi = New MenuItem
+                        mi.Text = "Edit Config"
+                        mi.NavigateUrl = REMIWebLinks.GetSetStationConfigurationLink(tl.ID)
+                        myMenu.Items(0).ChildItems.Add(mi)
+                    End If
                 End If
             Else
                 notMain.Notifications.AddWithMessage("Select a tracking location from the menu.", NotificationType.Information)

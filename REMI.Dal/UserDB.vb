@@ -178,8 +178,10 @@ Namespace REMI.Dal
                     Result = myCommand.ExecuteNonQuery()
                 End Using
 
-                'becuase we are using the asp.net role manager we should also remove this user from the aspnet roles.
-                System.Web.Security.Roles.RemoveUserFromRoles(userNameToDelete, System.Web.Security.Roles.GetRolesForUser(userNameToDelete))
+                If (System.Web.Security.Roles.GetRolesForUser(userNameToDelete).Count > 0) Then
+                    'becuase we are using the asp.net role manager we should also remove this user from the aspnet roles.
+                    System.Web.Security.Roles.RemoveUserFromRoles(userNameToDelete, System.Web.Security.Roles.GetRolesForUser(userNameToDelete))
+                End If
             End Using
 
             Return Result

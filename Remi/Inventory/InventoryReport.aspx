@@ -57,6 +57,7 @@
                     <asp:Parameter Type="Int32" Name="RequestTypeID" DefaultValue="0" />
                     <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
                     <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="0" />
+                    <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
                 </SelectParameters>
             </asp:ObjectDataSource>
         <asp:Button ID="btnGetReport" runat="server" Text="Execute Report" cssclass="button"/>

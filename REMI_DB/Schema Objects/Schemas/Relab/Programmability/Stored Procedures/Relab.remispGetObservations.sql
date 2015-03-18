@@ -11,7 +11,7 @@ BEGIN
 			(SELECT T.c.value('@Description', 'varchar(MAX)')
 			FROM jo.Definition.nodes('/Orientations/Orientation') T(c)
 			WHERE T.c.value('@Unit', 'varchar(MAX)') = tu.BatchUnitNumber AND ts.TestStageName LIKE T.c.value('@Drop', 'varchar(MAX)') + ' %') AS Orientation, 
-			m.Comment, ISNULL(mf.[File], 0) As [Image], mf.ContentType
+			m.Comment, (CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurementsFiles rmf WHERE rmf.ResultMeasurementID=m.ID) > 0 THEN 1 ELSE 0 END) AS HasFiles, m.ID AS MeasurementID
 	FROM Relab.ResultsMeasurements m
 		INNER JOIN Relab.Results r ON r.ID=m.ResultID
 		INNER JOIN TestUnits tu ON r.TestUnitID=tu.ID
@@ -20,9 +20,8 @@ BEGIN
 		INNER JOIN Lookups lm ON lm.LookupID=m.MeasurementTypeID
 		INNER JOIN Batches b ON b.ID=tu.BatchID
 		LEFT OUTER JOIN JobOrientation jo ON jo.ID=b.OrientationID
-		LEFT OUTER JOIN Relab.ResultsMeasurementsFiles mf ON mf.ResultMeasurementID=m.ID
 	WHERE MeasurementTypeID IN (SELECT LookupID FROM Lookups WHERE LookupTypeID=7 AND [values] = 'Observation')
-		AND b.ID=@BatchID
+		AND b.ID=@BatchID AND ISNULL(m.Archived,0) = 0
 	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder
 END
 GO

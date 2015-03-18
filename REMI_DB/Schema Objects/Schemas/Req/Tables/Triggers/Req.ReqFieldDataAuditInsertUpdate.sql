@@ -1,4 +1,4 @@
-﻿CREATE TRIGGER [Req].[ReqFieldDataAuditInsertUpdate] ON  [Req].[ReqFieldData] after insert, update
+﻿ALTER TRIGGER [Req].[ReqFieldDataAuditInsertUpdate] ON  [Req].[ReqFieldData] after insert, update
 AS 
 BEGIN
 SET NOCOUNT ON;
@@ -26,14 +26,15 @@ end
 
 select @count= count(*) from
 (
-   select Value from Inserted
+   select Value, InstanceID from Inserted
    except
-   select Value from Deleted
+   select Value, InstanceID from Deleted
 ) a
 
 if ((@count) >0)
 begin
-	insert into Req.ReqFieldDataAudit (RequestID,ReqFieldSetupID,Value,InsertTime,Action, UserName)
-	Select RequestID,ReqFieldSetupID,Value,InsertTime, @action,lastuser from inserted
+	insert into Req.ReqFieldDataAudit (RequestID,ReqFieldSetupID,Value,InsertTime,Action, UserName, ReqFieldDataID, InstanceID)
+	Select RequestID,ReqFieldSetupID,Value,InsertTime, @action,lastuser, ReqFieldDataID, InstanceID from inserted
 END
 END
+

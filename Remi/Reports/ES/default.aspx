@@ -28,19 +28,19 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="content" ContentPlaceHolderID="Content" runat="Server">
-    
     <a class="test-popup-link" visible="false">popup</a> 
 
     <asp:HiddenField ID="hdnBatchID" runat="server" />
     <asp:HiddenField ID="hdnRequestNumber" Value="" runat="server" />
          
-    <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestInfo" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgExpCol" TargetControlID="pnlRequestInfo" ExpandedSize="600" TextLabelID="lblText" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlRequestInfoHeader" ExpandControlID="pnlRequestInfoHeader"></asp:CollapsiblePanelExtender>
+    <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestInfo" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgExpCol" TargetControlID="pnlRequestInfo" TextLabelID="lblText" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlRequestInfoHeader" ExpandControlID="pnlRequestInfoHeader"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeFA" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgFA" TargetControlID="pnlFAInfo" TextLabelID="lblFA" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlFA" ExpandControlID="pnlFA"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestSummary" CollapseControlID="pnlRequestSummaryHeader" TargetControlID="pnlRequestSummary" TextLabelID="lblSummary" ExpandControlID="pnlRequestSummaryHeader" ImageControlID="imgRequestSummaryExpCol" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="false" CollapsedSize="1" ></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeApprovals" CollapseControlID="pnlApprovalHeader" TargetControlID="pnlApproval" TextLabelID="lblApprove" ExpandControlID="pnlApprovalHeader" ImageControlID="imgApprovals" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>
       
     <a name="top"></a>
-    <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label>
+    <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label><br /><br />
+    <asp:Label runat="server" ID="lblPrinted"></asp:Label>
     <br /><br /><br />
     <asp:Panel runat="server" ID="pnlES" CssClass="CollapseHeader" style="cursor:none;">
         <table class="TableNoBorders" width="100%">
@@ -54,6 +54,8 @@
                         <asp:ListItem Text="Pass" Value="1" />
                         <asp:ListItem Text="Fail" Value="2" />
                         <asp:ListItem Text="No Result" Value="3" />
+                        <asp:ListItem Text="Preliminary Pass" Value="4" />
+                        <asp:ListItem Text="Preliminary Fail" Value="5" />
                     </asp:DropDownList>
                 </td>
             </tr>
@@ -168,7 +170,7 @@
                 <asp:Label ID="lblResultSummary" runat="server" Text="Results<br/><font color='rgb(0,124,186)'>Summary</font>" /><asp:Image runat="server" ID="imgResultSummary" />
             </asp:Panel>
             <asp:Panel runat="server" ID="pnlResultSummary" CssClass="CollapseBody">
-                <asp:GridView ID="gvwResultSummary" DataSourceID="odsResultSummary" runat="server" AutoGenerateColumns="true" ShowHeader="true" Width="1200">
+                <asp:GridView ID="gvwResultSummary" DataSourceID="odsResultSummary" runat="server" AutoGenerateColumns="true" ShowHeader="true">
                 </asp:GridView>
                 <asp:ObjectDataSource ID="odsResultSummary" runat="server" SelectMethod="ESResultSummary" TypeName="REMI.Bll.ReportManager" OldValuesParameterFormatString="original_{0}">
                     <SelectParameters>
@@ -195,7 +197,7 @@
                     });
                 </script>
 
-                <asp:GridView ID="gvwResultBreakDown" runat="server" DataSourceID="odsResultBreakdown" EnableViewState="true" AutoGenerateColumns="false" DataKeyNames="ID" ShowHeader="true" style="width:100%">
+                <asp:GridView ID="gvwResultBreakDown" runat="server" DataSourceID="odsResultBreakdown" EnableViewState="true" AutoGenerateColumns="false" DataKeyNames="ID" ShowHeader="true">
                     <Columns>
                         <asp:TemplateField>
                             <ItemTemplate>
@@ -225,7 +227,11 @@
                 <asp:Label ID="lblbservationSummary" runat="server" Text="Observation<br/><font color='rgb(0,124,186)'>Summary</font>" /><asp:Image runat="server" ID="imgObservationSummary" />
             </asp:Panel>
             <asp:Panel runat="server" ID="pnlObservationSummaryInfo" CssClass="CollapseBody">
-                <asp:GridView ID="gvwObservationSummary" runat="server" DataSourceID="odsObservations" OnDataBound="gvwObservationSummary_DataBound" EnableViewState="true" AutoGenerateColumns="true" ShowHeader="true" style="width:100%">
+                <p>This report gives which drop the observation first occured at and gives a count of how many units had that observation.</p>
+                <asp:GridView ID="gvwObservationSummary" runat="server" DataSourceID="odsObservations" OnDataBound="gvwObservationSummary_DataBound" EnableViewState="true" AutoGenerateColumns="true" ShowHeader="true">
+                    <Columns>
+                        <asp:BoundField DataField="Observation" HeaderText="Observation" ItemStyle-HorizontalAlign="Left" />
+                    </Columns>
                 </asp:GridView>
                 <asp:ObjectDataSource ID="odsObservations" runat="server" SelectMethod="GetObservationSummary" TypeName="REMI.Bll.RelabManager" OldValuesParameterFormatString="original_{0}">
                     <SelectParameters>
@@ -240,7 +246,7 @@
                 <asp:Label ID="lblbservations" runat="server" Text="Observations" /><asp:Image runat="server" ID="imgObservations" />
             </asp:Panel>
             <asp:Panel runat="server" ID="pnlObservationsInfo" CssClass="CollapseBody">
-                <asp:GridView ID="gvwObservations" runat="server" EnableViewState="true" OnDataBound="gvwObservations_DataBound" DataSourceID="odsObservationInfo" AutoGenerateColumns="false" ShowHeader="true" style="width:100%">
+                <asp:GridView ID="gvwObservations" runat="server" EnableViewState="true" OnDataBound="gvwObservations_DataBound" DataSourceID="odsObservationInfo" AutoGenerateColumns="false" ShowHeader="true">
                     <Columns>
                         <asp:TemplateField HeaderText="Unit">
                             <ItemTemplate>
@@ -257,7 +263,7 @@
                                 <asp:Label runat="server" Visible="true" ID="lblTestStage" Text='<%# Eval("TestStageName")%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Observation">
+                        <asp:TemplateField HeaderText="Observation" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
                                 <asp:Label runat="server" Visible="true" ID="lblObservation" Text='<%# Eval("Observation")%>' />
                             </ItemTemplate>
@@ -267,15 +273,15 @@
                                 <asp:Label runat="server" Visible="true" ID="lblOrientation" Text='<%# Eval("Orientation")%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Notes">
+                        <asp:TemplateField HeaderText="Notes" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
                                 <asp:Label runat="server" Visible="true" ID="lblComment" Text='<%# Eval("Comment")%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Attachment" ItemStyle-Width="50px" ControlStyle-CssClass="removeStyle" >
+                        <asp:TemplateField HeaderText="Attachment">
                             <ItemTemplate>
-                                <asp:Image Visible="false" runat="server" ImageUrl="" ID="img" />
-                                <asp:HiddenField runat="server" ID="hdnImgStr" Value='<%# "data:image/" + Eval("ContentType") + ";base64," + Convert.ToBase64String(Eval("Image"))%>' />
+                                <asp:HiddenField runat="server" ID="hdnHasFiles" Value='<%# Eval("HasFiles") %>' />
+                                <input type="image" src="../../Design/Icons/png/24x24/png_file.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("MeasurementID") %>' pageID='<%# Me.ClientID %>' role="button" />
                             </ItemTemplate>
                         </asp:TemplateField>           
                     </Columns>
@@ -286,10 +292,10 @@
                     </SelectParameters>
                 </asp:ObjectDataSource>
             </asp:Panel>
-            <br /><br />
         </ContentTemplate>
     </asp:UpdatePanel>
-
+    
+    <br /><br />
     <a name="fa"></a>
     <asp:Panel ID="pnlFA" runat="server" style="display:none;" CssClass="CollapseHeader" Height="75" HorizontalAlign="Left">
         <asp:Label ID="lblFA" runat="server" Text="Failure<br/><font color='rgb(0,124,186)'>Analysis</font>" /><asp:Image runat="server" ID="imgFA" />

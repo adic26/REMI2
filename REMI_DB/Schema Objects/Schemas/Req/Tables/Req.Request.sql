@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [Req].[Request](
 	[RequestID] [int] IDENTITY(1,1) NOT NULL,
-	[RequestNumber] [nvarchar](11) NULL,
+	[RequestNumber] [nvarchar](11) NOT NULL,
 	rv ROWVERSION,
  CONSTRAINT [PK_Request] PRIMARY KEY CLUSTERED 
 (

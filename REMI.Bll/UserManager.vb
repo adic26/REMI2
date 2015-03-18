@@ -446,6 +446,7 @@ Namespace REMI.Bll
             Dim nc As New NotificationCollection
             Try
                 Dim userNameToDelete As String = (From u In New REMI.Dal.Entities().Instance().Users Where u.ID = userIDToDelete Select u.LDAPLogin).FirstOrDefault()
+
                 If UserDB.Delete(userIDToDelete, userID, userNameToDelete) > 0 Then
                     nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "i1", NotificationType.Information))
                 End If

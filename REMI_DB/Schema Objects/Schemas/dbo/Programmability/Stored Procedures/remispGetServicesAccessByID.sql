@@ -4,6 +4,8 @@ BEGIN
 	DECLARE @TrueBit BIT
 	SET @TrueBit = CONVERT(BIT, 1)
 	
+	SELECT 0 AS ServiceID, '' AS ServiceName, 0 AS ServiceAccessID, '' AS [Values]
+	UNION
 	SELECT s.ServiceID, s.ServiceName, sa.ServiceAccessID, ld.[Values]
 	FROM dbo.Services s
 		INNER JOIN dbo.ServicesAccess sa WITH (NOLOCK) ON sa.ServiceID=s.ServiceID

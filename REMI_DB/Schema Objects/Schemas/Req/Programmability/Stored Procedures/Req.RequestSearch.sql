@@ -178,12 +178,13 @@ BEGIN
 
 	EXEC sp_executesql @SQL
 
+	--START BUILDING MEASUREMENTS
 	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType NOT IN ('Request','ReqNum')) > 0)
 	BEGIN
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
 
-		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, IMEI NVARCHAR(150), BSN BIGINT, ID INT, ResultID INT, XMLID INT)
+		CREATE TABLE dbo.#RR (RequestID INT, BatchID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, UnitIMEI NVARCHAR(150), UnitBSN BIGINT, ID INT, ResultID INT, XMLID INT)
 		CREATE TABLE dbo.#RRParameters (ResultMeasurementID INT)
 		CREATE TABLE dbo.#RRInformation (RID INT, ResultInfoArchived BIT)
 		
@@ -192,94 +193,73 @@ BEGIN
 		SET @SQL = 'ALTER TABLE dbo.#RR ADD ' + replace(@rows, ']', '] NVARCHAR(4000)')
 		EXEC sp_executesql @SQL
 
-		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage')) > 0)
-		BEGIN
-			ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
-				TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
-				MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
-				LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
-				DegradationVal DECIMAL(10,3), Description NVARCHAR(800), PassFail BIT, ReTestNum INT,
-				MeasurementUnitType NVARCHAR(150)
-		END
-
-		SET @rows = REPLACE(@rows, '[', 'r.[')
+		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
+			TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
+			MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
+			LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
+			DegradationVal DECIMAL(10,3), MeasurementDescription NVARCHAR(800), PassFail BIT, ReTestNum INT,
+			MeasurementUnitType NVARCHAR(150)
 
 		INSERT INTO #executeSQL (sqlvar)
 		VALUES ('INSERT INTO dbo.#RR 
-		SELECT r.RequestID, r.BatchID, r.RequestNumber, tu.BatchUnitNumber, tu.IMEI, tu.BSN ')
+		SELECT r.RequestID, r.BatchID, r.RequestNumber, tu.BatchUnitNumber, tu.IMEI, tu.BSN, m.ID, rs.ID AS ResultID, x.ID AS XMLID, ')
 
-		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage')) > 0)
-		BEGIN
-			INSERT INTO #executeSQL (sqlvar)
-			VALUES (',m.ID, rs.ID AS ResultID, x.ID AS XMLID, ')
-		END
-		ELSE
-		BEGIN
-			INSERT INTO #executeSQL (sqlvar)
-			VALUES (', 0 AS ID, 0 AS ResultID, 0 AS XMLID, ')
-		END
-
+		SET @rows = REPLACE(@rows, '[', 'r.[')
 		INSERT INTO #executeSQL (sqlvar)
 		VALUES (@rows)
 
-		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage')) > 0)
-		BEGIN
-			INSERT INTO #executeSQL (sqlvar)
-			VALUES (', (''http://go/remi/Relab/Measurements.aspx?ID='' + CONVERT(VARCHAR, rs.ID) + ''&Batch='' + CONVERT(VARCHAR, b.ID)) AS ResultLink ')
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (', (''http://go/remi/Relab/Measurements.aspx?ID='' + CONVERT(VARCHAR, rs.ID) + ''&Batch='' + CONVERT(VARCHAR, b.ID)) AS ResultLink ')
 		
-		
-			INSERT INTO #executeSQL (sqlvar)
-			VALUES (', t.TestName, ts.TestStageName, x.StartDate AS TestRunStartDate, x.EndDate AS TestRunEndDate, 
-				mn.[Values] As MeasurementName, m.MeasurementValue, m.LowerLimit, m.UpperLimit, m.Archived, m.Comment, m.DegradationVal, m.Description, m.PassFail, m.ReTestNum, 
-				mut.[Values] As MeasurementUnitType ')
-		END
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES (', t.TestName, ts.TestStageName, x.StartDate AS TestRunStartDate, x.EndDate AS TestRunEndDate, 
+			mn.[Values] As MeasurementName, m.MeasurementValue, m.LowerLimit, m.UpperLimit, m.Archived, m.Comment, m.DegradationVal, m.Description AS MeasurementDescription, m.PassFail, m.ReTestNum, 
+			mut.[Values] As MeasurementUnitType ')
 
 		INSERT INTO #executeSQL (sqlvar)
 		VALUES (' FROM dbo.#Request r WITH(NOLOCK)
 			INNER JOIN dbo.Batches b WITH(NOLOCK) ON b.ID=r.BatchID
 			INNER JOIN dbo.TestUnits tu WITH(NOLOCK) ON tu.BatchID=b.ID ')
 
-		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage', 'Measurement')) > 0)
-		BEGIN
-			DECLARE @ResultArchived INT
-			DECLARE @TestRunStartDate NVARCHAR(12)
-			DECLARE @TestRunEndDate NVARCHAR(12)
+		DECLARE @ResultArchived INT
+		DECLARE @TestRunStartDate NVARCHAR(12)
+		DECLARE @TestRunEndDate NVARCHAR(12)
 
-			SELECT @ResultArchived = ID FROM dbo.#temp WHERE TableType='ResultArchived'
-			SELECT @TestRunStartDate = SearchTerm FROM dbo.#temp WHERE TableType='TestRunStartDate'
-			SELECT @TestRunEndDate = SearchTerm FROM dbo.#temp WHERE TableType='TestRunEndDate'
+		SELECT @ResultArchived = ID FROM dbo.#temp WHERE TableType='ResultArchived'
+		SELECT @TestRunStartDate = SearchTerm FROM dbo.#temp WHERE TableType='TestRunStartDate'
+		SELECT @TestRunEndDate = SearchTerm FROM dbo.#temp WHERE TableType='TestRunEndDate'
 
-			IF @ResultArchived IS NULL
-				SET @ResultArchived = 0
+		IF @ResultArchived IS NULL
+			SET @ResultArchived = 0
+
+		INSERT INTO #executeSQL (sqlvar)
+		VALUES ('INNER JOIN Relab.Results rs WITH(NOLOCK) ON rs.TestUnitID=tu.ID
+			INNER JOIN Relab.ResultsMeasurements m WITH(NOLOCK) ON m.ResultID=rs.ID
+			INNER JOIN dbo.Lookups mn WITH(NOLOCK) ON mn.LookupID = m.MeasurementTypeID 
+			LEFT OUTER JOIN dbo.Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
+			INNER JOIN dbo.Tests t WITH(NOLOCK) ON rs.TestID=t.ID
+			INNER JOIN dbo.TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
+			INNER JOIN dbo.Jobs j WITH(NOLOCK) ON j.ID=ts.JobID
+			LEFT OUTER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
+		WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) ')
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType = 'Measurement') > 0)
+		BEGIN				
+			SET @whereStr = ''
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+			FROM dbo.#temp
+			WHERE TableType='Measurement' AND LTRIM(RTRIM(SearchTerm)) LIKE '*%'
+
+			SET @whereStr = REPLACE(REPLACE(REPLACE(@whereStr, '''*', 'LIKE ''%'), ''',', '%'''), 'LIKE ', ' OR mn.[Values] LIKE ')
 
 			INSERT INTO #executeSQL (sqlvar)
-			VALUES ('INNER JOIN Relab.Results rs WITH(NOLOCK) ON rs.TestUnitID=tu.ID
-				INNER JOIN Relab.ResultsMeasurements m WITH(NOLOCK) ON m.ResultID=rs.ID
-				INNER JOIN dbo.Lookups mn WITH(NOLOCK) ON mn.LookupID = m.MeasurementTypeID 
-				LEFT OUTER JOIN dbo.Lookups mut WITH(NOLOCK) ON mut.LookupID = m.MeasurementUnitTypeID 
-				INNER JOIN dbo.Tests t WITH(NOLOCK) ON rs.TestID=t.ID
-				INNER JOIN dbo.TestStages ts WITH(NOLOCK) ON rs.TestStageID=ts.ID
-				LEFT OUTER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ID=m.XMLID
-			WHERE ((' + CONVERT(NVARCHAR,@ResultArchived) + ' = 0 AND m.Archived=0) OR (' + CONVERT(NVARCHAR, @ResultArchived) + '=1)) ')
+			VALUES ('AND ( ' + SUBSTRING(@whereStr,4, LEN(@whereStr)) + ' )')
+		END
 
-			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType = 'Measurement') > 0)
-			BEGIN				
-				SET @whereStr = ''
-				SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
-				FROM dbo.#temp
-				WHERE TableType='Measurement' AND LTRIM(RTRIM(SearchTerm)) LIKE '*%'
-
-				SET @whereStr = REPLACE(REPLACE(REPLACE(@whereStr, '''*', 'LIKE ''%'), ''',', '%'''), 'LIKE ', ' OR mn.[Values] LIKE ')
-
-				INSERT INTO #executeSQL (sqlvar)
-				VALUES ('AND ( ' + SUBSTRING(@whereStr,4, LEN(@whereStr)) + ' )')
-			END
-
-			IF (@TestRunStartDate IS NOT NULL AND @TestRunEndDate IS NOT NULL)
-			BEGIN
-				INSERT INTO #executeSQL (sqlvar)
-				VALUES (' AND (x.StartDate >= ''' + CONVERT(NVARCHAR,@TestRunStartDate) + ' 00:00:00.000'' AND x.EndDate <= ''' + CONVERT(NVARCHAR,@TestRunEndDate) + ' 23:59:59'') ')
-			END
+		IF (@TestRunStartDate IS NOT NULL AND @TestRunEndDate IS NOT NULL)
+		BEGIN
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND (x.StartDate >= ''' + CONVERT(NVARCHAR,@TestRunStartDate) + ' 00:00:00.000'' AND x.EndDate <= ''' + CONVERT(NVARCHAR,@TestRunEndDate) + ' 23:59:59'') ')
 		END
 
 		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Unit') > 0)
@@ -341,291 +321,300 @@ BEGIN
 			INSERT INTO #executeSQL (sqlvar)
 			VALUES (' AND ts.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
 		END
+		
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Job') > 0)
+		BEGIN
+			SET @whereStr = ''
 
+			SELECT @whereStr = COALESCE(@whereStr + '' ,'') + LTRIM(RTRIM(ID)) + ','
+			FROM dbo.#temp
+			WHERE TableType = 'Job'
+
+			INSERT INTO #executeSQL (sqlvar)
+			VALUES (' AND j.ID IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') ')
+		END
+		
 		SET @SQL =  REPLACE(REPLACE(REPLACE(REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;',''), '&gt;', ' >'), '&lt;', ' <'),'&amp;','&')
 		EXEC sp_executesql @SQL
 
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
 
-		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType IN ('Test', 'Stage', 'Measurement')) > 0)
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Param:%') > 0)
 		BEGIN
-			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Param:%') > 0)
-			BEGIN
-				INSERT INTO dbo.#Params (Name, Val)
-				SELECT REPLACE(TableType, 'Param:', ''), SearchTerm
-				FROM dbo.#temp
-				WHERE TableType LIKE 'Param:%'
-			END
+			INSERT INTO dbo.#Params (Name, Val)
+			SELECT REPLACE(TableType, 'Param:', ''), SearchTerm
+			FROM dbo.#temp
+			WHERE TableType LIKE 'Param:%'
+		END
 		
-			SELECT @ParameterColumnNames=  ISNULL(STUFF(
-			( 
-			SELECT DISTINCT '],[' + rp.ParameterName
-			FROM dbo.#RR rr WITH(NOLOCK)
-				LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
-			WHERE rp.ParameterName <> 'Command'
-			ORDER BY '],[' +  rp.ParameterName
-			FOR XML PATH('')), 1, 2, '') + ']','[na]')
+		SELECT @ParameterColumnNames=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + rp.ParameterName
+		FROM dbo.#RR rr WITH(NOLOCK)
+			LEFT OUTER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
+		WHERE rp.ParameterName <> 'Command'
+		ORDER BY '],[' +  rp.ParameterName
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
 
-			IF (@ParameterColumnNames <> '[na]')
+		IF (@ParameterColumnNames <> '[na]')
+		BEGIN
+			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
+			EXEC sp_executesql @SQL
+			SET @whereStr = ''
+			
+			DELETE p 
+			FROM dbo.#Params p
+			WHERE p.Name IN (SELECT Name
+					FROM 
+						(
+							SELECT Name
+							FROM #Params
+						) param
+					WHERE param.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@ParameterColumnNames, '[', ''), ']', ''))))))
+			
+			IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
 			BEGIN
-				SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
-				EXEC sp_executesql @SQL
-				SET @whereStr = ''
+				SET @whereStr = ' WHERE '
+				SET @whereStr2 = ''
+				SET @whereStr3 = ''
 				
-				DELETE p 
-				FROM dbo.#Params p
-				WHERE p.Name IN (SELECT Name
-						FROM 
-							(
-								SELECT Name
-								FROM #Params
-							) param
-						WHERE param.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@ParameterColumnNames, '[', ''), ']', ''))))))
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+				INTO #buildparamtable
+				FROM #Params
+				GROUP BY name
 				
-				IF ((SELECT COUNT(*) FROM dbo.#Params) > 0)
-				BEGIN
-					SET @whereStr = ' WHERE '
-					SET @whereStr2 = ''
-					SET @whereStr3 = ''
-					
-					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
-					INTO #buildparamtable
-					FROM #Params
-					GROUP BY name
-					
-					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
-					INTO #buildparamtable2
-					FROM #Params
-					GROUP BY name
-					
-					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
-					INTO #buildparamtable3
-					FROM #Params
-					GROUP BY name
-					
-					UPDATE bt
-					SET bt.params = REPLACE(REPLACE((
-							SELECT ('''' + p.Val + ''',') As Val
-							FROM #Params p
-							WHERE p.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
-							FOR XML PATH('')), '<Val>', ''), '</Val>','')
-					FROM #buildparamtable bt
-					WHERE Params = ''
-					
-					UPDATE bt
-					SET bt.params = REPLACE(REPLACE((
-							SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(p.Val, '*','%') + '%'' OR ') As Val
-							FROM #Params p
-							WHERE p.Name = bt.Name AND Val LIKE '*%' AND Val NOT LIKE '-%'
-							FOR XML PATH('')), '<Val>', ''), '</Val>','')
-					FROM #buildparamtable2 bt
-					WHERE Params = '' OR Params IS NULL
-					
-					UPDATE bt
-					SET bt.params = REPLACE(REPLACE((
-							SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(p.Val, '-','%') + '%'' OR ') As Val
-							FROM #Params p
-							WHERE p.Name = bt.Name AND Val LIKE '-%'
-							FOR XML PATH('')), '<Val>', ''), '</Val>','')
-					FROM #buildparamtable3 bt
-					WHERE Params = '' OR Params IS NULL
-					
-					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(params, 0, LEN(params)) + ') AND ' 
-					FROM dbo.#buildparamtable 
-					WHERE Params IS NOT NULL
-					
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+				INTO #buildparamtable2
+				FROM #Params
+				GROUP BY name
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
+				INTO #buildparamtable3
+				FROM #Params
+				GROUP BY name
+				
+				UPDATE bt
+				SET bt.params = REPLACE(REPLACE((
+						SELECT ('''' + p.Val + ''',') As Val
+						FROM #Params p
+						WHERE p.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildparamtable bt
+				WHERE Params = ''
+				
+				UPDATE bt
+				SET bt.params = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(p.Val, '*','%') + '%'' OR ') As Val
+						FROM #Params p
+						WHERE p.Name = bt.Name AND Val LIKE '*%' AND Val NOT LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildparamtable2 bt
+				WHERE Params = '' OR Params IS NULL
+				
+				UPDATE bt
+				SET bt.params = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(p.Val, '-','%') + '%'' OR ') As Val
+						FROM #Params p
+						WHERE p.Name = bt.Name AND Val LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildparamtable3 bt
+				WHERE Params = '' OR Params IS NULL
+				
+				SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(params, 0, LEN(params)) + ') AND ' 
+				FROM dbo.#buildparamtable 
+				WHERE Params IS NOT NULL
+				
+				IF (@whereStr <> ' WHERE ')
+					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+
+				SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
+				FROM dbo.#buildparamtable2 
+				WHERE Params IS NOT NULL
+				
+				IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
+				BEGIN						
 					IF (@whereStr <> ' WHERE ')
-						SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
-
-					SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
-					FROM dbo.#buildparamtable2 
-					WHERE Params IS NOT NULL
-					
-					IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
-					BEGIN						
-						IF (@whereStr <> ' WHERE ')
-							SET @whereStr2 = ' AND ' + @whereStr2
-						ELSE
-							SET @whereStr2 = @whereStr2
-					END
-					
-					SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
-					FROM dbo.#buildparamtable3
-					WHERE Params IS NOT NULL
-					
-					IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
-					BEGIN						
-						IF (@whereStr <> ' WHERE ')
-							SET @whereStr3 = ' AND ' + @whereStr3
-						ELSE
-							SET @whereStr3 = @whereStr3
-					END
-												
-					SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')				
-
-					DROP TABLE #buildparamtable
-					DROP TABLE #buildparamtable2
+						SET @whereStr2 = ' AND ' + @whereStr2
+					ELSE
+						SET @whereStr2 = @whereStr2
 				END
+				
+				SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
+				FROM dbo.#buildparamtable3
+				WHERE Params IS NOT NULL
+				
+				IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
+				BEGIN						
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr3 = ' AND ' + @whereStr3
+					ELSE
+						SET @whereStr3 = @whereStr3
+				END
+											
+				SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')				
 
-				SET @SQL = 'INSERT INTO dbo.#RRParameters SELECT *
-				FROM (
-					SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
-					FROM dbo.#RR rr WITH(NOLOCK)
-						INNER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
-					) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt
-				 ' + @whereStr
-					
-				EXEC sp_executesql @SQL
+				DROP TABLE #buildparamtable
+				DROP TABLE #buildparamtable2
 			END
-			ELSE
-			BEGIN
-				SET @ParameterColumnNames = NULL
-			END
 
-			DECLARE @ResultInfoArchived INT
-			SELECT @ResultInfoArchived = ID FROM dbo.#temp WHERE TableType='ResultInfoArchived'
+			SET @SQL = 'INSERT INTO dbo.#RRParameters SELECT *
+			FROM (
+				SELECT rp.ResultMeasurementID, rp.ParameterName, rp.Value
+				FROM dbo.#RR rr WITH(NOLOCK)
+					INNER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
+				) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt
+			 ' + @whereStr
+				
+			EXEC sp_executesql @SQL
+		END
+		ELSE
+		BEGIN
+			SET @ParameterColumnNames = NULL
+		END
 
-			IF @ResultInfoArchived IS NULL
-				SET @ResultInfoArchived = 0
+		DECLARE @ResultInfoArchived INT
+		SELECT @ResultInfoArchived = ID FROM dbo.#temp WHERE TableType='ResultInfoArchived'
+
+		IF @ResultInfoArchived IS NULL
+			SET @ResultInfoArchived = 0
 							
-			IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Info:%') > 0)
+		IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType LIKE 'Info:%') > 0)
+		BEGIN
+			INSERT INTO dbo.#Infos (Name, Val)
+			SELECT REPLACE(TableType, 'Info:', ''), SearchTerm
+			FROM dbo.#temp
+			WHERE TableType LIKE 'Info:%'
+		END
+
+		SELECT @InformationColumnNames=  ISNULL(STUFF(
+		( 
+		SELECT DISTINCT '],[' + ri.Name
+		FROM dbo.#RR rr WITH(NOLOCK)
+			INNER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ResultID = rr.ResultID
+			LEFT OUTER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON x.ID=ri.XMLID
+		WHERE ri.Name NOT IN ('Start UTC','Start','End', 'STEF Plugin Version')
+			AND ((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1))
+		ORDER BY '],[' +  ri.Name
+		FOR XML PATH('')), 1, 2, '') + ']','[na]')
+
+		IF (@InformationColumnNames <> '[na]')
+		BEGIN
+			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
+			EXEC sp_executesql @SQL
+			
+			SET @whereStr = ''
+			
+			DELETE i 
+			FROM dbo.#infos i
+			WHERE i.Name IN (SELECT Name
+					FROM 
+						(
+							SELECT Name
+							FROM #Infos
+						) inf
+					WHERE inf.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@InformationColumnNames, '[', ''), ']', ''))))))
+
+			IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
 			BEGIN
-				INSERT INTO dbo.#Infos (Name, Val)
-				SELECT REPLACE(TableType, 'Info:', ''), SearchTerm
-				FROM dbo.#temp
-				WHERE TableType LIKE 'Info:%'
-			END
-
-			SELECT @InformationColumnNames=  ISNULL(STUFF(
-			( 
-			SELECT DISTINCT '],[' + ri.Name
-			FROM dbo.#RR rr WITH(NOLOCK)
-				INNER JOIN Relab.ResultsXML x WITH(NOLOCK) ON x.ResultID = rr.ResultID
-				LEFT OUTER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON x.ID=ri.XMLID
-			WHERE ri.Name NOT IN ('Start UTC','Start','End', 'STEF Plugin Version')
-				AND ((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1))
-			ORDER BY '],[' +  ri.Name
-			FOR XML PATH('')), 1, 2, '') + ']','[na]')
-
-			IF (@InformationColumnNames <> '[na]')
-			BEGIN
-				SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
-				EXEC sp_executesql @SQL
+				SET @whereStr = ' WHERE '
+				SET @whereStr2 = ''
+				SET @whereStr3 = ''
 				
-				SET @whereStr = ''
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+				INTO #buildinfotable
+				FROM dbo.#infos
+				GROUP BY name
 				
-				DELETE i 
-				FROM dbo.#infos i
-				WHERE i.Name IN (SELECT Name
-						FROM 
-							(
-								SELECT Name
-								FROM #Infos
-							) inf
-						WHERE inf.Name NOT IN (SELECT s FROM dbo.Split(',', LTRIM(RTRIM(REPLACE(REPLACE(@InformationColumnNames, '[', ''), ']', ''))))))
-
-				IF ((SELECT COUNT(*) FROM dbo.#Infos) > 0)
-				BEGIN
-					SET @whereStr = ' WHERE '
-					SET @whereStr2 = ''
-					SET @whereStr3 = ''
-					
-					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
-					INTO #buildinfotable
-					FROM dbo.#infos
-					GROUP BY name
-					
-					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
-					INTO #buildinfotable2
-					FROM dbo.#infos
-					GROUP BY name
-					
-					SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
-					INTO #buildinfotable3
-					FROM dbo.#infos
-					GROUP BY name
-					
-					UPDATE bt
-					SET bt.info = REPLACE(REPLACE((
-							SELECT ('''' + i.Val + ''',') As Val
-							FROM dbo.#infos i
-							WHERE i.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
-							FOR XML PATH('')), '<Val>', ''), '</Val>','')
-					FROM #buildinfotable bt
-					WHERE info = ''
-					
-					UPDATE bt
-					SET bt.info = REPLACE(REPLACE((
-							SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(i.Val, '*','%') + '%'' OR ') As Val
-							FROM dbo.#infos i
-							WHERE i.Name = bt.Name AND Val LIKE '*%'
-							FOR XML PATH('')), '<Val>', ''), '</Val>','')
-					FROM #buildinfotable2 bt
-					WHERE info = '' OR info IS NULL
-					
-					UPDATE bt
-					SET bt.info = REPLACE(REPLACE((
-							SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(i.Val, '-','%') + '%'' OR ') As Val
-							FROM dbo.#infos i
-							WHERE i.Name = bt.Name AND Val LIKE '-%'
-							FOR XML PATH('')), '<Val>', ''), '</Val>','')
-					FROM #buildinfotable3 bt
-					WHERE info = '' OR info IS NULL
-										
-					SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(info, 0, LEN(info)) + ') AND ' 
-					FROM dbo.#buildinfotable 
-					WHERE info IS NOT NULL 
-					
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+				INTO #buildinfotable2
+				FROM dbo.#infos
+				GROUP BY name
+				
+				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS info
+				INTO #buildinfotable3
+				FROM dbo.#infos
+				GROUP BY name
+				
+				UPDATE bt
+				SET bt.info = REPLACE(REPLACE((
+						SELECT ('''' + i.Val + ''',') As Val
+						FROM dbo.#infos i
+						WHERE i.Name = bt.Name AND Val NOT LIKE '*%' AND Val NOT LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildinfotable bt
+				WHERE info = ''
+				
+				UPDATE bt
+				SET bt.info = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) LIKE ''' + REPLACE(i.Val, '*','%') + '%'' OR ') As Val
+						FROM dbo.#infos i
+						WHERE i.Name = bt.Name AND Val LIKE '*%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildinfotable2 bt
+				WHERE info = '' OR info IS NULL
+				
+				UPDATE bt
+				SET bt.info = REPLACE(REPLACE((
+						SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(i.Val, '-','%') + '%'' OR ') As Val
+						FROM dbo.#infos i
+						WHERE i.Name = bt.Name AND Val LIKE '-%'
+						FOR XML PATH('')), '<Val>', ''), '</Val>','')
+				FROM #buildinfotable3 bt
+				WHERE info = '' OR info IS NULL
+									
+				SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(info, 0, LEN(info)) + ') AND ' 
+				FROM dbo.#buildinfotable 
+				WHERE info IS NOT NULL 
+				
+				IF (@whereStr <> ' WHERE ')
+					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+									
+				SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
+				FROM dbo.#buildinfotable2 
+				WHERE info IS NOT NULL 
+				
+				IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
+				BEGIN						
 					IF (@whereStr <> ' WHERE ')
-						SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
-										
-					SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
-					FROM dbo.#buildinfotable2 
-					WHERE info IS NOT NULL 
-					
-					IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
-					BEGIN						
-						IF (@whereStr <> ' WHERE ')
-							SET @whereStr2 = ' AND ' + @whereStr2
-						ELSE
-							SET @whereStr2 = @whereStr2
-					END						
-					
-					SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
-					FROM dbo.#buildinfotable3 
-					WHERE info IS NOT NULL 
-					
-					IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
-					BEGIN						
-						IF (@whereStr <> ' WHERE ')
-							SET @whereStr3 = ' AND ' + @whereStr3
-						ELSE
-							SET @whereStr3 = @whereStr3
-					END
-												
-					SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')
-
-					DROP TABLE #buildinfotable
-					DROP TABLE #buildinfotable2
+						SET @whereStr2 = ' AND ' + @whereStr2
+					ELSE
+						SET @whereStr2 = @whereStr2
+				END						
+				
+				SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(info, 0, LEN(info)-1) + ' ) '
+				FROM dbo.#buildinfotable3 
+				WHERE info IS NOT NULL 
+				
+				IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
+				BEGIN						
+					IF (@whereStr <> ' WHERE ')
+						SET @whereStr3 = ' AND ' + @whereStr3
+					ELSE
+						SET @whereStr3 = @whereStr3
 				END
+											
+				SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')
 
-				SET @SQL = N'INSERT INTO dbo.#RRInformation SELECT *
-				FROM (
-					SELECT rr.ResultID AS RID, ri.IsArchived AS ResultInfoArchived, ri.Name, ri.Value
-					FROM dbo.#RR rr WITH(NOLOCK)
-						INNER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON rr.XMLID=ri.XMLID
-						WHERE ri.Name NOT IN (''Start UTC'',''Start'',''End'', ''STEF Plugin Version'') AND
-							((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1)) 
-					) te PIVOT (MAX(Value) FOR Name IN ('+ @InformationColumnNames +')) AS pvt
-				' + @whereStr
+				DROP TABLE #buildinfotable
+				DROP TABLE #buildinfotable2
+			END
 
-				EXEC sp_executesql @SQL, N'@ResultInfoArchived int', @ResultInfoArchived
-			END
-			ELSE
-			BEGIN
-				SET @InformationColumnNames = NULL
-			END
+			SET @SQL = N'INSERT INTO dbo.#RRInformation SELECT *
+			FROM (
+				SELECT rr.ResultID AS RID, ri.IsArchived AS ResultInfoArchived, ri.Name, ri.Value
+				FROM dbo.#RR rr WITH(NOLOCK)
+					INNER JOIN Relab.ResultsInformation ri WITH(NOLOCK) ON rr.XMLID=ri.XMLID
+					WHERE ri.Name NOT IN (''Start UTC'',''Start'',''End'', ''STEF Plugin Version'') AND
+						((@ResultInfoArchived = 0 AND ri.IsArchived=0) OR (@ResultInfoArchived=1)) 
+				) te PIVOT (MAX(Value) FOR Name IN ('+ @InformationColumnNames +')) AS pvt
+			' + @whereStr
+
+			EXEC sp_executesql @SQL, N'@ResultInfoArchived int', @ResultInfoArchived
+		END
+		ELSE
+		BEGIN
+			SET @InformationColumnNames = NULL
 		END
 
 		SET @whereStr = ''
@@ -755,7 +744,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES-- ('Request', 51, '*ontario')
+VALUES ('Request', 51, '*Windermere')
 --,('Request', 51, '-Windermere E R135')
 --,('Request', 51, '3G SIMs')
 -- ,('Request', 51, '*Lisbon')
@@ -763,10 +752,12 @@ VALUES-- ('Request', 51, '*ontario')
 --,('Request', 49, '*Accessory')
 --,('Test', 1099, 'Sensor Test')
 --,('Test', 1280, 'Functional')
---,('Test', 1020, 'Radiated RF Test')
+,('Test', 1020, 'Radiated RF Test')
 --('Test', 1561, 'Display Test')
 --,('Test', 1103, 'Camera Front')
-('Stage', 3616, '1 Drop')
+--('Stage', 3616, '1 Drop')
+--,('Job', 179, 'T004 DIRT RASS Drop')
+--,('Job', 215, 'T013 Mechanical Suite')
 --,('Stage', 2246, 'Analysis')
 --,('Stage', 3220, 'Post 720hrs')
 --,('BSN', 0, '1151185790')

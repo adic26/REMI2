@@ -22,6 +22,7 @@
     var additional = $('#bs_Additional');
     var tests = $('#bs_TestField');
     var stages = $('#bs_RealStages');
+    var jobs = $('#bs_StagesField');
     var oTable;
     var executeTop = $("[id$='hdnTop']");
 
@@ -332,8 +333,11 @@
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             var testID = $('#bs_TestField optgroup > option')[originalIndex].getAttribute('testid');
             var tests = 'Test' + ',' + testID + ',' + element.innerText;
-            //console.log(tests);
             fullList.push(tests);
+        });
+
+        $("#bs_StagesField option:selected").each(function () {
+            fullList.push('Job' + ',' + $(this)[0].getAttribute('jobID') + ',' + $(this).text());
         });
 
         $.each(selectedStages, function (index, element) {
@@ -346,7 +350,6 @@
                 var testID = $('#bs_RealStages optgroup')[OptGroup - 1].childNodes[originalIndex].getAttribute('testid');
             }
             var stage = 'Stage' + ',' + testID + ',' + element.innerText;
-            //console.log(stage);
             fullList.push(stage);
         });
 
@@ -367,17 +370,7 @@
             $('div.table').unblock();
         }
     });
-    
-    // Old export Function
-    //$('#bs_export').click(function () {
-    //    if (navigator.appName == 'Microsoft Internet Explorer') {
-    //        alert("Export Functionality Not Supported For IE. Use Chrome.");
-    //    }
-    //    else {
-    //        CSVExportDataTable("", $(this).val());
-    //    }
-    //});
-    
+        
     var selectpicker = $('#bs_StagesField').data('selectpicker').$newElement;
     selectpicker.data('open', false);
 
@@ -388,7 +381,10 @@
 
     $('#bs_StagesField').change(function () {
         if ($('#bs_StagesField').val() != null) {
-            addStagesViaJobs($('#bs_StagesField').val(), $('#bs_RealStages'));
+            $("#bs_StagesField option:selected").each(function () {
+                $('#bs_RealStages').empty();
+                stagesWebService($(this).text(), $(this)[0].getAttribute('jobID'), $('#bs_RealStages'));
+            });
         }
 
         $('#bs_RealStages').next().show();
@@ -514,7 +510,7 @@ function jobSearch(model, username) {
         model.empty();
         cb = '';
         $.each(rslt, function (index, element) {
-            cb += "<option>" + element + "</option>";
+            cb += '<option jobID=\"' + element.ID + '">' + element.Name + '</option>';
         });
 
         model.append(cb);
@@ -539,42 +535,17 @@ function populateFields(data, model, type) {
     $('.selectpicker').selectpicker('refresh');
 }
 
-function populateStage(rtID, model) {
-    var requestParams = JSON.stringify({
-        "requestTypeID": rtID
-    });
-
-    var myRequest = jsonRequest("../webservice/REMIInternal.asmx/GetAllStages", requestParams).success(function (data) {
-        model.empty();
-        model.append('<optgroup label="Stages">');
-        model.append(data);
-        model.append('</optgroup>');
-        $('.selectpicker').selectpicker('refresh');
-    });
-}
-
 function refreshAllSelectPickers() {
     $('.selectpicker').selectpicker('refresh');
 }
 
-function addStagesViaJobs(data,model) {
-    model.empty();
-
-    //where data is all the values from the Job.
-    //send multiple jobs inside stagesWebservice and process it
-    $.each(data, function (index, element) {
-        //call web service function
-        stagesWebService(element,model);
-    });
-}
-
-function stagesWebService(jobName,model) {    
+function stagesWebService(jobName, JobID, model) {    
     //Re-assess the web service , so it takes multiple job names
     var requestParams = JSON.stringify({
-        "jobName": jobName
+        "jobID": JobID
     });
 
-    var myRequest = jsonRequest("../webservice/RemiAPI.asmx/GetJobStages", requestParams).success(function (data) {
+    var myRequest = jsonRequest("../webservice/REMIInternal.asmx/GetJobStages", requestParams).success(function (data) {
         var results = data;
         var rslt = $(results);
         var cb = '';

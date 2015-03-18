@@ -8,6 +8,13 @@
     <h1>Device Tracking Scan</h1>
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
+    <h3>Filter</h3>
+    <ul>
+        <li>
+            <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgDepartmentView" runat="server" />
+            <asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
+        </li>
+    </ul>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <uc1:NotificationList ID="notMain" runat="server" />
@@ -20,12 +27,7 @@
                     Select Job (If Applicable):
                 </td>
                 <td>
-                    <asp:DropDownList ID="ddlJobs" runat="server" AppendDataBoundItems="True" AutoPostBack="True"
-                        DataSourceID="odsJobs" Width="305px">
-                        <asp:ListItem>Not Applicable</asp:ListItem>
-                    </asp:DropDownList>
-                    <asp:ObjectDataSource ID="odsJobs" runat="server" OldValuesParameterFormatString="original_{0}"
-                        SelectMethod="GetJobList" TypeName="REMI.Bll.JobManager"></asp:ObjectDataSource>
+                    <asp:DropDownList ID="ddlJobs" runat="server" AppendDataBoundItems="False" AutoPostBack="True" DataTextField="Name" DataValueField="Name" Width="305px"></asp:DropDownList>
                 </td>
             </tr>
             <tr>
@@ -44,8 +46,7 @@
                             <asp:Parameter Name="ID" Type="Int32" />
                         </DeleteParameters>
                         <SelectParameters>
-                            <asp:ControlParameter ControlID="ddlJobs" Name="jobName" PropertyName="SelectedValue"
-                                Type="String" />
+                            <asp:ControlParameter ControlID="ddlJobs" Name="jobName" PropertyName="SelectedValue" Type="String" />
                         </SelectParameters>
                     </asp:ObjectDataSource>
                 </td>

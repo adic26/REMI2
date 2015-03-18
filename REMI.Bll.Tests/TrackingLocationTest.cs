@@ -45,7 +45,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetLocationsWithoutHost()
         {
-            Assert.That(TrackingLocationManager.GetLocationsWithoutHost(0, 1).Count > 0);
+            Assert.That(TrackingLocationManager.GetLocationsWithoutHost(0, 1,0).Count > 0);
         }
 
         [Test]

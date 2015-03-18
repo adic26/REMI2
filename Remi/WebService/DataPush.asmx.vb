@@ -23,7 +23,7 @@ Public Class DataPush
                     Return RelabManager.UploadResults(xml, lossFile)
             End Select
         Catch ex As Exception
-            RelabManager.LogIssue("UploadData", "e1", NotificationType.Errors, ex)
+            RelabManager.LogIssue("UploadData", "e1", NotificationType.Errors, ex, String.Format("xml: {0} lossFile: {1} xsd: {2}", xml, lossFile, xsd))
         End Try
         Return False
     End Function
@@ -36,7 +36,7 @@ Public Class DataPush
                     Return RelabManager.UploadResultsMeasurementsFile(file, contentType, fileName)
             End Select
         Catch ex As Exception
-            RelabManager.LogIssue("UploadDataImageFile", "e1", NotificationType.Errors, ex)
+            RelabManager.LogIssue("UploadDataImageFile", "e1", NotificationType.Errors, ex, String.Format("contentType: {0} fileName: {1} xsd: {2}", contentType, fileName, xsd))
         End Try
         Return False
     End Function
@@ -46,7 +46,7 @@ Public Class DataPush
         Try
             REMI.Core.Emailer.SendMail(destinations, sender, subject, messageBody, False)
         Catch ex As Exception
-            UserManager.LogIssue("Email could not be sent via API.", "e3", NotificationType.Errors, ex, "Dest: " + destinations + "Sender: " + sender)
+            UserManager.LogIssue("DataPush API SendMail", "e3", NotificationType.Errors, ex, "Dest: " + destinations + "Sender: " + sender)
         End Try
     End Sub
 
@@ -55,7 +55,7 @@ Public Class DataPush
         Try
             Return RelabManager.GetResults(requestNumber, testIDs, testStageName, unitNumber)
         Catch ex As Exception
-            RelabManager.LogIssue("GetResults", "e3", NotificationType.Errors, ex)
+            RelabManager.LogIssue("GetResults", "e3", NotificationType.Errors, ex, String.Format("Request: {0} TestIDs: {1} TestStageName: {2} Unit: {3}", requestNumber, testIDs, testStageName, unitNumber))
         End Try
         Return New DataTable("Results")
     End Function
@@ -65,19 +65,19 @@ Public Class DataPush
         Try
             Return RelabManager.MeasurementFiles(measurementID, resultID)
         Catch ex As Exception
-            RelabManager.LogIssue("GetMeasurementFiles", "e3", NotificationType.Errors, ex)
+            RelabManager.LogIssue("GetMeasurementFiles", "e3", NotificationType.Errors, ex, String.Format("measurementID: {0} resultID: {1}", measurementID.ToString(), resultID.ToString()))
         End Try
         Return New DataTable("MeasurementFiles")
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Modify a result")> _
-    Public Function ModifyResult(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String, ByVal userIdentification As String) As Boolean
+    Public Function ModifyResult(ByVal value As String, ByVal id As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String, ByVal userIdentification As String) As Boolean
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Return RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, userIdentification)
+                Return RelabManager.ModifyResult(value, id, passFailOverride, currentPassFail, passFailText, userIdentification)
             End If
         Catch ex As Exception
-            RelabManager.LogIssue("ModifyResult", "e1", NotificationType.Errors, ex)
+            RelabManager.LogIssue("ModifyResult", "e1", NotificationType.Errors, ex, String.Format("value: {0} id: {1} passFailOverride: {2} currentPassFail: [3} passFailText: {4} userIdentification: {5}", value, id, passFailOverride, currentPassFail, passFailText, userIdentification))
         End Try
         Return False
     End Function
@@ -87,7 +87,7 @@ Public Class DataPush
         Try
             Return RelabManager.PollUnProcessedResults(requestNumber, unit, testStageName, testName)
         Catch ex As Exception
-            RelabManager.LogIssue("PollUnProcessedResults", "e1", NotificationType.Errors, ex)
+            RelabManager.LogIssue("PollUnProcessedResults", "e1", NotificationType.Errors, ex, String.Format("requestNumber: {0} unit: {1} testStageName: {2} testName: {3}", requestNumber, unit.ToString(), testStageName, testName))
         End Try
 
         Return False

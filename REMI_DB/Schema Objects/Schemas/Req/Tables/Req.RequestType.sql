@@ -5,7 +5,7 @@
 	[DBType] [nvarchar](50) NOT NULL,
 	[HasIntegration] [bit] NOT NULL,
 	[CanReport] [bit] NOT NULL,
-	[HasApproval] [bit] NOT NULL,
+	[HasDistribution] [bit] NOT NULL,
 	[IsExternal] [bit] NOT NULL,
 	rv ROWVERSION,
  CONSTRAINT [PK_RequestType] PRIMARY KEY CLUSTERED 

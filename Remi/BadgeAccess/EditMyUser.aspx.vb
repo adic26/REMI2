@@ -13,7 +13,7 @@ Partial Class BadgeAccess_EditMyUser
         notMain.Notifications.Clear()
 
         If (Not Page.IsPostBack) Then
-            ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID)
+            ddlDefaultPage.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, UserManager.GetCurrentUser.DepartmentID, True)
             ddlDefaultPage.DataBind()
 
             ddlTraining.Items.Clear()
@@ -72,7 +72,7 @@ Partial Class BadgeAccess_EditMyUser
             Dim hdnLevel As HiddenField = DirectCast(e.Row.FindControl("hdnLevel"), HiddenField)
             Dim chkModify As CheckBox = DirectCast(e.Row.FindControl("chkModify"), CheckBox)
 
-            ddlLevel.DataSource = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0)
+            ddlLevel.DataSource = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
             ddlLevel.DataBind()
 
             ddlLevel.SelectedValue = hdnLevel.Value

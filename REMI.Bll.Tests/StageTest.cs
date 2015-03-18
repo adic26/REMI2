@@ -83,7 +83,7 @@ namespace REMI.Bll.Tests
             var job = new REMI.Entities.Job();
             job = (from j in instance.Jobs.Include("TestStages") where j.IsActive == true && j.TestStages.Count > 0 orderby j.ID descending select j).FirstOrDefault();
 
-            Assert.That(TestStageManager.GetList(TestStageType.Parametric, job.JobName, false).Count > 0);
+            Assert.That(TestStageManager.GetList(TestStageType.Parametric, job.JobName, false, 0).Count > 0);
         }
 
         [Test]

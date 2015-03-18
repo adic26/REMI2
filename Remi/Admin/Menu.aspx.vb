@@ -12,7 +12,7 @@ Public Class Menu
                 Response.Redirect("~/")
             End If
 
-            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             ddlDepartments.DataBind()
 
             MenuBindData()
@@ -30,7 +30,7 @@ Public Class Menu
     End Sub
 
     Protected Sub MenuAccessBindData()
-        grdMenuAccess.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value)
+        grdMenuAccess.DataSource = SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value, False)
         grdMenuAccess.DataBind()
     End Sub
 
@@ -91,7 +91,22 @@ Public Class Menu
 
         MenuAccessBindData()
         REMIAppCache.RemoveMenuAccess(ddlDepartments.SelectedItem.Value)
-        REMIAppCache.SetMenuAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value))
+        REMIAppCache.SetMenuAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value, True))
+    End Sub
+
+    Protected Sub btnAddMenu_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Dim menuName As String = Request.Form(grdMenu.FooterRow.FindControl("txtMenuName").UniqueID)
+        Dim url As String = Request.Form(grdMenu.FooterRow.FindControl("txtMenuUrl").UniqueID)
+
+        Dim isSaved As Boolean = SecurityManager.AddNewMenu(menuName, url)
+
+        If (isSaved) Then
+            notMain.Notifications.Add(New Notification("i2", NotificationType.Information, "The Menu Was Inserted Successfully"))
+        Else
+            notMain.Notifications.Add(New Notification("e1", NotificationType.Warning, "The Menu Was Not Inserted Successfully"))
+        End If
+
+        MenuBindData()
     End Sub
 
     Protected Sub btnAddAccess_Click(ByVal sender As Object, ByVal e As EventArgs)
@@ -108,6 +123,6 @@ Public Class Menu
 
         MenuAccessBindData()
         REMIAppCache.RemoveMenuAccess(ddlDepartments.SelectedItem.Value)
-        REMIAppCache.SetMenuAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value))
+        REMIAppCache.SetMenuAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetMenuAccessByDepartment(String.Empty, ddlDepartments.SelectedItem.Value, True))
     End Sub
 End Class

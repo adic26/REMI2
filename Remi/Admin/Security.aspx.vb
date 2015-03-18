@@ -14,7 +14,7 @@ Public Class Security
             End If
 
             BindServices()
-            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1)
+            ddlDepartments.DataSource = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             ddlDepartments.DataBind()
         End If
 
@@ -155,7 +155,7 @@ Public Class Security
 
         BindServicesAccess(departmentID)
         REMIAppCache.RemoveServiceAccess(departmentID)
-        REMIAppCache.SetServiceAccess(departmentID, SecurityManager.GetServicesAccess(departmentID))
+        REMIAppCache.SetServiceAccess(departmentID, SecurityManager.GetServicesAccess(departmentID, True))
     End Sub
 
     Protected Sub grdServices_RowUpdating(ByVal sender As Object, ByVal e As GridViewUpdateEventArgs)
@@ -188,7 +188,7 @@ Public Class Security
     End Sub
 
     Protected Sub BindServicesAccess(ByVal departmentID As Int32)
-        grdServiceAccess.DataSource = SecurityManager.GetServicesAccess(departmentID)
+        grdServiceAccess.DataSource = SecurityManager.GetServicesAccess(departmentID, False)
         grdServiceAccess.DataBind()
     End Sub
 
@@ -208,7 +208,7 @@ Public Class Security
 
         BindServicesAccess(departmentID)
         REMIAppCache.RemoveServiceAccess(ddlDepartments.SelectedItem.Value)
-        REMIAppCache.SetServiceAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetServicesAccess(departmentID))
+        REMIAppCache.SetServiceAccess(ddlDepartments.SelectedItem.Value, SecurityManager.GetServicesAccess(departmentID, False))
     End Sub
 #End Region
 End Class
