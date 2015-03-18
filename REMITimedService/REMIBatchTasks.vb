@@ -3,6 +3,10 @@ Imports System.Net.Mail
 Imports System.Diagnostics
 Imports System.Threading
 Imports System.Configuration
+Imports System.Text
+Imports System.Net
+Imports System.IO
+Imports System.Web.Script.Serialization
 
 Public Class REMIBatchTasks
     Inherits System.ServiceProcess.ServiceBase
@@ -99,6 +103,10 @@ Public Class REMIBatchTasks
             Dim counter As Integer = 0
             Dim succeeded As Boolean = True
             Dim retry As Int32 = 1
+            Dim sbSource As StringBuilder
+            Dim request As HttpWebRequest
+            Dim response As HttpWebResponse = Nothing
+            Dim reader As StreamReader
             _sendSuccessEmails = remi.GetInstance().HasAccess("RemiTimedServiceSendSuccessEmails")
             _sendNotAssignedEmails = remi.GetInstance().HasAccess("RemiTimedServiceSendNotAssignedEmails")
 
@@ -109,6 +117,8 @@ Public Class REMIBatchTasks
                 For Each s As String In batches
                     currentQRA = s
                     retry = 1
+
+                    Dim dtJIRA As DataTable = remi.GetInstance.GetBatchJIRA(currentQRA)
 
                     Do
                         Try
@@ -139,6 +149,45 @@ Public Class REMIBatchTasks
                                 sb.Append(String.Format("{0} - BatchStartedBeforeAssigned Failed For {1} with Error {2}{3}Stack Trace: {4}", DateTime.Now, currentQRA, ex.Message.ToString(), Environment.NewLine, ex.StackTrace))
                             End Try
                         End If
+
+                        Try
+                            request = DirectCast(WebRequest.Create(String.Format("https://test-jira.bbqnx.net/rest/api/2/search?jql=labels={0}&fields=key,summary", currentQRA)), HttpWebRequest)
+                            request.Credentials = CredentialCache.DefaultCredentials
+                            request.Method = "GET"
+                            request.Timeout = 25000
+                            request.UseDefaultCredentials = True
+                            request.ContentType = "application/json"
+                            request.AutomaticDecompression = DecompressionMethods.GZip + DecompressionMethods.Deflate
+                            Dim authBytes As Byte() = Encoding.UTF8.GetBytes("remi:Zaq12wsx".ToCharArray())
+                            request.Headers("Authorization") = "Basic " + Convert.ToBase64String(authBytes)
+
+                            response = DirectCast(request.GetResponse(), HttpWebResponse)
+
+                            If request.HaveResponse = True AndAlso Not (response Is Nothing) Then
+                                reader = New StreamReader(response.GetResponseStream())
+                                sbSource = New StringBuilder(reader.ReadToEnd())
+
+                                Dim jiraSerialized As Dictionary(Of String, Object) = New JavaScriptSerializer().Deserialize(Of Object)(sbSource.ToString())
+
+                                For Each rec In DirectCast(jiraSerialized("issues"), Object())
+                                    Dim key As String = rec("key")
+                                    Dim title As String = DirectCast(rec("fields"), Dictionary(Of String, Object))("summary")
+
+                                    Dim jira As DataRow = (From j As DataRow In dtJIRA Where j.Field(Of String)("DisplayName") = key Select j).FirstOrDefault()
+
+                                    If (jira Is Nothing) Then
+                                        remi.GetInstance.AddEditJira(currentQRA, 0, key, String.Format("https://jira.bbqnx.net/browse/{0}", key), title)
+                                    Else
+                                        remi.GetInstance.AddEditJira(currentQRA, jira.Field(Of Int32)("JIRAID"), key, String.Format("https://jira.bbqnx.net/browse/{0}", key), title)
+                                    End If
+                                Next
+                            End If
+                        Catch ex As Exception
+                            sb.Append(Environment.NewLine)
+                            sb.Append(String.Format("{0} - JIRA Sync Failed For {1} with Error {2}{3} Stack Trace: {4}", DateTime.Now, currentQRA, ex.Message.ToString(), Environment.NewLine, ex.StackTrace))
+                        Finally
+                            If Not response Is Nothing Then response.Close()
+                        End Try
                     Loop While (retry < 5 And succeeded = False) 'The batch check failed. So retry while failed for 4 attempts
                 Next
             Else
