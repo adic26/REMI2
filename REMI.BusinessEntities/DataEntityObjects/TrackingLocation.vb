@@ -146,7 +146,6 @@ Namespace REMI.BusinessEntities
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        <NotNullOrEmpty(Key:="w16")> _
         Public Property GeoLocationName() As String
             Get
                 Return _geoLocationName
