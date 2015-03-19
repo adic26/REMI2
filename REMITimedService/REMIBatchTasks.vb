@@ -148,18 +148,16 @@ Public Class REMIBatchTasks
         Dim reader As StreamReader
         Dim dtServices As DataTable = remi.GetInstance.GetServicesAccess(Nothing)
         Dim requests As New List(Of String)
-        'Dim products As New List(Of String)
         Dim ebs As RemiAPI.BatchSearchBatchStatus() = New RemiAPI.BatchSearchBatchStatus() {RemiAPI.BatchSearchBatchStatus.Complete, RemiAPI.BatchSearchBatchStatus.Rejected, RemiAPI.BatchSearchBatchStatus.Held, RemiAPI.BatchSearchBatchStatus.NotSavedToREMI, RemiAPI.BatchSearchBatchStatus.Quarantined, RemiAPI.BatchSearchBatchStatus.Received}
         Dim url As String = String.Empty
+        Dim counter As Integer = 0
 
         For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "JIRASync" Select s).ToList
             Dim bv As RemiAPI.BatchView() = remi.GetInstance.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, RemiAPI.TrackingLocationFunction.NotSet, String.Empty, RemiAPI.BatchStatus.NotSet, RemiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, RemiAPI.TestStageType.NotSet)
             requests.AddRange((From rs As RemiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
-            'products.AddRange((From rs As RemiAPI.BatchView In bv Select rs.ProductGroup).Distinct.ToList())
         Next
 
         Try
-            ' and ""Applicable Platform(s)"" IN (""{1}"")     , String.Join(""",""", products.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray())
             Dim json As String = String.Format("labels IN ({0}) and issuetype=defect", String.Join(",", requests.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()))
             url = String.Format("{0}rest/api/2/search?jql={1}&fields=key,summary,labels", ConfigurationManager.AppSettings("JIRALink").ToString(), Uri.EscapeUriString(json))
             request = DirectCast(WebRequest.Create(url), HttpWebRequest)
@@ -193,6 +191,8 @@ Public Class REMIBatchTasks
                     Dim dtJIRA As DataTable = remi.GetInstance.GetBatchJIRA(requestNumber)
                     Dim jira As DataRow = (From j As DataRow In dtJIRA Where j.Field(Of String)("DisplayName") = key Select j).FirstOrDefault()
 
+                    counter += 1
+
                     If (jira Is Nothing) Then
                         remi.GetInstance.AddEditJira(requestNumber, 0, key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
                     Else
@@ -209,7 +209,7 @@ Public Class REMIBatchTasks
         End Try
 
         If (_sendSuccessEmails) Then
-            Helpers.SendMail("JIRA Sync", "Finished Executing")
+            Helpers.SendMail("JIRA Sync", String.Format("Finished Executing {0} JIRA's", counter))
         End If
     End Sub
 
