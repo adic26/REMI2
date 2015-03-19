@@ -35,7 +35,7 @@ Namespace REMI.Bll
             Try
                 Dim dt As DataTable = TestDB.GetTestAccess(testID)
 
-                If removeFirst Then
+                If removeFirst Or dt.Rows.Count > 1 Then
                     dt.Rows(0).Delete()
                     dt.AcceptChanges()
                 End If

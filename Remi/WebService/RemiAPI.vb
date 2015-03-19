@@ -451,7 +451,7 @@ Public Class RemiAPI
                 Return IIf(notification Is Nothing, True, False)
             End If
         Catch ex As Exception
-            TrackingLocationManager.LogIssue("REMI API SaveTrackingLocation", "e3", NotificationType.Errors, ex, String.Format("hostName: {0} trackingLocationID: {1} testCenterID: {2} userIdentification: {3}", hostName, trackingLocationID, testCenterID, userIdentification))
+            TrackingLocationManager.LogIssue("REMI API AddHostToTrackingLocation", "e3", NotificationType.Errors, ex, String.Format("hostName: {0} trackingLocationID: {1} testCenterID: {2} userIdentification: {3}", hostName, trackingLocationID, testCenterID, userIdentification))
         End Try
 
         Return False
@@ -468,6 +468,11 @@ Public Class RemiAPI
                 tl.Status = TrackingLocationStatus.Available
                 tl.Decommissioned = False
                 tl.GeoLocationID = testCenterID
+                tl.IsMultiDeviceZone = False
+                tl.LocationStatus = TrackingStatus.Functional
+                tl.LastUser = userIdentification
+                tl.CurrentUnitCount = 1
+                tl.Comment = "Added Through DBControl"
 
                 Dim tlc As New TrackingLocationCollection()
                 tlc.Add(tl)
@@ -1403,13 +1408,13 @@ Public Class RemiAPI
 
 #Region "Report Generator Methods"
     <WebMethod(Description:="Returns the data associated with a particular batch.")> _
-    Public Function GetBatchResultsOverview(ByVal requestNumber As String) As List(Of TestStageResultOverview)
+    Public Function GetBatchResultsOverview(ByVal qraNumber As String) As List(Of TestStageResultOverview)
         Try
-            Dim b As BatchView = BatchManager.GetViewBatch(requestNumber)
+            Dim b As BatchView = BatchManager.GetViewBatch(qraNumber)
 
             Return GetTestStageOverview(b)
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API Get View Batch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
+            BatchManager.LogIssue("REMI API Get View Batch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", qraNumber))
         End Try
         Return Nothing
     End Function
@@ -1461,9 +1466,9 @@ Public Class RemiAPI
     ''' <returns></returns>
     ''' <remarks></remarks>
     <WebMethod(EnableSession:=True, Description:="Attempts to retrieve a batch from REMI and if it cannot find the batch will attempt to retrieve it from TRS. This method requires identification and will also save new batches.")> _
-    Public Function IncomingGetAndSaveBatch(ByVal requestNumber As String, ByVal userIdentification As String) As IncomingAppBatchData
+    Public Function IncomingGetAndSaveBatch(ByVal qraNumber As String, ByVal userIdentification As String) As IncomingAppBatchData
         Try
-            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(requestNumber), 21))
+            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(qraNumber), 21))
             Dim ib As New IncomingAppBatchData
             If bc.Validate Then
                 Dim b As Batch = BatchManager.GetItem(bc.BatchNumber)
@@ -1480,7 +1485,7 @@ Public Class RemiAPI
 
             Return ib
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API IncomingGetAndSaveBatch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", requestNumber, userIdentification))
+            BatchManager.LogIssue("REMI API IncomingGetAndSaveBatch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", qraNumber, userIdentification))
         End Try
         Return Nothing
     End Function

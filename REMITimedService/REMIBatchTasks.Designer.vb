@@ -1,5 +1,6 @@
 ﻿Imports System.ServiceProcess
 
+
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class REMIBatchTasks
     Inherits System.ServiceProcess.ServiceBase
@@ -48,5 +49,4 @@ Partial Class REMIBatchTasks
         components = New System.ComponentModel.Container()
         Me.ServiceName = "Service1"
     End Sub
-
 End Class
