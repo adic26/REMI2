@@ -1408,13 +1408,13 @@ Public Class RemiAPI
 
 #Region "Report Generator Methods"
     <WebMethod(Description:="Returns the data associated with a particular batch.")> _
-    Public Function GetBatchResultsOverview(ByVal requestNumber As String) As List(Of TestStageResultOverview)
+    Public Function GetBatchResultsOverview(ByVal qraNumber As String) As List(Of TestStageResultOverview)
         Try
-            Dim b As BatchView = BatchManager.GetViewBatch(requestNumber)
+            Dim b As BatchView = BatchManager.GetViewBatch(qraNumber)
 
             Return GetTestStageOverview(b)
         Catch ex As Exception
-            BatchManager.LogIssue("REMI API Get View Batch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
+            BatchManager.LogIssue("REMI API Get View Batch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", qraNumber))
         End Try
         Return Nothing
     End Function
