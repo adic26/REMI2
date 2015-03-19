@@ -28,7 +28,6 @@ Partial Class Admin_Tests_EditDetail
         lblTitle.Text = "Add New Parametric Test"
         lblTestName.Visible = False
         txtName.Visible = True
-        BindAccess()
     End Sub
 
     Protected Sub ProcessTestID(ByVal tmpID As Integer)

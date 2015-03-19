@@ -92,8 +92,9 @@
     </asp:Panel>
     <br />
     <asp:Panel runat="server" ID="pnlRequest" EnableViewState="true" style="display:inline-block;vertical-align:top;">
-        <asp:Table runat="server" ID="tbl" Width="70%" EnableViewState="true" CssClass="requestTable"></asp:Table>
+        <asp:Table runat="server" ID="tbl" EnableViewState="true" CssClass="requestTable"></asp:Table>
     </asp:Panel>
+
     <asp:Panel runat="server" ID="pnlSetup" EnableViewState="true" style="display:inline-block;vertical-align:top;" Visible="false">
         <rs:RequestSetup ID="setup" runat="server" Visible="false" DisplayMode="Request" Title="Setup Parametric" />
         <rs:RequestSetup ID="setupEnv" runat="server" Visible="false" DisplayMode="Request" Title="Setup Environmental" />

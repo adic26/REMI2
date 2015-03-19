@@ -146,6 +146,7 @@ Public Class Request
                 lblName.EnableViewState = True
                 lblName.ID = String.Format("lbl{0}", id)
                 tCell.Controls.Add(lblName)
+
                 tRow.Cells.Add(tCell)
 
                 If (res.IsRequired) Then
@@ -402,7 +403,7 @@ Public Class Request
                             txtArea.EnableViewState = True
                             txtArea.ID = String.Format("txtArea{0}", id)
                             txtArea.TextMode = TextBoxMode.MultiLine
-                            txtArea.Width = Unit.Percentage(70)
+                            txtArea.Width = Unit.Percentage(100)
                             txtArea.Rows = 20
                             txtArea.Text = res.Value
                             tCell2.Controls.Add(txtArea)
@@ -422,20 +423,23 @@ Public Class Request
                             cv.ID = String.Format("cv{0}", id)
                             cv.Operator = ValidationCompareOperator.DataTypeCheck
                             cv.ControlToValidate = txt.ID
+                            cv.Font.Bold = True
 
                             Select Case res.FieldValidation.ToUpper
                                 Case "INT"
                                     cv.Type = ValidationDataType.Integer
                                     cv.ErrorMessage = "Value Must Be Numeric"
+                                    tCell2.Controls.Add(New LiteralControl("<br />"))
+                                    tCell2.Controls.Add(cv)
                                 Case "DOUBLE"
                                     cv.Type = ValidationDataType.Double
                                     cv.ErrorMessage = "Value Must Be Double"
+                                    tCell2.Controls.Add(New LiteralControl("<br />"))
+                                    tCell2.Controls.Add(cv)
                                 Case "STRING"
                                     cv.Type = ValidationDataType.String
                                     cv.ErrorMessage = "Value Must Be String"
                             End Select
-
-                            tCell2.Controls.Add(cv)
 
                             If (res.IsRequired And fieldCount = 1) Then
                                 rfv.ControlToValidate = txt.ID
@@ -476,6 +480,8 @@ Public Class Request
                 End If
 
                 If (res.IsRequired) Then
+                    rfv.Font.Bold = True
+                    tCell2.Controls.Add(New LiteralControl("<br />"))
                     tCell2.Controls.Add(rfv)
                 End If
 
