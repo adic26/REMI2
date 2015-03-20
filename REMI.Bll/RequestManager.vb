@@ -219,6 +219,63 @@ Namespace REMI.Bll
             Return False
         End Function
 
+        Public Shared Function AddRequestFieldData(ByVal requestTypeID As Int32, ByVal requestID As Int32, ByVal fieldName As String, ByVal fieldValue As String) As Boolean
+            Dim success As Boolean = False
+
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim field As REMI.Entities.ReqFieldSetup = (From f In instance.ReqFieldSetups Where f.Name = fieldName And f.RequestTypeID = requestTypeID Select f).FirstOrDefault()
+
+                If (field IsNot Nothing) Then
+                    Dim data As List(Of REMI.Entities.ReqFieldData) = (From d In instance.ReqFieldDatas Where d.RequestID = requestID And d.ReqFieldSetupID = field.ReqFieldSetupID Select d).ToList()
+                    Dim newData As REMI.Entities.ReqFieldData
+
+                    If (data.Count = 0) Then
+                        newData = New REMI.Entities.ReqFieldData
+                        newData.InstanceID = 1
+                        newData.LastUser = UserManager.GetCurrentValidUserLDAPName
+                        newData.InsertTime = DateTime.Now
+                        newData.ReqFieldSetupID = field.ReqFieldSetupID
+                        newData.RequestID = requestID
+                        newData.Value = fieldValue
+                        instance.AddToReqFieldDatas(newData)
+                        success = True
+                    ElseIf (data.Count = 1 And String.IsNullOrEmpty(data(0).Value)) Then
+                        newData = (From nd In instance.ReqFieldDatas Where nd.RequestID = requestID And nd.ReqFieldSetupID = field.ReqFieldSetupID Select nd).FirstOrDefault()
+                        newData.Value = fieldValue
+                        success = True
+                    Else
+                        Dim sib As REMI.Entities.ReqFieldSetupSibling = (From s In instance.ReqFieldSetupSiblings Where s.ReqFieldSetupID = field.ReqFieldSetupID Select s).FirstOrDefault()
+
+                        If (sib IsNot Nothing) Then
+                            Dim maxInstanceID As Int32
+                            Int32.TryParse((From i As REMI.Entities.ReqFieldData In data Select i.InstanceID).Max().ToString(), maxInstanceID)
+
+                            If (maxInstanceID < sib.MaxDisplayNum) Then
+                                newData = New REMI.Entities.ReqFieldData
+                                newData.InstanceID = maxInstanceID + 1
+                                newData.LastUser = UserManager.GetCurrentValidUserLDAPName
+                                newData.InsertTime = DateTime.Now
+                                newData.ReqFieldSetupID = field.ReqFieldSetupID
+                                newData.RequestID = requestID
+                                newData.Value = fieldValue
+                                instance.AddToReqFieldDatas(newData)
+
+                                success = True
+                            End If
+                        End If
+                    End If
+
+                    instance.SaveChanges()
+                End If
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+                success = False
+            End Try
+
+            Return success
+        End Function
+
         Public Shared Function SaveRequestSetupBatchOnly(ByVal productID As Int32, ByVal jobID As Int32, ByVal batchID As Int32, ByVal TestStageType As Int32, ByVal setupInfo As List(Of String)) As NotificationCollection
             Dim nc As New NotificationCollection
 

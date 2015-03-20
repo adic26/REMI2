@@ -396,6 +396,19 @@ Public Class ProductConfiguration
 
         Return False
     End Function
+
+    <WebMethod(EnableSession:=True, Description:="Save Field Data")> _
+    Public Function AddRequestFieldData(ByVal requestTypeID As Int32, ByVal requestID As Int32, ByVal fieldName As String, ByVal fieldValue As String, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RequestManager.AddRequestFieldData(requestTypeID, requestID, fieldName, fieldValue)
+            End If
+        Catch ex As Exception
+            RequestManager.LogIssue("AddRequestFieldData", "e1", NotificationType.Errors, ex, String.Format("requestTypeID: {0} requestID: {1} fieldName: {2} fieldValue: {3} userIdentification: {4}", requestTypeID, requestID, fieldName, fieldValue, userIdentification))
+        End Try
+
+        Return False
+    End Function
 #End Region
 
 End Class

@@ -906,7 +906,9 @@ Public Class RemiAPI
     Public Function GetBatchJIRA(ByVal requestNumber As String) As DataTable
         Try
             Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-            Return BatchManager.GetBatchJIRA(batch.ID, False)
+            If (batch IsNot Nothing) Then
+                Return BatchManager.GetBatchJIRA(batch.ID, False)
+            End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatchJIRA", "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
         End Try
@@ -918,7 +920,9 @@ Public Class RemiAPI
     Public Function AddEditJira(ByVal requestNumber As String, ByVal jiraID As Int32, ByVal displayName As String, ByVal link As String, ByVal title As String) As Boolean
         Try
             Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-            Return BatchManager.AddEditJira(batch.ID, jiraID, displayName, link, title)
+            If (batch IsNot Nothing) Then
+                Return BatchManager.AddEditJira(batch.ID, jiraID, displayName, link, title)
+            End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API AddEditJira", "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
         End Try

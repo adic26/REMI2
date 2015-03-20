@@ -102,4 +102,17 @@ Public Class DataPush
 
         Return False
     End Function
+
+    <WebMethod(Description:="Get All Files For A Given Request")> _
+    Public Function GetOverAllPassFail(ByVal requestNumber As String) As String
+        Try
+            Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
+            If (batch IsNot Nothing) Then
+                Return RelabManager.GetOverAllPassFail(batch.ID).Tables(2).Rows(0)(0).ToString()
+            End If
+        Catch ex As Exception
+            RelabManager.LogIssue("GetOverAllPassFail", "e3", NotificationType.Errors, ex, String.Format("Request: {0}", requestNumber))
+        End Try
+        Return String.Empty
+    End Function
 End Class
