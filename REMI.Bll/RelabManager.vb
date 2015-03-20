@@ -77,6 +77,29 @@ Namespace REMI.Bll
             Return New DataTable("ResultsSummaryExport")
         End Function
 
+        Public Shared Function GetFiles(ByVal requestNumber As String, ByVal fromReportGenerator As Boolean) As DataTable
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim dt As DataTable
+
+                If (fromReportGenerator) Then
+                    dt = BusinessEntities.Helpers.EQToDataTable((From f In instance.ResultsMeasurementsFiles
+                                                                Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber And (f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("drop") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("tumble") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("visual") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("functional") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("camera"))
+                                                                Select f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
+                Else
+                    dt = BusinessEntities.Helpers.EQToDataTable((From f In instance.ResultsMeasurementsFiles
+                                                                Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber
+                                                                Select f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
+                End If
+                
+                Return dt
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("Files")
+        End Function
+
         Public Shared Function MeasurementFiles(ByVal MeasurementID As Int32, ByVal resultID As Int32) As DataTable
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()

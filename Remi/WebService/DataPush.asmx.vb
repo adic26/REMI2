@@ -60,6 +60,16 @@ Public Class DataPush
         Return New DataTable("Results")
     End Function
 
+    <WebMethod(Description:="Get All Files For A Given Request")> _
+    Public Function GetFiles(ByVal requestNumber As String, ByVal fromReportGenerator As Boolean) As DataTable
+        Try
+            Return RelabManager.GetFiles(requestNumber, fromReportGenerator)
+        Catch ex As Exception
+            RelabManager.LogIssue("GetFiles", "e3", NotificationType.Errors, ex, String.Format("Request: {0}", requestNumber))
+        End Try
+        Return New DataTable("Files")
+    End Function
+
     <WebMethod(Description:="Get All Images For A Measurement or Result")> _
     Public Function GetMeasurementFiles(ByVal measurementID As Int32, ByVal resultID As Int32) As DataTable
         Try
