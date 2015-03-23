@@ -901,6 +901,28 @@ Namespace REMI.Dal
                 End Using
             End Using
         End Sub
+
+        Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
+            Dim result As Int32 = 0
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispMoveBatchForward", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    myCommand.Parameters.AddWithValue("@UserName", userIdentification)
+
+                    Dim returnValue As New SqlParameter("ReturnValue", SqlDbType.Int)
+                    returnValue.Direction = ParameterDirection.ReturnValue
+                    myCommand.Parameters.Add(returnValue)
+
+                    myConnection.Open()
+                    myCommand.ExecuteScalar()
+                    Int32.TryParse(returnValue.Value.ToString(), result)
+                End Using
+            End Using
+
+            Return result > 0
+        End Function
 #End Region
 
 #Region "Private Methods"

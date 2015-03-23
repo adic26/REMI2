@@ -5,7 +5,8 @@ BEGIN
 	DECLARE @JobID INT
 	SELECT @JobID = ID FROM Jobs WITH(NOLOCK) WHERE JobName=@JobName
 
-	select *
+	select row,ID,QRANumber, BatchUnitNumber, ReasonForRequestID, ProductGroupName, JobName, TestStageName, TestName, TestStageID, TestUnitID, LastUser, ProductTypeID, AccessoryGroupID, 
+		ProductID, ProductType, AccessoryGroupName, IsMQual, TestCenter, TestCenterID, ReasonForRequest, TestID
 	from 
 	(
 		select ROW_NUMBER() over (order by lp.[values] desc)as row, pvt.ID, b.QRANumber, ISNULL(tu.Batchunitnumber, 0) as batchunitnumber, pvt.[ReasonForRequest] As ReasonForRequestID, lp.[Values] AS ProductGroupName, 
@@ -15,7 +16,7 @@ BEGIN
 		(select top 1 LastUser from TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS LastUser,
 		(select top 1 ConcurrencyID from TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS ConcurrencyID,
 		pvt.ProductTypeID, pvt.AccessoryGroupID, pvt.ProductID, l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, pvt.IsMQual, 
-		l3.[Values] As TestCenter, l3.[LookupID] AS TestCenterID, l4.[Values] As ReasonForRequest
+		l3.[Values] As TestCenter, l3.[LookupID] AS TestCenterID, l4.[Values] As ReasonForRequest, t.ID AS TestID
 		FROM vw_ExceptionsPivoted as pvt WITH(NOLOCK)
 			LEFT OUTER JOIN Tests t WITH(NOLOCK) ON pvt.Test = t.ID
 			LEFT OUTER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID = pvt.TestUnitID

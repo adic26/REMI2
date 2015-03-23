@@ -1364,6 +1364,22 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Checks if batch is ready to be moved to a different status.")> _
+    Public Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
+        Try
+            If (HasAccess("RemiTimedServiceAvailable")) Then
+                If UserManager.SetUserToSession(userIdentification) Then
+                    Return BatchManager.MoveBatchForward(requestNumber, UserManager.GetCurrentValidUserLDAPName)
+                End If
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API MoveBatchForward", "e1", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", requestNumber, userIdentification))
+        End Try
+
+        Return False
+    End Function
+
+    <Obsolete("Don't use this routine any more. Use MoveBatchForward instead."), _
+    WebMethod(EnableSession:=True, Description:="Checks if batch is ready to be moved to a different status.")> _
     Public Function CheckBatchForStatusUpdates(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
         Try
             If (HasAccess("RemiTimedServiceAvailable")) Then
