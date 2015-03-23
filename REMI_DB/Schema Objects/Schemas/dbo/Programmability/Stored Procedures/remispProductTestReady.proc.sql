@@ -10,7 +10,8 @@ BEGIN
 		LEFT OUTER JOIN ProductTestReady ptr ON ptr.TestID=t.ID AND ptr.ProductID=@ProductID AND ptr.PSID=@PSID
 	WHERE t.TestName IN ('Parametric Radiated Wi-Fi','Acoustic Test', 'HAC Test', 'Sensor Test',
 		'Touch Panel Test','Insertion','Top Facing Keys Tactility Test','Peripheral Keys Tactility Test','Charging Test',
-		'Camera Front','Bluetooth Test','Accessory Charging','Accessory Acoustic Test','Radiated RF Test','KET Top Facing Keys Cycling Test')
+		'Camera Front','Bluetooth Test','Accessory Charging','Accessory Acoustic Test','Radiated RF Test','KET Top Facing Keys Cycling Test',
+		'Slider Test','Altimeter Test','Mechanical Over Extention')
 		AND ISNULL(t.IsArchived, 0) = 0
 	ORDER BY t.TestName
 END

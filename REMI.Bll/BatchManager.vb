@@ -505,9 +505,9 @@ Namespace REMI.Bll
             Dim isSuccess As Boolean
 
             Try
-                REMIAppCache.RemoveExtReqData(qraNumber)
-                REMIAppCache.RemoveReqData(qraNumber)
-                Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=False)
+                REMIAppCache.ClearAllBatchData(qraNumber)
+
+                Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=True)
                 Dim batchChanged As Boolean = b.OutOfDate
 
                 'check batches for trs completion
