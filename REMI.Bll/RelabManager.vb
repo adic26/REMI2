@@ -84,11 +84,11 @@ Namespace REMI.Bll
 
                 If (fromReportGenerator) Then
                     dt = BusinessEntities.Helpers.EQToDataTable((From f In instance.ResultsMeasurementsFiles
-                                                                Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber And (Not f.ResultsMeasurement.Result.TestStage.TestStageName.ToLower.Contains("analysis")) And (f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("drop") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("tumble") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("visual") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("functional") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("camera"))
+                                                                Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber And (Not f.ResultsMeasurement.Result.TestStage.TestStageName.ToLower.Contains("analysis")) And f.ResultsMeasurement.Archived = False And (f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("drop") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("tumble") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("visual") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("functional") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("camera"))
                                                                 Select f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
                 Else
                     dt = BusinessEntities.Helpers.EQToDataTable((From f In instance.ResultsMeasurementsFiles
-                                                                Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber And (Not f.ResultsMeasurement.Result.TestStage.TestStageName.ToLower.Contains("analysis"))
+                                                                Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber And (Not f.ResultsMeasurement.Result.TestStage.TestStageName.ToLower.Contains("analysis")) And f.ResultsMeasurement.Archived = False
                                                                 Select f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
                 End If
                 
