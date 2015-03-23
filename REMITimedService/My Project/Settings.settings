@@ -5,8 +5,5 @@
     <Setting Name="IntervalMinutes" Type="System.String" Scope="User">
       <Value Profile="(Default)">15</Value>
     </Setting>
-    <Setting Name="REMITimedService_RemiAPI_RemiAPI" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://rem002ykf/webservice/remiapi.asmx</Value>
-    </Setting>
   </Settings>
 </SettingsFile>
