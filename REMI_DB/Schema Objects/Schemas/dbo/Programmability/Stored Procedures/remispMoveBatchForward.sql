@@ -17,6 +17,7 @@ BEGIN
 	DECLARE @FailureCount INT
 	DECLARE @UnitCount INT
 	DECLARE @ExitedEarly BIT
+	DECLARE @ProductType NVARCHAR(150)
 	SET @ExitedEarly = CONVERT(BIT, 0)
 	SET @ReturnVal = 0
 	CREATE TABLE #TempSetup (TestStageID INT, TestStageName NVARCHAR(255), TestID INT, TestName NVARCHAR(255), Selected BIT)
@@ -27,9 +28,11 @@ BEGIN
 		SELECT @RequestID=RequestID, @BatchID=BatchID FROM Req.Request WHERE RequestNumber=@RequestNumber
 		SELECT @UnitCount = COUNT(ID) FROM TestUnits WHERE BatchID=@BatchID
 		SELECT @JobID = j.ID, @ProductID=b.ProductID, @BatchStatus = CASE b.BatchStatus WHEN 1 THEN 'Held' WHEN 2 THEN 'InProgress' WHEN 3 THEN 'Quarantined'
-			WHEN 4 THEN 'Received' WHEN 5 THEN 'Complete' WHEN 7 THEN 'Rejected' WHEN 8 THEN 'TestingComplete' ELSE 'NotSet' END, @NewBatchStatus = b.BatchStatus
+			WHEN 4 THEN 'Received' WHEN 5 THEN 'Complete' WHEN 7 THEN 'Rejected' WHEN 8 THEN 'TestingComplete' ELSE 'NotSet' END, @NewBatchStatus = b.BatchStatus,
+			@ProductType = l.[Values]
 		FROM Batches b
 			INNER JOIN Jobs j ON j.JobName = b.JobName
+			INNER JOIN Lookups l ON l.LookupID=b.ProductTypeID
 		WHERE b.ID=@BatchID
 
 		--Get the setup information for the batch
@@ -73,9 +76,10 @@ BEGIN
 		FROM TestRecords tr 
 		WHERE tr.TestUnitID IN (SELECT ID FROM TestUnits tu WHERE tu.BatchID=@BatchID) AND TestID=@TestID AND TestStageID=@TestStageID
 		
-		IF (@UnitCount <> @IncomingCount)
+		IF (@UnitCount <> @IncomingCount AND LOWER(@ProductType)='handheld')
 		BEGIN
 			SET @TestStageName = 'Sample Evaluation'
+			SET @NewBatchStatus = 4
 		END
 		ELSE
 		BEGIN
@@ -89,7 +93,7 @@ BEGIN
 			FROM #TempSetup s
 				INNER JOIN TestStages ts ON ts.ID = s.TestStageID
 			ORDER BY ts.ProcessOrder ASC
-
+			
 			INSERT INTO #exceptions (row,ID,RequestNumber, BatchUnitNumber, ReasonForRequestID, ProductGroupName, JobName, TestStageName, TestName, TestStageID, TestUnitID,LastUser, ProductTypeID, AccessoryGroupID, ProductID, ProductType, AccessoryGroupName, IsMQual, TestCenter, TestCenterID, ReasonForRequest, TestID)
 			EXEC [dbo].[remispExceptionSearch] @IncludeBatches=1,@QRANumber=@RequestNumber
 
@@ -103,24 +107,29 @@ BEGIN
 				SET @ProcessOrder = 0
 				SET @TestStageType = 0
 				SET @CountUnitExceptioned = 0
+				SET @TestID=NULL
+				SET @TestStageID=NULL
+				SET @TestStageName=NULL
 				
 				SELECT @TestID=s.TestID, @TestStageID=s.TestStageID, @TestStageName=s.TestStageName, @TestStageType=ts.TestStageType, @ProcessOrder=ts.ProcessOrder
 				FROM #Setup s
 					INNER JOIN TestStages ts ON ts.ID=s.TestStageID
 				WHERE s.ID=@RowID
-					
+
 				SELECT @CountUnitExceptioned = COUNT(DISTINCT TestUnitID)
 				FROM #exceptions e
 				WHERE (e.TestID=@TestID AND e.TestStageID IS NULL AND e.TestUnitID IS NULL)--Exception For Test regardless of unit
 					OR
+					(e.TestID=@TestID AND e.TestStageID = @TestStageID AND e.TestUnitID IS NULL)--Exception For Test/Stage regardless of unit
+					OR
+					(e.TestID=@TestID AND e.TestStageID = @TestStageID AND e.TestUnitID IN (SELECT ID FROM TestUnits WHERE BatchID=@BatchID))--Unit Exception For Test/Stage
+					OR
 					(e.TestID IS NULL AND e.TestStageID = @TestStageID AND e.TestUnitID IS NULL)--Exception For Stage regardless of unit
 					OR
-					(e.TestStageID = @TestStageID AND e.TestID=@TestID AND e.TestUnitID IS NULL)--Exception For Test/Stage regardless of unit
+					(e.TestID IS NULL AND e.TestStageID IS NULL AND e.TestUnitID IN (SELECT ID FROM TestUnits WHERE BatchID=@BatchID))--Entire Unit Level Exception
 					OR
-					(e.TestStageID = @TestStageID AND e.TestID=@TestID AND e.TestUnitID IN (SELECT ID FROM TestUnits WHERE BatchID=@BatchID))--Unit Exception For Test/Stage
-					OR
-					(e.TestStageID IS NULL AND e.TestID IS NULL AND e.TestUnitID IN (SELECT ID FROM TestUnits WHERE BatchID=@BatchID))--Entire Unit Level Exception
-				
+					(e.TestID IS NULL AND e.TestStageID = @TestStageID AND e.TestUnitID IN (SELECT ID FROM TestUnits WHERE BatchID=@BatchID))--Unit Exception For Stage
+
 				IF ((@UnitCount - @CountUnitExceptioned) <> (SELECT COUNT(DISTINCT ID) 
 								FROM TestRecords tr
 								WHERE TestStageID=@TestStageID AND TestID=@TestID 
