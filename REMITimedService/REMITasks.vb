@@ -48,8 +48,8 @@ Public Class REMITasks
         dueTime = (interval * 60000)
         checkUpdateTimer = New System.Threading.Timer(tcbCheckUpdates, Nothing, 0, dueTime)
 
-        dueTime = 3600000 - (now.Minute Mod 60) * 60000 - now.Second * 1000 - now.Millisecond
-        createDocTimer = New System.Threading.Timer(tcbCreateDoc, Nothing, dueTime, 14400000) 'Every 4 hours on the hour.
+        'dueTime = 3600000 - (now.Minute Mod 60) * 60000 - now.Second * 1000 - now.Millisecond
+        'createDocTimer = New System.Threading.Timer(tcbCreateDoc, Nothing, dueTime, 14400000) 'Every 4 hours on the hour.
     End Sub
 
     Protected Overrides Sub OnStop()
@@ -64,7 +64,7 @@ Public Class REMITasks
     Private Sub CreateDocs()
         Dim now As Date = DateTime.Now
 
-        If (Not (now.Hour >= 12 And now.Hour <= 17)) Then 'Don't run if not between 7am and 5pm
+        If (Not (now.Hour >= 12 And now.Hour <= 17) Or now.DayOfWeek = DayOfWeek.Saturday Or now.DayOfWeek = DayOfWeek.Sunday) Then 'Don't run if not between 7am and 5pm
             Return
         End If
 
@@ -251,7 +251,7 @@ Public Class REMITasks
     Private Sub CheckBatchForStatusUpdates()
         Dim now As Date = DateTime.Now
 
-        If (Not (now.Hour >= 6 And now.Hour <= 18)) Then 'Don't run if not between 7am and 5pm
+        If (Not (now.Hour >= 6 And now.Hour <= 18) Or now.DayOfWeek = DayOfWeek.Saturday Or now.DayOfWeek = DayOfWeek.Sunday) Then 'Don't run if not between 7am and 5pm
             Return
         End If
 
@@ -294,7 +294,7 @@ Public Class REMITasks
 
                     Do
                         Try
-                            DBControl.DAL.Remi.CheckBatchForStatusUpdates(req, "remi@blackberry.com")
+                            DBControl.DAL.Remi.MoveBatchForward(req, "remi@blackberry.com")
 
                             counter += 1
                             If counter Mod 50 = 0 Then
@@ -329,7 +329,7 @@ Public Class REMITasks
     Private Sub JIRASync()
         Dim now As Date = DateTime.Now
 
-        If (Not (now.Hour >= 7 And now.Hour <= 18)) Then 'Don't run if not between 8am and 5pm
+        If (Not (now.Hour >= 7 And now.Hour <= 18) Or now.DayOfWeek = DayOfWeek.Saturday Or now.DayOfWeek = DayOfWeek.Sunday) Then 'Don't run if not between 8am and 5pm
             Return
         End If
 
@@ -426,6 +426,12 @@ Public Class REMITasks
     End Sub
 
     Private Sub BatchStartedBeforeAssigned()
+        Dim now As Date = DateTime.Now
+
+        If (now.DayOfWeek = DayOfWeek.Saturday Or now.DayOfWeek = DayOfWeek.Sunday) Then 'Don't run if not between 7am and 5pm
+            Return
+        End If
+
         _sendNotAssignedEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendNotAssignedEmails")
 
         If (_sendNotAssignedEmails) Then
