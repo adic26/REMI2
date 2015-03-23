@@ -2809,4 +2809,7 @@
   <ItemGroup>
     <None Include="Schema Objects\Schemas\Req\Programmability\Stored Procedures\Req.RequestDataAudit.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMoveBatchForward.sql" />
+  </ItemGroup>
 </Project>

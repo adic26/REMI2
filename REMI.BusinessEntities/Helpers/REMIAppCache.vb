@@ -58,6 +58,7 @@ Namespace REMI.BusinessEntities
             RemoveTestExceptions(qraNumber)
             RemoveTestRecords(qraNumber)
             RemoveReqData(qraNumber)
+            RemoveExtReqData(qraNumber)
         End Sub
 
         Public Shared Function GetReqData(ByVal rqNumber As String) As RequestFieldsCollection

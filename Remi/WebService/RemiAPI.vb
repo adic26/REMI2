@@ -906,7 +906,9 @@ Public Class RemiAPI
     Public Function GetBatchJIRA(ByVal requestNumber As String) As DataTable
         Try
             Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-            Return BatchManager.GetBatchJIRA(batch.ID, False)
+            If (batch IsNot Nothing) Then
+                Return BatchManager.GetBatchJIRA(batch.ID, False)
+            End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatchJIRA", "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
         End Try
@@ -918,7 +920,9 @@ Public Class RemiAPI
     Public Function AddEditJira(ByVal requestNumber As String, ByVal jiraID As Int32, ByVal displayName As String, ByVal link As String, ByVal title As String) As Boolean
         Try
             Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-            Return BatchManager.AddEditJira(batch.ID, jiraID, displayName, link, title)
+            If (batch IsNot Nothing) Then
+                Return BatchManager.AddEditJira(batch.ID, jiraID, displayName, link, title)
+            End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API AddEditJira", "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
         End Try
@@ -1360,6 +1364,22 @@ Public Class RemiAPI
     End Function
 
     <WebMethod(EnableSession:=True, Description:="Checks if batch is ready to be moved to a different status.")> _
+    Public Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
+        Try
+            If (HasAccess("RemiTimedServiceAvailable")) Then
+                If UserManager.SetUserToSession(userIdentification) Then
+                    Return BatchManager.MoveBatchForward(requestNumber, UserManager.GetCurrentValidUserLDAPName)
+                End If
+            End If
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API MoveBatchForward", "e1", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", requestNumber, userIdentification))
+        End Try
+
+        Return False
+    End Function
+
+    <Obsolete("Don't use this routine any more. Use MoveBatchForward instead."), _
+    WebMethod(EnableSession:=True, Description:="Checks if batch is ready to be moved to a different status.")> _
     Public Function CheckBatchForStatusUpdates(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
         Try
             If (HasAccess("RemiTimedServiceAvailable")) Then

@@ -2,7 +2,7 @@
 
 
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class REMIBatchTasks
+Partial Class REMITasks
     Inherits System.ServiceProcess.ServiceBase
 
     'UserService overrides dispose to clean up the component list.
@@ -29,13 +29,13 @@ Partial Class REMIBatchTasks
         '
         '   ServicesToRun = New System.ServiceProcess.ServiceBase () {New Service1, New MySecondUserService}
         '
-        ServicesToRun = New System.ServiceProcess.ServiceBase() {New REMIBatchTasks}
+        ServicesToRun = New System.ServiceProcess.ServiceBase() {New REMITasks}
         AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf uhException
         System.ServiceProcess.ServiceBase.Run(ServicesToRun)
     End Sub
     Public Shared Sub uhException(ByVal sender As Object, ByVal e As UnhandledExceptionEventArgs)
         Dim ex As Exception = DirectCast(e.ExceptionObject, Exception)
-        remi.GetInstance.SendMail("reliabilityinfrastructure@blackberry.com", "remiTimedService@blackberry.com", "unhandled exception!", ex.Message + Environment.NewLine + ex.StackTrace)
+        DBControl.Helpers.Notify.SendNofitication("reliabilityinfrastructure@blackberry.com", "remiTimedService@blackberry.com", "unhandled exception!", ex.Message + Environment.NewLine + ex.StackTrace, True, String.Empty)
 
     End Sub
     'Required by the Component Designer

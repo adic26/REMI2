@@ -501,13 +501,23 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
+
+        Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
+            REMIAppCache.ClearAllBatchData(requestNumber)
+            Dim b As Batch = BatchManager.GetItem(requestNumber, cacheRetrievedData:=True)
+            TestRecordManager.CheckBatchForResultUpdates(b, False)
+
+            Return BatchDB.MoveBatchForward(requestNumber, userIdentification)
+
+        End Function
+
         Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Boolean
             Dim isSuccess As Boolean
 
             Try
-                REMIAppCache.RemoveExtReqData(qraNumber)
-                REMIAppCache.RemoveReqData(qraNumber)
-                Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=False)
+                REMIAppCache.ClearAllBatchData(qraNumber)
+
+                Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=True)
                 Dim batchChanged As Boolean = b.OutOfDate
 
                 'check batches for trs completion
