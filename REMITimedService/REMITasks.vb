@@ -48,8 +48,8 @@ Public Class REMITasks
         dueTime = (interval * 60000)
         checkUpdateTimer = New System.Threading.Timer(tcbCheckUpdates, Nothing, 0, dueTime)
 
-        'dueTime = 3600000 - (now.Minute Mod 60) * 60000 - now.Second * 1000 - now.Millisecond
-        'createDocTimer = New System.Threading.Timer(tcbCreateDoc, Nothing, dueTime, 14400000) 'Every 4 hours on the hour.
+        dueTime = 3600000 - (now.Minute Mod 60) * 60000 - now.Second * 1000 - now.Millisecond
+        createDocTimer = New System.Threading.Timer(tcbCreateDoc, Nothing, dueTime, 14400000) 'Every 4 hours on the hour.
     End Sub
 
     Protected Overrides Sub OnStop()
@@ -88,8 +88,13 @@ Public Class REMITasks
                     Dim req() As DBControl.remiAPI.RequestFields = DBControl.DAL.Remi.GetRequest(bw.QRANumber)
                     Dim dtFiles As DataTable = DBControl.DAL.Results.GetFiles(bw.QRANumber, True)
                     Dim es As String = (From r In req Where r.IntField = "ExecutiveSummary" Select r.Value).FirstOrDefault()
-                    Dim fileToOpen As Object = DirectCast("\\rem002ykf\Templates\QRAExecutiveSummary.docx", Object)
-                    Dim fileToSave As Object = DirectCast(String.Format("\\fsg52ykf\ReliabilityReportGenerator\QRA\{0}.docx", bw.QRANumber), Object)
+                    Dim fileToOpen As Object = DirectCast(ConfigurationManager.AppSettings("TemplateFile").ToString(), Object)
+
+                    If Not Directory.Exists(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType)) Then
+                        Directory.CreateDirectory(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType))
+                    End If
+
+                    Dim fileToSave As Object = DirectCast(String.Format("{0}{1}\{2}.docx", ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType, bw.QRANumber), Object)
 
                     If (Not String.IsNullOrEmpty(es) And Not File.Exists(fileToSave)) Then
                         Dim PassFail As String = DBControl.DAL.Results.GetOverAllPassFail(bw.QRANumber)
@@ -101,56 +106,44 @@ Public Class REMITasks
 
                         If (sourceDoc IsNot Nothing) Then
                             Dim rng As Word.Range
-                            Dim bookmarkName As Object = DirectCast("Department", Object)
 
-                            If (sourceDoc.Bookmarks.Exists(bookmarkName.ToString())) Then
-                                rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
+                            If (sourceDoc.Bookmarks.Exists(DirectCast("Department", Object).ToString())) Then
+                                rng = sourceDoc.Bookmarks.Item(DirectCast("Department", Object)).Range
                                 rng.Text = bw.Department
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
                             End If
 
-                            bookmarkName = DirectCast("JobName", Object)
-
-                            If (sourceDoc.Bookmarks.Exists(bookmarkName.ToString())) Then
-                                rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
-                                rng.Text = bw.JobName
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                            End If
-
-                            bookmarkName = DirectCast("JobNameHeader", Object)
-
-                            If (sourceDoc.Bookmarks.Exists(bookmarkName.ToString())) Then
-                                rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
-                                rng.Text = bw.JobName
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                            End If
-
-                            bookmarkName = DirectCast("RequestNumber", Object)
-
-                            If (sourceDoc.Bookmarks.Exists(bookmarkName.ToString())) Then
-                                rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
-                                rng.Text = bw.QRANumber
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                            End If
-
-                            bookmarkName = DirectCast("ExecutiveSummary", Object)
-
-                            If (sourceDoc.Bookmarks.Exists(bookmarkName.ToString())) Then
-                                rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
+                            If (sourceDoc.Bookmarks.Exists(DirectCast("ExecutiveSummary", Object).ToString())) Then
+                                rng = sourceDoc.Bookmarks.Item(DirectCast("ExecutiveSummary", Object)).Range
                                 rng.Text = es
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
                             End If
 
-                            bookmarkName = DirectCast("PartNameUnderTest", Object)
+                            If (sourceDoc.Bookmarks.Exists(DirectCast("JobName", Object).ToString())) Then
+                                rng = sourceDoc.Bookmarks.Item(DirectCast("JobName", Object)).Range
+                                rng.Text = bw.JobName
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                            End If
 
-                            If (sourceDoc.Bookmarks.Exists(bookmarkName.ToString())) Then
-                                rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
+                            If (sourceDoc.Bookmarks.Exists(DirectCast("JobNameHeader", Object).ToString())) Then
+                                rng = sourceDoc.Bookmarks.Item(DirectCast("JobNameHeader", Object)).Range
+                                rng.Text = bw.JobName
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                            End If
+
+                            If (sourceDoc.Bookmarks.Exists(DirectCast("RequestNumber", Object).ToString())) Then
+                                rng = sourceDoc.Bookmarks.Item(DirectCast("RequestNumber", Object)).Range
+                                rng.Text = bw.QRANumber
+                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                            End If
+
+                            If (sourceDoc.Bookmarks.Exists(DirectCast("PartNameUnderTest", Object).ToString())) Then
+                                rng = sourceDoc.Bookmarks.Item(DirectCast("PartNameUnderTest", Object)).Range
                                 rng.Text = (From r In req Where r.Name = "Part Name Under Test" Select r.Value).FirstOrDefault()
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
                             End If
 
-                            bookmarkName = DirectCast("RequestDetails", Object)
-                            rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
+                            rng = sourceDoc.Bookmarks.Item(DirectCast("RequestDetails", Object)).Range
                             rng.Text = String.Empty
                             Dim oTemplate As Word.ListTemplate = wordApp.ListGalleries.Item(Word.WdListGalleryType.wdBulletGallery).ListTemplates.Item(1)
 
@@ -172,19 +165,22 @@ Public Class REMITasks
 
                             System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
 
-                            bookmarkName = DirectCast("Result", Object)
-
-                            If (sourceDoc.Bookmarks.Exists(bookmarkName.ToString())) Then
-                                rng = sourceDoc.Bookmarks.Item(bookmarkName).Range
+                            If (sourceDoc.Bookmarks.Exists(DirectCast("Result", Object).ToString())) Then
+                                rng = sourceDoc.Bookmarks.Item(DirectCast("Result", Object)).Range
                                 rng.Text = PassFail
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
                             End If
 
                             Dim tempPath As String = String.Concat(Path.GetTempPath(), bw.QRANumber)
+
+                            If (Directory.Exists(tempPath)) Then
+                                Directory.Delete(tempPath, True)
+                            End If
+
                             Directory.CreateDirectory(tempPath)
 
                             For Each row As DataRow In dtFiles.Rows
-                                Dim stagePath As String = String.Concat(Path.GetTempPath(), bw.QRANumber, "\", row.Field(Of String)("TestStageName").ToString())
+                                Dim stagePath As String = String.Concat(tempPath, "\", row.Field(Of String)("TestStageName").ToString())
                                 Dim testPath As String = String.Concat(stagePath, "\", row.Field(Of String)("TestName").ToString())
                                 Dim unit As String = String.Concat(testPath, "\", row.Field(Of Int32)("BatchUnitNumber").ToString())
                                 Dim contentType As String = row.Field(Of String)("ContentType").ToString().Replace(".", String.Empty)
@@ -214,12 +210,17 @@ Public Class REMITasks
                             Next
 
                             Dim subDirs As String() = IO.Directory.GetDirectories(tempPath)
+                            rng = sourceDoc.Bookmarks.Item(DirectCast("Images", Object)).Range
+                            rng.Text = String.Empty
 
                             For Each dir As String In subDirs
-                                ZipFile.CreateFromDirectory(dir, String.Concat(tempPath, "\", dir.Substring(dir.LastIndexOf("\") + 1) + ".zip"), CompressionLevel.Optimal, True)
+                                Dim file As String = String.Concat(tempPath, "\", dir.Substring(dir.LastIndexOf("\") + 1) + ".zip")
+                                ZipFile.CreateFromDirectory(dir, file, CompressionLevel.Optimal, True)
+
+                                rng.InlineShapes.AddOLEObject(missing, file, missing, missing, missing, missing, missing, missing)
                             Next
 
-                            bookmarkName = DirectCast("Images", Object)
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
 
                             Directory.Delete(tempPath, True)
                         End If
