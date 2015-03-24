@@ -35,6 +35,8 @@ declare @totalTestTimeMinutes float
 declare @ApplicableTestStages nvarchar(1000)=''
 declare @ApplicableTests nvarchar(1000)=''
 DECLARE @DepartmentID INT
+declare @BatchID int
+DECLARE @ProductID INT
 -----------------------
 --Vars for use in SP --
 -----------------------
@@ -42,7 +44,7 @@ DECLARE @DepartmentID INT
 --jobname-- product group
 declare @jobname nvarchar(400)
 
-select @jobname=jobname, @productname=lp.[Values], @DepartmentID = DepartmentID from Batches inner join Products p on p.ID=Batches.ProductID 
+select @jobname=jobname, @productname=lp.[Values], @DepartmentID = DepartmentID, @BatchID=Batches.ID,@ProductID=Batches.ProductID from Batches inner join Products p on p.ID=Batches.ProductID 
 				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID where Batches.QRANumber = @qranumber
 
 declare @jobID int
@@ -185,7 +187,31 @@ set @numberoftests = (select COUNT (*) from Testrecordsxtrackinglogs as trXtl, D
 set @TestIsValidForLocation = case when (select 1 from Tests as t, TrackingLocations as tl, trackinglocationtypes as tlt, TrackingLocationsForTests as tltfort 
 where tlt.ID = tltfort.TrackingLocationtypeID and t.ID = tltfort.TestID and t.ID = @testID and tlt.ID = tl.TrackingLocationTypeID and tl.ID = @TLID) IS not null then 1 else 0 end
 --get applicable test stages
-select @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName from TestStages where ISNULL(TestStages.IsArchived, 0)=0 AND testStages.TestStageType NOT IN (4,5, 0) AND TestStages.JobID = @jobID order by ProcessOrder
+
+IF EXISTS (SELECT 1 FROM Req.RequestSetup WHERE BatchID=@BatchID)
+BEGIN
+	CREATE TABLE #Setup (TestStageID INT, TestStageName NVARCHAR(255), TestID INT, TestName NVARCHAR(255), Selected BIT)
+	INSERT INTO #Setup
+	EXEC Req.GetRequestSetupInfo @productID, @jobID, @BatchID, 1, 0, '', 0
+	INSERT INTO #Setup
+	EXEC Req.GetRequestSetupInfo @productID, @jobID, @BatchID, 2, 0, '', 0
+	
+	SELECT @ApplicableTestStages = @ApplicableTestStages + ',' + a.TestStageName
+	FROM (
+	SELECT DISTINCT s.TestStageName, ts.ProcessOrder
+	FROM #Setup s
+		INNER JOIN TestStages ts ON ts.ID = s.TestStageID
+	) a
+	ORDER BY a.ProcessOrder
+	DROP TABLE #Setup
+END
+ELSE
+BEGIN
+	SELECT @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName 
+	FROM TestStages ts
+	WHERE ISNULL(ts.IsArchived, 0)=0 AND ts.TestStageType NOT IN (4,5,0) AND ts.JobID = @jobID 
+	ORDER BY ProcessOrder
+END
 
 
 --get applicable tests

@@ -193,11 +193,20 @@ where tlt.ID = tltfort.TrackingLocationtypeID and t.ID = tltfort.TestID and t.ID
 
 IF EXISTS (SELECT 1 FROM Req.RequestSetup WHERE BatchID=@BatchID)
 BEGIN
-	SELECT @ApplicableTestStages = @ApplicableTestStages + ','  + TestStageName 
-	FROM TestStages ts
-		INNER JOIN Req.RequestSetup rs ON rs.BatchID=@BatchID AND rs.TestStageID=ts.ID
-	WHERE ISNULL(ts.IsArchived, 0)=0 AND ts.TestStageType NOT IN (4,5,0) AND ts.JobID = @jobID 
-	ORDER BY ProcessOrder
+	CREATE TABLE #Setup (TestStageID INT, TestStageName NVARCHAR(255), TestID INT, TestName NVARCHAR(255), Selected BIT)
+	INSERT INTO #Setup
+	EXEC Req.GetRequestSetupInfo @productID, @jobID, @BatchID, 1, 0, '', 0
+	INSERT INTO #Setup
+	EXEC Req.GetRequestSetupInfo @productID, @jobID, @BatchID, 2, 0, '', 0
+	
+	SELECT @ApplicableTestStages = @ApplicableTestStages + ',' + a.TestStageName
+	FROM (
+	SELECT DISTINCT s.TestStageName, ts.ProcessOrder
+	FROM #Setup s
+		INNER JOIN TestStages ts ON ts.ID = s.TestStageID
+	) a
+	ORDER BY a.ProcessOrder
+	DROP TABLE #Setup
 END
 ELSE
 BEGIN
