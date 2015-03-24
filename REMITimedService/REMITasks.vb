@@ -12,6 +12,7 @@ Imports REMITimedService.RemiTimedService
 Imports Word = Microsoft.Office.Interop.Word
 Imports System.IO.Compression
 Imports System.Data.SqlClient
+Imports System.Drawing
 
 Public Class REMITasks
     Inherits System.ServiceProcess.ServiceBase
@@ -210,8 +211,63 @@ Public Class REMITasks
                                 fs.Dispose()
                             Next
 
-                            Dim subDirs As String() = IO.Directory.GetDirectories(tempPath)
                             rng = sourceDoc.Bookmarks.Item(DirectCast("Images", Object)).Range
+                            Dim rowCount As Int32 = Math.Ceiling(dtFiles.Rows.Count() / 2)
+                            Dim tbl As Word.Table = rng.Tables.Add(rng, rowCount, 2, missing, missing)
+                            Dim pictureCounter As Int32 = 0
+                            tbl.Borders(Word.WdBorderType.wdBorderBottom).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                            tbl.Borders(Word.WdBorderType.wdBorderLeft).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                            tbl.Borders(Word.WdBorderType.wdBorderRight).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                            tbl.Borders(Word.WdBorderType.wdBorderTop).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                            tbl.Borders(Word.WdBorderType.wdBorderVertical).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                            tbl.Borders(Word.WdBorderType.wdBorderHorizontal).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+
+                            For Each row As Word.Row In tbl.Rows
+                                For Each cell As Word.Cell In row.Cells
+                                    If (pictureCounter < dtFiles.Rows.Count) Then
+                                        Dim innerTable As Word.Table = cell.Range.Tables.Add(cell.Range, 1, 1, missing, missing)
+
+                                        innerTable.Rows(1).Cells(1).Range.Text = dtFiles.Rows(pictureCounter).Field(Of String)("Values")
+                                        innerTable.Rows(1).Cells(1).Range.Bold = 0
+                                        innerTable.Rows(1).Cells(1).Range.Font.Size = 9
+                                        Dim row2 As Word.Row = innerTable.Rows.Add(missing)
+
+                                        Dim ms As MemoryStream = New MemoryStream(dtFiles.Rows(pictureCounter).Field(Of Byte())("File"))
+                                        Dim image As Bitmap = DirectCast(Drawing.Image.FromStream(ms), Bitmap)
+
+                                        Dim origHPix As Int32 = image.Height
+                                        Dim origWPix As Int32 = image.Width
+                                        Dim newWInches As Decimal = 3.5
+                                        Dim newWPoints As Decimal = wordApp.InchesToPoints(newWInches)
+                                        Dim newWPixels As Decimal = wordApp.PointsToPixels(newWPoints, missing)
+                                        Dim newHPixels As Decimal = newWPixels * origHPix / origWPix
+                                        Dim newImage As Bitmap = New Bitmap(image, New Size(newWPixels, newHPixels))
+
+                                        System.Windows.Forms.Clipboard.SetDataObject(newImage)
+                                        row2.Cells(1).Range.PasteAndFormat(Word.WdRecoveryType.wdFormatOriginalFormatting)
+                                        image.Dispose()
+                                        image = Nothing
+                                        newImage.Dispose()
+                                        newImage = Nothing
+
+                                        Dim row3 As Word.Row = innerTable.Rows.Add(missing)
+                                        row3.Cells(1).Range.Text = String.Format("{0} {1} {2}", dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"), dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"))
+                                        row3.Range.Font.Bold = 0
+                                        row3.Range.Font.Size = 8
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(row3)
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(row2)
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(innerTable)
+
+                                        pictureCounter += 1
+                                    End If
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
+                                Next
+                            Next
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(tbl)
+
+                            Dim subDirs As String() = IO.Directory.GetDirectories(tempPath)
+                            rng = sourceDoc.Bookmarks.Item(DirectCast("ZipImages", Object)).Range
                             rng.Text = String.Empty
 
                             For Each dir As String In subDirs
