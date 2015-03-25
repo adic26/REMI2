@@ -1279,6 +1279,14 @@ table tr td input
     border:none;
 }
 
+.RequestCellSpan
+{
+    text-align:left;
+    border:none;
+    font-weight: bold;
+    font-size: medium;
+}
+
 .requestTable
 {
     border:none;

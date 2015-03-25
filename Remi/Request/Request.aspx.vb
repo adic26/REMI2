@@ -127,6 +127,7 @@ Public Class Request
             hdnRequestType.Value = rf(0).RequestType
             hdnRequestTypeID.Value = rf(0).RequestTypeID
             lblRequest.Text = rf(0).RequestNumber
+            Dim lastCategory As String = String.Empty
 
             For Each res In rf
                 Dim tRow As New TableRow()
@@ -136,9 +137,20 @@ Public Class Request
                 Dim rfv As New RequiredFieldValidator
                 Dim id As String = "0"
                 Dim fieldCount As Int32 = 1
-
                 tCell.CssClass = "RequestCell1"
                 tCell2.CssClass = "RequestCell2"
+
+                If (lastCategory <> res.Category) Then
+                    Dim tRowCat As New TableRow()
+                    Dim tCellCat As New TableCell()
+                    tCellCat.ColumnSpan = 2
+                    tCellCat.Text = res.Category
+                    tCellCat.CssClass = "RequestCellSpan"
+
+                    tRowCat.Cells.Add(tCellCat)
+                    tbl.Rows.Add(tRowCat)
+                    lastCategory = res.Category
+                End If
 
                 id = res.FieldSetupID
 
