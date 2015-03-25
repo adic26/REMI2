@@ -62,7 +62,7 @@ namespace REMI.Bll.Tests
             var ut = new REMI.Entities.UserTraining();
             ut = (from t in instance.UserTrainings.Include("User").Include("Lookup") orderby t.ID descending select t).FirstOrDefault();
 
-            Assert.True(UserManager.UserExists(ut.User.LDAPLogin));
+            Assert.True(UserManager.UserExists(ut.User.LDAPLogin,0));
         }
 
         //[Test]

@@ -333,9 +333,16 @@ Namespace REMI.Bll
             Return 0
         End Function
 
-        Public Shared Function UserExists(ByVal userName As String) As Boolean
+        Public Shared Function UserExists(ByVal userName As String, ByVal badge As Int32) As Boolean
             Try
-                Dim u As User = UserDB.GetItem(userName.ToLower, Contracts.Enumerations.SearchType.UserName)
+                Dim u As User = Nothing
+
+                If (badge > 0) Then
+                    u = UserDB.GetItem(badge.ToString(), Contracts.Enumerations.SearchType.Badge)
+                Else
+                    u = UserDB.GetItem(userName.ToLower, Contracts.Enumerations.SearchType.UserName)
+                End If
+
                 If u IsNot Nothing Then
                     Return True
                 End If
