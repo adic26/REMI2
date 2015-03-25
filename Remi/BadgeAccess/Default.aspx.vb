@@ -7,7 +7,8 @@ Partial Class BadgeAccess_Default
 
 #Region "Load"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        txtBadge.Focus()
+        Dim scriptManager As ScriptManager = scriptManager.GetCurrent(Me.Page)
+        scriptManager.SetFocus(txtBadge)
     End Sub
 #End Region
 

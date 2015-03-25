@@ -44,7 +44,7 @@ Public Class Request
             setup.QRANumber = rec.RequestNumber
             setup.BatchID = rec.BatchID
             setup.TestStageType = TestStageType.Parametric
-            setup.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProjectManager")).FirstOrDefault()
+            setup.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
             setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
             setup.OrientationID = 0
@@ -59,7 +59,7 @@ Public Class Request
             setupEnv.ProductName = batch.ProductGroup
             setupEnv.QRANumber = batch.QRANumber
             setupEnv.TestStageType = TestStageType.EnvironmentalStress
-            setupEnv.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProjectManager")).FirstOrDefault()
+            setupEnv.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
             setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             setupEnv.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
             setupEnv.OrientationID = 0

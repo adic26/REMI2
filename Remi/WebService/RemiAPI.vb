@@ -1012,7 +1012,7 @@ Public Class RemiAPI
                         Dim us As New UserSearch()
                         us.TestCenterID = batch.TestCenterLocationID
 
-                        Dim emails As List(Of String) = (From u In UserManager.UserSearchList(us, False, False, False, True, False) Where (From p In u.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProjectManager")).FirstOrDefault() = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
+                        Dim emails As List(Of String) = (From u In UserManager.UserSearchList(us, False, False, False, True, False) Where (From p In u.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault() = True Or u.IsTestCenterAdmin = True Select u.EmailAddress).Distinct.ToList
 
                         If (emails.Count > 0) Then
                             Remi.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("{0} Started Before Assigned", requestNumber), String.Format("Please assign this batch as soon as possible in the Request <a href=""{0}"">{1}</a>", batch.RequestLink, requestNumber), True)
