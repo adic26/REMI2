@@ -88,6 +88,13 @@
                      </asp:ObjectDataSource>
                  </td>
             </tr>
+            <tr>
+                 <td class="HorizTableFirstcolumn">Products:</td>
+                 <td style="text-align:left;">
+                     <asp:GridView runat="server" ID="grdProducts" EmptyDataText="No Products">
+                     </asp:GridView>
+                 </td>
+            </tr>
              <tr>
                  <td class="HorizTableFirstcolumn">Default Page:</td>
                  <td style="text-align:left;">

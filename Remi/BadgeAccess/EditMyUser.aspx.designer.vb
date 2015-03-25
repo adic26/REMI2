@@ -93,6 +93,7 @@ Partial Public Class BadgeAccess_EditMyUser
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlDepartment As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents grdProducts As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''grdDepartments control.

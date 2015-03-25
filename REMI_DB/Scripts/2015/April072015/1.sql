@@ -1,13 +1,9 @@
 BEGIN TRAN
 EXEC sp_rename 'dbo.UsersProducts', '_UsersProducts'
 EXEC sp_rename 'dbo.UsersProductsAudit', '_UsersProductsAudit'
-
+GO
 ALTER TABLE dbo.UserDetails ADD IsProductManager BIT DEFAULT(0) NULL
 ALTER TABLE dbo.UserDetails ADD LastUser NVARCHAR(255) NULL
-
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 ALTER FUNCTION dbo.remifnUserCanDelete (@UserName NVARCHAR(255))
 RETURNS BIT
@@ -1561,4 +1557,5 @@ go
 delete
 from aspnet_Roles
 where RoleName='ProjectManager'
+go
 ROLLBACK TRAN
