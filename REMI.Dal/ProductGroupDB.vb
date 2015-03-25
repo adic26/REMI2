@@ -229,29 +229,6 @@ Namespace REMI.Dal
             Return tempList
         End Function
 
-        ''' <summary>Saves a ProductGroup/User association in the database.</summary> 
-        ''' <returns>Returns true when the object was saved successfully, or false otherwise.</returns> 
-        Public Shared Function SaveUserAssociation(ByVal productID As Int32, ByVal userNameToAdd As String, ByVal currentUserName As String) As Boolean
-
-            Dim Result As Integer = 0
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("remispProductManagersAssignUser", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", productID)
-                    myCommand.Parameters.AddWithValue("@UserName", userNameToAdd)
-                    myCommand.Parameters.AddWithValue("@LastUser", currentUserName)
-                    myConnection.Open()
-                    Dim NumberOfRecordsAffected As Integer = myCommand.ExecuteNonQuery()
-                    If NumberOfRecordsAffected = 0 Then
-                        Throw New DBConcurrencyException(String.Format("There was an error saving the association of user:{0} to the productID: {1}.", userNameToAdd, productID))
-                    End If
-                End Using
-
-            End Using
-            Return True
-        End Function
-
         Public Shared Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String, ByVal tsdContact As String) As Boolean 'We are passing in productGroupName because the webservice will insert a missing one
             Dim Result As Integer = 0
             Dim success As Boolean = False
@@ -288,26 +265,6 @@ Namespace REMI.Dal
             End Using
 
             Return success
-        End Function
-
-        ''' <summary>Deletes a ProductGroup/User association from the database.</summary> 
-        ''' <param name="ProductGroupName">The Name of the ProductGroup. </param>
-        ''' <returns>Returns <c>true</c> when the object was deleted successfully, or <c>false</c> otherwise.</returns> 
-        Public Shared Function Delete(ByVal productID As Int32, ByVal userIDToRemove As Int32, ByVal userID As Int32) As Boolean
-            Dim Result As Integer = 0
-            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("remispProductManagersDeleteSingleItem", MyConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", productID)
-                    myCommand.Parameters.AddWithValue("@UserIDToRemove", userIDToRemove)
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
-                    MyConnection.Open()
-                    Result = myCommand.ExecuteNonQuery()
-                End Using
-
-            End Using
-            Return CBool(Result)
         End Function
 
         ''' <summary>Saves a product setting in the database.</summary> 

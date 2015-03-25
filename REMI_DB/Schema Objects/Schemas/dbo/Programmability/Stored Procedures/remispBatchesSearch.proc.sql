@@ -223,12 +223,12 @@ AS
 					OR
 					(@BatchStart IS NOT NULL AND @BatchEnd IS NOT NULL AND b.ID IN (Select distinct batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime BETWEEN @BatchStart AND @BatchEnd))
 				)
-				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@ExecutingUserID)))
+				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.LookupID IN (SELECT ud.LookupID FROM UserDetails ud WITH(NOLOCK) WHERE UserID=@ExecutingUserID)))
 				AND
 				(
 					(@OnlyHasResults IS NULL OR @OnlyHasResults = 0)
 					OR
-					(@OnlyHasResults = 1 AND EXISTS(SELECT 1 FROM TestUnits tu INNER JOIN Relab.Results r ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
+					(@OnlyHasResults = 1 AND EXISTS(SELECT 1 FROM TestUnits tu WITH(NOLOCK) INNER JOIN Relab.Results r ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
 				)
 		)AS BatchesRows		
 	ORDER BY BatchesRows.PriorityOrder ASC, BatchesRows.QRANumber DESC

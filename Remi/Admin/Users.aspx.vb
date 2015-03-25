@@ -73,6 +73,7 @@ Partial Class Admin_Users
 
         dtLevel = LookupsManager.GetLookups("Level", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
         Dim dtDepartments As DataTable = LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
+        Dim dtProducts As DataTable = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
 
         If CurrentUser Is Nothing Then
             lblHeaderText.Text = "Add New User"
@@ -90,6 +91,9 @@ Partial Class Admin_Users
 
             grdDepartments.DataSource = dtDepartments
             grdDepartments.DataBind()
+
+            gvProducts.DataSource = dtProducts
+            gvProducts.DataBind()
         Else
             Dim testCenterAdmin As Boolean = UserManager.GetCurrentUser.IsTestCenterAdmin
             lblHeaderText.Text = String.Format("Editing {0}", CurrentUser.LDAPName)
@@ -129,6 +133,9 @@ Partial Class Admin_Users
             grdDepartments.DataSource = dtDepartments
             grdDepartments.DataBind()
 
+            gvProducts.DataSource = dtProducts
+            gvProducts.DataBind()
+
             For Each drtc As GridViewRow In grdTestCenter.Rows
                 Dim chkAccess As CheckBox = drtc.FindControl("chkAccess")
                 Dim chkDefault As CheckBox = drtc.FindControl("chkDefault")
@@ -155,17 +162,20 @@ Partial Class Admin_Users
                 End If
             Next
 
-            dlstProductGroups.DataBind()
-            gvwTraining.DataBind()
+            For Each pr As GridViewRow In gvProducts.Rows
+                Dim chkAccess As CheckBox = pr.FindControl("chkAccess")
+                Dim chkProductManager As CheckBox = pr.FindControl("chkProductManager")
+                Dim hdnLookupID As HiddenField = pr.FindControl("hdnLookupID")
 
-            For Each dr As DataRow In CurrentUser.ProductGroups.Rows
-                For Each dli As DataListItem In dlstProductGroups.Items
-                    Dim chkProductGroup As CheckBox = dli.FindControl("chkProductGroup")
-                    If chkProductGroup.Text = dr.Item("ProductGroupName").ToString() Then
-                        chkProductGroup.Checked = True
-                    End If
-                Next
+                Dim dr As DataRow = (From ud As DataRow In CurrentUser.UserDetails.Rows Where ud.Field(Of Int32)("LookupID") = hdnLookupID.Value Select ud).FirstOrDefault()
+
+                If (dr IsNot Nothing) Then
+                    chkProductManager.Checked = dr.Field(Of Boolean)("IsProductManager")
+                    chkAccess.Checked = True
+                End If
             Next
+
+            gvwTraining.DataBind()
 
             'recheck appropriate roles.
             For Each r As String In CurrentUser.RolesList
@@ -190,7 +200,7 @@ Partial Class Admin_Users
 
         Dim us As New UserSearch
         us.TestCenterID = testCenterID
-        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, True, chkArchived.Checked)
+        gvwUsers.DataSource = UserManager.UserSearchList(us, False, True, True, True, chkArchived.Checked)
         gvwUsers.DataBind()
     End Sub
 #End Region
@@ -246,14 +256,30 @@ Partial Class Admin_Users
     Protected Sub gvwUsers_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwUsers.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
             Dim btnTraining As Image = DirectCast(e.Row.FindControl("btnTraining"), Image)
+            Dim btnDetails As Image = DirectCast(e.Row.FindControl("btnDetails"), Image)
+            Dim btnRoles As Image = DirectCast(e.Row.FindControl("btnRoles"), Image)
             Dim pnlTraining As Panel = DirectCast(e.Row.FindControl("pnlTraining"), Panel)
+            Dim pnlDetails As Panel = DirectCast(e.Row.FindControl("pnlDetails"), Panel)
+            Dim pnlRoles As Panel = DirectCast(e.Row.FindControl("pnlRoles"), Panel)
             Dim blTraining As BulletedList = DirectCast(e.Row.FindControl("blTraining"), BulletedList)
+            Dim bltRoles As BulletedList = DirectCast(e.Row.FindControl("bltRoles"), BulletedList)
+            Dim bltDetails As BulletedList = DirectCast(e.Row.FindControl("bltDetails"), BulletedList)
 
             If (blTraining.Items.Count = 0) Then
                 btnTraining.CssClass = "hidden"
             End If
 
+            If (bltRoles.Items.Count = 0) Then
+                btnRoles.CssClass = "hidden"
+            End If
+
+            If (bltDetails.Items.Count = 0) Then
+                btnDetails.CssClass = "hidden"
+            End If
+
             btnTraining.Attributes.Add("onclick", "javascript: gvrowtoggle(" & e.Row.RowIndex & ", '" & pnlTraining.ClientID & "')")
+            btnDetails.Attributes.Add("onclick", "javascript: gvrowtoggle(" & e.Row.RowIndex & ", '" & pnlDetails.ClientID & "')")
+            btnRoles.Attributes.Add("onclick", "javascript: gvrowtoggle(" & e.Row.RowIndex & ", '" & pnlRoles.ClientID & "')")
         End If
     End Sub
 
@@ -270,6 +296,10 @@ Partial Class Admin_Users
 
     Protected Sub UpdateGvwHeader() Handles gvwUsers.PreRender
         Helpers.MakeAccessable(gvwUsers)
+    End Sub
+
+    Protected Sub ProductsHeader() Handles gvProducts.PreRender
+        Helpers.MakeAccessable(gvProducts)
     End Sub
 
     Protected Sub TestCenterHeader() Handles grdTestCenter.PreRender
@@ -314,29 +344,6 @@ Partial Class Admin_Users
         Else
             tmpUser.ByPassProduct = 0
         End If
-
-        'Projects
-        Dim userProjects As New DataTable("ProductGroups")
-        userProjects.Columns.Add("ID", Type.GetType("System.Int32"))
-        userProjects.Columns.Add("ProductGroupName", Type.GetType("System.String"))
-
-        Dim products As DataList = DirectCast(Me.FindControl(dlstProductGroups.UniqueID), DataList)
-
-        For Each dli As DataListItem In products.Items
-            If (dli.ItemType = ListItemType.Item Or dli.ItemType = ListItemType.AlternatingItem) Then
-
-                Dim chkProductGroup As CheckBox = dli.FindControl("chkProductGroup")
-                Dim hdnProductID As HiddenField = dli.FindControl("hdnProductID")
-
-                If Request.Form(chkProductGroup.UniqueID) = "on" Then
-                    Dim newRow As DataRow = userProjects.NewRow
-                    newRow("ID") = hdnProductID.Value
-                    newRow("ProductGroupName") = chkProductGroup.Text
-                    userProjects.Rows.Add(newRow)
-                End If
-            End If
-
-        Next
 
         Dim roles As DataList = DirectCast(Me.FindControl(dlstRoles.UniqueID), DataList)
         Dim userRoles As New List(Of String)
@@ -422,7 +429,6 @@ Partial Class Admin_Users
 
         'set up the user data
         tmpUser.RolesList = userRoles
-        tmpUser.ProductGroups = userProjects
         tmpUser.Training = userTraining
         tmpUser.DefaultPage = Request.Form(ddlDefaultPage.UniqueID)
 
@@ -432,6 +438,7 @@ Partial Class Admin_Users
         userDetails.Columns.Add("Values", Type.GetType("System.String"))
         userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
         userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
+        userDetails.Columns.Add("IsProductManager", Type.GetType("System.Boolean"))
 
         For Each drtc As GridViewRow In grdDepartments.Rows
             Dim chkAccess As CheckBox = drtc.FindControl("chkAccess")
@@ -444,6 +451,7 @@ Partial Class Admin_Users
                 newRow("LookupID") = hdnLookupID.Value
                 newRow("Values") = lblName.Text
                 newRow("Name") = "Department"
+                newRow("IsProductManager") = False
 
                 If (chkDefault.Checked And Not defaultIsSet) Then
                     defaultIsSet = True
@@ -469,12 +477,36 @@ Partial Class Admin_Users
                 newRow("LookupID") = hdnLookupID.Value
                 newRow("Values") = lblName.Text
                 newRow("Name") = "TestCenter"
+                newRow("IsProductManager") = False
 
                 If (chkDefault.Checked And Not defaultIsSet) Then
                     defaultIsSet = True
                     newRow("IsDefault") = chkDefault.Checked
                 Else
                     newRow("IsDefault") = False
+                End If
+
+                userDetails.Rows.Add(newRow)
+            End If
+        Next
+
+        For Each pr As GridViewRow In gvProducts.Rows
+            Dim chkAccess As CheckBox = pr.FindControl("chkAccess")
+            Dim chkProductManager As CheckBox = pr.FindControl("chkProductManager")
+            Dim hdnLookupID As HiddenField = pr.FindControl("hdnLookupID")
+            Dim lblName As Label = pr.FindControl("lblName")
+
+            If (chkAccess.Checked Or chkProductManager.Checked) Then
+                Dim newRow As DataRow = userDetails.NewRow
+                newRow("LookupID") = hdnLookupID.Value
+                newRow("Values") = lblName.Text
+                newRow("Name") = "Products"
+                newRow("IsDefault") = False
+
+                If (chkProductManager.Checked) Then
+                    newRow("IsProductManager") = chkProductManager.Checked
+                Else
+                    newRow("IsProductManager") = False
                 End If
 
                 userDetails.Rows.Add(newRow)

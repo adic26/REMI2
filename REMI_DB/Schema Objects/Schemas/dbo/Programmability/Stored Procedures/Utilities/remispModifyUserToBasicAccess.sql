@@ -11,7 +11,6 @@ BEGIN
 	DELETE FROM UserDetails WHERE UserID=@UserID
 	
 	UPDATE Users SET ByPassProduct=0 WHERE ID=@UserID
-	DELETE FROM UsersProducts WHERE UserID=@UserID
 	DELETE FROM aspnet_UsersInRoles WHERE UserId=@UserIDGuid AND RoleId <> @RoleID
 	DELETE FROM UserTraining WHERE UserID=@UserID
 END

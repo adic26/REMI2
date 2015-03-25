@@ -12,7 +12,7 @@ Partial Class ScanForInfo_ProductGroup
         Dim id As Int32
         Int32.TryParse(ddlProductGroup.SelectedValue, id)
 
-        If (UserManager.GetCurrentUser.ByPassProduct Or (From up In UserManager.GetCurrentUser.ProductGroups.Rows Where up("ID") = id Select up("id")).FirstOrDefault() <> Nothing) Then
+        If (UserManager.GetCurrentUser.ByPassProduct Or (From up In UserManager.GetCurrentUser.UserDetails.Rows Where up("Values") = ddlProductGroup.SelectedItem.Text Select up("Values")).FirstOrDefault() <> Nothing) Then
             ProcessName(id)
         End If
     End Sub

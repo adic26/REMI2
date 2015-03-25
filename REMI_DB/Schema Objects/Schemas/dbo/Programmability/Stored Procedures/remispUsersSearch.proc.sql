@@ -10,9 +10,10 @@ BEGIN
 				u.ConcurrencyID
 			 FROM Users u
 				LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
-				LEFT OUTER JOIN UsersProducts up ON up.UserID = u.ID
 				INNER JOIN UserDetails udtc ON udtc.UserID=u.ID
 				INNER JOIN UserDetails udd ON udd.UserID=u.ID
+				LEFT OUTER JOIN UserDetails udp ON udp.UserID=u.ID
+				LEFT OUTER JOIN Products p ON p.LookupID=udp.LookupID
 			WHERE (
 					(@IncludeInActive = 0 AND ISNULL(u.IsActive, 1)=1)
 					OR
@@ -44,7 +45,7 @@ BEGIN
 				  )
 				  AND
 				  (
-					(up.ProductID=@ProductID) 
+					(p.ID=@ProductID) 
 					OR
 					(@ProductID = 0)
 				  )

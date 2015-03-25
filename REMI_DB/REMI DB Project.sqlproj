@@ -255,6 +255,8 @@
     <Folder Include="Scripts\2014\December022014" />
     <Folder Include="Scripts\2014\December152014" />
     <Folder Include="Scripts\2014\February062014" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Obsolete" />
+    <Folder Include="Scripts\2015\April072015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -755,16 +757,7 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispScanGetData.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductManagersDeleteSingleItem.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispScanSaveData.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductManagersAssignUser.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductManagersSelectList.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchGetViewBatch.proc.sql">
@@ -1175,11 +1168,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\RemispGetTestCountByType.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispCheckVersion.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -1507,9 +1495,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchDNPParametric.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\UsersProducts.table.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\UsersProducts.FK_UsersProducts_Products.fkey.sql">
       <SubType>Code</SubType>
     </None>
@@ -1520,9 +1505,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersProducts.UsersProductsAuditInsertUpdate.trigger.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\UsersProductsAudit.table.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispYourBatchesGetActiveBatches.proc.sql">
@@ -2811,5 +2793,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispMoveBatchForward.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\RemispGetTestCountByType.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispProductManagersSelectList.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispProductManagersAssignUser.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispProductManagersDeleteSingleItem.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Obsolete\UsersProducts.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Obsolete\UsersProductsAudit.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\April072015\1.sql" />
   </ItemGroup>
 </Project>

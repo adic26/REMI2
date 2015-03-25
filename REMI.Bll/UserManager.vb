@@ -50,9 +50,9 @@ Namespace REMI.Bll
             Return New DataTable("UserSearch")
         End Function
 
-        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal loadAD As Boolean, ByVal includeInActive As Boolean) As UserCollection
+        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal loadTraining As Boolean, ByVal loadAD As Boolean, ByVal includeInActive As Boolean) As UserCollection
             Try
-                Dim uc As UserCollection = UserDB.UserSearchList(us, showAllGrid, determineDelete, loadTraining, loadProducts, includeInActive)
+                Dim uc As UserCollection = UserDB.UserSearchList(us, showAllGrid, determineDelete, loadTraining, includeInActive)
 
                 If (loadAD) Then
                     For Each u As User In uc
@@ -121,12 +121,19 @@ Namespace REMI.Bll
                                     Where ud.User.ID = u.ID And ud.Lookup.LookupType.Name = "Department" _
                                     Select New With {.LookupID = ud.LookupID, .isDefault = ud.IsDefault}).ToList()
 
+                        Dim userDetailsProducts = (From ud In instance.UserDetails _
+                                    Where ud.User.ID = u.ID And ud.Lookup.LookupType.Name = "Products" _
+                                    Select New With {.LookupID = ud.LookupID, .isDefault = ud.IsDefault}).ToList()
+
                         'Get new set of UserDetails for user
                         Dim userDetailsNewTestCenter = (From ud In u.UserDetails Where DirectCast(ud.Item("Name"), String) = "TestCenter" _
                                 Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isDefault = DirectCast(ud.Item("isDefault"), Boolean)}).ToList()
 
                         Dim userDetailsNewDepartment = (From ud In u.UserDetails Where DirectCast(ud.Item("Name"), String) = "Department" _
                                 Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isDefault = DirectCast(ud.Item("isDefault"), Boolean)}).ToList()
+
+                        Dim userDetailsNewProducts = (From ud In u.UserDetails Where DirectCast(ud.Item("Name"), String) = "Products" _
+                                Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isProductManager = DirectCast(ud.Item("IsProductManager"), Boolean)}).ToList()
 
                         For Each udd In userDetailsNewDepartment
                             Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.User.ID = u.ID And d.LookupID = udd.LookupID Select d).FirstOrDefault()
@@ -136,9 +143,11 @@ Namespace REMI.Bll
                                 ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
                                 ud.Lookup = (From l In instance.Lookups Where l.LookupID = udd.LookupID Select l).FirstOrDefault()
                                 ud.IsDefault = udd.isDefault
+                                ud.IsAdmin = False
 
                                 instance.AddToUserDetails(ud)
                             Else
+                                ud.IsAdmin = False
                                 ud.IsDefault = udd.isDefault
                             End If
                         Next
@@ -151,10 +160,31 @@ Namespace REMI.Bll
                                 ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
                                 ud.Lookup = (From l In instance.Lookups Where l.LookupID = udtc.LookupID Select l).FirstOrDefault()
                                 ud.IsDefault = udtc.isDefault
+                                ud.IsAdmin = False
 
                                 instance.AddToUserDetails(ud)
                             Else
+                                ud.IsAdmin = False
                                 ud.IsDefault = udtc.isDefault
+                            End If
+                        Next
+
+                        For Each udtc In userDetailsNewProducts
+                            Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.User.ID = u.ID And d.LookupID = udtc.LookupID Select d).FirstOrDefault()
+
+                            If (ud Is Nothing) Then
+                                ud = New REMI.Entities.UserDetail
+                                ud.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
+                                ud.Lookup = (From l In instance.Lookups Where l.LookupID = udtc.LookupID Select l).FirstOrDefault()
+                                ud.IsDefault = False
+                                ud.IsAdmin = False
+                                ud.IsProductManager = udtc.isProductManager
+
+                                instance.AddToUserDetails(ud)
+                            Else
+                                ud.IsDefault = False
+                                ud.IsAdmin = False
+                                ud.IsProductManager = udtc.isProductManager
                             End If
                         Next
 
@@ -172,36 +202,11 @@ Namespace REMI.Bll
                             End If
                         Next
 
-                        'Get existing set of products for user
-                        Dim userProducts As List(Of Int32) = (From pm In instance.UsersProducts _
-                                    Where pm.User.ID = u.ID _
-                                    Select ProductID = pm.Product.ID).ToList()
-
-                        'Get new set of products for user
-                        Dim userProductsNew As List(Of Int32) = (From p In u.ProductGroups _
-                                Select DirectCast(p.Item("ID"), Int32)).ToList()
-
-                        ''Gets the list of products that are missing for user
-                        Dim missingProducts = userProductsNew.Except(userProducts)
-
-                        ''Gets the list of products that need to be removed
-                        Dim removeProducts = userProducts.Except(userProductsNew)
-
-                        'Remove products
-                        For Each t In removeProducts
-                            Dim productID As Int32 = t
-                            Dim up = (From upm In instance.UsersProducts Where upm.Product.ID = productID And upm.User.ID = u.ID Select upm).FirstOrDefault()
-                            instance.DeleteObject(up)
-                        Next
-
-                        'Add missing products
-                        For Each t In missingProducts
-                            Dim productID As Int32 = t
-                            Dim pm As New REMI.Entities.UsersProduct()
-                            pm.User = (From usr In instance.Users Where usr.ID = u.ID Select usr).FirstOrDefault()
-                            pm.LastUser = GetCurrentValidUserLDAPName()
-                            pm.Product = (From p In instance.Products Where p.ID = productID Select p).FirstOrDefault()
-                            instance.AddToUsersProducts(pm)
+                        For Each udr In userDetailsProducts
+                            If (From d In u.UserDetails Where DirectCast(d.Item("LookupID"), Int32) = udr.LookupID Select d).FirstOrDefault() Is Nothing Then
+                                Dim up As REMI.Entities.UserDetail = (From ud In instance.UserDetails Where ud.User.ID = u.ID And ud.LookupID = udr.LookupID Select ud).FirstOrDefault()
+                                instance.DeleteObject(up)
+                            End If
                         Next
 
                         'check for previous roles and remove

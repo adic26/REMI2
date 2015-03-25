@@ -637,7 +637,7 @@ Partial Class Search
         Dim us As New UserSearch()
         us.TestCenterID = ddlTestCenterTraining.SelectedValue
 
-        Dim uc As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False, False)
+        Dim uc As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False)
         uc.Insert(0, New User())
 
         ddlUserTraining.DataSource = uc
