@@ -418,13 +418,6 @@ Namespace REMI.BusinessEntities
         End Property
 
         <XmlIgnore()> _
-        Public ReadOnly Property IsProjectManager() As Boolean
-            Get
-                Return RolesList.Contains("ProjectManager")
-            End Get
-        End Property
-
-        <XmlIgnore()> _
         Public ReadOnly Property IsDeveloper() As Boolean
             Get
                 Return RolesList.Contains("Developer")

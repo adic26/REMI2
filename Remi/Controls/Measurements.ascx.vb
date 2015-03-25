@@ -10,12 +10,14 @@ Public Class Measurements
     Private _includeArchived As Boolean
     Private _showExport As Boolean
     Private _controlMode As ControlMode
+    Private _isProjectManager As Boolean
 
     Public Enum ControlMode
         RelabDisplay = 1
         ExecutiveSummaryDisplay = 2
     End Enum
 
+#Region "Load"
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
         If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then
             Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("/Design/scripts/jQuery/jquery-1.10.2.js"))
@@ -68,6 +70,9 @@ Public Class Measurements
 
             grdResultMeasurements.EmptyDataText = EmptyDataTextMeasurement
 
+            Dim instance = New REMI.Dal.Entities().Instance()
+            _isProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = (From b In instance.Batches Where b.ID = BatchID Select b.Product.Lookup.Values).FirstOrDefault() Select p.Field(Of Boolean)("IsProjectManager")).FirstOrDefault()
+
             If (dtMeasure.Rows.Count > 0) Then
                 grdResultMeasurements.DataSource = dtMeasure
                 grdResultMeasurements.DataBind()
@@ -95,6 +100,7 @@ Public Class Measurements
             End If
         End If
     End Sub
+#End Region
 
 #Region "Methods"
     Protected Sub SetVisible(ByVal dt As DataTable)
@@ -232,6 +238,14 @@ Public Class Measurements
 #End Region
 
 #Region "Events"
+    Protected Sub chkOnlyFails_CheckedChanged(sender As Object, e As EventArgs)
+        DataBind()
+    End Sub
+
+    Protected Sub chkIncludeArchived_CheckedChanged(sender As Object, e As EventArgs)
+        DataBind()
+    End Sub
+
     Protected Sub gvwWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdResultMeasurements.PreRender
         Helpers.MakeAccessable(grdResultMeasurements)
     End Sub
@@ -306,7 +320,7 @@ Public Class Measurements
             End If
 
             If DisplayMode <> ControlMode.ExecutiveSummaryDisplay Then
-                Dim popupString As String = String.Format("<textarea id=&quot;txtComment" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + "&quot;>" + Server.HtmlDecode(e.Row.Cells(14).Text).Trim().Replace(vbCr, "\n").Replace(vbLf, "") + "</textarea><input type=&quot;checkbox&quot; id=&quot;chkPassFail{1}&quot; {3}>{0}<br/><input type=&quot;button&quot; id=&quot;btnSave&quot; value=&quot;Save Comment&quot; onclick=&quot;SaveComment(txtComment" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + "," + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + ", chkPassFail" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + ", {2}, \'{0}\')&quot; />", If(e.Row.Cells(8).Text = "Pass", "Fail", "Pass"), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), If(e.Row.Cells(8).Text = "Pass", "true", "false"), If(UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin, "", "disabled"))
+                Dim popupString As String = String.Format("<textarea id=&quot;txtComment" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + "&quot;>" + Server.HtmlDecode(e.Row.Cells(14).Text).Trim().Replace(vbCr, "\n").Replace(vbLf, "") + "</textarea><input type=&quot;checkbox&quot; id=&quot;chkPassFail{1}&quot; {3}>{0}<br/><input type=&quot;button&quot; id=&quot;btnSave&quot; value=&quot;Save Comment&quot; onclick=&quot;SaveComment(txtComment" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + "," + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + ", chkPassFail" + grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString() + ", {2}, \'{0}\')&quot; />", If(e.Row.Cells(8).Text = "Pass", "Fail", "Pass"), grdResultMeasurements.DataKeys(e.Row.RowIndex).Values(1).ToString(), If(e.Row.Cells(8).Text = "Pass", "true", "false"), If(_isProjectManager Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin, "", "disabled"))
                 e.Row.Cells(8).Text = String.Format("<label onmouseover=""Tip('{1}',STICKY,'true',null,'true',CLOSEBTN,'true',WIDTH,'',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()"">{0}</label>", e.Row.Cells(8).Text, popupString)
             End If
 
@@ -342,11 +356,4 @@ Public Class Measurements
     End Sub
 #End Region
 
-    Protected Sub chkOnlyFails_CheckedChanged(sender As Object, e As EventArgs)
-        DataBind()
-    End Sub
-
-    Protected Sub chkIncludeArchived_CheckedChanged(sender As Object, e As EventArgs)
-        DataBind()
-    End Sub
 End Class

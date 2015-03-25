@@ -1548,4 +1548,17 @@ END
 GO
 GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
+delete
+from aspnet_UsersInRoles
+where RoleId in (select RoleId
+from aspnet_Roles
+where RoleName='ProjectManager')
+go
+delete
+from aspnet_PermissionsInRoles
+where RoleID in (select roleid from aspnet_Roles where RoleName='ProjectManager')
+go
+delete
+from aspnet_Roles
+where RoleName='ProjectManager'
 ROLLBACK TRAN

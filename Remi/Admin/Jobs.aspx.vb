@@ -89,7 +89,7 @@ Partial Class Admin_TestStages
             JobSetup.ProductName = String.Empty
             JobSetup.QRANumber = String.Empty
             JobSetup.TestStageType = TestStageType.Parametric
-            JobSetup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            JobSetup.IsProjectManager = False
             JobSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             JobSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
             JobSetup.RequestTypeID = 0
@@ -105,7 +105,7 @@ Partial Class Admin_TestStages
             JobEnvSetup.ProductName = String.Empty
             JobEnvSetup.QRANumber = String.Empty
             JobEnvSetup.TestStageType = TestStageType.EnvironmentalStress
-            JobEnvSetup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            JobEnvSetup.IsProjectManager = False
             JobEnvSetup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             JobEnvSetup.HasEditItemAuthority = UserManager.GetCurrentUser.IsAdmin
             JobEnvSetup.RequestTypeID = 0

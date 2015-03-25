@@ -291,7 +291,7 @@ Partial Class ScanForInfo_Default
                     setup.ProductName = b.ProductGroup
                     setup.QRANumber = b.QRANumber
                     setup.TestStageType = TestStageType.Parametric
-                    setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                    setup.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = b.ProductGroup Select p.Field(Of Boolean)("IsProjectManager")).FirstOrDefault()
                     setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                     setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)
                     setup.OrientationID = 0
@@ -306,7 +306,7 @@ Partial Class ScanForInfo_Default
                     setupStressing.ProductName = b.ProductGroup
                     setupStressing.QRANumber = b.QRANumber
                     setupStressing.TestStageType = TestStageType.EnvironmentalStress
-                    setupStressing.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                    setupStressing.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = b.ProductGroup Select p.Field(Of Boolean)("IsProjectManager")).FirstOrDefault()
                     setupStressing.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                     setupStressing.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)
                     setupStressing.OrientationID = If(b.Orientation Is Nothing, 0, b.Orientation.ID)
@@ -325,7 +325,7 @@ Partial Class ScanForInfo_Default
                     txtExecutiveSummary.Text = b.ExecutiveSummary
                     Dim isExternal As Boolean = (From rd In b.ReqData Select rd.IsFromExternalSystem).FirstOrDefault()
 
-                    If ((UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsAdmin) And Not (isExternal)) Then
+                    If (((From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = b.ProductGroup Select p.Field(Of Boolean)("IsProjectManager")).FirstOrDefault() Or UserManager.GetCurrentUser.IsAdmin) And Not (isExternal)) Then
                         txtExecutiveSummary.Enabled = True
                         btnExecutiveSummary.Visible = True
                     End If
