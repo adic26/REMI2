@@ -66,7 +66,7 @@ Namespace REMI.Bll
                 Dim ver As String = version.ToString()
                 Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = fromMode And c.ConfigTypeID = type And c.Version = ver Select c).FirstOrDefault()
 
-                If (config IsNot Nothing And toMode > 0) Then
+                If (config IsNot Nothing And toMode > 0 And toMode <> fromMode) Then
                     Dim newConfig = New REMI.Entities.Configuration
                     newConfig.Definition = config.Definition
                     newConfig.Name = config.Name
@@ -95,7 +95,7 @@ Namespace REMI.Bll
                 Dim toVer As String = toVersion.ToString()
                 Dim config As REMI.Entities.Configuration = (From c In instance.Configurations Where c.Name = Name And c.ModeID = mode And c.ConfigTypeID = type And c.Version = fromVer Select c).FirstOrDefault()
 
-                If (config IsNot Nothing And Not String.IsNullOrEmpty(toVer)) Then
+                If (config IsNot Nothing And toVer.CompareTo(fromVer) <> 0) Then
                     Dim newConfig = New REMI.Entities.Configuration
                     newConfig.Definition = config.Definition
                     newConfig.Name = config.Name
