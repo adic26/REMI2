@@ -489,7 +489,7 @@ Public Class RemiAPI
 
 #Region "Tests"
     <WebMethod(Description:="Given a test name this method returns all the known details of a specific test.")> _
-    Public Function GetTest(ByVal name As String) As Test
+    Public Function GetTest(ByVal Name As String) As Test
         Try
             Return TestManager.GetTestByName(name, True)
         Catch ex As Exception
