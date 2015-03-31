@@ -124,7 +124,7 @@ PACKAGE BODY "REMI_HELPER" IS
             
             union all
             
-            select 'Request Link', 'https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=' || to_char(rh.rq_id), 0
+            select 'Request Link', 'http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=' || to_char(rh.rq_id), 0
             from trs.request_header rh, (
                 SELECT rh.rq_id, count(1) c
                 FROM trs.request_files rf, trs.request_header rh
@@ -141,8 +141,8 @@ PACKAGE BODY "REMI_HELPER" IS
             union all
             
             
-           SELECT 'Drop/Tumble Link', CASE WHEN lower(ri.text) LIKE '%drop%' THEN 'https://hwqaweb.rim.net/relab_alpha/webforms_drop.drop_report?p_arg=' || nvl(to_char(job_id), 'N/A') 
-            WHEN lower(ri.text) LIKE '%tumble%' THEN 'https://hwqaweb.rim.net/relab_alpha/web_tumble_forms.tumble_report?p_arg=' || nvl(to_char(job_id), 'N/A')
+           SELECT 'Drop/Tumble Link', CASE WHEN lower(ri.text) LIKE '%drop%' THEN 'http://hwqaweb.rim.net/relab_alpha/webforms_drop.drop_report?printable=false&p_arg=' || nvl(to_char(job_id), 'N/A') 
+            WHEN lower(ri.text) LIKE '%tumble%' THEN 'http://hwqaweb.rim.net/relab_alpha/web_tumble_forms.tumble_report?printable=false&p_arg=' || nvl(to_char(job_id), 'N/A')
             ELSE nvl(to_char(job_id), 'N/A') END AS field_value, 0
             FROM trs.request_header rh,
                  trs.request_info ri,
@@ -625,7 +625,7 @@ FUNCTION get_Requests_By_Search (p_search in trs.request_info.Text%type)
     BEGIN
         open o_cur for
         Select * from       
-		(select distinct 'https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=' || to_char(rh.rq_id) as RequestID, rh.reqnum as RequestNumber, sf.description as Status,
+		(select distinct 'http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=' || to_char(rh.rq_id) as RequestID, rh.reqnum as RequestNumber, sf.description as Status,
         max(case when rf_id = 6 then text else null end) as Product,
         max(case when rf_id = 15396 then text else null end) as ProductType,
         max(case when rf_id = 24895 then text else null end) as AccessoryGroupName,
@@ -671,7 +671,7 @@ FUNCTION get_Requests_For_Dashboard (p_search in trs.request_info.Text%type)
     BEGIN
         open o_cur for
         Select * from       
-		(select distinct rh.reqnum as RequestNumber, 
+		(select distinct rh.reqnum as "RequestNumber", 
         max(case when rf_id = 542 then text else null end) as "RequestedTest",
         max(case when rf_id = 12 then text else null end) as SAMPLESIZE,
         max(case when rf_id = 6 then text else null end) as PRODUCT,
@@ -679,7 +679,7 @@ FUNCTION get_Requests_For_Dashboard (p_search in trs.request_info.Text%type)
         max(case when rf_id = 24895 then text else null end) as AccessoryGroupName,
         sf.description as STATUS,
         max(case when rf_id = 294 then text else null end) as PURPOSE,
-        max(case when rf_id = 657 then text else null end) as ExecutiveSummary,
+        max(case when rf_id = 657 then text else null end) as "ExecutiveSummary",
         max(case when rf_id = 706 then text else null end) as CPR
         from trs.request_header rh, trs.request_info ri, trs.time_user_stamp t1, trs.time_user_stamp t,
           trs.request_status rs, trs.status_fields sf, trs.time_user_stamp ts
@@ -696,19 +696,19 @@ FUNCTION get_Requests_For_Dashboard (p_search in trs.request_info.Text%type)
           and rh.rt_id = 1 
         group by rh.reqnum, rh.rq_id, rh.req_by, sf.description, t.cre_date)
         where PRODUCT = p_search
-        order by RequestNumber desc;
+        order by "RequestNumber" desc;
       
       return o_cur;
     END;
-
-	FUNCTION get_request_Links (p_reqnum in trs.request_header.reqnum%type)
+    
+    FUNCTION get_request_Links (p_reqnum in trs.request_header.reqnum%type)
     RETURN sys_refcursor
     IS
         o_cur sys_refcursor;
     BEGIN
         -- Given the QRA number, grab metadata about that job from TRS & reliability systems.
         open o_cur for
-        select rhd.rq_id, rhd.ReqNum, rt.Type
+        select (rt.Type || ' - ' || rhd.ReqNum) as DisplayText, ('http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=' || to_char(rhd.rq_id)) As Link
         from trs.Related_Items ri, trs.request_header rh, TRS.request_header rhd, trs.request_types rt
         WHERE ri.rq_id=rh.rq_Id and rh.reqnum = p_reqnum
         and rhd.rq_id=ri.rel_rq_id and rt.rt_id=rhd.rt_id;
@@ -716,4 +716,5 @@ FUNCTION get_Requests_For_Dashboard (p_search in trs.request_info.Text%type)
         -- return the cursor type.
         return o_cur;
     END;
+
 END;

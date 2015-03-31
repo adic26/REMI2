@@ -7,11 +7,11 @@
 <h1>Help</h1>
 <br />
 <h2>Work Instructions</h2>
-<asp:HyperLink runat="server" ID="hplAdmin" CssClass="hidden" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=1374411" Target="_blank">Administration</asp:HyperLink><br />
-<asp:HyperLink runat="server" ID="hplRoles" CssClass="hidden" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=1339268" Target="_blank">Roles And Permissions</asp:HyperLink><br />
-<asp:HyperLink runat="server" ID="hplScan" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=726798" Target="_blank">Device Scanning</asp:HyperLink><br />
-<asp:HyperLink runat="server" ID="hplControl" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=676439" Target="_blank">Remi Control</asp:HyperLink><br />
-<asp:HyperLink runat="server" ID="hplRemi" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=1492237" Target="_blank">Remi</asp:HyperLink><br />
+<asp:HyperLink runat="server" ID="hplAdmin" CssClass="hidden" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=1374411" Target="_blank">Administration</asp:HyperLink><br />
+<asp:HyperLink runat="server" ID="hplRoles" CssClass="hidden" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=1339268" Target="_blank">Roles And Permissions</asp:HyperLink><br />
+<asp:HyperLink runat="server" ID="hplScan" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=726798" Target="_blank">Device Scanning</asp:HyperLink><br />
+<asp:HyperLink runat="server" ID="hplControl" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=676439" Target="_blank">Remi Control</asp:HyperLink><br />
+<asp:HyperLink runat="server" ID="hplRemi" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rqId=1492237" Target="_blank">Remi</asp:HyperLink><br />
 
 <h2>Batch</h2>
 <p>

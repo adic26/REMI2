@@ -165,10 +165,10 @@
                     OR enter other Cater document number:&nbsp;<asp:TextBox ID="txtAssignAnyFailDoc" runat="server"
                         Width="142px"></asp:TextBox><asp:Button ID="btnAssignAnyFailDoc" Width="44px" Height="20px" Font-Size="XX-Small" runat="server" Text="Assign" cssclass="button"/>
                     <br />
-                    <asp:HyperLink ID="hypAddNewFA" runat="server" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rtId=40"
+                    <asp:HyperLink ID="hypAddNewFA" runat="server" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rtId=40"
                         Visible="False">New FA</asp:HyperLink>
-                    &nbsp;<asp:HyperLink ID="hypAddNewRIT" runat="server" Visible="False" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rtId=96">New RIT</asp:HyperLink><asp:HyperLink
-                        ID="hypAddNewSCM" NavigateUrl="https://hwqaweb.rim.net/pls/trs/data_entry.main?rtId=55"
+                    &nbsp;<asp:HyperLink ID="hypAddNewRIT" runat="server" Visible="False" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rtId=96">New RIT</asp:HyperLink><asp:HyperLink
+                        ID="hypAddNewSCM" NavigateUrl="http://hwqaweb.rim.net/pls/trs/data_entry.main?rtId=55"
                         runat="server" Visible="False">New SCM</asp:HyperLink></td>
             </tr>
             <tr>

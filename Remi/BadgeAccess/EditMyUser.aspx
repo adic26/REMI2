@@ -104,7 +104,7 @@
             <tr>
                 <td class="HorizTableFirstcolumn">Training</td>
                 <td style="text-align:left;">
-                    <a target="_blank" href="https://hwqaweb.rim.net/pls/trs/data_entry.main?formMode=EDIT&rqId=1535598">Procedure</a>
+                    <a target="_blank" href="http://hwqaweb.rim.net/pls/trs/data_entry.main?formMode=EDIT&rqId=1535598">Procedure</a>
                     <asp:ObjectDataSource ID="odsTraining" runat="server" SelectMethod="GetTraining" TypeName="REMI.Bll.UserManager" OldValuesParameterFormatString="{0}">
                         <SelectParameters>
                             <asp:ControlParameter ControlID="hdnUserID" Name="userID" DefaultValue=" " PropertyName="Value" Type="Int32" />

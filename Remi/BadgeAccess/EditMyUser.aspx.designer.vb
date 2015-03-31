@@ -93,7 +93,6 @@ Partial Public Class BadgeAccess_EditMyUser
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlDepartment As Global.System.Web.UI.WebControls.DropDownList
-    Protected WithEvents grdProducts As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''grdDepartments control.
@@ -112,6 +111,15 @@ Partial Public Class BadgeAccess_EditMyUser
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
+    '''grdProducts control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdProducts As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''ddlDefaultPage control.

@@ -34,7 +34,11 @@ select @count= count(*) from
 if ((@count) >0)
 begin
 	insert into Req.ReqFieldDataAudit (RequestID,ReqFieldSetupID,Value,InsertTime,Action, UserName, ReqFieldDataID, InstanceID)
-	Select RequestID,ReqFieldSetupID,Value,InsertTime, @action,lastuser, ReqFieldDataID, InstanceID from inserted
+	Select RequestID,ReqFieldSetupID,Value,ISNULL(InsertTime,getdate()), @action, ISNULL(lastuser,'remi'), ReqFieldDataID, InstanceID from inserted
 END
 END
+
+
+GO
+
 
