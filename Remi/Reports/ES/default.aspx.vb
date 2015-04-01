@@ -51,7 +51,7 @@ Partial Class ES_Default
 
                     Dim bs As New REMI.BusinessEntities.BatchSearch
                     bs.ProductID = b.ProductID
-                    bs.JobName = b.JobName
+                    bs.JobID = b.JobID
                     bs.ProductTypeID = b.ProductTypeID
 
                     Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)

@@ -25,7 +25,8 @@
 	@NotInTrackingLocationFunction INT  = NULL,
 	@Revision NVARCHAR(10) = NULL,
 	@DepartmentID INT = NULL,
-	@OnlyHasResults INT = NULL
+	@OnlyHasResults INT = NULL,
+	@JobID int = 0
 AS
 	DECLARE @TestName NVARCHAR(400)
 	DECLARE @TestStageName NVARCHAR(400)
@@ -146,7 +147,14 @@ AS
 				AND (b.AccessoryGroupID = @AccessoryGroupID OR @AccessoryGroupID IS NULL)
 				AND (b.TestCenterLocationID = @GeoLocationID OR @GeoLocationID IS NULL)
 				AND (b.DepartmentID = @DepartmentID OR @DepartmentID IS NULL)
-				AND (b.JobName = @JobName OR @JobName IS NULL)
+				AND 
+				(
+					(@JobID > 0 AND j.ID=@JobID)
+					OR
+					(@JobName IS NOT NULL AND b.JobName = @JobName)
+					OR
+					(@JobName IS NULL AND @JobID = 0)
+				)
 				AND (b.RequestPurpose = @RequestReason OR @RequestReason IS NULL)
 				AND (b.MechanicalTools = @Revision OR @Revision IS NULL)
 				AND 

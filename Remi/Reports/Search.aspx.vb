@@ -285,6 +285,7 @@ Partial Class Search
                     Dim productID As Int32
                     Dim productTypeID As Int32
                     Dim testID As Int32
+                    Dim jobID As Int32
                     Dim testStageID As Int32
                     Dim userID As Int32
                     Dim departmentID As Int32
@@ -300,9 +301,9 @@ Partial Class Search
                     End If
 
                     Int32.TryParse(ddlDepartment.SelectedValue, departmentID)
-
+                    Int32.TryParse(ddlJobs.SelectedValue, jobID)
                     bs.GeoLocationID = geoLocationID
-                    bs.JobName = ddlJobs.SelectedValue
+                    bs.JobID = jobID
                     bs.DepartmentID = departmentID
 
                     If (Not (String.IsNullOrEmpty(testStage))) Then
@@ -513,6 +514,7 @@ Partial Class Search
             Dim productTypeID As Int32
             Dim testID As Int32
             Dim testStageID As Int32
+            Dim jobID As Int32
             Dim userID As Int32
             Dim trackingLocationID As Int32
             Dim geoLocationID As Int32 = ddlTestCenters.SelectedValue
@@ -521,13 +523,14 @@ Partial Class Search
             Dim departmentID As Int32
             Dim testStage As String = txtTestStage.Text.Trim()
             Dim revision As String = txtRevision.Text.Trim()
+            Int32.TryParse(ddlJobs.SelectedValue, jobID)
 
             If (geoLocationID = 0) Then
                 geoLocationID = Nothing
             End If
 
             bs.GeoLocationID = geoLocationID
-            bs.JobName = ddlJobs.SelectedValue
+            bs.JobID = jobID
 
             If (Not (String.IsNullOrEmpty(testStage))) Then
                 bs.TestStage = testStage
@@ -663,7 +666,10 @@ Partial Class Search
     Protected Sub ddlJobs_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlJobs.SelectedIndexChanged
         ddlTestStages.Items.Clear()
         ddlTestStages.Items.Add(New ListItem("All", 0))
-        ddlTestStages.DataSource = TestStageManager.GetList(0, ddlJobs.SelectedValue, False, 0)
+        Dim jobID As Int32
+        Int32.TryParse(ddlJobs.SelectedValue.ToString(), jobID)
+
+        ddlTestStages.DataSource = TestStageManager.GetList(0, String.Empty, False, jobID)
         ddlTestStages.DataBind()
     End Sub
 

@@ -92,7 +92,8 @@ Public Class RemiAPI
                 End If
 
                 If (Not String.IsNullOrEmpty(jobName)) Then
-                    bs.JobName = jobName
+                    Dim j As Job = JobManager.GetJob(jobName, 0)
+                    bs.JobID = j.ID
                 End If
 
                 If (Not String.IsNullOrEmpty(revision)) Then

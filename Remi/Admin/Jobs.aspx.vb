@@ -75,7 +75,7 @@ Partial Class Admin_TestStages
             gvwMain.DataBind()
 
             Dim bs As New BatchSearch()
-            bs.JobName = j.Name
+            bs.JobID = j.ID
             bs.ExcludedStatus = BatchSearchBatchStatus.Complete
 
             bscJobs.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
