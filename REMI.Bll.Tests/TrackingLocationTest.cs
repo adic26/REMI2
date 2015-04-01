@@ -92,14 +92,6 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetSpecificLocationForCurrentUsersTestCenter()
-        {
-            var tln = new REMI.Entities.TrackingLocation();
-            tln = (from tl in instance.TrackingLocations.Include("TrackingLocationsHosts") where tl.Decommissioned != true select tl).FirstOrDefault();
-            Assert.That(TrackingLocationManager.GetSpecificLocationForCurrentUsersTestCenter(tln.TrackingLocationName, username) > 0);
-        }
-
-        [Test]
         public void GetTrackingLocationByID()
         {
             var tln = new REMI.Entities.TrackingLocation();

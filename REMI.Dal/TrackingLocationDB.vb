@@ -148,30 +148,30 @@ Namespace REMI.Dal
             Return Result
         End Function
 
-        Public Shared Function GetSpecificLocationForUsersTestCenter(ByVal stationName As String, ByVal userName As String) As Integer
-            Dim Result As Integer = 0
+        'Public Shared Function GetSpecificLocationForUsersTestCenter(ByVal stationName As String, ByVal userName As String) As Integer
+        '    Dim Result As Integer = 0
 
-            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispTrackingLocationsGetSpecificLocationForUsersTestCenter", MyConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@locationname", stationName)
-                    myCommand.Parameters.AddWithValue("@UserName", userName)
-                    MyConnection.Open()
+        '    Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+        '        Using myCommand As New SqlCommand("remispTrackingLocationsGetSpecificLocationForUsersTestCenter", MyConnection)
+        '            myCommand.CommandType = CommandType.StoredProcedure
+        '            myCommand.Parameters.AddWithValue("@locationname", stationName)
+        '            myCommand.Parameters.AddWithValue("@UserName", userName)
+        '            MyConnection.Open()
 
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            If myReader.Read() Then
-                                If Not myReader.IsDBNull(myReader.GetOrdinal("TrackingLocationID")) Then
-                                    Result = myReader.GetInt32(myReader.GetOrdinal("TrackingLocationID"))
-                                End If
-                            End If
-                        End If
-                    End Using
-                End Using
-            End Using
+        '            Using myReader As SqlDataReader = myCommand.ExecuteReader()
+        '                If myReader.HasRows Then
+        '                    If myReader.Read() Then
+        '                        If Not myReader.IsDBNull(myReader.GetOrdinal("TrackingLocationID")) Then
+        '                            Result = myReader.GetInt32(myReader.GetOrdinal("TrackingLocationID"))
+        '                        End If
+        '                    End If
+        '                End If
+        '            End Using
+        '        End Using
+        '    End Using
 
-            Return Result
-        End Function
+        '    Return Result
+        'End Function
 
         ''' <summary>Deletes a TrackingLocation from the database.</summary> 
         ''' <param name="id">The ID of the TrackingLocation to delete.</param> 

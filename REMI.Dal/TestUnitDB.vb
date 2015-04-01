@@ -301,14 +301,14 @@ Namespace REMI.Dal
             Return result
         End Function
 
-        Public Shared Function GetAvailableUnits(ByVal QRANumber As String, ByVal excludedUnitNumber As Int32) As List(Of String)
+        Public Shared Function GetAvailableUnits(ByVal requestNumber As String, ByVal excludedUnitNumber As Int32) As List(Of String)
             Dim units As New List(Of String)
 
             Using myconnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 myconnection.Open()
                 Using myCommand As New SqlCommand("remispTestUnitsAvailable", myconnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@QRANumber", QRANumber)
+                    myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
 
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then
@@ -383,15 +383,15 @@ Namespace REMI.Dal
             Return dt
         End Function
 
-        Public Shared Function GetUnit(ByVal qraNumber As String, ByVal unitNumber As Int32) As TestUnit
+        Public Shared Function GetUnit(ByVal requestNumber As String, ByVal unitNumber As Int32) As TestUnit
             Dim unit As TestUnit = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestUnitsSearchFor", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
 
-                    If Not String.IsNullOrEmpty(qraNumber) Then
-                        myCommand.Parameters.AddWithValue("@QRANumber", qraNumber)
+                    If Not String.IsNullOrEmpty(requestNumber) Then
+                        myCommand.Parameters.AddWithValue("@QRANumber", requestNumber)
                     End If
 
                     If unitNumber > 0 Then
@@ -442,33 +442,6 @@ Namespace REMI.Dal
                 Return tempList
             Else
                 Return New TestUnitCollection
-            End If
-        End Function
-
-        ''' <summary>Sets the BSN for a test unit.</summary> 
-        ''' <param name="QRANumber">The QRA Number of the batch to save.</param> 
-        ''' <param name="UnitNumber">The unit number of the test unit to save.</param>
-        ''' <param name="BSN">The BSN of the test unit to save.</param>
-        ''' <returns>Returns true when the BSN was set successfully, or false otherwise.</returns> 
-        Public Shared Function SaveBSN(ByVal QRANumber As String, ByVal UnitNumber As Integer, ByVal BSN As Long, ByVal UpdateUser As String) As Boolean
-            Dim NumberOfRecordsAffected As Integer
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispTestUnitsSetBSN", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@QRANumber", QRANumber)
-                    myCommand.Parameters.AddWithValue("@UnitNumber", UnitNumber)
-                    myCommand.Parameters.AddWithValue("@BSN", BSN)
-                    myCommand.Parameters.AddWithValue("@UpdateUser", UpdateUser)
-                    myConnection.Open()
-                    NumberOfRecordsAffected = myCommand.ExecuteNonQuery()
-                End Using
-            End Using
-
-            If NumberOfRecordsAffected = 0 Then
-                Return False
-            Else
-                Return True
             End If
         End Function
 

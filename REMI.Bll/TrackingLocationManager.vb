@@ -99,14 +99,14 @@ Namespace REMI.Bll
             End Try
         End Function
 
-        Public Shared Function GetSpecificLocationForCurrentUsersTestCenter(ByVal StationName As String, ByVal lastUser As String) As Integer
-            Try
-                Return TrackingLocationDB.GetSpecificLocationForUsersTestCenter(StationName, lastUser)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return 0
-        End Function
+        'Public Shared Function GetSpecificLocationForCurrentUsersTestCenter(ByVal StationName As String, ByVal lastUser As String) As Integer
+        '    Try
+        '        Return TrackingLocationDB.GetSpecificLocationForUsersTestCenter(StationName, lastUser)
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+        '    End Try
+        '    Return 0
+        'End Function
 
         Public Shared Function GetTrackingLocationID(ByVal trackingLocationName As String, ByVal testCenterID As Int32) As Int32
             Try

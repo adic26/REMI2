@@ -63,7 +63,7 @@ Partial Class Incoming_Default
                 bc = New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(txtQRANumber.Text), 30))
 
                 If bc.Validate Then
-                    If BatchManager.CheckSingleBatchForStatusUpdate(bc.BatchNumber) = True Then
+                    If BatchManager.MoveBatchForward(bc.BatchNumber, UserManager.GetCurrentUser.UserName) = True Then
                         notMain.Notifications.AddWithMessage(String.Format("{0} Updated From Request!", bc.BatchNumber), NotificationType.Information)
                     Else
                         notMain.Notifications.AddWithMessage(String.Format("{0} Updated Failed!", bc.BatchNumber), NotificationType.Errors)

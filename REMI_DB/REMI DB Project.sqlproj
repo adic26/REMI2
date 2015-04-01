@@ -532,9 +532,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductManagersAudit.pkey.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationsGetSpecificLocationForUsersTestCenter.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesDeleteSingleItem.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -548,9 +545,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesSelectSingleItem.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsSelectByStatus.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispDeviceTrackingLogSelectListByTestRecordID.proc.sql">
@@ -641,9 +635,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispProductSettingsDeleteSetting.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestsSelectSingleItemByName.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestStagesSelectListOfNames.proc.sql">
@@ -761,9 +752,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchGetViewBatch.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestUnitsSetBSN.proc.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsInsertNew.proc.sql">
@@ -2826,5 +2814,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\2015\April072015\1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestsSelectSingleItemByName.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTrackingLocationsGetSpecificLocationForUsersTestCenter.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestUnitsSetBSN.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestRecordsSelectByStatus.proc.sql">
+      <SubType>Code</SubType>
+    </None>
   </ItemGroup>
 </Project>

@@ -92,8 +92,8 @@ Namespace REMI.Dal
             End Using
             Return String.Join(",", shelves.ToArray)
         End Function
-        Public Shared Function ScanDevice(ByVal qraNumber As String, ByVal unitNumber As Integer, ByVal userName As String, ByVal Direction As ScanDirection, ByVal binName As String) As Integer
 
+        Public Shared Function ScanDevice(ByVal qraNumber As String, ByVal unitNumber As Integer, ByVal userName As String, ByVal Direction As ScanDirection, ByVal binName As String) As Integer
             Dim Result As Integer = 0
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMSTAR)
 
@@ -123,6 +123,7 @@ Namespace REMI.Dal
             End Using
             Return Result
         End Function
+
         Public Shared Function AddCountOrder(ByVal qraNumbers As List(Of String), ByVal userName As String) As Boolean
             Dim dateString As String = DateTime.Now.ToString("yyyy-mm-dd-hh-mm-ss")
             Dim Result As Boolean = True

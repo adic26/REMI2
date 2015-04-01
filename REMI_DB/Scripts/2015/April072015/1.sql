@@ -1558,4 +1558,46 @@ delete
 from aspnet_Roles
 where RoleName='ProjectManager'
 go
+DROP PROCEDURE remispTestsSelectSingleItemByName
+GO
+ALTER PROCEDURE [dbo].[remispTestsSelectSingleItem] @ID INT = 0, @Name nvarchar(400) = NULL, @ParametricOnly INT = 1
+AS
+	SELECT t.Comment,t.ConcurrencyID,t.Duration,t.ID,t.LastUser,t.ResultBasedOntime,t.TestName,t.TestType,t.WILocation, t.IsArchived, t.Owner, t.Trainee, t.DegradationVal
+	FROM Tests as t
+	WHERE 
+		(
+			(t.ID = @ID AND @ID > 0)
+			OR
+			(@ID = 0 AND t.TestName = @name)
+		)
+		AND 
+		(
+			@ParametricOnly = 0
+			OR
+			(@ParametricOnly = 1 AND TestType=1)
+		)
+GO
+GRANT EXECUTE ON remispTestsSelectSingleItem TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispTestUnitsAvailable] @RequestNumber NVARCHAR(11)
+AS
+BEGIN
+	SELECT tu.BatchUnitNumber
+	FROM Batches b WITH(NOLOCK)
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON b.ID=tu.BatchID
+	WHERE QRANumber=@RequestNumber
+		AND tu.ID NOT IN (SELECT dtl.TestUnitID
+					FROM DeviceTrackingLog dtl WITH(NOLOCK)
+						INNER JOIN TrackingLocations tl WITH(NOLOCK) ON dtl.TrackingLocationID=tl.ID AND tl.ID NOT IN (25,81)
+					WHERE TestUnitID = 214734 AND OutTime IS NULL)
+END
+GO
+GRANT EXECUTE ON remispTestUnitsAvailable TO REMI
+GO
+DROP PROCEDURE remispTrackingLocationsGetSpecificLocationForUsersTestCenter
+go
+drop procedure remispTestUnitsSetBSN
+go
+drop procedure remispTestRecordsSelectByStatus
+go
 ROLLBACK TRAN

@@ -39,11 +39,11 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
-        Public Shared Function GetUnit(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As TestUnit
+        Public Shared Function GetUnit(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As TestUnit
             Try
-                Return TestUnitDB.GetUnit(QRANumber, batchUnitNumber)
+                Return TestUnitDB.GetUnit(requestNumber, batchUnitNumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", QRANumber, batchUnitNumber))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0} BSN: {1}", requestNumber, batchUnitNumber))
             End Try
             Return Nothing
         End Function
@@ -86,9 +86,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.Select, False)> _
-        Public Shared Function GetAvailableUnits(ByVal QRANumber As String, ByVal excludedUnitNumber As Int32) As List(Of String)
+        Public Shared Function GetAvailableUnits(ByVal requestNumber As String, ByVal excludedUnitNumber As Int32) As List(Of String)
             Try
-                Return TestUnitDB.GetAvailableUnits(QRANumber, excludedUnitNumber)
+                Return TestUnitDB.GetAvailableUnits(requestNumber, excludedUnitNumber)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

@@ -79,12 +79,6 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetActiveBatchList()
-        {
-            Assert.IsNotNull(BatchManager.GetActiveBatchList());
-        }
-
-        [Test]
         public void BatchSearch()
         {
             BatchSearch bs = new BatchSearch();
@@ -127,15 +121,6 @@ namespace REMI.Bll.Tests
             batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
 
             Assert.IsTrue(BatchManager.SaveExecutiveSummary(batch.QRANumber, "remi", "Testing..."));
-        }
-
-        [Test]
-        public void CheckSingleBatchForStatusUpdate()
-        {
-            var batch = new REMI.Entities.Batch();
-            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
-
-            Assert.That(BatchManager.CheckSingleBatchForStatusUpdate(batch.QRANumber) == true);
         }
 
         [Test]

@@ -41,11 +41,11 @@ Namespace REMI.Dal
             End Using
             Return myDeviceTrackingLog
         End Function
+
         Public Shared Function GetLogsByTestRecordID(ByVal trID As Integer) As DeviceTrackingLogCollection
             Dim myDeviceTrackingLogCol As DeviceTrackingLogCollection = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectListByTestRecordID", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@testrecordID", trID)
@@ -60,10 +60,10 @@ Namespace REMI.Dal
                         End If
 
                         myReader.Close()
-
                     End Using
                 End Using
             End Using
+
             Return myDeviceTrackingLogCol
         End Function
         ''' <summary>Gets the last instance of DeviceTrackingLog from the underlying datasource for a specific device.</summary> 
@@ -73,7 +73,6 @@ Namespace REMI.Dal
             Dim myDeviceTrackingLog As DeviceTrackingLog = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectLastLogByTestUnitID", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TestUnitID", TestUnitID)
@@ -85,33 +84,32 @@ Namespace REMI.Dal
                         End If
 
                         myReader.Close()
-
                     End Using
                 End Using
             End Using
+
             Return myDeviceTrackingLog
         End Function
+
         Public Shared Function GetLastLog(ByVal TestUnitID As Integer, ByVal myconnection As SqlConnection) As DeviceTrackingLog
             Dim myDeviceTrackingLog As DeviceTrackingLog = Nothing
-
 
             Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectLastLogByTestUnitID", myconnection)
                 myCommand.CommandType = CommandType.StoredProcedure
                 myCommand.Parameters.AddWithValue("@TestUnitID", TestUnitID)
 
                 Using myReader As SqlDataReader = myCommand.ExecuteReader()
-
                     If myReader.Read() Then
                         myDeviceTrackingLog = FillDataRecord(myReader)
                     End If
 
                     myReader.Close()
-
                 End Using
-
             End Using
+
             Return myDeviceTrackingLog
         End Function
+
         ''' <summary>Gets the last instance of DeviceTrackingLog from the underlying datasource for a specific device.</summary> 
         ''' <param name="Barcode">The barcode of the scanned Test Unit.</param> 
         ''' <returns>A DeviceTrackingLog if the TestUnitID was found in the database, or Nothing otherwise.</returns> 
@@ -146,16 +144,12 @@ Namespace REMI.Dal
 
             Dim Result As Integer = 0
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-
                     myCommand.Parameters.AddWithValue("@TestUnitID", MyDeviceTrackingLog.TestUnitID)
                     myCommand.Parameters.AddWithValue("@TrackinglocationID", MyDeviceTrackingLog.TrackingLocationID)
                     myCommand.Parameters.AddWithValue("@InTime", MyDeviceTrackingLog.InTime)
-
                     myCommand.Parameters.AddWithValue("@InUser", MyDeviceTrackingLog.InUser)
-
 
                     ' adds the return parameter to each of the commands that use this sub
                     Dim returnValue As DbParameter = myCommand.CreateParameter()
@@ -200,6 +194,7 @@ Namespace REMI.Dal
             End Using
             Return Result
         End Function
+
         ''' <summary> 
         ''' Returns a list with DeviceTrackingLog objects. 
         ''' </summary> 
@@ -231,6 +226,7 @@ Namespace REMI.Dal
             End Using
             Return tempList
         End Function
+
         ''' <summary> 
         ''' Returns a list with DeviceTrackingLog objects. 
         ''' </summary> 
@@ -238,10 +234,8 @@ Namespace REMI.Dal
         ''' A DeviceTrackingLogCollection. 
         ''' </returns> 
         Public Shared Function GetListByLocationDate(ByVal ID As Integer, ByVal OldestDate As DateTime) As DeviceTrackingLogCollection
-
             Dim tempList As DeviceTrackingLogCollection = Nothing
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectListByLocationDate", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TrackingLocationID", ID)
@@ -255,13 +249,13 @@ Namespace REMI.Dal
                                 tempList.Add(FillDataRecord(myReader))
                             End While
                         End If
-
                     End Using
                 End Using
             End Using
-            Return tempList
 
+            Return tempList
         End Function
+
         ''' <summary> 
         ''' Returns a list with DeviceTrackingLog objects. 
         ''' </summary> 
@@ -269,17 +263,14 @@ Namespace REMI.Dal
         ''' A DeviceTrackingLogCollection. 
         ''' </returns> 
         Public Shared Function GetListByProductDate(ByVal productID As Int32, ByVal OldestDate As DateTime) As DeviceTrackingLogCollection
-
             Dim tempList As DeviceTrackingLogCollection = Nothing
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectListByProductDate", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@ProductID", productID)
                     myCommand.Parameters.AddWithValue("@Date", OldestDate)
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
-
                         If myReader.HasRows Then
                             tempList = New DeviceTrackingLogCollection()
                             While myReader.Read()
@@ -289,9 +280,10 @@ Namespace REMI.Dal
                     End Using
                 End Using
             End Using
-            Return tempList
 
+            Return tempList
         End Function
+
         ''' <summary>
         ''' Returns a list of Tracking records for a specific testunit before a specified date
         ''' </summary>
@@ -299,17 +291,14 @@ Namespace REMI.Dal
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function GetListByTestUnitIDDate(ByVal testUnitID As Integer, ByVal OldestDate As DateTime) As DeviceTrackingLogCollection
-
             Dim tempList As DeviceTrackingLogCollection = Nothing
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectListByTestUnitIDDate", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TestUnitID", testUnitID)
                     myCommand.Parameters.AddWithValue("@Date", OldestDate)
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
-
                         If myReader.HasRows Then
                             tempList = New DeviceTrackingLogCollection()
                             While myReader.Read()
@@ -319,9 +308,10 @@ Namespace REMI.Dal
                     End Using
                 End Using
             End Using
-            Return tempList
 
+            Return tempList
         End Function
+
         ''' <summary> 
         ''' Returns a list with DeviceTrackingLog objects. 
         ''' </summary> 
@@ -329,50 +319,43 @@ Namespace REMI.Dal
         ''' A DeviceTrackingLogCollection. 
         ''' </returns> 
         Public Shared Function GetListByBarcodeDate(ByVal QRANumber As String, ByVal OldestDate As DateTime) As DeviceTrackingLogCollection
-
             Dim tempList As DeviceTrackingLogCollection = Nothing
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectListByQRANumberDate", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@QRANumber", QRANumber)
                     myCommand.Parameters.AddWithValue("@Date", OldestDate)
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
-
                         If myReader.HasRows Then
                             tempList = New DeviceTrackingLogCollection()
                             While myReader.Read()
                                 tempList.Add(FillDataRecord(myReader))
                             End While
                         End If
-
                     End Using
                 End Using
-
-
             End Using
-            Return tempList
 
+            Return tempList
         End Function
+
         ''' <summary>Deletes a DeviceTrackingLog from the database.</summary> 
         ''' <param name="id">The ID of the DeviceTrackingLog to delete.</param> 
         ''' <returns>Returns <c>true</c> when the object was deleted successfully, or <c>false</c> otherwise.</returns> 
         Public Shared Function Delete(ByVal ID As Integer) As Boolean
             Dim Result As Integer = 0
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogDeleteSingleItem", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@ID", ID)
                     MyConnection.Open()
                     Result = myCommand.ExecuteNonQuery()
                 End Using
-
             End Using
+
             Return CBool(Result)
         End Function
-
 #End Region
 
 #Region "Private Methods"
@@ -384,7 +367,6 @@ Namespace REMI.Dal
         ''' <remarks></remarks>
         Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord) As DeviceTrackingLog
             Dim dtl As New DeviceTrackingLog
-
 
             dtl.TestUnitID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("TestUnitID"))
             dtl.TrackingLocationID = myDataRecord.GetInt32(myDataRecord.GetOrdinal("TrackingLocationID"))
@@ -417,16 +399,4 @@ Namespace REMI.Dal
 #End Region
 
     End Class
-
 End Namespace
-
-
-
-
-
-
-
-
-
-
-

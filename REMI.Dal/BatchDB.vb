@@ -124,7 +124,6 @@ Namespace REMI.Dal
         End Function
 #End Region
 
-#Region "New Slim Batch Methods"
         Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, Optional ByVal cacheRetrievedData As Boolean = True) As BatchView
             Dim batch As BatchView = Nothing
 
@@ -187,7 +186,6 @@ Namespace REMI.Dal
 
             Return batch
         End Function
-#End Region
 
 #Region "Public Stored Proc Methods"
         ''' <summary> 

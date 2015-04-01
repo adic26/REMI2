@@ -86,25 +86,6 @@ Namespace REMI.Dal
             Return tempTR
         End Function
 
-        Public Shared Function SelectByStatus(ByVal status As TestRecordStatus) As TestRecordCollection
-            Dim tempTRList As New TestRecordCollection
-            Using myconnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispTestRecordsSelectByStatus", myconnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@status", status)
-
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                tempTRList.Add(FillDataRecord(myReader))
-                            End While
-                        End If
-                    End Using
-                End Using
-            End Using
-            Return tempTRList
-        End Function
-
         Public Shared Function GetTestRecordsForBatch(ByVal qraNumber As String, ByVal myConnection As SqlConnection) As TestRecordCollection
             Dim tempList As New TestRecordCollection
 
