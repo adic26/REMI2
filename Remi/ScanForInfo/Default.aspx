@@ -637,7 +637,7 @@
                         </asp:GridView>
                         <asp:ObjectDataSource ID="odsAuditLog" runat="server" SelectMethod="GetBatchAuditLogs" TypeName="REMI.Bll.BatchManager">
                             <SelectParameters>
-                                <asp:ControlParameter ControlID="hdnQRANumber" DefaultValue="-1" Name="QRANumber" PropertyName="Value" Type="String" />
+                                <asp:ControlParameter ControlID="hdnQRANumber" DefaultValue="-1" Name="requestNumber" PropertyName="Value" Type="String" />
                             </SelectParameters>
                         </asp:ObjectDataSource>
                     </Content>
@@ -709,7 +709,7 @@
                         </asp:GridView>
                         <asp:ObjectDataSource ID="odsDocuments" runat="server" SelectMethod="GetBatchDocuments" TypeName="REMI.Bll.BatchManager">
                             <SelectParameters>
-                                <asp:ControlParameter ControlID="hdnQRANumber" DefaultValue="-1" Name="QRANumber" PropertyName="Value" Type="String" />
+                                <asp:ControlParameter ControlID="hdnQRANumber" DefaultValue="-1" Name="requestNumber" PropertyName="Value" Type="String" />
                             </SelectParameters>
                         </asp:ObjectDataSource>
                     </Content>
