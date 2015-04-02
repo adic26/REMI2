@@ -39,10 +39,10 @@ BEGIN
 				SET [' + CONVERT(VARCHAR,@BatchUnitNumber) + '] = (
 						SELECT CASE WHEN PassFail  = 1 THEN ''Pass'' WHEN PassFail = 0 THEN ''Fail'' ELSE NULL END + 
 							CASE WHEN (SELECT CONVERT(VARCHAR,COUNT(*))
-							FROM Relab.ResultsMeasurements rm
-								INNER JOIN Relab.ResultsMeasurementsFiles rmf ON rmf.ResultMeasurementID=rm.ID
+							FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
+								INNER JOIN Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) ON rmf.ResultMeasurementID=rm.ID
 							WHERE rm.ResultID=r.ID) > 0 THEN ''1'' ELSE ''0'' END
-						FROM Relab.Results r 
+						FROM Relab.Results r WITH(NOLOCK) 
 						WHERE r.TestUnitID=' + CONVERT(NVARCHAR, @ID) + '
 							AND rr.TestID=r.TestID AND rr.TestStageID=r.TestStageID
 					)

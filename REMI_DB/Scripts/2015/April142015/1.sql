@@ -1849,4 +1849,294 @@ AS
 GO
 GRANT EXECUTE ON remispBatchesSearch TO Remi
 GO
+ALTER PROCEDURE [Relab].[remispResultsStatus] @BatchID INT
+AS
+BEGIN
+	DECLARE @Status NVARCHAR(18)
+	
+	SELECT CASE WHEN r.PassFail = 0 THEN 'Fail' ELSE 'Pass' END AS Result, COUNT(*) AS NumRecords
+	INTO #ResultCount
+	FROM Relab.Results r WITH(NOLOCK)
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=r.TestUnitID
+	WHERE tu.BatchID=@BatchID
+	GROUP BY r.PassFail
+	
+	SELECT CASE WHEN rs.PassFail = 1 THEN 'Pass' WHEN rs.PassFail=2 THEN 'Fail' ELSE 'No Result' END AS Result, 
+		rs.ApprovedBy, rs.ApprovedDate
+	INTO #ResultOverride
+	FROM Relab.ResultsStatus rs WITH(NOLOCK)
+	WHERE rs.BatchID=@BatchID
+	ORDER BY ResultStatusID DESC
+	
+	IF ((SELECT COUNT(*) FROM #ResultOverride) > 0)
+		BEGIN
+			SELECT TOP 1 @Status = Result FROM #ResultOverride
+		END
+	ELSE
+		BEGIN
+			IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Fail'))
+				SET @Status = 'Preliminary Fail'
+			ELSE IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Pass'))
+				SET @Status = 'Preliminary Pass'
+			ELSE
+				SET @Status = 'No Result'
+		END
+	
+	SELECT * FROM #ResultCount
+	SELECT * FROM #ResultOverride
+		
+	SELECT @Status AS FinalStatus
+	
+	DROP TABLE #ResultCount
+	DROP TABLE #ResultOverride
+END
+GO
+GRANT EXECUTE ON [Relab].[remispResultsStatus] TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispGetBatchJIRAs] @BatchID INT
+AS
+BEGIN
+	SELECT 0 AS JIRAID, @BatchID As BatchID, '' AS DisplayName, '' AS Link, '' AS Title
+	UNION
+	SELECT bj.JIRAID, bj.BatchID, bj.DisplayName, bj.Link, bj.Title
+	FROM BatchesJira bj WITH(NOLOCK)
+	WHERE bj.BatchID=@BatchID
+END
+GO
+GRANT EXECUTE ON [dbo].[remispGetBatchJIRAs] TO Remi
+GO
+ALTER PROCEDURE [remispBatchGetTaskInfo] @BatchID INT, @TestStageID INT = 0
+AS
+BEGIN
+	DECLARE @BatchStatus INT
+	SELECT @BatchStatus = BatchStatus FROM Batches WITH(NOLOCK) WHERE ID=@BatchID
+
+	IF (@BatchStatus = 5)
+	BEGIN
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, '' AS TestCounts
+		FROM vw_GetTaskInfoCompleted WITH(NOLOCK)
+		WHERE BatchID = @BatchID
+			AND
+			(
+				(@TestStageID = 0)
+				OR
+				(@TestStageID <> 0 AND TestStageID=@TestStageID)
+			)
+		ORDER BY ProcessOrder
+	END
+	ELSE
+	BEGIN
+		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
+			TestIsArchived, TestWI, TestCounts
+		FROM vw_GetTaskInfo WITH(NOLOCK)
+		WHERE BatchID = @BatchID
+			AND
+			(
+				(@TestStageID = 0)
+				OR
+				(@TestStageID <> 0 AND TestStageID=@TestStageID)
+			)
+		ORDER BY ProcessOrder
+	END
+END
+GO
+GRANT EXECUTE ON remispBatchGetTaskInfo TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispESResultSummary] @BatchID INT
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @UnitRows VARCHAR(8000)
+	DECLARE @sql VARCHAR(8000)
+	DECLARE @BatchUnitNumber INT
+	DECLARE @UnitCount INT
+	DECLARE @RowID INT
+	DECLARE @ID INT
+	CREATE TABLE #Results (TestID INT, TestName NVARCHAR(MAX), TestStageID INT, TestStageName NVARCHAR(MAX))
+
+	SELECT ROW_NUMBER() OVER (ORDER BY tu.ID) AS RowID, tu.BatchUnitNumber, tu.ID
+	INTO #units
+	FROM TestUnits tu WITH(NOLOCK)
+	WHERE BatchID=@BatchID
+
+	INSERT INTO #Results (TestID, TestName, TestStageID, TestStageName)
+	SELECT DISTINCT r.TestID, t.TestName, r.TestStageID, ts.TestStageName
+	FROM Batches b 
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.BatchID=b.ID
+		INNER JOIN Relab.Results r WITH(NOLOCK) ON r.TestUnitID=tu.ID
+		INNER JOIN Tests t WITH(NOLOCK) ON t.ID=r.TestID
+		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
+	WHERE b.ID=@BatchID AND ts.TestStageName NOT IN ('Analysis')
+
+	SELECT @UnitCount = COUNT(RowID) FROM #units WITH(NOLOCK)
+
+	SELECT @RowID = MIN(RowID) FROM #units
+				
+	WHILE (@RowID IS NOT NULL)
+	BEGIN
+		SELECT @BatchUnitNumber=BatchUnitNumber, @ID=ID FROM #units WITH(NOLOCK) WHERE RowID=@RowID
+
+		EXECUTE ('ALTER TABLE #Results ADD [' + @BatchUnitNumber + '] NVARCHAR(10) NULL')
+		print @ID
+		SET @SQL = 'UPDATE rr
+				SET [' + CONVERT(VARCHAR,@BatchUnitNumber) + '] = (
+						SELECT CASE WHEN PassFail  = 1 THEN ''Pass'' WHEN PassFail = 0 THEN ''Fail'' ELSE NULL END + 
+							CASE WHEN (SELECT CONVERT(VARCHAR,COUNT(*))
+							FROM Relab.ResultsMeasurements rm WITH(NOLOCK)
+								INNER JOIN Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) ON rmf.ResultMeasurementID=rm.ID
+							WHERE rm.ResultID=r.ID) > 0 THEN ''1'' ELSE ''0'' END
+						FROM Relab.Results r WITH(NOLOCK) 
+						WHERE r.TestUnitID=' + CONVERT(NVARCHAR, @ID) + '
+							AND rr.TestID=r.TestID AND rr.TestStageID=r.TestStageID
+					)
+				FROM #Results rr'
+		
+		EXECUTE (@SQL)
+		SELECT @RowID = MIN(RowID) FROM #units WITH(NOLOCK) WHERE RowID > @RowID
+	END
+	
+	ALTER TABLE #Results DROP COLUMN TestID
+	ALTER TABLE #Results DROP COLUMN TestStageID
+	
+	SELECT * 
+	FROM #Results WITH(NOLOCK)
+
+	DROP TABLE #units
+	DROP TABLE #Results
+	SET NOCOUNT OFF
+END
+GO
+GRANT EXECUTE ON [dbo].[remispESResultSummary] TO Remi
+GO
+ALTER PROCEDURE Relab.remispGetObservationSummary @BatchID INT
+AS
+BEGIN
+	DECLARE @RowID INT
+	DECLARE @ID INT
+	DECLARE @BatchUnitNumber INT
+	Declare @ObservationLookupID INT
+	DECLARE @query NVARCHAR(4000)
+	CREATE TABLE #Observations (Observation NVARCHAR(255) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL, UnitsAffected INT)
+
+	SELECT @ObservationLookupID = LookupID FROM Lookups WITH(NOLOCK) WHERE LookupTypeID=7 AND [values] = 'Observation'
+
+	SELECT ROW_NUMBER() OVER (ORDER BY tu.ID) AS RowID, tu.BatchUnitNumber, tu.ID
+	INTO #units
+	FROM TestUnits tu WITH(NOLOCK)
+	WHERE BatchID=@BatchID
+
+	SELECT m.ID AS MeasurementID, tu.ID AS TestUnitID, tu.batchunitnumber, ts.ProcessOrder, ts.TestStageName, Relab.ResultsObservation (m.ID) AS Observation
+	INTO #temp
+	FROM Relab.ResultsMeasurements m WITH(NOLOCK)
+		INNER JOIN Relab.Results r WITH(NOLOCK) ON r.ID=m.ResultID
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON r.TestUnitID=tu.ID
+		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
+		INNER JOIN Tests t WITH(NOLOCK) ON t.ID=r.TestID
+		INNER JOIN Lookups lm WITH(NOLOCK) ON lm.LookupID=m.MeasurementTypeID
+		INNER JOIN Batches b WITH(NOLOCK) ON b.ID=tu.BatchID
+		LEFT OUTER JOIN JobOrientation jo WITH(NOLOCK) ON jo.ID=b.OrientationID
+	WHERE MeasurementTypeID = @ObservationLookupID AND b.ID=@BatchID AND ISNULL(m.Archived, 0) = 0
+		
+	INSERT INTO #Observations
+	SELECT Observation, COUNT(DISTINCT TestUnitID) AS UnitsAffected
+	FROM #temp WITH(NOLOCK)
+	GROUP BY Observation
+	
+	SELECT @RowID = MIN(RowID) FROM #units
+				
+	WHILE (@RowID IS NOT NULL)
+	BEGIN
+		SET @query = ''
+		SELECT @BatchUnitNumber=BatchUnitNumber, @ID=ID FROM #units WITH(NOLOCK) WHERE RowID=@RowID
+		
+		EXECUTE ('ALTER TABLE #Observations ADD [' + @BatchUnitNumber + '] NVARCHAR(10) NULL')
+		
+		SET @query = 'UPDATE #Observations SET [' + CONVERT(VARCHAR,@BatchUnitNumber) + '] = ISNULL((
+			SELECT TOP 1 REPLACE(REPLACE(REPLACE(REPLACE(ISNULL(TestStageName,''''),''drops'',''''),''drop'',''''),''tumbles'',''''),''tumble'','''')
+			FROM #temp WITH(NOLOCK)
+			WHERE batchunitnumber=' + CONVERT(VARCHAR,@BatchUnitNumber) + ' 
+				AND #temp.Observation = #Observations.Observation
+			ORDER BY ProcessOrder ASC
+		), ''-'')'
+		
+		EXECUTE (@query)
+			
+		SELECT @RowID = MIN(RowID) FROM #units WITH(NOLOCK) WHERE RowID > @RowID
+	END
+	
+	DECLARE @units NVARCHAR(4000)
+	SELECT @units = ISNULL(STUFF((
+	SELECT '], [' + CONVERT(VARCHAR, tu.BatchUnitNumber)
+	FROM TestUnits tu WITH(NOLOCK)
+	WHERE BatchID=@BatchID
+	FOR XML PATH('')), 1, 2, '') + ']','[na]')
+	
+	SET @query = 'SELECT Observation, ' + @units + ', UnitsAffected FROM #Observations'
+	EXECUTE (@query)
+
+	DROP TABLE #temp
+	DROP TABLE #Observations
+	DROP TABLE #units
+END
+GO
+GRANT EXECUTE ON Relab.remispGetObservationSummary TO REMI
+GO
+ALTER FUNCTION [Relab].[ResultsObservation](@ResultMeasurementID INT)
+RETURNS NVARCHAR(MAX)
+AS
+BEGIN
+	DECLARE @listStr NVARCHAR(MAX)
+	DECLARE @obs TABLE(Value NVARCHAR(250), ParameterName NVARCHAR(255))
+	
+	INSERT INTO @obs (Value, ParameterName)
+	SELECT Value, ParameterName
+	FROM Relab.ResultsParameters WITH(NOLOCK)
+	WHERE Relab.ResultsParameters.ResultMeasurementID=@ResultMeasurementID
+	
+	SELECT @listStr = Value
+	FROM @obs
+	WHERE ParameterName = 'Top Observation'
+	
+	SELECT @listStr = COALESCE(@listStr+'\' ,'') + LTRIM(RTRIM(Value))
+	FROM @obs
+	WHERE ParameterName LIKE '%Sub O%'
+	ORDER BY ParameterName, Value ASC
+	
+	Return @listStr
+END
+GO
+ALTER PROCEDURE Relab.remispGetObservations @BatchID INT
+AS
+BEGIN
+	DECLARE @ObservationLookupID INT
+	SELECT @ObservationLookupID = LookupID FROM Lookups WITH(NOLOCK) WHERE LookupTypeID=7 AND [values] = 'Observation'
+
+	SELECT b.QRANumber, tu.BatchUnitNumber, (SELECT TOP 1 ts2.TestStageName
+								FROM Relab.Results r2 WITH(NOLOCK)
+									INNER JOIN TestStages ts2 WITH(NOLOCK) ON ts2.ID=r2.TestStageID AND ts2.TestStageType=2
+								WHERE r2.TestUnitID=r.TestUnitID
+								ORDER BY ts2.ProcessOrder DESC
+								) AS MaxStage, 
+			ts.TestStageName, [Relab].[ResultsObservation] (m.ID) AS Observation, 
+			(SELECT T.c.value('@Description', 'varchar(MAX)')
+			FROM jo.Definition.nodes('/Orientations/Orientation') T(c)
+			WHERE T.c.value('@Unit', 'varchar(MAX)') = tu.BatchUnitNumber AND ts.TestStageName LIKE T.c.value('@Drop', 'varchar(MAX)') + ' %') AS Orientation, 
+			m.Comment, (CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) WHERE rmf.ResultMeasurementID=m.ID) > 0 THEN 1 ELSE 0 END) AS HasFiles, m.ID AS MeasurementID
+	FROM Relab.ResultsMeasurements m WITH(NOLOCK)
+		INNER JOIN Relab.Results r WITH(NOLOCK) ON r.ID=m.ResultID
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON r.TestUnitID=tu.ID
+		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
+		INNER JOIN Tests t WITH(NOLOCK) ON t.ID=r.TestID
+		INNER JOIN Lookups lm WITH(NOLOCK) ON lm.LookupID=m.MeasurementTypeID
+		INNER JOIN Batches b WITH(NOLOCK) ON b.ID=tu.BatchID
+		LEFT OUTER JOIN JobOrientation jo WITH(NOLOCK) ON jo.ID=b.OrientationID
+	WHERE MeasurementTypeID = @ObservationLookupID
+		AND b.ID=@BatchID AND ISNULL(m.Archived,0) = 0
+	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder
+END
+GO
+GRANT EXECUTE ON Relab.remispGetObservations TO REMI
+GO
 ROLLBACK TRAN

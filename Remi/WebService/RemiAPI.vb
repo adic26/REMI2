@@ -350,19 +350,19 @@ Public Class RemiAPI
 #End Region
 
 #Region "Station/Hosts"
-    '<Obsolete("Don't use this routine any more. Use ReturnMultipleStationNames instead."), _
-    'WebMethod(Description:="Returns the test station this computer represents.")> _
-    'Public Function ResolveStationName(ByVal computerName As String) As String
-    '    Try
-    '        Dim t As TrackingLocation = TrackingLocationManager.GetSingleTrackingLocationByHostName(computerName)
-    '        If t IsNot Nothing Then
-    '            Return t.Name
-    '        End If
-    '    Catch ex As Exception
-    '        TrackingLocationManager.LogIssue("REMI API ResolveStationName", "e3", NotificationType.Errors, ex, String.Format("WorkStationName: {0}", computerName))
-    '    End Try
-    '    Return Nothing
-    'End Function
+    <Obsolete("Don't use this routine any more. Use ReturnMultipleStationNames instead."), _
+    WebMethod(Description:="Returns the test station this computer represents.")> _
+    Public Function ResolveStationName(ByVal computerName As String) As String
+        Try
+            Dim t As TrackingLocation = TrackingLocationManager.GetSingleTrackingLocationByHostName(computerName)
+            If t IsNot Nothing Then
+                Return t.Name
+            End If
+        Catch ex As Exception
+            TrackingLocationManager.LogIssue("REMI API ResolveStationName", "e3", NotificationType.Errors, ex, String.Format("WorkStationName: {0}", computerName))
+        End Try
+        Return Nothing
+    End Function
 
     <WebMethod(Description:="Returns the hostID for the station name.")> _
     Public Function GetHostID(ByVal computerName As String, ByVal trackingLocationID As Int32) As Int32

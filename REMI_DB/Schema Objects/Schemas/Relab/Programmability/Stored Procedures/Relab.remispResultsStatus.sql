@@ -5,15 +5,15 @@ BEGIN
 	
 	SELECT CASE WHEN r.PassFail = 0 THEN 'Fail' ELSE 'Pass' END AS Result, COUNT(*) AS NumRecords
 	INTO #ResultCount
-	FROM Relab.Results r
-		INNER JOIN TestUnits tu ON tu.ID=r.TestUnitID
+	FROM Relab.Results r WITH(NOLOCK)
+		INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=r.TestUnitID
 	WHERE tu.BatchID=@BatchID
 	GROUP BY r.PassFail
 	
 	SELECT CASE WHEN rs.PassFail = 1 THEN 'Pass' WHEN rs.PassFail=2 THEN 'Fail' ELSE 'No Result' END AS Result, 
 		rs.ApprovedBy, rs.ApprovedDate
 	INTO #ResultOverride
-	FROM Relab.ResultsStatus rs
+	FROM Relab.ResultsStatus rs WITH(NOLOCK)
 	WHERE rs.BatchID=@BatchID
 	ORDER BY ResultStatusID DESC
 	

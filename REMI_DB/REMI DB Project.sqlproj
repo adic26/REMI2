@@ -256,7 +256,7 @@
     <Folder Include="Scripts\2014\December152014" />
     <Folder Include="Scripts\2014\February062014" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Obsolete" />
-    <Folder Include="Scripts\2015\April072015" />
+    <Folder Include="Scripts\2015\April142015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -2813,7 +2813,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\2015\April072015\1.sql" />
+    <None Include="Scripts\2015\April142015\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestsSelectSingleItemByName.proc.sql">
