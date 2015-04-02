@@ -39,11 +39,44 @@ Partial Class BadgeAccess_Default
         If (Not String.IsNullOrEmpty(txtNewUserName.Text)) Then
             Dim badge As Int32 = 0
             Int32.TryParse(txtNewBadge.Text, badge)
-            notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(txtNewUserName.Text.ToLower, txtNewPassword.Text, badge, ddlGeoLoc.SelectedValue, True, ddlDepartments.SelectedValue)
 
-            If (Not notMain.Notifications.HasErrors) Then
-                If UserManager.SetUserToSession(txtNewUserName.Text) Then
-                    Response.Redirect(GetRedirectPage)
+            If (Not UserManager.UserExists(txtNewUserName.Text, 0)) Then
+                Dim u As User = New User
+                u.IsActive = True
+                u.ByPassProduct = 0
+                u.LDAPName = txtNewUserName.Text.ToLower
+                u.DefaultPage = ddlDefaultPage.SelectedValue
+                u.BadgeNumber = badge
+                u.LastUser = txtNewUserName.Text
+
+                Dim userDetails As New DataTable
+                userDetails.Columns.Add("Name", Type.GetType("System.String"))
+                userDetails.Columns.Add("Values", Type.GetType("System.String"))
+                userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
+                userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
+
+                Dim newRow As DataRow = userDetails.NewRow
+                newRow("LookupID") = ddlGeoLoc.SelectedValue
+                newRow("Values") = ddlGeoLoc.SelectedItem.Text
+                newRow("Name") = "TestCenter"
+                newRow("IsDefault") = 1
+                userDetails.Rows.Add(newRow)
+
+                Dim newRow2 As DataRow = userDetails.NewRow
+                newRow2("LookupID") = ddlDepartments.SelectedValue
+                newRow2("Values") = ddlDepartments.SelectedItem.Text
+                newRow2("Name") = "Department"
+                newRow2("IsDefault") = 1
+                userDetails.Rows.Add(newRow2)
+
+                u.UserDetails = userDetails
+
+                notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(txtNewPassword.Text, True, u)
+
+                If (Not notMain.Notifications.HasErrors) Then
+                    If UserManager.SetUserToSession(txtNewUserName.Text) Then
+                        Response.Redirect(GetRedirectPage)
+                    End If
                 End If
             End If
         End If

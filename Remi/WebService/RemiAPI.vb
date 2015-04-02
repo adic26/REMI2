@@ -803,7 +803,37 @@ Public Class RemiAPI
     <WebMethod(EnableSession:=True, Description:="Creates A New REMI User.", MessageName:="CreateUser")> _
     Public Function CreateUser(ByVal userIdentification As String, ByVal testCenterID As Int32, ByVal departmentID As Int32, ByVal badgeNumber As Int32) As Boolean
         Try
-            UserManager.ConfirmUserCredentialsAndSave(userIdentification, String.Empty, badgeNumber, testCenterID, False, departmentID)
+            Dim u As User = New User
+            u.IsActive = True
+            u.ByPassProduct = 0
+            u.LDAPName = userIdentification
+            u.DefaultPage = "/default.aspx"
+            u.BadgeNumber = badgeNumber
+            u.LastUser = userIdentification
+
+            Dim userDetails As New DataTable
+            userDetails.Columns.Add("Name", Type.GetType("System.String"))
+            userDetails.Columns.Add("Values", Type.GetType("System.String"))
+            userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
+            userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
+
+            Dim newRow As DataRow = userDetails.NewRow
+            newRow("LookupID") = testCenterID
+            newRow("Values") = String.Empty
+            newRow("Name") = "TestCenter"
+            newRow("IsDefault") = 1
+            userDetails.Rows.Add(newRow)
+
+            Dim newRow2 As DataRow = userDetails.NewRow
+            newRow2("LookupID") = departmentID
+            newRow2("Values") = String.Empty
+            newRow2("Name") = "Department"
+            newRow2("IsDefault") = 1
+            userDetails.Rows.Add(newRow2)
+
+            u.UserDetails = userDetails
+
+            UserManager.ConfirmUserCredentialsAndSave(String.Empty, False, u)
 
             Return True
         Catch ex As Exception

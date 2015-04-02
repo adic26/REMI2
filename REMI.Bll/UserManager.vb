@@ -396,43 +396,17 @@ Namespace REMI.Bll
         ''' <summary>
         ''' Add a user to the database.
         ''' </summary>
-        Public Shared Function ConfirmUserCredentialsAndSave(ByVal username As String, ByVal password As String, ByVal badgenumber As Integer, ByVal testCenterID As Int32, ByVal hasPasswordRequirement As Boolean, ByVal departmentID As Int32) As NotificationCollection
+        Public Shared Function ConfirmUserCredentialsAndSave(ByVal password As String, ByVal hasPasswordRequirement As Boolean, ByVal u As User) As NotificationCollection
             Dim returnNotifications As New NotificationCollection
 
             Try
                 If (hasPasswordRequirement) Then
-                    hasPasswordRequirement = RIMAuthenticationProvider.AuthenticateCredentials(username, password)
+                    hasPasswordRequirement = RIMAuthenticationProvider.AuthenticateCredentials(u.LDAPName, password)
                 Else
                     hasPasswordRequirement = True
                 End If
 
                 If hasPasswordRequirement Then
-                    Dim u As User = UserManager.GetItem(username.ToLower, SearchType.UserName)
-                    u.BadgeNumber = badgenumber
-                    u.ByPassProduct = 1
-
-                    Dim userDetails As New DataTable
-                    userDetails.Columns.Add("Name", Type.GetType("System.String"))
-                    userDetails.Columns.Add("Values", Type.GetType("System.String"))
-                    userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
-                    userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
-
-                    Dim newRow As DataRow = userDetails.NewRow
-                    newRow("LookupID") = testCenterID
-                    newRow("Values") = String.Empty
-                    newRow("Name") = "TestCenter"
-                    newRow("IsDefault") = 1
-                    userDetails.Rows.Add(newRow)
-
-                    Dim newRow2 As DataRow = userDetails.NewRow
-                    newRow2("LookupID") = departmentID
-                    newRow2("Values") = String.Empty
-                    newRow2("Name") = "Department"
-                    newRow2("IsDefault") = 1
-                    userDetails.Rows.Add(newRow2)
-
-                    u.UserDetails = userDetails
-
                     u.ID = Save(u, False, False, True)
 
                     If u.ID > 0 Then 'if the user was saved then
@@ -441,7 +415,7 @@ Namespace REMI.Bll
                         returnNotifications.AddWithMessage("User verified ok but there was a database error. Unable to save.", NotificationType.Information)
                     End If
                 Else
-                    returnNotifications.Add(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, username)
+                    returnNotifications.Add(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, u.LDAPName)
                 End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)

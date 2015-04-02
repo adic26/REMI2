@@ -105,7 +105,7 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:DropDownList ID="ddlDepartments" runat="server" DataSourceID="odsDepartments" DataTextField="LookupType" DataValueField="LookupID" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlDepartments" runat="server" AutoPostBack="true" DataSourceID="odsDepartments" DataTextField="LookupType" DataValueField="LookupID" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
                                 <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                                     <SelectParameters>
                                         <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
@@ -117,6 +117,18 @@
                                         <asp:Parameter Type="Boolean" Name="ShowAdminSelected" DefaultValue="false" />
                                         <asp:Parameter Type="Int32" Name="RemoveFirst" DefaultValue="1" />
                                         <asp:Parameter Type="Boolean" Name="showArchived" DefaultValue="false" />
+                                    </SelectParameters>
+                                </asp:ObjectDataSource>
+                            </asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell CssClass="loginCell">
+                                <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" DataSourceID="odsDefaultPage" runat="server" DataTextField="Name" DataValueField="Url" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
+                                <asp:ObjectDataSource ID="odsDefaultPage" runat="server" SelectMethod="GetMenuAccessByDepartment" TypeName="Remi.Bll.SecurityManager">
+                                    <SelectParameters>
+                                        <asp:Parameter Type="String" Name="pageName" DefaultValue="" />
+                                        <asp:ControlParameter ControlID="ddlDepartments" Name="departmentID" PropertyName="SelectedValue" Type="String" />
+                                        <asp:Parameter Type="Boolean" Name="RemoveFirst" DefaultValue="true" />
                                     </SelectParameters>
                                 </asp:ObjectDataSource>
                             </asp:TableCell>

@@ -221,6 +221,24 @@ Partial Public Class BadgeAccess_Default
     Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
+    '''ddlDefaultPage control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlDefaultPage As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''odsDefaultPage control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents odsDefaultPage As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
     '''btnNewUser control.
     '''</summary>
     '''<remarks>
