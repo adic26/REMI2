@@ -30,6 +30,9 @@
         <li>
             <asp:Button runat="server" Text="Incoming" ID="btnIncoming" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
         </li>
+        <li>
+            <asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
+        </li>
     </ul>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
@@ -68,7 +71,8 @@
     </asp:Panel>
 
     <asp:Panel Visible="false" runat="server" ID="pnlSearchUnits">
-        BSN: <asp:TextBox runat="server" ID="txtBSN"></asp:TextBox>
+        BSN:&nbsp; <asp:TextBox runat="server" ID="txtBSN"></asp:TextBox><br />
+        IMEI: <asp:TextBox runat="server" ID="txtIMEI"></asp:TextBox>
         <br /><br />
     </asp:Panel>
     
@@ -93,7 +97,7 @@
         Request: <asp:DropDownList ID="ddlRequestReason" runat="server" Width="239px" AppendDataBoundItems="True" AutoPostBack="False" DataTextField="Description" DataValueField="LookupID">
         </asp:DropDownList>
         <br />
-        Jobs: <asp:DropDownList ID="ddlJobs" runat="server" DataSourceID="odsJobs" DataTextField="Name" DataValueField="ID" AutoPostBack="True" Width="239px" AppendDataBoundItems="True">
+        Jobs: <asp:DropDownList ID="ddlJobs" runat="server" DataTextField="Name" DataValueField="ID" AutoPostBack="True" Width="239px" AppendDataBoundItems="True">
             <asp:ListItem>All</asp:ListItem>
         </asp:DropDownList>
         <br />
@@ -353,14 +357,6 @@
             <asp:Parameter Type="Boolean" Name="includeArchived" DefaultValue="False" />
             <asp:Parameter Type="Int32" Name="userID" />
             <asp:Parameter Type="Int32" Name="requestTypeID" DefaultValue="0" />
-        </SelectParameters>
-    </asp:ObjectDataSource>
-
-    <asp:ObjectDataSource ID="odsJobs" runat="server" SelectMethod="GetJobListDT" TypeName="Remi.Bll.JobManager" OldValuesParameterFormatString="original_{0}">
-        <SelectParameters>
-            <asp:Parameter Name="requestTypeID" DefaultValue="0" Type="Int32" />
-            <asp:Parameter Name="UserID" DefaultValue="0" Type="Int32" />
-            <asp:Parameter Name="departmentID" DefaultValue="0" Type="Int32" />
         </SelectParameters>
     </asp:ObjectDataSource>
         

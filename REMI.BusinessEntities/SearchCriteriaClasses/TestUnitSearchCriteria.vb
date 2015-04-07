@@ -3,6 +3,7 @@
 
 #Region "Private Variables"
         Private _bsn As Int32
+        Private _imei As String
 #End Region
 
 #Region "Constructors"
@@ -19,7 +20,15 @@
                 _bsn = value
             End Set
         End Property
-#End Region
 
+        Public Property IMEI() As String
+            Get
+                Return _imei
+            End Get
+            Set(ByVal value As String)
+                _imei = value
+            End Set
+        End Property
+#End Region
     End Class
 End Namespace

@@ -8,10 +8,6 @@ Imports System.Drawing
 Partial Class ES_Default
     Inherits System.Web.UI.Page
 
-    'Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
-    '    gvwObservationSummary.Columns(1).Visible = False
-    'End Sub
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
             If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then

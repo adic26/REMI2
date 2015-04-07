@@ -275,7 +275,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Notes" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
-                                <asp:Label runat="server" Visible="true" ID="lblComment" Text='<%# Eval("Comment")%>' />
+                                <asp:Label runat="server" Visible="true" ID="lblComment" Style="word-break: break-all; word-wrap: break-word;" Text='<%# Eval("Comment")%>' Width="600px" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Attachment">

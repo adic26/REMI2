@@ -351,15 +351,17 @@ img.right
 {
     width: 75px;
     padding: 0px 0px 0px 0px;
-    margin: 00px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     display:inline-block;
-    vertical-align:top;
+    vertical-align: top;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .leftSidebar
 {
     padding: 0px 0px 0px 0px;
-    margin: 00px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     border: 10px;
     width: 10%;
     height: 700px;
@@ -1357,4 +1359,8 @@ table tr td input
 {
     font-weight:bold;
     font-size: medium;
+}
+
+.ScrollMenu
+{
 }
