@@ -4,6 +4,13 @@
         size: 4
     });
 
+    $(document).on('keyup keypress keydown', 'form input', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
     //IE Tags
     if (typeof (UserAgentInfo) != 'undefined' && !window.addEventListener) {
         UserAgentInfo.strBrowser = 1;
