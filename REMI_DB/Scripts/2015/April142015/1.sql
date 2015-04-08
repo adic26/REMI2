@@ -3221,4 +3221,6 @@ END
 GO
 GRANT EXECUTE ON remispMoveBatchForward TO Remi
 GO
+UPDATE Menu set Name='Advanced Search' where Name='Result Search'
+GO
 ROLLBACK TRAN

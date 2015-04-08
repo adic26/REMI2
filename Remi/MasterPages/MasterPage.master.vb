@@ -132,13 +132,13 @@ Partial Class MasterPages_MasterPage
                 End If
             End If
 
-            If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Result Search").FirstOrDefault() IsNot Nothing) Then
+            If (Not (From ma In dtMenuAccess.AsEnumerable() Where ma.Field(Of String)("Name") = "Advanced Search").FirstOrDefault() IsNot Nothing) Then
                 If (menuHeader.FindItem("Results") IsNot Nothing) Then
-                    menuHeader.FindItem("Results").ChildItems.Remove(menuHeader.FindItem("Results/ResultsSearch"))
+                    menuHeader.FindItem("Results").ChildItems.Remove(menuHeader.FindItem("Results/AdvancedSearch"))
                 End If
-                'ResultsSearch
+
                 If (menuHeader.FindItem("Search") IsNot Nothing) Then
-                    menuHeader.FindItem("Search").ChildItems.Remove(menuHeader.FindItem("Search/ResultsSearch"))
+                    menuHeader.FindItem("Search").ChildItems.Remove(menuHeader.FindItem("Search/AdvancedSearch"))
                 End If
             End If
 

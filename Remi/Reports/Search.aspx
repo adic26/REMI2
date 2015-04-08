@@ -13,7 +13,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="server">
-    <h2>Advanced Search</h2>
+    <h2>Search</h2>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" Runat="Server">
     <h3>Quick Search</h3>
@@ -38,7 +38,7 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
     <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="3" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
         <asp:ListItem Text="Batchs" Selected="True" Value="1"></asp:ListItem>
-        <asp:ListItem Text="Units" Value="2"></asp:ListItem>
+        <%--<asp:ListItem Text="Units" Value="2"></asp:ListItem>--%>
         <asp:ListItem Text="Exceptions" Value="3" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="4" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Training" Value="5"></asp:ListItem>
