@@ -64,7 +64,7 @@ BEGIN
 	SET @SQL = 'INSERT INTO dbo.#Request SELECT *
 		FROM 
 			(
-			SELECT r.RequestID, r.BatchID, r.RequestNumber, rfd.Value, rfs.Name 
+			SELECT r.RequestID, r.BatchID, r.RequestNumber, rfd.Value, rfs.Name
 			FROM Req.Request r WITH(NOLOCK)
 				INNER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.RequestID=r.RequestID
 				INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
@@ -75,13 +75,51 @@ BEGIN
 					SET @SQL += ' INNER JOIN dbo.#ReqNum rn WITH(NOLOCK) ON rn.RequestNumber=r.RequestNumber '
 				END
 				
-			SET @SQL += ' WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID) + '
-			) req PIVOT (MAX(Value) FOR Name IN (' + REPLACE(@rows, ',', ',
+			SET @SQL += ' WHERE rt.RequestTypeID=' + CONVERT(NVARCHAR, @RequestTypeID)
+			IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType IN ('BSN','IMEI')) > 0 AND (SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType NOT IN ('BSN','IMEI')) = 0)
+			BEGIN
+				SET @SQL += ' AND r.BatchID IN 
+					(SELECT b.ID 
+					FROM dbo.Batches b WITH(NOLOCK)
+						INNER JOIN dbo.TestUnits tu WITH(NOLOCK) ON b.ID=tu.BatchID 
+					WHERE b.QRANumber = r.RequestNumber AND ('
+
+				IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='BSN') > 0)
+				BEGIN
+					SET @whereStr = ''
+
+					SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(ISNULL(SearchTerm, ''))) + ''','
+					FROM dbo.#temp WITH(NOLOCK)
+					WHERE TableType = 'BSN'
+
+					SET @SQL += ' tu.BSN IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') '
+				END
+				
+				IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='IMEI') > 0)
+				BEGIN
+					SET @whereStr = ''
+
+					SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(SearchTerm)) + ''','
+					FROM dbo.#temp WITH(NOLOCK)
+					WHERE TableType = 'IMEI'
+					
+					IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='BSN') > 0)
+					BEGIN
+						SET @SQL += ' OR '
+					END
+
+					SET @SQL += 'tu.IMEI IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ') '
+				END
+				
+				SET @SQL += ' ) ) '
+			END			
+			
+			SET @SQL += ' ) req PIVOT (MAX(Value) FOR Name IN (' + REPLACE(@rows, ',', ',
 			') + ')) AS pvt '
 
 	INSERT INTO #executeSQL (sqlvar)
 	VALUES (@SQL)
-	
+
 	SET @SQL = ''
 	
 	IF ((SELECT COUNT(*) FROM dbo.#temp WHERE TableType='Request') > 0)
@@ -179,7 +217,7 @@ BEGIN
 	EXEC sp_executesql @SQL
 
 	--START BUILDING MEASUREMENTS
-	IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType NOT IN ('Request','ReqNum')) > 0)
+	IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType NOT IN ('Request','ReqNum', 'IMEI', 'BSN')) > 0)
 	BEGIN
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
@@ -744,42 +782,44 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES ('Request', 51, '*Windermere')
---,('Request', 51, '-Windermere E R135')
---,('Request', 51, '3G SIMs')
--- ,('Request', 51, '*Lisbon')
---,('Request', 49, 'Handheld')
---,('Request', 49, '*Accessory')
---,('Test', 1099, 'Sensor Test')
---,('Test', 1280, 'Functional')
-,('Test', 1020, 'Radiated RF Test')
---('Test', 1561, 'Display Test')
---,('Test', 1103, 'Camera Front')
---('Stage', 3616, '1 Drop')
---,('Job', 179, 'T004 DIRT RASS Drop')
---,('Job', 215, 'T013 Mechanical Suite')
---,('Stage', 2246, 'Analysis')
---,('Stage', 3220, 'Post 720hrs')
---,('BSN', 0, '1151185790')
---,('ReqNum', 0, 'QRA-14-0038')
---,('ReqNum', 0, 'QRA-14-0597')
---,('Unit', 0, '5')
---,('Unit', 0, '1')
---,('IMEI', 0, '')
---,('ResultArchived', 0, '')
---,('Param:Band', 0, 'GPRS1800')
---,('Param:Band', 0, 'LTE17')
---,('Param:Channel', 0, '*700')
---,('Param:Channel', 0, '-512')
---,('ResultInfoArchived', 0, '')
---,('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
---,('Info:HardwareID', 0, '*Rohde&Schwarz')
---,('Info:OSVersion', 0, 'NA')
---,('Info:OSVersion', 0, 'adsf')
---,('Info:CameraID', 0, 'Not Reported')
---,('Info:hoursintest', 0, '10')
---, ('TestRunStartDate', 0, '2015-01-19')
---, ('TestRunEndDate', 0, '2015-01-19')
---,('Measurement', 0, '*RxBER')
+VALUES --('Request', 51, '*Windermere'),
+--('Request', 51, '-Windermere E R135'),
+--('Request', 51, '3G SIMs'),
+--('Request', 51, '*Lisbon'),
+--('Request', 49, 'Handheld'),
+--('Request', 49, '*Accessory'),
+--('Test', 1099, 'Sensor Test'),
+--('Test', 1280, 'Functional'),
+--('Test', 1020, 'Radiated RF Test'),
+--('Test', 1561, 'Display Test'),
+--('Test', 1103, 'Camera Front'),
+--('Stage', 3616, '1 Drop'),
+--('Job', 179, 'T004 DIRT RASS Drop'),
+--('Job', 215, 'T013 Mechanical Suite'),
+--('Stage', 2246, 'Analysis'),
+--('Stage', 3220, 'Post 720hrs'),
+('BSN', 0, '1132205311'),
+('BSN', 0, '1151200936'),
+--('ReqNum', 0, 'QRA-14-0038'),
+--('ReqNum', 0, 'QRA-14-0597'),
+--('Unit', 0, '5'),
+--('Unit', 0, '1'),
+('IMEI', 0, '004402242039794'),
+('IMEI', 0, '351852062969380'),
+--('ResultArchived', 0, ''),
+--('Param:Band', 0, 'GPRS1800'),
+--('Param:Band', 0, 'LTE17'),
+--('Param:Channel', 0, '*700'),
+--('Param:Channel', 0, '-512'),
+--('ResultInfoArchived', 0, ''),
+--('Info:HardwareID', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14'),
+--('Info:HardwareID', 0, '*Rohde&Schwarz'),
+--('Info:OSVersion', 0, 'NA'),
+--('Info:OSVersion', 0, 'adsf'),
+--('Info:CameraID', 0, 'Not Reported'),
+--('Info:hoursintest', 0, '10'),
+--('TestRunStartDate', 0, '2015-01-19'),
+--('TestRunEndDate', 0, '2015-01-19'),
+--('Measurement', 0, '*RxBER'),
 --('Info:', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
 EXEC [Req].[RequestSearch] 1, @table, 251
