@@ -42,7 +42,7 @@ Namespace REMI.Bll
                 End If
 
                 If (ShowAdminSelected) Then
-                    dt.Rows(0).Item("LookupType") = "Not Set"
+                    dt.Rows(0).Item("LookupType") = "NotSet"
                 End If
 
                 If RemoveFirst = 1 And dt.Rows.Count > 1 Then

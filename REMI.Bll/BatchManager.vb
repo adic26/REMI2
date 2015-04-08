@@ -254,13 +254,13 @@ Namespace REMI.Bll
                 Select Case Number.Length
                     Case 4
                         Number = String.Format("{0}-{1}", DateTime.Now.Year.ToString().Substring(2), Number)
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault()
                     Case 7
                         If (isValid) Then
-                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
-                                Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
-                            ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault() Is Nothing) Then
-                                Return Number.Trim()
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                                Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault()
+                            ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) Select b.QRANumber).FirstOrDefault() Is Nothing) Then
+                                Return number.Trim()
                             Else
                                 Return String.Empty
                             End If
@@ -271,10 +271,10 @@ Namespace REMI.Bll
                         Dim reqNum As String = Number.Substring(0, 11).ToString().Trim()
 
                         If (isValid) Then
-                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
-                                Return Number
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                                Return number
                             ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum Select b.QRANumber).FirstOrDefault() Is Nothing) Then
-                                Return Number
+                                Return number
                             Else
                                 Return String.Empty
                             End If
@@ -282,7 +282,7 @@ Namespace REMI.Bll
 
                         Return Number.Trim()
                     Case Else
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = number.Trim() And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault()
                 End Select
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, Number.ToString())
@@ -504,7 +504,7 @@ Namespace REMI.Bll
 
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
             REMIAppCache.ClearAllBatchData(requestNumber)
-            Dim b As Batch = BatchManager.GetItem(requestNumber, cacheRetrievedData:=True)
+            Dim b As Batch = BatchManager.GetItem(requestNumber, False, True, True)
             TestRecordManager.CheckBatchForResultUpdates(b, False)
 
             Return BatchDB.MoveBatchForward(requestNumber, userIdentification)

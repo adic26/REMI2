@@ -783,10 +783,15 @@ Namespace REMI.Dal
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@QRANumber", MyBatch.QRANumber)
                     myCommand.Parameters.AddWithValue("@JobName", MyBatch.JobName)
-                    myCommand.Parameters.AddWithValue("@TestCenterLocation", MyBatch.TestCenterLocation)
+
+                    If (MyBatch.TestCenterLocation Is Nothing) Then
+                        myCommand.Parameters.AddWithValue("@TestCenterLocation", "NotSet")
+                    Else
+                        myCommand.Parameters.AddWithValue("@TestCenterLocation", MyBatch.TestCenterLocation)
+                    End If
 
                     If (MyBatch.Priority Is Nothing) Then
-                        myCommand.Parameters.AddWithValue("@Priority", "Not Set")
+                        myCommand.Parameters.AddWithValue("@Priority", "NotSet")
                         myCommand.Parameters.AddWithValue("@PriorityID", 0)
                     Else
                         myCommand.Parameters.AddWithValue("@Priority", MyBatch.Priority)
@@ -794,7 +799,7 @@ Namespace REMI.Dal
                     End If
 
                     If (MyBatch.RequestPurpose Is Nothing) Then
-                        myCommand.Parameters.AddWithValue("@RequestPurpose", "Not Set")
+                        myCommand.Parameters.AddWithValue("@RequestPurpose", "NotSet")
                         myCommand.Parameters.AddWithValue("@RequestPurposeID", 0)
                     Else
                         myCommand.Parameters.AddWithValue("@RequestPurpose", MyBatch.RequestPurpose)
@@ -805,12 +810,19 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@Requestor", MyBatch.Requestor)
                     myCommand.Parameters.AddWithValue("@ProductGroupName", MyBatch.ProductGroup)
                     myCommand.Parameters.AddWithValue("@AccessoryGroupName", MyBatch.AccessoryGroup)
-                    myCommand.Parameters.AddWithValue("@ProductType", MyBatch.ProductType)
+
+                    If (MyBatch.ProductType Is Nothing) Then
+                        myCommand.Parameters.AddWithValue("@ProductType", "NotSet")
+                    Else
+                        myCommand.Parameters.AddWithValue("@ProductType", MyBatch.ProductType)
+                    End If
+
                     myCommand.Parameters.AddWithValue("@testStageCompletionStatus", MyBatch.TestStageCompletion)
 
                     If Not String.IsNullOrEmpty(MyBatch.TestStageName) Then
                         myCommand.Parameters.AddWithValue("@TestStageName", MyBatch.TestStageName)
                     End If
+
                     myCommand.Parameters.AddWithValue("@unitsToBeReturnedToRequestor", MyBatch.HasUnitsRequiredToBeReturnedToRequestor)
                     myCommand.Parameters.AddWithValue("@expectedSampleSize", MyBatch.NumberOfUnitsExpected)
 
@@ -831,8 +843,15 @@ Namespace REMI.Dal
                     End If
 
                     myCommand.Parameters.AddWithValue("@MechanicalTools", MyBatch.MechanicalTools)
-                    myCommand.Parameters.AddWithValue("@DepartmentID", MyBatch.DepartmentID)
-                    myCommand.Parameters.AddWithValue("@Department", MyBatch.Department)
+
+                    If (MyBatch.Department Is Nothing) Then
+                        myCommand.Parameters.AddWithValue("@Department", "NotSet")
+                        myCommand.Parameters.AddWithValue("@DepartmentID", 0)
+                    Else
+                        myCommand.Parameters.AddWithValue("@DepartmentID", MyBatch.DepartmentID)
+                        myCommand.Parameters.AddWithValue("@Department", MyBatch.Department)
+                    End If
+
                     myCommand.Parameters.AddWithValue("@ExecutiveSummary", MyBatch.ExecutiveSummary)
 
                     Helpers.SetSaveParameters(myCommand, MyBatch)
