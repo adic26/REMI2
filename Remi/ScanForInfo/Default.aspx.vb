@@ -179,7 +179,7 @@ Partial Class ScanForInfo_Default
         If bc.Validate Then
             b = BatchManager.GetViewBatch(bc.BatchNumber)
 
-            If b IsNot Nothing Then
+            If b IsNot Nothing And b.ID > 0 Then
                 lnkCheckForUpdates2.Enabled = True
                 lnkCheckForUpdates.Enabled = True
                 ddlTime.Enabled = True
@@ -260,7 +260,7 @@ Partial Class ScanForInfo_Default
                         lblOrientation.Text = String.Empty
                     End If
 
-                    Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
+                    Dim records = (From rm In New REMI.Dal.Entities().Instance().ResultsMeasurements _
                                       Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                       Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
 
@@ -339,7 +339,7 @@ Partial Class ScanForInfo_Default
                     Dim es As New ExceptionSearch()
                     es.QRANumber = b.QRANumber
                     es.IncludeBatches = 1
-                    gvwTestExceptions.DataSource = Remi.Dal.TestExceptionDB.ExceptionSearch(es)
+                    gvwTestExceptions.DataSource = REMI.Dal.TestExceptionDB.ExceptionSearch(es)
                     gvwTestExceptions.DataBind()
 
                     JIRABindData()
