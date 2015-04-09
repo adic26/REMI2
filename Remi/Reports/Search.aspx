@@ -36,13 +36,13 @@
     </ul>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="3" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
+    <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="4" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
         <asp:ListItem Text="Batchs" Selected="True" Value="1"></asp:ListItem>
         <%--<asp:ListItem Text="Units" Value="2"></asp:ListItem>--%>
         <asp:ListItem Text="Exceptions" Value="3" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="4" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Training" Value="5"></asp:ListItem>
-    </asp:RadioButtonList><br />
+    </asp:RadioButtonList><br /><br />
 
     <asp:Panel Visible="false" runat="server" ID="pnlTraining">
     Test Center: <asp:DropDownList ID="ddlTestCenterTraining" runat="server" AppendDataBoundItems="True" AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList><br />

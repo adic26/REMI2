@@ -398,6 +398,27 @@ Namespace REMI.Bll
                             result.ExecutiveSummary = summary
                         End If
 
+                        Dim requestType As Int32 = (From rt In instance.RequestTypes Where rt.Lookup.Values = barcode.Type Select rt.RequestTypeID).FirstOrDefault()
+                        Dim request As Int32 = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r.RequestID).FirstOrDefault()
+                        Dim map As String = (From m In instance.ReqFieldMappings Where m.RequestTypeID = requestType And m.IntField = "ExecutiveSummary" Select m.ExtField).FirstOrDefault()
+                        Dim setupID As Int32 = (From s In instance.ReqFieldSetups Where s.RequestTypeID = requestType And s.Name = map Select s.ReqFieldSetupID).FirstOrDefault()
+
+                        If (setupID > 0) Then
+                            Dim data As REMI.Entities.ReqFieldData = (From d In instance.ReqFieldDatas Where d.ReqFieldSetupID = setupID And d.RequestID = request Select d).FirstOrDefault()
+                            If (data IsNot Nothing) Then
+                                data.Value = summary
+                            Else
+                                data = New REMI.Entities.ReqFieldData
+                                data.InsertTime = DateTime.Now
+                                data.InstanceID = 1
+                                data.LastUser = userIdentification
+                                data.RequestID = request
+                                data.ReqFieldSetupID = setupID
+                                data.Value = summary
+                                instance.AddToReqFieldDatas(data)
+                            End If
+                        End If
+
                         instance.SaveChanges()
 
                         Return True
