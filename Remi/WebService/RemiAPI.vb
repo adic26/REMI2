@@ -868,7 +868,8 @@ Public Class RemiAPI
     '    Return False
     'End Function
 
-    <WebMethod(Description:="Returns a full list of the Product Groups currently being worked on.")> _
+    <Obsolete("Don't use this routine any more. Use GetLookups instead."), _
+    WebMethod(Description:="Returns a full list of the Product Groups currently being worked on.")> _
     Public Function GetProductGroups() As String()
         Try
             Dim dt As DataTable = ProductGroupManager.GetProductList(True, -1, False)
@@ -881,7 +882,8 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    <WebMethod(Description:="Returns a datatable of the Product Groups currently being worked on.")> _
+    <Obsolete("Don't use this routine any more. Use GetLookups instead."), _
+    WebMethod(Description:="Returns a datatable of the Product Groups currently being worked on.")> _
     Public Function GetProductGroupsDataTable() As DataTable
         Try
             Dim productList As DataTable = ProductGroupManager.GetProductList(True, -1, False)
@@ -903,7 +905,7 @@ Public Class RemiAPI
         Return 0
     End Function
 
-    '<WebMethod(Description:="Returns a full list of the settings for a product.")> _
+    'WebMethod(Description:="Returns a full list of the settings for a product.")> _
     'Public Function GetProductSettingsByProductID(ByVal productID As Int32) As SerializableDictionary(Of String, String)
     '    Try
     '        Return ProductGroupManager.GetProductSettingsDictionary(productID)
@@ -937,15 +939,16 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    '<WebMethod(Description:="Returns a specific setting for a product.")> _
-    'Public Function GetProductSettingByProductID(ByVal productID As Int32, ByVal keyName As String) As String
-    '    Try
-    '        Return ProductGroupManager.GetProductSetting(productID, keyName)
-    '    Catch ex As Exception
-    '        ProductGroupManager.LogIssue("REMI API GetProductSettingByProductID", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} Key: {1}", productID, keyName))
-    '    End Try
-    '    Return Nothing
-    'End Function
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Returns a specific setting for a product.")> _
+    Public Function GetProductSettingByProductID(ByVal productID As Int32, ByVal keyName As String) As String
+        Try
+            Return ProductGroupManager.GetProductSetting(productID, keyName)
+        Catch ex As Exception
+            ProductGroupManager.LogIssue("REMI API GetProductSettingByProductID", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0} Key: {1}", productID, keyName))
+        End Try
+        Return Nothing
+    End Function
 #End Region
 
 #Region "Batch"
