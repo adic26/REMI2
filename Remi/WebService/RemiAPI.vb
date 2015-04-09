@@ -299,19 +299,20 @@ Public Class RemiAPI
     '    Return Nothing
     'End Function
 
-    '<WebMethod(EnableSession:=True, Description:="Gets # Of Units Assigned To This Batch.")> _
-    'Public Function GetNumOfUnits(ByVal QRANumber As String) As Int32
-    '    Try
-    '        Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
+    <Obsolete("Don't Use This Method Anymore."), _
+    WebMethod(EnableSession:=True, Description:="Gets # Of Units Assigned To This Batch.")> _
+    Public Function GetNumOfUnits(ByVal QRANumber As String) As Int32
+        Try
+            Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
 
-    '        If (barcode.Validate()) Then
-    '            Return TestUnitManager.GetNumOfUnits(barcode.BatchNumber)
-    '        End If
-    '    Catch ex As Exception
-    '        TestUnitManager.LogIssue("REMI API GetNumOfUnits", "e13", NotificationType.Errors, ex, String.Format("Request: {0}", QRANumber))
-    '    End Try
-    '    Return 0
-    'End Function
+            If (barcode.Validate()) Then
+                Return TestUnitManager.GetNumOfUnits(barcode.BatchNumber)
+            End If
+        Catch ex As Exception
+            TestUnitManager.LogIssue("REMI API GetNumOfUnits", "e13", NotificationType.Errors, ex, String.Format("Request: {0}", QRANumber))
+        End Try
+        Return 0
+    End Function
 
     '<WebMethod(EnableSession:=True, Description:="Gets Unit Assigned To.")> _
     'Public Function GetUnitAssignedTo(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As String
@@ -843,18 +844,18 @@ Public Class RemiAPI
         Return False
     End Function
 
-    '<WebMethod(EnableSession:=True, Description:="Given a badge number returns a user's login name.")> _
-    '<Obsolete("This method has been superceeded by GetUserDetails.")> _
-    'Public Function GetFriendlyUserID(ByVal userIdentification As String) As String
-    '    Try
-    '        If UserManager.SetUserToSession(userIdentification) Then
-    '            Return UserManager.GetCurrentValidUserLDAPName()
-    '        End If
-    '    Catch ex As Exception
-    '        UserManager.LogIssue("REMI API GetFriendlyUserID", "e3", NotificationType.Errors, ex, String.Format("User: {0}", userIdentification))
-    '    End Try
-    '    Return Nothing
-    'End Function
+    <Obsolete("This method has been superceeded by GetUserDetails."), _
+    WebMethod(EnableSession:=True, Description:="Given a badge number returns a user's login name.")> _
+    Public Function GetFriendlyUserID(ByVal userIdentification As String) As String
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return UserManager.GetCurrentValidUserLDAPName()
+            End If
+        Catch ex As Exception
+            UserManager.LogIssue("REMI API GetFriendlyUserID", "e3", NotificationType.Errors, ex, String.Format("User: {0}", userIdentification))
+        End Try
+        Return Nothing
+    End Function
 #End Region
 
 #Region "Product"
@@ -1535,7 +1536,8 @@ Public Class RemiAPI
     ''' <param name="qraNumber"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    <WebMethod(EnableSession:=True, Description:="Attempts to retrieve a batch from REMI and if it cannot find the batch will attempt to retrieve it from TRS. This method requires identification and will also save new batches.")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(EnableSession:=True, Description:="Attempts to retrieve a batch from REMI and if it cannot find the batch will attempt to retrieve it from TRS. This method requires identification and will also save new batches.")> _
     Public Function IncomingGetAndSaveBatch(ByVal qraNumber As String, ByVal userIdentification As String) As IncomingAppBatchData
         Try
             Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(qraNumber), 21))
