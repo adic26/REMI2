@@ -39,4 +39,76 @@ Partial Public Class Developer_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hplLogs As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
+    '''notMain control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents notMain As Global.Remi.Controls_Notifications
+
+    '''<summary>
+    '''ddlMode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlMode As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''ddlType control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlType As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''ddlVersions control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlVersions As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''ddlName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlName As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''btnQuery control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnQuery As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''txtXML control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtXML As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''btnSave control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnSave As Global.System.Web.UI.WebControls.Button
 End Class
