@@ -60,7 +60,7 @@
                     <asp:MenuItem ImageUrl="../Design/Icons/ic_overflow_tab.png"></asp:MenuItem>
                     <asp:MenuItem Text="Overview" NavigateUrl="~/Overview.aspx" Value="Overview"></asp:MenuItem>
                     <asp:MenuItem Text="Search" NavigateUrl="~/Reports/Search.aspx" Value="Search">
-                        <asp:MenuItem Text="Advanced Search" NavigateUrl="~/Relab/Reports.aspx" Value="AdvancedSearch"></asp:MenuItem>
+                        <asp:MenuItem Text="Advanced Search" NavigateUrl="~/Reports/AdvancedSearch.aspx" Value="AdvancedSearch"></asp:MenuItem>
                     </asp:MenuItem>
                     <asp:MenuItem Text="Scan Device" NavigateUrl="~/ScanForTest/Default.aspx" Value="Scan"></asp:MenuItem>
                     <asp:MenuItem Text="Batch Info" NavigateUrl="~/ScanForInfo/Default.aspx" Value="Batch"></asp:MenuItem>
@@ -79,7 +79,7 @@
                     </asp:MenuItem>
                     <asp:MenuItem Text="Requests" NavigateUrl="~/Request/default.aspx" Value="Requests"></asp:MenuItem>
                     <asp:MenuItem Text="Results" NavigateUrl="~/Relab/Results.aspx" Value="Results">
-                        <asp:MenuItem Text="Advanced Search" NavigateUrl="~/Relab/Reports.aspx" Value="AdvancedSearch"></asp:MenuItem>
+                        <asp:MenuItem Text="Advanced Search" NavigateUrl="~/Reports/AdvancedSearch.aspx" Value="AdvancedSearch"></asp:MenuItem>
                     </asp:MenuItem>
                     <asp:MenuItem Text="Admin" NavigateUrl="~/Admin/Jobs.aspx" Value="admin">
                         <asp:MenuItem Text="Jobs" NavigateUrl="~/Admin/Jobs.aspx"></asp:MenuItem>

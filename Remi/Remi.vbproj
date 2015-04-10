@@ -485,11 +485,11 @@
       <DependentUpon>Measurements.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
-    <Compile Include="Relab\Reports.aspx.designer.vb">
-      <DependentUpon>Reports.aspx</DependentUpon>
+    <Compile Include="Reports\AdvancedSearch.aspx.designer.vb">
+      <DependentUpon>AdvancedSearch.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Relab\Reports.aspx.vb">
-      <DependentUpon>Reports.aspx</DependentUpon>
+    <Compile Include="Reports\AdvancedSearch.aspx.vb">
+      <DependentUpon>AdvancedSearch.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="Relab\ResultGraph.aspx.designer.vb">
@@ -729,7 +729,7 @@
     <Content Include="ManageUser\Default.aspx" />
     <Content Include="Overview.aspx" />
     <Content Include="Relab\Measurements.aspx" />
-    <Content Include="Relab\Reports.aspx" />
+    <Content Include="Reports\AdvancedSearch.aspx" />
     <Content Include="Relab\ResultGraph.aspx" />
     <Content Include="Relab\Results.aspx" />
     <Content Include="Relab\Versions.aspx" />
