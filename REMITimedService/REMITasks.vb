@@ -95,7 +95,10 @@ Public Class REMITasks
                         Dim fileToOpen As Object = DirectCast(ConfigurationManager.AppSettings("TemplateFile").ToString(), Object)
 
                         If Not Directory.Exists(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType)) Then
+                            sb.AppendLine(String.Format("Creating Folder {0}", req(0).RequestType))
+
                             Directory.CreateDirectory(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType))
+                            sb.AppendLine(String.Format("Creating Folder {0} Finished", req(0).RequestType))
                         End If
 
                         Dim fileToSave As Object = DirectCast(String.Format("{0}{1}\{2}.docx", ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType, bw.QRANumber), Object)
@@ -299,6 +302,7 @@ Public Class REMITasks
                         End If
                     Catch ex As Exception
                         sb.AppendLine(String.Format("{0} - Error Creating Doc For {1}...", DateTime.Now, bw.QRANumber))
+                        sb.AppendLine(String.Format("{0} - {1} - {2}", DateTime.Now, ex.Message, ex.StackTrace.ToString()))
                     End Try
                 Next
             Next
