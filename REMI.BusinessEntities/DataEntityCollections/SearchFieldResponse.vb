@@ -1,6 +1,4 @@
 ﻿Namespace REMI.BusinessEntities
-
-
     <Serializable()> _
     Public Class SearchFieldResponse
         Inherits LoggedItemBase
@@ -38,15 +36,17 @@
                 _testID = value
             End Set
         End Property
-
 #End Region
 
         'Empty Constructor
         Public Sub New()
-
         End Sub
 
-
+        Public Sub New(ByVal name As String, ByVal type As String, ByVal testID As Int32)
+            Me.Name = name
+            Me.Type = type
+            Me.TestID = testID
+        End Sub
     End Class
 
     Public Class SearchFieldResponseDefinition
@@ -58,6 +58,4 @@
             Success = False
         End Sub
     End Class
-
-
 End Namespace

@@ -215,9 +215,73 @@ BEGIN
 	SET @SQL = REPLACE((select sqlvar AS [text()] from dbo.#executeSQL for xml path('')), '&#x0D;','')
 
 	EXEC sp_executesql @SQL
+	SET @SQL = ''
+	
+	IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType LIKE 'Batch%') > 0 AND (SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType='Request') > 0)
+	BEGIN
+		SET @SQL = 'DELETE FROM #Request WHERE RequestNumber NOT IN (SELECT DISTINCT RequestNumber
+		FROM #Request r
+			INNER JOIN Batches b ON r.RequestNumber=b.QRANumber
+			LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName 
+			INNER JOIN TestStages ts WITH(NOLOCK) ON ts.TestStageName=b.TestStageName
+		WHERE 1=1 '
+		
+		IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType='BatchStageType') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(ISNULL(SearchTerm, ''))) + ''','
+			FROM dbo.#temp WITH(NOLOCK)
+			WHERE TableType = 'BatchStageType'
+
+			SET @SQL += ' AND ts.TestStageType IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')'
+		END
+		
+		IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType='BatchAssignedUser') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(ISNULL(SearchTerm, ''))) + ''','
+			FROM dbo.#temp WITH(NOLOCK)
+			WHERE TableType = 'BatchAssignedUser'
+
+			SET @SQL += ' AND (
+							SELECT top 1 u.ldaplogin 
+							FROM TestUnits as tu WITH(NOLOCK), devicetrackinglog as dtl WITH(NOLOCK), TrackingLocations as tl WITH(NOLOCK), Users u WITH(NOLOCK)
+							WHERE tl.ID = dtl.TrackingLocationID and tu.id  = dtl.testunitid and tu.batchid = b.id and  inuser = u.LDAPLogin and outuser is null
+						  ) IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')'
+		END
+
+		IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType='BatchStatus') > 0)
+		BEGIN
+			SET @whereStr = ''
+
+			SELECT @whereStr = COALESCE(@whereStr + '''' ,'') + LTRIM(RTRIM(ISNULL(SearchTerm, ''))) + ''','
+			FROM dbo.#temp WITH(NOLOCK)
+			WHERE TableType = 'BatchStatus'
+
+			SET @SQL += ' AND b.BatchStatus IN (' + SUBSTRING(@whereStr, 0, LEN(@whereStr)) + ')'
+		END
+		
+		DECLARE @BatchStartDate NVARCHAR(12)
+		DECLARE @BatchEndDate NVARCHAR(12)
+
+		SELECT @BatchStartDate = SearchTerm FROM dbo.#temp WITH(NOLOCK) WHERE TableType='BatchStartDate'
+		SELECT @BatchEndDate = SearchTerm FROM dbo.#temp WITH(NOLOCK) WHERE TableType='BatchEndDate'
+		
+		IF (@BatchStartDate IS NOT NULL AND @BatchEndDate IS NOT NULL)
+		BEGIN
+			SET @SQL += ' AND b.ID IN (SELECT DISTINCT batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime >= ''' + CONVERT(NVARCHAR,@BatchStartDate) + ' 00:00:00.000'' AND InsertTime <= ''' + CONVERT(NVARCHAR,@BatchEndDate) + ' 23:59:59'') '
+		END
+		
+		SET @SQL += ')'
+		
+		EXEC sp_executesql @SQL
+		SET @SQL = ''
+	END
 
 	--START BUILDING MEASUREMENTS
-	IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType NOT IN ('Request','ReqNum', 'IMEI', 'BSN')) > 0)
+	IF ((SELECT COUNT(*) FROM dbo.#temp WITH(NOLOCK) WHERE TableType NOT IN ('Request','ReqNum', 'IMEI', 'BSN') AND TableType NOT LIKE 'Batch%') > 0)
 	BEGIN
 		SET @SQL = ''
 		TRUNCATE TABLE dbo.#executeSQL
@@ -782,7 +846,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES --('Request', 51, '*Windermere'),
+VALUES ('Request', 51, '*Windermere'),
 --('Request', 51, '-Windermere E R135'),
 --('Request', 51, '3G SIMs'),
 --('Request', 51, '*Lisbon'),
@@ -798,14 +862,14 @@ VALUES --('Request', 51, '*Windermere'),
 --('Job', 215, 'T013 Mechanical Suite'),
 --('Stage', 2246, 'Analysis'),
 --('Stage', 3220, 'Post 720hrs'),
-('BSN', 0, '1132205311'),
-('BSN', 0, '1151200936'),
+--('BSN', 0, '1132205311'),
+--('BSN', 0, '1151200936'),
 --('ReqNum', 0, 'QRA-14-0038'),
 --('ReqNum', 0, 'QRA-14-0597'),
 --('Unit', 0, '5'),
 --('Unit', 0, '1'),
-('IMEI', 0, '004402242039794'),
-('IMEI', 0, '351852062969380'),
+--('IMEI', 0, '004402242039794'),
+--('IMEI', 0, '351852062969380'),
 --('ResultArchived', 0, ''),
 --('Param:Band', 0, 'GPRS1800'),
 --('Param:Band', 0, 'LTE17'),
@@ -822,4 +886,11 @@ VALUES --('Request', 51, '*Windermere'),
 --('TestRunEndDate', 0, '2015-01-19'),
 --('Measurement', 0, '*RxBER'),
 --('Info:', 0, 'Rohde&Schwarz,CMW,1201.0002k50/119061,3.0.14')
+--('BatchStageType',0,'1'),
+--('BatchAssignedUser',0,'ogaudreault'),
+--('BatchAssignedUser',0,'vpriala')
+--('BatchStatus',0,'2')
+('BatchStatus',0,'5')
+--('BatchStartDate', 0, '2015-01-19'),
+--('BatchEndDate', 0, '2015-04-19')
 EXEC [Req].[RequestSearch] 1, @table, 251

@@ -31,6 +31,33 @@ Public Class REMIInternal
         Return response
     End Function
 
+    <WebMethod(EnableSession:=False, Description:="")> _
+    Public Function GetEnum(ByVal type As String) As SearchFieldResponseDefinition
+        Dim response As New SearchFieldResponseDefinition()
+        Dim myList As New List(Of SearchFieldResponse)
+        Try
+            Dim base As Type
+
+            Select Case type
+                Case "BatchSearchBatchStatus"
+                    base = GetType(BatchSearchBatchStatus)
+            End Select
+
+            Dim myEnumFields As Reflection.FieldInfo() = base.GetFields()
+            For Each myField As Reflection.FieldInfo In myEnumFields
+                If Not myField.IsSpecialName AndAlso myField.Name.ToLower() <> "notset" AndAlso myField.Name.ToLower() <> "notsavedtoremi" Then
+                    Dim id As Int32 = DirectCast(System.Enum.Parse(base, myField.Name), Int32)
+
+                    myList.Add(New SearchFieldResponse(myField.Name, type, id))
+                End If
+            Next
+            response.Results = myList
+            response.Success = True
+        Catch ex As Exception
+            ReportManager.LogIssue("REMIInternal GetEnum", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ", type))
+        End Try
+        Return response
+    End Function
 
     <WebMethod(Description:="Given a job name this function returns all the known stages of the job.")> _
     Public Function GetJobStages(ByVal jobID As Int32) As TestStageCollection

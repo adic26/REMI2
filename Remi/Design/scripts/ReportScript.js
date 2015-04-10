@@ -32,7 +32,7 @@
     var jobs = $('#bs_StagesField');
     var oTable;
     var executeTop = $("[id$='hdnTop']");
-
+    
     var o = new Option("--aReqNum", "--aReqNum");
     $(o).html("Request Number");
     $('#bs_Additional').append(o);
@@ -71,6 +71,22 @@
     
     var o = new Option("--aParam", "--aParam");
     $(o).html("Parameter");
+    $('#bs_Additional').append(o);
+
+    var o = new Option("--bBatchStageType", "--bBatchStageType");
+    $(o).html("Batch Stage Type");
+    $('#bs_Additional').append(o);
+
+    var o = new Option("--bBatchAssignedUser", "--bBatchAssignedUser");
+    $(o).html("Batch Assigned To");
+    $('#bs_Additional').append(o);
+
+    var o = new Option("--bBatchStatus", "--bBatchStatus");
+    $(o).html("Batch Status");
+    $('#bs_Additional').append(o);
+
+    var o = new Option("--bBatchUpdatedDate", "--bBatchUpdatedDate");
+    $(o).html("Batch Updated Date");
     $('#bs_Additional').append(o);
 
     $.fn.dataTable.TableTools.defaults.aButtons = ["copy", "csv", "xls"];
@@ -113,7 +129,6 @@
                     });
                 } else {
                     //OTable is defined already
-
                     //(i) Destroy dataTable
                     oTable.destroy();
 
@@ -179,7 +194,7 @@
                 $('div.table').unblock();
             });
     }
-
+    
     $('#bs_list').hide()
     $('#bs_OKayButton').on('click', function () {
         //$('.selectpicker').selectpicker('hide');
@@ -210,30 +225,49 @@
         
         $.each(fullList, function (index, element) {
             var isAdditional = false;
+            var isBatch = false;
             if (element.indexOf("--a") > -1) {
                 element = element.replace("--a", "");
                 isAdditional = true;
             }
 
-            var builtHTML;
-            builtHTML = '<span class="list-group-item">' + element;
+            if (element.indexOf("--b") > -1) {
+                element = element.replace("--b", "");
+                isBatch = true;
+            }
+
+            var builtHTML = '<span class="list-group-item">' + element;
 
             if (element == "TestRunDate") {
-                builtHTML += '<script>$(function () { $("#startDate").datepicker({}); $("#endDate").datepicker({}); });</script>';
-                builtHTML += '<input type="text" id="startDate" name="startDate"addition="' + isAdditional + '" data-datepick="rangeSelect: true" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><input type="text" id="endDate" name="endDate"addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+                builtHTML += '<script>$(function () { $("#startDate' + count + '").datepicker({}); $("#endDate' + count + '").datepicker({}); });</script>';
+                builtHTML += '<input type="text" id="startDate' + count + '" name="startDate' + count + '" batch="' + isBatch + '" addition="' + isAdditional + '" data-datepick="rangeSelect: true" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><input type="text" id="endDate' + count + '" name="endDate' + count + '" batch="' + isBatch + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
             }
             else if (element == "ResultArchived") {
-                builtHTML += '<select id="resultArchived' + count + '" name="resultArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
+                builtHTML += '<select id="resultArchived' + count + '" name="resultArchived' + count + '" class="" batch="' + isBatch + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
             }
             else if (element == "ResultInfoArchived") {
-                builtHTML += '<select id="resultInfoArchived' + count + '" name="resultInfoArchived' + count + '" class="" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
+                builtHTML += '<select id="resultInfoArchived' + count + '" name="resultInfoArchived' + count + '" class="" batch="' + isBatch + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="">N/A</option><option value="Yes">Yes</option><option value="No">No</option></select>';
+            }
+            else if (element == "BatchStatus") {
+                builtHTML += '<select name="BatchStatus' + count + '" id="BatchStatus' + count + '" addition="' + isAdditional + '" batch="' + isBatch + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+                builtHTML += '<option value="2">In Progress</option><option value="4">Received</option><option value="5">Complete</option><option value="8">TestingComplete</option>';
+                
+                builtHTML += '</select>';
+            }
+            else if (element == "BatchStageType") {
+                builtHTML += '<select name="BatchStageType' + count + '" id="BatchStageType' + count + '" addition="' + isAdditional + '" batch="' + isBatch + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><option value="1">Parametric</option><option value="2">Environmental</option><option value="3">Incoming</option><option value="4">Non Testing Task</option><option value="5">Failure Analysis</option></select>';
+            }
+            else if (element == "BatchUpdatedDate") {
+                builtHTML += '<script>$(function () { $("#lastUpdatedStartDate' + count + '").datepicker({}); $("#lastUpdatedEndDate' + count + '").datepicker({}); });</script>';
+                builtHTML += '<input type="text" id="lastUpdatedStartDate' + count + '" batch="' + isBatch + '" name="lastUpdatedStartDate' + count + '" addition="' + isAdditional + '" data-datepick="rangeSelect: true" class="form-inline" style="float: right;" placeholder="Input Search Criteria"><input type="text" id="lastUpdatedEndDate' + count + '" name="lastUpdatedEndDate' + count + '" batch="' + isBatch + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
             }
             else {
                 if (element == "Param" || element == "Info") {
-                    builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+                    builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" batch="' + isBatch + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
                 }
-                builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
+                builtHTML += '<input type="text" id="' + element + count + '" name="' + element + '" batch="' + isBatch + '" addition="' + isAdditional + '" class="form-inline" style="float: right;" placeholder="Input Search Criteria">';
             }
+
             builtHTML += '</span>';
             $('.list-group').append(builtHTML);
             count = count + 1;
@@ -242,6 +276,22 @@
         myList.show();
         $('#bs_searchButton').show(); 
     });
+    
+    //function PopulateEnum(ddl) {
+    //    var requestParams = JSON.stringify({"type": "BatchSearchBatchStatus"});
+
+    //    var myRequest = jsonRequest("../webservice/REMIInternal.asmx/GetEnum", requestParams).success(function (data) {
+    //        if (data.Success == true) {
+    //            var results = data.Results;
+    //            var rslt = $(results);
+    //            var rep;
+
+    //            $.each(rslt, function (index, element) {
+    //                rep += '<option value="' + element.TestID + '">' + element.Name + '</option>';
+    //            });
+    //        }
+    //    });
+    //}
     
     $('#bs_searchButton').on('click', function () {
         $('div.table').block({
@@ -266,12 +316,10 @@
             var originalIndex = element.parentNode.getAttribute('data-original-index');
             var testID = $('#bs_ddlSearchField optgroup > option')[originalIndex].getAttribute('testid');
             $.each(searchTermRequests, function (s_index, s_element) {
-                //console.log($(this).text());
                 if (s_element.children[0].value != '') {
                     var searchTerm = s_element.innerText
                     if (searchTerm == element.innerText) {
                         var request = 'Request' + ',' + testID + ',' + s_element.children[0].value;
-                        //console.log(request);
                         fullList.push(request);
                     }
                 }
@@ -279,12 +327,26 @@
         });
 
         $.each(searchTermRequests, function (s_index, s_element) {
-            //console.log($(this).text());
-
-            if (s_element.children[0].value != '' && s_element.outerHTML.indexOf('addition="true"') > -1) {
+            if (s_element.children[0].value != '' && s_element.outerHTML.indexOf('batch="true"') > -1) {
+                if (s_element.innerText == "BatchUpdatedDate") {
+                    if (s_element.children[2].value != '' && s_element.children[1].value != '') {
+                        fullList.push('BatchStartDate' + ',0,' + s_element.children[2].value);
+                        fullList.push('BatchEndDate' + ',0,' + s_element.children[1].value);
+                    }
+                }
+                else if (s_element.innerText.indexOf('BatchStageType') > -1) {
+                    fullList.push('BatchStageType,0,' + s_element.children[0].value);
+                }
+                else if (s_element.innerText.indexOf('BatchStatus') > -1) {
+                    fullList.push('BatchStatus,0,' + s_element.children[0].value);
+                }
+                else if (s_element.innerText.indexOf('BatchAssignedUser') > -1) {
+                    fullList.push('BatchAssignedUser,0,' + s_element.children[0].value);
+                }
+            }
+            else if (s_element.children[0].value != '' && s_element.outerHTML.indexOf('addition="true"') > -1) {
                 if (s_element.innerText == "Param" || s_element.innerText == "Info") {
                     var additionalVals = s_element.outerText + ':' + s_element.children[1].value + ',0,' + s_element.children[0].value;
-                    //console.log(additionalVals);
                     fullList.push(additionalVals);
                 }
                 else if (s_element.innerText == "TestRunDate") {
@@ -318,7 +380,6 @@
                     }
 
                     if (validationPassed) {
-                        //console.log(additionalVals);
                         fullList.push(additionalVals);
                     }
                 }
