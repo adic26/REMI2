@@ -365,13 +365,13 @@ Namespace REMI.Bll
         Public Shared Function SaveTrackingLocationHost(ByVal id As Int32, ByVal hostName As String) As NotificationCollection
             Dim nc As New NotificationCollection
             Try
-                If UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-                    If TrackingLocationDB.SaveHost(id, hostName, UserManager.GetCurrentValidUserLDAPName, TrackingLocationManager.CheckStatus(hostName)) > 0 Then
-                        nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "i2", NotificationType.Information))
-                    End If
-                Else
-                    Throw New Security.SecurityException("Unauthorized attempt to update a host.")
+                'If UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
+                If TrackingLocationDB.SaveHost(id, hostName, UserManager.GetCurrentValidUserLDAPName, TrackingLocationManager.CheckStatus(hostName)) > 0 Then
+                    nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "i2", NotificationType.Information))
                 End If
+                'Else
+                '    Throw New Security.SecurityException("Unauthorized attempt to update a host.")
+                'End If
             Catch sqlEx As SqlClient.SqlException When sqlEx.Number = 2601
                 nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e5", NotificationType.Errors, sqlEx, String.Format("TrackingLocationID: {0} Host: {1}", id, hostName)))
             Catch ex As Exception
