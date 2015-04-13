@@ -30,10 +30,20 @@
             var mfp = $.magnificPopup.instance;
             mfp.items.pop();
             $.each(myImage, function (index, element) {
-                mfp.items.push({
-                    src: element,
-                    type: 'image'
-                });
+                //my image , determine whether this is image or download link
+                if (element.indexOf("ImageHandler") >= 0) {
+                    mfp.items.push({
+                        src: element,
+                        type: 'image'
+                    });
+                }
+                else if (element.indexOf("Download.ashx") >= 0) {
+                    mfp.items.push({
+                        src: '<div class="white-popup"><a href="' + element + '">Click Here To Download</a></div>',
+                        midClick: true,
+                        type: 'inline'
+                    });
+                }
 
                 mfp.updateItemHTML();
             });

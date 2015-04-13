@@ -213,7 +213,7 @@ Public Class REMIInternal
     <System.Web.Script.Services.ScriptMethod()> _
     Public Function GetSlidesJS(ByVal contextKey As String) As List(Of String)
         Dim dt As New DataTable
-        Dim imgBuilder As New List(Of String)
+        Dim lnkBuilder As New List(Of String)
 
         If (contextKey <> "0") Then
             dt = RelabManager.MeasurementFiles(contextKey, 0)
@@ -224,11 +224,14 @@ Public Class REMIInternal
                 Dim fileName As String = dt.Rows(i)("FileName").ToString().Substring(dt.Rows(i)("FileName").ToString().Replace("/", "\").LastIndexOf("\") + 1)
 
                 If (Helpers.IsRecognisedImageFile(fileName)) Then
-                    imgBuilder.Add(imageDataURL.ToString())
+                    lnkBuilder.Add(imageDataURL.ToString())
+                Else
+                    lnkBuilder.Add(downloadURL.ToString())
                 End If
+
             Next
         End If
 
-        Return imgBuilder
+        Return lnkBuilder
     End Function
 End Class

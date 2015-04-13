@@ -59,7 +59,10 @@
         <asp:HiddenField runat="server" ID="hdnResultID" />
         <asp:HiddenField runat="server" ID="hdnBatchID" />
         
-        <a class="test-popup-link" visible="false">popup</a>         
+        <a class="test-popup-link" visible="false">popup</a>
+        <div id="my-popup" class="mfp-hide white-popup">
+  Inline popup
+</div>         
         <msm:Measurements runat="server" ID="msmMeasuerments" Visible="false" ShowExport="true" EnableViewState="true" ShowFailsOnly="false" IncludeArchived="false" DisplayMode="RelabDisplay" EmptyDataTextInformation="There is no information found for this result." EmptyDataTextMeasurement="There were no measurements found for this result." />
     </asp:Panel>
 </asp:Content>
