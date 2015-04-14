@@ -29,6 +29,7 @@
 </asp:Content>
 <asp:Content ID="content" ContentPlaceHolderID="Content" runat="Server">
     <a class="test-popup-link" visible="false">popup</a> 
+    <div id="my-popup" class="mfp-hide white-popup">Inline popup</div>    
 
     <asp:HiddenField ID="hdnBatchID" runat="server" />
     <asp:HiddenField ID="hdnRequestNumber" Value="" runat="server" />
