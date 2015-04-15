@@ -50,6 +50,7 @@
                     <asp:Label runat="server" ID="lblES" Text="Executive<br/><font color='rgb(0,124,186)'>Summary</font>" style="font: bold 28px auto Trebuchet MS, Sans-Serif;"></asp:Label>
                 </td>
                 <td width="50%">
+                    <asp:Label runat="server" ID="lblStatus"></asp:Label><br />
                     <asp:Label runat="server" ID="lblResult"></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlStatus" Visible="true" AutoPostBack="true">
                         <asp:ListItem Text="Pass" Value="1" />

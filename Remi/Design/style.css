@@ -1364,3 +1364,26 @@ table tr td input
 .ScrollMenu
 {
 }
+
+.ESInProgress
+{
+    color: #006400;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.ESTestingComplete
+{
+    color: black;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.ESComplete
+{
+    color: black;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+

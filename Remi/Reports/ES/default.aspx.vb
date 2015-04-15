@@ -79,6 +79,7 @@ Partial Class ES_Default
                     End If
 
                     SetStatus(ds.Tables(2).Rows(0)(0).ToString())
+                    SetBatchStatus(b.Status.ToString())
 
                     For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Distinct Select New With {tr.FailDocDS})
                         pnlFA.Style.Add("Display", "block")
@@ -123,6 +124,19 @@ Partial Class ES_Default
                 End If
             End If
         End If
+    End Sub
+
+    Protected Sub SetBatchStatus(ByVal status As String)
+        lblStatus.Text = status
+
+        Select Case lblStatus.Text.ToLower
+            Case "complete"
+                lblStatus.CssClass = "ESComplete"
+            Case "testingcomplete"
+                lblStatus.CssClass = "ESTestingComplete"
+            Case "inprogress"
+                lblStatus.CssClass = "ESInProgress"
+        End Select
     End Sub
 
     Protected Sub SetStatus(ByVal result As String)
