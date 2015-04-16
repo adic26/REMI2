@@ -74,6 +74,7 @@ Public Class REMITasks
         _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
 
         If (_createDocs) Then
+            Dim errorEncountered As Boolean = False
             Dim sb As New System.Text.StringBuilder
             Dim succeeded As Boolean = True
             Dim counter As Integer = 0
@@ -87,30 +88,33 @@ Public Class REMITasks
                 Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, "Report", String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NonTestingTask)
 
                 For Each bw In bv
-                    Try
-                        sb.AppendLine(String.Format("{0} - Create Doc For {1}", DateTime.Now, bw.QRANumber))
-                        Dim req() As DBControl.remiAPI.RequestFields = DBControl.DAL.Remi.GetRequest(bw.QRANumber)
-                        Dim dtFiles As DataTable = DBControl.DAL.Results.GetFiles(bw.QRANumber, True)
-                        Dim es As String = (From r In req Where r.IntField = "ExecutiveSummary" Select r.Value).FirstOrDefault()
-                        Dim fileToOpen As Object = DirectCast(ConfigurationManager.AppSettings("TemplateFile").ToString(), Object)
+                    sb.AppendLine(String.Format("{0} - Create Doc For {1}", DateTime.Now, bw.QRANumber))
+                    Dim req() As DBControl.remiAPI.RequestFields = DBControl.DAL.Remi.GetRequest(bw.QRANumber)
+                    Dim dtFiles As DataTable = DBControl.DAL.Results.GetFiles(bw.QRANumber, True)
+                    Dim es As String = (From r In req Where r.IntField = "ExecutiveSummary" Select r.Value).FirstOrDefault()
 
-                        If Not Directory.Exists(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType)) Then
-                            sb.AppendLine(String.Format("Creating Folder {0}", req(0).RequestType))
+                    File.Copy(ConfigurationManager.AppSettings("TemplateFile").ToString(), String.Concat(Path.GetTempPath(), ConfigurationManager.AppSettings("TemplateFileName").ToString()), True)
+                    Dim tempFile As String = String.Concat(Path.GetTempPath(), ConfigurationManager.AppSettings("TemplateFileName").ToString())
+                    Dim fileToOpen As Object = DirectCast(tempFile, Object)
 
-                            Directory.CreateDirectory(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType))
-                            sb.AppendLine(String.Format("Creating Folder {0} Finished", req(0).RequestType))
-                        End If
+                    If Not Directory.Exists(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType)) Then
+                        sb.AppendLine(String.Format("Creating Folder {0}", req(0).RequestType))
 
-                        Dim fileToSave As Object = DirectCast(String.Format("{0}{1}\{2}.docx", ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType, bw.QRANumber), Object)
+                        Directory.CreateDirectory(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType))
+                        sb.AppendLine(String.Format("Creating Folder {0} Finished", req(0).RequestType))
+                    End If
 
-                        If (Not String.IsNullOrEmpty(es) And Not File.Exists(fileToSave)) Then
-                            Dim PassFail As String = DBControl.DAL.Results.GetOverAllPassFail(bw.QRANumber)
+                    Dim fileToSave As Object = DirectCast(String.Format("{0}{1}\{2}.docx", ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType, bw.QRANumber), Object)
 
-                            Dim wordApp As New Word.Application()
-                            Dim sourceDoc As New Word.Document
-                            Dim missing As Object = System.Reflection.Missing.Value
-                            sourceDoc = wordApp.Documents.Open(fileToOpen, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing)
+                    If (Not String.IsNullOrEmpty(es) And Not File.Exists(fileToSave)) Then
+                        Dim PassFail As String = DBControl.DAL.Results.GetOverAllPassFail(bw.QRANumber)
 
+                        Dim wordApp As New Word.Application()
+                        Dim sourceDoc As New Word.Document
+                        Dim missing As Object = System.Reflection.Missing.Value
+                        sourceDoc = wordApp.Documents.Open(fileToOpen, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing)
+
+                        Try
                             If (sourceDoc IsNot Nothing) Then
                                 Dim rng As Word.Range
 
@@ -129,6 +133,12 @@ Public Class REMITasks
                                 If (sourceDoc.Bookmarks.Exists(DirectCast("JobName", Object).ToString())) Then
                                     rng = sourceDoc.Bookmarks.Item(DirectCast("JobName", Object)).Range
                                     rng.Text = bw.JobName
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                End If
+
+                                If (sourceDoc.Bookmarks.Exists(DirectCast("UserName", Object).ToString())) Then
+                                    rng = sourceDoc.Bookmarks.Item(DirectCast("UserName", Object)).Range
+                                    rng.Text = "remi"
                                     System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
                                 End If
 
@@ -151,7 +161,6 @@ Public Class REMITasks
                                 End If
 
                                 If (sourceDoc.Bookmarks.Exists(DirectCast("RequestDetails", Object).ToString())) Then
-
                                     rng = sourceDoc.Bookmarks.Item(DirectCast("RequestDetails", Object)).Range
                                     rng.Text = String.Empty
                                     Dim oTemplate As Word.ListTemplate = wordApp.ListGalleries.Item(Word.WdListGalleryType.wdBulletGallery).ListTemplates.Item(1)
@@ -183,6 +192,52 @@ Public Class REMITasks
                                     Next
 
                                     System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                End If
+
+                                If (sourceDoc.Bookmarks.Exists(DirectCast("Observations", Object).ToString())) Then
+                                    Dim dtObservations As DataTable = DBControl.DAL.Results.GetObservationSummary(bw.ID, Environment.UserName)
+
+                                    rng = sourceDoc.Bookmarks.Item("Observations").Range
+                                    rng.Text = String.Empty
+
+                                    Dim tblob As Word.Table = rng.Tables.Add(rng, dtObservations.Rows.Count, dtObservations.Columns.Count, Word.WdDefaultTableBehavior.wdWord9TableBehavior, Word.WdAutoFitBehavior.wdAutoFitContent)
+                                    tblob.Borders(Word.WdBorderType.wdBorderBottom).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tblob.Borders(Word.WdBorderType.wdBorderLeft).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tblob.Borders(Word.WdBorderType.wdBorderRight).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tblob.Borders(Word.WdBorderType.wdBorderTop).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tblob.Borders(Word.WdBorderType.wdBorderVertical).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tblob.Borders(Word.WdBorderType.wdBorderHorizontal).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+
+                                    Dim rowNum As Int32 = 0
+                                    Dim colNum As Int32 = 0
+
+                                    For Each row As Word.Row In tblob.Rows
+                                        For Each cell As Word.Cell In row.Cells
+                                            If (rowNum = 0) Then
+                                                cell.Range.Text = dtObservations.Columns(colNum).ColumnName
+                                                cell.Range.Font.Bold = 1
+                                                cell.Range.Font.Size = 12
+                                                cell.Range.Font.Name = "Arial"
+                                                cell.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter
+                                            Else
+                                                cell.Range.Text = dtObservations.Rows(rowNum)(colNum).ToString()
+                                                cell.Range.Font.Bold = 0
+                                                cell.Range.Font.Size = 8
+                                                cell.Range.Font.Name = "Arial"
+                                                cell.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft
+                                            End If
+
+                                            colNum = colNum + 1
+                                            System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
+                                        Next
+
+                                        colNum = 0
+                                        rowNum = rowNum + 1
+                                    Next
+
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(tblob)
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+
                                 End If
 
                                 If (sourceDoc.Bookmarks.Exists(DirectCast("Result", Object).ToString())) Then
@@ -299,24 +354,34 @@ Public Class REMITasks
 
                                 Directory.Delete(tempPath, True)
                             End If
+                        Catch ex As Exception
+                            errorEncountered = True
+                            sb.AppendLine(String.Format("{0} - Error Creating Doc For {1}...", DateTime.Now, bw.QRANumber))
+                            sb.AppendLine(String.Format("{0} - {1} - {2}", DateTime.Now, ex.Message, ex.StackTrace.ToString()))
+                        Finally
+                            If (errorEncountered) Then
+                                sourceDoc.Close()
+                                sourceDoc = Nothing
+                                wordApp = Nothing
+                            Else
+                                If (sourceDoc IsNot Nothing) Then
+                                    sourceDoc.SaveAs(fileToSave, missing, missing, missing, missing, missing, missing, missing, missing,
+                                             missing, missing, missing, missing, missing, missing, missing)
+                                    Dim saveChanges As Object = DirectCast(Word.WdSaveOptions.wdDoNotSaveChanges, Object)
+                                    sourceDoc.Close(saveChanges, missing, missing)
+                                End If
 
-                            If (sourceDoc IsNot Nothing) Then
-                                sourceDoc.SaveAs(fileToSave, missing, missing, missing, missing, missing, missing, missing, missing,
-                                         missing, missing, missing, missing, missing, missing, missing)
-                                Dim saveChanges As Object = DirectCast(Word.WdSaveOptions.wdDoNotSaveChanges, Object)
-                                sourceDoc.Close(saveChanges, missing, missing)
+                                If (wordApp IsNot Nothing) Then
+                                    wordApp.Quit(missing, missing, missing)
+                                End If
                             End If
 
-                            If (wordApp IsNot Nothing) Then
-                                wordApp.Quit(missing, missing, missing)
-                            End If
+                            GC.Collect()
+                            GC.WaitForPendingFinalizers()
+                        End Try
 
-                            Thread.Sleep(60000)
-                        End If
-                    Catch ex As Exception
-                        sb.AppendLine(String.Format("{0} - Error Creating Doc For {1}...", DateTime.Now, bw.QRANumber))
-                        sb.AppendLine(String.Format("{0} - {1} - {2}", DateTime.Now, ex.Message, ex.StackTrace.ToString()))
-                    End Try
+                        Thread.Sleep(60000)
+                    End If
                 Next
             Next
 
