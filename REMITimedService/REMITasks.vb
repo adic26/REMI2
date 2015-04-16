@@ -200,7 +200,7 @@ Public Class REMITasks
                                     rng = sourceDoc.Bookmarks.Item("Observations").Range
                                     rng.Text = String.Empty
 
-                                    Dim tblob As Word.Table = rng.Tables.Add(rng, dtObservations.Rows.Count, dtObservations.Columns.Count, Word.WdDefaultTableBehavior.wdWord9TableBehavior, Word.WdAutoFitBehavior.wdAutoFitContent)
+                                    Dim tblob As Word.Table = rng.Tables.Add(rng, dtObservations.Rows.Count + 1, dtObservations.Columns.Count, Word.WdDefaultTableBehavior.wdWord9TableBehavior, Word.WdAutoFitBehavior.wdAutoFitContent)
                                     tblob.Borders(Word.WdBorderType.wdBorderBottom).LineStyle = Word.WdLineStyle.wdLineStyleSingle
                                     tblob.Borders(Word.WdBorderType.wdBorderLeft).LineStyle = Word.WdLineStyle.wdLineStyleSingle
                                     tblob.Borders(Word.WdBorderType.wdBorderRight).LineStyle = Word.WdLineStyle.wdLineStyleSingle
@@ -211,6 +211,7 @@ Public Class REMITasks
                                     Dim rowNum As Int32 = 0
                                     Dim colNum As Int32 = 0
 
+
                                     For Each row As Word.Row In tblob.Rows
                                         For Each cell As Word.Cell In row.Cells
                                             If (rowNum = 0) Then
@@ -219,7 +220,20 @@ Public Class REMITasks
                                                 cell.Range.Font.Size = 12
                                                 cell.Range.Font.Name = "Arial"
                                                 cell.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter
-                                            Else
+                                                colNum = colNum + 1
+                                                System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
+                                            End If
+                                        Next
+                                        colNum = 0
+                                        rowNum = rowNum + 1
+                                    Next
+
+                                    rowNum = 0
+                                    colNum = 0
+
+                                    For Each row As Word.Row In tblob.Rows
+                                        For Each cell As Word.Cell In row.Cells
+                                            If (rowNum > 0 And rowNum <= dtObservations.Rows.Count) Then
                                                 cell.Range.Text = dtObservations.Rows(rowNum)(colNum).ToString()
                                                 cell.Range.Font.Bold = 0
                                                 cell.Range.Font.Size = 8
