@@ -4,34 +4,15 @@ Imports Remi.Core
 
 Partial Class BadgeAccess_Default
     Inherits System.Web.UI.Page
-    ''' <summary>
-    ''' This method executes for a badge scan.
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
-        Dim redirectPage As String = String.Empty
-        Dim i As Integer
-        Int32.TryParse(Helpers.CleanInputText(txtBadgeNumber.Text, 7), i)
 
-        If i > 0 Then
-            If UserManager.SetUserToSession(i) Then
-                Response.Redirect(GetRedirectPage) 'if the user was found by their badge number and added then everything is ok, send them to where they want
-            ElseIf Not UserManager.GetCurrentUser.RequiresSuppAuth Then
-                notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(UserManager.GetCurrentUser.UserName, String.Empty, i, 76, False, 0)
-
-                If Not notMain.Notifications.HasErrors Then
-                    Response.Redirect(GetRedirectPage)
-                End If
-            Else
-                notMain.Notifications.AddWithMessage("You're Badge Number Is Not Found! Use Windows Credentials Login.", REMI.Validation.NotificationType.Warning)
-            End If
-        Else
-            notMain.Notifications.AddWithMessage("Unable To Read Badge Number! Try Windows Credentials Login.", REMI.Validation.NotificationType.Errors)
-        End If
+#Region "Load"
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim scriptManager As ScriptManager = scriptManager.GetCurrent(Me.Page)
+        scriptManager.SetFocus(txtBadge)
     End Sub
+#End Region
 
+#Region "Methods"
     Private Function GetRedirectPage() As String
         If Request.QueryString.Item("RedirectPage") IsNot Nothing Then
             Return Request.QueryString.Get("RedirectPage")
@@ -39,51 +20,92 @@ Partial Class BadgeAccess_Default
             Return REMIConfiguration.DefaultRedirectPage
         End If
     End Function
+#End Region
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        txtBadgeNumber.Focus()
+#Region "Button Events"
+    Protected Sub btnCreate_Click(sender As Object, e As EventArgs)
+        mvLogin.ActiveViewIndex = 1
+        btnlogin.Visible = True
+        btnCreate.Visible = False
     End Sub
 
-    Sub UserNameValidation(ByVal source As Object, ByVal arguments As ServerValidateEventArgs)
-        If (Helpers.GetPostBackControl(Me.Page).ID = "btnConfirm") Then
-            If (txtUserName.Text.Trim().Length = 0) Then
-                arguments.IsValid = False
-                DirectCast(source, CustomValidator).ErrorMessage = "You Must Enter An UserName!"
+    Protected Sub btnLogin_Click(sender As Object, e As EventArgs)
+        mvLogin.ActiveViewIndex = 0
+        btnCreate.Visible = True
+        btnlogin.Visible = False
+    End Sub
+
+    Protected Sub btnNewUser_Click(sender As Object, e As EventArgs)
+        If (Not String.IsNullOrEmpty(txtNewUserName.Text)) Then
+            Dim badge As Int32 = 0
+            Int32.TryParse(txtNewBadge.Text, badge)
+
+            If (Not UserManager.UserExists(txtNewUserName.Text, 0)) Then
+                Dim u As User = New User
+                u.IsActive = True
+                u.ByPassProduct = 0
+                u.LDAPName = txtNewUserName.Text.ToLower
+                u.DefaultPage = ddlDefaultPage.SelectedValue
+                u.BadgeNumber = badge
+                u.LastUser = txtNewUserName.Text
+
+                Dim userDetails As New DataTable
+                userDetails.Columns.Add("Name", Type.GetType("System.String"))
+                userDetails.Columns.Add("Values", Type.GetType("System.String"))
+                userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
+                userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
+
+                Dim newRow As DataRow = userDetails.NewRow
+                newRow("LookupID") = ddlGeoLoc.SelectedValue
+                newRow("Values") = ddlGeoLoc.SelectedItem.Text
+                newRow("Name") = "TestCenter"
+                newRow("IsDefault") = 1
+                userDetails.Rows.Add(newRow)
+
+                Dim newRow2 As DataRow = userDetails.NewRow
+                newRow2("LookupID") = ddlDepartments.SelectedValue
+                newRow2("Values") = ddlDepartments.SelectedItem.Text
+                newRow2("Name") = "Department"
+                newRow2("IsDefault") = 1
+                userDetails.Rows.Add(newRow2)
+
+                u.UserDetails = userDetails
+
+                notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(txtNewPassword.Text, True, u)
+
+                If (Not notMain.Notifications.HasErrors) Then
+                    If UserManager.SetUserToSession(txtNewUserName.Text) Then
+                        Response.Redirect(GetRedirectPage)
+                    End If
+                End If
+            End If
+        End If
+
+        txtNewBadge.Text = String.Empty
+        txtNewPassword.Text = String.Empty
+        txtNewUserName.Text = String.Empty
+    End Sub
+
+    Protected Sub btnReturn_Click(sender As Object, e As EventArgs)
+        If (Not String.IsNullOrEmpty(txtBadge.Text)) Then
+            If (UserManager.UserExists(String.Empty, txtBadge.Text)) Then
+                If UserManager.SetUserToSession(txtBadge.Text) Then
+                    Response.Redirect(GetRedirectPage)
+                End If
             Else
-                DirectCast(source, CustomValidator).ErrorMessage = ""
-                arguments.IsValid = True
+                mvLogin.ActiveViewIndex = 1
             End If
-        End If
-    End Sub
-
-    Sub PasswordValidation(ByVal source As Object, ByVal arguments As ServerValidateEventArgs)
-        If (Helpers.GetPostBackControl(Me.Page).ID = "btnConfirm") Then
-            If (txtPassword.Text.Trim().Length = 0) Then
-                arguments.IsValid = False
-                DirectCast(source, CustomValidator).ErrorMessage = "You Must Enter An Password!"
+        ElseIf Not String.IsNullOrEmpty(txtUserName.Text) Then
+            If (UserManager.UserExists(txtUserName.Text, 0)) Then
+                If UserManager.SetUserToSession(txtUserName.Text) Then
+                    Response.Redirect(GetRedirectPage)
+                End If
             Else
-                DirectCast(source, CustomValidator).ErrorMessage = ""
-                arguments.IsValid = True
+                mvLogin.ActiveViewIndex = 1
+                btnCreate.Visible = False
+                btnlogin.Visible = True
             End If
         End If
     End Sub
-
-    Protected Sub btnConfirm_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnConfirm.Click
-        If (Page.IsValid) Then
-            Dim bNumber As Int32 'try to get the badge numer sent in. This is not sent in in some cases (just adding a user to remi).
-            Dim redirectPage As String = "~/"
-
-            Int32.TryParse(txtBadge.Text, bNumber)
-
-            If Request.QueryString.Item("redirectpage") IsNot Nothing Then
-                redirectPage = Request.QueryString.Get("redirectpage")
-            End If
-
-            notMain.Notifications = UserManager.ConfirmUserCredentialsAndSave(Helpers.CleanInputText(txtUserName.Text.ToLower, 255), txtPassword.Text, bNumber, ddlGeoLoc.SelectedValue, True, ddlDepartments.SelectedValue)
-
-            If Not notMain.Notifications.HasErrors Then
-                Response.Redirect(GetRedirectPage)
-            End If
-        End If
-    End Sub
+#End Region
 End Class

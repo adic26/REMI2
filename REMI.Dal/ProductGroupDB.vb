@@ -70,6 +70,7 @@ Namespace REMI.Dal
                 Return ird
             End Using
         End Function
+
         ''' <summary>
         ''' Retrieves a list of locations and the product unit count in that location
         ''' </summary>
@@ -81,7 +82,6 @@ Namespace REMI.Dal
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared Function RetrieveInventoryReportForProductGroup(ByVal startDate As DateTime, ByVal endDate As DateTime, ByVal filterByQRANumber As Boolean, ByVal geoLocation As Int32, ByVal productID As Int32, ByVal myConnection As SqlConnection) As Dictionary(Of String, Integer)
-
             Dim tmpList As New Dictionary(Of String, Integer)
 
             Using myCommand As New SqlCommand("remispCountUnitsInLocation", myConnection)
@@ -157,28 +157,28 @@ Namespace REMI.Dal
             Return tmpData
         End Function
 
-        ''' <summary>
-        ''' Returns a list of the product groups that a user is associated with.
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetUserProductGroupList(ByVal userID As Int32) As DataTable
-            Dim tempList As New DataTable
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispProductManagersSelectList", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
-                    myConnection.Open()
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(tempList)
-                    tempList.TableName = "ProductGroups"
-                End Using
-            End Using
-            Return tempList
-        End Function
+        ' ''' <summary>
+        ' ''' Returns a list of the product groups that a user is associated with.
+        ' ''' </summary>
+        ' ''' <returns></returns>
+        ' ''' <remarks></remarks>
+        'Public Shared Function GetUserProductGroupList(ByVal userID As Int32) As DataTable
+        '    Dim tempList As New DataTable
+        '    Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+        '        Using myCommand As New SqlCommand("remispProductManagersSelectList", myConnection)
+        '            myCommand.CommandType = CommandType.StoredProcedure
+        '            myCommand.Parameters.AddWithValue("@UserID", userID)
+        '            myConnection.Open()
+        '            Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+        '            da.Fill(tempList)
+        '            tempList.TableName = "ProductGroups"
+        '        End Using
+        '    End Using
+        '    Return tempList
+        'End Function
 
         Public Shared Function GetProductTestReady(ByVal ProductID As Int32, ByVal MNum As String) As DataTable
-            Dim tempList As New DataTable
+            Dim tempList As New DataTable("ProductTestReady")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispProductTestReady", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
@@ -200,7 +200,7 @@ Namespace REMI.Dal
         ''' A ProductGroupCollection. 
         ''' </returns> 
         Public Shared Function GetList(Optional ByVal ByPassProduct As Boolean = True, Optional ByVal userID As Int32 = -1, Optional ByVal showArchived As Boolean = False) As DataTable
-            Dim tempList As New DataTable
+            Dim tempList As New DataTable("Products")
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetProducts", myConnection)
@@ -227,29 +227,6 @@ Namespace REMI.Dal
                 End Using
             End Using
             Return tempList
-        End Function
-
-        ''' <summary>Saves a ProductGroup/User association in the database.</summary> 
-        ''' <returns>Returns true when the object was saved successfully, or false otherwise.</returns> 
-        Public Shared Function SaveUserAssociation(ByVal productID As Int32, ByVal userNameToAdd As String, ByVal currentUserName As String) As Boolean
-
-            Dim Result As Integer = 0
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("remispProductManagersAssignUser", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", productID)
-                    myCommand.Parameters.AddWithValue("@UserName", userNameToAdd)
-                    myCommand.Parameters.AddWithValue("@LastUser", currentUserName)
-                    myConnection.Open()
-                    Dim NumberOfRecordsAffected As Integer = myCommand.ExecuteNonQuery()
-                    If NumberOfRecordsAffected = 0 Then
-                        Throw New DBConcurrencyException(String.Format("There was an error saving the association of user:{0} to the productID: {1}.", userNameToAdd, productID))
-                    End If
-                End Using
-
-            End Using
-            Return True
         End Function
 
         Public Shared Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String, ByVal tsdContact As String) As Boolean 'We are passing in productGroupName because the webservice will insert a missing one
@@ -288,26 +265,6 @@ Namespace REMI.Dal
             End Using
 
             Return success
-        End Function
-
-        ''' <summary>Deletes a ProductGroup/User association from the database.</summary> 
-        ''' <param name="ProductGroupName">The Name of the ProductGroup. </param>
-        ''' <returns>Returns <c>true</c> when the object was deleted successfully, or <c>false</c> otherwise.</returns> 
-        Public Shared Function Delete(ByVal productID As Int32, ByVal userIDToRemove As Int32, ByVal userID As Int32) As Boolean
-            Dim Result As Integer = 0
-            Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("remispProductManagersDeleteSingleItem", MyConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", productID)
-                    myCommand.Parameters.AddWithValue("@UserIDToRemove", userIDToRemove)
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
-                    MyConnection.Open()
-                    Result = myCommand.ExecuteNonQuery()
-                End Using
-
-            End Using
-            Return CBool(Result)
         End Function
 
         ''' <summary>Saves a product setting in the database.</summary> 
@@ -451,6 +408,21 @@ Namespace REMI.Dal
             Return CBool(Result)
         End Function
 
+        Public Shared Function GetProductContacts(ByVal productID As Int32) As DataTable
+            Dim dt As New DataTable
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispGetContacts", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myConnection.Open()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                End Using
+            End Using
+            Return dt
+        End Function
+
+#Region "CONFIG"
         Public Shared Function GetProductConfigurationXML(ByVal pcUID As Int32) As XDocument
             Dim xml As XDocument
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -714,20 +686,7 @@ Namespace REMI.Dal
             End Using
             Return True
         End Function
-
-        Public Shared Function GetProductContacts(ByVal productID As Int32) As DataTable
-            Dim dt As New DataTable
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispGetContacts", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
-                    myConnection.Open()
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(dt)
-                End Using
-            End Using
-            Return dt
-        End Function
+#End Region
 #End Region
     End Class
 End Namespace

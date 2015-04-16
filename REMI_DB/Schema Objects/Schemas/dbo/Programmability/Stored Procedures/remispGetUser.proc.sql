@@ -30,8 +30,6 @@ AS
 	EXEC remispGetUserDetails @UserID
 	
 	EXEC remispGetUserTraining @UserID =@UserID, @ShowTrainedOnly = 1
-	
-	EXEC remispProductManagersSelectList @UserID
 
 	EXEC Req.remispGetRequestTypes @UserName
 	

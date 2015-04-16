@@ -14,9 +14,7 @@ Namespace REMI.BusinessEntities
 
 #Region "Private Variables"
         Private _ldapName As String
-        Private _productGroups As DataTable
         Private _userDetails As DataTable
-        Private _productGroupsNames As List(Of String)
         Private _roles As List(Of String)
         Private _detailsNames As List(Of String)
         Private _badgeNumber As Integer
@@ -37,9 +35,7 @@ Namespace REMI.BusinessEntities
 
 #Region "Constructor"
         Public Sub New()
-            _productGroups = New DataTable("ProductGroups")
             _services = New DataTable("Services")
-            _productGroupsNames = New List(Of String)
             _training = New DataTable("Training")
             _userDetails = New DataTable("UserDetails")
             _requestTypes = New DataTable("RequestTypes")
@@ -182,20 +178,6 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        ''' <summary>
-        ''' Gets or sets the list of productgroups the user is managing.
-        ''' </summary>
-        Public Property ProductGroups() As DataTable
-            Get
-                Return _productGroups
-            End Get
-            Set(ByVal value As DataTable)
-                If value IsNot Nothing Then
-                    _productGroups = value
-                End If
-            End Set
-        End Property
-
         Public Property RequestTypes() As DataTable
             Get
                 Return _requestTypes
@@ -260,18 +242,6 @@ Namespace REMI.BusinessEntities
             Set(ByVal value As List(Of String))
                 If value IsNot Nothing Then
                     _trainingNames = value
-                End If
-            End Set
-        End Property
-
-        <XmlIgnore()> _
-        Public Property ProductGroupsNames() As List(Of String)
-            Get
-                Return _productGroupsNames
-            End Get
-            Set(ByVal value As List(Of String))
-                If value IsNot Nothing Then
-                    _productGroupsNames = value
                 End If
             End Set
         End Property
@@ -448,13 +418,6 @@ Namespace REMI.BusinessEntities
         End Property
 
         <XmlIgnore()> _
-        Public ReadOnly Property IsProjectManager() As Boolean
-            Get
-                Return RolesList.Contains("ProjectManager")
-            End Get
-        End Property
-
-        <XmlIgnore()> _
         Public ReadOnly Property IsDeveloper() As Boolean
             Get
                 Return RolesList.Contains("Developer")
@@ -484,9 +447,9 @@ Namespace REMI.BusinessEntities
                 Boolean.TryParse(role.Item("hasProductCheck").ToString(), hasProductCheck)
 
                 If (hasProductCheck And ByPassProduct = 0) Then
-                    Dim product = (From p In ProductGroups _
-                                    Where p.Item("ProductGroupName").ToString() = productGroupName _
-                                    Select productGroup = p.Item("ProductGroupName").ToString())
+                    Dim product = (From p In UserDetails _
+                                    Where p.Item("Values").ToString() = productGroupName _
+                                    Select productGroup = p.Item("Values").ToString())
                     If (Not (product.Contains(productGroupName))) Then
                         hasPerm = False
                     End If

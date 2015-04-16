@@ -485,11 +485,11 @@
       <DependentUpon>Measurements.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
-    <Compile Include="Relab\Reports.aspx.designer.vb">
-      <DependentUpon>Reports.aspx</DependentUpon>
+    <Compile Include="Reports\AdvancedSearch.aspx.designer.vb">
+      <DependentUpon>AdvancedSearch.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Relab\Reports.aspx.vb">
-      <DependentUpon>Reports.aspx</DependentUpon>
+    <Compile Include="Reports\AdvancedSearch.aspx.vb">
+      <DependentUpon>AdvancedSearch.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="Relab\ResultGraph.aspx.designer.vb">
@@ -694,6 +694,7 @@
     <Content Include="Design\scripts\jQuery\jquery-1.11.1.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.4.2.js" />
     <Content Include="Design\scripts\jQuery\jquery-1.8.0.js" />
+    <Content Include="Design\scripts\jQuery\jquery-1.8.3.js" />
     <Content Include="Design\scripts\jQuery\jquery-2.1.1.js" />
     <Content Include="Design\scripts\jQuery\jquery.min.js" />
     <Content Include="Design\scripts\MagnificPopup\magnific-popup.js" />
@@ -702,6 +703,7 @@
     <Content Include="Design\scripts\swf\copy_csv_xls.swf" />
     <Content Include="Design\scripts\swf\copy_csv_xls_pdf.swf" />
     <Content Include="Design\scripts\ToolBox.js" />
+    <Content Include="Design\scripts\WaterMark\WaterMark.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Help\default.aspx" />
     <Content Include="Images\Help\StressingTestingSuspended.jpg" />
@@ -727,7 +729,7 @@
     <Content Include="ManageUser\Default.aspx" />
     <Content Include="Overview.aspx" />
     <Content Include="Relab\Measurements.aspx" />
-    <Content Include="Relab\Reports.aspx" />
+    <Content Include="Reports\AdvancedSearch.aspx" />
     <Content Include="Relab\ResultGraph.aspx" />
     <Content Include="Relab\Results.aspx" />
     <Content Include="Relab\Versions.aspx" />

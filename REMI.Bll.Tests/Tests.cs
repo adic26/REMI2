@@ -32,8 +32,8 @@ namespace REMI.Bll.Tests
             var test = new REMI.Entities.Test();
             test = (from t in instance.Tests orderby t.ID descending select t).FirstOrDefault();
 
-            Assert.IsNotNull(TestManager.GetTest(test.ID));
-            Assert.IsNull(TestManager.GetTest(0));
+            Assert.IsNotNull(TestManager.GetTest(test.ID, String.Empty, false));
+            Assert.IsNull(TestManager.GetTest(0, String.Empty, false));
         }
 
         [Test]
@@ -44,14 +44,14 @@ namespace REMI.Bll.Tests
 
             if (test.TestType == 1)
             {
-                Assert.IsNotNull(TestManager.GetTestByName(test.TestName, true));
+                Assert.IsNotNull(TestManager.GetTest(0,test.TestName, true));
             }
             else if (test.TestType == 2)
             {
-                Assert.IsNotNull(TestManager.GetTestByName(test.TestName, false));
+                Assert.IsNotNull(TestManager.GetTest(0, test.TestName, false));
             }
 
-            Assert.IsNull(TestManager.GetTestByName(String.Empty, true));
+            Assert.IsNull(TestManager.GetTest(0,String.Empty, true));
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace REMI.Bll.Tests
             var test = new REMI.Entities.Test();
             test = (from t in instance.Tests where t.TestType==1 orderby t.ID descending select t).FirstOrDefault();
 
-            Test tests = TestManager.GetTest(test.ID);
+            Test tests = TestManager.GetTest(test.ID,String.Empty, false);
 
             Assert.That(TestManager.SaveTest(tests) > 0);
 

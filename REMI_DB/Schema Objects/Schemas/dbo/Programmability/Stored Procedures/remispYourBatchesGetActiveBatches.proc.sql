@@ -9,11 +9,11 @@ WHERE (
 		OR
 		(@Year > 0 AND b.QRANumber LIKE '%-' + RIGHT(CONVERT(NVARCHAR, @Year), 2) + '-%')
 	  )
-	AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
-	AND (@OnlyShowQRAWithResults = 0 OR (@OnlyShowQRAWithResults = 1 AND b.ID IN (SELECT tu.BatchID FROM Relab.Results r INNER JOIN TestUnits tu ON tu.ID=r.TestUnitID)))
+	AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND lp.LookupID IN (SELECT up.LookupID FROM UserDetails up WITH(NOLOCK) WHERE UserID=@UserID)))
+	AND (@OnlyShowQRAWithResults = 0 OR (@OnlyShowQRAWithResults = 1 AND b.ID IN (SELECT tu.BatchID FROM Relab.Results r WITH(NOLOCK) INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=r.TestUnitID)))
 	AND (b.DepartmentID IN (SELECT ud.LookupID 
-							FROM UserDetails ud 
-								INNER JOIN Lookups lt ON lt.LookupID=ud.LookupID
+							FROM UserDetails ud WITH(NOLOCK)
+								INNER JOIN Lookups lt WITH(NOLOCK) ON lt.LookupID=ud.LookupID
 							WHERE ud.UserID=@UserID))
 ORDER BY b.QRANumber DESC
 RETURN

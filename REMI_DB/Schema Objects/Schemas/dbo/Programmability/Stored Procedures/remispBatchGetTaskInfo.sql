@@ -2,13 +2,13 @@
 AS
 BEGIN
 	DECLARE @BatchStatus INT
-	SELECT @BatchStatus = BatchStatus FROM Batches WHERE ID=@BatchID
+	SELECT @BatchStatus = BatchStatus FROM Batches WITH(NOLOCK) WHERE ID=@BatchID
 
 	IF (@BatchStatus = 5)
 	BEGIN
 		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
 			TestIsArchived, TestWI, '' AS TestCounts
-		FROM vw_GetTaskInfoCompleted
+		FROM vw_GetTaskInfoCompleted WITH(NOLOCK)
 		WHERE BatchID = @BatchID
 			AND
 			(
@@ -22,7 +22,7 @@ BEGIN
 	BEGIN
 		SELECT QRANumber, expectedDuration, processorder, resultbasedontime, tname As TestName, testtype, teststagetype, tsname AS TestStageName, testunitsfortest, TestID, TestStageID, IsArchived, 
 			TestIsArchived, TestWI, TestCounts
-		FROM vw_GetTaskInfo 
+		FROM vw_GetTaskInfo WITH(NOLOCK)
 		WHERE BatchID = @BatchID
 			AND
 			(

@@ -37,7 +37,7 @@ Partial Class TestRecords_Add
                 Int32.TryParse(ddlTest.SelectedValue, testID)
 
                 If (testID > 0) Then
-                    Dim functionalID As Int32 = (From tlt In TestManager.GetTest(testID).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
+                    Dim functionalID As Int32 = (From tlt In TestManager.GetTest(testID, String.Empty, False).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
 
                     If (functionalID > 0) Then
                         rblMFISFIAcc.Enabled = True
@@ -142,7 +142,7 @@ Partial Class TestRecords_Add
         Int32.TryParse(ddlTest.SelectedValue, testID)
 
         If (testID > 0) Then
-            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(testID).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
+            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(testID, String.Empty, False).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
             If (functionalID > 0) Then
                 rblMFISFIAcc.Enabled = True
             Else
@@ -167,7 +167,7 @@ Partial Class TestRecords_Add
         If (trs <> TestRecordStatus.Complete And trs <> TestRecordStatus.CompleteFail And trs <> TestRecordStatus.CompleteKnownFailure And trs <> TestRecordStatus.FARaised And trs <> TestRecordStatus.FARequired) Then
             pnlRelabMatrix.Visible = False
         Else
-            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(ddlTest.SelectedValue).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
+            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(ddlTest.SelectedValue, String.Empty, False).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
 
             If (functionalID > 0) Then
                 pnlRelabMatrix.Visible = True
@@ -182,7 +182,7 @@ Partial Class TestRecords_Add
 
     Protected Sub ddlTest_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTest.SelectedIndexChanged
         If (Not String.IsNullOrEmpty(ddlTest.SelectedValue)) Then
-            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(ddlTest.SelectedValue).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
+            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(ddlTest.SelectedValue, String.Empty, False).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
 
             If (functionalID > 0) Then
                 rblMFISFIAcc.Enabled = True

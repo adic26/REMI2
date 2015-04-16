@@ -50,6 +50,15 @@ Partial Public Class Search
     Protected WithEvents btnIncoming As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
+    '''ddlRequestType control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ddlRequestType As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
     '''rblSearchBy control.
     '''</summary>
     '''<remarks>
@@ -174,6 +183,15 @@ Partial Public Class Search
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents txtBSN As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtIMEI control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtIMEI As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''pnlSearchBatch control.
@@ -651,15 +669,6 @@ Partial Public Class Search
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents odsTests As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
-    '''odsJobs control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsJobs As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''odsTestCenters control.

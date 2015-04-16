@@ -199,27 +199,27 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetBatchUnitsInStage(ByVal QRANumber As String) As DataTable
+        Public Shared Function GetBatchUnitsInStage(ByVal requestNumber As String) As DataTable
             Try
-                Return BatchDB.GetBatchUnitsInStage(QRANumber)
+                Return BatchDB.GetBatchUnitsInStage(requestNumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, QRANumber.ToString())
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber.ToString())
             End Try
             Return New DataTable("BatchUnitsInStage")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetBatchDocuments(ByVal QRANumber As String) As DataTable
+        Public Shared Function GetBatchDocuments(ByVal requestNumber As String) As DataTable
             Try
-                Return BatchDB.GetBatchDocuments(QRANumber)
+                Return BatchDB.GetBatchDocuments(requestNumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, QRANumber.ToString())
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber.ToString())
             End Try
             Return New DataTable("BatchDocuments")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetBatchJIRA(ByVal BatchID As Int32, ByVal ShowEmptyRecord As Boolean) As DataTable
+        Public Shared Function GetBatchJIRA(ByVal batchID As Int32, ByVal showEmptyRecord As Boolean) As DataTable
             Try
                 Dim dt As DataTable = BatchDB.GetBatchJIRA(BatchID)
 
@@ -236,12 +236,12 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetReqString(ByVal Number As String) As String
+        Public Shared Function GetReqString(ByVal number As String) As String
             Return GetReqString(Number, False)
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetReqString(ByVal Number As String, ByVal byPassUserCheck As Boolean) As String
+        Public Shared Function GetReqString(ByVal number As String, ByVal byPassUserCheck As Boolean) As String
             Try
                 Dim isValid As Boolean = Number.Split("-"c).Length - 1 > 0
                 Dim userID As Int32 = UserManager.GetCurrentUser.ID
@@ -254,13 +254,13 @@ Namespace REMI.Bll
                 Select Case Number.Length
                     Case 4
                         Number = String.Format("{0}-{1}", DateTime.Now.Year.ToString().Substring(2), Number)
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault()
                     Case 7
                         If (isValid) Then
-                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
-                                Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
-                            ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(Number.Trim()) Select b.QRANumber).FirstOrDefault() Is Nothing) Then
-                                Return Number.Trim()
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                                Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault()
+                            ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber.Contains(number.Trim()) Select b.QRANumber).FirstOrDefault() Is Nothing) Then
+                                Return number.Trim()
                             Else
                                 Return String.Empty
                             End If
@@ -271,10 +271,10 @@ Namespace REMI.Bll
                         Dim reqNum As String = Number.Substring(0, 11).ToString().Trim()
 
                         If (isValid) Then
-                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
-                                Return Number
+                            If ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault() IsNot Nothing) Then
+                                Return number
                             ElseIf ((From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = reqNum Select b.QRANumber).FirstOrDefault() Is Nothing) Then
-                                Return Number
+                                Return number
                             Else
                                 Return String.Empty
                             End If
@@ -282,7 +282,7 @@ Namespace REMI.Bll
 
                         Return Number.Trim()
                     Case Else
-                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = Number.Trim() And (departments.Contains(b.Department.LookupID) Or byPassUserCheck) Select b.QRANumber).FirstOrDefault()
+                        Return (From b In New REMI.Dal.Entities().Instance().Batches Where b.QRANumber = number.Trim() And (departments.Contains(b.Department.LookupID) Or byPassUserCheck Or b.Department.LookupID = 0) Select b.QRANumber).FirstOrDefault()
                 End Select
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, Number.ToString())
@@ -292,22 +292,22 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetBatchAuditLogs(ByVal QRANumber As String) As Object
+        Public Shared Function GetBatchAuditLogs(ByVal requestNumber As String) As Object
             Try
-                Return (From ba In New REMI.Dal.Entities().Instance().vw_BatchAudit Where ba.QRANumber = QRANumber Select ba).ToList
+                Return (From ba In New REMI.Dal.Entities().Instance().vw_BatchAudit Where ba.QRANumber = requestNumber Select ba).ToList
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, QRANumber.ToString())
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber.ToString())
             End Try
             Return New DataTable
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetListAtLocation(ByVal BarcodePrefix As Integer, ByVal startRowIndex As Integer, ByVal MaximumRows As Integer, ByVal sortExpression As String) As BatchCollection
+        Public Shared Function GetListAtLocation(ByVal barcodePrefix As Integer, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String) As BatchCollection
             Try
-                Dim bc As BatchCollection = BatchDB.GetListAtLocation(BarcodePrefix, startRowIndex, MaximumRows, sortExpression, UserManager.GetCurrentUser)
+                Dim bc As BatchCollection = BatchDB.GetListAtLocation(barcodePrefix, startRowIndex, MaximumRows, sortExpression, UserManager.GetCurrentUser)
                 Return bc
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, BarcodePrefix.ToString)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, barcodePrefix.ToString)
             End Try
             Return New BatchCollection
         End Function
@@ -359,9 +359,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function SaveBatchComment(ByVal qraNumber As String, ByVal userIdentification As String, ByVal comment As String) As Boolean
+        Public Shared Function SaveBatchComment(ByVal requestNumber As String, ByVal userIdentification As String, ByVal comment As String) As Boolean
             Try
-                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
+                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
                 If barcode.Validate() Then
                     Dim instance = New REMI.Dal.Entities().Instance()
 
@@ -379,23 +379,44 @@ Namespace REMI.Bll
                     Return False
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request Number: {0} comment: {1}", qraNumber, comment))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request Number: {0} comment: {1}", requestNumber, comment))
                 Return False
             End Try
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function SaveExecutiveSummary(ByVal qraNumber As String, ByVal userIdentification As String, ByVal summary As String) As Boolean
+        Public Shared Function SaveExecutiveSummary(ByVal requestNumber As String, ByVal userIdentification As String, ByVal summary As String) As Boolean
             Try
                 If (Not String.IsNullOrEmpty(summary.Trim())) Then
-                    Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
+                    Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
                     If barcode.Validate() Then
                         Dim instance = New REMI.Dal.Entities().Instance()
 
-                        Dim result = (From b In instance.Batches Where b.QRANumber = qraNumber Select b).FirstOrDefault()
+                        Dim result = (From b In instance.Batches Where b.QRANumber = requestNumber Select b).FirstOrDefault()
 
                         If (result IsNot Nothing) Then
                             result.ExecutiveSummary = summary
+                        End If
+
+                        Dim requestType As Int32 = (From rt In instance.RequestTypes Where rt.Lookup.Values = barcode.Type Select rt.RequestTypeID).FirstOrDefault()
+                        Dim request As Int32 = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r.RequestID).FirstOrDefault()
+                        Dim map As String = (From m In instance.ReqFieldMappings Where m.RequestTypeID = requestType And m.IntField = "ExecutiveSummary" Select m.ExtField).FirstOrDefault()
+                        Dim setupID As Int32 = (From s In instance.ReqFieldSetups Where s.RequestTypeID = requestType And s.Name = map Select s.ReqFieldSetupID).FirstOrDefault()
+
+                        If (setupID > 0) Then
+                            Dim data As REMI.Entities.ReqFieldData = (From d In instance.ReqFieldDatas Where d.ReqFieldSetupID = setupID And d.RequestID = request Select d).FirstOrDefault()
+                            If (data IsNot Nothing) Then
+                                data.Value = summary
+                            Else
+                                data = New REMI.Entities.ReqFieldData
+                                data.InsertTime = DateTime.Now
+                                data.InstanceID = 1
+                                data.LastUser = userIdentification
+                                data.RequestID = request
+                                data.ReqFieldSetupID = setupID
+                                data.Value = summary
+                                instance.AddToReqFieldDatas(data)
+                            End If
                         End If
 
                         instance.SaveChanges()
@@ -408,7 +429,7 @@ Namespace REMI.Bll
                     Return False
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request Number: {0} summary: {1}", qraNumber, summary))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request Number: {0} summary: {1}", requestNumber, summary))
                 Return False
             End Try
         End Function
@@ -418,18 +439,18 @@ Namespace REMI.Bll
         ''' </summary> 
         ''' <returns></returns>
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function CountListAtLocation(ByVal BarcodePrefix As Integer) As Integer
+        Public Shared Function CountListAtLocation(ByVal barcodePrefix As Integer) As Integer
             Try
-                Return BatchDB.CountBatchesInTrackingLocation(BarcodePrefix)
+                Return BatchDB.CountBatchesInTrackingLocation(barcodePrefix)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TrackingLocationID: {0}", BarcodePrefix))
                 Return -1
             End Try
         End Function
 
-        Public Shared Function GetRAWBatchInformation(ByVal QRANumber As String) As REMI.Entities.Batch
+        Public Shared Function GetRAWBatchInformation(ByVal requestNumber As String) As REMI.Entities.Batch
             Try
-                Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
+                Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
                 If bc.Validate Then
                     Dim instance = New REMI.Dal.Entities().Instance()
                     Dim batch As REMI.Entities.Batch = (From b In instance.Batches.Include("TestCenter").Include("AccessoryGroup").Include("ProductType").Include("Purpose").Include("Department") Where b.QRANumber = bc.BatchNumber Select b).FirstOrDefault()
@@ -486,94 +507,94 @@ Namespace REMI.Bll
             Return New BatchCollection
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetActiveBatchList() As String()
-            Try
-                Dim bc As BatchCollection = BatchDB.GetActiveBatches(-1, -1, True, UserManager.GetCurrentUser)
-                Dim qras As String() = (From s In bc Select s.RequestNumber).ToArray
-                Dim requests As New List(Of String)
-                requests.AddRange(qras)
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetActiveBatchList() As String()
+        '    Try
+        '        Dim bc As BatchCollection = BatchDB.GetActiveBatches(-1, -1, True, UserManager.GetCurrentUser)
+        '        Dim qras As String() = (From s In bc Select s.RequestNumber).ToArray
+        '        Dim requests As New List(Of String)
+        '        requests.AddRange(qras)
 
-                Return requests.ToArray
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return Nothing
-        End Function
+        '        Return requests.ToArray
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+        '    End Try
+        '    Return Nothing
+        'End Function
 
 
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
             REMIAppCache.ClearAllBatchData(requestNumber)
-            Dim b As Batch = BatchManager.GetItem(requestNumber, cacheRetrievedData:=True)
+            Dim b As Batch = BatchManager.GetItem(requestNumber, False, True, True)
             TestRecordManager.CheckBatchForResultUpdates(b, False)
 
             Return BatchDB.MoveBatchForward(requestNumber, userIdentification)
 
         End Function
 
-        Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Boolean
-            Dim isSuccess As Boolean
+        'Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Boolean
+        '    Dim isSuccess As Boolean
 
-            Try
-                REMIAppCache.ClearAllBatchData(qraNumber)
+        '    Try
+        '        REMIAppCache.ClearAllBatchData(qraNumber)
 
-                Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=True)
-                Dim batchChanged As Boolean = b.OutOfDate
+        '        Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=True)
+        '        Dim batchChanged As Boolean = b.OutOfDate
 
-                'check batches for trs completion
-                If b.Status <> BatchStatus.Complete AndAlso b.IsCompleteInRequest Then
-                    b.Status = BatchStatus.Complete
-                    batchChanged = True
-                End If
+        '        'check batches for trs completion
+        '        If b.Status <> BatchStatus.Complete AndAlso b.IsCompleteInRequest Then
+        '            b.Status = BatchStatus.Complete
+        '            batchChanged = True
+        '        End If
 
-                'check received batches for assignement
-                If b.Status <> BatchStatus.InProgress AndAlso b.Status = BatchStatus.Received AndAlso b.RequestStatus.ToLower = TRSStatus.Assigned.ToString().ToLower() Then
-                    b.Status = BatchStatus.InProgress
-                    batchChanged = True
-                End If
+        '        'check received batches for assignement
+        '        If b.Status <> BatchStatus.InProgress AndAlso b.Status = BatchStatus.Received AndAlso b.RequestStatus.ToLower = TRSStatus.Assigned.ToString().ToLower() Then
+        '            b.Status = BatchStatus.InProgress
+        '            batchChanged = True
+        '        End If
 
-                'check for rejected batches
-                If b.Status <> BatchStatus.Rejected AndAlso b.RequestStatus.ToLower = TRSStatus.Rejected.ToString().ToLower() AndAlso b.Status <> BatchStatus.Rejected Then
-                    b.Status = BatchStatus.Rejected
-                    batchChanged = True
-                End If
+        '        'check for rejected batches
+        '        If b.Status <> BatchStatus.Rejected AndAlso b.RequestStatus.ToLower = TRSStatus.Rejected.ToString().ToLower() AndAlso b.Status <> BatchStatus.Rejected Then
+        '            b.Status = BatchStatus.Rejected
+        '            batchChanged = True
+        '        End If
 
-                'move batches still stuck at an incoming eval type stage but are in fact assigned in trs to the next (non incoming type) stage in their job process.
-                Dim nextTeststage As TestStage = Nothing
+        '        'move batches still stuck at an incoming eval type stage but are in fact assigned in trs to the next (non incoming type) stage in their job process.
+        '        Dim nextTeststage As TestStage = Nothing
 
-                If b.TestStage Is Nothing Then
-                    nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Select ts).FirstOrDefault
-                Else
-                    If (b.TestStage.ToString().ToLower().Trim().Equals("analysis") AndAlso b.Status = BatchStatus.InProgress) Then
-                        nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Where ts.ProcessOrder > b.TestStage.ProcessOrder Select ts).FirstOrDefault
-                    End If
-                End If
+        '        If b.TestStage Is Nothing Then
+        '            nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Select ts).FirstOrDefault
+        '        Else
+        '            If (b.TestStage.ToString().ToLower().Trim().Equals("analysis") AndAlso b.Status = BatchStatus.InProgress) Then
+        '                nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Where ts.ProcessOrder > b.TestStage.ProcessOrder Select ts).FirstOrDefault
+        '            End If
+        '        End If
 
-                If nextTeststage IsNot Nothing AndAlso b.TestStageName <> nextTeststage.Name Then
-                    b.TestStageName = nextTeststage.Name
-                    batchChanged = True
-                End If
+        '        If nextTeststage IsNot Nothing AndAlso b.TestStageName <> nextTeststage.Name Then
+        '            b.TestStageName = nextTeststage.Name
+        '            batchChanged = True
+        '        End If
 
-                TestRecordManager.CheckBatchForResultUpdates(b, False)
+        '        TestRecordManager.CheckBatchForResultUpdates(b, False)
 
-                'check for test record based updates to the batches
-                If b.TestStage IsNot Nothing AndAlso (b.CheckBatchTestStageStatus Or b.AdvanceToNextStageIfApplicable Or b.AdvanceBatchToTestingCompleteIfApplicable) Then
-                    'if it changed, save the batch
-                    batchChanged = True
-                End If
+        '        'check for test record based updates to the batches
+        '        If b.TestStage IsNot Nothing AndAlso (b.CheckBatchTestStageStatus Or b.AdvanceToNextStageIfApplicable Or b.AdvanceBatchToTestingCompleteIfApplicable) Then
+        '            'if it changed, save the batch
+        '            batchChanged = True
+        '        End If
 
-                If batchChanged Then
-                    Boolean.TryParse((Save(b) > 0).ToString(), isSuccess)
-                Else
-                    isSuccess = True
-                End If
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Current Request: " + qraNumber)
-                isSuccess = False
-            End Try
+        '        If batchChanged Then
+        '            Boolean.TryParse((Save(b) > 0).ToString(), isSuccess)
+        '        Else
+        '            isSuccess = True
+        '        End If
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Current Request: " + qraNumber)
+        '        isSuccess = False
+        '    End Try
 
-            Return isSuccess
-        End Function
+        '    Return isSuccess
+        'End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True, Optional OnlyHasResults As Int32 = 0) As BatchCollection
@@ -605,17 +626,17 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
-        Public Shared Function GetViewBatch(ByVal batchQRANumber As String) As IBatch
+        Public Shared Function GetViewBatch(ByVal requestNumber As String) As IBatch
             Try
                 'becuase we are running two batch models side by side
                 'If the batch is not already in remi, I must use the older type batch getitem method
                 'so as to got through the initial batch setup process.
-                Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser)
+                Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(requestNumber, UserManager.GetCurrentUser)
                 If b IsNot Nothing Then
                     Return b
                 End If
                 'ok we don't have this in the database so get the 'full' older model.
-                Return GetItem(batchQRANumber)
+                Return GetItem(requestNumber)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -629,17 +650,17 @@ Namespace REMI.Bll
         ''' <param name="batchQRANumber">The QRA number of the batch.</param>
         ''' <returns>A batch</returns>
         ''' <remarks>This function always returns an object. Check the ID for a null batch!</remarks>
-        Public Shared Function GetItem(ByVal batchQRANumber As String, Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
+        Public Shared Function GetItem(ByVal requestNumber As String, Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
             Dim b As Batch
 
             If refreshCache Then
-                REMIAppCache.ClearAllBatchData(batchQRANumber)
+                REMIAppCache.ClearAllBatchData(requestNumber)
             End If
 
             Try
-                Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(batchQRANumber))
+                Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
                 If bc.Validate Then
-                    b = BatchDB.GetBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser, cacheRetrievedData)
+                    b = BatchDB.GetBatchByQRANumber(requestNumber, UserManager.GetCurrentUser, cacheRetrievedData)
 
                     If b Is Nothing Then
                         b = New Batch(RequestDB.GetRequest(bc.BatchNumber, UserManager.GetCurrentUser))
@@ -652,12 +673,12 @@ Namespace REMI.Bll
                         AddNewBatchToREMI(bc, b)
                     End If
                 Else
-                    b = New Batch(batchQRANumber)
+                    b = New Batch(requestNumber)
                     b.Notifications.Add(bc.Notifications)
                 End If
             Catch ex As Exception
-                b = New Batch(batchQRANumber)
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, batchQRANumber))
+                b = New Batch(requestNumber)
+                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber))
             End Try
 
             Return b
@@ -684,10 +705,10 @@ Namespace REMI.Bll
 #End Region
 
 #Region "Manage Batches Methods"
-        Public Shared Function RevertBatchSpecificTestDuration(ByVal qraNumber As String, ByVal teststageid As Integer, ByVal comment As String) As Notification
+        Public Shared Function RevertBatchSpecificTestDuration(ByVal requestNumber As String, ByVal teststageid As Integer, ByVal comment As String) As Notification
             Dim n As New Notification
 
-            If BatchDB.DeleteBatchSpecificTestDuration(qraNumber, teststageid, comment, UserManager.GetCurrentValidUserLDAPName) Then
+            If BatchDB.DeleteBatchSpecificTestDuration(requestNumber, teststageid, comment, UserManager.GetCurrentValidUserLDAPName) Then
                 n.Message = "Duration reverted to default ok."
                 n.Type = NotificationType.Information
             Else
@@ -698,10 +719,10 @@ Namespace REMI.Bll
             Return n
         End Function
 
-        Public Shared Function ModifyBatchSpecificTestDuration(ByVal qraNumber As String, ByVal teststageid As Integer, ByVal duration As Double, ByVal comment As String) As Notification
+        Public Shared Function ModifyBatchSpecificTestDuration(ByVal requestNumber As String, ByVal teststageid As Integer, ByVal duration As Double, ByVal comment As String) As Notification
             Dim n As New Notification
 
-            If BatchDB.ModifyBatchSpecificTestDuration(qraNumber, teststageid, duration, comment, UserManager.GetCurrentValidUserLDAPName) Then
+            If BatchDB.ModifyBatchSpecificTestDuration(requestNumber, teststageid, duration, comment, UserManager.GetCurrentValidUserLDAPName) Then
                 n.Message = "Duration saved ok."
                 n.Type = NotificationType.Information
             Else
@@ -722,10 +743,10 @@ Namespace REMI.Bll
             Return New DataSet
         End Function
 
-        Public Shared Function SetPriority(ByVal qraNumber As String, ByVal priorityID As Int32, ByVal priority As String) As NotificationCollection
+        Public Shared Function SetPriority(ByVal requestNumber As String, ByVal priorityID As Int32, ByVal priority As String) As NotificationCollection
             Dim b As Batch
             Try
-                b = BatchManager.GetItem(qraNumber)
+                b = BatchManager.GetItem(requestNumber)
                 If b IsNot Nothing Then
                     If b.Validate Then
                         b.PriorityID = priorityID
@@ -734,49 +755,49 @@ Namespace REMI.Bll
                         If b.Validate Then
                             BatchManager.Save(b)
                             If (REMI.Core.REMIConfiguration.Debug) Then
-                                b.Notifications.Add(LogIssue("SetPriority", "i14", NotificationType.Information, String.Format("Request Number: {0} Priority: {1}", qraNumber, priority)))
+                                b.Notifications.Add(LogIssue("SetPriority", "i14", NotificationType.Information, String.Format("Request Number: {0} Priority: {1}", requestNumber, priority)))
                             End If
                         End If
                     End If
                 Else
                     b = New Batch
-                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", qraNumber), NotificationType.Warning)
+                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
                 End If
             Catch ex As Exception
                 b = New Batch
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", qraNumber, priority)))
+                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", requestNumber, priority)))
             End Try
             Return b.Notifications
         End Function
 
-        Public Shared Function SetStatus(ByVal qraNumber As String, ByVal status As BatchStatus) As NotificationCollection
+        Public Shared Function SetStatus(ByVal requestNumber As String, ByVal status As BatchStatus) As NotificationCollection
             Dim nc As New NotificationCollection
             Try
-                If BatchDB.SetBatchStatus(qraNumber, status, UserManager.GetCurrentValidUserLDAPName) Then
+                If BatchDB.SetBatchStatus(requestNumber, status, UserManager.GetCurrentValidUserLDAPName) Then
                     If (REMI.Core.REMIConfiguration.Debug) Then
-                        nc.Add(LogIssue("SetBatchStatus", "i8", NotificationType.Information, String.Format("Request Number: {0} Status: {1}", qraNumber, status)))
+                        nc.Add(LogIssue("SetBatchStatus", "i8", NotificationType.Information, String.Format("Request Number: {0} Status: {1}", requestNumber, status)))
                     End If
                 Else
-                    nc.Add(LogIssue("SetBatchStatus", "e18", NotificationType.Errors, String.Format("Request Number: {0} Status: {1}", qraNumber, status)))
+                    nc.Add(LogIssue("SetBatchStatus", "e18", NotificationType.Errors, String.Format("Request Number: {0} Status: {1}", requestNumber, status)))
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} status: {1}", qraNumber, status.ToString))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} status: {1}", requestNumber, status.ToString))
             End Try
             Return nc
         End Function
 
 #Region "Batch Comments"
-        Public Shared Function AddNewComment(ByVal qraNumber As String, ByVal comment As String) As NotificationCollection
+        Public Shared Function AddNewComment(ByVal requestNumber As String, ByVal comment As String) As NotificationCollection
             Dim nc As New NotificationCollection
             Try
-                Dim b As Batch = BatchManager.GetItem(qraNumber)
+                Dim b As Batch = BatchManager.GetItem(requestNumber)
                 If b IsNot Nothing Then
                     If Not BatchDB.AddBatchComment(b.ID, comment, UserManager.GetCurrentValidUserLDAPName) Then
-                        nc.Add(LogIssue("AddNewComment", "e27", NotificationType.Errors, String.Format("Request Number: {0} comment: {1}", qraNumber, comment)))
+                        nc.Add(LogIssue("AddNewComment", "e27", NotificationType.Errors, String.Format("Request Number: {0} comment: {1}", requestNumber, comment)))
                     End If
                 End If
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Request: " + qraNumber + " comment to add:" + comment)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Request: " + requestNumber + " comment to add:" + comment)
             End Try
             Return nc
         End Function
@@ -791,16 +812,16 @@ Namespace REMI.Bll
             Return nc
         End Function
 
-        Public Shared Function GetBatchComments(ByVal qranumber As String) As List(Of IBatchCommentView)
-            Return BatchDB.GetBatchComments(qranumber)
+        Public Shared Function GetBatchComments(ByVal requestNumber As String) As List(Of IBatchCommentView)
+            Return BatchDB.GetBatchComments(requestNumber)
         End Function
 #End Region
 
-        Public Shared Function DNPParametricForBatch(ByVal qraNumber As String, ByVal userIdentification As String, ByVal unitNumber As Int32) As Boolean
+        Public Shared Function DNPParametricForBatch(ByVal requestNumber As String, ByVal userIdentification As String, ByVal unitNumber As Int32) As Boolean
             Try
-                Return BatchDB.DNPParametricForBatch(qraNumber, userIdentification, unitNumber)
+                Return BatchDB.DNPParametricForBatch(requestNumber, userIdentification, unitNumber)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, qraNumber.ToString())
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, requestNumber.ToString())
             End Try
             Return False
         End Function
@@ -812,10 +833,10 @@ Namespace REMI.Bll
         ''' <param name="testStageName"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ChangeTestStage(ByVal qraNumber As String, ByVal testStageName As String) As NotificationCollection
+        Public Shared Function ChangeTestStage(ByVal requestNumber As String, ByVal testStageName As String) As NotificationCollection
             Dim b As Batch
             Try
-                b = BatchManager.GetItem(qraNumber)
+                b = BatchManager.GetItem(requestNumber)
                 If b IsNot Nothing Then
                     If b.Validate Then
                         'validate that the teststageid is part of this job
@@ -832,11 +853,11 @@ Namespace REMI.Bll
                     End If
                 Else
                     b = New Batch
-                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", qraNumber), NotificationType.Warning)
+                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
                 End If
             Catch ex As Exception
                 b = New Batch
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, String.Format("Request: {0} TestStage: {1}", qraNumber, testStageName)))
+                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, String.Format("Request: {0} TestStage: {1}", requestNumber, testStageName)))
             End Try
             Return b.Notifications
         End Function

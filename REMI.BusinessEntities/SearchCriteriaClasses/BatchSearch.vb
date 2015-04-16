@@ -3,6 +3,7 @@ Namespace REMI.BusinessEntities
 
     Public Class BatchSearch
         Private _job As String
+        Private _jobID As Int32
         Private _stage As String
         Private _revision As String
         Private _geoLocationID As Int32
@@ -112,6 +113,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(value As String)
                 _job = value
+            End Set
+        End Property
+
+        Public Property JobID() As Int32
+            Get
+                Return _jobID
+            End Get
+            Set(value As Int32)
+                _jobID = value
             End Set
         End Property
 

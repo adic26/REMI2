@@ -16,11 +16,13 @@ Partial Class Search
             Dim testCenterAdmin As Boolean = UserManager.GetCurrentUser.IsTestCenterAdmin
 
             If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
-                rblSearchBy.Items(3).Enabled = True 'Users
+                rblSearchBy.Items.FindByValue("4").Enabled = True 'Users
+                'rblSearchBy.Items(3).Enabled = True 'Users
             End If
 
             If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(0)) Then
-                rblSearchBy.Items(2).Enabled = True 'Exceptions
+                rblSearchBy.Items.FindByValue("3").Enabled = True 'Exceptions
+                'rblSearchBy.Items(2).Enabled = True 'Exceptions
             End If
 
             If (Not (IsPostBack)) Then
@@ -39,6 +41,21 @@ Partial Class Search
                     ddlUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False, False, False)
                     ddlUsers.DataBind()
                 End If
+            End If
+        End If
+    End Sub
+
+    Protected Sub Page_PreRender() Handles Me.PreLoad
+        If Not Page.IsPostBack Then
+            ddlRequestType.DataSource = UserManager.GetCurrentUser.RequestTypes
+            ddlRequestType.DataBind()
+
+            If (ddlRequestType.Items.Count > 0 And ddlRequestType.SelectedIndex = -1) Then
+                ddlRequestType.SelectedIndex = 0
+            End If
+
+            If (ddlRequestType.Items.Count = 1) Then
+                ddlRequestType.Enabled = False
             End If
         End If
     End Sub
@@ -285,6 +302,7 @@ Partial Class Search
                     Dim productID As Int32
                     Dim productTypeID As Int32
                     Dim testID As Int32
+                    Dim jobID As Int32
                     Dim testStageID As Int32
                     Dim userID As Int32
                     Dim departmentID As Int32
@@ -300,9 +318,9 @@ Partial Class Search
                     End If
 
                     Int32.TryParse(ddlDepartment.SelectedValue, departmentID)
-
+                    Int32.TryParse(ddlJobs.SelectedValue, jobID)
                     bs.GeoLocationID = geoLocationID
-                    bs.JobName = ddlJobs.SelectedValue
+                    bs.JobID = jobID
                     bs.DepartmentID = departmentID
 
                     If (Not (String.IsNullOrEmpty(testStage))) Then
@@ -385,9 +403,10 @@ Partial Class Search
                     Int32.TryParse(txtBSN.Text, bsn)
 
                     us.BSN = bsn
+                    us.IMEI = txtIMEI.Text
 
-                    If (bsn > 0) Then
-                        gvwUnits.DataSource = REMI.Dal.TestUnitDB.UnitSearch(us)
+                    If (bsn > 0 Or txtIMEI.Text.Length > 0) Then
+                        gvwUnits.DataSource = Remi.Dal.TestUnitDB.UnitSearch(us)
                         gvwUnits.DataBind()
                     End If
 
@@ -513,6 +532,7 @@ Partial Class Search
             Dim productTypeID As Int32
             Dim testID As Int32
             Dim testStageID As Int32
+            Dim jobID As Int32
             Dim userID As Int32
             Dim trackingLocationID As Int32
             Dim geoLocationID As Int32 = ddlTestCenters.SelectedValue
@@ -521,13 +541,14 @@ Partial Class Search
             Dim departmentID As Int32
             Dim testStage As String = txtTestStage.Text.Trim()
             Dim revision As String = txtRevision.Text.Trim()
+            Int32.TryParse(ddlJobs.SelectedValue, jobID)
 
             If (geoLocationID = 0) Then
                 geoLocationID = Nothing
             End If
 
             bs.GeoLocationID = geoLocationID
-            bs.JobName = ddlJobs.SelectedValue
+            bs.JobID = jobID
 
             If (Not (String.IsNullOrEmpty(testStage))) Then
                 bs.TestStage = testStage
@@ -611,9 +632,10 @@ Partial Class Search
             Int32.TryParse(txtBSN.Text, bsn)
 
             us.BSN = bsn
+            us.IMEI = txtIMEI.Text
 
-            If (bsn > 0) Then
-                Helpers.ExportToExcel(Helpers.GetDateTimeFileName("UnitSearch", "xls"), REMI.Dal.TestUnitDB.UnitSearch(us))
+            If (bsn > 0 Or txtIMEI.Text.Length > 0) Then
+                Helpers.ExportToExcel(Helpers.GetDateTimeFileName("UnitSearch", "xls"), Remi.Dal.TestUnitDB.UnitSearch(us))
             End If
         ElseIf (pnlTraining.Visible) Then
             Dim us As New UserSearch()
@@ -637,7 +659,7 @@ Partial Class Search
         Dim us As New UserSearch()
         us.TestCenterID = ddlTestCenterTraining.SelectedValue
 
-        Dim uc As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False, False)
+        Dim uc As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False)
         uc.Insert(0, New User())
 
         ddlUserTraining.DataSource = uc
@@ -663,7 +685,10 @@ Partial Class Search
     Protected Sub ddlJobs_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlJobs.SelectedIndexChanged
         ddlTestStages.Items.Clear()
         ddlTestStages.Items.Add(New ListItem("All", 0))
-        ddlTestStages.DataSource = TestStageManager.GetList(0, ddlJobs.SelectedValue, False, 0)
+        Dim jobID As Int32
+        Int32.TryParse(ddlJobs.SelectedValue.ToString(), jobID)
+
+        ddlTestStages.DataSource = TestStageManager.GetList(0, String.Empty, False, jobID)
         ddlTestStages.DataBind()
     End Sub
 
@@ -704,9 +729,23 @@ Partial Class Search
         ddlProductFilter.DataBind()
     End Sub
 
+    Protected Sub ddlRequestType_SelectedIndexChanged(sender As Object, e As EventArgs)
+        If (pnlSearchBatch.Visible) Then
+            ddlJobs.Items.Clear()
+            ddlJobs.Items.Add("ALL")
+            ddlJobs.DataSource = JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0)
+            ddlJobs.DataBind()
+        ElseIf (pnlSearchExceptions.Visible) Then
+            ddlJobs2.Items.Clear()
+            ddlJobs2.Items.Add("ALL")
+            ddlJobs2.DataSource = JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0)
+            ddlJobs2.DataBind()
+        End If
+    End Sub
+
     Protected Sub rblSearchBy_OnSelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
         lblTopInfo.Visible = False
-        Dim val As String = DirectCast(sender, System.Web.UI.WebControls.RadioButtonList).SelectedIndex
+        Dim val As String = DirectCast(sender, System.Web.UI.WebControls.RadioButtonList).SelectedValue
 
         Dim dtProductType As DataTable = LookupsManager.GetLookups("ProductType", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
         Dim drProductType() As DataRow = dtProductType.Select("LookupType = ''")
@@ -723,13 +762,19 @@ Partial Class Search
         prodList.Rows.InsertAt(newRow, 0)
 
         Select Case val
-            Case "0"
+            Case "1"
                 'Batch
                 pnlSearchBatch.Visible = True
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = False
+                ddlRequestType.Visible = True
+
+                ddlJobs.Items.Clear()
+                ddlJobs.Items.Add("ALL")
+                ddlJobs.DataSource = JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0)
+                ddlJobs.DataBind()
 
                 ddlProductType.Items.Clear()
                 ddlProductType.DataSource = dtProductType
@@ -800,24 +845,25 @@ Partial Class Search
                 txtEnd.Text = DateTime.Now.ToShortDateString()
 
                 ddlTestCenters.Items.Clear()
-                ddlTestCenters.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
+                ddlTestCenters.DataSource = REMI.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
                 ddlTestCenters.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
                 If (ddlTestCenters.Items.Contains(l)) Then
                     ddlTestCenters.SelectedValue = UserManager.GetCurrentUser.TestCentreID
                 End If
-            Case "2"
+            Case "3"
                 'Exceptions
                 pnlTraining.Visible = False
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = True
                 pnlSearchUser.Visible = False
                 pnlSearchUnits.Visible = False
+                ddlRequestType.Visible = True
 
                 ddlJobs2.Items.Clear()
                 ddlJobs2.Items.Add("ALL")
-                ddlJobs2.DataSource = JobManager.GetJobListDT(0, 0, 0)
+                ddlJobs2.DataSource = JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0)
                 ddlJobs2.DataBind()
 
                 ddlProductType2.Items.Clear()
@@ -836,24 +882,25 @@ Partial Class Search
                 ddlRequestReasonException.Items.Add("ALL")
                 ddlRequestReasonException.DataSource = LookupsManager.GetLookups("RequestPurpose", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
                 ddlRequestReasonException.DataBind()
-            Case "3"
+            Case "4"
                 'User
                 pnlTraining.Visible = False
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = True
                 pnlSearchUnits.Visible = False
+                ddlRequestType.Visible = False
 
                 ddlProductFilterUser.Items.Clear()
                 ddlProductFilterUser.DataSource = prodList
                 ddlProductFilterUser.DataBind()
 
                 ddlTestCentersUser.Items.Clear()
-                ddlTestCentersUser.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
+                ddlTestCentersUser.DataSource = REMI.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
                 ddlTestCentersUser.DataBind()
 
                 ddlDepartmentUser.Items.Clear()
-                ddlDepartmentUser.DataSource = Remi.Bll.LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
+                ddlDepartmentUser.DataSource = REMI.Bll.LookupsManager.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
                 ddlDepartmentUser.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -865,22 +912,24 @@ Partial Class Search
                 If (ddlDepartmentUser.Items.Contains(ld)) Then
                     ddlDepartmentUser.SelectedValue = UserManager.GetCurrentUser.DepartmentID
                 End If
-            Case "1" 'Search Units
+            Case "2" 'Search Units
                 pnlTraining.Visible = False
                 pnlSearchUnits.Visible = True
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
-            Case "4"
+                ddlRequestType.Visible = False
+            Case "5"
                 'Training
                 pnlSearchBatch.Visible = False
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchUnits.Visible = False
                 pnlTraining.Visible = True
+                ddlRequestType.Visible = False
 
                 ddlTestCenterTraining.Items.Clear()
-                ddlTestCenterTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
+                ddlTestCenterTraining.DataSource = REMI.Bll.LookupsManager.GetLookups("TestCenter", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
                 ddlTestCenterTraining.DataBind()
 
                 Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, UserManager.GetCurrentUser.TestCentreID)
@@ -890,7 +939,7 @@ Partial Class Search
                 End If
 
                 ddlSearchTraining.Items.Clear()
-                ddlSearchTraining.DataSource = Remi.Bll.LookupsManager.GetLookups("Training", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
+                ddlSearchTraining.DataSource = REMI.Bll.LookupsManager.GetLookups("Training", 0, 0, String.Empty, String.Empty, 0, False, 0, False)
                 ddlSearchTraining.DataBind()
             Case Else
                 pnlTraining.Visible = False
@@ -898,6 +947,7 @@ Partial Class Search
                 pnlSearchExceptions.Visible = False
                 pnlSearchUser.Visible = False
                 pnlSearchUnits.Visible = False
+                ddlRequestType.Visible = False
         End Select
 
         gvwTraining.DataSource = Nothing

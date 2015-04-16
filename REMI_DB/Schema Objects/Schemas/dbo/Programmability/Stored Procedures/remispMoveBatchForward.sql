@@ -25,16 +25,23 @@ BEGIN
 	CREATE TABLE #exceptions (Row INT, ID INT, RequestNumber NVARCHAR(11), BatchUnitNumber INT, ReasonForRequestID INT, ProductGroupName NVARCHAR(150), JobName NVARCHAR(150), TestStageName NVARCHAR(150), TestName NVARCHAR(150), TestStageID INT, TestUnitID INT, LastUser NVARCHAR(150), ProductTypeID INT, AccessoryGroupID INT, ProductID INT, ProductType NVARCHAR(150), AccessoryGroupName NVARCHAR(150), IsMQual INT, TestCenter NVARCHAR(MAX), TestCenterID INT, ReasonForRequest NVARCHAR(150), TestID INT)
 
 	BEGIN TRY
-		SELECT @RequestID=RequestID, @BatchID=BatchID FROM Req.Request WHERE RequestNumber=@RequestNumber
+		SELECT @RequestID=RequestID FROM Req.Request WHERE RequestNumber=@RequestNumber
 		SELECT @UnitCount = COUNT(ID) FROM TestUnits WHERE BatchID=@BatchID
-		SELECT @JobID = j.ID, @ProductID=b.ProductID, @BatchStatus = CASE b.BatchStatus WHEN 1 THEN 'Held' WHEN 2 THEN 'InProgress' WHEN 3 THEN 'Quarantined'
+		SELECT @JobID = j.ID, @BatchID=b.ID, @ProductID=b.ProductID, @BatchStatus = CASE b.BatchStatus WHEN 1 THEN 'Held' WHEN 2 THEN 'InProgress' WHEN 3 THEN 'Quarantined'
 			WHEN 4 THEN 'Received' WHEN 5 THEN 'Complete' WHEN 7 THEN 'Rejected' WHEN 8 THEN 'TestingComplete' ELSE 'NotSet' END, @NewBatchStatus = b.BatchStatus,
 			@ProductType = l.[Values]
 		FROM Batches b
 			INNER JOIN Jobs j ON j.JobName = b.JobName
 			INNER JOIN Lookups l ON l.LookupID=b.ProductTypeID
-		WHERE b.ID=@BatchID
-
+		WHERE b.QRANumber=@RequestNumber
+		
+		IF ((SELECT BatchID FROM Req.Request WHERE RequestNumber=@RequestNumber) IS NULL)
+		BEGIN
+			UPDATE Req.Request
+			SET BatchID=@BatchID
+			WHERE RequestNumber=@RequestNumber
+		END
+		
 		--Get the setup information for the batch
 		INSERT INTO #TempSetup
 		EXEC Req.GetRequestSetupInfo @ProductID, @JobID, @BatchID, 1, 0, '', 0

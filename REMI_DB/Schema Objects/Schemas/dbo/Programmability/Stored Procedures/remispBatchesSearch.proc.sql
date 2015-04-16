@@ -25,7 +25,8 @@
 	@NotInTrackingLocationFunction INT  = NULL,
 	@Revision NVARCHAR(10) = NULL,
 	@DepartmentID INT = NULL,
-	@OnlyHasResults INT = NULL
+	@OnlyHasResults INT = NULL,
+	@JobID int = 0
 AS
 	DECLARE @TestName NVARCHAR(400)
 	DECLARE @TestStageName NVARCHAR(400)
@@ -146,7 +147,14 @@ AS
 				AND (b.AccessoryGroupID = @AccessoryGroupID OR @AccessoryGroupID IS NULL)
 				AND (b.TestCenterLocationID = @GeoLocationID OR @GeoLocationID IS NULL)
 				AND (b.DepartmentID = @DepartmentID OR @DepartmentID IS NULL)
-				AND (b.JobName = @JobName OR @JobName IS NULL)
+				AND 
+				(
+					(@JobID > 0 AND j.ID=@JobID)
+					OR
+					(@JobName IS NOT NULL AND b.JobName = @JobName)
+					OR
+					(@JobName IS NULL AND @JobID = 0)
+				)
 				AND (b.RequestPurpose = @RequestReason OR @RequestReason IS NULL)
 				AND (b.MechanicalTools = @Revision OR @Revision IS NULL)
 				AND 
@@ -223,12 +231,12 @@ AS
 					OR
 					(@BatchStart IS NOT NULL AND @BatchEnd IS NOT NULL AND b.ID IN (Select distinct batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime BETWEEN @BatchStart AND @BatchEnd))
 				)
-				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@ExecutingUserID)))
+				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.LookupID IN (SELECT ud.LookupID FROM UserDetails ud WITH(NOLOCK) WHERE UserID=@ExecutingUserID)))
 				AND
 				(
 					(@OnlyHasResults IS NULL OR @OnlyHasResults = 0)
 					OR
-					(@OnlyHasResults = 1 AND EXISTS(SELECT 1 FROM TestUnits tu INNER JOIN Relab.Results r ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
+					(@OnlyHasResults = 1 AND EXISTS(SELECT 1 FROM TestUnits tu WITH(NOLOCK) INNER JOIN Relab.Results r ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
 				)
 		)AS BatchesRows		
 	ORDER BY BatchesRows.PriorityOrder ASC, BatchesRows.QRANumber DESC

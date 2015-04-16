@@ -29,6 +29,7 @@
 </asp:Content>
 <asp:Content ID="content" ContentPlaceHolderID="Content" runat="Server">
     <a class="test-popup-link" visible="false">popup</a> 
+    <div id="my-popup" class="mfp-hide white-popup">Inline popup</div>    
 
     <asp:HiddenField ID="hdnBatchID" runat="server" />
     <asp:HiddenField ID="hdnRequestNumber" Value="" runat="server" />
@@ -49,6 +50,7 @@
                     <asp:Label runat="server" ID="lblES" Text="Executive<br/><font color='rgb(0,124,186)'>Summary</font>" style="font: bold 28px auto Trebuchet MS, Sans-Serif;"></asp:Label>
                 </td>
                 <td width="50%">
+                    <asp:Label runat="server" ID="lblStatus"></asp:Label><br />
                     <asp:Label runat="server" ID="lblResult"></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlStatus" Visible="true" AutoPostBack="true">
                         <asp:ListItem Text="Pass" Value="1" />
@@ -275,7 +277,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Notes" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
-                                <asp:Label runat="server" Visible="true" ID="lblComment" Text='<%# Eval("Comment")%>' />
+                                <asp:Label runat="server" Visible="true" ID="lblComment" Style="word-break: break-all; word-wrap: break-word;" Text='<%# Eval("Comment")%>' Width="600px" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Attachment">

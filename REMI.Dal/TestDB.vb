@@ -63,38 +63,21 @@ Namespace REMI.Dal
         ''' <summary>Gets an instance of Test from the underlying datasource.</summary> 
         ''' <param name="id">The unique ID of the Test in the database.</param> 
         ''' <returns>A Test if the ID was found in the database, or Nothing otherwise.</returns> 
-        Public Shared Function GetItem(ByVal ID As Integer) As Test
+        Public Shared Function GetItem(ByVal id As Int32, ByVal name As String, ByVal parametricOnly As Boolean) As Test
             Dim myTest As Test = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
                 Using myCommand As New SqlCommand("remispTestsSelectSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ID", ID)
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.Read() Then
-                            myTest = FillDataRecord(myReader)
-                        End If
-                        myReader.Close()
-                    End Using
-                End Using
 
-                'If myTest IsNot Nothing Then
-                '    myTest.TrackingLocationTypes = GetApplicableTLTypes(myTest.ID, myConnection)
-                'End If
-            End Using
-            Return myTest
-        End Function
+                    If (id > 0) Then
+                        myCommand.Parameters.AddWithValue("@ID", id)
+                    End If
 
-        Public Shared Function GetItemByName(ByVal name As String, ByVal parametricOnly As Boolean) As Test
-            Dim myTest As Test = Nothing
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-
-                Using myCommand As New SqlCommand("remispTestsSelectSingleItemByName", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@Name", name)
+                    If (Not String.IsNullOrEmpty(name)) Then
+                        myCommand.Parameters.AddWithValue("@Name", name)
+                    End If
 
                     If (parametricOnly) Then
                         myCommand.Parameters.AddWithValue("@ParametricOnly", 1)
@@ -111,7 +94,6 @@ Namespace REMI.Dal
                     End Using
                 End Using
             End Using
-
             Return myTest
         End Function
 

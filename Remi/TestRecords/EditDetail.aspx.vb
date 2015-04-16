@@ -97,7 +97,7 @@ Partial Class TestRecords_EditDetail
         If (trs <> TestRecordStatus.Complete And trs <> TestRecordStatus.CompleteFail And trs <> TestRecordStatus.CompleteKnownFailure And trs <> TestRecordStatus.FARaised And trs <> TestRecordStatus.FARequired) Then
             pnlRelabMatrix.Visible = False
         Else
-            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(hdnTestID.Value).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
+            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(hdnTestID.Value, String.Empty, False).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
 
             If (functionalID > 0) Then
                 gvwRelabMatrix.DataSource = RelabManager.FunctionalMatrixByTestRecord(hdnTRID.Value, hdnTestStageID.Value, hdnTestID.Value, hdnBatchID.Value, Nothing, rblMFISFIAcc.SelectedValue)
@@ -213,7 +213,7 @@ Partial Class TestRecords_EditDetail
             mi.NavigateUrl = tr.TestRecordsLink
             myMenu.Items(0).ChildItems.Add(mi)
 
-            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(tr.TestID).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
+            Dim functionalID As Int32 = (From tlt In TestManager.GetTest(tr.TestID, String.Empty, False).TrackingLocationTypes() Where tlt.Name = "Functional Station" Select tlt.ID).FirstOrDefault()
 
             If (functionalID > 0) Then
                 rblMFISFIAcc.Enabled = True

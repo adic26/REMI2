@@ -1,15 +1,9 @@
 ﻿ALTER PROCEDURE [dbo].[remispUsersDeleteSingleItem] @userIDToDelete nvarchar(255), @UserID INT
 AS
-	UPDATE UsersProducts 
-	SET LastUser = (SELECT LDAPLogin FROM Users WHERE ID=@UserID) 
-	FROM UsersProducts
-	WHERE UserID = @userIDToDelete
-	
 	UPDATE Users 
 	SET LastUser = (SELECT LDAPLogin FROM Users WHERE ID=@UserID)
 	WHERE ID = @userIDToDelete
 
-	DELETE FROM UsersProducts WHERE UserID = @userIDToDelete
 	DELETE FROM UserSearchFilter WHERE UserID = @userIDToDelete
 	DELETE FROM UserDetails WHERE UserID=@userIDToDelete
 	DELETE FROM UserTraining WHERE UserID=@userIDToDelete

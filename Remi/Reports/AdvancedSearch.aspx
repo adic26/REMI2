@@ -1,12 +1,12 @@
 ﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" AutoEventWireup="false"
-    Inherits="Remi.Reports" Codebehind="Reports.aspx.vb" EnableEventValidation="false" %>
+    Inherits="Remi.Reports" Codebehind="AdvancedSearch.aspx.vb" EnableEventValidation="false" %>
 <%@ Register Assembly="System.Web.Ajax" Namespace="System.Web.UI" TagPrefix="asp" %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 <%@ Register Src="../Controls/Search.ascx" TagName="Search" TagPrefix="uc2" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server"></asp:Content>
 <asp:Content ID="cntTitle" ContentPlaceHolderID="pageTitleContent" runat="server">
-    <h1>Reports</h1><br />
+    <h1>Advanced Search</h1><br />
 </asp:Content>
 <asp:Content ID="leftcolumn" ContentPlaceHolderID="leftSidebarContent" runat="server">
     <asp:Panel ID="pnlLeftMenuActions" runat="server">

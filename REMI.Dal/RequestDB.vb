@@ -618,7 +618,7 @@ Namespace REMI.Dal
 
                 If (onlylh.Count > 0) Then
                     If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
-                        filteredOptions.Add("Not Set")
+                        filteredOptions.Add("NotSet")
                     End If
 
                     For Each rec In options
@@ -628,7 +628,7 @@ Namespace REMI.Dal
                     Next
                 Else
                     If (myFields.InternalField = 0 Or Not myFields.IsRequired) Then
-                        filteredOptions.Add("Not Set")
+                        filteredOptions.Add("NotSet")
                     End If
 
                     filteredOptions.AddRange(options)

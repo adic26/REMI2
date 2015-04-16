@@ -44,7 +44,7 @@ Public Class Request
             setup.QRANumber = rec.RequestNumber
             setup.BatchID = rec.BatchID
             setup.TestStageType = TestStageType.Parametric
-            setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setup.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
             setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             setup.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
             setup.OrientationID = 0
@@ -59,7 +59,7 @@ Public Class Request
             setupEnv.ProductName = batch.ProductGroup
             setupEnv.QRANumber = batch.QRANumber
             setupEnv.TestStageType = TestStageType.EnvironmentalStress
-            setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+            setupEnv.IsProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = batch.ProductGroup Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
             setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
             setupEnv.HasEditItemAuthority = UserManager.GetCurrentUser.HasEditItemAuthority(batch.ProductGroup, batch.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(batch.DepartmentID)
             setupEnv.OrientationID = 0
@@ -127,6 +127,7 @@ Public Class Request
             hdnRequestType.Value = rf(0).RequestType
             hdnRequestTypeID.Value = rf(0).RequestTypeID
             lblRequest.Text = rf(0).RequestNumber
+            Dim lastCategory As String = String.Empty
 
             For Each res In rf
                 Dim tRow As New TableRow()
@@ -136,9 +137,20 @@ Public Class Request
                 Dim rfv As New RequiredFieldValidator
                 Dim id As String = "0"
                 Dim fieldCount As Int32 = 1
-
                 tCell.CssClass = "RequestCell1"
                 tCell2.CssClass = "RequestCell2"
+
+                If (lastCategory <> res.Category) Then
+                    Dim tRowCat As New TableRow()
+                    Dim tCellCat As New TableCell()
+                    tCellCat.ColumnSpan = 2
+                    tCellCat.Text = res.Category
+                    tCellCat.CssClass = "RequestCellSpan"
+
+                    tRowCat.Cells.Add(tCellCat)
+                    tbl.Rows.Add(tRowCat)
+                    lastCategory = res.Category
+                End If
 
                 id = res.FieldSetupID
 
@@ -333,7 +345,7 @@ Public Class Request
                                 setup.QRANumber = lblRequest.Text
                                 setup.BatchID = 0
                                 setup.TestStageType = TestStageType.Parametric
-                                setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                                setup.IsProjectManager = False
                                 setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                                 setup.HasEditItemAuthority = True
                                 setup.OrientationID = 0
@@ -348,7 +360,7 @@ Public Class Request
                                 setupEnv.ProductName = String.Empty
                                 setupEnv.QRANumber = lblRequest.Text
                                 setupEnv.TestStageType = TestStageType.EnvironmentalStress
-                                setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                                setupEnv.IsProjectManager = False
                                 setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                                 setup.HasEditItemAuthority = True
                                 setupEnv.OrientationID = 0
@@ -739,7 +751,7 @@ Public Class Request
                 setup.QRANumber = lblRequest.Text
                 setup.BatchID = 0
                 setup.TestStageType = TestStageType.Parametric
-                setup.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                setup.IsProjectManager = False
                 setup.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                 setup.HasEditItemAuthority = True
                 setup.OrientationID = 0
@@ -754,7 +766,7 @@ Public Class Request
                 setupEnv.ProductName = String.Empty
                 setupEnv.QRANumber = lblRequest.Text
                 setupEnv.TestStageType = TestStageType.EnvironmentalStress
-                setupEnv.IsProjectManager = UserManager.GetCurrentUser.IsProjectManager
+                setupEnv.IsProjectManager = False
                 setupEnv.IsAdmin = UserManager.GetCurrentUser.IsAdmin
                 setupEnv.HasEditItemAuthority = True
                 setupEnv.OrientationID = 0

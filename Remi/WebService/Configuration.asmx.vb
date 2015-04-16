@@ -233,10 +233,12 @@ Public Class ProductConfiguration
         Dim publishSucceeded As Boolean = False
 
         Try
-            Dim verNum As New Version(version)
-            publishSucceeded = ConfigManager.CloneConfigMode(Name, verNum, fromMode, type, toMode)
+            If (Not String.IsNullOrEmpty(version)) Then
+                Dim verNum As New Version(version)
+                publishSucceeded = ConfigManager.CloneConfigMode(name, verNum, fromMode, type, toMode)
+            End If
         Catch ex As Exception
-            ConfigManager.LogIssue("CloneConfigMode", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+            ConfigManager.LogIssue("CloneConfigMode", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", name, version.ToString(), fromMode, type, toMode))
         End Try
 
         Return publishSucceeded
@@ -247,14 +249,16 @@ Public Class ProductConfiguration
         Dim publishSucceeded As Boolean = False
 
         Try
-            Dim verNum As New Version(version)
-            Dim fromModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", fromMode, Nothing)
-            Dim toModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", toMode, Nothing)
-            Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
+            If (Not String.IsNullOrEmpty(version)) Then
+                Dim verNum As New Version(version)
+                Dim fromModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", fromMode, Nothing)
+                Dim toModeID As Int32 = LookupsManager.GetLookupID("ConfigModes", toMode, Nothing)
+                Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            publishSucceeded = ConfigManager.CloneConfigMode(Name, verNum, fromModeID, typeID, toModeID)
+                publishSucceeded = ConfigManager.CloneConfigMode(name, verNum, fromModeID, typeID, toModeID)
+            End If
         Catch ex As Exception
-            ConfigManager.LogIssue("CloneConfigMode", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", Name, version.ToString(), fromMode, type, toMode))
+            ConfigManager.LogIssue("CloneConfigMode", "e3", NotificationType.Errors, ex, String.Format("Name: {0} Version: {1} From Mode: {2} Type: {3} To Mode: {4}", name, version.ToString(), fromMode, type, toMode))
         End Try
 
         Return publishSucceeded
@@ -265,11 +269,13 @@ Public Class ProductConfiguration
         Dim publishSucceeded As Boolean = False
 
         Try
-            Dim fromVer As New Version(fromVersion)
-            Dim toVer As New Version(toVersion)
-            publishSucceeded = ConfigManager.CloneConfigVersion(Name, fromVer, mode, type, toVer)
+            If (Not String.IsNullOrEmpty(fromVersion) And Not String.IsNullOrEmpty(toVersion)) Then
+                Dim fromVer As New Version(fromVersion)
+                Dim toVer As New Version(toVersion)
+                publishSucceeded = ConfigManager.CloneConfigVersion(name, fromVer, mode, type, toVer)
+            End If
         Catch ex As Exception
-            ConfigManager.LogIssue("CloneConfigVersion", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
+            ConfigManager.LogIssue("CloneConfigVersion", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", name, fromVersion, mode, type, toVersion))
         End Try
 
         Return publishSucceeded
@@ -280,14 +286,16 @@ Public Class ProductConfiguration
         Dim publishSucceeded As Boolean = False
 
         Try
-            Dim fromVer As New Version(fromVersion)
-            Dim toVer As New Version(toVersion)
-            Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
-            Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
+            If (Not String.IsNullOrEmpty(fromVersion) And Not String.IsNullOrEmpty(toVersion)) Then
+                Dim fromVer As New Version(fromVersion)
+                Dim toVer As New Version(toVersion)
+                Dim modeID As Int32 = LookupsManager.GetLookupID("ConfigModes", mode, Nothing)
+                Dim typeID As Int32 = LookupsManager.GetLookupID("ConfigTypes", type, Nothing)
 
-            publishSucceeded = ConfigManager.CloneConfigVersion(Name, fromVer, modeID, typeID, toVer)
+                publishSucceeded = ConfigManager.CloneConfigVersion(name, fromVer, modeID, typeID, toVer)
+            End If
         Catch ex As Exception
-            ConfigManager.LogIssue("CloneConfigVersion", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", Name, fromVersion, mode, type, toVersion))
+            ConfigManager.LogIssue("CloneConfigVersion", "e3", NotificationType.Errors, ex, String.Format("Name: {0} From Version: {1} Mode: {2} Type: {3} To Version: {4}", name, fromVersion, mode, type, toVersion))
         End Try
 
         Return publishSucceeded

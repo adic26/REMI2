@@ -23,7 +23,7 @@ BEGIN
 	FROM Jobs j WITH(NOLOCK)
 	WHERE j.JobName=@JobName AND LTRIM(RTRIM(ISNULL(j.ProcedureLocation, ''))) <> ''
 	UNION
-	SELECT 'Specification' AS WIType, 'https://hwqaweb.rim.net/pls/trs/data_entry.main?req=QRA-ENG-SP-11-0001' AS Location
+	SELECT 'Specification' AS WIType, 'http://hwqaweb.rim.net/pls/trs/data_entry.main?req=QRA-ENG-SP-11-0001' AS Location
 	UNION
 	SELECT 'QAP' As WIType, p.QAPLocation AS Location
 	FROM Products p WITH(NOLOCK)

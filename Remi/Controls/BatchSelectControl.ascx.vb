@@ -461,7 +461,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.Move).Visible = False
         End Select
 
-        If (grdBatches.Columns(GridviewColumNames.Move).Visible And Not (_isAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.IsProjectManager Or UserManager.GetCurrentUser.IsLabTechOpsManager Or UserManager.GetCurrentUser.IsLabTestCoordinator)) Then
+        If (grdBatches.Columns(GridviewColumNames.Move).Visible And Not (_isAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.IsLabTechOpsManager Or UserManager.GetCurrentUser.IsLabTestCoordinator)) Then
             grdBatches.Columns(GridviewColumNames.Move).Visible = False
         End If
     End Sub

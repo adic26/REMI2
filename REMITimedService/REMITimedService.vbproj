@@ -83,23 +83,25 @@
   <ItemGroup>
     <Reference Include="DBControl, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\DBControl.4.5.264\lib\net45\DBControl.dll</HintPath>
+      <HintPath>packages\DBControl.4.5.346\lib\net45\DBControl.dll</HintPath>
     </Reference>
     <Reference Include="DBControl.XmlSerializers, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\DBControl.4.5.264\lib\net45\DBControl.XmlSerializers.dll</HintPath>
+      <HintPath>packages\DBControl.4.5.346\lib\net45\DBControl.XmlSerializers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

@@ -5,9 +5,9 @@ BEGIN
 	SET @TrueBit = CONVERT(BIT, 1)
 
 	SELECT ID, lp.[values] AS ProductGroupName
-	FROM Products p
+	FROM Products p WITH(NOLOCK)
 		INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
-	WHERE (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.ID IN (SELECT ProductID FROM UsersProducts WHERE UserID=@UserID)))
+	WHERE (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND lp.LookupID IN (SELECT LookupID FROM UserDetails WITH(NOLOCK) WHERE UserID=@UserID)))
 		AND
 		(
 			(@ShowArchived = 1)

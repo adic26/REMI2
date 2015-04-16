@@ -54,6 +54,9 @@ Partial Class BadgeAccess_EditMyUser
 
         grdDepartments.DataSource = (From d As DataRow In UserManager.GetCurrentUser.UserDetails.Rows Where d.Field(Of String)("Name") = "Department" Select New With {.Departments = d.Field(Of String)("Values")}).ToList()
         grdDepartments.DataBind()
+
+        grdProducts.DataSource = (From d As DataRow In UserManager.GetCurrentUser.UserDetails.Rows Where d.Field(Of String)("Name") = "Products" Select New With {.Product = d.Field(Of String)("Values"), .IsProductManager = d.Field(Of Boolean)("IsProductManager")}).ToList()
+        grdProducts.dataBind()
     End Sub
 
     Protected Sub ddlTraining_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTraining.SelectedIndexChanged
@@ -189,6 +192,10 @@ Partial Class BadgeAccess_EditMyUser
 
     Protected Sub TestCentersHeader() Handles grdTestCenter.PreRender
         Helpers.MakeAccessable(grdTestCenter)
+    End Sub
+
+    Protected Sub ProductsHeader() Handles grdProducts.PreRender
+        Helpers.MakeAccessable(grdProducts)
     End Sub
 
     Private Sub RedirectIfRequested()

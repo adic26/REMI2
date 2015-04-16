@@ -351,15 +351,17 @@ img.right
 {
     width: 75px;
     padding: 0px 0px 0px 0px;
-    margin: 00px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     display:inline-block;
-    vertical-align:top;
+    vertical-align: top;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .leftSidebar
 {
     padding: 0px 0px 0px 0px;
-    margin: 00px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     border: 10px;
     width: 10%;
     height: 700px;
@@ -824,7 +826,6 @@ table
 {
     border-collapse: collapse;
     color: #000;
-    margin: 5px 5px 5px 5px;
     text-align: center;
 }
 
@@ -1279,7 +1280,110 @@ table tr td input
     border:none;
 }
 
+.RequestCellSpan
+{
+    text-align:left;
+    border:none;
+    font-weight: bold;
+    font-size: medium;
+}
+
 .requestTable
 {
     border:none;
 }
+
+.loginCell
+{
+    text-align:center;
+    border:none;
+}
+
+#centering{
+     position:absolute;
+     top:50%;
+     left:50%;
+     margin:-100px 0 0 -150px;
+}
+
+.login
+{
+    text-align:center;
+    width:300px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    padding: 5px 5px 5px 5px;
+}
+
+.loginTextBox
+{
+    height: 25px;
+    font-size:medium;
+}
+
+.loginBtnReturn
+{
+    border: 2px solid #362d2d;
+    margin: 5px 5px 0px 5px;
+    cursor: pointer;
+    cursor: hand;
+    font-weight: bold;
+    text-align: center;
+    background-color: #362d2d;
+    color: #FFFFFF;
+    border: 1px solid #362d2d;
+    font-size: 16px;
+    height: 30px;
+    min-width: 200px;
+}
+
+.loginSwitchBtn
+{
+    border: 2px solid #362d2d;
+    margin: 5px 5px 0px 5px;
+    cursor: pointer;
+    cursor: hand;
+    font-weight: bold;
+    text-align: center;
+    background-color: #362d2d;
+    color: #FFFFFF;
+    border: 1px solid #362d2d;
+    font-size: 16px;
+    height: 40px;
+    min-width: 120px;
+}
+
+.loginReturnTxt
+{
+    font-weight:bold;
+    font-size: medium;
+}
+
+.ScrollMenu
+{
+}
+
+.ESInProgress
+{
+    color: #006400;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.ESTestingComplete
+{
+    color: black;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.ESComplete
+{
+    color: black;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+

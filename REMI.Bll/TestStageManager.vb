@@ -105,7 +105,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.Update, False)> _
         Public Shared Function AddUpdateTaskAssignment(ByVal qraNumber As String, ByVal taskId As Integer, ByVal assignedTo As String) As Boolean
             Try
-                If REMI.Bll.UserManager.UserExists(assignedTo) Then
+                If REMI.Bll.UserManager.UserExists(assignedTo, 0) Then
                     Return TestStageDB.AddUpdateTaskAssignment(qraNumber, taskId, assignedTo, UserManager.GetCurrentValidUserLDAPName())
                 End If
             Catch ex As Exception

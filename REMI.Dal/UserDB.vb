@@ -35,7 +35,7 @@ Namespace REMI.Dal
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.Read() Then
-                            myUser = FillDataRecord(myReader, False, False, False, False)
+                            myUser = FillDataRecord(myReader, False, False, False)
 
                             myReader.NextResult()
 
@@ -63,15 +63,15 @@ Namespace REMI.Dal
                                 Next row
                             End Using
 
-                            'UserProducts
-                            Using myDataTable As New DataTable("ProductGroups")
-                                myDataTable.Load(myReader)
-                                myUser.ProductGroups = myDataTable
+                            ''UserProducts
+                            'Using myDataTable As New DataTable("ProductGroups")
+                            '    myDataTable.Load(myReader)
+                            '    myUser.ProductGroups = myDataTable
 
-                                For Each row As DataRow In myUser.ProductGroups.Rows
-                                    myUser.ProductGroupsNames.Add(row.Item("ProductGroupName").ToString())
-                                Next row
-                            End Using
+                            '    For Each row As DataRow In myUser.ProductGroups.Rows
+                            '        myUser.ProductGroupsNames.Add(row.Item("ProductGroupName").ToString())
+                            '    Next row
+                            'End Using
 
                             Using myDataTable As New DataTable("RequestTypes")
                                 myDataTable.Load(myReader)
@@ -187,7 +187,7 @@ Namespace REMI.Dal
             Return Result
         End Function
 
-        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal includeInActive As Boolean) As UserCollection
+        Public Shared Function UserSearchList(ByVal us As UserSearch, ByVal showAllGrid As Boolean, ByVal determineDelete As Boolean, ByVal loadTraining As Boolean, ByVal includeInActive As Boolean) As UserCollection
             Dim uc As New UserCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -217,7 +217,7 @@ Namespace REMI.Dal
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()
                         If myReader.HasRows Then
                             While myReader.Read()
-                                uc.Add(FillDataRecord(myReader, loadTraining, loadProducts, True, True))
+                                uc.Add(FillDataRecord(myReader, loadTraining, True, True))
                             End While
                         End If
                     End Using
@@ -270,7 +270,7 @@ Namespace REMI.Dal
         ''' <param name="myDataRecord">The Data record for the User produced by a select query</param>
         ''' <returns>A User object filled with the data from the IDataRecord object</returns>
         ''' <remarks></remarks>
-        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Boolean, ByVal loadProducts As Boolean, ByVal loadDetails As Boolean, ByVal loadRequestTypes As Boolean) As User
+        Private Shared Function FillDataRecord(ByVal myDataRecord As IDataRecord, ByVal loadTraining As Boolean, ByVal loadDetails As Boolean, ByVal loadRequestTypes As Boolean) As User
             Dim myUser As New User()
 
             myUser.LDAPName = myDataRecord.GetString(myDataRecord.GetOrdinal("LDAPLogin"))
@@ -301,14 +301,6 @@ Namespace REMI.Dal
                 If Not myDataRecord.IsDBNull(myDataRecord.GetOrdinal("DefaultPage")) Then
                     myUser.DefaultPage = myDataRecord.GetString(myDataRecord.GetOrdinal("DefaultPage"))
                 End If
-            End If
-
-            If (loadProducts = True) Then
-                myUser.ProductGroups = ProductGroupDB.GetUserProductGroupList(myDataRecord.GetInt32(myDataRecord.GetOrdinal("ID")))
-
-                For Each row As DataRow In myUser.ProductGroups.Rows
-                    myUser.ProductGroupsNames.Add(row.Item("ProductGroupName").ToString())
-                Next row
             End If
 
             If (loadTraining = True) Then

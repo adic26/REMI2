@@ -98,7 +98,7 @@ BEGIN
 		WHERE LTRIM(RTRIM(LastUser))=@UserName
 		UNION
 		SELECT DISTINCT 0
-		FROM UsersProducts
+		FROM UserDetails
 		WHERE LTRIM(RTRIM(LastUser))=@UserName
 		UNION
 		SELECT DISTINCT 0

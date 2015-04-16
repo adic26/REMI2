@@ -23,31 +23,40 @@ Partial Public Class BadgeAccess_Default
     Protected WithEvents notMain As Global.Remi.Controls_Notifications
 
     '''<summary>
-    '''IESubmitBugRemedy_DoNotRemove control.
+    '''mvLogin control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents IESubmitBugRemedy_DoNotRemove As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents mvLogin As Global.System.Web.UI.WebControls.MultiView
 
     '''<summary>
-    '''txtBadgeNumber control.
+    '''vLogin control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtBadgeNumber As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents vLogin As Global.System.Web.UI.WebControls.View
 
     '''<summary>
-    '''btnSubmit control.
+    '''tblLogin control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnSubmit As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents tblLogin As Global.System.Web.UI.WebControls.Table
+
+    '''<summary>
+    '''lblReturn control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblReturn As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''txtUserName control.
@@ -59,15 +68,6 @@ Partial Public Class BadgeAccess_Default
     Protected WithEvents txtUserName As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''valUserName control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents valUserName As Global.System.Web.UI.WebControls.CustomValidator
-
-    '''<summary>
     '''txtPassword control.
     '''</summary>
     '''<remarks>
@@ -77,13 +77,112 @@ Partial Public Class BadgeAccess_Default
     Protected WithEvents txtPassword As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''valPassword control.
+    '''txtBadge control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents valPassword As Global.System.Web.UI.WebControls.CustomValidator
+    Protected WithEvents txtBadge As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''cvBadge control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cvBadge As Global.System.Web.UI.WebControls.CompareValidator
+
+    '''<summary>
+    '''btnReturn control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnReturn As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''vCreate control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents vCreate As Global.System.Web.UI.WebControls.View
+
+    '''<summary>
+    '''tblCreate control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents tblCreate As Global.System.Web.UI.WebControls.Table
+
+    '''<summary>
+    '''lblNewUser control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblNewUser As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''rfvUserName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rfvUserName As Global.System.Web.UI.WebControls.RequiredFieldValidator
+
+    '''<summary>
+    '''rfvPassword control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rfvPassword As Global.System.Web.UI.WebControls.RequiredFieldValidator
+
+    '''<summary>
+    '''cpNewBadge control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpNewBadge As Global.System.Web.UI.WebControls.CompareValidator
+
+    '''<summary>
+    '''txtNewUserName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtNewUserName As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtNewPassword control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtNewPassword As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtNewBadge control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtNewBadge As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''ddlGeoLoc control.
@@ -122,20 +221,47 @@ Partial Public Class BadgeAccess_Default
     Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
-    '''txtBadge control.
+    '''ddlDefaultPage control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtBadge As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents ddlDefaultPage As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''btnConfirm control.
+    '''odsDefaultPage control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnConfirm As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents odsDefaultPage As Global.System.Web.UI.WebControls.ObjectDataSource
+
+    '''<summary>
+    '''btnNewUser control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnNewUser As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnLogin control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnLogin As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''btnCreate control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnCreate As Global.System.Web.UI.WebControls.Button
 End Class

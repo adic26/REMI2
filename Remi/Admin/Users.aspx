@@ -117,13 +117,19 @@
                 <asp:BoundField DataField="BadgeNumber" HeaderText="Badge" readonly="true" SortExpression="BadgeNumber" />
                 <asp:TemplateField HeaderText="Details">
                     <ItemTemplate>
-                        <asp:BulletedList runat="server" ID="bltDetails" DataSource='<%# Eval("DetailsNames") %>'></asp:BulletedList>
+                        <asp:Image runat="server" ID="btnDetails" ImageUrl="/Design/Icons/png/16x16/link.png" />
+                        <asp:Panel runat="server" ID="pnlDetails" CssClass="hidden">
+                            <asp:BulletedList runat="server" ID="bltDetails" DataSource='<%# Eval("DetailsNames") %>'></asp:BulletedList>
+                        </asp:Panel>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Roles">
                     <ItemTemplate>
-                        <asp:BulletedList ID="bltRoles" runat="server" DataSource='<%# Eval("RolesList") %>' >
-                        </asp:BulletedList>
+                        <asp:Image runat="server" ID="btnRoles" ImageUrl="/Design/Icons/png/16x16/link.png" />
+                        <asp:Panel runat="server" ID="pnlRoles" CssClass="hidden">
+                            <asp:BulletedList ID="bltRoles" runat="server" DataSource='<%# Eval("RolesList") %>' >
+                            </asp:BulletedList>
+                        </asp:Panel>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Training" SortExpression="TrainingOption" ItemStyle-CssClass="removeStyle">
@@ -133,12 +139,6 @@
                             <asp:BulletedList ID="blTraining" runat="server" DataSource='<%# Eval("TrainingNames") %>' >
                             </asp:BulletedList>
                         </asp:Panel>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Projects" SortExpression="ProductGroupName">
-                    <ItemTemplate>
-                        <asp:BulletedList ID="blProductGroups" runat="server" DataSource='<%# Eval("ProductGroupsNames") %>' >
-                        </asp:BulletedList>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="IsActive" HeaderText="Active" readonly="true" SortExpression="IsActive" />
@@ -269,24 +269,28 @@
                 </td>
             </tr>
             <tr>
-                <td class="HorizTableFirstcolumn">
-                    Projects:</td>
+                <td class="HorizTableFirstcolumn">Products:</td>
                 <td class="Datagrid">
-                    <asp:DataList ID="dlstProductGroups" runat="server" DataSourceID="odsProductGroups" ItemStyle-HorizontalAlign="left" ItemStyle-Wrap="false" RepeatColumns="5" ShowFooter="False" ShowHeader="False"  CssClass="Datagrid">
-                        <ItemTemplate>
-                            <asp:HiddenField ID="hdnProductID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "ID") %>' />
-                            <asp:CheckBox ID='chkProductGroup'  runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "ProductGroupName") %>' CssClass="HorizTableSecondColumn"/>
-                        </ItemTemplate>
-                        <ItemStyle HorizontalAlign="Left" Wrap="False" />
-                    </asp:DataList>
-                    <asp:ObjectDataSource ID="odsProductGroups" runat="server" SelectMethod="GetProductList" TypeName="REMI.Bll.ProductGroupManager" OldValuesParameterFormatString="{0}">
-                        <SelectParameters>
-                            <asp:Parameter DefaultValue="True" Name="ByPassProduct" Type="Boolean" />
-                            <asp:Parameter DefaultValue="-1" Name="userID" Type="Int32" />
-                            <asp:Parameter DefaultValue="False" Name="showArchived" Type="Boolean" />
-                        </SelectParameters>
-                    </asp:ObjectDataSource>
-                    <br />
+                    <asp:GridView runat="server" ID="gvProducts" EmptyDataText="No Departments" AutoGenerateColumns="false">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Product" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lblName" Text='<%# DataBinder.Eval(Container.DataItem, "LookupType") %>'></asp:Label>
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Access" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:HiddenField ID="hdnLookupID" runat="server" Value='<%# DataBinder.Eval(Container.DataItem, "LookupID") %>' />
+                                    <asp:CheckBox runat="server" ID="chkAccess" Checked="false" />
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Is Product Manager" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:CheckBox runat="server" ID="chkProductManager" Checked="false" />
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
                 </td>
             </tr>
             <tr>

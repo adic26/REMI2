@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("ef0b181f-75fd-42d8-93ea-cae5c4a49c21")>
+<Assembly: EdmSchemaAttribute("1f6a5327-37fc-4873-8f3c-3073d4d46281")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -90,7 +90,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldMapping_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "ReqFieldMapping", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldMapping), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_MenuDepartment_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "MenuDepartment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.MenuDepartment), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_MenuDepartment_Menu", "Menu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Menu), "MenuDepartment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.MenuDepartment), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UsersProducts_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UsersProduct", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UsersProduct), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestUnit), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog), True)>
@@ -125,9 +124,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductSettings_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductSetting", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductSetting), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductTestReady_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductTestReady", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductTestReady), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Product), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UsersProducts_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "UsersProduct", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UsersProduct), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestsAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "TestsAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestsAccess), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestsAccess_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "TestsAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestsAccess), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
@@ -138,6 +134,8 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqDistribution_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqDistribution", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqDistribution), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldSetupSibling", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupSibling), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
 
 #End Region
 
@@ -947,20 +945,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property UsersProducts() As ObjectSet(Of UsersProduct)
-            Get
-                If (_UsersProducts Is Nothing) Then
-                    _UsersProducts = MyBase.CreateObjectSet(Of UsersProduct)("UsersProducts")
-                End If
-                Return _UsersProducts
-            End Get
-        End Property
-    
-        Private _UsersProducts As ObjectSet(Of UsersProduct)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property UserTrainings() As ObjectSet(Of UserTraining)
             Get
                 If (_UserTrainings Is Nothing) Then
@@ -1297,20 +1281,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property UserDetails() As ObjectSet(Of UserDetail)
-            Get
-                If (_UserDetails Is Nothing) Then
-                    _UserDetails = MyBase.CreateObjectSet(Of UserDetail)("UserDetails")
-                End If
-                Return _UserDetails
-            End Get
-        End Property
-    
-        Private _UserDetails As ObjectSet(Of UserDetail)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property ReqFieldDataAudits() As ObjectSet(Of ReqFieldDataAudit)
             Get
                 If (_ReqFieldDataAudits Is Nothing) Then
@@ -1419,6 +1389,20 @@ Namespace REMI.Entities
         End Property
     
         Private _ReqFieldSetupSiblings As ObjectSet(Of ReqFieldSetupSibling)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property UserDetails() As ObjectSet(Of UserDetail)
+            Get
+                If (_UserDetails Is Nothing) Then
+                    _UserDetails = MyBase.CreateObjectSet(Of UserDetail)("UserDetails")
+                End If
+                Return _UserDetails
+            End Get
+        End Property
+    
+        Private _UserDetails As ObjectSet(Of UserDetail)
 
         #End Region
 
@@ -1803,13 +1787,6 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the UsersProducts EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToUsersProducts(ByVal usersProduct As UsersProduct)
-            MyBase.AddObject("UsersProducts", usersProduct)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the UserTrainings EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToUserTrainings(ByVal userTraining As UserTraining)
@@ -1978,13 +1955,6 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the UserDetails EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToUserDetails(ByVal userDetail As UserDetail)
-            MyBase.AddObject("UserDetails", userDetail)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the ReqFieldDataAudits EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToReqFieldDataAudits(ByVal reqFieldDataAudit As ReqFieldDataAudit)
@@ -2038,6 +2008,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToReqFieldSetupSiblings(ByVal reqFieldSetupSibling As ReqFieldSetupSibling)
             MyBase.AddObject("ReqFieldSetupSiblings", reqFieldSetupSibling)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the UserDetails EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToUserDetails(ByVal userDetail As UserDetail)
+            MyBase.AddObject("UserDetails", userDetail)
         End Sub
 
         #End Region
@@ -9233,24 +9210,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserDetails_Lookups", "UserDetail")>
-         Public Property UserDetails() As EntityCollection(Of UserDetail)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Lookups", "UserDetail")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Lookups", "UserDetail", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestsAccess_Lookups", "TestsAccess")>
          Public Property TestsAccesses() As EntityCollection(Of TestsAccess)
             Get
@@ -9295,6 +9254,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Configuration)("REMI.Entities.FK_Configurations_Lookups1", "Configuration", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserDetails_Lookups", "UserDetail")>
+         Public Property UserDetails() As EntityCollection(Of UserDetail)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Lookups", "UserDetail")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of UserDetail)("REMI.Entities.FK_UserDetails_Lookups", "UserDetail", value)
                 End If
             End Set
         End Property
@@ -10408,24 +10385,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Products", "RequestSetup", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UsersProducts_Products", "UsersProduct")>
-         Public Property UsersProducts() As EntityCollection(Of UsersProduct)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of UsersProduct)("REMI.Entities.FK_UsersProducts_Products", "UsersProduct")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of UsersProduct)("REMI.Entities.FK_UsersProducts_Products", "UsersProduct", value)
                 End If
             End Set
         End Property
@@ -24230,24 +24189,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UsersProducts_Users", "UsersProduct")>
-         Public Property UsersProducts() As EntityCollection(Of UsersProduct)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of UsersProduct)("REMI.Entities.FK_UsersProducts_Users", "UsersProduct")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of UsersProduct)("REMI.Entities.FK_UsersProducts_Users", "UsersProduct", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UserTraining_Users", "UserTraining")>
          Public Property UserTrainings() As EntityCollection(Of UserTraining)
             Get
@@ -24453,6 +24394,56 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnIsAdminChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property IsProductManager() As Nullable(Of Global.System.Boolean)
+            Get
+                Return _IsProductManager
+            End Get
+            Set
+                OnIsProductManagerChanging(value)
+                ReportPropertyChanging("IsProductManager")
+                _IsProductManager = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsProductManager")
+                OnIsProductManagerChanged()
+            End Set
+        End Property
+    
+        Private _IsProductManager As Nullable(Of Global.System.Boolean)
+        Private Partial Sub OnIsProductManagerChanging(value As Nullable(Of Global.System.Boolean))
+        End Sub
+    
+        Private Partial Sub OnIsProductManagerChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property LastUser() As Global.System.String
+            Get
+                Return _LastUser
+            End Get
+            Set
+                OnLastUserChanging(value)
+                ReportPropertyChanging("LastUser")
+                _LastUser = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("LastUser")
+                OnLastUserChanged()
+            End Set
+        End Property
+    
+        Private _LastUser As Global.System.String
+        Private Partial Sub OnLastUserChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnLastUserChanged()
         End Sub
 
         #End Region
@@ -25042,208 +25033,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of RequestType)("REMI.Entities.FK_UserSearchFilter_RequestType", "RequestType", value)
-                End If
-            End Set
-        End Property
-
-        #End Region
-
-    End Class
-    
-    ''' <summary>
-    ''' No Metadata Documentation available.
-    ''' </summary>
-    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="UsersProduct")>
-    <Serializable()>
-    <DataContractAttribute(IsReference:=True)>
-    Public Partial Class UsersProduct
-        Inherits EntityObject
-        #Region "Factory Method"
-    
-        ''' <summary>
-        ''' Create a new UsersProduct object.
-        ''' </summary>
-        ''' <param name="id">Initial value of the ID property.</param>
-        ''' <param name="userID">Initial value of the UserID property.</param>
-        ''' <param name="productID">Initial value of the ProductID property.</param>
-        ''' <param name="lastUser">Initial value of the LastUser property.</param>
-        Public Shared Function CreateUsersProduct(id As Global.System.Int32, userID As Global.System.Int32, productID As Global.System.Int32, lastUser As Global.System.String) As UsersProduct
-            Dim usersProduct as UsersProduct = New UsersProduct
-            usersProduct.ID = id
-            usersProduct.UserID = userID
-            usersProduct.ProductID = productID
-            usersProduct.LastUser = lastUser
-            Return usersProduct
-        End Function
-
-        #End Region
-
-        #Region "Primitive Properties"
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property ID() As Global.System.Int32
-            Get
-                Return _ID
-            End Get
-            Set
-                If (_ID <> Value) Then
-                    OnIDChanging(value)
-                    ReportPropertyChanging("ID")
-                    _ID = StructuralObject.SetValidValue(value)
-                    ReportPropertyChanged("ID")
-                    OnIDChanged()
-                End If
-            End Set
-        End Property
-    
-        Private _ID As Global.System.Int32
-        Private Partial Sub OnIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property UserID() As Global.System.Int32
-            Get
-                Return _UserID
-            End Get
-            Set
-                OnUserIDChanging(value)
-                ReportPropertyChanging("UserID")
-                _UserID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("UserID")
-                OnUserIDChanged()
-            End Set
-        End Property
-    
-        Private _UserID As Global.System.Int32
-        Private Partial Sub OnUserIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnUserIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
-            Get
-                Return _ProductID
-            End Get
-            Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
-            End Set
-        End Property
-    
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnProductIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property LastUser() As Global.System.String
-            Get
-                Return _LastUser
-            End Get
-            Set
-                OnLastUserChanging(value)
-                ReportPropertyChanging("LastUser")
-                _LastUser = StructuralObject.SetValidValue(value, false)
-                ReportPropertyChanged("LastUser")
-                OnLastUserChanged()
-            End Set
-        End Property
-    
-        Private _LastUser As Global.System.String
-        Private Partial Sub OnLastUserChanging(value As Global.System.String)
-        End Sub
-    
-        Private Partial Sub OnLastUserChanged()
-        End Sub
-
-        #End Region
-
-        #Region "Navigation Properties"
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UsersProducts_Users", "User")>
-        Public Property User() As User
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UsersProducts_Users", "User").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UsersProducts_Users", "User").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property UserReference() As EntityReference(Of User)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of User)("REMI.Entities.FK_UsersProducts_Users", "User")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of User)("REMI.Entities.FK_UsersProducts_Users", "User", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_UsersProducts_Products", "Product")>
-        Public Property Product() As Product
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_UsersProducts_Products", "Product").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_UsersProducts_Products", "Product").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_UsersProducts_Products", "Product")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_UsersProducts_Products", "Product", value)
                 End If
             End Set
         End Property

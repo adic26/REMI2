@@ -8,10 +8,6 @@ Imports System.Drawing
 Partial Class ES_Default
     Inherits System.Web.UI.Page
 
-    'Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
-    '    gvwObservationSummary.Columns(1).Visible = False
-    'End Sub
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If (Not Page.IsPostBack) Then
             If (Not Page.ClientScript.IsClientScriptIncludeRegistered(Me.Page.GetType(), "1.10.2")) Then
@@ -51,7 +47,7 @@ Partial Class ES_Default
 
                     Dim bs As New REMI.BusinessEntities.BatchSearch
                     bs.ProductID = b.ProductID
-                    bs.JobName = b.JobName
+                    bs.JobID = b.JobID
                     bs.ProductTypeID = b.ProductTypeID
 
                     Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
@@ -83,6 +79,7 @@ Partial Class ES_Default
                     End If
 
                     SetStatus(ds.Tables(2).Rows(0)(0).ToString())
+                    SetBatchStatus(b.Status.ToString())
 
                     For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Distinct Select New With {tr.FailDocDS})
                         pnlFA.Style.Add("Display", "block")
@@ -127,6 +124,19 @@ Partial Class ES_Default
                 End If
             End If
         End If
+    End Sub
+
+    Protected Sub SetBatchStatus(ByVal status As String)
+        lblStatus.Text = status
+
+        Select Case lblStatus.Text.ToLower
+            Case "complete"
+                lblStatus.CssClass = "ESComplete"
+            Case "testingcomplete"
+                lblStatus.CssClass = "ESTestingComplete"
+            Case "inprogress"
+                lblStatus.CssClass = "ESInProgress"
+        End Select
     End Sub
 
     Protected Sub SetStatus(ByVal result As String)

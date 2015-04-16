@@ -417,6 +417,7 @@ Partial Public Class Admin_Users
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents grdDepartments As Global.System.Web.UI.WebControls.GridView
+    Protected WithEvents gvProducts As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''gvRequestTypes control.

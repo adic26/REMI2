@@ -1,15 +1,4 @@
 ﻿ALTER PROCEDURE [dbo].[remispProductManagersAssignUser]
-/*	'===============================================================
-	'   NAME:                	remispProductManagersAssignUser
-	'   DATE CREATED:       	11 Sept 2009
-	'   CREATED BY:          	Darragh O'Riordan
-	'   FUNCTION:            	Creates or updates an item in a table: product managers
-	'   VERSION: 1                   
-	'   COMMENTS:            
-	'   MODIFIED ON:         
-	'   MODIFIED BY:         
-	'   REASON FOR MODIFICATION: 
-	'===============================================================*/
 	@ProductID INT,
 	@Username nvarchar(255),
 	@LastUser nvarchar(255)	

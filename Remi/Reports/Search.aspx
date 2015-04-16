@@ -13,7 +13,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="pageTitleContent" runat="server">
-    <h2>Advanced Search</h2>
+    <h2>Search</h2>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" Runat="Server">
     <h3>Quick Search</h3>
@@ -30,16 +30,19 @@
         <li>
             <asp:Button runat="server" Text="Incoming" ID="btnIncoming" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
         </li>
+        <li>
+            <asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
+        </li>
     </ul>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="3" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
+    <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="4" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
         <asp:ListItem Text="Batchs" Selected="True" Value="1"></asp:ListItem>
-        <asp:ListItem Text="Units" Value="2"></asp:ListItem>
+        <%--<asp:ListItem Text="Units" Value="2"></asp:ListItem>--%>
         <asp:ListItem Text="Exceptions" Value="3" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="4" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Training" Value="5"></asp:ListItem>
-    </asp:RadioButtonList><br />
+    </asp:RadioButtonList><br /><br />
 
     <asp:Panel Visible="false" runat="server" ID="pnlTraining">
     Test Center: <asp:DropDownList ID="ddlTestCenterTraining" runat="server" AppendDataBoundItems="True" AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList><br />
@@ -68,7 +71,8 @@
     </asp:Panel>
 
     <asp:Panel Visible="false" runat="server" ID="pnlSearchUnits">
-        BSN: <asp:TextBox runat="server" ID="txtBSN"></asp:TextBox>
+        BSN:&nbsp; <asp:TextBox runat="server" ID="txtBSN"></asp:TextBox><br />
+        IMEI: <asp:TextBox runat="server" ID="txtIMEI"></asp:TextBox>
         <br /><br />
     </asp:Panel>
     
@@ -93,7 +97,7 @@
         Request: <asp:DropDownList ID="ddlRequestReason" runat="server" Width="239px" AppendDataBoundItems="True" AutoPostBack="False" DataTextField="Description" DataValueField="LookupID">
         </asp:DropDownList>
         <br />
-        Jobs: <asp:DropDownList ID="ddlJobs" runat="server" DataSourceID="odsJobs" DataTextField="Name" DataValueField="Name" AutoPostBack="True" Width="239px" AppendDataBoundItems="True">
+        Jobs: <asp:DropDownList ID="ddlJobs" runat="server" DataTextField="Name" DataValueField="ID" AutoPostBack="True" Width="239px" AppendDataBoundItems="True">
             <asp:ListItem>All</asp:ListItem>
         </asp:DropDownList>
         <br />
@@ -353,14 +357,6 @@
             <asp:Parameter Type="Boolean" Name="includeArchived" DefaultValue="False" />
             <asp:Parameter Type="Int32" Name="userID" />
             <asp:Parameter Type="Int32" Name="requestTypeID" DefaultValue="0" />
-        </SelectParameters>
-    </asp:ObjectDataSource>
-
-    <asp:ObjectDataSource ID="odsJobs" runat="server" SelectMethod="GetJobListDT" TypeName="Remi.Bll.JobManager" OldValuesParameterFormatString="original_{0}">
-        <SelectParameters>
-            <asp:Parameter Name="requestTypeID" DefaultValue="0" Type="Int32" />
-            <asp:Parameter Name="UserID" DefaultValue="0" Type="Int32" />
-            <asp:Parameter Name="departmentID" DefaultValue="0" Type="Int32" />
         </SelectParameters>
     </asp:ObjectDataSource>
         

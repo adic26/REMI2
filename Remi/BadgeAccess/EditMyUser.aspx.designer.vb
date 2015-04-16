@@ -113,6 +113,15 @@ Partial Public Class BadgeAccess_EditMyUser
     Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
+    '''grdProducts control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdProducts As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
     '''ddlDefaultPage control.
     '''</summary>
     '''<remarks>

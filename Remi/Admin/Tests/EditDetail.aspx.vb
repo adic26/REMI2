@@ -30,9 +30,9 @@ Partial Class Admin_Tests_EditDetail
         txtName.Visible = True
     End Sub
 
-    Protected Sub ProcessTestID(ByVal tmpID As Integer)
+    Protected Sub ProcessTestID(ByVal tmpID As Int32)
         Try
-            Dim t As Test = TestManager.GetTest(tmpID)
+            Dim t As Test = TestManager.GetTest(tmpID, String.Empty, False)
             If t IsNot Nothing Then
                 Dim litTitle As Literal = Master.FindControl("litPageTitle")
                 If litTitle IsNot Nothing Then
@@ -191,7 +191,7 @@ Partial Class Admin_Tests_EditDetail
         notMain.Clear()
 
         If CInt(hdnEditID.Value) > 0 Then
-            tmpTest = TestManager.GetTest(CInt(hdnEditID.Value))
+            tmpTest = TestManager.GetTest(CInt(hdnEditID.Value), String.Empty, False)
         Else
             tmpTest = New Test
         End If
