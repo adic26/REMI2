@@ -150,27 +150,40 @@ Public Class REMITasks
                                     System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
                                 End If
 
-                                rng = sourceDoc.Bookmarks.Item(DirectCast("RequestDetails", Object)).Range
-                                rng.Text = String.Empty
-                                Dim oTemplate As Word.ListTemplate = wordApp.ListGalleries.Item(Word.WdListGalleryType.wdBulletGallery).ListTemplates.Item(1)
+                                If (sourceDoc.Bookmarks.Exists(DirectCast("RequestDetails", Object).ToString())) Then
 
-                                For Each r In req
-                                    If (Not String.IsNullOrEmpty(r.Value) And Not r.IntField.ToLower.Contains("execut")) Then
-                                        With rng
-                                            .ListFormat.ApplyListTemplateWithLevel(ListTemplate:=oTemplate, ContinuePreviousList:=False, ApplyTo:=Word.WdListApplyTo.wdListApplyToWholeList, DefaultListBehavior:=Word.WdDefaultListBehavior.wdWord10ListBehavior)
-                                            .Collapse(Word.WdCollapseDirection.wdCollapseStart)
-                                            .Text = String.Format("{0}: {1}", r.Name, r.Value.Replace(vbCr, " ").Replace(vbLf, " "))
-                                            .Font.Size = 10
-                                            .Font.Name = "Arial"
-                                            .ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft
-                                            .Bold = False
-                                            .InsertParagraphAfter()
-                                            .Collapse(Word.WdCollapseDirection.wdCollapseEnd)
-                                        End With
-                                    End If
-                                Next
+                                    rng = sourceDoc.Bookmarks.Item(DirectCast("RequestDetails", Object)).Range
+                                    rng.Text = String.Empty
+                                    Dim oTemplate As Word.ListTemplate = wordApp.ListGalleries.Item(Word.WdListGalleryType.wdBulletGallery).ListTemplates.Item(1)
 
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    Dim dontAddFields = New List(Of String)()
+                                    dontAddFields.Add("Request Status")
+                                    dontAddFields.Add("Department")
+                                    dontAddFields.Add("Is Report Required")
+                                    dontAddFields.Add("FA Required")
+                                    dontAddFields.Add("Return Material?")
+                                    dontAddFields.Add("Product Type")
+                                    dontAddFields.Add("Drop/Tumble Link")
+                                    dontAddFields.Add("Executive Summary")
+
+                                    For Each r In req
+                                        If (Not String.IsNullOrEmpty(r.Value) And Not dontAddFields.Contains(r.Name)) Then
+                                            With rng
+                                                .ListFormat.ApplyListTemplateWithLevel(ListTemplate:=oTemplate, ContinuePreviousList:=False, ApplyTo:=Word.WdListApplyTo.wdListApplyToWholeList, DefaultListBehavior:=Word.WdDefaultListBehavior.wdWord10ListBehavior)
+                                                .Collapse(Word.WdCollapseDirection.wdCollapseStart)
+                                                .Text = String.Format("{0}: {1}", r.Name, r.Value.Replace(vbCr, " ").Replace(vbLf, " "))
+                                                .Font.Size = 10
+                                                .Font.Name = "Arial"
+                                                .ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft
+                                                .Bold = False
+                                                .InsertParagraphAfter()
+                                                .Collapse(Word.WdCollapseDirection.wdCollapseEnd)
+                                            End With
+                                        End If
+                                    Next
+
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                End If
 
                                 If (sourceDoc.Bookmarks.Exists(DirectCast("Result", Object).ToString())) Then
                                     rng = sourceDoc.Bookmarks.Item(DirectCast("Result", Object)).Range
