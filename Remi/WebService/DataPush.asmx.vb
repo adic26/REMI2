@@ -92,6 +92,30 @@ Public Class DataPush
         Return False
     End Function
 
+    <WebMethod(EnableSession:=True, Description:="Get Observations")> _
+    Public Function GetObservations(ByVal batchID As Int32, ByVal userIdentification As String) As DataTable
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RelabManager.GetObservations(batchID)
+            End If
+        Catch ex As Exception
+            RelabManager.LogIssue("GetObservations", "e1", NotificationType.Errors, ex, String.Format("batchID: {0} userIdentification: {1} ", batchID, userIdentification))
+        End Try
+        Return New DataTable("GetObservations")
+    End Function
+
+    <WebMethod(EnableSession:=True, Description:="Get Observation Summary")> _
+    Public Function GetObservationSummary(ByVal batchID As Int32, ByVal userIdentification As String) As DataTable
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return RelabManager.GetObservationSummary(batchID)
+            End If
+        Catch ex As Exception
+            RelabManager.LogIssue("GetObservationSummary", "e1", NotificationType.Errors, ex, String.Format("batchID: {0} userIdentification: {1} ", batchID, userIdentification))
+        End Try
+        Return New DataTable("GetObservationSummary")
+    End Function
+
     <WebMethod(Description:="Poll Unprocessed Results")> _
     Public Function PollUnProcessedResults(ByVal requestNumber As String, ByVal unit As Int32, ByVal testStageName As String, ByVal testName As String) As Boolean
         Try
