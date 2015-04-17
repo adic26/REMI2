@@ -46,7 +46,7 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:TextBox runat="server" ID="txtBadge" Width="200px" CssClass="loginTextBox" ToolTip="Badge"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtBadge" TextMode="Password" Width="200px" CssClass="loginTextBox" ToolTip="Badge"></asp:TextBox>
                                 <br /><asp:CompareValidator runat="server" ID="cvBadge" ValidationGroup="Return" ControlToValidate="txtBadge" Display="Static" ErrorMessage="Must Be Numeric" Operator="DataTypeCheck" Type="Integer"></asp:CompareValidator>
                             </asp:TableCell>
                         </asp:TableRow>
