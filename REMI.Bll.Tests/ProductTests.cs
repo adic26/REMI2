@@ -144,7 +144,7 @@ namespace REMI.Bll.Tests
             var product = new REMI.Entities.Product();
             product = (from p in instance.Products orderby p.ID descending select p).FirstOrDefault();
 
-            Assert.True(ProductGroupManager.UpdateProduct(product.Lookup.Values, (product.Lookup.IsActive == 1 ? 1 : 0), product.ID, product.QAPLocation, product.TSDContact));
+            Assert.True(ProductGroupManager.UpdateProduct(product.Lookup.Values, (product.Lookup.IsActive == 1 ? 1 : 0), product.ID, product.QAPLocation));
         }
 
         [Test]

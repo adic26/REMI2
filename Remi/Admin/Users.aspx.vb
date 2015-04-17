@@ -165,12 +165,14 @@ Partial Class Admin_Users
             For Each pr As GridViewRow In gvProducts.Rows
                 Dim chkAccess As CheckBox = pr.FindControl("chkAccess")
                 Dim chkProductManager As CheckBox = pr.FindControl("chkProductManager")
+                Dim chkTSDContact As CheckBox = pr.FindControl("chkTSDContact")
                 Dim hdnLookupID As HiddenField = pr.FindControl("hdnLookupID")
 
                 Dim dr As DataRow = (From ud As DataRow In CurrentUser.UserDetails.Rows Where ud.Field(Of Int32)("LookupID") = hdnLookupID.Value Select ud).FirstOrDefault()
 
                 If (dr IsNot Nothing) Then
                     chkProductManager.Checked = dr.Field(Of Boolean)("IsProductManager")
+                    chkTSDContact.Checked = dr.Field(Of Boolean)("IsTSDContact")
                     chkAccess.Checked = True
                 End If
             Next
@@ -439,6 +441,7 @@ Partial Class Admin_Users
         userDetails.Columns.Add("LookupID", Type.GetType("System.Int32"))
         userDetails.Columns.Add("IsDefault", Type.GetType("System.Boolean"))
         userDetails.Columns.Add("IsProductManager", Type.GetType("System.Boolean"))
+        userDetails.Columns.Add("IsTSDContact", Type.GetType("System.Boolean"))
 
         For Each drtc As GridViewRow In grdDepartments.Rows
             Dim chkAccess As CheckBox = drtc.FindControl("chkAccess")
@@ -493,10 +496,11 @@ Partial Class Admin_Users
         For Each pr As GridViewRow In gvProducts.Rows
             Dim chkAccess As CheckBox = pr.FindControl("chkAccess")
             Dim chkProductManager As CheckBox = pr.FindControl("chkProductManager")
+            Dim chkTSDContact As CheckBox = pr.FindControl("chkTSDContact")
             Dim hdnLookupID As HiddenField = pr.FindControl("hdnLookupID")
             Dim lblName As Label = pr.FindControl("lblName")
 
-            If (chkAccess.Checked Or chkProductManager.Checked) Then
+            If (chkAccess.Checked Or chkProductManager.Checked Or chkTSDContact.Checked) Then
                 Dim newRow As DataRow = userDetails.NewRow
                 newRow("LookupID") = hdnLookupID.Value
                 newRow("Values") = lblName.Text
@@ -507,6 +511,12 @@ Partial Class Admin_Users
                     newRow("IsProductManager") = chkProductManager.Checked
                 Else
                     newRow("IsProductManager") = False
+                End If
+
+                If (chkTSDContact.Checked) Then
+                    newRow("IsTSDContact") = chkTSDContact.Checked
+                Else
+                    newRow("IsTSDContact") = False
                 End If
 
                 userDetails.Rows.Add(newRow)

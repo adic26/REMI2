@@ -6,6 +6,7 @@
 	[IsAdmin] [bit] NULL,
 	[IsProductManager] [bit] NULL,
 	[LastUser] [nvarchar](255) NULL,
+	IsTSDContact BIT DEFAULT(0) NULL,
  CONSTRAINT [PK_UserDetails] PRIMARY KEY CLUSTERED 
 (
 	[UserDetailsID] ASC

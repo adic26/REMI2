@@ -1,8 +1,6 @@
 ﻿CREATE TABLE [dbo].[Products](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[IsActive] [bit] NOT NULL,
 	[QAPLocation] [nvarchar](255) NULL,
-	TSDContact NVARCHAR(255) NULL,
 	LookupID INT NOT NULL
  CONSTRAINT [PK_Products] PRIMARY KEY CLUSTERED 
 (

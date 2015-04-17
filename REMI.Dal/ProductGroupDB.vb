@@ -229,16 +229,12 @@ Namespace REMI.Dal
             Return tempList
         End Function
 
-        Public Shared Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String, ByVal tsdContact As String) As Boolean 'We are passing in productGroupName because the webservice will insert a missing one
+        Public Shared Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String) As Boolean 'We are passing in productGroupName because the webservice will insert a missing one
             Dim Result As Integer = 0
             Dim success As Boolean = False
 
             If (QAP Is Nothing) Then
                 QAP = String.Empty
-            End If
-
-            If (tsdContact Is Nothing) Then
-                tsdContact = String.Empty
             End If
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -248,7 +244,6 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@isActive", isActive)
                     myCommand.Parameters.AddWithValue("@productID", productID)
                     myCommand.Parameters.AddWithValue("@QAP", QAP)
-                    myCommand.Parameters.AddWithValue("@TSDContact", tsdContact)
 
                     Dim output As DbParameter = myCommand.CreateParameter()
                     output.DbType = DbType.Boolean

@@ -74,11 +74,6 @@
     <uc1:notifications ID="notMain" runat="server" />
     QAP URL: <asp:TextBox ID="txtQAPLocation" runat="server" Width="507px" Rows="3"></asp:TextBox><br />
 
-    <asp:AutoCompleteExtender runat="server" ID="aceTxtOwner" TargetControlID="txtTSDContact"
-        ServicePath="~/webservice/AutoCompleteService.asmx" ServiceMethod="GetActiveDirectoryNames" MinimumPrefixLength="1" CompletionSetCount="20">
-    </asp:AutoCompleteExtender>
-    TSD Contact<asp:TextBox runat="server" ID="txtTSDContact"></asp:TextBox>
-
     <h2>Functional Tests:</h2>
     <asp:GridView runat="server" ID="gdvFunctional" AutoGenerateColumns="false" DataKeyNames="LookupID">
         <Columns>

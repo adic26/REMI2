@@ -289,6 +289,11 @@
                                     <asp:CheckBox runat="server" ID="chkProductManager" Checked="false" />
                                 </ItemTemplate>                     
                             </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Is TSD Contact" SortExpression="">
+                                <ItemTemplate>
+                                    <asp:CheckBox runat="server" ID="chkTSDContact" Checked="false" />
+                                </ItemTemplate>                     
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </td>

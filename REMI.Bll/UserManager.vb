@@ -133,7 +133,7 @@ Namespace REMI.Bll
                                 Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isDefault = DirectCast(ud.Item("isDefault"), Boolean)}).ToList()
 
                         Dim userDetailsNewProducts = (From ud In u.UserDetails Where DirectCast(ud.Item("Name"), String) = "Products" _
-                                Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isProductManager = DirectCast(ud.Item("IsProductManager"), Boolean)}).ToList()
+                                Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isProductManager = DirectCast(ud.Item("IsProductManager"), Boolean), .isTSDContact = DirectCast(ud.Item("IsTSDContact"), Boolean)}).ToList()
 
                         For Each udd In userDetailsNewDepartment
                             Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.User.ID = u.ID And d.LookupID = udd.LookupID Select d).FirstOrDefault()
@@ -179,12 +179,14 @@ Namespace REMI.Bll
                                 ud.IsDefault = False
                                 ud.IsAdmin = False
                                 ud.IsProductManager = udtc.isProductManager
+                                ud.IsTSDContact = udtc.isTSDContact
 
                                 instance.AddToUserDetails(ud)
                             Else
                                 ud.IsDefault = False
                                 ud.IsAdmin = False
                                 ud.IsProductManager = udtc.isProductManager
+                                ud.IsTSDContact = udtc.isTSDContact
                             End If
                         Next
 

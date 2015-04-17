@@ -50,9 +50,8 @@ Partial Class ManageProducts_EditProductSettings
 
         Dim instance = New REMI.Dal.Entities().Instance()
 
-        Dim product = (From p In instance.Products Where p.ID = productID Select p.QAPLocation, p.TSDContact, p.Lookup.IsActive).FirstOrDefault()
+        Dim product = (From p In instance.Products Where p.ID = productID Select p.QAPLocation, p.Lookup.IsActive).FirstOrDefault()
         txtQAPLocation.Text = product.QAPLocation
-        txtTSDContact.Text = product.TSDContact
         hdnIsActive.Value = product.IsActive
 
         Dim pl = (From l In instance.Lookups Where l.LookupType.Name = "MFIFunctionalMatrix" Or l.LookupType.Name = "SFIFunctionalMatrix" Or l.LookupType.Name = "AccFunctionalMatrix" Order By l.LookupType.Name, l.Values _
@@ -142,7 +141,7 @@ Partial Class ManageProducts_EditProductSettings
         If (UserManager.GetCurrentUser.IsAdmin) Then
             Dim isActive As Boolean
             Boolean.TryParse(hdnIsActive.Value, isActive)
-            ProductGroupManager.UpdateProduct(hdnProductName.Value, isActive, hdnProductID.Value, txtQAPLocation.Text, txtTSDContact.Text)
+            ProductGroupManager.UpdateProduct(hdnProductName.Value, isActive, hdnProductID.Value, txtQAPLocation.Text)
         End If
 
         Response.Redirect(REMIWebLinks.GetProductInfoLink(hdnProductID.Value), True)

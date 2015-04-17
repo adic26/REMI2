@@ -176,24 +176,6 @@ Partial Public Class ManageProducts_EditProductSettings
     Protected WithEvents txtQAPLocation As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''aceTxtOwner control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents aceTxtOwner As Global.AjaxControlToolkit.AutoCompleteExtender
-
-    '''<summary>
-    '''txtTSDContact control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtTSDContact As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
     '''gdvFunctional control.
     '''</summary>
     '''<remarks>

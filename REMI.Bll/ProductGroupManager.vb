@@ -69,9 +69,9 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function UpdateProduct(ByVal productGroupname As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String, ByVal tsdContact As String) As Boolean
+        Public Shared Function UpdateProduct(ByVal productGroupname As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String) As Boolean
             Try
-                Return ProductGroupDB.UpdateProduct(productGroupname, isActive, productID, QAP, tsdContact)
+                Return ProductGroupDB.UpdateProduct(productGroupname, isActive, productID, QAP)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
