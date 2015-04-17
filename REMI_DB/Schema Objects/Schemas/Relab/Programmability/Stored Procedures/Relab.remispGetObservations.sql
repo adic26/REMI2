@@ -11,7 +11,7 @@ BEGIN
 								ORDER BY ts2.ProcessOrder DESC
 								) AS MaxStage, 
 			ts.TestStageName, [Relab].[ResultsObservation] (m.ID) AS Observation, 
-			(SELECT T.c.value('@Description', 'varchar(MAX)')
+			(SELECT TOP 1 T.c.value('@Description', 'varchar(MAX)')
 			FROM jo.Definition.nodes('/Orientations/Orientation') T(c)
 			WHERE T.c.value('@Unit', 'varchar(MAX)') = tu.BatchUnitNumber AND ts.TestStageName LIKE T.c.value('@Drop', 'varchar(MAX)') + ' %') AS Orientation, 
 			m.Comment, (CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) WHERE rmf.ResultMeasurementID=m.ID) > 0 THEN 1 ELSE 0 END) AS HasFiles, m.ID AS MeasurementID

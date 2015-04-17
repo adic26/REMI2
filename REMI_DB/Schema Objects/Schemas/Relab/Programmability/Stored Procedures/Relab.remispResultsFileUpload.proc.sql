@@ -98,14 +98,18 @@ BEGIN
 		SET @StartDate = DATEADD(DAY, -CONVERT(INT, SUBSTRING(@Duration, 1, CHARINDEX('.', @Duration)-1)), @EndDate)
 		SET @Duration = SUBSTRING(@Duration, CHARINDEX('.', @Duration)+1, LEN(@Duration))
 	END
-	
+	ELSE
+	BEGIN
+		SET @StartDate = @EndDate
+	END
+
 	SELECT * INTO #dates FROM dbo.Split(':', @Duration)
-	
+
 	IF ((SELECT s FROM #dates WHERE RowID=1) IS NOT NULL)
 	BEGIN
 		SET @StartDate = DATEADD(HOUR, -CONVERT(INT, (SELECT s FROM #dates WHERE RowID=1)), @StartDate)
 	END
-	
+
 	IF ((SELECT s FROM #dates WHERE RowID=2) IS NOT NULL)
 	BEGIN
 		SET @StartDate = DATEADD(MINUTE, -CONVERT(INT, (SELECT s FROM #dates WHERE RowID=2)), @StartDate)
@@ -117,7 +121,6 @@ BEGIN
 	END
 
 	DROP TABLE #dates
-	select @StartDate,@EndDate
 
 	SELECT @TestUnitID = tu.ID
 	FROM TestUnits tu
