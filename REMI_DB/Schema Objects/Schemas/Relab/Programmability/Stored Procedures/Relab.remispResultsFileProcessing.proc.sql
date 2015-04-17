@@ -544,7 +544,7 @@ BEGIN
 							BEGIN
 								UPDATE Relab.ResultsMeasurementsFiles 
 								SET ResultMeasurementID=@ResultMeasurementID3 
-								WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(@FileName) AND ResultMeasurementID IS NULL
+								WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(LTRIM(RTRIM(@FileName))) AND ResultMeasurementID IS NULL
 							END
 						
 						INSERT INTO #files ([FileName])
@@ -554,7 +554,7 @@ BEGIN
 						UPDATE Relab.ResultsMeasurementsFiles 
 						SET ResultMeasurementID=@ResultMeasurementID2
 						FROM Relab.ResultsMeasurementsFiles 
-							INNER JOIN #files f ON f.[FileName] = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+							INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 						WHERE ResultMeasurementID IS NULL
 					
 						IF (@Parameters <> '')
