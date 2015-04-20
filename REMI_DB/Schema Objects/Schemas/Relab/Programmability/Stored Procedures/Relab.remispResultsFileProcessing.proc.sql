@@ -454,7 +454,7 @@ BEGIN
 					BEGIN
 						INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
 					END
-				
+
 					PRINT 'INSERT Files'
 					UPDATE Relab.ResultsMeasurementsFiles 
 					SET ResultMeasurementID=@ResultMeasurementID
@@ -464,7 +464,7 @@ BEGIN
 					
 					IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
 									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
-								WHERE ResultMeasurementID = @ResultMeasurementID))
+								WHERE ResultMeasurementID = @ResultMeasurementID)) AND (SELECT COUNT(*) FROM #files) > 0
 					BEGIN
 						PRINT 'Files Didnt Insert Correctly Rolling Back'
 						GOTO HANDLE_ERROR
@@ -522,7 +522,7 @@ BEGIN
 						
 						IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
 									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
-								WHERE ResultMeasurementID = @ResultMeasurementID2))
+								WHERE ResultMeasurementID = @ResultMeasurementID2)) AND (SELECT COUNT(*) FROM #files) > 0
 						BEGIN
 							PRINT 'Files Didnt Insert Correctly Rolling Back'
 							GOTO HANDLE_ERROR
@@ -572,7 +572,7 @@ BEGIN
 										
 						IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
 									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
-								WHERE ResultMeasurementID = @ResultMeasurementID3))
+								WHERE ResultMeasurementID = @ResultMeasurementID3)) AND (SELECT COUNT(*) FROM #files) > 0
 						BEGIN
 							PRINT 'Files Didnt Insert Correctly Rolling Back'
 							GOTO HANDLE_ERROR
