@@ -108,4 +108,12 @@ GO
 ALTER TABLE dbo.Products DROP COLUMN _ProductGroupName
 ALTER TABLE dbo.Products DROP COLUMN _IsActive
 GO
+CREATE PROCEDURE Relab.remispGetObservationParameters @MeasurementID INT
+AS
+BEGIN
+	select [Relab].[ResultsObservation] (@MeasurementID) AS Observation
+END
+GO
+GRANT EXECUTE ON Relab.remispGetObservationParameters TO REMI
+GO
 rollback tran

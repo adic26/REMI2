@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("3ad1550c-7611-4016-954b-9ac45eedf5b5")>
+<Assembly: EdmSchemaAttribute("d68260b2-b0b7-487b-8fea-44ffe8c22be5")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -2016,6 +2016,26 @@ Namespace REMI.Entities
         Public Sub AddToProducts(ByVal product As Product)
             MyBase.AddObject("Products", product)
         End Sub
+
+        #End Region
+
+        #Region "Function Imports"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        ''' <param name="measurementID">No Metadata Documentation available.</param>
+        Public Function remispGetObservationParameters(measurementID As Nullable(Of Global.System.Int32)) As ObjectResult(Of Global.System.String)
+            Dim measurementIDParameter As ObjectParameter
+            If (measurementID.HasValue)
+                measurementIDParameter = New ObjectParameter("MeasurementID", measurementID)
+            Else
+                measurementIDParameter = New ObjectParameter("MeasurementID", GetType(Global.System.Int32))
+            End If
+    
+            Return MyBase.ExecuteFunction(Of Global.System.String)("remispGetObservationParameters", measurementIDParameter)
+    
+        End Function
 
         #End Region
 

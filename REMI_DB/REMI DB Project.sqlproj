@@ -2837,4 +2837,7 @@
       <SubType>Code</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetObservationParameters.sql" />
+  </ItemGroup>
 </Project>
