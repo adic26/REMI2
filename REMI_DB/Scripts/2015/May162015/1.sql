@@ -102,4 +102,10 @@ END
 GO
 GRANT EXECUTE ON remispGetUserDetails TO REMI
 GO
+DROP TABLE dbo._UsersProducts
+DROP TABLE dbo._UsersProductsAudit
+GO
+ALTER TABLE dbo.Products DROP COLUMN _ProductGroupName
+ALTER TABLE dbo.Products DROP COLUMN _IsActive
+GO
 rollback tran

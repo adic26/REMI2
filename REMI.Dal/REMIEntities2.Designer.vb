@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("70323468-22dc-47a1-8a2e-26dccb86a464")>
+<Assembly: EdmSchemaAttribute("3ad1550c-7611-4016-954b-9ac45eedf5b5")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -10151,56 +10151,6 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property C_ProductGroupName() As Global.System.String
-            Get
-                Return _C_ProductGroupName
-            End Get
-            Set
-                OnC_ProductGroupNameChanging(value)
-                ReportPropertyChanging("C_ProductGroupName")
-                _C_ProductGroupName = StructuralObject.SetValidValue(value, true)
-                ReportPropertyChanged("C_ProductGroupName")
-                OnC_ProductGroupNameChanged()
-            End Set
-        End Property
-    
-        Private _C_ProductGroupName As Global.System.String
-        Private Partial Sub OnC_ProductGroupNameChanging(value As Global.System.String)
-        End Sub
-    
-        Private Partial Sub OnC_ProductGroupNameChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property C_IsActive() As Nullable(Of Global.System.Boolean)
-            Get
-                Return _C_IsActive
-            End Get
-            Set
-                OnC_IsActiveChanging(value)
-                ReportPropertyChanging("C_IsActive")
-                _C_IsActive = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("C_IsActive")
-                OnC_IsActiveChanged()
-            End Set
-        End Property
-    
-        Private _C_IsActive As Nullable(Of Global.System.Boolean)
-        Private Partial Sub OnC_IsActiveChanging(value As Nullable(Of Global.System.Boolean))
-        End Sub
-    
-        Private Partial Sub OnC_IsActiveChanged()
         End Sub
     
         ''' <summary>
