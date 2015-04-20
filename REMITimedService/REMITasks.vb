@@ -497,21 +497,22 @@ Public Class REMITasks
             Dim sb As New StringBuilder
             Dim succeeded As Boolean = True
             Dim counter As Integer = 0
-            _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
-            Dim dtServices As DataTable = DBControl.DAL.Remi.GetServicesAccess(Nothing)
             Dim requests As New List(Of String)
-            Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
-
-            For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "JIRASync" Select s).ToList
-                Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
-                requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
-                sb.AppendLine(String.Format("{0} - Adding Requests For Department {1}", DateTime.Now, department.Field(Of String)("Values").ToString()))
-            Next
-
-            Dim strRequests As String = String.Join("','", requests.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray())
-            Dim dtJiraQuery As New DataTable("JiraQuery")
 
             Try
+                _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
+                Dim dtServices As DataTable = DBControl.DAL.Remi.GetServicesAccess(Nothing)
+                Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
+
+                For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "JIRASync" Select s).ToList
+                    Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
+                    requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
+                    sb.AppendLine(String.Format("{0} - Adding Requests For Department {1}", DateTime.Now, department.Field(Of String)("Values").ToString()))
+                Next
+
+                Dim strRequests As String = String.Join("','", requests.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray())
+                Dim dtJiraQuery As New DataTable("JiraQuery")
+
                 Using myConnection As New SqlConnection(ConfigurationManager.ConnectionStrings("JiraDBConnectionString").ConnectionString)
                     Using myCommand As New SqlCommand("SELECT d.IssueKey, d.Summary, l.Label FROM FCT.vDefects d INNER JOIN DIM.vLabels l ON l.IssueID=d.IssueID WHERE l.Label IN ('" + strRequests + "')", myConnection)
                         myCommand.CommandType = CommandType.Text
@@ -522,37 +523,40 @@ Public Class REMITasks
                         dtJiraQuery.TableName = "JiraQuery"
                     End Using
                 End Using
+
+                If (succeeded) Then
+                    For Each dr As DataRow In dtJiraQuery.Rows
+                        Dim key As String = dr.Field(Of String)("IssueKey")
+                        Dim title As String = dr.Field(Of String)("Summary")
+                        Dim requestNumber As String = String.Empty
+
+                        If Regex.IsMatch(dr.Field(Of String)("Label"), "^([a-zA-Z]){3}[-]([0-9]){2}[-]([0-9]){4}$") Then
+                            requestNumber = dr.Field(Of String)("Label")
+                            sb.AppendLine(String.Format("{0} - Found Request {1}", DateTime.Now, requestNumber))
+                        End If
+
+                        If (Not String.IsNullOrEmpty(requestNumber)) Then
+                            Dim dtJIRA As DataTable = DBControl.DAL.Remi.GetBatchJIRA(requestNumber)
+                            Dim jira As DataRow = (From j As DataRow In dtJIRA Where j.Field(Of String)("DisplayName") = key Select j).FirstOrDefault()
+                            counter += 1
+
+                            If (jira Is Nothing) Then
+                                sb.AppendLine(String.Format("{0} - Inserting {1} To REMI", DateTime.Now, requestNumber))
+                                DBControl.DAL.Remi.AddEditJira(requestNumber, 0, key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
+                            Else
+                                sb.AppendLine(String.Format("{0} - Editing {1} In REMI", DateTime.Now, requestNumber))
+                                DBControl.DAL.Remi.AddEditJira(requestNumber, jira.Field(Of Int32)("JIRAID"), key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
+                            End If
+                        End If
+                    Next
+                End If
+            Catch sqlex As SqlException
+                sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, sqlex.Message, Environment.NewLine, sqlex.StackTrace.ToString()))
+                succeeded = False
             Catch ex As Exception
                 sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, ex.Message, Environment.NewLine, ex.StackTrace.ToString()))
                 succeeded = False
             End Try
-
-            If (succeeded) Then
-                For Each dr As DataRow In dtJiraQuery.Rows
-                    Dim key As String = dr.Field(Of String)("IssueKey")
-                    Dim title As String = dr.Field(Of String)("Summary")
-                    Dim requestNumber As String = String.Empty
-
-                    If Regex.IsMatch(dr.Field(Of String)("Label"), "^([a-zA-Z]){3}[-]([0-9]){2}[-]([0-9]){4}$") Then
-                        requestNumber = dr.Field(Of String)("Label")
-                        sb.AppendLine(String.Format("{0} - Found Request {1}", DateTime.Now, requestNumber))
-                    End If
-
-                    If (Not String.IsNullOrEmpty(requestNumber)) Then
-                        Dim dtJIRA As DataTable = DBControl.DAL.Remi.GetBatchJIRA(requestNumber)
-                        Dim jira As DataRow = (From j As DataRow In dtJIRA Where j.Field(Of String)("DisplayName") = key Select j).FirstOrDefault()
-                        counter += 1
-
-                        If (jira Is Nothing) Then
-                            sb.AppendLine(String.Format("{0} - Inserting {1} To REMI", DateTime.Now, requestNumber))
-                            DBControl.DAL.Remi.AddEditJira(requestNumber, 0, key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
-                        Else
-                            sb.AppendLine(String.Format("{0} - Editing {1} In REMI", DateTime.Now, requestNumber))
-                            DBControl.DAL.Remi.AddEditJira(requestNumber, jira.Field(Of Int32)("JIRAID"), key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
-                        End If
-                    End If
-                Next
-            End If
 
             If (Not (succeeded) Or _sendSuccessEmails) Then
                 sb.AppendLine(String.Format("{0} - Finished Executing {1} JIRA's", DateTime.Now, counter))
