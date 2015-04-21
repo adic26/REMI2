@@ -185,7 +185,7 @@ Partial Class ScanForInfo_Default
                 ddlTime.Enabled = True
 
                 If (b.ProductID = 0 And b.ProductGroup IsNot Nothing) Then
-                    b.ProductID = ProductGroupManager.GetProductIDByName(b.ProductGroup)
+                    b.ProductID = (From l In New Remi.Dal.Entities().Instance().Lookups Where l.Values = b.ProductGroup Select l.LookupID).FirstOrDefault()
                 End If
 
                 If (UserManager.GetCurrentUser.ByPassProduct Or (From up In UserManager.GetCurrentUser.UserDetails.Rows Where up("Values") = b.ProductGroup Select up("Values")).FirstOrDefault() <> Nothing) Then

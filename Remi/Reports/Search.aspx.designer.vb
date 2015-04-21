@@ -446,15 +446,6 @@ Partial Public Class Search
     Protected WithEvents ddlTestCentersException As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''ddlProductFilter2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlProductFilter2 As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
     '''ddlProductType2 control.
     '''</summary>
     '''<remarks>

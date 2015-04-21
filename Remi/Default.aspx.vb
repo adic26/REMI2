@@ -66,13 +66,6 @@ Partial Class _Default
         If litTitle IsNot Nothing Then
             litTitle.Text = "Daily List - " + DateTime.Now.ToString("f")
         End If
-        Dim prodList As DataTable = ProductGroupManager.GetProductList(UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False)
-        Dim newRow As DataRow = prodList.NewRow
-        newRow("ID") = 0
-        newRow("ProductGroupName") = "All Products"
-        prodList.Rows.InsertAt(newRow, 0)
-        ddlProductGroups.DataSource = prodList
-        ddlProductGroups.DataBind()
     End Sub
 
     Protected Sub odsDailyList_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.ObjectDataSourceSelectingEventArgs) Handles odsDailyList.Selecting

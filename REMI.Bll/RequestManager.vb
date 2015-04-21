@@ -358,9 +358,9 @@ Namespace REMI.Bll
                     If (chk = 1) Then 'Batch
                         currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Batch.ID = batchID And rs.TestStage.TestStageType = TestStageType Select rs).ToList()
                     ElseIf (chk = 2) Then 'Product
-                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Product.ID = productID And rs.TestStage.TestStageType = TestStageType Select rs).ToList()
+                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.LookupID = productID And rs.TestStage.TestStageType = TestStageType Select rs).ToList()
                     ElseIf (chk = 3) Then 'Job
-                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.TestStage.TestStageType = TestStageType And rs.Product Is Nothing And rs.Batch Is Nothing Select rs).ToList()
+                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.TestStage.TestStageType = TestStageType And rs.Lookup Is Nothing And rs.Batch Is Nothing Select rs).ToList()
                     End If
 
                     For Each node As Web.UI.WebControls.TreeNode In tnc
@@ -374,9 +374,9 @@ Namespace REMI.Bll
                         If (chk = 1) Then 'Batch
                             saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Batch.ID = batchID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType).FirstOrDefault()
                         ElseIf (chk = 2) Then 'Product
-                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Product.ID = productID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType).FirstOrDefault()
+                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.LookupID = productID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType).FirstOrDefault()
                         ElseIf (chk = 3) Then 'Job
-                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType And rs.Product Is Nothing And rs.Batch Is Nothing).FirstOrDefault()
+                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType And rs.Lookup Is Nothing And rs.Batch Is Nothing).FirstOrDefault()
                         End If
 
                         If (saveSetup Is Nothing) Then
@@ -385,7 +385,7 @@ Namespace REMI.Bll
                             If (chk = 1) Then
                                 saveSetup.Batch = (From b In instance.Batches Where b.ID = batchID Select b).FirstOrDefault()
                             ElseIf (chk = 2) Then
-                                saveSetup.Product = (From p In instance.Products Where p.ID = productID Select p).FirstOrDefault()
+                                saveSetup.Lookup = (From l In instance.Lookups Where l.LookupID = productID Select l).FirstOrDefault()
                                 saveSetup.Job = (From j In instance.Jobs Where j.ID = jobID Select j).FirstOrDefault()
                             ElseIf (chk = 3) Then
                                 saveSetup.Job = (From j In instance.Jobs Where j.ID = jobID Select j).FirstOrDefault()

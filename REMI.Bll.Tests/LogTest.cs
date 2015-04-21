@@ -77,12 +77,12 @@ namespace REMI.Bll.Tests
         [Test]
         public void Get24HourLogsForProduct()
         {
-            var prod = new REMI.Entities.Product();
-            prod = (from p in instance.Products orderby p.ID descending select p).FirstOrDefault();
+            var prod = new REMI.Entities.Lookup();
+            prod = (from p in instance.Lookups orderby p.LookupID descending select p).FirstOrDefault();
 
             try
             {
-                TrackingLogManager.Get24HourLogsForProduct(prod.ID, 24);
+                TrackingLogManager.Get24HourLogsForProduct(prod.LookupID, 24);
             }
             catch (Exception err)
             {

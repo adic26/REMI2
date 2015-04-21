@@ -15,14 +15,14 @@ BEGIN
 	
 insert into ProductSettingsAudit (
 	ProductSettingsId, 
-	ProductID,
+	LookupID,
 	KeyName, 
 	ValueText,	
 	DefaultValue,
 	Action)
 	Select 
 	Id, 
-	ProductID,
+	LookupID,
 	KeyName, 
 	ValueText,
 	DefaultValue,

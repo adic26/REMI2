@@ -101,25 +101,7 @@ Partial Public Class ManageProducts_EditProductSettings
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents hdnProductID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''hdnProductName control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnProductName As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''hdnIsActive control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hdnIsActive As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents hdnLookupID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''txtNewSettingName control.
@@ -165,15 +147,6 @@ Partial Public Class ManageProducts_EditProductSettings
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents notMain As Global.Remi.Controls_Notifications
-
-    '''<summary>
-    '''txtQAPLocation control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtQAPLocation As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''gdvFunctional control.

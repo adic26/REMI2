@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("d68260b2-b0b7-487b-8fea-44ffe8c22be5")>
+<Assembly: EdmSchemaAttribute("a7df802b-72a6-4469-ab04-8e0faabeed0d")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -31,27 +31,18 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ApplicationVersions_Applications", "Application", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Application), "ApplicationVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ApplicationVersion), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK__aspnet_Pr__UserI__3F115E1A", "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.aspnet_Users), "aspnet_Profile", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.aspnet_Profile), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "BatchSpecificTestDuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchSpecificTestDuration), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TrackingLocations", "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocation), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_DeviceTrackingLog", "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.DeviceTrackingLog), "TestRecordsXTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecordsXTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobOrientation_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Job), "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobOrientation), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Job), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestStages_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Job), "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestStage), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationUpload_ID", "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.ProductConfigurationUpload), "ProductConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfiguration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigValues_ProductConfiguration", "ProductConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ProductConfiguration), "ProductConfigValue", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigValue), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigurationUpload), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationVersion_ProductConfigurationUpload", "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ProductConfigurationUpload), "ProductConfigurationVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigurationVersion), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductTestReady_ProductSettings", "ProductSetting", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ProductSetting), "ProductTestReady", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductTestReady), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductTestReady_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "ProductTestReady", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductTestReady), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TaskAssignment_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.TestStage), "TaskAssignment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TaskAssignment), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Test), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.TestStage), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecordsXTrackingLogs_TestRecords", "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestRecord), "TestRecordsXTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecordsXTrackingLog), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestStages_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Test), "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestStage), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsForTests_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "TrackingLocationsForTest", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsForTest), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestStage), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestStage), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationPlugin_TrackingLocations", "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocation), "TrackingLocationsPlugin", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsPlugin), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocations_TrackingLocationTypes", "TrackingLocationType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationType), "TrackingLocation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocation), True)>
@@ -60,21 +51,8 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHostsConfiguration_TrackingLocationsPlugin", "TrackingLocationsPlugin", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.TrackingLocationsPlugin), "TrackingLocationsHostsConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHostsConfiguration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration", "TrackingLocationsHostsConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationsHostsConfiguration), "TrackingLocationsHostsConfigValue", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationsHostsConfigValue), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TrackingLocationTypePermissions_TrackingLocationTypes", "TrackingLocationType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TrackingLocationType), "TrackingLocationTypePermission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TrackingLocationTypePermission), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchComments_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchComment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchComment), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_JobOrientation", "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.JobOrientation), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchSpecificTestDuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchSpecificTestDuration), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Batch), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TaskAssignment_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TaskAssignment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TaskAssignment), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_AccessoryGroup", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Department", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Priority", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_ProductType", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_RequestPurpose", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_TestCenterLocation", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_JobOrientation_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.JobOrientation), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Lookups_LookupType", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.LookupType), "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Lookup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigValue_Lookup", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ProductConfigValue", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigValue), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductLookups_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ProductLookup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductLookup), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Lookups_MeasurementType", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Lookups_UnitType", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestExceptions_LookupID", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "TestException", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestException), True)>
@@ -91,7 +69,6 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_MenuDepartment_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "MenuDepartment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.MenuDepartment), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_MenuDepartment_Menu", "Menu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Menu), "MenuDepartment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.MenuDepartment), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserTraining_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserTraining", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserTraining), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestUnit), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "DeviceTrackingLog", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.DeviceTrackingLog), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestRecords_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "TestRecord", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestRecord), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Results_TestUnits", "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestUnit), "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Result), True)>
@@ -109,11 +86,7 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "aspnet_UsersInRoles", "aspnet_Roles", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Roles), "aspnet_Users", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.aspnet_Users))>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_Lookups1", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType1", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Request_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Batch), "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Request), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsStatus_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "ResultsStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsStatu), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserSearchFilter_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserSearchFilter", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserSearchFilter), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserSearchFilter_RequestType", "RequestType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.RequestType), "UserSearchFilter", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserSearchFilter), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestsAccess_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "TestsAccess", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestsAccess), True)>
@@ -121,21 +94,47 @@ Imports System.Xml.Serialization
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Configurations_Lookups1", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Configuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Configuration), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsInformation_ResultsXML", "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ResultsXML), "ResultsInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsInformation), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchesJira_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchesJira", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchesJira), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldData_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqFieldData", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldData), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqDistribution_Request", "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Request), "ReqDistribution", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqDistribution), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ReqFieldSetupSibling_ReqFieldSetup", "ReqFieldSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ReqFieldSetup), "ReqFieldSetupSibling", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ReqFieldSetupSibling), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_UserDetails_Users", "User", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.User), "UserDetail", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.UserDetail), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Products_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Product), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigurationUpload), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductLookups_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductLookup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductLookup), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductSettings_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductSetting", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductSetting), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductTestReady_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Product), "ProductTestReady", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductTestReady), True)>
-<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Products", "Product", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Product), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Lookups_LookupType", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.LookupType), "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Lookup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductSettings_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ProductSetting", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductSetting), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType1", "LookupType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.LookupType), "LookupsHierarchy", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.LookupsHierarchy), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductTestReady_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "ProductTestReady", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductTestReady), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductTestReady_ProductSettings", "ProductSetting", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ProductSetting), "ProductTestReady", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductTestReady), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductTestReady_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "ProductTestReady", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductTestReady), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchComments_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchComment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchComment), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_AccessoryGroup", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Department", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_JobOrientation", "JobOrientation", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.JobOrientation), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Priority", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_Products", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_ProductType", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_RequestPurpose", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Batches_TestCenterLocation", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Batch), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchesJira_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchesJira", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchesJira), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "BatchSpecificTestDuration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.BatchSpecificTestDuration), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Request_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Batch), "Request", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Request), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsStatus_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "ResultsStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsStatu), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TaskAssignment_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TaskAssignment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TaskAssignment), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Batch), "TestUnit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.TestUnit), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductLookups_Lookups", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ProductLookup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductLookup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductLookups_Products", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ProductLookup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductLookup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Products", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_Calibration_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "Calibration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.Calibration), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Batches", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Batch), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Jobs", "Job", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Job), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Products", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.Lookup), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_RequestSetup_TestStages", "TestStage", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.TestStage), "RequestSetup", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.RequestSetup), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Products", "Lookup", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Lookup), "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigurationUpload), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationUpload_ID", "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, GetType(REMI.Entities.ProductConfigurationUpload), "ProductConfiguration", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfiguration), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Tests", "Test", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Test), "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigurationUpload), True)>
+<Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ProductConfigurationVersion_ProductConfigurationUpload", "ProductConfigurationUpload", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.ProductConfigurationUpload), "ProductConfigurationVersion", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ProductConfigurationVersion), True)>
 
 #End Region
 
@@ -199,20 +198,6 @@ Namespace REMI.Entities
         End Property
     
         Private _vw_BatchAudit As ObjectSet(Of vw_BatchAudit)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property vw_ExceptionsPivoted() As ObjectSet(Of vw_ExceptionsPivoted)
-            Get
-                If (_vw_ExceptionsPivoted Is Nothing) Then
-                    _vw_ExceptionsPivoted = MyBase.CreateObjectSet(Of vw_ExceptionsPivoted)("vw_ExceptionsPivoted")
-                End If
-                Return _vw_ExceptionsPivoted
-            End Get
-        End Property
-    
-        Private _vw_ExceptionsPivoted As ObjectSet(Of vw_ExceptionsPivoted)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -357,20 +342,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property RequestSetups() As ObjectSet(Of RequestSetup)
-            Get
-                If (_RequestSetups Is Nothing) Then
-                    _RequestSetups = MyBase.CreateObjectSet(Of RequestSetup)("RequestSetups")
-                End If
-                Return _RequestSetups
-            End Get
-        End Property
-    
-        Private _RequestSetups As ObjectSet(Of RequestSetup)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property ApplicationLogs() As ObjectSet(Of ApplicationLog)
             Get
                 If (_ApplicationLogs Is Nothing) Then
@@ -511,20 +482,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property Calibrations() As ObjectSet(Of Calibration)
-            Get
-                If (_Calibrations Is Nothing) Then
-                    _Calibrations = MyBase.CreateObjectSet(Of Calibration)("Calibrations")
-                End If
-                Return _Calibrations
-            End Get
-        End Property
-    
-        Private _Calibrations As ObjectSet(Of Calibration)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property DeviceTrackingLogs() As ObjectSet(Of DeviceTrackingLog)
             Get
                 If (_DeviceTrackingLogs Is Nothing) Then
@@ -567,20 +524,6 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property LookupTypes() As ObjectSet(Of LookupType)
-            Get
-                If (_LookupTypes Is Nothing) Then
-                    _LookupTypes = MyBase.CreateObjectSet(Of LookupType)("LookupTypes")
-                End If
-                Return _LookupTypes
-            End Get
-        End Property
-    
-        Private _LookupTypes As ObjectSet(Of LookupType)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
         Public ReadOnly Property ProductConfigurations() As ObjectSet(Of ProductConfiguration)
             Get
                 If (_ProductConfigurations Is Nothing) Then
@@ -591,20 +534,6 @@ Namespace REMI.Entities
         End Property
     
         Private _ProductConfigurations As ObjectSet(Of ProductConfiguration)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property ProductConfigurationUploads() As ObjectSet(Of ProductConfigurationUpload)
-            Get
-                If (_ProductConfigurationUploads Is Nothing) Then
-                    _ProductConfigurationUploads = MyBase.CreateObjectSet(Of ProductConfigurationUpload)("ProductConfigurationUploads")
-                End If
-                Return _ProductConfigurationUploads
-            End Get
-        End Property
-    
-        Private _ProductConfigurationUploads As ObjectSet(Of ProductConfigurationUpload)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -633,48 +562,6 @@ Namespace REMI.Entities
         End Property
     
         Private _ProductConfigValues As ObjectSet(Of ProductConfigValue)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property ProductLookups() As ObjectSet(Of ProductLookup)
-            Get
-                If (_ProductLookups Is Nothing) Then
-                    _ProductLookups = MyBase.CreateObjectSet(Of ProductLookup)("ProductLookups")
-                End If
-                Return _ProductLookups
-            End Get
-        End Property
-    
-        Private _ProductLookups As ObjectSet(Of ProductLookup)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property ProductSettings() As ObjectSet(Of ProductSetting)
-            Get
-                If (_ProductSettings Is Nothing) Then
-                    _ProductSettings = MyBase.CreateObjectSet(Of ProductSetting)("ProductSettings")
-                End If
-                Return _ProductSettings
-            End Get
-        End Property
-    
-        Private _ProductSettings As ObjectSet(Of ProductSetting)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property ProductTestReadies() As ObjectSet(Of ProductTestReady)
-            Get
-                If (_ProductTestReadies Is Nothing) Then
-                    _ProductTestReadies = MyBase.CreateObjectSet(Of ProductTestReady)("ProductTestReadies")
-                End If
-                Return _ProductTestReadies
-            End Get
-        End Property
-    
-        Private _ProductTestReadies As ObjectSet(Of ProductTestReady)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -955,20 +842,6 @@ Namespace REMI.Entities
         End Property
     
         Private _UserTrainings As ObjectSet(Of UserTraining)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property Batches() As ObjectSet(Of Batch)
-            Get
-                If (_Batches Is Nothing) Then
-                    _Batches = MyBase.CreateObjectSet(Of Batch)("Batches")
-                End If
-                Return _Batches
-            End Get
-        End Property
-    
-        Private _Batches As ObjectSet(Of Batch)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -1393,16 +1266,128 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        Public ReadOnly Property Products() As ObjectSet(Of Product)
+        Public ReadOnly Property LookupTypes() As ObjectSet(Of LookupType)
             Get
-                If (_Products Is Nothing) Then
-                    _Products = MyBase.CreateObjectSet(Of Product)("Products")
+                If (_LookupTypes Is Nothing) Then
+                    _LookupTypes = MyBase.CreateObjectSet(Of LookupType)("LookupTypes")
                 End If
-                Return _Products
+                Return _LookupTypes
             End Get
         End Property
     
-        Private _Products As ObjectSet(Of Product)
+        Private _LookupTypes As ObjectSet(Of LookupType)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ProductSettings() As ObjectSet(Of ProductSetting)
+            Get
+                If (_ProductSettings Is Nothing) Then
+                    _ProductSettings = MyBase.CreateObjectSet(Of ProductSetting)("ProductSettings")
+                End If
+                Return _ProductSettings
+            End Get
+        End Property
+    
+        Private _ProductSettings As ObjectSet(Of ProductSetting)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ProductTestReadies() As ObjectSet(Of ProductTestReady)
+            Get
+                If (_ProductTestReadies Is Nothing) Then
+                    _ProductTestReadies = MyBase.CreateObjectSet(Of ProductTestReady)("ProductTestReadies")
+                End If
+                Return _ProductTestReadies
+            End Get
+        End Property
+    
+        Private _ProductTestReadies As ObjectSet(Of ProductTestReady)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property vw_ExceptionsPivoted() As ObjectSet(Of vw_ExceptionsPivoted)
+            Get
+                If (_vw_ExceptionsPivoted Is Nothing) Then
+                    _vw_ExceptionsPivoted = MyBase.CreateObjectSet(Of vw_ExceptionsPivoted)("vw_ExceptionsPivoted")
+                End If
+                Return _vw_ExceptionsPivoted
+            End Get
+        End Property
+    
+        Private _vw_ExceptionsPivoted As ObjectSet(Of vw_ExceptionsPivoted)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property Batches() As ObjectSet(Of Batch)
+            Get
+                If (_Batches Is Nothing) Then
+                    _Batches = MyBase.CreateObjectSet(Of Batch)("Batches")
+                End If
+                Return _Batches
+            End Get
+        End Property
+    
+        Private _Batches As ObjectSet(Of Batch)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ProductLookups() As ObjectSet(Of ProductLookup)
+            Get
+                If (_ProductLookups Is Nothing) Then
+                    _ProductLookups = MyBase.CreateObjectSet(Of ProductLookup)("ProductLookups")
+                End If
+                Return _ProductLookups
+            End Get
+        End Property
+    
+        Private _ProductLookups As ObjectSet(Of ProductLookup)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property Calibrations() As ObjectSet(Of Calibration)
+            Get
+                If (_Calibrations Is Nothing) Then
+                    _Calibrations = MyBase.CreateObjectSet(Of Calibration)("Calibrations")
+                End If
+                Return _Calibrations
+            End Get
+        End Property
+    
+        Private _Calibrations As ObjectSet(Of Calibration)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property RequestSetups() As ObjectSet(Of RequestSetup)
+            Get
+                If (_RequestSetups Is Nothing) Then
+                    _RequestSetups = MyBase.CreateObjectSet(Of RequestSetup)("RequestSetups")
+                End If
+                Return _RequestSetups
+            End Get
+        End Property
+    
+        Private _RequestSetups As ObjectSet(Of RequestSetup)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property ProductConfigurationUploads() As ObjectSet(Of ProductConfigurationUpload)
+            Get
+                If (_ProductConfigurationUploads Is Nothing) Then
+                    _ProductConfigurationUploads = MyBase.CreateObjectSet(Of ProductConfigurationUpload)("ProductConfigurationUploads")
+                End If
+                Return _ProductConfigurationUploads
+            End Get
+        End Property
+    
+        Private _ProductConfigurationUploads As ObjectSet(Of ProductConfigurationUpload)
 
         #End Region
 
@@ -1413,13 +1398,6 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddTovw_BatchAudit(ByVal vw_BatchAudit As vw_BatchAudit)
             MyBase.AddObject("vw_BatchAudit", vw_BatchAudit)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the vw_ExceptionsPivoted EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddTovw_ExceptionsPivoted(ByVal vw_ExceptionsPivoted As vw_ExceptionsPivoted)
-            MyBase.AddObject("vw_ExceptionsPivoted", vw_ExceptionsPivoted)
         End Sub
     
         ''' <summary>
@@ -1493,13 +1471,6 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the RequestSetups EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToRequestSetups(ByVal requestSetup As RequestSetup)
-            MyBase.AddObject("RequestSetups", requestSetup)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the ApplicationLogs EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToApplicationLogs(ByVal applicationLog As ApplicationLog)
@@ -1570,13 +1541,6 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the Calibrations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToCalibrations(ByVal calibration As Calibration)
-            MyBase.AddObject("Calibrations", calibration)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the DeviceTrackingLogs EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToDeviceTrackingLogs(ByVal deviceTrackingLog As DeviceTrackingLog)
@@ -1598,24 +1562,10 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the LookupTypes EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToLookupTypes(ByVal lookupType As LookupType)
-            MyBase.AddObject("LookupTypes", lookupType)
-        End Sub
-    
-        ''' <summary>
         ''' Deprecated Method for adding a new object to the ProductConfigurations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
         Public Sub AddToProductConfigurations(ByVal productConfiguration As ProductConfiguration)
             MyBase.AddObject("ProductConfigurations", productConfiguration)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the ProductConfigurationUploads EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToProductConfigurationUploads(ByVal productConfigurationUpload As ProductConfigurationUpload)
-            MyBase.AddObject("ProductConfigurationUploads", productConfigurationUpload)
         End Sub
     
         ''' <summary>
@@ -1630,27 +1580,6 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToProductConfigValues(ByVal productConfigValue As ProductConfigValue)
             MyBase.AddObject("ProductConfigValues", productConfigValue)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the ProductLookups EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToProductLookups(ByVal productLookup As ProductLookup)
-            MyBase.AddObject("ProductLookups", productLookup)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the ProductSettings EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToProductSettings(ByVal productSetting As ProductSetting)
-            MyBase.AddObject("ProductSettings", productSetting)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the ProductTestReadies EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToProductTestReadies(ByVal productTestReady As ProductTestReady)
-            MyBase.AddObject("ProductTestReadies", productTestReady)
         End Sub
     
         ''' <summary>
@@ -1791,13 +1720,6 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToUserTrainings(ByVal userTraining As UserTraining)
             MyBase.AddObject("UserTrainings", userTraining)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the Batches EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddToBatches(ByVal batch As Batch)
-            MyBase.AddObject("Batches", batch)
         End Sub
     
         ''' <summary>
@@ -2011,10 +1933,66 @@ Namespace REMI.Entities
         End Sub
     
         ''' <summary>
-        ''' Deprecated Method for adding a new object to the Products EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' Deprecated Method for adding a new object to the LookupTypes EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
         ''' </summary>
-        Public Sub AddToProducts(ByVal product As Product)
-            MyBase.AddObject("Products", product)
+        Public Sub AddToLookupTypes(ByVal lookupType As LookupType)
+            MyBase.AddObject("LookupTypes", lookupType)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ProductSettings EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToProductSettings(ByVal productSetting As ProductSetting)
+            MyBase.AddObject("ProductSettings", productSetting)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ProductTestReadies EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToProductTestReadies(ByVal productTestReady As ProductTestReady)
+            MyBase.AddObject("ProductTestReadies", productTestReady)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the vw_ExceptionsPivoted EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddTovw_ExceptionsPivoted(ByVal vw_ExceptionsPivoted As vw_ExceptionsPivoted)
+            MyBase.AddObject("vw_ExceptionsPivoted", vw_ExceptionsPivoted)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the Batches EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToBatches(ByVal batch As Batch)
+            MyBase.AddObject("Batches", batch)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ProductLookups EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToProductLookups(ByVal productLookup As ProductLookup)
+            MyBase.AddObject("ProductLookups", productLookup)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the Calibrations EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToCalibrations(ByVal calibration As Calibration)
+            MyBase.AddObject("Calibrations", calibration)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the RequestSetups EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToRequestSetups(ByVal requestSetup As RequestSetup)
+            MyBase.AddObject("RequestSetups", requestSetup)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the ProductConfigurationUploads EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddToProductConfigurationUploads(ByVal productConfigurationUpload As ProductConfigurationUpload)
+            MyBase.AddObject("ProductConfigurationUploads", productConfigurationUpload)
         End Sub
 
         #End Region
@@ -3983,8 +3961,9 @@ Namespace REMI.Entities
         ''' <param name="jobName">Initial value of the JobName property.</param>
         ''' <param name="requestPurpose">Initial value of the RequestPurpose property.</param>
         ''' <param name="concurrencyID">Initial value of the ConcurrencyID property.</param>
+        ''' <param name="c_ProductID">Initial value of the C_ProductID property.</param>
         ''' <param name="productID">Initial value of the ProductID property.</param>
-        Public Shared Function CreateBatch(id As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, requestPurpose As Global.System.Int32, concurrencyID As Global.System.Byte(), productID As Global.System.Int32) As Batch
+        Public Shared Function CreateBatch(id As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, requestPurpose As Global.System.Int32, concurrencyID As Global.System.Byte(), c_ProductID As Global.System.Int32, productID As Global.System.Int32) As Batch
             Dim batch as Batch = New Batch
             batch.ID = id
             batch.QRANumber = qRANumber
@@ -3993,6 +3972,7 @@ Namespace REMI.Entities
             batch.JobName = jobName
             batch.RequestPurpose = requestPurpose
             batch.ConcurrencyID = concurrencyID
+            batch.C_ProductID = c_ProductID
             batch.ProductID = productID
             Return batch
         End Function
@@ -4658,24 +4638,24 @@ Namespace REMI.Entities
         ''' </summary>
         <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
         <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
+        Public Property C_ProductID() As Global.System.Int32
             Get
-                Return _ProductID
+                Return _C_ProductID
             End Get
             Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
+                OnC_ProductIDChanging(value)
+                ReportPropertyChanging("C_ProductID")
+                _C_ProductID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("C_ProductID")
+                OnC_ProductIDChanged()
             End Set
         End Property
     
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
+        Private _C_ProductID As Global.System.Int32
+        Private Partial Sub OnC_ProductIDChanging(value As Global.System.Int32)
         End Sub
     
-        Private Partial Sub OnProductIDChanged()
+        Private Partial Sub OnC_ProductIDChanged()
         End Sub
     
         ''' <summary>
@@ -4927,6 +4907,31 @@ Namespace REMI.Entities
     
         Private Partial Sub OnDepartmentIDChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ProductID() As Global.System.Int32
+            Get
+                Return _ProductID
+            End Get
+            Set
+                OnProductIDChanging(value)
+                ReportPropertyChanging("ProductID")
+                _ProductID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ProductID")
+                OnProductIDChanged()
+            End Set
+        End Property
+    
+        Private _ProductID As Global.System.Int32
+        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnProductIDChanged()
+        End Sub
 
         #End Region
 
@@ -4946,91 +4951,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of BatchComment)("REMI.Entities.FK_BatchComments_Batches", "BatchComment", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_JobOrientation", "JobOrientation")>
-        Public Property JobOrientation() As JobOrientation
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property JobOrientationReference() As EntityReference(Of JobOrientation)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Batches", "BatchSpecificTestDuration")>
-         Public Property BatchSpecificTestDurations() As EntityCollection(Of BatchSpecificTestDuration)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of BatchSpecificTestDuration)("REMI.Entities.FK_BatchSpecificTestDurations_Batches", "BatchSpecificTestDuration")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of BatchSpecificTestDuration)("REMI.Entities.FK_BatchSpecificTestDurations_Batches", "BatchSpecificTestDuration", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Batches", "RequestSetup")>
-         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Batches", "RequestSetup")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Batches", "RequestSetup", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TaskAssignment_Batches", "TaskAssignment")>
-         Public Property TaskAssignments() As EntityCollection(Of TaskAssignment)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TaskAssignment)("REMI.Entities.FK_TaskAssignment_Batches", "TaskAssignment")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TaskAssignment)("REMI.Entities.FK_TaskAssignment_Batches", "TaskAssignment", value)
                 End If
             End Set
         End Property
@@ -5103,8 +5023,39 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_JobOrientation", "JobOrientation")>
+        Public Property JobOrientation() As JobOrientation
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property JobOrientationReference() As EntityReference(Of JobOrientation)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of JobOrientation)("REMI.Entities.FK_Batches_JobOrientation", "JobOrientation", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Priority", "Lookup")>
-        Public Property Priorities() As Lookup
+        Public Property Prior() As Lookup
             Get
                 Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_Priority", "Lookup").Value
             End Get
@@ -5117,13 +5068,44 @@ Namespace REMI.Entities
         ''' </summary>
         <BrowsableAttribute(False)>
         <DataMemberAttribute()>
-        Public Property PrioritiesReference() As EntityReference(Of Lookup)
+        Public Property PriorReference() As EntityReference(Of Lookup)
             Get
                 Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_Priority", "Lookup")
             End Get
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_Priority", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Products", "Lookup")>
+        Public Property Product() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_Products", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_Products", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property ProductReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_Products", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Batches_Products", "Lookup", value)
                 End If
             End Set
         End Property
@@ -5227,14 +5209,32 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "TestUnit")>
-         Public Property TestUnits() As EntityCollection(Of TestUnit)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_BatchesJira_Batches", "BatchesJira")>
+         Public Property BatchesJiras() As EntityCollection(Of BatchesJira)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of BatchesJira)("REMI.Entities.FK_BatchesJira_Batches", "BatchesJira")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of BatchesJira)("REMI.Entities.FK_BatchesJira_Batches", "BatchesJira", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_BatchSpecificTestDurations_Batches", "BatchSpecificTestDuration")>
+         Public Property BatchSpecificTestDurations() As EntityCollection(Of BatchSpecificTestDuration)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of BatchSpecificTestDuration)("REMI.Entities.FK_BatchSpecificTestDurations_Batches", "BatchSpecificTestDuration")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of BatchSpecificTestDuration)("REMI.Entities.FK_BatchSpecificTestDurations_Batches", "BatchSpecificTestDuration", value)
                 End If
             End Set
         End Property
@@ -5281,14 +5281,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_BatchesJira_Batches", "BatchesJira")>
-         Public Property BatchesJiras() As EntityCollection(Of BatchesJira)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TaskAssignment_Batches", "TaskAssignment")>
+         Public Property TaskAssignments() As EntityCollection(Of TaskAssignment)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of BatchesJira)("REMI.Entities.FK_BatchesJira_Batches", "BatchesJira")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TaskAssignment)("REMI.Entities.FK_TaskAssignment_Batches", "TaskAssignment")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of BatchesJira)("REMI.Entities.FK_BatchesJira_Batches", "BatchesJira", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TaskAssignment)("REMI.Entities.FK_TaskAssignment_Batches", "TaskAssignment", value)
                 End If
             End Set
         End Property
@@ -5299,27 +5299,32 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Products", "Product")>
-        Public Property Product() As Product
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "TestUnit")>
+         Public Property TestUnits() As EntityCollection(Of TestUnit)
             Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_Batches_Products", "Product").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_Batches_Products", "Product").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_Batches_Products", "Product")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_Batches_Products", "Product", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestUnit)("REMI.Entities.FK_TestUnits_Batches", "TestUnit", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Batches", "RequestSetup")>
+         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Batches", "RequestSetup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Batches", "RequestSetup", value)
                 End If
             End Set
         End Property
@@ -5576,8 +5581,8 @@ Namespace REMI.Entities
         ''' <param name="insertTime">Initial value of the InsertTime property.</param>
         ''' <param name="action">Initial value of the Action property.</param>
         ''' <param name="requestPurpose">Initial value of the RequestPurpose property.</param>
-        ''' <param name="productID">Initial value of the ProductID property.</param>
-        Public Shared Function CreateBatchesAudit(id As Global.System.Int32, batchID As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, userName As Global.System.String, insertTime As Global.System.DateTime, action As Global.System.String, requestPurpose As Global.System.Int32, productID As Global.System.Int32) As BatchesAudit
+        ''' <param name="c_ProductID">Initial value of the C_ProductID property.</param>
+        Public Shared Function CreateBatchesAudit(id As Global.System.Int32, batchID As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, userName As Global.System.String, insertTime As Global.System.DateTime, action As Global.System.String, requestPurpose As Global.System.Int32, c_ProductID As Global.System.Int32) As BatchesAudit
             Dim batchesAudit as BatchesAudit = New BatchesAudit
             batchesAudit.ID = id
             batchesAudit.BatchID = batchID
@@ -5589,7 +5594,7 @@ Namespace REMI.Entities
             batchesAudit.InsertTime = insertTime
             batchesAudit.Action = action
             batchesAudit.RequestPurpose = requestPurpose
-            batchesAudit.ProductID = productID
+            batchesAudit.C_ProductID = c_ProductID
             Return batchesAudit
         End Function
 
@@ -5952,9 +5957,9 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
         <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
+        Public Property ProductID() As Nullable(Of Global.System.Int32)
             Get
                 Return _ProductID
             End Get
@@ -5967,8 +5972,8 @@ Namespace REMI.Entities
             End Set
         End Property
     
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
+        Private _ProductID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnProductIDChanging(value As Nullable(Of Global.System.Int32))
         End Sub
     
         Private Partial Sub OnProductIDChanged()
@@ -6172,6 +6177,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnDepartmentIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property C_ProductID() As Global.System.Int32
+            Get
+                Return _C_ProductID
+            End Get
+            Set
+                OnC_ProductIDChanging(value)
+                ReportPropertyChanging("C_ProductID")
+                _C_ProductID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("C_ProductID")
+                OnC_ProductIDChanged()
+            End Set
+        End Property
+    
+        Private _C_ProductID As Global.System.Int32
+        Private Partial Sub OnC_ProductIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnC_ProductIDChanged()
         End Sub
 
         #End Region
@@ -6671,21 +6701,21 @@ Namespace REMI.Entities
         ''' Create a new Calibration object.
         ''' </summary>
         ''' <param name="id">Initial value of the ID property.</param>
-        ''' <param name="productID">Initial value of the ProductID property.</param>
         ''' <param name="hostID">Initial value of the HostID property.</param>
         ''' <param name="dateCreated">Initial value of the DateCreated property.</param>
         ''' <param name="name">Initial value of the Name property.</param>
         ''' <param name="file">Initial value of the File property.</param>
         ''' <param name="testID">Initial value of the TestID property.</param>
-        Public Shared Function CreateCalibration(id As Global.System.Int32, productID As Global.System.Int32, hostID As Global.System.Int32, dateCreated As Global.System.DateTime, name As Global.System.String, file As Global.System.String, testID As Global.System.Int32) As Calibration
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        Public Shared Function CreateCalibration(id As Global.System.Int32, hostID As Global.System.Int32, dateCreated As Global.System.DateTime, name As Global.System.String, file As Global.System.String, testID As Global.System.Int32, lookupID As Global.System.Int32) As Calibration
             Dim calibration as Calibration = New Calibration
             calibration.ID = id
-            calibration.ProductID = productID
             calibration.HostID = hostID
             calibration.DateCreated = dateCreated
             calibration.Name = name
             calibration.File = file
             calibration.TestID = testID
+            calibration.LookupID = lookupID
             Return calibration
         End Function
 
@@ -6718,31 +6748,6 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
-            Get
-                Return _ProductID
-            End Get
-            Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
-            End Set
-        End Property
-    
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnProductIDChanged()
         End Sub
     
         ''' <summary>
@@ -6894,10 +6899,66 @@ Namespace REMI.Entities
     
         Private Partial Sub OnLastUserChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Global.System.Int32
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
 
         #End Region
 
         #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Calibration_Products", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Calibration_Products", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Calibration_Products", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Calibration_Products", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Calibration_Products", "Lookup", value)
+                End If
+            End Set
+        End Property
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -6926,37 +6987,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Test)("REMI.Entities.FK_Calibration_Tests", "Test", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Calibration_Products", "Product")>
-        Public Property Product() As Product
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_Calibration_Products", "Product").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_Calibration_Products", "Product").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_Calibration_Products", "Product")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_Calibration_Products", "Product", value)
                 End If
             End Set
         End Property
@@ -7932,24 +7962,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Jobs", "RequestSetup")>
-         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Jobs", "RequestSetup")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Jobs", "RequestSetup", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestStages_Jobs", "TestStage")>
          Public Property TestStages() As EntityCollection(Of TestStage)
             Get
@@ -7976,6 +7988,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of JobAccess)("REMI.Entities.FK_JobAccess_Jobs", "JobAccess", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Jobs", "RequestSetup")>
+         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Jobs", "RequestSetup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Jobs", "RequestSetup", value)
                 End If
             End Set
         End Property
@@ -8494,24 +8524,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_JobOrientation", "Batch")>
-         Public Property Batches() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_JobOrientation", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_JobOrientation", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobOrientation_Lookups", "Lookup")>
         Public Property Lookup() As Lookup
             Get
@@ -8533,6 +8545,24 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_JobOrientation_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_JobOrientation", "Batch")>
+         Public Property Batches() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_JobOrientation", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_JobOrientation", "Batch", value)
                 End If
             End Set
         End Property
@@ -8731,114 +8761,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_AccessoryGroup", "Batch")>
-         Public Property Batches() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_AccessoryGroup", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_AccessoryGroup", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Department", "Batch")>
-         Public Property Batches1() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Department", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Department", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Priority", "Batch")>
-         Public Property Batches2() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Priority", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Priority", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_ProductType", "Batch")>
-         Public Property Batches3() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_ProductType", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_ProductType", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_RequestPurpose", "Batch")>
-         Public Property Batches4() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_RequestPurpose", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_RequestPurpose", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_TestCenterLocation", "Batch")>
-         Public Property Batches5() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_TestCenterLocation", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_TestCenterLocation", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_JobOrientation_Lookups", "JobOrientation")>
          Public Property JobOrientations() As EntityCollection(Of JobOrientation)
             Get
@@ -8857,37 +8779,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Lookups_LookupType", "LookupType")>
-        Public Property LookupType() As LookupType
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property LookupTypeReference() As EntityReference(Of LookupType)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigValue_Lookup", "ProductConfigValue")>
          Public Property ProductConfigValues() As EntityCollection(Of ProductConfigValue)
             Get
@@ -8896,24 +8787,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigValue)("REMI.Entities.FK_ProductConfigValue_Lookup", "ProductConfigValue", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductLookups_Lookups", "ProductLookup")>
-         Public Property ProductLookups() As EntityCollection(Of ProductLookup)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Lookups", "ProductLookup")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Lookups", "ProductLookup", value)
                 End If
             End Set
         End Property
@@ -9284,14 +9157,279 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Products_Lookups", "Product")>
-         Public Property Products() As EntityCollection(Of Product)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Lookups_LookupType", "LookupType")>
+        Public Property LookupType() As LookupType
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Product)("REMI.Entities.FK_Products_Lookups", "Product")
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupTypeReference() As EntityReference(Of LookupType)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Product)("REMI.Entities.FK_Products_Lookups", "Product", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of LookupType)("REMI.Entities.FK_Lookups_LookupType", "LookupType", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductSettings_Lookups", "ProductSetting")>
+         Public Property ProductSettings() As EntityCollection(Of ProductSetting)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductSetting)("REMI.Entities.FK_ProductSettings_Lookups", "ProductSetting")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductSetting)("REMI.Entities.FK_ProductSettings_Lookups", "ProductSetting", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductTestReady_Lookups", "ProductTestReady")>
+         Public Property ProductTestReadies() As EntityCollection(Of ProductTestReady)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Lookups", "ProductTestReady")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Lookups", "ProductTestReady", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_AccessoryGroup", "Batch")>
+         Public Property Batches() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_AccessoryGroup", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_AccessoryGroup", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Department", "Batch")>
+         Public Property Batches1() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Department", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Department", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Priority", "Batch")>
+         Public Property Batches2() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Priority", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Priority", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Products", "Batch")>
+         Public Property Batches3() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Products", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Products", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_ProductType", "Batch")>
+         Public Property Batches4() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_ProductType", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_ProductType", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_RequestPurpose", "Batch")>
+         Public Property Batches5() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_RequestPurpose", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_RequestPurpose", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_TestCenterLocation", "Batch")>
+         Public Property Batches6() As EntityCollection(Of Batch)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_TestCenterLocation", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_TestCenterLocation", "Batch", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductLookups_Lookups", "ProductLookup")>
+         Public Property ProductLookups() As EntityCollection(Of ProductLookup)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Lookups", "ProductLookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Lookups", "ProductLookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductLookups_Products", "ProductLookup")>
+         Public Property ProductLookups1() As EntityCollection(Of ProductLookup)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Products", "ProductLookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Products", "ProductLookup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Calibration_Products", "Calibration")>
+         Public Property Calibrations() As EntityCollection(Of Calibration)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Products", "Calibration")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Products", "Calibration", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Products", "RequestSetup")>
+         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Products", "RequestSetup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Products", "RequestSetup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Products", "ProductConfigurationUpload")>
+         Public Property ProductConfigurationUploads() As EntityCollection(Of ProductConfigurationUpload)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Products", "ProductConfigurationUpload")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Products", "ProductConfigurationUpload", value)
                 End If
             End Set
         End Property
@@ -9558,6 +9696,37 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "RequestType")>
+        Public Property RequestType() As RequestType
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property RequestTypeReference() As EntityReference(Of RequestType)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_LookupType", "LookupType")>
         Public Property LookupType() As LookupType
             Get
@@ -9610,37 +9779,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of LookupType)("REMI.Entities.FK_LookupsHierarchy_LookupType1", "LookupType", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_LookupsHierarchy_RequestType", "RequestType")>
-        Public Property RequestType() As RequestType
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property RequestTypeReference() As EntityReference(Of RequestType)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of RequestType)("REMI.Entities.FK_LookupsHierarchy_RequestType", "RequestType", value)
                 End If
             End Set
         End Property
@@ -9752,6 +9890,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnIsSystemChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property IsSecureType() As Nullable(Of Global.System.Boolean)
+            Get
+                Return _IsSecureType
+            End Get
+            Set
+                OnIsSecureTypeChanging(value)
+                ReportPropertyChanging("IsSecureType")
+                _IsSecureType = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsSecureType")
+                OnIsSecureTypeChanged()
+            End Set
+        End Property
+    
+        Private _IsSecureType As Nullable(Of Global.System.Boolean)
+        Private Partial Sub OnIsSecureTypeChanging(value As Nullable(Of Global.System.Boolean))
+        End Sub
+    
+        Private Partial Sub OnIsSecureTypeChanged()
         End Sub
 
         #End Region
@@ -10123,299 +10286,6 @@ Namespace REMI.Entities
     ''' <summary>
     ''' No Metadata Documentation available.
     ''' </summary>
-    <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="Product")>
-    <Serializable()>
-    <DataContractAttribute(IsReference:=True)>
-    Public Partial Class Product
-        Inherits EntityObject
-        #Region "Factory Method"
-    
-        ''' <summary>
-        ''' Create a new Product object.
-        ''' </summary>
-        ''' <param name="id">Initial value of the ID property.</param>
-        ''' <param name="lookupID">Initial value of the LookupID property.</param>
-        Public Shared Function CreateProduct(id As Global.System.Int32, lookupID As Global.System.Int32) As Product
-            Dim product as Product = New Product
-            product.ID = id
-            product.LookupID = lookupID
-            Return product
-        End Function
-
-        #End Region
-
-        #Region "Primitive Properties"
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property ID() As Global.System.Int32
-            Get
-                Return _ID
-            End Get
-            Set
-                If (_ID <> Value) Then
-                    OnIDChanging(value)
-                    ReportPropertyChanging("ID")
-                    _ID = StructuralObject.SetValidValue(value)
-                    ReportPropertyChanged("ID")
-                    OnIDChanged()
-                End If
-            End Set
-        End Property
-    
-        Private _ID As Global.System.Int32
-        Private Partial Sub OnIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property QAPLocation() As Global.System.String
-            Get
-                Return _QAPLocation
-            End Get
-            Set
-                OnQAPLocationChanging(value)
-                ReportPropertyChanging("QAPLocation")
-                _QAPLocation = StructuralObject.SetValidValue(value, true)
-                ReportPropertyChanged("QAPLocation")
-                OnQAPLocationChanged()
-            End Set
-        End Property
-    
-        Private _QAPLocation As Global.System.String
-        Private Partial Sub OnQAPLocationChanging(value As Global.System.String)
-        End Sub
-    
-        Private Partial Sub OnQAPLocationChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property C_TSDContact() As Global.System.String
-            Get
-                Return _C_TSDContact
-            End Get
-            Set
-                OnC_TSDContactChanging(value)
-                ReportPropertyChanging("C_TSDContact")
-                _C_TSDContact = StructuralObject.SetValidValue(value, true)
-                ReportPropertyChanged("C_TSDContact")
-                OnC_TSDContactChanged()
-            End Set
-        End Property
-    
-        Private _C_TSDContact As Global.System.String
-        Private Partial Sub OnC_TSDContactChanging(value As Global.System.String)
-        End Sub
-    
-        Private Partial Sub OnC_TSDContactChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property LookupID() As Global.System.Int32
-            Get
-                Return _LookupID
-            End Get
-            Set
-                OnLookupIDChanging(value)
-                ReportPropertyChanging("LookupID")
-                _LookupID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("LookupID")
-                OnLookupIDChanged()
-            End Set
-        End Property
-    
-        Private _LookupID As Global.System.Int32
-        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnLookupIDChanged()
-        End Sub
-
-        #End Region
-
-        #Region "Navigation Properties"
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Batches_Products", "Batch")>
-         Public Property Batches() As EntityCollection(Of Batch)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Products", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Batch)("REMI.Entities.FK_Batches_Products", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Calibration_Products", "Calibration")>
-         Public Property Calibrations() As EntityCollection(Of Calibration)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Products", "Calibration")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Products", "Calibration", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Products_Lookups", "Lookup")>
-        Public Property Lookup() As Lookup
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Products_Lookups", "Lookup").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Products_Lookups", "Lookup").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property LookupReference() As EntityReference(Of Lookup)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_Products_Lookups", "Lookup")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_Products_Lookups", "Lookup", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Products", "ProductConfigurationUpload")>
-         Public Property ProductConfigurationUploads() As EntityCollection(Of ProductConfigurationUpload)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Products", "ProductConfigurationUpload")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Products", "ProductConfigurationUpload", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductLookups_Products", "ProductLookup")>
-         Public Property ProductLookups() As EntityCollection(Of ProductLookup)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Products", "ProductLookup")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductLookup)("REMI.Entities.FK_ProductLookups_Products", "ProductLookup", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductSettings_Products", "ProductSetting")>
-         Public Property ProductSettings() As EntityCollection(Of ProductSetting)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductSetting)("REMI.Entities.FK_ProductSettings_Products", "ProductSetting")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductSetting)("REMI.Entities.FK_ProductSettings_Products", "ProductSetting", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductTestReady_Products", "ProductTestReady")>
-         Public Property ProductTestReadies() As EntityCollection(Of ProductTestReady)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Products", "ProductTestReady")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Products", "ProductTestReady", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Products", "RequestSetup")>
-         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Products", "RequestSetup")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Products", "RequestSetup", value)
-                End If
-            End Set
-        End Property
-
-        #End Region
-
-    End Class
-    
-    ''' <summary>
-    ''' No Metadata Documentation available.
-    ''' </summary>
     <EdmEntityTypeAttribute(NamespaceName:="REMI.Entities", Name:="ProductConfiguration")>
     <Serializable()>
     <DataContractAttribute(IsReference:=True)>
@@ -10603,6 +10473,24 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigValues_ProductConfiguration", "ProductConfigValue")>
+         Public Property ProductConfigValues() As EntityCollection(Of ProductConfigValue)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductConfigValue)("REMI.Entities.FK_ProductConfigValues_ProductConfiguration", "ProductConfigValue")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigValue)("REMI.Entities.FK_ProductConfigValues_ProductConfiguration", "ProductConfigValue", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigurationUpload_ID", "ProductConfigurationUpload")>
         Public Property ProductConfigurationUpload() As ProductConfigurationUpload
             Get
@@ -10627,24 +10515,6 @@ Namespace REMI.Entities
                 End If
             End Set
         End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigValues_ProductConfiguration", "ProductConfigValue")>
-         Public Property ProductConfigValues() As EntityCollection(Of ProductConfigValue)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductConfigValue)("REMI.Entities.FK_ProductConfigValues_ProductConfiguration", "ProductConfigValue")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigValue)("REMI.Entities.FK_ProductConfigValues_ProductConfiguration", "ProductConfigValue", value)
-                End If
-            End Set
-        End Property
 
         #End Region
 
@@ -10665,18 +10535,18 @@ Namespace REMI.Entities
         ''' </summary>
         ''' <param name="id">Initial value of the ID property.</param>
         ''' <param name="isProcessed">Initial value of the IsProcessed property.</param>
-        ''' <param name="productID">Initial value of the ProductID property.</param>
         ''' <param name="testID">Initial value of the TestID property.</param>
         ''' <param name="lastUser">Initial value of the LastUser property.</param>
         ''' <param name="pCName">Initial value of the PCName property.</param>
-        Public Shared Function CreateProductConfigurationUpload(id As Global.System.Int32, isProcessed As Global.System.Boolean, productID As Global.System.Int32, testID As Global.System.Int32, lastUser As Global.System.String, pCName As Global.System.String) As ProductConfigurationUpload
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        Public Shared Function CreateProductConfigurationUpload(id As Global.System.Int32, isProcessed As Global.System.Boolean, testID As Global.System.Int32, lastUser As Global.System.String, pCName As Global.System.String, lookupID As Global.System.Int32) As ProductConfigurationUpload
             Dim productConfigurationUpload as ProductConfigurationUpload = New ProductConfigurationUpload
             productConfigurationUpload.ID = id
             productConfigurationUpload.IsProcessed = isProcessed
-            productConfigurationUpload.ProductID = productID
             productConfigurationUpload.TestID = testID
             productConfigurationUpload.LastUser = lastUser
             productConfigurationUpload.PCName = pCName
+            productConfigurationUpload.LookupID = lookupID
             Return productConfigurationUpload
         End Function
 
@@ -10734,31 +10604,6 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnIsProcessedChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
-            Get
-                Return _ProductID
-            End Get
-            Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
-            End Set
-        End Property
-    
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnProductIDChanged()
         End Sub
     
         ''' <summary>
@@ -10835,10 +10680,66 @@ Namespace REMI.Entities
     
         Private Partial Sub OnPCNameChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Global.System.Int32
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
 
         #End Region
 
         #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Products", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Lookup", value)
+                End If
+            End Set
+        End Property
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -10903,37 +10804,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigurationVersion)("REMI.Entities.FK_ProductConfigurationVersion_ProductConfigurationUpload", "ProductConfigurationVersion", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Products", "Product")>
-        Public Property Product() As Product
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Product").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Product").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Product")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_ProductConfigurationUpload_Products", "Product", value)
                 End If
             End Set
         End Property
@@ -11426,13 +11296,15 @@ Namespace REMI.Entities
         ''' Create a new ProductLookup object.
         ''' </summary>
         ''' <param name="id">Initial value of the ID property.</param>
-        ''' <param name="productID">Initial value of the ProductID property.</param>
+        ''' <param name="c_ProductID">Initial value of the C_ProductID property.</param>
         ''' <param name="lookupID">Initial value of the LookupID property.</param>
-        Public Shared Function CreateProductLookup(id As Global.System.Int32, productID As Global.System.Int32, lookupID As Global.System.Int32) As ProductLookup
+        ''' <param name="productID">Initial value of the ProductID property.</param>
+        Public Shared Function CreateProductLookup(id As Global.System.Int32, c_ProductID As Global.System.Int32, lookupID As Global.System.Int32, productID As Global.System.Int32) As ProductLookup
             Dim productLookup as ProductLookup = New ProductLookup
             productLookup.ID = id
-            productLookup.ProductID = productID
+            productLookup.C_ProductID = c_ProductID
             productLookup.LookupID = lookupID
+            productLookup.ProductID = productID
             Return productLookup
         End Function
 
@@ -11472,24 +11344,24 @@ Namespace REMI.Entities
         ''' </summary>
         <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
         <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
+        Public Property C_ProductID() As Global.System.Int32
             Get
-                Return _ProductID
+                Return _C_ProductID
             End Get
             Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
+                OnC_ProductIDChanging(value)
+                ReportPropertyChanging("C_ProductID")
+                _C_ProductID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("C_ProductID")
+                OnC_ProductIDChanged()
             End Set
         End Property
     
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
+        Private _C_ProductID As Global.System.Int32
+        Private Partial Sub OnC_ProductIDChanging(value As Global.System.Int32)
         End Sub
     
-        Private Partial Sub OnProductIDChanged()
+        Private Partial Sub OnC_ProductIDChanged()
         End Sub
     
         ''' <summary>
@@ -11515,6 +11387,31 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnLookupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ProductID() As Global.System.Int32
+            Get
+                Return _ProductID
+            End Get
+            Set
+                OnProductIDChanging(value)
+                ReportPropertyChanging("ProductID")
+                _ProductID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ProductID")
+                OnProductIDChanged()
+            End Set
+        End Property
+    
+        Private _ProductID As Global.System.Int32
+        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnProductIDChanged()
         End Sub
 
         #End Region
@@ -11558,13 +11455,13 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductLookups_Products", "Product")>
-        Public Property Product() As Product
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductLookups_Products", "Lookup")>
+        Public Property Product() As Lookup
             Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductLookups_Products", "Product").Value
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductLookups_Products", "Lookup").Value
             End Get
             Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductLookups_Products", "Product").Value = value
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductLookups_Products", "Lookup").Value = value
             End Set
         End Property
         ''' <summary>
@@ -11572,13 +11469,13 @@ Namespace REMI.Entities
         ''' </summary>
         <BrowsableAttribute(False)>
         <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
+        Public Property ProductReference() As EntityReference(Of Lookup)
             Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductLookups_Products", "Product")
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductLookups_Products", "Lookup")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_ProductLookups_Products", "Product", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_ProductLookups_Products", "Lookup", value)
                 End If
             End Set
         End Property
@@ -11603,13 +11500,13 @@ Namespace REMI.Entities
         ''' <param name="id">Initial value of the ID property.</param>
         ''' <param name="lastUser">Initial value of the LastUser property.</param>
         ''' <param name="keyName">Initial value of the KeyName property.</param>
-        ''' <param name="productID">Initial value of the ProductID property.</param>
-        Public Shared Function CreateProductSetting(id As Global.System.Int32, lastUser As Global.System.String, keyName As Global.System.String, productID As Global.System.Int32) As ProductSetting
+        ''' <param name="lookupID">Initial value of the LookupID property.</param>
+        Public Shared Function CreateProductSetting(id As Global.System.Int32, lastUser As Global.System.String, keyName As Global.System.String, lookupID As Global.System.Int32) As ProductSetting
             Dim productSetting as ProductSetting = New ProductSetting
             productSetting.ID = id
             productSetting.LastUser = lastUser
             productSetting.KeyName = keyName
-            productSetting.ProductID = productID
+            productSetting.LookupID = lookupID
             Return productSetting
         End Function
 
@@ -11749,29 +11646,60 @@ Namespace REMI.Entities
         ''' </summary>
         <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
         <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
+        Public Property LookupID() As Global.System.Int32
             Get
-                Return _ProductID
+                Return _LookupID
             End Get
             Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
             End Set
         End Property
     
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
+        Private _LookupID As Global.System.Int32
+        Private Partial Sub OnLookupIDChanging(value As Global.System.Int32)
         End Sub
     
-        Private Partial Sub OnProductIDChanged()
+        Private Partial Sub OnLookupIDChanged()
         End Sub
 
         #End Region
 
         #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductSettings_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductSettings_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductSettings_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductSettings_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_ProductSettings_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -11787,37 +11715,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_ProductSettings", "ProductTestReady", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductSettings_Products", "Product")>
-        Public Property Product() As Product
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductSettings_Products", "Product").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductSettings_Products", "Product").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductSettings_Products", "Product")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_ProductSettings_Products", "Product", value)
                 End If
             End Set
         End Property
@@ -11839,13 +11736,11 @@ Namespace REMI.Entities
         ''' <summary>
         ''' Create a new ProductTestReady object.
         ''' </summary>
-        ''' <param name="productID">Initial value of the ProductID property.</param>
         ''' <param name="testID">Initial value of the TestID property.</param>
         ''' <param name="pSID">Initial value of the PSID property.</param>
         ''' <param name="id">Initial value of the ID property.</param>
-        Public Shared Function CreateProductTestReady(productID As Global.System.Int32, testID As Global.System.Int32, pSID As Global.System.Int32, id As Global.System.Int32) As ProductTestReady
+        Public Shared Function CreateProductTestReady(testID As Global.System.Int32, pSID As Global.System.Int32, id As Global.System.Int32) As ProductTestReady
             Dim productTestReady as ProductTestReady = New ProductTestReady
-            productTestReady.ProductID = productID
             productTestReady.TestID = testID
             productTestReady.PSID = pSID
             productTestReady.ID = id
@@ -11855,31 +11750,6 @@ Namespace REMI.Entities
         #End Region
 
         #Region "Primitive Properties"
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
-        <DataMemberAttribute()>
-        Public Property ProductID() As Global.System.Int32
-            Get
-                Return _ProductID
-            End Get
-            Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
-            End Set
-        End Property
-    
-        Private _ProductID As Global.System.Int32
-        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
-        End Sub
-    
-        Private Partial Sub OnProductIDChanged()
-        End Sub
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -12057,10 +11927,66 @@ Namespace REMI.Entities
     
         Private Partial Sub OnJIRAChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnLookupIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
 
         #End Region
 
         #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductTestReady_Lookups", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductTestReady_Lookups", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductTestReady_Lookups", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_ProductTestReady_Lookups", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_ProductTestReady_Lookups", "Lookup", value)
+                End If
+            End Set
+        End Property
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -12120,37 +12046,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Test)("REMI.Entities.FK_ProductTestReady_Tests", "Test", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductTestReady_Products", "Product")>
-        Public Property Product() As Product
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductTestReady_Products", "Product").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductTestReady_Products", "Product").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_ProductTestReady_Products", "Product")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_ProductTestReady_Products", "Product", value)
                 End If
             End Set
         End Property
@@ -14105,37 +14000,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Request_Batches", "Batch")>
-        Public Property Batch() As Batch
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property BatchReference() As EntityReference(Of Batch)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ReqFieldData_Request", "ReqFieldData")>
          Public Property ReqFieldDatas() As EntityCollection(Of ReqFieldData)
             Get
@@ -14162,6 +14026,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ReqDistribution)("REMI.Entities.FK_ReqDistribution_Request", "ReqDistribution", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Request_Batches", "Batch")>
+        Public Property Batch() As Batch
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property BatchReference() As EntityReference(Of Batch)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_Request_Batches", "Batch", value)
                 End If
             End Set
         End Property
@@ -14250,31 +14145,6 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnJobIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property ProductID() As Nullable(Of Global.System.Int32)
-            Get
-                Return _ProductID
-            End Get
-            Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
-            End Set
-        End Property
-    
-        Private _ProductID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnProductIDChanging(value As Nullable(Of Global.System.Int32))
-        End Sub
-    
-        Private Partial Sub OnProductIDChanged()
         End Sub
     
         ''' <summary>
@@ -14376,10 +14246,66 @@ Namespace REMI.Entities
     
         Private Partial Sub OnLastUserChanged()
         End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property LookupID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _LookupID
+            End Get
+            Set
+                OnLookupIDChanging(value)
+                ReportPropertyChanging("LookupID")
+                _LookupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("LookupID")
+                OnLookupIDChanged()
+            End Set
+        End Property
+    
+        Private _LookupID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnLookupIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnLookupIDChanged()
+        End Sub
 
         #End Region
 
         #Region "Navigation Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Batches", "Batch")>
+        Public Property Batch() As Batch
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property BatchReference() As EntityReference(Of Batch)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch", value)
+                End If
+            End Set
+        End Property
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -14408,6 +14334,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Job)("REMI.Entities.FK_RequestSetup_Jobs", "Job", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Products", "Lookup")>
+        Public Property Lookup() As Lookup
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_RequestSetup_Products", "Lookup").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_RequestSetup_Products", "Lookup").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property LookupReference() As EntityReference(Of Lookup)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Lookup)("REMI.Entities.FK_RequestSetup_Products", "Lookup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Lookup)("REMI.Entities.FK_RequestSetup_Products", "Lookup", value)
                 End If
             End Set
         End Property
@@ -14470,68 +14427,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of TestStage)("REMI.Entities.FK_RequestSetup_TestStages", "TestStage", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Batches", "Batch")>
-        Public Property Batch() As Batch
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property BatchReference() As EntityReference(Of Batch)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_RequestSetup_Batches", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Products", "Product")>
-        Public Property Product() As Product
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_RequestSetup_Products", "Product").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_RequestSetup_Products", "Product").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property ProductReference() As EntityReference(Of Product)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Product)("REMI.Entities.FK_RequestSetup_Products", "Product")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Product)("REMI.Entities.FK_RequestSetup_Products", "Product", value)
                 End If
             End Set
         End Property
@@ -19161,60 +19056,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Calibration_Tests", "Calibration")>
-         Public Property Calibrations() As EntityCollection(Of Calibration)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Tests", "Calibration")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Tests", "Calibration", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Tests", "ProductConfigurationUpload")>
-         Public Property ProductConfigurationUploads() As EntityCollection(Of ProductConfigurationUpload)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Tests", "ProductConfigurationUpload")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Tests", "ProductConfigurationUpload", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductTestReady_Tests", "ProductTestReady")>
-         Public Property ProductTestReadies() As EntityCollection(Of ProductTestReady)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Tests", "ProductTestReady")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Tests", "ProductTestReady", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestRecords_Tests", "TestRecord")>
          Public Property TestRecords() As EntityCollection(Of TestRecord)
             Get
@@ -19223,24 +19064,6 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestRecord)("REMI.Entities.FK_TestRecords_Tests", "TestRecord", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Tests", "RequestSetup")>
-         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
-            Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Tests", "RequestSetup")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Tests", "RequestSetup", value)
                 End If
             End Set
         End Property
@@ -19313,6 +19136,78 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of TestsAccess)("REMI.Entities.FK_TestsAccess_Tests", "TestsAccess", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductTestReady_Tests", "ProductTestReady")>
+         Public Property ProductTestReadies() As EntityCollection(Of ProductTestReady)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Tests", "ProductTestReady")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductTestReady)("REMI.Entities.FK_ProductTestReady_Tests", "ProductTestReady", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Calibration_Tests", "Calibration")>
+         Public Property Calibrations() As EntityCollection(Of Calibration)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Tests", "Calibration")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Calibration)("REMI.Entities.FK_Calibration_Tests", "Calibration", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_Tests", "RequestSetup")>
+         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Tests", "RequestSetup")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_Tests", "RequestSetup", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_ProductConfigurationUpload_Tests", "ProductConfigurationUpload")>
+         Public Property ProductConfigurationUploads() As EntityCollection(Of ProductConfigurationUpload)
+            Get
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Tests", "ProductConfigurationUpload")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of ProductConfigurationUpload)("REMI.Entities.FK_ProductConfigurationUpload_Tests", "ProductConfigurationUpload", value)
                 End If
             End Set
         End Property
@@ -21543,14 +21438,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_TestStages", "RequestSetup")>
-         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Results_TestStages", "Result")>
+         Public Property Results() As EntityCollection(Of Result)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_TestStages", "RequestSetup")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Result)("REMI.Entities.FK_Results_TestStages", "Result")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_TestStages", "RequestSetup", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Result)("REMI.Entities.FK_Results_TestStages", "Result", value)
                 End If
             End Set
         End Property
@@ -21561,14 +21456,14 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_Results_TestStages", "Result")>
-         Public Property Results() As EntityCollection(Of Result)
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_RequestSetup_TestStages", "RequestSetup")>
+         Public Property RequestSetups() As EntityCollection(Of RequestSetup)
             Get
-                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of Result)("REMI.Entities.FK_Results_TestStages", "Result")
+                Return CType(Me,IEntityWithRelationships).RelationshipManager.GetRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_TestStages", "RequestSetup")
             End Get
             Set
                 If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Result)("REMI.Entities.FK_Results_TestStages", "Result", value)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of RequestSetup)("REMI.Entities.FK_RequestSetup_TestStages", "RequestSetup", value)
                 End If
             End Set
         End Property
@@ -21896,37 +21791,6 @@ Namespace REMI.Entities
         <XmlIgnoreAttribute()>
         <SoapIgnoreAttribute()>
         <DataMemberAttribute()>
-        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch")>
-        Public Property Batch() As Batch
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value
-            End Get
-            Set
-                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value = value
-            End Set
-        End Property
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <BrowsableAttribute(False)>
-        <DataMemberAttribute()>
-        Public Property BatchReference() As EntityReference(Of Batch)
-            Get
-                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch")
-            End Get
-            Set
-                If (Not value Is Nothing)
-                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch", value)
-                End If
-            End Set
-        End Property
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <XmlIgnoreAttribute()>
-        <SoapIgnoreAttribute()>
-        <DataMemberAttribute()>
         <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_DeviceTrackingLog_TestUnits", "DeviceTrackingLog")>
          Public Property DeviceTrackingLogs() As EntityCollection(Of DeviceTrackingLog)
             Get
@@ -21971,6 +21835,37 @@ Namespace REMI.Entities
             Set
                 If (Not value Is Nothing)
                     CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedCollection(Of Result)("REMI.Entities.FK_Results_TestUnits", "Result", value)
+                End If
+            End Set
+        End Property
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <XmlIgnoreAttribute()>
+        <SoapIgnoreAttribute()>
+        <DataMemberAttribute()>
+        <EdmRelationshipNavigationPropertyAttribute("REMI.Entities", "FK_TestUnits_Batches", "Batch")>
+        Public Property Batch() As Batch
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value
+            End Get
+            Set
+                CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch").Value = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <BrowsableAttribute(False)>
+        <DataMemberAttribute()>
+        Public Property BatchReference() As EntityReference(Of Batch)
+            Get
+                Return CType(Me, IEntityWithRelationships).RelationshipManager.GetRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch")
+            End Get
+            Set
+                If (Not value Is Nothing)
+                    CType(Me, IEntityWithRelationships).RelationshipManager.InitializeRelatedReference(Of Batch)("REMI.Entities.FK_TestUnits_Batches", "Batch", value)
                 End If
             End Set
         End Property
@@ -25905,31 +25800,6 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnIDChanged()
-        End Sub
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
-        <DataMemberAttribute()>
-        Public Property ProductID() As Nullable(Of Global.System.Int32)
-            Get
-                Return _ProductID
-            End Get
-            Set
-                OnProductIDChanging(value)
-                ReportPropertyChanging("ProductID")
-                _ProductID = StructuralObject.SetValidValue(value)
-                ReportPropertyChanged("ProductID")
-                OnProductIDChanged()
-            End Set
-        End Property
-    
-        Private _ProductID As Nullable(Of Global.System.Int32)
-        Private Partial Sub OnProductIDChanging(value As Nullable(Of Global.System.Int32))
-        End Sub
-    
-        Private Partial Sub OnProductIDChanged()
         End Sub
     
         ''' <summary>

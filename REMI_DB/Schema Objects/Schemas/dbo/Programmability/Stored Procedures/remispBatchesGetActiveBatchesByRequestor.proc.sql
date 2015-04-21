@@ -52,15 +52,14 @@ AS
 		(
 			SELECT ROW_NUMBER() OVER (ORDER BY b.ID) AS Row, 
 				b.BatchStatus,b.Comment,
-				b.teststagecompletionstatus,b.ConcurrencyID,b.ID,b.JobName,b.LastUser,b.Priority AS PriorityID,lp.[Values] AS ProductGroupName,b.ProductTypeID, b.AccessoryGroupID,p.ID As ProductID,b.QRANumber,
+				b.teststagecompletionstatus,b.ConcurrencyID,b.ID,b.JobName,b.LastUser,b.Priority AS PriorityID,lp.[Values] AS ProductGroupName,b.ProductTypeID, b.AccessoryGroupID,b.ProductID As ProductID,b.QRANumber,
 				b.RequestPurpose AS RequestPurposeID,b.TestCenterLocationID,b.TestStageName, j.WILocation,
 				(select count(*) from testunits where testunits.batchid = b.id) as testUnitCount,
 				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, b.RQID, l3.[Values] As TestCenterLocation,
 				b.AssemblyNumber, b.AssemblyRevision, b.HWRevision, b.PartName, b.ReportRequiredBy, b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, 
 				ExecutiveSummary, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, b.DepartmentID, l6.[Values] AS Department, b.Requestor
 			FROM Batches as b
-				INNER JOIN Products p WITH(NOLOCK) on p.ID=b.ProductID
-				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=b.ProductID
 				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
 				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
 				LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID

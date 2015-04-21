@@ -14,9 +14,9 @@ Partial Class ManageProducts_EditProductConfig
 
 #Region "Page Events"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Dim productID As String = Request.QueryString.Get("Product")
+        Dim lookupid As String = Request.QueryString.Get("id")
         Dim id As Int32
-        Int32.TryParse(productID, id)
+        Int32.TryParse(lookupid, id)
         Dim test As String = Request(ddlTests.UniqueID)
         txtXMLDisplay.Visible = False
         lblXMLTitle.Visible = False
@@ -35,22 +35,24 @@ Partial Class ManageProducts_EditProductConfig
         lblConfigs.Visible = pnlOverAll.Visible
         btnUploadNew.Visible = pnlOverAll.Visible
 
-        If (String.IsNullOrEmpty(productID)) Then
+        If (String.IsNullOrEmpty(lookupid)) Then
             ddlTests.Visible = False
             lvlTests.Visible = False
         End If
-        Dim productName As String = ProductGroupManager.GetProductNameByID(id)
+
+        Dim productName As String = LookupsManager.GetLookupByID(lookupid).Rows(0).Field(Of String)("values")
         lblProductName.Text = "Edit " + productName + " Configuration"
 
         If (Me.IsPostBack) Then
-            hdnProductID.Value = id
+            Dim instance = New Remi.Dal.Entities().Instance()
+            hdnProductID.Value = lookupid
             hypCancel.NavigateUrl = REMIWebLinks.GetProductInfoLink(id)
             hypRefresh.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
             pnlLeftMenuActions.Visible = True
             hdnTestID.Value = test
 
             If (Not (String.IsNullOrEmpty(productName)) And Not (String.IsNullOrEmpty(test))) Then
-                ddlProductConfig.DataSource = (From pc In New REMI.Dal.Entities().Instance().ProductConfigurationUploads Where pc.Test.ID = hdnTestID.Value And pc.Product.ID = id Select New With {.PCName = pc.PCName, .PCID = pc.ID}).ToList
+                ddlProductConfig.DataSource = (From pc In New Remi.Dal.Entities().Instance().ProductConfigurationUploads Where pc.Test.ID = hdnTestID.Value And pc.LookupID = id Select New With {.PCName = pc.PCName, .PCID = pc.ID}).ToList
                 ddlProductConfig.DataBind()
 
                 Dim pcID As Int32
@@ -82,7 +84,7 @@ Partial Class ManageProducts_EditProductConfig
                 txtPCName.Visible = False
                 lblPCName.Visible = False
 
-                Dim record = (From r In New REMI.Dal.Entities().Instance().ProductConfigurationUploads Where r.Test.ID = hdnTestID.Value And r.Product.ID = id And r.IsProcessed = 0 And r.ID = pcID Select r)
+                Dim record = (From r In New Remi.Dal.Entities().Instance().ProductConfigurationUploads Where r.Test.ID = hdnTestID.Value And r.LookupID = id And r.IsProcessed = 0 And r.ID = pcID Select r)
 
                 If (record.Count > 0) Then
                     btnCopyFrom.Visible = False

@@ -47,11 +47,14 @@ Namespace REMI.Dal
 
                 Dim currentProductData As Dictionary(Of String, Integer)
                 Dim r As DataRow
-                For Each p As DataRow In GetList().Rows
+
+                Dim dtProducts As DataTable = LookupsDB.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, False, 0)
+
+                For Each p As DataRow In dtProducts.Rows
                     r = ird.ProductLocationReport.NewRow
-                    r("Product") = p.Item("ProductGroupName").ToString()
+                    r("Product") = p.Item("LookupType").ToString()
                     Dim productID As Int32
-                    Int32.TryParse(p.Item("ID").ToString(), productID)
+                    Int32.TryParse(p.Item("LookupID").ToString(), productID)
                     currentProductData = RetrieveInventoryReportForProductGroup(startDate, endDate, filterByQRANumber, geoLocation, productID, myConnection)
                     'only add this product as a row if there are some units within this timeframe
                     If currentProductData.Values.Sum > 0 Then
@@ -81,7 +84,7 @@ Namespace REMI.Dal
         ''' <param name="productGroupName"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Shared Function RetrieveInventoryReportForProductGroup(ByVal startDate As DateTime, ByVal endDate As DateTime, ByVal filterByQRANumber As Boolean, ByVal geoLocation As Int32, ByVal productID As Int32, ByVal myConnection As SqlConnection) As Dictionary(Of String, Integer)
+        Private Shared Function RetrieveInventoryReportForProductGroup(ByVal startDate As DateTime, ByVal endDate As DateTime, ByVal filterByQRANumber As Boolean, ByVal geoLocation As Int32, ByVal lookupID As Int32, ByVal myConnection As SqlConnection) As Dictionary(Of String, Integer)
             Dim tmpList As New Dictionary(Of String, Integer)
 
             Using myCommand As New SqlCommand("remispCountUnitsInLocation", myConnection)
@@ -95,10 +98,10 @@ Namespace REMI.Dal
                 Else
                     myCommand.Parameters.AddWithValue("@geographicallocation", 0)
                 End If
-                If productID > 0 Then
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                If lookupID > 0 Then
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupID)
                 Else
-                    myCommand.Parameters.AddWithValue("@productID", 0)
+                    myCommand.Parameters.AddWithValue("@LookupID", 0)
                 End If
 
                 Using myReader As SqlDataReader = myCommand.ExecuteReader()
@@ -157,32 +160,12 @@ Namespace REMI.Dal
             Return tmpData
         End Function
 
-        ' ''' <summary>
-        ' ''' Returns a list of the product groups that a user is associated with.
-        ' ''' </summary>
-        ' ''' <returns></returns>
-        ' ''' <remarks></remarks>
-        'Public Shared Function GetUserProductGroupList(ByVal userID As Int32) As DataTable
-        '    Dim tempList As New DataTable
-        '    Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-        '        Using myCommand As New SqlCommand("remispProductManagersSelectList", myConnection)
-        '            myCommand.CommandType = CommandType.StoredProcedure
-        '            myCommand.Parameters.AddWithValue("@UserID", userID)
-        '            myConnection.Open()
-        '            Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-        '            da.Fill(tempList)
-        '            tempList.TableName = "ProductGroups"
-        '        End Using
-        '    End Using
-        '    Return tempList
-        'End Function
-
-        Public Shared Function GetProductTestReady(ByVal ProductID As Int32, ByVal MNum As String) As DataTable
+        Public Shared Function GetProductTestReady(ByVal lookupid As Int32, ByVal MNum As String) As DataTable
             Dim tempList As New DataTable("ProductTestReady")
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispProductTestReady", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", ProductID)
+                    myCommand.Parameters.AddWithValue("@Lookupid", lookupid)
                     myCommand.Parameters.AddWithValue("@MNum", MNum)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
@@ -193,84 +176,15 @@ Namespace REMI.Dal
             Return tempList
         End Function
 
-        ''' <summary> 
-        ''' Returns a list with ProductGroup objects. 
-        ''' </summary> 
-        ''' <returns> 
-        ''' A ProductGroupCollection. 
-        ''' </returns> 
-        Public Shared Function GetList(Optional ByVal ByPassProduct As Boolean = True, Optional ByVal userID As Int32 = -1, Optional ByVal showArchived As Boolean = False) As DataTable
-            Dim tempList As New DataTable("Products")
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispGetProducts", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-
-                    If (ByPassProduct) Then
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
-                    Else
-                        myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
-                    End If
-
-                    myCommand.Parameters.AddWithValue("@UserID", userID)
-
-                    If (showArchived) Then
-                        myCommand.Parameters.AddWithValue("@ShowArchived", 1)
-                    Else
-                        myCommand.Parameters.AddWithValue("@ShowArchived", 0)
-                    End If
-
-                    myConnection.Open()
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(tempList)
-                    tempList.TableName = "Products"
-                End Using
-            End Using
-            Return tempList
-        End Function
-
-        Public Shared Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String) As Boolean 'We are passing in productGroupName because the webservice will insert a missing one
-            Dim Result As Integer = 0
-            Dim success As Boolean = False
-
-            If (QAP Is Nothing) Then
-                QAP = String.Empty
-            End If
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispSaveProduct", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductGroupName", productGroupName)
-                    myCommand.Parameters.AddWithValue("@isActive", isActive)
-                    myCommand.Parameters.AddWithValue("@productID", productID)
-                    myCommand.Parameters.AddWithValue("@QAP", QAP)
-
-                    Dim output As DbParameter = myCommand.CreateParameter()
-                    output.DbType = DbType.Boolean
-                    output.Direction = ParameterDirection.Output
-                    output.ParameterName = "@Success"
-                    output.Value = success
-                    myCommand.Parameters.Add(output)
-
-                    myConnection.Open()
-                    myCommand.ExecuteNonQuery()
-
-                    Boolean.TryParse(myCommand.Parameters("@Success").Value.ToString(), success)
-                End Using
-            End Using
-
-            Return success
-        End Function
-
         ''' <summary>Saves a product setting in the database.</summary> 
-        Public Shared Function SaveProductSetting(ByVal productID As Int32, ByVal keyName As String, ByVal valueText As String, ByVal defaultValue As String, ByVal userName As String) As Boolean
+        Public Shared Function SaveProductSetting(ByVal lookupid As Int32, ByVal keyName As String, ByVal valueText As String, ByVal defaultValue As String, ByVal userName As String) As Boolean
 
             Dim Result As Integer = 0
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
                 Using myCommand As New SqlCommand("remispProductSettingsInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@lookupid", lookupid)
                     myCommand.Parameters.AddWithValue("@keyname", keyName)
                     myCommand.Parameters.AddWithValue("@defaultValue", defaultValue)
                     If valueText IsNot Nothing AndAlso Not String.IsNullOrEmpty(valueText.Trim) Then
@@ -287,13 +201,13 @@ Namespace REMI.Dal
         End Function
 
         ''' <summary>Retrieves a list of product settings in the database.</summary> 
-        Public Shared Function GetProductSettings(ByVal productID As Int32) As List(Of ProductSetting)
+        Public Shared Function GetProductSettings(ByVal lookupID As Int32) As List(Of ProductSetting)
             Dim tempList As New List(Of ProductSetting)
             Dim tmpValue As ProductSetting
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispProductSettingsSelectListForProduct", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupID)
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader
                         If myReader.HasRows Then
@@ -311,63 +225,18 @@ Namespace REMI.Dal
                     End Using
                 End Using
             End Using
+
             Return tempList
-
-        End Function
-
-        Public Shared Function GetProductIDByName(ByVal productGroupName As String) As Int32
-            Dim returnVal As Int32 = 0
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispGetProductIDByName", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productGroupName", productGroupName)
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                If (Not myReader.IsDBNull(myReader.GetOrdinal("ID"))) Then
-                                    returnVal = myReader.GetInt32(myReader.GetOrdinal("ID"))
-                                End If
-                            End While
-                        End If
-                    End Using
-                End Using
-            End Using
-            Return returnVal
-        End Function
-
-        Public Shared Function GetProductNameByID(ByVal productID As Int32) As String
-            Dim returnVal As String = Nothing
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispGetProductNameByID", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                If (Not myReader.IsDBNull(myReader.GetOrdinal("ProductGroupName"))) Then
-                                    returnVal = myReader.GetString(myReader.GetOrdinal("ProductGroupName"))
-                                End If
-                            End While
-                        End If
-
-                    End Using
-                End Using
-            End Using
-            Return returnVal
         End Function
 
         ''' <summary>Retrieves a single product setting from the database.</summary> 
-        Public Shared Function GetProductSetting(ByVal ProductID As Int32, ByVal keyName As String) As String
+        Public Shared Function GetProductSetting(ByVal lookupID As Int32, ByVal keyName As String) As String
             Dim returnVal As String = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispProductSettingsSelectSingleValue", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", ProductID)
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupID)
                     myCommand.Parameters.AddWithValue("@keyname", keyName)
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader
@@ -386,13 +255,13 @@ Namespace REMI.Dal
 
         End Function
 
-        Public Shared Function DeleteProductSetting(ByVal productID As Int32, ByVal keyname As String, ByVal username As String) As Boolean
+        Public Shared Function DeleteProductSetting(ByVal lookupid As Int32, ByVal keyname As String, ByVal username As String) As Boolean
             Dim Result As Integer = 0
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
 
                 Using myCommand As New SqlCommand("remispProductSettingsDeleteSetting", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@lookupid", lookupid)
                     myCommand.Parameters.AddWithValue("@keyname", keyname)
                     myCommand.Parameters.AddWithValue("@UserName", username)
                     MyConnection.Open()
@@ -403,12 +272,12 @@ Namespace REMI.Dal
             Return CBool(Result)
         End Function
 
-        Public Shared Function GetProductContacts(ByVal productID As Int32) As DataTable
+        Public Shared Function GetProductContacts(ByVal lookupid As Int32) As DataTable
             Dim dt As New DataTable
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetContacts", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@lookupid", lookupid)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
                     da.Fill(dt)
@@ -572,12 +441,12 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetSimilarTestConfigurations(ByVal productID As Int32, ByVal TestID As Int32) As DataTable
+        Public Shared Function GetSimilarTestConfigurations(ByVal lookupid As Int32, ByVal TestID As Int32) As DataTable
             Dim dt As New DataTable
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetSimilarTestConfiguration", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupid)
                     myCommand.Parameters.AddWithValue("@TestID", TestID)
                     myConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
@@ -587,13 +456,13 @@ Namespace REMI.Dal
             Return dt
         End Function
 
-        Public Shared Function CopyTestConfiguration(ByVal productID As Int32, ByVal testID As Int32, ByVal copyFromProductID As Int32, ByVal lastUser As String) As Boolean
+        Public Shared Function CopyTestConfiguration(ByVal lookupid As Int32, ByVal testID As Int32, ByVal copyFromLookupID As Int32, ByVal lastUser As String) As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispCopyTestConfiguration", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupid)
                     myCommand.Parameters.AddWithValue("@TestID", testID)
-                    myCommand.Parameters.AddWithValue("@copyFromProductID", copyFromProductID)
+                    myCommand.Parameters.AddWithValue("@copyFromLookupID", copyFromLookupID)
                     myCommand.Parameters.AddWithValue("@LastUser", lastUser)
                     myConnection.Open()
                     myCommand.ExecuteNonQuery()
@@ -641,11 +510,11 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function ProductConfigurationUpload(ByVal productID As Int32, ByVal testID As Int32, ByVal xml As XDocument, ByVal LastUser As String, ByVal pcName As String) As Boolean
+        Public Shared Function ProductConfigurationUpload(ByVal lookupid As Int32, ByVal testID As Int32, ByVal xml As XDocument, ByVal LastUser As String, ByVal pcName As String) As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispProductConfigurationUpload", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", productID)
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupid)
                     myCommand.Parameters.AddWithValue("@TestID", testID)
                     myCommand.Parameters.AddWithValue("@XML", xml.ToString())
                     myCommand.Parameters.AddWithValue("@LastUser", LastUser)

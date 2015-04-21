@@ -34,23 +34,23 @@ end
 --Only inserts records into the Audit table if the row was either updated or inserted and values actually changed.
 select @count= count(*) from
 (
-   select ProductID, KeyName, ValueText, DefaultValue from Inserted
+   select LookupID, KeyName, ValueText, DefaultValue from Inserted
    except
-   select ProductID, KeyName, ValueText, DefaultValue from Deleted
+   select LookupID, KeyName, ValueText, DefaultValue from Deleted
 ) a
 
 if ((@count) >0)
 begin
 	insert into ProductSettingsAudit (
 			ProductSettingsId, 
-		ProductID,
+		LookupID,
 		KeyName, 
 		ValueText,
 		DefaultValue,	
 		Action)
 		Select 
 		Id, 
-		ProductID,
+		LookupID,
 		KeyName, 
 		DefaultValue,
 		ValueText,	

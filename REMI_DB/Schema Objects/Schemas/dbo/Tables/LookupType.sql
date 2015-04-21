@@ -1,6 +1,8 @@
 ﻿CREATE TABLE [dbo].[LookupType](
 	[LookupTypeID] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](150) NOT NULL,
+	[IsSystem] [bit] NOT NULL,
+	[IsSecureType] [bit] NULL,
  CONSTRAINT [PK_LookupType] PRIMARY KEY CLUSTERED 
 (
 	[LookupTypeID] ASC

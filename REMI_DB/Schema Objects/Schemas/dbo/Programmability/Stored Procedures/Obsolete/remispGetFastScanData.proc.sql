@@ -44,7 +44,7 @@ DECLARE @ProductID INT
 --jobname-- product group
 declare @jobname nvarchar(400)
 
-select @jobname=jobname, @productname=lp.[Values], @DepartmentID = DepartmentID, @BatchID=Batches.ID,@ProductID=Batches.ProductID from Batches inner join Products p on p.ID=Batches.ProductID 
+select @jobname=jobname, @productname=lp.[Values], @DepartmentID = DepartmentID, @BatchID=Batches.ID,@ProductID=p.ID from Batches inner join Products p on p.ID=Batches.ProductID 
 				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID where Batches.QRANumber = @qranumber
 
 declare @jobID int

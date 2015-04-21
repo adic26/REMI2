@@ -1,4 +1,4 @@
-﻿ALTER procedure [dbo].[remispExceptionSearch] @ProductID INT = 0, @AccessoryGroupID INT = 0, @ProductTypeID INT = 0, @TestID INT = 0, @TestStageID INT = 0, @JobName NVARCHAR(400) = NULL, 
+﻿ALTER procedure [dbo].[remispExceptionSearch] @AccessoryGroupID INT = 0, @ProductTypeID INT = 0, @TestID INT = 0, @TestStageID INT = 0, @JobName NVARCHAR(400) = NULL, 
 	@IncludeBatches INT = 0, @RequestReason INT = 0, @TestCenterID INT = 0, @IsMQual INT = 0, @QRANumber NVARCHAR(11) = NULL
 AS
 BEGIN
@@ -9,13 +9,13 @@ BEGIN
 		ProductID, ProductType, AccessoryGroupName, IsMQual, TestCenter, TestCenterID, ReasonForRequest, TestID
 	from 
 	(
-		select ROW_NUMBER() over (order by lp.[values] desc)as row, pvt.ID, b.QRANumber, ISNULL(tu.Batchunitnumber, 0) as batchunitnumber, pvt.[ReasonForRequest] As ReasonForRequestID, lp.[Values] AS ProductGroupName, 
+		select ROW_NUMBER() over (order by p.[values] desc)as row, pvt.ID, b.QRANumber, ISNULL(tu.Batchunitnumber, 0) as batchunitnumber, pvt.[ReasonForRequest] As ReasonForRequestID, p.[Values] AS ProductGroupName, 
 		(select jobname from jobs,TestStages where teststages.id =pvt.TestStageid and Jobs.ID = TestStages.jobid) as jobname, 
 		(select teststagename from teststages WITH(NOLOCK) where teststages.id =pvt.TestStageid) as teststagename, 
 		t.TestName,pvt.TestStageID, pvt.TestUnitID,
 		(select top 1 LastUser from TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS LastUser,
 		(select top 1 ConcurrencyID from TestExceptions WITH(NOLOCK) WHERE ID=pvt.ID) AS ConcurrencyID,
-		pvt.ProductTypeID, pvt.AccessoryGroupID, pvt.ProductID, l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, pvt.IsMQual, 
+		pvt.ProductTypeID, pvt.AccessoryGroupID, b.ProductID, l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, pvt.IsMQual, 
 		l3.[Values] As TestCenter, l3.[LookupID] AS TestCenterID, l4.[Values] As ReasonForRequest, t.ID AS TestID
 		FROM vw_ExceptionsPivoted as pvt WITH(NOLOCK)
 			LEFT OUTER JOIN Tests t WITH(NOLOCK) ON pvt.Test = t.ID
@@ -23,16 +23,10 @@ BEGIN
 			LEFT OUTER JOIN Batches b WITH(NOLOCK) ON tu.BatchID = b.ID
 			LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON l.LookupID=pvt.ProductTypeID
 			LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON l2.LookupID=pvt.AccessoryGroupID
-			LEFT OUTER JOIN Products p WITH(NOLOCK) ON p.ID=pvt.ProductID
-			LEFT OUTER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+			LEFT OUTER JOIN Lookups p WITH(NOLOCK) on p.LookupID=b.ProductID
 			LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON l3.LookupID=pvt.TestCenterID
 			LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON l4.LookupID=pvt.ReasonForRequest
-		WHERE (
-				(pvt.[ProductID]=@ProductID) 
-				OR
-				(@ProductID = 0)
-			)
-			AND
+		WHERE 
 			(
 				(pvt.ReasonForRequest = @RequestReason)
 				OR

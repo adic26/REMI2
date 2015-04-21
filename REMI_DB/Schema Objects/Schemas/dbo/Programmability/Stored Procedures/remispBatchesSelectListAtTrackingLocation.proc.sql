@@ -97,7 +97,7 @@ case when @sortExpression is null then Priority end desc
 					  l.[Values] As ProductType,
 					  l2.[Values] As AccessoryGroupName,
 					  l3.[Values] As TestCenterLocation,
-					  p.ID As ProductID,
+					  b.ProductID As ProductID,
                       b.JobName, 
                       b.LastUser, 
                       b.TestCenterLocationID,
@@ -110,8 +110,7 @@ case when @sortExpression is null then Priority end desc
 					INNER JOIN DeviceTrackingLog AS dtl WITH(NOLOCK) 
 					INNER JOIN TrackingLocations AS tl WITH(NOLOCK) ON dtl.TrackingLocationID = tl.ID 
 					INNER JOIN TestUnits AS tu WITH(NOLOCK) ON dtl.TestUnitID = tu.ID ON b.id = tu.batchid --batches where there's a tracking log
-					inner join Products p WITH(NOLOCK) on p.ID=b.ProductID
-					INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+					INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=b.ProductID
 					LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName
 					LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
 					LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID 

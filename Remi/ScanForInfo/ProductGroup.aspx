@@ -60,17 +60,9 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
     <asp:Panel ID="pnlSummary" runat="server">
         <asp:TextBox ID="IESubmitBugRemedy_DoNotRemove" runat="server" Style="visibility: hidden;display: none;" />
-        &nbsp;&nbsp;<asp:DropDownList ID="ddlProductGroup" runat="server" Width="181px" DataTextField="ProductGroupName" DataValueField="ID" ></asp:DropDownList>
-        <asp:ObjectDataSource ID="odsProducts" runat="server" SelectMethod="GetProductList" TypeName="REMI.Bll.ProductGroupManager" OldValuesParameterFormatString="original_{0}">
-            <SelectParameters>
-                <asp:ControlParameter  ControlID="ctl00$Content$chkByPass" DefaultValue="False" Name="ByPassProduct" PropertyName="Checked" Type="Boolean" />
-                <asp:ControlParameter ControlID="ctl00$Content$hdnUserID" Name="UserID" Type="Int32" PropertyName="Value" />
-                <asp:ControlParameter ControlID="ctl00$leftSidebarContent$chkShowArchived" DefaultValue="False" PropertyName="Checked" Name="showArchived" Type="Boolean" />
-            </SelectParameters>
-        </asp:ObjectDataSource>
+        &nbsp;&nbsp;<asp:DropDownList ID="ddlProductGroup" runat="server" Width="181px" DataTextField="LookupType" DataValueField="LookupID" ></asp:DropDownList>
         &nbsp;<asp:Button ID="btnSubmit" runat="server" Text="View" Width="55px" Height="25px" CssClass="button" />
-        <asp:HiddenField ID="hdnProductID" runat="server" Value="0" />
-        <asp:CheckBox runat="server" ID="chkByPass" CssClass="hidden" Visible="false" />
+        <asp:HiddenField ID="hdnLookupID" runat="server" Value="0" />
         <asp:HiddenField ID="hdnUserID" runat="server" Value="" />
         
         <asp:GridView ID="grdTargetDates" runat="server" AutoGenerateColumns="false" DataKeyNames="ID, KeyName" AutoGenerateEditButton="true" EmptyDataText="" EnableViewState="true"  OnRowEditing="grdTargetDates_OnRowEditing" OnRowCancelingEdit="grdTargetDates_OnRowCancelingEdit" OnRowUpdating="grdTargetDates_RowUpdating">
@@ -235,10 +227,8 @@
                         <asp:ObjectDataSource ID="odsTrackingLog" runat="server" SelectMethod="Get24HourLogsForProduct"
                             TypeName="REMI.Bll.TrackingLogManager" OldValuesParameterFormatString="original_{0}">
                             <SelectParameters>
-                                <asp:ControlParameter ControlID="hdnProductID" Name="ProductID" PropertyName="Value"
-                                    Type="String" />
-                                <asp:ControlParameter ControlID="ddlTime" Name="TimeInHours" PropertyName="SelectedValue"
-                                    Type="String" />
+                                <asp:ControlParameter ControlID="hdnLookupID" Name="LookupID" PropertyName="Value" Type="String" />
+                                <asp:ControlParameter ControlID="ddlTime" Name="TimeInHours" PropertyName="SelectedValue" Type="String" />
                             </SelectParameters>
                         </asp:ObjectDataSource>
                     </Content>

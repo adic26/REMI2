@@ -35,9 +35,7 @@
         <asp:Label ID="lblProductName" runat="server"></asp:Label></h1>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
-    <asp:HiddenField ID="hdnProductID" runat="server" />
-    <asp:HiddenField ID="hdnProductName" runat="server" />
-    <asp:HiddenField runat="server" ID="hdnIsActive" />
+    <asp:HiddenField ID="hdnLookupID" runat="server" />
     <table style="width: 18%; height: 45px;">
         <tr>
             <td class="HorizTableFirstcolumn">
@@ -72,7 +70,6 @@
         </tr>
     </table>
     <uc1:notifications ID="notMain" runat="server" />
-    QAP URL: <asp:TextBox ID="txtQAPLocation" runat="server" Width="507px" Rows="3"></asp:TextBox><br />
 
     <h2>Functional Tests:</h2>
     <asp:GridView runat="server" ID="gdvFunctional" AutoGenerateColumns="false" DataKeyNames="LookupID">

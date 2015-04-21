@@ -13,7 +13,7 @@ BEGIN
 				INNER JOIN UserDetails udtc ON udtc.UserID=u.ID
 				INNER JOIN UserDetails udd ON udd.UserID=u.ID
 				LEFT OUTER JOIN UserDetails udp ON udp.UserID=u.ID
-				LEFT OUTER JOIN Products p ON p.LookupID=udp.LookupID
+				LEFT OUTER JOIN Lookups p ON p.LookupID=udp.LookupID
 			WHERE (
 					(@IncludeInActive = 0 AND ISNULL(u.IsActive, 1)=1)
 					OR
@@ -45,7 +45,7 @@ BEGIN
 				  )
 				  AND
 				  (
-					(p.ID=@ProductID) 
+					(p.LookupID=@ProductID) 
 					OR
 					(@ProductID = 0)
 				  )

@@ -1,36 +1,32 @@
-﻿ALTER procedure remispCountUnitsInLocation
-@startDate datetime,
-@endDate datetime,
-@geoGraphicalLocation int,
-@FilterBasedOnQraNumber bit,
-@productID INT
+﻿ALTER procedure remispCountUnitsInLocation @startDate datetime, @endDate datetime, @geoGraphicalLocation int, @FilterBasedOnQraNumber bit, @LookupID INT
 AS
-declare @startYear int = Right(year( @StartDate), 2);
-declare @endYear int = Right(year( @EndDate), 2);
+BEGIN
+	DECLARE @startYear int = Right(year( @StartDate), 2);
+	DECLARE @endYear int = Right(year( @EndDate), 2);
 
-IF @geoGraphicalLocation = 0
-	SET @geoGraphicalLocation = NULL
+	IF @geoGraphicalLocation = 0
+		SET @geoGraphicalLocation = NULL
 
-select tl.TrackingLocationName, count(tu.id) as CountedUnits 
-from TestUnits as tu, trackinglocations as tl, DeviceTrackingLog as dtl, Batches as b,Products p 
-where tu.ID = dtl.TestUnitID and dtl.TrackingLocationID = tl.ID and dtl.OutUser is null and tu.BatchID = b.id
-and dtl.InTime > @StartDate and dtl.InTime < @EndDate 
-and (@FilterBasedOnQraNumber = 0 or (Convert(int , SUBSTRING(b.QRANumber, 5, 2)) >= @startYear
-and Convert(int , SUBSTRING(b.QRANumber, 5, 2)) <= @endYear))
-and (p.ID = @productID or @productID = 0)
-and (b.TestCenterLocationID = @geoGraphicalLocation or @geoGraphicalLocation IS NULL) and p.ID=b.ProductID
-group by TrackingLocationName 
-union all
-select 'Total', count(tu.id) as CountedUnits 
-from TestUnits as tu, trackinglocations as tl, DeviceTrackingLog as dtl, Batches as b, Products p 
-where tu.ID = dtl.TestUnitID and dtl.TrackingLocationID = tl.ID and dtl.OutUser is null and tu.BatchID = b.id
-and dtl.InTime > @StartDate and dtl.InTime < @EndDate 
-and (@FilterBasedOnQraNumber = 0 or (Convert(int , SUBSTRING(b.QRANumber, 5, 2)) >= @startYear
-and Convert(int , SUBSTRING(b.QRANumber, 5, 2)) <= @endYear))
-and (p.ID = @productID or @productID = 0)
-and (b.TestCenterLocationID  = @geoGraphicalLocation or @geoGraphicalLocation IS NULL)
-and p.ID=b.ProductID
-order by TrackingLocationName asc
+	SELECT tl.TrackingLocationName, count(tu.id) as CountedUnits 
+	FROM TestUnits tu WITH(NOLOCK), trackinglocations tl WITH(NOLOCK), DeviceTrackingLog dtl WITH(NOLOCK), Batches b WITH(NOLOCK)
+	WHERE tu.ID = dtl.TestUnitID AND dtl.TrackingLocationID = tl.ID AND dtl.OutUser IS NULL AND tu.BatchID = b.id
+		AND dtl.InTime > @StartDate AND dtl.InTime < @EndDate 
+		AND (@FilterBasedOnQraNumber = 0 OR (Convert(int , SUBSTRING(b.QRANumber, 5, 2)) >= @startYear
+		AND Convert(int , SUBSTRING(b.QRANumber, 5, 2)) <= @endYear))
+		AND (b.ProductID = @LookupID OR @LookupID = 0)
+		AND (b.TestCenterLocationID = @geoGraphicalLocation OR @geoGraphicalLocation IS NULL) 
+	GROUP BY TrackingLocationName 
+	UNION ALL
+	SELECT 'Total', count(tu.id) AS CountedUnits 
+	FROM TestUnits tu, trackinglocations tl, DeviceTrackingLog dtl, Batches b
+	WHERE tu.ID = dtl.TestUnitID AND dtl.TrackingLocationID = tl.ID AND dtl.OutUser IS NULL AND tu.BatchID = b.id
+		AND dtl.InTime > @StartDate AND dtl.InTime < @EndDate 
+		AND (@FilterBasedOnQraNumber = 0 or (Convert(int , SUBSTRING(b.QRANumber, 5, 2)) >= @startYear
+		AND Convert(INT, SUBSTRING(b.QRANumber, 5, 2)) <= @endYear))
+		AND (b.ProductID = @LookupID or @LookupID = 0)
+		AND (b.TestCenterLocationID  = @geoGraphicalLocation OR @geoGraphicalLocation IS NULL)
+	order by TrackingLocationName ASC
+END
 GO
 GRANT EXECUTE On remispCountUnitsInLocation TO Remi
 GO

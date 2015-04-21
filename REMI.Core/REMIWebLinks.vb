@@ -59,8 +59,8 @@ Namespace REMI.Core
         Public Shared Function GetRelabResultLink(ByVal batchID As Integer) As String
             Return String.Format("/Relab/Results.aspx?Batch={0}", batchID)
         End Function
-        Public Shared Function GetProductInfoLink(ByVal productID As Int32) As String
-            Return String.Format("/{0}?Name={1}", REMIConfiguration.REMIProductGroupLink, productID.ToString())
+        Public Shared Function GetProductInfoLink(ByVal lookupid As Int32) As String
+            Return String.Format("/{0}?id={1}", REMIConfiguration.REMIProductGroupLink, lookupid.ToString())
         End Function
         Public Shared Function GetJobLink(ByVal jobID As Int32) As String
             Return String.Format("/{0}?JobID={1}", REMIConfiguration.REMIJobLink, jobID.ToString())
@@ -93,10 +93,10 @@ Namespace REMI.Core
             Return String.Format("/{0}?RN={1}", REMIConfiguration.RemiSetTestUnitExceptionsLink, QRANumber)
         End Function
         Public Shared Function GetSetProductSettingsLink(ByVal productID As Int32) As String
-            Return String.Format("/{0}?product={1}", REMIConfiguration.RemiSetProductSettingsLink, productID.ToString())
+            Return String.Format("/{0}?id={1}", REMIConfiguration.RemiSetProductSettingsLink, productID.ToString())
         End Function
-        Public Shared Function GetSetProductConfigurationLink(ByVal productID As Int32) As String
-            Return String.Format("/{0}?product={1}", REMIConfiguration.RemiSetProductConfigLink, productID.ToString())
+        Public Shared Function GetSetProductConfigurationLink(ByVal lookupid As Int32) As String
+            Return String.Format("/{0}?id={1}", REMIConfiguration.RemiSetProductConfigLink, lookupid.ToString())
         End Function
         Public Shared Function GetSetStationConfigurationLink(ByVal trackingLocationID As Int32) As String
             Return String.Format("/{0}?BarcodeSuffix={1}", REMIConfiguration.RemiSetStationConfigLink, trackingLocationID.ToString())

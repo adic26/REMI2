@@ -39,7 +39,6 @@
           <EntitySet Name="ProductConfigurationVersion" EntityType="remiModel.Store.ProductConfigurationVersion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ProductConfigValues" EntityType="remiModel.Store.ProductConfigValues" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ProductLookups" EntityType="remiModel.Store.ProductLookups" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Products" EntityType="remiModel.Store.Products" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ProductSettings" EntityType="remiModel.Store.ProductSettings" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ProductTestReady" EntityType="remiModel.Store.ProductTestReady" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Services" EntityType="remiModel.Store.Services" store:Type="Tables" Schema="dbo" />
@@ -127,7 +126,6 @@
           <EntitySet Name="vw_ExceptionsPivoted" EntityType="remiModel.Store.vw_ExceptionsPivoted" store:Type="Views" store:Schema="dbo" store:Name="vw_ExceptionsPivoted">
             <DefiningQuery>SELECT 
       [vw_ExceptionsPivoted].[ID] AS [ID], 
-      [vw_ExceptionsPivoted].[ProductID] AS [ProductID], 
       [vw_ExceptionsPivoted].[ReasonForRequest] AS [ReasonForRequest], 
       [vw_ExceptionsPivoted].[TestUnitID] AS [TestUnitID], 
       [vw_ExceptionsPivoted].[TestStageID] AS [TestStageID], 
@@ -261,7 +259,7 @@
             <End Role="Batches" EntitySet="Batches" />
           </AssociationSet>
           <AssociationSet Name="FK_Batches_Products" Association="remiModel.Store.FK_Batches_Products">
-            <End Role="Products" EntitySet="Products" />
+            <End Role="Lookups" EntitySet="Lookups" />
             <End Role="Batches" EntitySet="Batches" />
           </AssociationSet>
           <AssociationSet Name="FK_Batches_ProductType" Association="remiModel.Store.FK_Batches_ProductType">
@@ -289,7 +287,7 @@
             <End Role="BatchSpecificTestDurations" EntitySet="BatchSpecificTestDurations" />
           </AssociationSet>
           <AssociationSet Name="FK_Calibration_Products" Association="remiModel.Store.FK_Calibration_Products">
-            <End Role="Products" EntitySet="Products" />
+            <End Role="Lookups" EntitySet="Lookups" />
             <End Role="Calibration" EntitySet="Calibration" />
           </AssociationSet>
           <AssociationSet Name="FK_Calibration_Tests" Association="remiModel.Store.FK_Calibration_Tests">
@@ -365,7 +363,7 @@
             <End Role="ProductConfiguration" EntitySet="ProductConfiguration" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductConfigurationUpload_Products" Association="remiModel.Store.FK_ProductConfigurationUpload_Products">
-            <End Role="Products" EntitySet="Products" />
+            <End Role="Lookups" EntitySet="Lookups" />
             <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUpload" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductConfigurationUpload_Tests" Association="remiModel.Store.FK_ProductConfigurationUpload_Tests">
@@ -389,19 +387,15 @@
             <End Role="ProductLookups" EntitySet="ProductLookups" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductLookups_Products" Association="remiModel.Store.FK_ProductLookups_Products">
-            <End Role="Products" EntitySet="Products" />
+            <End Role="Lookups" EntitySet="Lookups" />
             <End Role="ProductLookups" EntitySet="ProductLookups" />
           </AssociationSet>
-          <AssociationSet Name="FK_Products_Lookups" Association="remiModel.Store.FK_Products_Lookups">
+          <AssociationSet Name="FK_ProductSettings_Lookups" Association="remiModel.Store.FK_ProductSettings_Lookups">
             <End Role="Lookups" EntitySet="Lookups" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSettings_Products" Association="remiModel.Store.FK_ProductSettings_Products">
-            <End Role="Products" EntitySet="Products" />
             <End Role="ProductSettings" EntitySet="ProductSettings" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductTestReady_Products" Association="remiModel.Store.FK_ProductTestReady_Products">
-            <End Role="Products" EntitySet="Products" />
+          <AssociationSet Name="FK_ProductTestReady_Lookups" Association="remiModel.Store.FK_ProductTestReady_Lookups">
+            <End Role="Lookups" EntitySet="Lookups" />
             <End Role="ProductTestReady" EntitySet="ProductTestReady" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductTestReady_ProductSettings" Association="remiModel.Store.FK_ProductTestReady_ProductSettings">
@@ -465,7 +459,7 @@
             <End Role="RequestSetup" EntitySet="RequestSetup" />
           </AssociationSet>
           <AssociationSet Name="FK_RequestSetup_Products" Association="remiModel.Store.FK_RequestSetup_Products">
-            <End Role="Products" EntitySet="Products" />
+            <End Role="Lookups" EntitySet="Lookups" />
             <End Role="RequestSetup" EntitySet="RequestSetup" />
           </AssociationSet>
           <AssociationSet Name="FK_RequestSetup_Tests" Association="remiModel.Store.FK_RequestSetup_Tests">
@@ -821,7 +815,7 @@
           <Property Name="CPRNumber" Type="nvarchar" MaxLength="500" />
           <Property Name="HWRevision" Type="nvarchar" MaxLength="500" />
           <Property Name="PMNotes" Type="nvarchar(max)" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="_ProductID" Type="int" Nullable="false" />
           <Property Name="ProductTypeID" Type="int" />
           <Property Name="AccessoryGroupID" Type="int" />
           <Property Name="TestCenterLocationID" Type="int" />
@@ -832,6 +826,7 @@
           <Property Name="Order" Type="int" />
           <Property Name="OrientationID" Type="int" />
           <Property Name="DepartmentID" Type="int" />
+          <Property Name="ProductID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="BatchesAudit">
           <Key>
@@ -851,7 +846,7 @@
           <Property Name="RequestPurpose" Type="int" Nullable="false" />
           <Property Name="RFBands" Type="nvarchar" MaxLength="400" />
           <Property Name="TestStageCompletionStatus" Type="int" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="_ProductID" Type="int" Nullable="false" />
           <Property Name="ProductTypeID" Type="int" />
           <Property Name="AccessoryGroupID" Type="int" />
           <Property Name="TestCenterLocationID" Type="int" />
@@ -860,6 +855,7 @@
           <Property Name="MechanicalTools" Type="nvarchar" MaxLength="10" />
           <Property Name="Order" Type="int" />
           <Property Name="DepartmentID" Type="int" />
+          <Property Name="ProductID" Type="int" />
         </EntityType>
         <EntityType Name="BatchesJira">
           <Key>
@@ -888,13 +884,13 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
           <Property Name="HostID" Type="int" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
           <Property Name="File" Type="xml" Nullable="false" />
           <Property Name="TestID" Type="int" Nullable="false" />
           <Property Name="LastUser" Type="nvarchar" MaxLength="255" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Configurations">
           <Key>
@@ -990,6 +986,7 @@
           <Property Name="LookupTypeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="150" />
           <Property Name="IsSystem" Type="bit" Nullable="false" />
+          <Property Name="IsSecureType" Type="bit" />
         </EntityType>
         <EntityType Name="Menu">
           <Key>
@@ -1024,10 +1021,10 @@
           </Key>
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="IsProcessed" Type="bit" Nullable="false" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
           <Property Name="TestID" Type="int" Nullable="false" />
           <Property Name="LastUser" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="PCName" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductConfigurationVersion">
           <Key>
@@ -1055,17 +1052,9 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="_ProductID" Type="int" Nullable="false" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
           <Property Name="ProductID" Type="int" Nullable="false" />
-          <Property Name="LookupID" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Products">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="QAPLocation" Type="nvarchar" MaxLength="255" />
-          <Property Name="_TSDContact" Type="nvarchar" MaxLength="255" />
-          <Property Name="LookupID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductSettings">
           <Key>
@@ -1076,13 +1065,12 @@
           <Property Name="KeyName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ValueText" Type="nvarchar(max)" />
           <Property Name="DefaultValue" Type="nvarchar(max)" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="LookupID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductTestReady">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ProductID" Type="int" Nullable="false" />
           <Property Name="TestID" Type="int" Nullable="false" />
           <Property Name="PSID" Type="int" Nullable="false" />
           <Property Name="Comment" Type="ntext" />
@@ -1090,6 +1078,7 @@
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="IsNestReady" Type="int" />
           <Property Name="JIRA" Type="int" />
+          <Property Name="LookupID" Type="int" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
@@ -1654,11 +1643,11 @@
           </Key>
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="JobID" Type="int" />
-          <Property Name="ProductID" Type="int" />
           <Property Name="TestStageID" Type="int" Nullable="false" />
           <Property Name="TestID" Type="int" Nullable="false" />
           <Property Name="BatchID" Type="int" />
           <Property Name="LastUser" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="LookupID" Type="int" />
         </EntityType>
         <EntityType Name="RequestType">
           <Key>
@@ -1723,7 +1712,6 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="ProductID" Type="int" />
           <Property Name="ReasonForRequest" Type="int" />
           <Property Name="TestUnitID" Type="int" />
           <Property Name="TestStageID" Type="int" />
@@ -2022,11 +2010,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Batches_Products">
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="1" />
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="Batches" Type="remiModel.Store.Batches" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="Batches">
               <PropertyRef Name="ProductID" />
@@ -2106,14 +2094,14 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Calibration_Products">
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="1" />
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="Calibration" Type="remiModel.Store.Calibration" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="Calibration">
-              <PropertyRef Name="ProductID" />
+              <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2334,14 +2322,14 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProductConfigurationUpload_Products">
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="1" />
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="ProductConfigurationUpload" Type="remiModel.Store.ProductConfigurationUpload" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="ProductConfigurationUpload">
-              <PropertyRef Name="ProductID" />
+              <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2406,50 +2394,38 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProductLookups_Products">
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="1" />
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
           <End Role="ProductLookups" Type="remiModel.Store.ProductLookups" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="ProductLookups">
               <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Products_Lookups">
+        <Association Name="FK_ProductSettings_Lookups">
           <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="1" />
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="*" />
+          <End Role="ProductSettings" Type="remiModel.Store.ProductSettings" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Lookups">
               <PropertyRef Name="LookupID" />
             </Principal>
-            <Dependent Role="Products">
+            <Dependent Role="ProductSettings">
               <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductSettings_Products">
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="1" />
-          <End Role="ProductSettings" Type="remiModel.Store.ProductSettings" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ProductSettings">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductTestReady_Products">
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="1" />
+        <Association Name="FK_ProductTestReady_Lookups">
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="0..1" />
           <End Role="ProductTestReady" Type="remiModel.Store.ProductTestReady" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="ProductTestReady">
-              <PropertyRef Name="ProductID" />
+              <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2634,14 +2610,14 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RequestSetup_Products">
-          <End Role="Products" Type="remiModel.Store.Products" Multiplicity="0..1" />
+          <End Role="Lookups" Type="remiModel.Store.Lookups" Multiplicity="0..1" />
           <End Role="RequestSetup" Type="remiModel.Store.RequestSetup" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookups">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="RequestSetup">
-              <PropertyRef Name="ProductID" />
+              <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3254,7 +3230,6 @@
       <Schema Namespace="REMI.Entities" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="Entities">
           <EntitySet Name="vw_BatchAudit" EntityType="REMI.Entities.vw_BatchAudit" />
-          <EntitySet Name="vw_ExceptionsPivoted" EntityType="REMI.Entities.vw_ExceptionsPivoted" />
           <EntitySet Name="vw_GetTaskInfo" EntityType="REMI.Entities.vw_GetTaskInfo" />
           <EntitySet Name="vw_GetTaskInfoCompleted" EntityType="REMI.Entities.vw_GetTaskInfoCompleted" />
           <EntitySet Name="vw_TestRecordAudit" EntityType="REMI.Entities.vw_TestRecordAudit" />
@@ -3265,7 +3240,6 @@
           <EntitySet Name="ResultsOrphaneds" EntityType="REMI.Entities.ResultsOrphaned" />
           <EntitySet Name="ResultsParameters" EntityType="REMI.Entities.ResultsParameter" />
           <EntitySet Name="ResultsXMLs" EntityType="REMI.Entities.ResultsXML" />
-          <EntitySet Name="RequestSetups" EntityType="REMI.Entities.RequestSetup" />
           <AssociationSet Name="FK_ResultsMeasurements_Results" Association="REMI.Entities.FK_ResultsMeasurements_Results">
             <End Role="Result" EntitySet="Results" />
             <End Role="ResultsMeasurement" EntitySet="ResultsMeasurements" />
@@ -3300,18 +3274,12 @@
           <EntitySet Name="BatchComments" EntityType="REMI.Entities.BatchComment" />
           <EntitySet Name="BatchesAudits" EntityType="REMI.Entities.BatchesAudit" />
           <EntitySet Name="BatchSpecificTestDurations" EntityType="REMI.Entities.BatchSpecificTestDuration" />
-          <EntitySet Name="Calibrations" EntityType="REMI.Entities.Calibration" />
           <EntitySet Name="DeviceTrackingLogs" EntityType="REMI.Entities.DeviceTrackingLog" />
           <EntitySet Name="JobOrientations" EntityType="REMI.Entities.JobOrientation" />
           <EntitySet Name="Jobs" EntityType="REMI.Entities.Job" />
-          <EntitySet Name="LookupTypes" EntityType="REMI.Entities.LookupType" />
           <EntitySet Name="ProductConfigurations" EntityType="REMI.Entities.ProductConfiguration" />
-          <EntitySet Name="ProductConfigurationUploads" EntityType="REMI.Entities.ProductConfigurationUpload" />
           <EntitySet Name="ProductConfigurationVersions" EntityType="REMI.Entities.ProductConfigurationVersion" />
           <EntitySet Name="ProductConfigValues" EntityType="REMI.Entities.ProductConfigValue" />
-          <EntitySet Name="ProductLookups" EntityType="REMI.Entities.ProductLookup" />
-          <EntitySet Name="ProductSettings" EntityType="REMI.Entities.ProductSetting" />
-          <EntitySet Name="ProductTestReadies" EntityType="REMI.Entities.ProductTestReady" />
           <EntitySet Name="StationConfigurationUploads" EntityType="REMI.Entities.StationConfigurationUpload" />
           <EntitySet Name="sysdiagrams" EntityType="REMI.Entities.sysdiagram" />
           <EntitySet Name="TargetAccesses" EntityType="REMI.Entities.TargetAccess" />
@@ -3352,10 +3320,6 @@
             <End Role="Test" EntitySet="Tests" />
             <End Role="BatchSpecificTestDuration" EntitySet="BatchSpecificTestDurations" />
           </AssociationSet>
-          <AssociationSet Name="FK_Calibration_Tests" Association="REMI.Entities.FK_Calibration_Tests">
-            <End Role="Test" EntitySet="Tests" />
-            <End Role="Calibration" EntitySet="Calibrations" />
-          </AssociationSet>
           <AssociationSet Name="FK_DeviceTrackingLog_TrackingLocations" Association="REMI.Entities.FK_DeviceTrackingLog_TrackingLocations">
             <End Role="TrackingLocation" EntitySet="TrackingLocations" />
             <End Role="DeviceTrackingLog" EntitySet="DeviceTrackingLogs" />
@@ -3368,37 +3332,13 @@
             <End Role="Job" EntitySet="Jobs" />
             <End Role="JobOrientation" EntitySet="JobOrientations" />
           </AssociationSet>
-          <AssociationSet Name="FK_RequestSetup_Jobs" Association="REMI.Entities.FK_RequestSetup_Jobs">
-            <End Role="Job" EntitySet="Jobs" />
-            <End Role="RequestSetup" EntitySet="RequestSetups" />
-          </AssociationSet>
           <AssociationSet Name="FK_TestStages_Jobs" Association="REMI.Entities.FK_TestStages_Jobs">
             <End Role="Job" EntitySet="Jobs" />
             <End Role="TestStage" EntitySet="TestStages" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductConfigurationUpload_ID" Association="REMI.Entities.FK_ProductConfigurationUpload_ID">
-            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
-            <End Role="ProductConfiguration" EntitySet="ProductConfigurations" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductConfigValues_ProductConfiguration" Association="REMI.Entities.FK_ProductConfigValues_ProductConfiguration">
             <End Role="ProductConfiguration" EntitySet="ProductConfigurations" />
             <End Role="ProductConfigValue" EntitySet="ProductConfigValues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductConfigurationUpload_Tests" Association="REMI.Entities.FK_ProductConfigurationUpload_Tests">
-            <End Role="Test" EntitySet="Tests" />
-            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductConfigurationVersion_ProductConfigurationUpload" Association="REMI.Entities.FK_ProductConfigurationVersion_ProductConfigurationUpload">
-            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
-            <End Role="ProductConfigurationVersion" EntitySet="ProductConfigurationVersions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductTestReady_ProductSettings" Association="REMI.Entities.FK_ProductTestReady_ProductSettings">
-            <End Role="ProductSetting" EntitySet="ProductSettings" />
-            <End Role="ProductTestReady" EntitySet="ProductTestReadies" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductTestReady_Tests" Association="REMI.Entities.FK_ProductTestReady_Tests">
-            <End Role="Test" EntitySet="Tests" />
-            <End Role="ProductTestReady" EntitySet="ProductTestReadies" />
           </AssociationSet>
           <AssociationSet Name="FK_TaskAssignment_TestStages" Association="REMI.Entities.FK_TaskAssignment_TestStages">
             <End Role="TestStage" EntitySet="TestStages" />
@@ -3416,10 +3356,6 @@
             <End Role="TestRecord" EntitySet="TestRecords" />
             <End Role="TestRecordsXTrackingLog" EntitySet="TestRecordsXTrackingLogs" />
           </AssociationSet>
-          <AssociationSet Name="FK_RequestSetup_Tests" Association="REMI.Entities.FK_RequestSetup_Tests">
-            <End Role="Test" EntitySet="Tests" />
-            <End Role="RequestSetup" EntitySet="RequestSetups" />
-          </AssociationSet>
           <AssociationSet Name="FK_Results_Tests" Association="REMI.Entities.FK_Results_Tests">
             <End Role="Test" EntitySet="Tests" />
             <End Role="Result" EntitySet="Results" />
@@ -3431,10 +3367,6 @@
           <AssociationSet Name="FK_TrackingLocationsForTests_Tests" Association="REMI.Entities.FK_TrackingLocationsForTests_Tests">
             <End Role="Test" EntitySet="Tests" />
             <End Role="TrackingLocationsForTest" EntitySet="TrackingLocationsForTests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RequestSetup_TestStages" Association="REMI.Entities.FK_RequestSetup_TestStages">
-            <End Role="TestStage" EntitySet="TestStages" />
-            <End Role="RequestSetup" EntitySet="RequestSetups" />
           </AssociationSet>
           <AssociationSet Name="FK_Results_TestStages" Association="REMI.Entities.FK_Results_TestStages">
             <End Role="TestStage" EntitySet="TestStages" />
@@ -3468,67 +3400,14 @@
             <End Role="TrackingLocationType" EntitySet="TrackingLocationTypes" />
             <End Role="TrackingLocationTypePermission" EntitySet="TrackingLocationTypePermissions" />
           </AssociationSet>
-          <EntitySet Name="Batches" EntityType="REMI.Entities.Batch" />
-          <AssociationSet Name="FK_BatchComments_Batches" Association="REMI.Entities.FK_BatchComments_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="BatchComment" EntitySet="BatchComments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Batches_JobOrientation" Association="REMI.Entities.FK_Batches_JobOrientation">
-            <End Role="JobOrientation" EntitySet="JobOrientations" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BatchSpecificTestDurations_Batches" Association="REMI.Entities.FK_BatchSpecificTestDurations_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="BatchSpecificTestDuration" EntitySet="BatchSpecificTestDurations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RequestSetup_Batches" Association="REMI.Entities.FK_RequestSetup_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="RequestSetup" EntitySet="RequestSetups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TaskAssignment_Batches" Association="REMI.Entities.FK_TaskAssignment_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="TaskAssignment" EntitySet="TaskAssignments" />
-          </AssociationSet>
           <EntitySet Name="Lookups" EntityType="REMI.Entities.Lookup" />
-          <AssociationSet Name="FK_Batches_AccessoryGroup" Association="REMI.Entities.FK_Batches_AccessoryGroup">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Batches_Department" Association="REMI.Entities.FK_Batches_Department">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Batches_Priority" Association="REMI.Entities.FK_Batches_Priority">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Batches_ProductType" Association="REMI.Entities.FK_Batches_ProductType">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Batches_RequestPurpose" Association="REMI.Entities.FK_Batches_RequestPurpose">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Batches_TestCenterLocation" Association="REMI.Entities.FK_Batches_TestCenterLocation">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
           <AssociationSet Name="FK_JobOrientation_Lookups" Association="REMI.Entities.FK_JobOrientation_Lookups">
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="JobOrientation" EntitySet="JobOrientations" />
           </AssociationSet>
-          <AssociationSet Name="FK_Lookups_LookupType" Association="REMI.Entities.FK_Lookups_LookupType">
-            <End Role="LookupType" EntitySet="LookupTypes" />
-            <End Role="Lookup" EntitySet="Lookups" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductConfigValue_Lookup" Association="REMI.Entities.FK_ProductConfigValue_Lookup">
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="ProductConfigValue" EntitySet="ProductConfigValues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductLookups_Lookups" Association="REMI.Entities.FK_ProductLookups_Lookups">
-            <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="ProductLookup" EntitySet="ProductLookups" />
           </AssociationSet>
           <AssociationSet Name="FK_ResultsMeasurements_Lookups_MeasurementType" Association="REMI.Entities.FK_ResultsMeasurements_Lookups_MeasurementType">
             <End Role="Lookup" EntitySet="Lookups" />
@@ -3604,10 +3483,6 @@
           </AssociationSet>
           <EntitySet Name="TestUnits" EntityType="REMI.Entities.TestUnit" />
           <EntitySet Name="UsersAudits" EntityType="REMI.Entities.UsersAudit" />
-          <AssociationSet Name="FK_TestUnits_Batches" Association="REMI.Entities.FK_TestUnits_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="TestUnit" EntitySet="TestUnits" />
-          </AssociationSet>
           <AssociationSet Name="FK_DeviceTrackingLog_TestUnits" Association="REMI.Entities.FK_DeviceTrackingLog_TestUnits">
             <End Role="TestUnit" EntitySet="TestUnits" />
             <End Role="DeviceTrackingLog" EntitySet="DeviceTrackingLogs" />
@@ -3684,27 +3559,11 @@
             <End Role="Lookup" EntitySet="Lookups" />
             <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
           </AssociationSet>
-          <AssociationSet Name="FK_LookupsHierarchy_LookupType" Association="REMI.Entities.FK_LookupsHierarchy_LookupType">
-            <End Role="LookupType" EntitySet="LookupTypes" />
-            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LookupsHierarchy_LookupType1" Association="REMI.Entities.FK_LookupsHierarchy_LookupType1">
-            <End Role="LookupType" EntitySet="LookupTypes" />
-            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
-          </AssociationSet>
           <AssociationSet Name="FK_LookupsHierarchy_RequestType" Association="REMI.Entities.FK_LookupsHierarchy_RequestType">
             <End Role="RequestType" EntitySet="RequestTypes" />
             <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
           </AssociationSet>
-          <AssociationSet Name="FK_Request_Batches" Association="REMI.Entities.FK_Request_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="Request" EntitySet="Requests" />
-          </AssociationSet>
           <EntitySet Name="ResultsStatus" EntityType="REMI.Entities.ResultsStatu" />
-          <AssociationSet Name="FK_ResultsStatus_Batches" Association="REMI.Entities.FK_ResultsStatus_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="ResultsStatu" EntitySet="ResultsStatus" />
-          </AssociationSet>
           <EntitySet Name="UserSearchFilters" EntityType="REMI.Entities.UserSearchFilter" />
           <AssociationSet Name="FK_UserSearchFilter_Users" Association="REMI.Entities.FK_UserSearchFilter_Users">
             <End Role="User" EntitySet="Users" />
@@ -3739,10 +3598,6 @@
             <End Role="ResultsInformation" EntitySet="ResultsInformations" />
           </AssociationSet>
           <EntitySet Name="BatchesJiras" EntityType="REMI.Entities.BatchesJira" />
-          <AssociationSet Name="FK_BatchesJira_Batches" Association="REMI.Entities.FK_BatchesJira_Batches">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="BatchesJira" EntitySet="BatchesJiras" />
-          </AssociationSet>
           <EntitySet Name="ReqFieldDatas" EntityType="REMI.Entities.ReqFieldData" />
           <AssociationSet Name="FK_ReqFieldData_ReqFieldSetup" Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup">
             <End Role="ReqFieldSetup" EntitySet="ReqFieldSetups" />
@@ -3771,42 +3626,158 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserDetail" EntitySet="UserDetails" />
           </AssociationSet>
-          <EntitySet Name="Products" EntityType="REMI.Entities.Product" />
-          <AssociationSet Name="FK_Batches_Products" Association="REMI.Entities.FK_Batches_Products">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="Batch" EntitySet="Batches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Calibration_Products" Association="REMI.Entities.FK_Calibration_Products">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="Calibration" EntitySet="Calibrations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_Lookups" Association="REMI.Entities.FK_Products_Lookups">
+          <FunctionImport Name="remispGetObservationParameters" ReturnType="Collection(String)">
+          <Parameter Name="MeasurementID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="LookupTypes" EntityType="REMI.Entities.LookupType" />
+          <EntitySet Name="ProductSettings" EntityType="REMI.Entities.ProductSetting" />
+          <AssociationSet Name="FK_Lookups_LookupType" Association="REMI.Entities.FK_Lookups_LookupType">
+            <End Role="LookupType" EntitySet="LookupTypes" />
             <End Role="Lookup" EntitySet="Lookups" />
-            <End Role="Product" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductConfigurationUpload_Products" Association="REMI.Entities.FK_ProductConfigurationUpload_Products">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductLookups_Products" Association="REMI.Entities.FK_ProductLookups_Products">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="ProductLookup" EntitySet="ProductLookups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSettings_Products" Association="REMI.Entities.FK_ProductSettings_Products">
-            <End Role="Product" EntitySet="Products" />
+          <AssociationSet Name="FK_ProductSettings_Lookups" Association="REMI.Entities.FK_ProductSettings_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
             <End Role="ProductSetting" EntitySet="ProductSettings" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductTestReady_Products" Association="REMI.Entities.FK_ProductTestReady_Products">
-            <End Role="Product" EntitySet="Products" />
+          <AssociationSet Name="FK_LookupsHierarchy_LookupType" Association="REMI.Entities.FK_LookupsHierarchy_LookupType">
+            <End Role="LookupType" EntitySet="LookupTypes" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LookupsHierarchy_LookupType1" Association="REMI.Entities.FK_LookupsHierarchy_LookupType1">
+            <End Role="LookupType" EntitySet="LookupTypes" />
+            <End Role="LookupsHierarchy" EntitySet="LookupsHierarchies" />
+          </AssociationSet>
+          <EntitySet Name="ProductTestReadies" EntityType="REMI.Entities.ProductTestReady" />
+          <AssociationSet Name="FK_ProductTestReady_Lookups" Association="REMI.Entities.FK_ProductTestReady_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
             <End Role="ProductTestReady" EntitySet="ProductTestReadies" />
           </AssociationSet>
-          <AssociationSet Name="FK_RequestSetup_Products" Association="REMI.Entities.FK_RequestSetup_Products">
-            <End Role="Product" EntitySet="Products" />
+          <AssociationSet Name="FK_ProductTestReady_ProductSettings" Association="REMI.Entities.FK_ProductTestReady_ProductSettings">
+            <End Role="ProductSetting" EntitySet="ProductSettings" />
+            <End Role="ProductTestReady" EntitySet="ProductTestReadies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductTestReady_Tests" Association="REMI.Entities.FK_ProductTestReady_Tests">
+            <End Role="Test" EntitySet="Tests" />
+            <End Role="ProductTestReady" EntitySet="ProductTestReadies" />
+          </AssociationSet>
+          <EntitySet Name="vw_ExceptionsPivoted" EntityType="REMI.Entities.vw_ExceptionsPivoted" />
+          <EntitySet Name="Batches" EntityType="REMI.Entities.Batch" />
+          <AssociationSet Name="FK_BatchComments_Batches" Association="REMI.Entities.FK_BatchComments_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="BatchComment" EntitySet="BatchComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_AccessoryGroup" Association="REMI.Entities.FK_Batches_AccessoryGroup">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_Department" Association="REMI.Entities.FK_Batches_Department">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_JobOrientation" Association="REMI.Entities.FK_Batches_JobOrientation">
+            <End Role="JobOrientation" EntitySet="JobOrientations" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_Priority" Association="REMI.Entities.FK_Batches_Priority">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_Products" Association="REMI.Entities.FK_Batches_Products">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_ProductType" Association="REMI.Entities.FK_Batches_ProductType">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_RequestPurpose" Association="REMI.Entities.FK_Batches_RequestPurpose">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Batches_TestCenterLocation" Association="REMI.Entities.FK_Batches_TestCenterLocation">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Batch" EntitySet="Batches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchesJira_Batches" Association="REMI.Entities.FK_BatchesJira_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="BatchesJira" EntitySet="BatchesJiras" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchSpecificTestDurations_Batches" Association="REMI.Entities.FK_BatchSpecificTestDurations_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="BatchSpecificTestDuration" EntitySet="BatchSpecificTestDurations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_Batches" Association="REMI.Entities.FK_Request_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="Request" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultsStatus_Batches" Association="REMI.Entities.FK_ResultsStatus_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="ResultsStatu" EntitySet="ResultsStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskAssignment_Batches" Association="REMI.Entities.FK_TaskAssignment_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="TaskAssignment" EntitySet="TaskAssignments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestUnits_Batches" Association="REMI.Entities.FK_TestUnits_Batches">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="TestUnit" EntitySet="TestUnits" />
+          </AssociationSet>
+          <EntitySet Name="ProductLookups" EntityType="REMI.Entities.ProductLookup" />
+          <AssociationSet Name="FK_ProductLookups_Lookups" Association="REMI.Entities.FK_ProductLookups_Lookups">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="ProductLookup" EntitySet="ProductLookups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductLookups_Products" Association="REMI.Entities.FK_ProductLookups_Products">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="ProductLookup" EntitySet="ProductLookups" />
+          </AssociationSet>
+          <EntitySet Name="Calibrations" EntityType="REMI.Entities.Calibration" />
+          <AssociationSet Name="FK_Calibration_Products" Association="REMI.Entities.FK_Calibration_Products">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="Calibration" EntitySet="Calibrations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Calibration_Tests" Association="REMI.Entities.FK_Calibration_Tests">
+            <End Role="Test" EntitySet="Tests" />
+            <End Role="Calibration" EntitySet="Calibrations" />
+          </AssociationSet>
+          <EntitySet Name="RequestSetups" EntityType="REMI.Entities.RequestSetup" />
+          <AssociationSet Name="FK_RequestSetup_Batches" Association="REMI.Entities.FK_RequestSetup_Batches">
+            <End Role="Batch" EntitySet="Batches" />
             <End Role="RequestSetup" EntitySet="RequestSetups" />
           </AssociationSet>
-          <FunctionImport Name="remispGetObservationParameters" ReturnType="Collection(String)">
-            <Parameter Name="MeasurementID" Mode="In" Type="Int32" />
-          </FunctionImport>
+          <AssociationSet Name="FK_RequestSetup_Jobs" Association="REMI.Entities.FK_RequestSetup_Jobs">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="RequestSetup" EntitySet="RequestSetups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestSetup_Products" Association="REMI.Entities.FK_RequestSetup_Products">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="RequestSetup" EntitySet="RequestSetups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestSetup_Tests" Association="REMI.Entities.FK_RequestSetup_Tests">
+            <End Role="Test" EntitySet="Tests" />
+            <End Role="RequestSetup" EntitySet="RequestSetups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestSetup_TestStages" Association="REMI.Entities.FK_RequestSetup_TestStages">
+            <End Role="TestStage" EntitySet="TestStages" />
+            <End Role="RequestSetup" EntitySet="RequestSetups" />
+          </AssociationSet>
+          <EntitySet Name="ProductConfigurationUploads" EntityType="REMI.Entities.ProductConfigurationUpload" />
+          <AssociationSet Name="FK_ProductConfigurationUpload_Products" Association="REMI.Entities.FK_ProductConfigurationUpload_Products">
+            <End Role="Lookup" EntitySet="Lookups" />
+            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfigurationUpload_ID" Association="REMI.Entities.FK_ProductConfigurationUpload_ID">
+            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
+            <End Role="ProductConfiguration" EntitySet="ProductConfigurations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfigurationUpload_Tests" Association="REMI.Entities.FK_ProductConfigurationUpload_Tests">
+            <End Role="Test" EntitySet="Tests" />
+            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfigurationVersion_ProductConfigurationUpload" Association="REMI.Entities.FK_ProductConfigurationVersion_ProductConfigurationUpload">
+            <End Role="ProductConfigurationUpload" EntitySet="ProductConfigurationUploads" />
+            <End Role="ProductConfigurationVersion" EntitySet="ProductConfigurationVersions" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
           <Key>
@@ -3836,21 +3807,6 @@
           <Property Type="String" Name="AccessoryGroup" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="RequestPurpose" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Priority" MaxLength="150" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="vw_ExceptionsPivoted">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" />
-          <Property Type="Int32" Name="ProductID" />
-          <Property Type="Int32" Name="ReasonForRequest" />
-          <Property Type="Int32" Name="TestUnitID" />
-          <Property Type="Int32" Name="TestStageID" />
-          <Property Type="Int32" Name="Test" />
-          <Property Type="Int32" Name="ProductTypeID" />
-          <Property Type="Int32" Name="AccessoryGroupID" />
-          <Property Type="Int32" Name="TestCenterID" />
-          <Property Type="Int32" Name="IsMQual" />
         </EntityType>
         <EntityType Name="vw_GetTaskInfo">
           <Key>
@@ -4048,23 +4004,6 @@
           <Property Type="String" Name="SequenceXML" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ResultsInformations" Relationship="REMI.Entities.FK_ResultsInformation_ResultsXML" FromRole="ResultsXML" ToRole="ResultsInformation" />
         </EntityType>
-        <EntityType Name="RequestSetup">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="JobID" />
-          <Property Type="Int32" Name="ProductID" />
-          <Property Type="Int32" Name="TestStageID" Nullable="false" />
-          <Property Type="Int32" Name="TestID" Nullable="false" />
-          <Property Type="Int32" Name="BatchID" />
-          <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Job" Relationship="REMI.Entities.FK_RequestSetup_Jobs" FromRole="RequestSetup" ToRole="Job" />
-          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_RequestSetup_Tests" FromRole="RequestSetup" ToRole="Test" />
-          <NavigationProperty Name="TestStage" Relationship="REMI.Entities.FK_RequestSetup_TestStages" FromRole="RequestSetup" ToRole="TestStage" />
-          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_RequestSetup_Batches" FromRole="RequestSetup" ToRole="Batch" />
-          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_RequestSetup_Products" FromRole="RequestSetup" ToRole="Product" />
-        </EntityType>
         <Association Name="FK_ResultsMeasurements_Results">
           <End Type="REMI.Entities.Result" Role="Result" Multiplicity="1" />
           <End Type="REMI.Entities.ResultsMeasurement" Role="ResultsMeasurement" Multiplicity="*" />
@@ -4243,7 +4182,7 @@
           <Property Type="Int32" Name="RequestPurpose" Nullable="false" />
           <Property Type="String" Name="RFBands" MaxLength="400" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="TestStageCompletionStatus" />
-          <Property Type="Int32" Name="ProductID" Nullable="false" />
+          <Property Type="Int32" Name="ProductID" />
           <Property Type="Int32" Name="ProductTypeID" />
           <Property Type="Int32" Name="AccessoryGroupID" />
           <Property Type="Int32" Name="TestCenterLocationID" />
@@ -4252,6 +4191,7 @@
           <Property Type="String" Name="MechanicalTools" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Order" />
           <Property Type="Int32" Name="DepartmentID" />
+          <Property Type="Int32" Name="C_ProductID" Nullable="false" />
         </EntityType>
         <EntityType Name="BatchSpecificTestDuration">
           <Key>
@@ -4266,21 +4206,6 @@
           <Property Type="String" Name="Comment" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_BatchSpecificTestDurations_Tests" FromRole="BatchSpecificTestDuration" ToRole="Test" />
           <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_BatchSpecificTestDurations_Batches" FromRole="BatchSpecificTestDuration" ToRole="Batch" />
-        </EntityType>
-        <EntityType Name="Calibration">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="ProductID" Nullable="false" />
-          <Property Type="Int32" Name="HostID" Nullable="false" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="3" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="File" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="TestID" Nullable="false" />
-          <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_Calibration_Tests" FromRole="Calibration" ToRole="Test" />
-          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_Calibration_Products" FromRole="Calibration" ToRole="Product" />
         </EntityType>
         <EntityType Name="DeviceTrackingLog">
           <Key>
@@ -4313,8 +4238,8 @@
           <Property Type="String" Name="Definition" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Job" Relationship="REMI.Entities.FK_JobOrientation_Jobs" FromRole="JobOrientation" ToRole="Job" />
-          <NavigationProperty Name="Batches" Relationship="REMI.Entities.FK_Batches_JobOrientation" FromRole="JobOrientation" ToRole="Batch" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_JobOrientation_Lookups" FromRole="JobOrientation" ToRole="Lookup" />
+          <NavigationProperty Name="Batches" Relationship="REMI.Entities.FK_Batches_JobOrientation" FromRole="JobOrientation" ToRole="Batch" />
         </EntityType>
         <EntityType Name="Job">
           <Key>
@@ -4334,20 +4259,9 @@
           <Property Type="Boolean" Name="NoBSN" />
           <Property Type="Boolean" Name="ContinueOnFailures" />
           <NavigationProperty Name="JobOrientations" Relationship="REMI.Entities.FK_JobOrientation_Jobs" FromRole="Job" ToRole="JobOrientation" />
-          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Jobs" FromRole="Job" ToRole="RequestSetup" />
           <NavigationProperty Name="TestStages" Relationship="REMI.Entities.FK_TestStages_Jobs" FromRole="Job" ToRole="TestStage" />
           <NavigationProperty Name="JobAccesses" Relationship="REMI.Entities.FK_JobAccess_Jobs" FromRole="Job" ToRole="JobAccess" />
-        </EntityType>
-        <EntityType Name="LookupType">
-          <Key>
-            <PropertyRef Name="LookupTypeID" />
-          </Key>
-          <Property Type="Int32" Name="LookupTypeID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Lookups" Relationship="REMI.Entities.FK_Lookups_LookupType" FromRole="LookupType" ToRole="Lookup" />
-          <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType" FromRole="LookupType" ToRole="LookupsHierarchy" />
-          <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType1" FromRole="LookupType" ToRole="LookupsHierarchy" />
-          <Property Type="Boolean" Name="IsSystem" Nullable="false" />
+          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Jobs" FromRole="Job" ToRole="RequestSetup" />
         </EntityType>
         <EntityType Name="ProductConfiguration">
           <Key>
@@ -4359,23 +4273,8 @@
           <Property Type="String" Name="NodeName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="UploadID" />
-          <NavigationProperty Name="ProductConfigurationUpload" Relationship="REMI.Entities.FK_ProductConfigurationUpload_ID" FromRole="ProductConfiguration" ToRole="ProductConfigurationUpload" />
           <NavigationProperty Name="ProductConfigValues" Relationship="REMI.Entities.FK_ProductConfigValues_ProductConfiguration" FromRole="ProductConfiguration" ToRole="ProductConfigValue" />
-        </EntityType>
-        <EntityType Name="ProductConfigurationUpload">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Boolean" Name="IsProcessed" Nullable="false" />
-          <Property Type="Int32" Name="ProductID" Nullable="false" />
-          <Property Type="Int32" Name="TestID" Nullable="false" />
-          <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="PCName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ProductConfigurations" Relationship="REMI.Entities.FK_ProductConfigurationUpload_ID" FromRole="ProductConfigurationUpload" ToRole="ProductConfiguration" />
-          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Tests" FromRole="ProductConfigurationUpload" ToRole="Test" />
-          <NavigationProperty Name="ProductConfigurationVersions" Relationship="REMI.Entities.FK_ProductConfigurationVersion_ProductConfigurationUpload" FromRole="ProductConfigurationUpload" ToRole="ProductConfigurationVersion" />
-          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Products" FromRole="ProductConfigurationUpload" ToRole="Product" />
+          <NavigationProperty Name="ProductConfigurationUpload" Relationship="REMI.Entities.FK_ProductConfigurationUpload_ID" FromRole="ProductConfiguration" ToRole="ProductConfigurationUpload" />
         </EntityType>
         <EntityType Name="ProductConfigurationVersion">
           <Key>
@@ -4401,45 +4300,6 @@
           <Property Type="Boolean" Name="IsAttribute" />
           <NavigationProperty Name="ProductConfiguration" Relationship="REMI.Entities.FK_ProductConfigValues_ProductConfiguration" FromRole="ProductConfigValue" ToRole="ProductConfiguration" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ProductConfigValue_Lookup" FromRole="ProductConfigValue" ToRole="Lookup" />
-        </EntityType>
-        <EntityType Name="ProductLookup">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="ProductID" Nullable="false" />
-          <Property Type="Int32" Name="LookupID" Nullable="false" />
-          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ProductLookups_Lookups" FromRole="ProductLookup" ToRole="Lookup" />
-          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_ProductLookups_Products" FromRole="ProductLookup" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="ProductSetting">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="KeyName" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ValueText" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DefaultValue" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="ProductID" Nullable="false" />
-          <NavigationProperty Name="ProductTestReadies" Relationship="REMI.Entities.FK_ProductTestReady_ProductSettings" FromRole="ProductSetting" ToRole="ProductTestReady" />
-          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_ProductSettings_Products" FromRole="ProductSetting" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="ProductTestReady">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ProductID" Nullable="false" />
-          <Property Type="Int32" Name="TestID" Nullable="false" />
-          <Property Type="Int32" Name="PSID" Nullable="false" />
-          <Property Type="String" Name="Comment" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="IsReady" />
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="Int32" Name="IsNestReady" />
-          <Property Type="Int32" Name="JIRA" />
-          <NavigationProperty Name="ProductSetting" Relationship="REMI.Entities.FK_ProductTestReady_ProductSettings" FromRole="ProductTestReady" ToRole="ProductSetting" />
-          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_ProductTestReady_Tests" FromRole="ProductTestReady" ToRole="Test" />
-          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_ProductTestReady_Products" FromRole="ProductTestReady" ToRole="Product" />
         </EntityType>
         <EntityType Name="StationConfigurationUpload">
           <Key>
@@ -4590,15 +4450,15 @@
           <Property Type="String" Name="Trainee" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="DegradationVal" Precision="10" Scale="3" />
           <NavigationProperty Name="BatchSpecificTestDurations" Relationship="REMI.Entities.FK_BatchSpecificTestDurations_Tests" FromRole="Test" ToRole="BatchSpecificTestDuration" />
-          <NavigationProperty Name="Calibrations" Relationship="REMI.Entities.FK_Calibration_Tests" FromRole="Test" ToRole="Calibration" />
-          <NavigationProperty Name="ProductConfigurationUploads" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Tests" FromRole="Test" ToRole="ProductConfigurationUpload" />
-          <NavigationProperty Name="ProductTestReadies" Relationship="REMI.Entities.FK_ProductTestReady_Tests" FromRole="Test" ToRole="ProductTestReady" />
           <NavigationProperty Name="TestRecords" Relationship="REMI.Entities.FK_TestRecords_Tests" FromRole="Test" ToRole="TestRecord" />
-          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Tests" FromRole="Test" ToRole="RequestSetup" />
           <NavigationProperty Name="Results" Relationship="REMI.Entities.FK_Results_Tests" FromRole="Test" ToRole="Result" />
           <NavigationProperty Name="TestStages" Relationship="REMI.Entities.FK_TestStages_Tests" FromRole="Test" ToRole="TestStage" />
           <NavigationProperty Name="TrackingLocationsForTests" Relationship="REMI.Entities.FK_TrackingLocationsForTests_Tests" FromRole="Test" ToRole="TrackingLocationsForTest" />
           <NavigationProperty Name="TestsAccesses" Relationship="REMI.Entities.FK_TestsAccess_Tests" FromRole="Test" ToRole="TestsAccess" />
+          <NavigationProperty Name="ProductTestReadies" Relationship="REMI.Entities.FK_ProductTestReady_Tests" FromRole="Test" ToRole="ProductTestReady" />
+          <NavigationProperty Name="Calibrations" Relationship="REMI.Entities.FK_Calibration_Tests" FromRole="Test" ToRole="Calibration" />
+          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Tests" FromRole="Test" ToRole="RequestSetup" />
+          <NavigationProperty Name="ProductConfigurationUploads" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Tests" FromRole="Test" ToRole="ProductConfigurationUpload" />
         </EntityType>
         <EntityType Name="TestStage">
           <Key>
@@ -4618,8 +4478,8 @@
           <NavigationProperty Name="TaskAssignments" Relationship="REMI.Entities.FK_TaskAssignment_TestStages" FromRole="TestStage" ToRole="TaskAssignment" />
           <NavigationProperty Name="TestRecords" Relationship="REMI.Entities.FK_TestRecords_TestStages" FromRole="TestStage" ToRole="TestRecord" />
           <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_TestStages_Tests" FromRole="TestStage" ToRole="Test" />
-          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_TestStages" FromRole="TestStage" ToRole="RequestSetup" />
           <NavigationProperty Name="Results" Relationship="REMI.Entities.FK_Results_TestStages" FromRole="TestStage" ToRole="Result" />
+          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_TestStages" FromRole="TestStage" ToRole="RequestSetup" />
         </EntityType>
         <EntityType Name="TrackingLocation">
           <Key>
@@ -4803,18 +4663,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Calibration_Tests">
-          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
-          <End Type="REMI.Entities.Calibration" Role="Calibration" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Test">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Calibration">
-              <PropertyRef Name="TestID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DeviceTrackingLog_TrackingLocations">
           <End Type="REMI.Entities.TrackingLocation" Role="TrackingLocation" Multiplicity="1" />
           <End Type="REMI.Entities.DeviceTrackingLog" Role="DeviceTrackingLog" Multiplicity="*" />
@@ -4851,18 +4699,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RequestSetup_Jobs">
-          <End Type="REMI.Entities.Job" Role="Job" Multiplicity="0..1" />
-          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Job">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RequestSetup">
-              <PropertyRef Name="JobID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TestStages_Jobs">
           <End Type="REMI.Entities.Job" Role="Job" Multiplicity="1" />
           <End Type="REMI.Entities.TestStage" Role="TestStage" Multiplicity="*" />
@@ -4875,18 +4711,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductConfigurationUpload_ID">
-          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="0..1" />
-          <End Type="REMI.Entities.ProductConfiguration" Role="ProductConfiguration" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductConfigurationUpload">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ProductConfiguration">
-              <PropertyRef Name="UploadID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductConfigValues_ProductConfiguration">
           <End Type="REMI.Entities.ProductConfiguration" Role="ProductConfiguration" Multiplicity="1" />
           <End Type="REMI.Entities.ProductConfigValue" Role="ProductConfigValue" Multiplicity="*" />
@@ -4896,54 +4720,6 @@
             </Principal>
             <Dependent Role="ProductConfigValue">
               <PropertyRef Name="ProductConfigID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductConfigurationUpload_Tests">
-          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Test">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ProductConfigurationUpload">
-              <PropertyRef Name="TestID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductConfigurationVersion_ProductConfigurationUpload">
-          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductConfigurationVersion" Role="ProductConfigurationVersion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductConfigurationUpload">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ProductConfigurationVersion">
-              <PropertyRef Name="UploadID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductTestReady_ProductSettings">
-          <End Type="REMI.Entities.ProductSetting" Role="ProductSetting" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductTestReady" Role="ProductTestReady" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductSetting">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ProductTestReady">
-              <PropertyRef Name="PSID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductTestReady_Tests">
-          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductTestReady" Role="ProductTestReady" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Test">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ProductTestReady">
-              <PropertyRef Name="TestID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4995,18 +4771,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RequestSetup_Tests">
-          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
-          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Test">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RequestSetup">
-              <PropertyRef Name="TestID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Results_Tests">
           <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
           <End Type="REMI.Entities.Result" Role="Result" Multiplicity="*" />
@@ -5040,18 +4804,6 @@
             </Principal>
             <Dependent Role="TrackingLocationsForTest">
               <PropertyRef Name="TestID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RequestSetup_TestStages">
-          <End Type="REMI.Entities.TestStage" Role="TestStage" Multiplicity="1" />
-          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TestStage">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RequestSetup">
-              <PropertyRef Name="TestStageID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5151,124 +4903,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Batch">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="QRANumber" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="Priority" Nullable="false" />
-          <Property Type="Int32" Name="BatchStatus" Nullable="false" />
-          <Property Type="String" Name="JobName" Nullable="false" MaxLength="400" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="TestStageName" MaxLength="400" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="RequestPurpose" Nullable="false" />
-          <Property Type="String" Name="Comment" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Type="Binary" Name="ConcurrencyID" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="RFBands" MaxLength="400" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="TestStageCompletionStatus" />
-          <Property Type="String" Name="Requestor" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="UnitsToBeReturnedToRequestor" />
-          <Property Type="Int32" Name="ExpectedSampleSize" />
-          <Property Type="Int32" Name="RelabJobID" />
-          <Property Type="DateTime" Name="ReportApprovedDate" Precision="3" />
-          <Property Type="DateTime" Name="ReportRequiredBy" Precision="3" />
-          <Property Type="Int32" Name="RQID" />
-          <Property Type="String" Name="PartName" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="AssemblyNumber" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="AssemblyRevision" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="TRSStatus" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="CPRNumber" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="HWRevision" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="PMNotes" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="ProductID" Nullable="false" />
-          <Property Type="Int32" Name="ProductTypeID" />
-          <Property Type="Int32" Name="AccessoryGroupID" />
-          <Property Type="Int32" Name="TestCenterLocationID" />
-          <Property Type="Boolean" Name="IsMQual" />
-          <Property Type="DateTime" Name="DateCreated" Precision="3" />
-          <Property Type="String" Name="ExecutiveSummary" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="MechanicalTools" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="Order" />
-          <Property Type="Int32" Name="OrientationID" />
-          <Property Type="Int32" Name="DepartmentID" />
-          <NavigationProperty Name="BatchComments" Relationship="REMI.Entities.FK_BatchComments_Batches" FromRole="Batch" ToRole="BatchComment" />
-          <NavigationProperty Name="JobOrientation" Relationship="REMI.Entities.FK_Batches_JobOrientation" FromRole="Batch" ToRole="JobOrientation" />
-          <NavigationProperty Name="BatchSpecificTestDurations" Relationship="REMI.Entities.FK_BatchSpecificTestDurations_Batches" FromRole="Batch" ToRole="BatchSpecificTestDuration" />
-          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Batches" FromRole="Batch" ToRole="RequestSetup" />
-          <NavigationProperty Name="TaskAssignments" Relationship="REMI.Entities.FK_TaskAssignment_Batches" FromRole="Batch" ToRole="TaskAssignment" />
-          <NavigationProperty Name="AccessoryGroup" Relationship="REMI.Entities.FK_Batches_AccessoryGroup" FromRole="Batch" ToRole="Lookup" />
-          <NavigationProperty Name="Department" Relationship="REMI.Entities.FK_Batches_Department" FromRole="Batch" ToRole="Lookup" />
-          <NavigationProperty Name="Priorities" Relationship="REMI.Entities.FK_Batches_Priority" FromRole="Batch" ToRole="Lookup" />
-          <NavigationProperty Name="ProductType" Relationship="REMI.Entities.FK_Batches_ProductType" FromRole="Batch" ToRole="Lookup" />
-          <NavigationProperty Name="Purpose" Relationship="REMI.Entities.FK_Batches_RequestPurpose" FromRole="Batch" ToRole="Lookup" />
-          <NavigationProperty Name="TestCenter" Relationship="REMI.Entities.FK_Batches_TestCenterLocation" FromRole="Batch" ToRole="Lookup" />
-          <NavigationProperty Name="TestUnits" Relationship="REMI.Entities.FK_TestUnits_Batches" FromRole="Batch" ToRole="TestUnit" />
-          <NavigationProperty Name="Requests" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Batch" ToRole="Request" />
-          <NavigationProperty Name="ResultsStatus" Relationship="REMI.Entities.FK_ResultsStatus_Batches" FromRole="Batch" ToRole="ResultsStatu" />
-          <NavigationProperty Name="BatchesJiras" Relationship="REMI.Entities.FK_BatchesJira_Batches" FromRole="Batch" ToRole="BatchesJira" />
-          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_Batches_Products" FromRole="Batch" ToRole="Product" />
-        </EntityType>
-        <Association Name="FK_BatchComments_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
-          <End Type="REMI.Entities.BatchComment" Role="BatchComment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BatchComment">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Batches_JobOrientation">
-          <End Type="REMI.Entities.JobOrientation" Role="JobOrientation" Multiplicity="0..1" />
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="JobOrientation">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Batch">
-              <PropertyRef Name="OrientationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BatchSpecificTestDurations_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
-          <End Type="REMI.Entities.BatchSpecificTestDuration" Role="BatchSpecificTestDuration" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BatchSpecificTestDuration">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RequestSetup_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="0..1" />
-          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RequestSetup">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TaskAssignment_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
-          <End Type="REMI.Entities.TaskAssignment" Role="TaskAssignment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TaskAssignment">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Lookup">
           <Key>
             <PropertyRef Name="LookupID" />
@@ -5279,16 +4913,8 @@
           <Property Type="String" Name="Description" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ParentID" />
           <Property Type="Int32" Name="LookupTypeID" />
-          <NavigationProperty Name="Batches" Relationship="REMI.Entities.FK_Batches_AccessoryGroup" FromRole="Lookup" ToRole="Batch" />
-          <NavigationProperty Name="Batches1" Relationship="REMI.Entities.FK_Batches_Department" FromRole="Lookup" ToRole="Batch" />
-          <NavigationProperty Name="Batches2" Relationship="REMI.Entities.FK_Batches_Priority" FromRole="Lookup" ToRole="Batch" />
-          <NavigationProperty Name="Batches3" Relationship="REMI.Entities.FK_Batches_ProductType" FromRole="Lookup" ToRole="Batch" />
-          <NavigationProperty Name="Batches4" Relationship="REMI.Entities.FK_Batches_RequestPurpose" FromRole="Lookup" ToRole="Batch" />
-          <NavigationProperty Name="Batches5" Relationship="REMI.Entities.FK_Batches_TestCenterLocation" FromRole="Lookup" ToRole="Batch" />
           <NavigationProperty Name="JobOrientations" Relationship="REMI.Entities.FK_JobOrientation_Lookups" FromRole="Lookup" ToRole="JobOrientation" />
-          <NavigationProperty Name="LookupType" Relationship="REMI.Entities.FK_Lookups_LookupType" FromRole="Lookup" ToRole="LookupType" />
           <NavigationProperty Name="ProductConfigValues" Relationship="REMI.Entities.FK_ProductConfigValue_Lookup" FromRole="Lookup" ToRole="ProductConfigValue" />
-          <NavigationProperty Name="ProductLookups" Relationship="REMI.Entities.FK_ProductLookups_Lookups" FromRole="Lookup" ToRole="ProductLookup" />
           <NavigationProperty Name="ResultsMeasurements" Relationship="REMI.Entities.FK_ResultsMeasurements_Lookups_MeasurementType" FromRole="Lookup" ToRole="ResultsMeasurement" />
           <NavigationProperty Name="ResultsMeasurements1" Relationship="REMI.Entities.FK_ResultsMeasurements_Lookups_UnitType" FromRole="Lookup" ToRole="ResultsMeasurement" />
           <NavigationProperty Name="TestExceptions" Relationship="REMI.Entities.FK_TestExceptions_LookupID" FromRole="Lookup" ToRole="TestException" />
@@ -5309,80 +4935,22 @@
           <NavigationProperty Name="Configurations" Relationship="REMI.Entities.FK_Configurations_Lookups" FromRole="Lookup" ToRole="Configuration" />
           <NavigationProperty Name="Configurations1" Relationship="REMI.Entities.FK_Configurations_Lookups1" FromRole="Lookup" ToRole="Configuration" />
           <NavigationProperty Name="UserDetails" Relationship="REMI.Entities.FK_UserDetails_Lookups" FromRole="Lookup" ToRole="UserDetail" />
-          <NavigationProperty Name="Products" Relationship="REMI.Entities.FK_Products_Lookups" FromRole="Lookup" ToRole="Product" />
+          <NavigationProperty Name="LookupType" Relationship="REMI.Entities.FK_Lookups_LookupType" FromRole="Lookup" ToRole="LookupType" />
+          <NavigationProperty Name="ProductSettings" Relationship="REMI.Entities.FK_ProductSettings_Lookups" FromRole="Lookup" ToRole="ProductSetting" />
+          <NavigationProperty Name="ProductTestReadies" Relationship="REMI.Entities.FK_ProductTestReady_Lookups" FromRole="Lookup" ToRole="ProductTestReady" />
+          <NavigationProperty Name="Batches" Relationship="REMI.Entities.FK_Batches_AccessoryGroup" FromRole="Lookup" ToRole="Batch" />
+          <NavigationProperty Name="Batches1" Relationship="REMI.Entities.FK_Batches_Department" FromRole="Lookup" ToRole="Batch" />
+          <NavigationProperty Name="Batches2" Relationship="REMI.Entities.FK_Batches_Priority" FromRole="Lookup" ToRole="Batch" />
+          <NavigationProperty Name="Batches3" Relationship="REMI.Entities.FK_Batches_Products" FromRole="Lookup" ToRole="Batch" />
+          <NavigationProperty Name="Batches4" Relationship="REMI.Entities.FK_Batches_ProductType" FromRole="Lookup" ToRole="Batch" />
+          <NavigationProperty Name="Batches5" Relationship="REMI.Entities.FK_Batches_RequestPurpose" FromRole="Lookup" ToRole="Batch" />
+          <NavigationProperty Name="Batches6" Relationship="REMI.Entities.FK_Batches_TestCenterLocation" FromRole="Lookup" ToRole="Batch" />
+          <NavigationProperty Name="ProductLookups" Relationship="REMI.Entities.FK_ProductLookups_Lookups" FromRole="Lookup" ToRole="ProductLookup" />
+          <NavigationProperty Name="ProductLookups1" Relationship="REMI.Entities.FK_ProductLookups_Products" FromRole="Lookup" ToRole="ProductLookup" />
+          <NavigationProperty Name="Calibrations" Relationship="REMI.Entities.FK_Calibration_Products" FromRole="Lookup" ToRole="Calibration" />
+          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Products" FromRole="Lookup" ToRole="RequestSetup" />
+          <NavigationProperty Name="ProductConfigurationUploads" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Products" FromRole="Lookup" ToRole="ProductConfigurationUpload" />
           </EntityType>
-        <Association Name="FK_Batches_AccessoryGroup">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="Batch">
-              <PropertyRef Name="AccessoryGroupID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Batches_Department">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="Batch">
-              <PropertyRef Name="DepartmentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Batches_Priority">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="Batch">
-              <PropertyRef Name="Priority" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Batches_ProductType">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="Batch">
-              <PropertyRef Name="ProductTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Batches_RequestPurpose">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="Batch">
-              <PropertyRef Name="RequestPurpose" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Batches_TestCenterLocation">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="Batch">
-              <PropertyRef Name="TestCenterLocationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_JobOrientation_Lookups">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
           <End Type="REMI.Entities.JobOrientation" Role="JobOrientation" Multiplicity="*" />
@@ -5395,18 +4963,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Lookups_LookupType">
-          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="0..1" />
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LookupType">
-              <PropertyRef Name="LookupTypeID" />
-            </Principal>
-            <Dependent Role="Lookup">
-              <PropertyRef Name="LookupTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductConfigValue_Lookup">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
           <End Type="REMI.Entities.ProductConfigValue" Role="ProductConfigValue" Multiplicity="*" />
@@ -5415,18 +4971,6 @@
               <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="ProductConfigValue">
-              <PropertyRef Name="LookupID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductLookups_Lookups">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductLookup" Role="ProductLookup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lookup">
-              <PropertyRef Name="LookupID" />
-            </Principal>
-            <Dependent Role="ProductLookup">
               <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
@@ -5522,10 +5066,10 @@
           <Property Type="Int32" Name="RequestID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="RequestNumber" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Type="Int32" Name="BatchID" />
-          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Request" ToRole="Batch" />
           <Property Type="Binary" Name="rv" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <NavigationProperty Name="ReqFieldDatas" Relationship="REMI.Entities.FK_ReqFieldData_Request" FromRole="Request" ToRole="ReqFieldData" />
           <NavigationProperty Name="ReqDistributions" Relationship="REMI.Entities.FK_ReqDistribution_Request" FromRole="Request" ToRole="ReqDistribution" />
+          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Request" ToRole="Batch" />
         </EntityType>
         <EntityType Name="RequestType">
           <Key>
@@ -5751,10 +5295,10 @@
           <Property Type="Binary" Name="ConcurrencyID" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="IMEI" MaxLength="150" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_TestUnits_Batches" FromRole="TestUnit" ToRole="Batch" />
           <NavigationProperty Name="DeviceTrackingLogs" Relationship="REMI.Entities.FK_DeviceTrackingLog_TestUnits" FromRole="TestUnit" ToRole="DeviceTrackingLog" />
           <NavigationProperty Name="TestRecords" Relationship="REMI.Entities.FK_TestRecords_TestUnits" FromRole="TestUnit" ToRole="TestRecord" />
           <NavigationProperty Name="Results" Relationship="REMI.Entities.FK_Results_TestUnits" FromRole="TestUnit" ToRole="Result" />
+          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_TestUnits_Batches" FromRole="TestUnit" ToRole="Batch" />
         </EntityType>
         <EntityType Name="UsersAudit">
           <Key>
@@ -5771,18 +5315,6 @@
           <Property Type="String" Name="DefaultPage" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ByPassProduct" />
         </EntityType>
-        <Association Name="FK_TestUnits_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
-          <End Type="REMI.Entities.TestUnit" Role="TestUnit" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TestUnit">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DeviceTrackingLog_TestUnits">
           <End Type="REMI.Entities.TestUnit" Role="TestUnit" Multiplicity="1" />
           <End Type="REMI.Entities.DeviceTrackingLog" Role="DeviceTrackingLog" Multiplicity="*" />
@@ -6036,9 +5568,9 @@
           <Property Type="Int32" Name="RequestTypeID" Nullable="false" />
           <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups" FromRole="LookupsHierarchy" ToRole="Lookup" />
           <NavigationProperty Name="Lookup1" Relationship="REMI.Entities.FK_LookupsHierarchy_Lookups1" FromRole="LookupsHierarchy" ToRole="Lookup" />
+          <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_LookupsHierarchy_RequestType" FromRole="LookupsHierarchy" ToRole="RequestType" />
           <NavigationProperty Name="LookupType" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType" FromRole="LookupsHierarchy" ToRole="LookupType" />
           <NavigationProperty Name="LookupType1" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType1" FromRole="LookupsHierarchy" ToRole="LookupType" />
-          <NavigationProperty Name="RequestType" Relationship="REMI.Entities.FK_LookupsHierarchy_RequestType" FromRole="LookupsHierarchy" ToRole="RequestType" />
         </EntityType>
         <Association Name="FK_LookupsHierarchy_Lookups">
           <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
@@ -6064,30 +5596,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_LookupsHierarchy_LookupType">
-          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="1" />
-          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LookupType">
-              <PropertyRef Name="LookupTypeID" />
-            </Principal>
-            <Dependent Role="LookupsHierarchy">
-              <PropertyRef Name="ParentLookupTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LookupsHierarchy_LookupType1">
-          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="1" />
-          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LookupType">
-              <PropertyRef Name="LookupTypeID" />
-            </Principal>
-            <Dependent Role="LookupsHierarchy">
-              <PropertyRef Name="ChildLookupTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_LookupsHierarchy_RequestType">
           <End Type="REMI.Entities.RequestType" Role="RequestType" Multiplicity="1" />
           <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
@@ -6097,18 +5605,6 @@
             </Principal>
             <Dependent Role="LookupsHierarchy">
               <PropertyRef Name="RequestTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Request_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="0..1" />
-          <End Type="REMI.Entities.Request" Role="Request" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Request">
-              <PropertyRef Name="BatchID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6123,18 +5619,6 @@
           <Property Type="DateTime" Name="ApprovedDate" Precision="3" />
           <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_ResultsStatus_Batches" FromRole="ResultsStatu" ToRole="Batch" />
         </EntityType>
-        <Association Name="FK_ResultsStatus_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
-          <End Type="REMI.Entities.ResultsStatu" Role="ResultsStatu" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ResultsStatu">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="UserSearchFilter">
           <Key>
             <PropertyRef Name="UserID" />
@@ -6293,18 +5777,6 @@
           <Property Type="String" Name="Title" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_BatchesJira_Batches" FromRole="BatchesJira" ToRole="Batch" />
         </EntityType>
-        <Association Name="FK_BatchesJira_Batches">
-          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
-          <End Type="REMI.Entities.BatchesJira" Role="BatchesJira" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BatchesJira">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ReqFieldData">
           <Key>
             <PropertyRef Name="ReqFieldDataID" />
@@ -6426,116 +5898,595 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Product">
+        <EntityType Name="LookupType">
+          <Key>
+            <PropertyRef Name="LookupTypeID" />
+          </Key>
+          <Property Type="Int32" Name="LookupTypeID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsSystem" Nullable="false" />
+          <Property Type="Boolean" Name="IsSecureType" />
+          <NavigationProperty Name="Lookups" Relationship="REMI.Entities.FK_Lookups_LookupType" FromRole="LookupType" ToRole="Lookup" />
+          <NavigationProperty Name="LookupsHierarchies" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType" FromRole="LookupType" ToRole="LookupsHierarchy" />
+          <NavigationProperty Name="LookupsHierarchies1" Relationship="REMI.Entities.FK_LookupsHierarchy_LookupType1" FromRole="LookupType" ToRole="LookupsHierarchy" />
+        </EntityType>
+        <EntityType Name="ProductSetting">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="QAPLocation" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="C_TSDContact" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="KeyName" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ValueText" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DefaultValue" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="LookupID" Nullable="false" />
-          <NavigationProperty Name="Batches" Relationship="REMI.Entities.FK_Batches_Products" FromRole="Product" ToRole="Batch" />
-          <NavigationProperty Name="Calibrations" Relationship="REMI.Entities.FK_Calibration_Products" FromRole="Product" ToRole="Calibration" />
-          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_Products_Lookups" FromRole="Product" ToRole="Lookup" />
-          <NavigationProperty Name="ProductConfigurationUploads" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Products" FromRole="Product" ToRole="ProductConfigurationUpload" />
-          <NavigationProperty Name="ProductLookups" Relationship="REMI.Entities.FK_ProductLookups_Products" FromRole="Product" ToRole="ProductLookup" />
-          <NavigationProperty Name="ProductSettings" Relationship="REMI.Entities.FK_ProductSettings_Products" FromRole="Product" ToRole="ProductSetting" />
-          <NavigationProperty Name="ProductTestReadies" Relationship="REMI.Entities.FK_ProductTestReady_Products" FromRole="Product" ToRole="ProductTestReady" />
-          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Products" FromRole="Product" ToRole="RequestSetup" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ProductSettings_Lookups" FromRole="ProductSetting" ToRole="Lookup" />
+          <NavigationProperty Name="ProductTestReadies" Relationship="REMI.Entities.FK_ProductTestReady_ProductSettings" FromRole="ProductSetting" ToRole="ProductTestReady" />
         </EntityType>
-        <Association Name="FK_Batches_Products">
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="1" />
+        <Association Name="FK_Lookups_LookupType">
+          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupType">
+              <PropertyRef Name="LookupTypeID" />
+            </Principal>
+            <Dependent Role="Lookup">
+              <PropertyRef Name="LookupTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSettings_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.ProductSetting" Role="ProductSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="ProductSetting">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_LookupType">
+          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="1" />
+          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupType">
+              <PropertyRef Name="LookupTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ParentLookupTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LookupsHierarchy_LookupType1">
+          <End Type="REMI.Entities.LookupType" Role="LookupType" Multiplicity="1" />
+          <End Type="REMI.Entities.LookupsHierarchy" Role="LookupsHierarchy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupType">
+              <PropertyRef Name="LookupTypeID" />
+            </Principal>
+            <Dependent Role="LookupsHierarchy">
+              <PropertyRef Name="ChildLookupTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductTestReady">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="TestID" Nullable="false" />
+          <Property Type="Int32" Name="PSID" Nullable="false" />
+          <Property Type="String" Name="Comment" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="IsReady" />
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="IsNestReady" />
+          <Property Type="Int32" Name="JIRA" />
+          <Property Type="Int32" Name="LookupID" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ProductTestReady_Lookups" FromRole="ProductTestReady" ToRole="Lookup" />
+          <NavigationProperty Name="ProductSetting" Relationship="REMI.Entities.FK_ProductTestReady_ProductSettings" FromRole="ProductTestReady" ToRole="ProductSetting" />
+          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_ProductTestReady_Tests" FromRole="ProductTestReady" ToRole="Test" />
+        </EntityType>
+        <Association Name="FK_ProductTestReady_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
+          <End Type="REMI.Entities.ProductTestReady" Role="ProductTestReady" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="ProductTestReady">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductTestReady_ProductSettings">
+          <End Type="REMI.Entities.ProductSetting" Role="ProductSetting" Multiplicity="1" />
+          <End Type="REMI.Entities.ProductTestReady" Role="ProductTestReady" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductSetting">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductTestReady">
+              <PropertyRef Name="PSID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductTestReady_Tests">
+          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
+          <End Type="REMI.Entities.ProductTestReady" Role="ProductTestReady" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductTestReady">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vw_ExceptionsPivoted">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="Int32" Name="ReasonForRequest" />
+          <Property Type="Int32" Name="TestUnitID" />
+          <Property Type="Int32" Name="TestStageID" />
+          <Property Type="Int32" Name="Test" />
+          <Property Type="Int32" Name="ProductTypeID" />
+          <Property Type="Int32" Name="AccessoryGroupID" />
+          <Property Type="Int32" Name="TestCenterID" />
+          <Property Type="Int32" Name="IsMQual" />
+        </EntityType>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="QRANumber" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Priority" Nullable="false" />
+          <Property Type="Int32" Name="BatchStatus" Nullable="false" />
+          <Property Type="String" Name="JobName" Nullable="false" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TestStageName" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="RequestPurpose" Nullable="false" />
+          <Property Type="String" Name="Comment" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="Binary" Name="ConcurrencyID" Nullable="false" MaxLength="8" FixedLength="true" a:StoreGeneratedPattern="Computed" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RFBands" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="TestStageCompletionStatus" />
+          <Property Type="String" Name="Requestor" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="UnitsToBeReturnedToRequestor" />
+          <Property Type="Int32" Name="ExpectedSampleSize" />
+          <Property Type="Int32" Name="RelabJobID" />
+          <Property Type="DateTime" Name="ReportApprovedDate" Precision="3" />
+          <Property Type="DateTime" Name="ReportRequiredBy" Precision="3" />
+          <Property Type="Int32" Name="RQID" />
+          <Property Type="String" Name="PartName" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AssemblyNumber" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AssemblyRevision" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TRSStatus" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CPRNumber" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="HWRevision" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PMNotes" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="C_ProductID" Nullable="false" />
+          <Property Type="Int32" Name="ProductTypeID" />
+          <Property Type="Int32" Name="AccessoryGroupID" />
+          <Property Type="Int32" Name="TestCenterLocationID" />
+          <Property Type="Boolean" Name="IsMQual" />
+          <Property Type="DateTime" Name="DateCreated" Precision="3" />
+          <Property Type="String" Name="ExecutiveSummary" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="MechanicalTools" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Order" />
+          <Property Type="Int32" Name="OrientationID" />
+          <Property Type="Int32" Name="DepartmentID" />
+          <Property Type="Int32" Name="ProductID" Nullable="false" />
+          <NavigationProperty Name="BatchComments" Relationship="REMI.Entities.FK_BatchComments_Batches" FromRole="Batch" ToRole="BatchComment" />
+          <NavigationProperty Name="AccessoryGroup" Relationship="REMI.Entities.FK_Batches_AccessoryGroup" FromRole="Batch" ToRole="Lookup" />
+          <NavigationProperty Name="Department" Relationship="REMI.Entities.FK_Batches_Department" FromRole="Batch" ToRole="Lookup" />
+          <NavigationProperty Name="JobOrientation" Relationship="REMI.Entities.FK_Batches_JobOrientation" FromRole="Batch" ToRole="JobOrientation" />
+          <NavigationProperty Name="Prior" Relationship="REMI.Entities.FK_Batches_Priority" FromRole="Batch" ToRole="Lookup" />
+          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_Batches_Products" FromRole="Batch" ToRole="Lookup" />
+          <NavigationProperty Name="ProductType" Relationship="REMI.Entities.FK_Batches_ProductType" FromRole="Batch" ToRole="Lookup" />
+          <NavigationProperty Name="Purpose" Relationship="REMI.Entities.FK_Batches_RequestPurpose" FromRole="Batch" ToRole="Lookup" />
+          <NavigationProperty Name="TestCenter" Relationship="REMI.Entities.FK_Batches_TestCenterLocation" FromRole="Batch" ToRole="Lookup" />
+          <NavigationProperty Name="BatchesJiras" Relationship="REMI.Entities.FK_BatchesJira_Batches" FromRole="Batch" ToRole="BatchesJira" />
+          <NavigationProperty Name="BatchSpecificTestDurations" Relationship="REMI.Entities.FK_BatchSpecificTestDurations_Batches" FromRole="Batch" ToRole="BatchSpecificTestDuration" />
+          <NavigationProperty Name="Requests" Relationship="REMI.Entities.FK_Request_Batches" FromRole="Batch" ToRole="Request" />
+          <NavigationProperty Name="ResultsStatus" Relationship="REMI.Entities.FK_ResultsStatus_Batches" FromRole="Batch" ToRole="ResultsStatu" />
+          <NavigationProperty Name="TaskAssignments" Relationship="REMI.Entities.FK_TaskAssignment_Batches" FromRole="Batch" ToRole="TaskAssignment" />
+          <NavigationProperty Name="TestUnits" Relationship="REMI.Entities.FK_TestUnits_Batches" FromRole="Batch" ToRole="TestUnit" />
+          <NavigationProperty Name="RequestSetups" Relationship="REMI.Entities.FK_RequestSetup_Batches" FromRole="Batch" ToRole="RequestSetup" />
+        </EntityType>
+        <Association Name="FK_BatchComments_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.BatchComment" Role="BatchComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BatchComment">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batches_AccessoryGroup">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
           <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Product">
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="AccessoryGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batches_Department">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batches_JobOrientation">
+          <End Type="REMI.Entities.JobOrientation" Role="JobOrientation" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobOrientation">
               <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="OrientationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batches_Priority">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="Priority" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batches_Products">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="Batch">
               <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Calibration_Products">
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="1" />
-          <End Type="REMI.Entities.Calibration" Role="Calibration" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Calibration">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_Lookups">
-          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="*" />
+        <Association Name="FK_Batches_ProductType">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Lookup">
               <PropertyRef Name="LookupID" />
             </Principal>
-            <Dependent Role="Product">
+            <Dependent Role="Batch">
+              <PropertyRef Name="ProductTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batches_RequestPurpose">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="RequestPurpose" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Batches_TestCenterLocation">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="Batch">
+              <PropertyRef Name="TestCenterLocationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BatchesJira_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.BatchesJira" Role="BatchesJira" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BatchesJira">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BatchSpecificTestDurations_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.BatchSpecificTestDuration" Role="BatchSpecificTestDuration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BatchSpecificTestDuration">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Request" Role="Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Request">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultsStatus_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.ResultsStatu" Role="ResultsStatu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ResultsStatu">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskAssignment_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.TaskAssignment" Role="TaskAssignment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TaskAssignment">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestUnits_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="REMI.Entities.TestUnit" Role="TestUnit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TestUnit">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductLookup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="C_ProductID" Nullable="false" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
+          <Property Type="Int32" Name="ProductID" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ProductLookups_Lookups" FromRole="ProductLookup" ToRole="Lookup" />
+          <NavigationProperty Name="Product" Relationship="REMI.Entities.FK_ProductLookups_Products" FromRole="ProductLookup" ToRole="Lookup" />
+        </EntityType>
+        <Association Name="FK_ProductLookups_Lookups">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.ProductLookup" Role="ProductLookup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="ProductLookup">
               <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductConfigurationUpload_Products">
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ProductConfigurationUpload">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductLookups_Products">
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="1" />
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
           <End Type="REMI.Entities.ProductLookup" Role="ProductLookup" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
             </Principal>
             <Dependent Role="ProductLookup">
               <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductSettings_Products">
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductSetting" Role="ProductSetting" Multiplicity="*" />
+        <EntityType Name="Calibration">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="HostID" Nullable="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="File" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="TestID" Nullable="false" />
+          <Property Type="String" Name="LastUser" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_Calibration_Products" FromRole="Calibration" ToRole="Lookup" />
+          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_Calibration_Tests" FromRole="Calibration" ToRole="Test" />
+        </EntityType>
+        <Association Name="FK_Calibration_Products">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.Calibration" Role="Calibration" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="ID" />
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
             </Principal>
-            <Dependent Role="ProductSetting">
-              <PropertyRef Name="ProductID" />
+            <Dependent Role="Calibration">
+              <PropertyRef Name="LookupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductTestReady_Products">
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="1" />
-          <End Type="REMI.Entities.ProductTestReady" Role="ProductTestReady" Multiplicity="*" />
+        <Association Name="FK_Calibration_Tests">
+          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
+          <End Type="REMI.Entities.Calibration" Role="Calibration" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Product">
+            <Principal Role="Test">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="ProductTestReady">
-              <PropertyRef Name="ProductID" />
+            <Dependent Role="Calibration">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="RequestSetup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="JobID" />
+          <Property Type="Int32" Name="TestStageID" Nullable="false" />
+          <Property Type="Int32" Name="TestID" Nullable="false" />
+          <Property Type="Int32" Name="BatchID" />
+          <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="LookupID" />
+          <NavigationProperty Name="Batch" Relationship="REMI.Entities.FK_RequestSetup_Batches" FromRole="RequestSetup" ToRole="Batch" />
+          <NavigationProperty Name="Job" Relationship="REMI.Entities.FK_RequestSetup_Jobs" FromRole="RequestSetup" ToRole="Job" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_RequestSetup_Products" FromRole="RequestSetup" ToRole="Lookup" />
+          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_RequestSetup_Tests" FromRole="RequestSetup" ToRole="Test" />
+          <NavigationProperty Name="TestStage" Relationship="REMI.Entities.FK_RequestSetup_TestStages" FromRole="RequestSetup" ToRole="TestStage" />
+        </EntityType>
+        <Association Name="FK_RequestSetup_Batches">
+          <End Type="REMI.Entities.Batch" Role="Batch" Multiplicity="0..1" />
+          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RequestSetup">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestSetup_Jobs">
+          <End Type="REMI.Entities.Job" Role="Job" Multiplicity="0..1" />
+          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RequestSetup">
+              <PropertyRef Name="JobID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RequestSetup_Products">
-          <End Type="REMI.Entities.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="0..1" />
           <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Product">
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="RequestSetup">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestSetup_Tests">
+          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
+          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="RequestSetup">
-              <PropertyRef Name="ProductID" />
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestSetup_TestStages">
+          <End Type="REMI.Entities.TestStage" Role="TestStage" Multiplicity="1" />
+          <End Type="REMI.Entities.RequestSetup" Role="RequestSetup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestStage">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RequestSetup">
+              <PropertyRef Name="TestStageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductConfigurationUpload">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Boolean" Name="IsProcessed" Nullable="false" />
+          <Property Type="Int32" Name="TestID" Nullable="false" />
+          <Property Type="String" Name="LastUser" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PCName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="LookupID" Nullable="false" />
+          <NavigationProperty Name="Lookup" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Products" FromRole="ProductConfigurationUpload" ToRole="Lookup" />
+          <NavigationProperty Name="ProductConfigurations" Relationship="REMI.Entities.FK_ProductConfigurationUpload_ID" FromRole="ProductConfigurationUpload" ToRole="ProductConfiguration" />
+          <NavigationProperty Name="Test" Relationship="REMI.Entities.FK_ProductConfigurationUpload_Tests" FromRole="ProductConfigurationUpload" ToRole="Test" />
+          <NavigationProperty Name="ProductConfigurationVersions" Relationship="REMI.Entities.FK_ProductConfigurationVersion_ProductConfigurationUpload" FromRole="ProductConfigurationUpload" ToRole="ProductConfigurationVersion" />
+        </EntityType>
+        <Association Name="FK_ProductConfigurationUpload_Products">
+          <End Type="REMI.Entities.Lookup" Role="Lookup" Multiplicity="1" />
+          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lookup">
+              <PropertyRef Name="LookupID" />
+            </Principal>
+            <Dependent Role="ProductConfigurationUpload">
+              <PropertyRef Name="LookupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfigurationUpload_ID">
+          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="0..1" />
+          <End Type="REMI.Entities.ProductConfiguration" Role="ProductConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductConfigurationUpload">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductConfiguration">
+              <PropertyRef Name="UploadID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfigurationUpload_Tests">
+          <End Type="REMI.Entities.Test" Role="Test" Multiplicity="1" />
+          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductConfigurationUpload">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfigurationVersion_ProductConfigurationUpload">
+          <End Type="REMI.Entities.ProductConfigurationUpload" Role="ProductConfigurationUpload" Multiplicity="1" />
+          <End Type="REMI.Entities.ProductConfigurationVersion" Role="ProductConfigurationVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductConfigurationUpload">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductConfigurationVersion">
+              <PropertyRef Name="UploadID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6564,22 +6515,6 @@
                 <ScalarProperty Name="BatchStatus" ColumnName="BatchStatus" />
                 <ScalarProperty Name="PriorityID" ColumnName="PriorityID" />
                 <ScalarProperty Name="QRANumber" ColumnName="QRANumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vw_ExceptionsPivoted">
-            <EntityTypeMapping TypeName="REMI.Entities.vw_ExceptionsPivoted">
-              <MappingFragment StoreEntitySet="vw_ExceptionsPivoted">
-                <ScalarProperty Name="IsMQual" ColumnName="IsMQual" />
-                <ScalarProperty Name="TestCenterID" ColumnName="TestCenterID" />
-                <ScalarProperty Name="AccessoryGroupID" ColumnName="AccessoryGroupID" />
-                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
-                <ScalarProperty Name="Test" ColumnName="Test" />
-                <ScalarProperty Name="TestStageID" ColumnName="TestStageID" />
-                <ScalarProperty Name="TestUnitID" ColumnName="TestUnitID" />
-                <ScalarProperty Name="ReasonForRequest" ColumnName="ReasonForRequest" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -6745,19 +6680,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RequestSetups">
-            <EntityTypeMapping TypeName="REMI.Entities.RequestSetup">
-              <MappingFragment StoreEntitySet="RequestSetup">
-                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
-                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
-                <ScalarProperty Name="TestID" ColumnName="TestID" />
-                <ScalarProperty Name="TestStageID" ColumnName="TestStageID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="JobID" ColumnName="JobID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ApplicationLogs">
             <EntityTypeMapping TypeName="REMI.Entities.ApplicationLog">
               <MappingFragment StoreEntitySet="ApplicationLog">
@@ -6846,6 +6768,7 @@
           <EntitySetMapping Name="BatchesAudits">
             <EntityTypeMapping TypeName="REMI.Entities.BatchesAudit">
               <MappingFragment StoreEntitySet="BatchesAudit">
+                <ScalarProperty Name="C_ProductID" ColumnName="_ProductID" />
                 <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
                 <ScalarProperty Name="Order" ColumnName="Order" />
                 <ScalarProperty Name="MechanicalTools" ColumnName="MechanicalTools" />
@@ -6881,20 +6804,6 @@
                 <ScalarProperty Name="Duration" ColumnName="Duration" />
                 <ScalarProperty Name="TestID" ColumnName="TestID" />
                 <ScalarProperty Name="BatchID" ColumnName="BatchID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Calibrations">
-            <EntityTypeMapping TypeName="REMI.Entities.Calibration">
-              <MappingFragment StoreEntitySet="Calibration">
-                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
-                <ScalarProperty Name="TestID" ColumnName="TestID" />
-                <ScalarProperty Name="File" ColumnName="File" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="HostID" ColumnName="HostID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -6948,15 +6857,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LookupTypes">
-            <EntityTypeMapping TypeName="REMI.Entities.LookupType">
-              <MappingFragment StoreEntitySet="LookupType">
-                <ScalarProperty Name="IsSystem" ColumnName="IsSystem" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="LookupTypeID" ColumnName="LookupTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProductConfigurations">
             <EntityTypeMapping TypeName="REMI.Entities.ProductConfiguration">
               <MappingFragment StoreEntitySet="ProductConfiguration">
@@ -6965,18 +6865,6 @@
                 <ScalarProperty Name="NodeName" ColumnName="NodeName" />
                 <ScalarProperty Name="ViewOrder" ColumnName="ViewOrder" />
                 <ScalarProperty Name="ParentId" ColumnName="ParentId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductConfigurationUploads">
-            <EntityTypeMapping TypeName="REMI.Entities.ProductConfigurationUpload">
-              <MappingFragment StoreEntitySet="ProductConfigurationUpload">
-                <ScalarProperty Name="PCName" ColumnName="PCName" />
-                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
-                <ScalarProperty Name="TestID" ColumnName="TestID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="IsProcessed" ColumnName="IsProcessed" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -7001,41 +6889,6 @@
                 <ScalarProperty Name="LookupID" ColumnName="LookupID" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductLookups">
-            <EntityTypeMapping TypeName="REMI.Entities.ProductLookup">
-              <MappingFragment StoreEntitySet="ProductLookups">
-                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductSettings">
-            <EntityTypeMapping TypeName="REMI.Entities.ProductSetting">
-              <MappingFragment StoreEntitySet="ProductSettings">
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
-                <ScalarProperty Name="ValueText" ColumnName="ValueText" />
-                <ScalarProperty Name="KeyName" ColumnName="KeyName" />
-                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductTestReadies">
-            <EntityTypeMapping TypeName="REMI.Entities.ProductTestReady">
-              <MappingFragment StoreEntitySet="ProductTestReady">
-                <ScalarProperty Name="JIRA" ColumnName="JIRA" />
-                <ScalarProperty Name="IsNestReady" ColumnName="IsNestReady" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="IsReady" ColumnName="IsReady" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="PSID" ColumnName="PSID" />
-                <ScalarProperty Name="TestID" ColumnName="TestID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -7304,49 +7157,6 @@
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="LookupID" ColumnName="LookupID" />
                 <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Batches">
-            <EntityTypeMapping TypeName="REMI.Entities.Batch">
-              <MappingFragment StoreEntitySet="Batches">
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-                <ScalarProperty Name="OrientationID" ColumnName="OrientationID" />
-                <ScalarProperty Name="Order" ColumnName="Order" />
-                <ScalarProperty Name="MechanicalTools" ColumnName="MechanicalTools" />
-                <ScalarProperty Name="ExecutiveSummary" ColumnName="ExecutiveSummary" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="IsMQual" ColumnName="IsMQual" />
-                <ScalarProperty Name="TestCenterLocationID" ColumnName="TestCenterLocationID" />
-                <ScalarProperty Name="AccessoryGroupID" ColumnName="AccessoryGroupID" />
-                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="PMNotes" ColumnName="PMNotes" />
-                <ScalarProperty Name="HWRevision" ColumnName="HWRevision" />
-                <ScalarProperty Name="CPRNumber" ColumnName="CPRNumber" />
-                <ScalarProperty Name="TRSStatus" ColumnName="TRSStatus" />
-                <ScalarProperty Name="AssemblyRevision" ColumnName="AssemblyRevision" />
-                <ScalarProperty Name="AssemblyNumber" ColumnName="AssemblyNumber" />
-                <ScalarProperty Name="PartName" ColumnName="PartName" />
-                <ScalarProperty Name="RQID" ColumnName="RQID" />
-                <ScalarProperty Name="ReportRequiredBy" ColumnName="ReportRequiredBy" />
-                <ScalarProperty Name="ReportApprovedDate" ColumnName="ReportApprovedDate" />
-                <ScalarProperty Name="RelabJobID" ColumnName="RelabJobID" />
-                <ScalarProperty Name="ExpectedSampleSize" ColumnName="ExpectedSampleSize" />
-                <ScalarProperty Name="UnitsToBeReturnedToRequestor" ColumnName="UnitsToBeReturnedToRequestor" />
-                <ScalarProperty Name="Requestor" ColumnName="Requestor" />
-                <ScalarProperty Name="TestStageCompletionStatus" ColumnName="TestStageCompletionStatus" />
-                <ScalarProperty Name="RFBands" ColumnName="RFBands" />
-                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
-                <ScalarProperty Name="ConcurrencyID" ColumnName="ConcurrencyID" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="RequestPurpose" ColumnName="RequestPurpose" />
-                <ScalarProperty Name="TestStageName" ColumnName="TestStageName" />
-                <ScalarProperty Name="JobName" ColumnName="JobName" />
-                <ScalarProperty Name="BatchStatus" ColumnName="BatchStatus" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="QRANumber" ColumnName="QRANumber" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -7717,17 +7527,151 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="REMI.Entities.Product">
-              <MappingFragment StoreEntitySet="Products">
+          <FunctionImportMapping FunctionImportName="remispGetObservationParameters" FunctionName="remiModel.Store.remispGetObservationParameters" />
+          <EntitySetMapping Name="LookupTypes">
+            <EntityTypeMapping TypeName="REMI.Entities.LookupType">
+              <MappingFragment StoreEntitySet="LookupType">
+                <ScalarProperty Name="IsSecureType" ColumnName="IsSecureType" />
+                <ScalarProperty Name="IsSystem" ColumnName="IsSystem" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LookupTypeID" ColumnName="LookupTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductSettings">
+            <EntityTypeMapping TypeName="REMI.Entities.ProductSetting">
+              <MappingFragment StoreEntitySet="ProductSettings">
                 <ScalarProperty Name="LookupID" ColumnName="LookupID" />
-                <ScalarProperty Name="C_TSDContact" ColumnName="_TSDContact" />
-                <ScalarProperty Name="QAPLocation" ColumnName="QAPLocation" />
+                <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
+                <ScalarProperty Name="ValueText" ColumnName="ValueText" />
+                <ScalarProperty Name="KeyName" ColumnName="KeyName" />
+                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="remispGetObservationParameters" FunctionName="remiModel.Store.remispGetObservationParameters" />
+          <EntitySetMapping Name="ProductTestReadies">
+            <EntityTypeMapping TypeName="REMI.Entities.ProductTestReady">
+              <MappingFragment StoreEntitySet="ProductTestReady">
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="JIRA" ColumnName="JIRA" />
+                <ScalarProperty Name="IsNestReady" ColumnName="IsNestReady" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="IsReady" ColumnName="IsReady" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="PSID" ColumnName="PSID" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_ExceptionsPivoted">
+            <EntityTypeMapping TypeName="REMI.Entities.vw_ExceptionsPivoted">
+              <MappingFragment StoreEntitySet="vw_ExceptionsPivoted">
+                <ScalarProperty Name="IsMQual" ColumnName="IsMQual" />
+                <ScalarProperty Name="TestCenterID" ColumnName="TestCenterID" />
+                <ScalarProperty Name="AccessoryGroupID" ColumnName="AccessoryGroupID" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+                <ScalarProperty Name="Test" ColumnName="Test" />
+                <ScalarProperty Name="TestStageID" ColumnName="TestStageID" />
+                <ScalarProperty Name="TestUnitID" ColumnName="TestUnitID" />
+                <ScalarProperty Name="ReasonForRequest" ColumnName="ReasonForRequest" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Batches">
+            <EntityTypeMapping TypeName="REMI.Entities.Batch">
+              <MappingFragment StoreEntitySet="Batches">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="OrientationID" ColumnName="OrientationID" />
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="MechanicalTools" ColumnName="MechanicalTools" />
+                <ScalarProperty Name="ExecutiveSummary" ColumnName="ExecutiveSummary" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsMQual" ColumnName="IsMQual" />
+                <ScalarProperty Name="TestCenterLocationID" ColumnName="TestCenterLocationID" />
+                <ScalarProperty Name="AccessoryGroupID" ColumnName="AccessoryGroupID" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+                <ScalarProperty Name="C_ProductID" ColumnName="_ProductID" />
+                <ScalarProperty Name="PMNotes" ColumnName="PMNotes" />
+                <ScalarProperty Name="HWRevision" ColumnName="HWRevision" />
+                <ScalarProperty Name="CPRNumber" ColumnName="CPRNumber" />
+                <ScalarProperty Name="TRSStatus" ColumnName="TRSStatus" />
+                <ScalarProperty Name="AssemblyRevision" ColumnName="AssemblyRevision" />
+                <ScalarProperty Name="AssemblyNumber" ColumnName="AssemblyNumber" />
+                <ScalarProperty Name="PartName" ColumnName="PartName" />
+                <ScalarProperty Name="RQID" ColumnName="RQID" />
+                <ScalarProperty Name="ReportRequiredBy" ColumnName="ReportRequiredBy" />
+                <ScalarProperty Name="ReportApprovedDate" ColumnName="ReportApprovedDate" />
+                <ScalarProperty Name="RelabJobID" ColumnName="RelabJobID" />
+                <ScalarProperty Name="ExpectedSampleSize" ColumnName="ExpectedSampleSize" />
+                <ScalarProperty Name="UnitsToBeReturnedToRequestor" ColumnName="UnitsToBeReturnedToRequestor" />
+                <ScalarProperty Name="Requestor" ColumnName="Requestor" />
+                <ScalarProperty Name="TestStageCompletionStatus" ColumnName="TestStageCompletionStatus" />
+                <ScalarProperty Name="RFBands" ColumnName="RFBands" />
+                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
+                <ScalarProperty Name="ConcurrencyID" ColumnName="ConcurrencyID" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="RequestPurpose" ColumnName="RequestPurpose" />
+                <ScalarProperty Name="TestStageName" ColumnName="TestStageName" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="BatchStatus" ColumnName="BatchStatus" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="QRANumber" ColumnName="QRANumber" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductLookups">
+            <EntityTypeMapping TypeName="REMI.Entities.ProductLookup">
+              <MappingFragment StoreEntitySet="ProductLookups">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="C_ProductID" ColumnName="_ProductID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Calibrations">
+            <EntityTypeMapping TypeName="REMI.Entities.Calibration">
+              <MappingFragment StoreEntitySet="Calibration">
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="File" ColumnName="File" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="HostID" ColumnName="HostID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestSetups">
+            <EntityTypeMapping TypeName="REMI.Entities.RequestSetup">
+              <MappingFragment StoreEntitySet="RequestSetup">
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="TestStageID" ColumnName="TestStageID" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductConfigurationUploads">
+            <EntityTypeMapping TypeName="REMI.Entities.ProductConfigurationUpload">
+              <MappingFragment StoreEntitySet="ProductConfigurationUpload">
+                <ScalarProperty Name="LookupID" ColumnName="LookupID" />
+                <ScalarProperty Name="PCName" ColumnName="PCName" />
+                <ScalarProperty Name="LastUser" ColumnName="LastUser" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="IsProcessed" ColumnName="IsProcessed" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7749,93 +7693,76 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram Name="REMIEntities" ZoomLevel="91" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
-        <EntityTypeShape EntityType="REMI.Entities.vw_BatchAudit" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.vw_ExceptionsPivoted" Width="1.5" PointX="2.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfo" Width="1.5" PointX="4.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfoCompleted" Width="1.5" PointX="0.75" PointY="5.75" />
-        <EntityTypeShape EntityType="REMI.Entities.vw_TestRecordAudit" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="20" PointY="81.375" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="27.5" PointY="76.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="29.75" PointY="75.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="29.75" PointY="78.375" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsOrphaned" Width="1.5" PointX="2.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="29.75" PointY="81.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="22.25" PointY="89.875" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="20.75" PointY="65.875" />
+        <EntityTypeShape EntityType="REMI.Entities.vw_BatchAudit" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfo" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.vw_GetTaskInfoCompleted" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.vw_TestRecordAudit" Width="1.5" PointX="2.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.Result" Width="1.5" PointX="15" PointY="34.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurement" Width="1.5" PointX="19.5" PointY="30.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsAudit" Width="1.5" PointX="21.75" PointY="29.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsMeasurementsFile" Width="1.5" PointX="21.75" PointY="30.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsOrphaned" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsParameter" Width="1.5" PointX="21.75" PointY="31.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsXML" Width="1.5" PointX="17.25" PointY="37.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultXML_Results" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_ResultsXML_XMLID" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsAudit_ResultsMeasurements" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurementsFiles_ResultsMeasurements" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsParameters_ResultsMeasurements" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationLog" Width="1.5" PointX="6.75" PointY="4.75" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="16.375" PointY="54.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="11.875" PointY="51" />
-        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="14.125" PointY="50.625" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="16" PointY="98.625" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_SchemaVersions" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="2.5" PointX="12.75" PointY="88.25" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="17.75" PointY="76.875" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchesAudit" Width="1.5" PointX="8.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="20.75" PointY="70.625" />
-        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="7.5" PointY="61.625" />
-        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="20" PointY="77.25" />
-        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="5.25" PointY="71" />
-        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="3" PointY="59.625" />
-        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="67.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="2.375" PointX="13.625" PointY="58.25" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="2.375" PointX="10.5" PointY="61.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="2" PointX="13.625" PointY="54.625" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="14.25" PointY="62.5" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="7.5" PointY="66.125" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="7.5" PointY="72" />
-        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="9.75" PointY="66.375" />
-        <EntityTypeShape EntityType="REMI.Entities.StationConfigurationUpload" Width="1.5" PointX="4.75" PointY="8.75" />
-        <EntityTypeShape EntityType="REMI.Entities.sysdiagram" Width="1.5" PointX="10.75" PointY="0.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TargetAccess" Width="1.5" PointX="10.75" PointY="3.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="17.75" PointY="70.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="120.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TestExceptionsAudit" Width="1.5" PointX="10.75" PointY="6.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="23" PointY="79.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecordsAudit" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="25.25" PointY="79.75" />
-        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="5.25" PointY="54.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="18.5" PointY="58.5" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="13.25" PointY="73.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="21.25" PointY="62.875" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="15.5" PointY="78.375" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="17.75" PointY="84.875" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="23" PointY="74.875" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="15.5" PointY="85.25" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="13.25" PointY="78.625" />
-        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="11" PointY="78.125" />
-        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="12.25" PointY="66.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationLog" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationProductVersion" Width="1.5" PointX="10.25" PointY="16.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.Application" Width="1.5" PointX="5.75" PointY="14.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ApplicationVersion" Width="1.5" PointX="8" PointY="14.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Profile" Width="1.5" PointX="13" PointY="10.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_SchemaVersions" Width="1.5" PointX="4.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Users" Width="2.5" PointX="9.75" PointY="10.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchComment" Width="1.5" PointX="12.75" PointY="28.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchesAudit" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchSpecificTestDuration" Width="1.5" PointX="15.75" PointY="22.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.DeviceTrackingLog" Width="1.5" PointX="15" PointY="28.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.JobOrientation" Width="1.5" PointX="5.25" PointY="27.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.Job" Width="1.5" PointX="3" PointY="25.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfiguration" Width="2.375" PointX="7.5" PointY="18" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationVersion" Width="2" PointX="7.5" PointY="16.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigValue" Width="1.5" PointX="8.25" PointY="23.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.StationConfigurationUpload" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.sysdiagram" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TargetAccess" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TaskAssignment" Width="1.5" PointX="12.75" PointY="23.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TestException" Width="1.5" PointX="5.25" PointY="40.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TestExceptionsAudit" Width="1.5" PointX="6.75" PointY="2.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecord" Width="1.5" PointX="15" PointY="31.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecordsAudit" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TestRecordsXTrackingLog" Width="1.5" PointX="17.25" PointY="29.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.Test" Width="1.5" PointX="3" PointY="17.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TestStage" Width="1.5" PointX="10.5" PointY="20.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocation" Width="1.5" PointX="8.25" PointY="25.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsForTest" Width="1.5" PointX="10.25" PointY="14.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHost" Width="1.5" PointX="10.5" PointY="26.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfiguration" Width="1.5" PointX="12.75" PointY="25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsHostsConfigValue" Width="1.5" PointX="15" PointY="24.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationsPlugin" Width="1.5" PointX="10.5" PointY="25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationTypePermission" Width="1.5" PointX="8.25" PointY="12.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TrackingLocationType" Width="1.5" PointX="6" PointY="12.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.UserTraining" Width="1.5" PointX="5.25" PointY="19.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ApplicationVersions" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationProductVersion_ProductConfigurationVersion" />
         <AssociationConnector Association="REMI.Entities.FK_ApplicationVersions_Applications" />
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Pr__UserI__3F115E1A" />
         <AssociationConnector Association="REMI.Entities.FK_BatchSpecificTestDurations_Tests" />
-        <AssociationConnector Association="REMI.Entities.FK_Calibration_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TrackingLocations" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecordsXTrackingLogs_DeviceTrackingLog" />
         <AssociationConnector Association="REMI.Entities.FK_JobOrientation_Jobs" />
-        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Jobs" />
         <AssociationConnector Association="REMI.Entities.FK_TestStages_Jobs" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationUpload_ID" />
         <AssociationConnector Association="REMI.Entities.FK_ProductConfigValues_ProductConfiguration" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationUpload_Tests" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationVersion_ProductConfigurationUpload" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_ProductSettings" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_TaskAssignment_TestStages" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecords_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecords_TestStages" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecordsXTrackingLogs_TestRecords" />
-        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_Results_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_TestStages_Tests" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsForTests_Tests" />
-        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_TestStages" />
         <AssociationConnector Association="REMI.Entities.FK_Results_TestStages" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationPlugin_TrackingLocations" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocations_TrackingLocationTypes" />
@@ -7844,23 +7771,9 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfiguration_TrackingLocationsPlugin" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_TrackingLocationsHostsConfiguration" />
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationTypePermissions_TrackingLocationTypes" />
-        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="15.5" PointY="66.375" />
-        <AssociationConnector Association="REMI.Entities.FK_BatchComments_Batches" />
-        <AssociationConnector Association="REMI.Entities.FK_Batches_JobOrientation" />
-        <AssociationConnector Association="REMI.Entities.FK_BatchSpecificTestDurations_Batches" />
-        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Batches" />
-        <AssociationConnector Association="REMI.Entities.FK_TaskAssignment_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="64.625" />
-        <AssociationConnector Association="REMI.Entities.FK_Batches_AccessoryGroup" />
-        <AssociationConnector Association="REMI.Entities.FK_Batches_Department" />
-        <AssociationConnector Association="REMI.Entities.FK_Batches_Priority" />
-        <AssociationConnector Association="REMI.Entities.FK_Batches_ProductType" />
-        <AssociationConnector Association="REMI.Entities.FK_Batches_RequestPurpose" />
-        <AssociationConnector Association="REMI.Entities.FK_Batches_TestCenterLocation" />
+        <EntityTypeShape EntityType="REMI.Entities.Lookup" Width="1.5" PointX="3" PointY="23.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_JobOrientation_Lookups" />
-        <AssociationConnector Association="REMI.Entities.FK_Lookups_LookupType" />
         <AssociationConnector Association="REMI.Entities.FK_ProductConfigValue_Lookup" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductLookups_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Lookups_MeasurementType" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsMeasurements_Lookups_UnitType" />
         <AssociationConnector Association="REMI.Entities.FK_TestExceptions_LookupID" />
@@ -7868,90 +7781,119 @@
         <AssociationConnector Association="REMI.Entities.FK_TrackingLocationsHostsConfigValues_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_LookupsLevel" />
-        <EntityTypeShape EntityType="REMI.Entities.Request" Width="1.5" PointX="17.75" PointY="88.625" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="123.875" />
+        <EntityTypeShape EntityType="REMI.Entities.Request" Width="1.5" PointX="12.75" PointY="32.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestType" Width="1.5" PointX="5.25" PointY="41.5" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_RequestType_TypeID" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="10.5" PointY="93.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="2.875" PointX="12.75" PointY="95.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetup" Width="1.5" PointX="7.5" PointY="29.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupRole" Width="2.875" PointX="9.75" PointY="29.5" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldTypeID" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_FieldValidationID" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetup_RequestType" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_ReqFieldSetup" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="140.25" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldMapping" Width="1.5" PointX="7.5" PointY="46" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldMapping_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="8" PointY="75.875" />
-        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="10.25" PointY="70.75" />
-        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="10" PointY="57.125" />
+        <EntityTypeShape EntityType="REMI.Entities.Menu" Width="1.5" PointX="3" PointY="21.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.MenuDepartment" Width="1.5" PointX="5.25" PointY="21.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.User" Width="1.5" PointX="3" PointY="19.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_MenuDepartment_Menu" />
         <AssociationConnector Association="REMI.Entities.FK_UserTraining_Users" />
-        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="17.75" PointY="80" />
-        <EntityTypeShape EntityType="REMI.Entities.UsersAudit" Width="1.5" PointX="8.75" PointY="10.75" />
-        <AssociationConnector Association="REMI.Entities.FK_TestUnits_Batches" />
+        <EntityTypeShape EntityType="REMI.Entities.TestUnit" Width="1.5" PointX="12.75" PointY="31.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.UsersAudit" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_DeviceTrackingLog_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_TestRecords_TestUnits" />
         <AssociationConnector Association="REMI.Entities.FK_Results_TestUnits" />
-        <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="7.5" PointY="99.125" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestTypeAccess" Width="1.5" PointX="7.5" PointY="32.5" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_RequestTypeAccess_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="5.25" PointY="67.75" />
+        <EntityTypeShape EntityType="REMI.Entities.JobAccess" Width="1.5" PointX="5.25" PointY="25.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Jobs" />
         <AssociationConnector Association="REMI.Entities.FK_JobAccess_Lookups" />
-        <EntityTypeShape EntityType="REMI.Entities.Service" Width="1.5" PointX="3" PointY="75.875" />
-        <EntityTypeShape EntityType="REMI.Entities.ServicesAccess" Width="1.5" PointX="5.25" PointY="75.75" />
+        <EntityTypeShape EntityType="REMI.Entities.Service" Width="1.5" PointX="6" PointY="42.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ServicesAccess" Width="1.5" PointX="8.25" PointY="27.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_ServicesAccess_Services" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="7.375" PointY="87.75" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Applications" Width="1.5" PointX="4.375" PointY="10" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Us__Appli__40F9A68C" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="2.375" PointX="9.625" PointY="88.75" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Roles" Width="2.375" PointX="6.625" PointY="10.5" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK__aspnet_Ro__Appli__40058253" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupRole_aspnet_Roles" />
-        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="7.375" PointY="90.875" />
+        <EntityTypeShape EntityType="REMI.Entities.aspnet_Permissions" Width="1.5" PointX="4.375" PointY="11.125" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_aspnet_Permissions_aspnet_Applications" />
         <AssociationConnector Association="REMI.Entities.aspnet_PermissionsInRoles" />
         <AssociationConnector Association="REMI.Entities.aspnet_UsersInRoles" />
-        <EntityTypeShape EntityType="REMI.Entities.LookupsHierarchy" Width="1.5" PointX="7.5" PointY="94.625" />
+        <EntityTypeShape EntityType="REMI.Entities.LookupsHierarchy" Width="1.5" PointX="7.5" PointY="34.5" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_Lookups1" />
-        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType" />
-        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType1" />
         <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_RequestType" />
-        <AssociationConnector Association="REMI.Entities.FK_Request_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsStatu" Width="1.5" PointX="17.75" PointY="64" />
-        <AssociationConnector Association="REMI.Entities.FK_ResultsStatus_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.UserSearchFilter" Width="1.5" PointX="7.5" PointY="124.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsStatu" Width="1.5" PointX="12.75" PointY="22.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.UserSearchFilter" Width="1.5" PointX="7.5" PointY="41.5" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_UserSearchFilter_Users" />
         <AssociationConnector Association="REMI.Entities.FK_UserSearchFilter_RequestType" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldDataAudit" Width="2.875" PointX="10.75" PointY="9.75" />
-        <EntityTypeShape EntityType="REMI.Entities.TestsAccess" Width="1.5" PointX="13.25" PointY="70.75" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldDataAudit" Width="2.875" PointX="4.75" PointY="6.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.TestsAccess" Width="1.5" PointX="8.25" PointY="19.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_TestsAccess_Tests" />
-        <EntityTypeShape EntityType="REMI.Entities.Configuration" Width="1.5" PointX="5.25" PointY="117.25" />
+        <EntityTypeShape EntityType="REMI.Entities.Configuration" Width="1.5" PointX="5.25" PointY="39.125" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_Configurations_Lookups1" />
-        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="24.5" PointY="90.875" />
+        <EntityTypeShape EntityType="REMI.Entities.ResultsInformation" Width="1.5" PointX="19.5" PointY="37.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ResultsInformation_ResultsXML" />
-        <EntityTypeShape EntityType="REMI.Entities.BatchesJira" Width="1.5" PointX="17.75" PointY="66.875" />
-        <AssociationConnector Association="REMI.Entities.FK_BatchesJira_Batches" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldData" Width="1.5" PointX="20" PointY="95.25" />
+        <EntityTypeShape EntityType="REMI.Entities.BatchesJira" Width="1.5" PointX="12.75" PointY="26.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldData" Width="1.5" PointX="15" PointY="30" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_ReqFieldSetup" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldData_Request" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqDistribution" Width="1.5" PointX="20" PointY="92.625" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqDistribution" Width="1.5" PointX="15" PointY="32.375" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ReqDistribution_Request" />
-        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupSibling" Width="1.5" PointX="12.75" PointY="98" />
+        <EntityTypeShape EntityType="REMI.Entities.ReqFieldSetupSibling" Width="1.5" PointX="9.75" PointY="30.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_ReqFieldSetupSibling_ReqFieldSetup" />
-        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="10.25" PointY="74.25" />
+        <EntityTypeShape EntityType="REMI.Entities.UserDetail" Width="1.5" PointX="8.25" PointY="21.625" IsExpanded="false" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_UserDetails_Users" />
-        <EntityTypeShape EntityType="REMI.Entities.Product" Width="1.5" PointX="5.25" PointY="61.5" />
+        <EntityTypeShape EntityType="REMI.Entities.LookupType" Width="1.5" PointX="0.75" PointY="23.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductSetting" Width="1.5" PointX="5.25" PointY="38" IsExpanded="false" />
+        <AssociationConnector Association="REMI.Entities.FK_Lookups_LookupType" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductSettings_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType" />
+        <AssociationConnector Association="REMI.Entities.FK_LookupsHierarchy_LookupType1" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductTestReady" Width="1.5" PointX="7.5" PointY="30.75" IsExpanded="false" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_Lookups" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_ProductSettings" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_Tests" />
+        <EntityTypeShape EntityType="REMI.Entities.vw_ExceptionsPivoted" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="REMI.Entities.Batch" Width="1.5" PointX="10.5" PointY="23.625" IsExpanded="false" />
+        <AssociationConnector Association="REMI.Entities.FK_BatchComments_Batches" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_AccessoryGroup" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_Department" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_JobOrientation" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_Priority" />
         <AssociationConnector Association="REMI.Entities.FK_Batches_Products" />
-        <AssociationConnector Association="REMI.Entities.FK_Calibration_Products" />
-        <AssociationConnector Association="REMI.Entities.FK_Products_Lookups" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationUpload_Products" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_ProductType" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_RequestPurpose" />
+        <AssociationConnector Association="REMI.Entities.FK_Batches_TestCenterLocation" />
+        <AssociationConnector Association="REMI.Entities.FK_BatchesJira_Batches" />
+        <AssociationConnector Association="REMI.Entities.FK_BatchSpecificTestDurations_Batches" />
+        <AssociationConnector Association="REMI.Entities.FK_Request_Batches" />
+        <AssociationConnector Association="REMI.Entities.FK_ResultsStatus_Batches" />
+        <AssociationConnector Association="REMI.Entities.FK_TaskAssignment_Batches" />
+        <AssociationConnector Association="REMI.Entities.FK_TestUnits_Batches" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductLookup" Width="1.5" PointX="5.25" PointY="35.75" IsExpanded="false" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductLookups_Lookups" />
         <AssociationConnector Association="REMI.Entities.FK_ProductLookups_Products" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductSettings_Products" />
-        <AssociationConnector Association="REMI.Entities.FK_ProductTestReady_Products" />
+        <EntityTypeShape EntityType="REMI.Entities.Calibration" Width="1.5" PointX="5.25" PointY="17.625" IsExpanded="false" />
+        <AssociationConnector Association="REMI.Entities.FK_Calibration_Products" />
+        <AssociationConnector Association="REMI.Entities.FK_Calibration_Tests" />
+        <EntityTypeShape EntityType="REMI.Entities.RequestSetup" Width="1.5" PointX="12.75" PointY="20.625" IsExpanded="false" />
+        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Batches" />
+        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Jobs" />
         <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Products" />
+        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_Tests" />
+        <AssociationConnector Association="REMI.Entities.FK_RequestSetup_TestStages" />
+        <EntityTypeShape EntityType="REMI.Entities.ProductConfigurationUpload" Width="1.5" PointX="5.25" PointY="23.625" IsExpanded="false" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationUpload_Products" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationUpload_ID" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationUpload_Tests" />
+        <AssociationConnector Association="REMI.Entities.FK_ProductConfigurationVersion_ProductConfigurationUpload" />
         </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Calibration]
 (
 [ID] [int] NOT NULL IDENTITY(1, 1),
-[ProductID] [int] NOT NULL,
+[LookupID] [int] NOT NULL,
 [HostID] [int] NOT NULL,
 [DateCreated] [datetime] NOT NULL,
 [Name] [nvarchar] (150) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,

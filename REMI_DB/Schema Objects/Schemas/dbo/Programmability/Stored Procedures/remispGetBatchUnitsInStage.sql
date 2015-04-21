@@ -24,7 +24,6 @@ BEGIN
 		INNER JOIN Jobs j WITH(NOLOCK) ON ts.JobID=j.ID
 		INNER JOIN Batches b WITH(NOLOCK) on j.jobname = b.jobname 
 		INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
-		INNER JOIN Products p WITH(NOLOCK) ON b.ProductID=p.ID
 	WHERE b.QRANumber = @QRANumber AND EXISTS 
 		(
 			SELECT DISTINCT 1
@@ -37,9 +36,9 @@ BEGIN
 				)
 				AND
 				(
-					(rs.ProductID IS NULL)
+					(rs.LookupID IS NULL)
 					OR
-					(rs.ProductID IS NOT NULL AND rs.ProductID = p.ID)
+					(rs.LookupID IS NOT NULL AND rs.LookupID = b.ProductID)
 				)
 				AND
 				(

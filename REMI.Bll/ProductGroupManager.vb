@@ -13,36 +13,21 @@ Namespace REMI.Bll
     Public Class ProductGroupManager
         Inherits REMIManagerBase
 
-        ''' <summary>
-        ''' Gets a list of Products from the database.
-        ''' </summary>
-        ''' <returns> A collection of products.</returns>
-        ''' <remarks></remarks>
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetProductList(ByVal ByPassProduct As Boolean, ByVal userID As Int32, ByVal showArchived As Boolean) As DataTable
+        Public Shared Function GetProductTestReady(ByVal lookupid As Int32, ByVal MNum As String) As DataTable
             Try
-                Return ProductGroupDB.GetList(ByPassProduct, userID, showArchived)
+                Return ProductGroupDB.GetProductTestReady(lookupid, MNum)
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("lookupid: {0} MNum: {1}", lookupid, MNum))
                 Return New DataTable
             End Try
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetProductTestReady(ByVal ProductID As Int32, ByVal MNum As String) As DataTable
-            Try
-                Return ProductGroupDB.GetProductTestReady(ProductID, MNum)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return New DataTable
-            End Try
-        End Function
-
-        Public Shared Function SaveProductReady(ByVal productID As Int32, ByVal testID As Int32, ByVal productSettingID As Int32, ByVal productTestReadyID As Int32, ByVal isReady As Int32, ByVal comment As String, ByVal isNestReady As Int32, ByVal JIRA As Int32) As Boolean
+        Public Shared Function SaveProductReady(ByVal lookupID As Int32, ByVal testID As Int32, ByVal productSettingID As Int32, ByVal productTestReadyID As Int32, ByVal isReady As Int32, ByVal comment As String, ByVal isNestReady As Int32, ByVal JIRA As Int32) As Boolean
             Dim nc As New NotificationCollection
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
-                Dim testReady = (From ptr In instance.ProductTestReadies Where ptr.Test.ID = testID And ptr.Product.ID = productID And ptr.ProductSetting.ID = productSettingID And ptr.ID = productTestReadyID Select ptr).FirstOrDefault()
+                Dim testReady = (From ptr In instance.ProductTestReadies Where ptr.Test.ID = testID And ptr.LookupID = lookupID And ptr.ProductSetting.ID = productSettingID And ptr.ID = productTestReadyID Select ptr).FirstOrDefault()
 
                 If (testReady Is Nothing) Then
                     Dim pr As New REMI.Entities.ProductTestReady()
@@ -51,7 +36,7 @@ Namespace REMI.Bll
                     pr.Comment = comment
                     pr.Test = (From t In instance.Tests Where t.ID = testID Select t).FirstOrDefault()
                     pr.ProductSetting = (From ps In instance.ProductSettings Where ps.ID = productSettingID Select ps).FirstOrDefault()
-                    pr.Product = (From p In instance.Products Where p.ID = productID Select p).FirstOrDefault()
+                    pr.Lookup = (From l In instance.Lookups Where l.LookupID = lookupID Select l).FirstOrDefault()
                     pr.JIRA = JIRA
                     instance.AddToProductTestReadies(pr)
                 Else
@@ -63,39 +48,9 @@ Namespace REMI.Bll
 
                 instance.SaveChanges()
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("productID: {0} testID: {1} productSettingID: {2} productTestReadyID: {3} isReady: {4} Comment: {5}", productID, testID, productSettingID, productTestReadyID, isReady, comment)))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("lookupID: {0} testID: {1} productSettingID: {2} productTestReadyID: {3} isReady: {4} Comment: {5}", lookupID, testID, productSettingID, productTestReadyID, isReady, comment)))
             End Try
             Return False
-        End Function
-
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function UpdateProduct(ByVal productGroupname As String, ByVal isActive As Int32, ByVal productID As Int32, ByVal QAP As String) As Boolean
-            Try
-                Return ProductGroupDB.UpdateProduct(productGroupname, isActive, productID, QAP)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
-                Return False
-            End Try
-        End Function
-
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetProductNameByID(ByVal productID As Int32) As String
-            Try
-                Return ProductGroupDB.GetProductNameByID(productID)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return String.Empty
-            End Try
-        End Function
-
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetProductIDByName(ByVal productGroupName As String) As Int32
-            Try
-                Return ProductGroupDB.GetProductIDByName(productGroupName)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-                Return 0
-            End Try
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
@@ -108,8 +63,16 @@ Namespace REMI.Bll
             Return Nothing
         End Function
 
-#Region "Product Settings"
-        Public Shared Function CreateSetting(ByVal productID As Int32, ByVal keyName As String, ByVal valueText As String, ByVal defaultValue As String) As Boolean
+        Public Shared Function GetProductContacts(ByVal lookupid As Int32) As DataTable
+            Try
+                Return ProductGroupDB.GetProductContacts(lookupid)
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+            Return New DataTable("ProductContacts")
+        End Function
+
+        Public Shared Function CreateSetting(ByVal lookupid As Int32, ByVal keyName As String, ByVal valueText As String, ByVal defaultValue As String) As Boolean
             Dim nc As New NotificationCollection
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
@@ -118,69 +81,51 @@ Namespace REMI.Bll
                 ps.LastUser = UserManager.GetCurrentValidUserLDAPName
                 ps.ValueText = valueText
                 ps.DefaultValue = defaultValue
-                ps.Product = (From p In instance.Products Where p.ID = productID Select p).FirstOrDefault()
+                ps.Lookup = (From l In instance.Lookups Where l.LookupID = lookupid Select l).FirstOrDefault()
                 instance.AddToProductSettings(ps)
                 instance.SaveChanges()
                 Return True
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("productID: {0} keyName: {1} valueText: {2} defaultValue: {3}", productID, keyName, valueText, defaultValue)))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("lookupid: {0} keyName: {1} valueText: {2} defaultValue: {3}", lookupid, keyName, valueText, defaultValue)))
             End Try
             Return False
         End Function
 
-        Public Shared Function SaveSetting(ByVal productID As Int32, ByVal keyName As String, ByVal valueText As String, ByVal defaultValue As String) As Boolean
+        Public Shared Function SaveSetting(ByVal lookupid As Int32, ByVal keyName As String, ByVal valueText As String, ByVal defaultValue As String) As Boolean
             Dim nc As New NotificationCollection
             Try
-                Return ProductGroupDB.SaveProductSetting(productID, System.Web.HttpUtility.HtmlEncode(keyName), System.Web.HttpUtility.HtmlEncode(valueText), System.Web.HttpUtility.HtmlEncode(defaultValue), UserManager.GetCurrentValidUserLDAPName)
+                Return ProductGroupDB.SaveProductSetting(lookupid, System.Web.HttpUtility.HtmlEncode(keyName), System.Web.HttpUtility.HtmlEncode(valueText), System.Web.HttpUtility.HtmlEncode(defaultValue), UserManager.GetCurrentValidUserLDAPName)
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("productID: {0} keyName: {1} valueText: {2} defaultValue: {3}", productID, keyName, valueText, defaultValue)))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("lookupid: {0} keyName: {1} valueText: {2} defaultValue: {3}", lookupid, keyName, valueText, defaultValue)))
             End Try
             Return False
         End Function
 
-        Public Shared Function DeleteSetting(ByVal productID As Int32, ByVal keyName As String) As Boolean
+        Public Shared Function DeleteSetting(ByVal lookupid As Int32, ByVal keyName As String) As Boolean
             Dim nc As New NotificationCollection
             Try
-                Return ProductGroupDB.DeleteProductSetting(productID, keyName, UserManager.GetCurrentValidUserLDAPName)
+                Return ProductGroupDB.DeleteProductSetting(lookupid, keyName, UserManager.GetCurrentValidUserLDAPName)
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex, String.Format("productID: {0} keyName: {1}", productID, keyName)))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e2", NotificationType.Errors, ex, String.Format("lookupid: {0} keyName: {1}", lookupid, keyName)))
             End Try
             Return False
         End Function
 
-        Public Shared Function GetProductSetting(ByVal productID As Int32, ByVal keyName As String) As String
+        Public Shared Function GetProductSetting(ByVal lookupid As Int32, ByVal keyName As String) As String
             Dim nc As New NotificationCollection
             Try
-                Return System.Web.HttpUtility.HtmlDecode(ProductGroupDB.GetProductSetting(productID, keyName))
+                Return System.Web.HttpUtility.HtmlDecode(ProductGroupDB.GetProductSetting(lookupid, keyName))
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("productID: {0} keyName: {1}", productID, keyName)))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("lookupid: {0} keyName: {1}", lookupid, keyName)))
             End Try
 
             Return String.Empty
         End Function
 
-        Public Shared Function GetProductSettingsDictionary(ByVal productID As Int32) As SerializableDictionary(Of String, String)
+        Public Shared Function GetProductSettings(ByVal lookupid As Int32) As List(Of ProductSetting)
             Dim nc As New NotificationCollection
             Try
-                Dim encoded As List(Of ProductSetting) = ProductGroupDB.GetProductSettings(productID)
-                Dim decodedDictionary As New SerializableDictionary(Of String, String)
-
-                For Each p As ProductSetting In encoded
-                    decodedDictionary.Add(System.Web.HttpUtility.HtmlDecode(p.KeyName), System.Web.HttpUtility.HtmlDecode(p.ValueText))
-                Next
-
-                Return decodedDictionary
-            Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("productID: {0}", productID)))
-            End Try
-
-            Return New SerializableDictionary(Of String, String)
-        End Function
-
-        Public Shared Function GetProductSettings(ByVal productID As Int32) As List(Of ProductSetting)
-            Dim nc As New NotificationCollection
-            Try
-                Dim settingsList As List(Of ProductSetting) = ProductGroupDB.GetProductSettings(productID)
+                Dim settingsList As List(Of ProductSetting) = ProductGroupDB.GetProductSettings(lookupid)
 
                 For Each p As ProductSetting In settingsList
                     p.DefaultValue = System.Web.HttpUtility.HtmlDecode(p.DefaultValue)
@@ -188,14 +133,38 @@ Namespace REMI.Bll
                 Next
                 Return settingsList
             Catch ex As Exception
-                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("productID: {0}", productID)))
+                nc.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("lookupid: {0}", lookupid)))
             End Try
             Return New List(Of ProductSetting)
         End Function
 
-        Public Shared Function HasProductConfigurationXML(ByVal productID As Int32, ByVal TestID As Int32, ByVal name As String) As Boolean
+        Public Shared Function ChangeAccess(ByVal lookupID As Int32, ByVal productID As Int32, ByVal hasAccess As Boolean) As Boolean
             Try
-                Dim record = (From xml In New REMI.Dal.Entities().Instance().ProductConfigurationUploads Where xml.Test.ID = TestID And xml.Product.ID = productID And ((xml.PCName = name And name <> String.Empty) Or name = String.Empty) Select xml).FirstOrDefault()
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim t = (From p In instance.ProductLookups Where p.Lookup.LookupID = lookupID And p.Product.LookupID = productID Select p).FirstOrDefault()
+
+                If (t IsNot Nothing) Then 'exists so remove
+                    instance.DeleteObject(t)
+                Else
+                    Dim pl As New REMI.Entities.ProductLookup()
+                    pl.Lookup = (From l In instance.Lookups Where l.LookupID = lookupID Select l).FirstOrDefault()
+                    pl.Product = (From l In instance.Lookups Where l.LookupID = productID Select l).FirstOrDefault()
+                    instance.AddToProductLookups(pl)
+                End If
+
+                instance.SaveChanges()
+
+                Return True
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("lookupID: {0} ProductID: {1} HasAccess: {2}", lookupID, productID, hasAccess))
+                Return False
+            End Try
+        End Function
+
+#Region "Config"
+        Public Shared Function HasProductConfigurationXML(ByVal lookupid As Int32, ByVal TestID As Int32, ByVal name As String) As Boolean
+            Try
+                Dim record = (From xml In New REMI.Dal.Entities().Instance().ProductConfigurationUploads Where xml.Test.ID = TestID And xml.LookupID = lookupid And ((xml.PCName = name And name <> String.Empty) Or name = String.Empty) Select xml).FirstOrDefault()
                 If (record Is Nothing) Then
                     Return False
                 Else
@@ -232,12 +201,12 @@ Namespace REMI.Bll
             Return New XDocument()
         End Function
 
-        Public Shared Function GetAllProductConfigurationXMLs(ByVal productID As Int32, ByVal testID As Int32, ByVal loadVersions As Boolean) As ProductConfigCollection
+        Public Shared Function GetAllProductConfigurationXMLs(ByVal lookupid As Int32, ByVal testID As Int32, ByVal loadVersions As Boolean) As ProductConfigCollection
             Dim xmls As New ProductConfigCollection()
 
             Try
                 Dim instance = New REMI.Dal.Entities().Instance()
-                Dim record = (From xml In instance.ProductConfigurationUploads.Include("Test").Include("Product").Include("Product.Lookup") Where xml.Test.ID = testID And xml.Product.ID = productID Select xml)
+                Dim record = (From xml In instance.ProductConfigurationUploads.Include("Test") Where xml.Test.ID = testID And xml.LookupID = lookupid Select xml)
 
                 For Each rec In record
                     Dim xmlFrag As XDocument = ProductGroupDB.GetProductConfigurationXML(rec.ID)
@@ -267,7 +236,7 @@ Namespace REMI.Bll
                         Next
                     End If
 
-                    xmls.Add(New ProductConfiguration(rec.ID, True, rec.PCName, xmlFrag.Root.ToString(), rec.Test.TestName, rec.Product.Lookup.Values, testID, productID, versions, versions.Count + 1, currentCodeVersions))
+                    xmls.Add(New ProductConfiguration(rec.ID, True, rec.PCName, xmlFrag.Root.ToString(), rec.Test.TestName, rec.Lookup.Values, testID, lookupid, versions, versions.Count + 1, currentCodeVersions))
                 Next
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
@@ -276,9 +245,9 @@ Namespace REMI.Bll
             Return xmls
         End Function
 
-        Public Shared Function GetProductConfigurationXMLCombined(ByVal productID As Int32, ByVal testID As Int32) As XDocument
+        Public Shared Function GetProductConfigurationXMLCombined(ByVal lookupid As Int32, ByVal testID As Int32) As XDocument
             Try
-                Dim xmls As ProductConfigCollection = ProductGroupManager.GetAllProductConfigurationXMLs(productID, testID, False)
+                Dim xmls As ProductConfigCollection = ProductGroupManager.GetAllProductConfigurationXMLs(lookupid, testID, False)
                 Dim xmlCombined As XDocument
                 xmlCombined = XDocument.Parse("<XML/>")
 
@@ -336,18 +305,18 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function GetSimilarTestConfigurations(ByVal productID As Int32, ByVal TestID As Int32) As DataTable
+        Public Shared Function GetSimilarTestConfigurations(ByVal lookupid As Int32, ByVal TestID As Int32) As DataTable
             Try
-                Return ProductGroupDB.GetSimilarTestConfigurations(productID, TestID)
+                Return ProductGroupDB.GetSimilarTestConfigurations(lookupid, TestID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
             Return New DataTable()
         End Function
 
-        Public Shared Function CopyTestConfiguration(ByVal productID As Int32, ByVal TestID As Int32, ByVal copyFromProductID As Int32, ByVal lastUser As String) As Boolean
+        Public Shared Function CopyTestConfiguration(ByVal lookupid As Int32, ByVal TestID As Int32, ByVal copyFromProductID As Int32, ByVal lastUser As String) As Boolean
             Try
-                Return ProductGroupDB.CopyTestConfiguration(productID, TestID, copyFromProductID, lastUser)
+                Return ProductGroupDB.CopyTestConfiguration(lookupid, TestID, copyFromProductID, lastUser)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
@@ -381,32 +350,9 @@ Namespace REMI.Bll
             Return False
         End Function
 
-        Public Shared Function ChangeAccess(ByVal lookupID As Int32, ByVal productID As Int32, ByVal hasAccess As Boolean) As Boolean
+        Public Shared Function ProductConfigurationUpload(ByVal lookupid As Int32, ByVal TestID As Int32, ByVal xml As XDocument, ByVal LastUser As String, ByVal pcName As String) As Boolean
             Try
-                Dim instance = New REMI.Dal.Entities().Instance()
-                Dim t = (From p In instance.ProductLookups Where p.Lookup.LookupID = lookupID And p.Product.ID = productID Select p).FirstOrDefault()
-
-                If (t IsNot Nothing) Then 'exists so remove
-                    instance.DeleteObject(t)
-                Else
-                    Dim pl As New REMI.Entities.ProductLookup()
-                    pl.Lookup = (From l In instance.Lookups Where l.LookupID = lookupID Select l).FirstOrDefault()
-                    pl.Product = (From p In instance.Products Where p.ID = productID Select p).FirstOrDefault()
-                    instance.AddToProductLookups(pl)
-                End If
-
-                instance.SaveChanges()
-
-                Return True
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
-                Return False
-            End Try
-        End Function
-
-        Public Shared Function ProductConfigurationUpload(ByVal productID As Int32, ByVal TestID As Int32, ByVal xml As XDocument, ByVal LastUser As String, ByVal pcName As String) As Boolean
-            Try
-                Return ProductGroupDB.ProductConfigurationUpload(productID, TestID, xml, LastUser, pcName)
+                Return ProductGroupDB.ProductConfigurationUpload(lookupid, TestID, xml, LastUser, pcName)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
@@ -429,15 +375,6 @@ Namespace REMI.Bll
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
             End Try
             Return False
-        End Function
-
-        Public Shared Function GetProductContacts(ByVal productID As Int32) As DataTable
-            Try
-                Return ProductGroupDB.GetProductContacts(productID)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return New DataTable()
         End Function
 #End Region
     End Class

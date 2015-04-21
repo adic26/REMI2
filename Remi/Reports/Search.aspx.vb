@@ -17,12 +17,10 @@ Partial Class Search
 
             If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
                 rblSearchBy.Items.FindByValue("4").Enabled = True 'Users
-                'rblSearchBy.Items(3).Enabled = True 'Users
             End If
 
             If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(0)) Then
                 rblSearchBy.Items.FindByValue("3").Enabled = True 'Exceptions
-                'rblSearchBy.Items(2).Enabled = True 'Exceptions
             End If
 
             If (Not (IsPostBack)) Then
@@ -239,7 +237,6 @@ Partial Class Search
                 ElseIf (pnlSearchExceptions.Visible) Then
                     Dim es As New ExceptionSearch()
                     Dim accessory As Int32
-                    Dim productID As Int32
                     Dim productTypeID As Int32
                     Dim testID As Int32
                     Dim testStageID As Int32
@@ -251,7 +248,6 @@ Partial Class Search
                     If (Page.IsValid) Then
                         jobName = ddlJobs2.SelectedValue
                         Int32.TryParse(ddlAccesssoryGroup2.SelectedValue, accessory)
-                        Int32.TryParse(ddlProductFilter2.SelectedValue, productID)
                         Int32.TryParse(ddlProductType2.SelectedValue, productTypeID)
                         Int32.TryParse(ddlTests2.SelectedValue, testID)
                         Int32.TryParse(ddlTestStages2.SelectedValue, testStageID)
@@ -270,7 +266,6 @@ Partial Class Search
                         End If
 
                         es.AccessoryGroupID = accessory
-                        es.ProductID = productID
                         es.ProductTypeID = productTypeID
                         es.TestID = testID
                         es.TestStageID = testStageID
@@ -473,7 +468,6 @@ Partial Class Search
         ElseIf (pnlSearchExceptions.Visible) Then
             Dim es As New ExceptionSearch()
             Dim accessory As Int32
-            Dim productID As Int32
             Dim productTypeID As Int32
             Dim testID As Int32
             Dim testStageID As Int32
@@ -484,7 +478,6 @@ Partial Class Search
 
             jobName = ddlJobs2.SelectedValue
             Int32.TryParse(ddlAccesssoryGroup2.SelectedValue, accessory)
-            Int32.TryParse(ddlProductFilter2.SelectedValue, productID)
             Int32.TryParse(ddlProductType2.SelectedValue, productTypeID)
             Int32.TryParse(ddlTests2.SelectedValue, testID)
             Int32.TryParse(ddlTestStages2.SelectedValue, testStageID)
@@ -503,7 +496,6 @@ Partial Class Search
             End If
 
             es.AccessoryGroupID = accessory
-            es.ProductID = productID
             es.ProductTypeID = productTypeID
             es.TestID = testID
             es.TestStageID = testStageID
@@ -718,10 +710,10 @@ Partial Class Search
     End Sub
 
     Protected Sub chkShowArchived_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkShowArchived.CheckedChanged
-        Dim prodList As DataTable = ProductGroupManager.GetProductList(UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, chkShowArchived.Checked)
+        Dim prodList As DataTable = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
         Dim newRow As DataRow = prodList.NewRow
-        newRow("ID") = 0
-        newRow("ProductGroupName") = "All Products"
+        newRow("LookupID") = 0
+        newRow("LookupType") = "All Products"
         prodList.Rows.InsertAt(newRow, 0)
 
         ddlProductFilter.Items.Clear()
@@ -755,10 +747,10 @@ Partial Class Search
         Dim drAccessoryType() As DataRow = dtAccessoryType.Select("LookupType = ''")
         drAccessoryType.ElementAt(0).Item("LookupType") = "ALL"
 
-        Dim prodList As DataTable = ProductGroupManager.GetProductList(UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False)
+        Dim prodList As DataTable = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
         Dim newRow As DataRow = prodList.NewRow
-        newRow("ID") = 0
-        newRow("ProductGroupName") = "All Products"
+        newRow("LookupID") = 0
+        newRow("LookupType") = "All Products"
         prodList.Rows.InsertAt(newRow, 0)
 
         Select Case val
@@ -873,10 +865,6 @@ Partial Class Search
                 ddlAccesssoryGroup2.Items.Clear()
                 ddlAccesssoryGroup2.DataSource = dtAccessoryType
                 ddlAccesssoryGroup2.DataBind()
-
-                ddlProductFilter2.Items.Clear()
-                ddlProductFilter2.DataSource = prodList
-                ddlProductFilter2.DataBind()
 
                 ddlRequestReasonException.Items.Clear()
                 ddlRequestReasonException.Items.Add("ALL")

@@ -164,7 +164,7 @@ Partial Public Class ScanForInfo_ProductGroup
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents hdnProductID As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents hdnLookupID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''chkByPass control.

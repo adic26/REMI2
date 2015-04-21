@@ -15,7 +15,6 @@
 	@TestStageName nvarchar(400) = null,
 	@TestStageID INT = NULL
 AS
-	declare @pid int
 	declare @testunitid int
 	declare @TestStageType int
 		
@@ -26,10 +25,6 @@ AS
 		PRINT 'TestUnitID: ' + CONVERT(NVARCHAR, ISNULL(@testUnitID,''))
 	end
 		
-	--get the product group name for the test unit's batch
-	set @pid= (select p.ID from Batches as b, TestUnits as tu, products p where b.id = tu.BatchID and tu.ID= @testunitid and p.id=b.productID)
-	PRINT 'ProductID: ' + CONVERT(NVARCHAR, ISNULL(@pid,''))
-
 	if (@TestStageID is null and @TestStageName is not null)
 	begin
 		set @TestStageID = (select ts.ID from Teststages as ts,jobs as j, Batches as b, TestUnits as tu
@@ -49,9 +44,9 @@ AS
 	FROM vw_ExceptionsPivoted as pvt
 		INNER JOIN Tests t WITH(NOLOCK) ON pvt.Test = t.ID
 	where (
-			(pvt.TestUnitID = @TestUnitID and pvt.ProductID is null) 
+			(pvt.TestUnitID = @TestUnitID) 
 			or 
-			(pvt.TestUnitID is null and pvt.ProductID = @pid)
+			(pvt.TestUnitID is null)
 		  ) and( pvt.TestStageID = @TestStageID or @TestStageID is null)
 
 	SELECT TestName AS Name, (CASE WHEN (SELECT exTestName FROM @testUnitExemptions WHERE exTestName = t.TestName) IS NOT NULL THEN 'True' ELSE 'False' END ) AS TestUnitException

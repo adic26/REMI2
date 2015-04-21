@@ -57,7 +57,7 @@ Public Class RemiAPI
                 End If
 
                 If (Not String.IsNullOrEmpty(product)) Then
-                    Int32.TryParse(ProductGroupManager.GetProductIDByName(product), productID)
+                    Int32.TryParse(LookupsManager.GetLookupID("Products", product, 0), productID)
                     bs.ProductID = productID
                 End If
 
@@ -591,7 +591,7 @@ Public Class RemiAPI
 #End Region
 
 #Region "Lookups"
-    <WebMethod(Description:="Returns an ID of Lookup based on type.")> _
+    <WebMethod(EnableSession:=True, Description:="Returns an ID of Lookup based on type.")> _
     Public Function GetLookupIDByTypeString(ByVal type As String, ByVal lookup As String, ByVal parentID As Int32) As Int32
         Try
             Return LookupsManager.GetLookupID(type, lookup, parentID)
@@ -601,7 +601,7 @@ Public Class RemiAPI
         Return -1
     End Function
 
-    <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
+    <WebMethod(EnableSession:=True, Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProduct(ByVal type As String, ByVal productID As Int32) As DataTable
         Try
             Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0, False, 0, False)
@@ -611,7 +611,7 @@ Public Class RemiAPI
         Return New DataTable("Lookups")
     End Function
 
-    <WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
+    <WebMethod(EnableSession:=True, Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsTypeStringByProductParent(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32) As DataTable
         Try
             Return LookupsManager.GetLookups(type, productID, parentID, String.Empty, String.Empty, 0, False, 1, False)
@@ -621,7 +621,7 @@ Public Class RemiAPI
         Return New DataTable("Lookups")
     End Function
 
-    <WebMethod(Description:="Returns a list of Lookups based on type.")> _
+    <WebMethod(EnableSession:=True, Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookupsAdvanced(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Int32, ByVal removeFirstAllRecord As Int32) As DataTable
         Try
             Return LookupsManager.GetLookups(type, productID, parentID, parentLookupType, parentLookupValue, requestTypeID, False, removeFirstAllRecord, False)
@@ -631,7 +631,7 @@ Public Class RemiAPI
         Return New DataTable("Lookups")
     End Function
 
-    <WebMethod(Description:="Returns a list of Lookups based on type.")> _
+    <WebMethod(EnableSession:=True, Description:="Returns a list of Lookups based on type.")> _
     Public Function GetLookupsByTypeString(ByVal type As String) As DataTable
         Try
             Return LookupsManager.GetLookups(type, 0, 0, String.Empty, String.Empty, 0, False, 0, False)
@@ -859,23 +859,13 @@ Public Class RemiAPI
 #End Region
 
 #Region "Product"
-    '<WebMethod(EnableSession:=True, Description:="Update Product.")> _
-    'Public Function UpdateProduct(ByVal productGroupName As String, ByVal isActive As Int32, ByVal productID As Int32) As Boolean
-    '    Try
-    '        Return ProductGroupManager.UpdateProduct(productGroupName, isActive, productID, String.Empty, String.Empty)
-    '    Catch ex As Exception
-    '        ProductGroupManager.LogIssue("REMI API UpdateProduct", "e1", NotificationType.Errors, ex, String.Format("ProductID: {0} IsActive: {1} Name: {2}", productID, isActive, productGroupName))
-    '    End Try
-    '    Return False
-    'End Function
-
     <Obsolete("Don't use this routine any more. Use GetLookups instead."), _
     WebMethod(Description:="Returns a full list of the Product Groups currently being worked on.")> _
     Public Function GetProductGroups() As String()
         Try
-            Dim dt As DataTable = ProductGroupManager.GetProductList(True, -1, False)
+            Dim dt As DataTable = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
             Dim productList
-            productList = (From row In dt Select colB = row(1).ToString).ToArray
+            productList = (From row In dt Select row.Field(Of String)("LookuPType")).ToArray
             Return productList
         Catch ex As Exception
             ProductGroupManager.LogIssue("REMI API GetProductGroups", "e3", NotificationType.Errors, ex)
@@ -887,8 +877,15 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a datatable of the Product Groups currently being worked on.")> _
     Public Function GetProductGroupsDataTable() As DataTable
         Try
-            Dim productList As DataTable = ProductGroupManager.GetProductList(True, -1, False)
-            Return productList
+            Dim dtProductList As DataTable = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, False)
+            dtProductList.Columns.Add("ProductGroupName")
+            dtProductList.Columns.Add("ProductID")
+            Array.ForEach(dtProductList.AsEnumerable().ToArray(), Sub(row) row("ProductGroupName") = row("LookupType"))
+            Array.ForEach(dtProductList.AsEnumerable().ToArray(), Sub(row)
+                                                                      row("ProductID") = row.Field(Of Int32)("LookupID")
+                                                                  End Sub)
+
+            Return dtProductList
         Catch ex As Exception
             ProductGroupManager.LogIssue("REMI API GetProductGroupsDataTable", "e3", NotificationType.Errors, ex)
         End Try
@@ -896,44 +893,23 @@ Public Class RemiAPI
         Return New DataTable("Products")
     End Function
 
-    <WebMethod(Description:="Returns the productID for a given product group name.")> _
+    <Obsolete("Don't use this routine any more."), _
+    WebMethod(Description:="Returns the productID for a given product group name.")> _
     Public Function GetProductIDByName(ByVal productGroupName As String) As Int32
         Try
-            Return ProductGroupManager.GetProductIDByName(productGroupName)
+            Return (From l In New Remi.Dal.Entities().Instance().Lookups Where l.Values = productGroupName Select l.LookupID).FirstOrDefault()
         Catch ex As Exception
             ProductGroupManager.LogIssue("REMI API GetProductIDByName", "e3", NotificationType.Errors, ex, String.Format("ProductGroupName: {0}", productGroupName))
         End Try
         Return 0
     End Function
 
-    'WebMethod(Description:="Returns a full list of the settings for a product.")> _
-    'Public Function GetProductSettingsByProductID(ByVal productID As Int32) As SerializableDictionary(Of String, String)
-    '    Try
-    '        Return ProductGroupManager.GetProductSettingsDictionary(productID)
-    '    Catch ex As Exception
-    '        ProductGroupManager.LogIssue("REMI API GetProductSettingsByProductID", "e3", NotificationType.Errors, ex, String.Format("ProductID: {0}", productID))
-    '    End Try
-    '    Return Nothing
-    'End Function
-
-    '<Obsolete("Don't use this routine any more. Use GetProductSettingsByProductID instead."), _
-    'WebMethod(Description:="Returns a full list of the settings for a product.")> _
-    'Public Function GetProductSettings(ByVal productGroupName As String) As SerializableDictionary(Of String, String)
-    '    Try
-    '        Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
-    '        Return ProductGroupManager.GetProductSettingsDictionary(productID)
-    '    Catch ex As Exception
-    '        ProductGroupManager.LogIssue("REMI API GetProductSettings", "e3", NotificationType.Errors, ex, String.Format("ProductGroupName: {0}", productGroupName))
-    '    End Try
-    '    Return Nothing
-    'End Function
-
     <Obsolete("Don't use this routine any more. Everything is BBX now"), _
     WebMethod(Description:="Returns a specific setting for a product.")> _
     Public Function GetProductSetting(ByVal productGroupName As String, ByVal keyName As String) As String
         Try
-            Dim productID As Int32 = ProductGroupManager.GetProductIDByName(productGroupName)
-            Return ProductGroupManager.GetProductSetting(productID, keyName)
+            Dim lookupid As Int32 = (From l In New Remi.Dal.Entities().Instance().Lookups Where l.Values = productGroupName Select id = l.LookupID).FirstOrDefault()
+            Return ProductGroupManager.GetProductSetting(lookupid, keyName)
         Catch ex As Exception
             ProductGroupManager.LogIssue("REMI API GetProductSetting", "e3", NotificationType.Errors, ex, String.Format("ProductGroupName: {0} Key: {1}", productGroupName, keyName))
         End Try

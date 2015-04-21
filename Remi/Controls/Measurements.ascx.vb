@@ -71,7 +71,7 @@ Public Class Measurements
             grdResultMeasurements.EmptyDataText = EmptyDataTextMeasurement
 
             Dim instance = New REMI.Dal.Entities().Instance()
-            _isProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = (From b In instance.Batches Where b.ID = BatchID Select b.Product.Lookup.Values).FirstOrDefault() Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
+            _isProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = (From b In instance.Batches Where b.ID = BatchID Select b.Product.Values).FirstOrDefault() Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
 
             If (dtMeasure.Rows.Count > 0) Then
                 grdResultMeasurements.DataSource = dtMeasure
