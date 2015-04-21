@@ -54,6 +54,7 @@ GO
 
 
 ALTER TABLE LookupType ADD IsSecureType BIT DEFAULT(0)
+GO
 UPDATE LookupType SET IsSecureType=1 WHERE Name='Products'
 GO
 ALTER TABLE ProductSettings ADD LookupID INT
@@ -64,6 +65,7 @@ FROM ProductSettings ps
 INNER JOIN Products p ON ps.ProductID=p.ID
 GO
 ALTER TABLE ProductSettings ALTER COLUMN LookupID INT NOT NULL
+GO
 ALTER TABLE [dbo].[ProductSettings]  WITH CHECK ADD  CONSTRAINT [FK_ProductSettings_Lookups] FOREIGN KEY([LookupID])
 REFERENCES [dbo].[Lookups] ([LookupID])
 GO
@@ -75,6 +77,7 @@ GO
 ALTER TABLE ProductSettings DROP COLUMN ProductID
 GO
 ALTER TABLE ProductSettingsAudit ADD LookupID INT 
+GO
 UPDATE ps
 SET ps.LookupID=p.LookupID
 FROM ProductSettingsAudit ps
