@@ -8,7 +8,7 @@ BEGIN
 		INNER JOIN Tests t WITH(NOLOCK) ON r.TestID=t.ID
 		INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=r.TestUnitID
 	WHERE tu.BatchID=@BatchID
-	ORDER BY tu.BatchUnitNumber, ts.TestStageName, t.TestName
+	ORDER BY tu.BatchUnitNumber, ts.ProcessOrder, t.TestName
 END
 GO
 GRANT EXECUTE ON [Relab].[remispResultsSummary] TO Remi
