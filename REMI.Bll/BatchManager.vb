@@ -654,6 +654,7 @@ Namespace REMI.Bll
 
         Public Shared Function GetUnitInStages(ByVal requestNumber As String) As DataTable
             Try
+                Dim instance = New REMI.Dal.Entities().Instance()
                 Dim ds As DataSet = BatchDB.GetStagesNeedingCompletionByUnit(requestNumber, 0)
                 Dim unitNum As Int32 = 1
                 Dim dt As New DataTable("UnitsInStage")
@@ -666,7 +667,7 @@ Namespace REMI.Bll
 
                     If (tbl.Rows.Count = 0) Then
                         row("Unit") = unitNum
-                        row("Stage") = String.Empty
+                        row("Stage") = (From s In instance.Results Where s.TestUnit.Batch.QRANumber = requestNumber And s.TestUnit.BatchUnitNumber = unitNum Order By s.TestStage.ProcessOrder Descending Select s.TestStage.TestStageName).FirstOrDefault()
                         row("Status") = "Completed"
                     Else
                         row("Unit") = unitNum

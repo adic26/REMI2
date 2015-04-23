@@ -231,7 +231,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Observation" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
-                                <asp:Label runat="server" Visible="true" ID="lblObservation" Text='<%# Eval("Observation")%>' />
+                                <asp:Label runat="server" Visible="true" ID="lblObservation" CssClass="wordwrap" Text='<%# Eval("Observation")%>' Width="400px" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Orientation">
@@ -241,7 +241,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Notes" ItemStyle-HorizontalAlign="Left">
                             <ItemTemplate>
-                                <asp:Label runat="server" Visible="true" ID="lblComment" CssClass="wordwrap" Text='<%# Eval("Comment")%>' Width="300px" />
+                                <asp:Label runat="server" Visible="true" ID="lblComment" CssClass="wordwrap" Text='<%# Eval("Comment")%>' Width="500px" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Attachment">

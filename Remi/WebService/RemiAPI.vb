@@ -929,6 +929,17 @@ Public Class RemiAPI
 #End Region
 
 #Region "Batch"
+    <WebMethod(EnableSession:=True, Description:="Returns The units and what stage they went up to for requestNumber.")> _
+    Public Function GetUnitInStages(ByVal requestNumber As String) As DataTable
+        Try
+            Return BatchManager.GetUnitInStages(requestNumber)
+        Catch ex As Exception
+            BatchManager.LogIssue("REMI API GetUnitInStages", "e3", NotificationType.Errors, ex, String.Format("requestNumber: {0}", requestNumber))
+        End Try
+
+        Return New DataTable("UnitStages")
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Returns The list of JIRA's for requestNumber.")> _
     Public Function GetBatchJIRA(ByVal requestNumber As String) As DataTable
         Try
