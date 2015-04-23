@@ -79,9 +79,16 @@ BEGIN
 		SELECT @TestStageID=ID FROM TestStages ts WHERE ts.JobID=@JobID AND ISNULL(IsArchived, 0)=0 AND TestStageName='Sample Evaluation'
 		SELECT @TestID=ID FROM Tests ts WHERE ISNULL(IsArchived, 0)=0 AND TestName='Sample Evaluation'
 		
-		SELECT @IncomingCount = COUNT(DISTINCT TestUnitID) 
-		FROM TestRecords tr 
-		WHERE tr.TestUnitID IN (SELECT ID FROM TestUnits tu WHERE tu.BatchID=@BatchID) AND TestID=@TestID AND TestStageID=@TestStageID
+		IF (@TestStageID > 0 AND @TestID > 0)
+		BEGIN
+			SELECT @IncomingCount = COUNT(DISTINCT TestUnitID) 
+			FROM TestRecords tr 
+			WHERE tr.TestUnitID IN (SELECT ID FROM TestUnits tu WHERE tu.BatchID=@BatchID) AND TestID=@TestID AND TestStageID=@TestStageID
+		END
+		ELSE
+		BEGIN
+			SET @IncomingCount = @UnitCount
+		END
 		
 		IF (@UnitCount <> @IncomingCount AND LOWER(@ProductType)='handheld')
 		BEGIN
