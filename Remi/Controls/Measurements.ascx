@@ -59,7 +59,7 @@
         <Columns>
             <asp:TemplateField HeaderText="Image"  ControlStyle-CssClass="removeStyle" >
                 <ItemTemplate>                    
-                    <input type="image" src="../Design/Icons/png/24x24/png_file.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("ID") %>' pageID='<%# Me.ClientID %>' role="button" />
+                    <input type="image" src="../Design/Icons/png/24x24/download.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("ID") %>' pageID='<%# Me.ClientID %>' role="button" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Measurement" SortExpression="Measurement"   ItemStyle-Wrap="true">

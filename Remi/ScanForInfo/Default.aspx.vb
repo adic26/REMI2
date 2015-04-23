@@ -204,10 +204,10 @@ Partial Class ScanForInfo_Default
 
                         Select Case lblResult.Text.ToLower
                             Case "pass"
-                            Case "preliminary pass"
+                            Case "un-verified pass"
                                 lblResult.CssClass = "ESPass"
                             Case "fail"
-                            Case "preliminary fail"
+                            Case "un-verified fail"
                                 lblResult.CssClass = "ESFail"
                             Case "no result"
                                 lblResult.CssClass = "ESNoResult"

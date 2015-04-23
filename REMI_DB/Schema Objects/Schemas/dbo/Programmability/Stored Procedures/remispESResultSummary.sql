@@ -9,14 +9,14 @@ BEGIN
 	DECLARE @UnitCount INT
 	DECLARE @RowID INT
 	DECLARE @ID INT
-	CREATE TABLE #Results (TestID INT, TestName NVARCHAR(MAX), TestStageID INT, TestStageName NVARCHAR(MAX))
+	CREATE TABLE #Results (TestStageID INT, Stage NVARCHAR(MAX), TestID INT, Test NVARCHAR(MAX))
 
 	SELECT ROW_NUMBER() OVER (ORDER BY tu.ID) AS RowID, tu.BatchUnitNumber, tu.ID
 	INTO #units
 	FROM TestUnits tu WITH(NOLOCK)
 	WHERE BatchID=@BatchID
 
-	INSERT INTO #Results (TestID, TestName, TestStageID, TestStageName)
+	INSERT INTO #Results (TestID, Test, TestStageID, Stage)
 	SELECT DISTINCT r.TestID, t.TestName, r.TestStageID, ts.TestStageName
 	FROM Batches b 
 		INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.BatchID=b.ID

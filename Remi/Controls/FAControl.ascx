@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="FAControl.ascx.vb" Inherits="Remi.FAControl" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
-<asp:GridView ID="grdFAs" runat="server" EmptyDataText='<%# EmptyDataText %>' EnableViewState="true" AutoGenerateColumns="False" Width="700px">
+<asp:GridView ID="grdFAs" runat="server" EmptyDataText='<%# EmptyDataText %>' EnableViewState="true" AutoGenerateColumns="False" Width="700px" CssClass="ESGridView">
     <RowStyle CssClass="evenrow" />
     <Columns>
         <asp:TemplateField HeaderText="Unit">
@@ -21,7 +21,7 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Description">
             <ItemTemplate>
-                <asp:Label runat="server" ID="lblDescription" Style="word-break: break-all; word-wrap: break-word;" Text='<%# If(Eval("Failure Description") Is DBNull.Value, String.Empty, Eval("Failure Description").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))%>' Width="200px"></asp:Label>
+                <asp:Label runat="server" ID="lblDescription" CssClass="wordwrap" Text='<%# If(Eval("Failure Description") Is DBNull.Value, String.Empty, Eval("Failure Description").Replace(vbCr, "<br/>").Replace(vbCrLf, "<br/>").Replace(vbLf, "<br/>"))%>' Width="200px"></asp:Label>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="1st Level Fail">
@@ -60,4 +60,5 @@
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
+    <AlternatingRowStyle CssClass="oddrow" />
 </asp:GridView>

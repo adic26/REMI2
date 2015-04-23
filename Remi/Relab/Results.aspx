@@ -114,9 +114,9 @@
                 <AlternatingRowStyle CssClass="oddrow" />
                 <Columns>
                     <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True"  Visible="false" />
-                    <asp:BoundField DataField="TestStageName" HeaderText="Test Stage" SortExpression="TestStageName" />
-                    <asp:BoundField DataField="TestName" HeaderText="Test Name" SortExpression="TestName" />
-                    <asp:BoundField DataField="BatchUnitNumber" HeaderText="Unit" SortExpression="BatchUnitNumber" />
+                    <asp:BoundField DataField="Stage" HeaderText="Test Stage" SortExpression="Stage" />
+                    <asp:BoundField DataField="Test" HeaderText="Test Name" SortExpression="Test" />
+                    <asp:BoundField DataField="Unit" HeaderText="Unit" SortExpression="Unit" />
                     <asp:BoundField DataField="PassFail" HeaderText="Pass/Fail" SortExpression="PassFail" />   
                     <asp:TemplateField HeaderText="View Measurements" SortExpression="">
                         <ItemTemplate>
