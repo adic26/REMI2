@@ -652,6 +652,40 @@ Namespace REMI.Bll
             Return n
         End Function
 
+        Public Shared Function GetUnitInStages(ByVal requestNumber As String) As DataTable
+            Try
+                Dim ds As DataSet = BatchDB.GetStagesNeedingCompletionByUnit(requestNumber, 0)
+                Dim unitNum As Int32 = 1
+                Dim dt As New DataTable("UnitsInStage")
+                dt.Columns.Add("Unit", Type.GetType("System.Int32"))
+                dt.Columns.Add("Stage", Type.GetType("System.String"))
+                dt.Columns.Add("Status", Type.GetType("System.String"))
+
+                For Each tbl As DataTable In ds.Tables
+                    Dim row As DataRow = dt.NewRow
+
+                    If (tbl.Rows.Count = 0) Then
+                        row("Unit") = unitNum
+                        row("Stage") = String.Empty
+                        row("Status") = "Completed"
+                    Else
+                        row("Unit") = unitNum
+                        row("Stage") = tbl.Rows(0).Field(Of Int32)("TestStageName")
+                        row("Status") = "In Progress"
+                    End If
+
+                    dt.Rows.Add(row)
+                    unitNum = unitNum + 1
+                Next
+
+                Return dt
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("UnitsInStage")
+        End Function
+
         Public Shared Function GetStagesNeedingCompletionByUnit(ByVal requestNumber As String, ByVal unitNumber As Int32) As DataSet
             Try
                 Return BatchDB.GetStagesNeedingCompletionByUnit(requestNumber, unitNumber)

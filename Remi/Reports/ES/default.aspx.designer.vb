@@ -95,6 +95,15 @@ Partial Public Class ES_Default
     Protected WithEvents cpeApprovals As Global.AjaxControlToolkit.CollapsiblePanelExtender
 
     '''<summary>
+    '''cpeUnits control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cpeUnits As Global.AjaxControlToolkit.CollapsiblePanelExtender
+
+    '''<summary>
     '''lblRequestNumber control.
     '''</summary>
     '''<remarks>
@@ -273,6 +282,51 @@ Partial Public Class ES_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gvwRequestInfo As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''pnlUnitHeader control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlUnitHeader As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''lblUnits control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblUnits As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''imgUnit control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgUnit As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''pnlUnitInfo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlUnitInfo As Global.System.Web.UI.WebControls.Panel
+
+    '''<summary>
+    '''grdUnits control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents grdUnits As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''updResultBreakdown control.

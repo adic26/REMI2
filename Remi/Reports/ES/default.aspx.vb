@@ -45,6 +45,9 @@ Partial Class ES_Default
                     grdJIRAS.DataSource = BatchManager.GetBatchJIRA(b.ID, False)
                     grdJIRAS.DataBind()
 
+                    grdUnits.DataSource = BatchManager.GetUnitInStages(b.QRANumber)
+                    grdUnits.DataBind()
+
                     Dim bs As New REMI.BusinessEntities.BatchSearch
                     bs.ProductID = b.ProductID
                     bs.JobID = b.JobID

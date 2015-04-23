@@ -22,6 +22,7 @@
                     <asp:MenuItem Text="Approvals" NavigateUrl="#approve"></asp:MenuItem>
                     <asp:MenuItem Text="Result Summary" NavigateUrl="#resultSummary"></asp:MenuItem>
                     <asp:MenuItem Text="Result BreakDown" NavigateUrl="#resultBreakdown"></asp:MenuItem>
+                    <asp:MenuItem Text="Unit Info" NavigateUrl="#units"></asp:MenuItem>
                 </asp:MenuItem>
             </Items>
         </asp:Menu>
@@ -38,7 +39,8 @@
     <asp:CollapsiblePanelExtender runat="server" ID="cpeFA" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" ImageControlID="imgFA" TargetControlID="pnlFAInfo" TextLabelID="lblFA" CollapsedSize="0" Collapsed="true" ScrollContents="true" CollapseControlID="pnlFA" ExpandControlID="pnlFA"></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeRequestSummary" CollapseControlID="pnlRequestSummaryHeader" TargetControlID="pnlRequestSummary" TextLabelID="lblSummary" ExpandControlID="pnlRequestSummaryHeader" ImageControlID="imgRequestSummaryExpCol" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="false" CollapsedSize="1" ></asp:CollapsiblePanelExtender>
     <asp:CollapsiblePanelExtender runat="server" ID="cpeApprovals" CollapseControlID="pnlApprovalHeader" TargetControlID="pnlApproval" TextLabelID="lblApprove" ExpandControlID="pnlApprovalHeader" ImageControlID="imgApprovals" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>
-      
+    <asp:CollapsiblePanelExtender runat="server" ID="cpeUnits" CollapseControlID="pnlUnitHeader" TargetControlID="pnlUnitInfo" TextLabelID="lblUnits" ExpandControlID="pnlUnitHeader" ImageControlID="imgUnit" CollapsedImage="..\..\Design\Icons\png\24x24\green_arrow_down.png" ExpandedImage="..\..\Design\Icons\png\24x24\green_arrow_up.png" Collapsed="true" CollapsedSize="0" ></asp:CollapsiblePanelExtender>
+
     <a name="top"></a>
     <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label><br /><br />
     <asp:Label runat="server" ID="lblPrinted"></asp:Label>
@@ -145,6 +147,18 @@
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
+            <AlternatingRowStyle CssClass="oddrow" />
+        </asp:GridView>
+    </asp:Panel>
+    <br /><br />
+        
+    <a name="units"></a>
+    <asp:Panel runat="server" ID="pnlUnitHeader" CssClass="CollapseHeader" Height="75" HorizontalAlign="Left">
+        <asp:Label ID="lblUnits" runat="server" Text="Unit<br/><font color='rgb(0,124,186)'>Information</font>" /><asp:Image runat="server" ID="imgUnit" />
+    </asp:Panel>
+    <asp:Panel runat="server" ID="pnlUnitInfo" CssClass="CollapseBody">
+        <asp:GridView runat="server" ID="grdUnits" EnableViewState="true" AutoGenerateColumns="true" ShowHeader="true" CssClass="ESGridView">
+            <RowStyle CssClass="evenrow" />
             <AlternatingRowStyle CssClass="oddrow" />
         </asp:GridView>
     </asp:Panel>
