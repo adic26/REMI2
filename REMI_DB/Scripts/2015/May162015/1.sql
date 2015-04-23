@@ -355,4 +355,6 @@ alter table ProductConfigurationUpload drop column _ProductID
 GO
 EXEC sp_rename 'dbo.Products', '_Products'
 GO
+alter table batchesaudit alter column _ProductID INT NULL
+GO
 rollback tran
