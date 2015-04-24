@@ -15,7 +15,7 @@ SELECT d.type, f.f_id, u.ju_id, ol.drop_num, f.fm_id, f.failure_comment, image_e
     order by ol_id asc;
     
     select ju.ju_id, o.drop_num, a.f_id, a.at_id, a.at_type, 'http://hwqaweb/relab_alpha/docs/' || a.path, ju.unit_number,h.description, a.CONTENT,
-    f.image, f.failure_comment, f.drop_id, fm.description, d.ju_id, d.type
+    f.image, f.failure_comment, f.drop_id, fm.description as failuredesc, d.ju_id as dropunitid, d.type
     from job_units ju, drops d, orientation_list_data o, attachments a, job_header h, failure f, failure_mode fm
     where a.drop_id = d.drop_id
     and d.old_id = o.old_id

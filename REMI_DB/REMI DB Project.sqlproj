@@ -257,11 +257,12 @@
     <Folder Include="Scripts\2014\February062014" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Obsolete" />
     <Folder Include="Scripts\2015\April162015" />
-    <Folder Include="Scripts\2015\May162015" />
+    <Folder Include="Scripts\2015\May192015" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Constraints\Obsolete" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Indexes\Obsolete" />
+    <Folder Include="Scripts\2015\April242015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -1078,8 +1079,8 @@
       <SubType>NotInBuild</SubType>
     </None>
     <None Include="Scripts\2015\March172015\2.sql" />
-    <None Include="Scripts\2015\May162015\1.sql" />
-    <None Include="Scripts\2015\May162015\2.sql" />
+    <None Include="Scripts\2015\May192015\1.sql" />
+    <None Include="Scripts\2015\May192015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -2886,5 +2887,11 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Obsolete\Products.IX_Products_PG_IsActive.index.sql">
       <SubType>Code</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\April242015\migrationDTATTA2014.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\April242015\migrationDTATTA2015.sql" />
   </ItemGroup>
 </Project>
