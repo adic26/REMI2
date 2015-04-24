@@ -28,7 +28,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetLookups()
         {
-            Assert.That(LookupsManager.GetLookups(Contracts.LookupType.Priority, 0, 0, String.Empty, String.Empty, 0, false, 0,false).Rows.Count > 0);
+            Assert.That(LookupsManager.GetLookups("Priority", 0, 0, String.Empty, String.Empty, 0, false, 0,false).Rows.Count > 0);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace REMI.Bll.Tests
         [Test]
         public void GetLookupID()
         {
-            Assert.That(LookupsManager.GetLookupID(Contracts.LookupType.Priority, "low", 0) > 0);
+            Assert.That(LookupsManager.GetLookupID("Priority", "low", 0) > 0);
         }
 
         [Test]

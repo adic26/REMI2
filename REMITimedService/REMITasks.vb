@@ -430,7 +430,7 @@ Public Class REMITasks
             sb.AppendLine(DateTime.Now + " - Retrieving Active Jobs...")
 
             Dim requests As New List(Of String)
-            Dim dtDepartments As DataTable = DBControl.DAL.Remi.GetLookups(DBControl.remiAPI.LookupType.Department)
+            Dim dtDepartments As DataTable = DBControl.DAL.Remi.GetLookups("Department")
             Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
             Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
             requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
