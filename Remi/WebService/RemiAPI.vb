@@ -873,6 +873,18 @@ Public Class RemiAPI
 #End Region
 
 #Region "Product"
+    <WebMethod(EnableSession:=True, Description:="Assign Lookup To Product Lookup", Messagename:="AssignLookupToProduct")> _
+    Public Function AssignLookupToProduct(ByVal lookupID As Int32, ByVal lookupProductID As Int32, ByVal hasAccess As Boolean, ByVal userIdentification As String) As Boolean
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return ProductGroupManager.ChangeAccess(lookupID, lookupProductID, hasAccess)
+            End If
+        Catch ex As Exception
+            LookupsManager.LogIssue("REMI API AssignLookupToProduct", "e1", NotificationType.Errors, ex, String.Format("User: {0} lookupID: {1} lookupProductID: {2} hasAccess: {3}", userIdentification, lookupID, lookupProductID, hasAccess.ToString()))
+        End Try
+        Return False
+    End Function
+
     <Obsolete("Don't use this routine any more. Use GetLookups instead."), _
     WebMethod(Description:="Returns a full list of the Product Groups currently being worked on.")> _
     Public Function GetProductGroups() As String()
