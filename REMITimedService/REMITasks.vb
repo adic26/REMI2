@@ -51,7 +51,7 @@ Public Class REMITasks
         checkUpdateTimer = New System.Threading.Timer(tcbCheckUpdates, Nothing, 0, dueTime)
 
         dueTime = 3600000 - (now.Minute Mod 60) * 60000 - now.Second * 1000 - now.Millisecond
-        createDocTimer = New System.Threading.Timer(tcbCreateDoc, Nothing, dueTime, 14400000) 'Every 4 hours on the hour.
+        createDocTimer = New System.Threading.Timer(tcbCreateDoc, Nothing, dueTime, 7200000) 'Every 4 hours on the hour.
     End Sub
 
     Protected Overrides Sub OnStop()
@@ -341,6 +341,13 @@ Public Class REMITasks
                                             newImage = Nothing
 
                                             Dim row3 As Word.Row = innerTable.Rows.Add(missing)
+
+                                            If (dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName").ToString() = dtFiles.Rows(pictureCounter).Field(Of String)("TestName").ToString()) Then
+                                                row3.Cells(1).Range.Text = String.Format("{0} - {1}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"))
+                                            Else
+                                                row3.Cells(1).Range.Text = String.Format("{0} - {1} {2}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"))
+                                            End If
+
                                             row3.Cells(1).Range.Text = String.Format("{0} {1} {2}", dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"), dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"))
                                             row3.Range.Font.Bold = 0
                                             row3.Range.Font.Size = 8
@@ -350,7 +357,7 @@ Public Class REMITasks
 
                                             pictureCounter += 1
                                         End If
-                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
+                                            System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
                                     Next
                                 Next
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
