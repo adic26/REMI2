@@ -62,11 +62,13 @@ Public Class Relab_Measurements
         Else
             Dim ctrl As Control = Helpers.GetPostBackControl(Page)
 
-            If ctrl.ID = "ddlTestStage" Then
-                If (ddlTests.Items.FindByText(ddlTestStage.SelectedItem.Text) IsNot Nothing) Then
-                    ddlTests.SelectedValue = ddlTests.Items.FindByText(ddlTestStage.SelectedItem.Text).Value
-                Else
-                    ddlTests.ClearSelection()
+            If ctrl IsNot Nothing Then
+                If ctrl.ID = "ddlTestStage" Then
+                    If (ddlTests.Items.FindByText(ddlTestStage.SelectedItem.Text) IsNot Nothing) Then
+                        ddlTests.SelectedValue = ddlTests.Items.FindByText(ddlTestStage.SelectedItem.Text).Value
+                    Else
+                        ddlTests.ClearSelection()
+                    End If
                 End If
             End If
         End If

@@ -89,8 +89,6 @@ Public Class Measurements
                 chkOnlyFails.Enabled = False
             End If
 
-            imgExport.Visible = ShowExport
-
             SetVisible(dtMeasure)
 
             If (pnlInformation.Visible) Then
@@ -112,6 +110,7 @@ Public Class Measurements
                 chkOnlyFails.Visible = False
                 lblInfo.Visible = False
                 chkIncludeArchived.Visible = False
+                imgExport.Visible = False
 
                 If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
                     Dim index As Int32
@@ -150,6 +149,7 @@ Public Class Measurements
                 lblInfo.Visible = True
                 chkIncludeArchived.Visible = True
                 pnlLegend.Visible = True
+                imgExport.Visible = ShowExport
         End Select
     End Sub
 #End Region
