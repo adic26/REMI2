@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("a7df802b-72a6-4469-ab04-8e0faabeed0d")>
+<Assembly: EdmSchemaAttribute("63f3f4c5-5309-4445-8f61-18017eb89dfe")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -3961,9 +3961,8 @@ Namespace REMI.Entities
         ''' <param name="jobName">Initial value of the JobName property.</param>
         ''' <param name="requestPurpose">Initial value of the RequestPurpose property.</param>
         ''' <param name="concurrencyID">Initial value of the ConcurrencyID property.</param>
-        ''' <param name="c_ProductID">Initial value of the C_ProductID property.</param>
         ''' <param name="productID">Initial value of the ProductID property.</param>
-        Public Shared Function CreateBatch(id As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, requestPurpose As Global.System.Int32, concurrencyID As Global.System.Byte(), c_ProductID As Global.System.Int32, productID As Global.System.Int32) As Batch
+        Public Shared Function CreateBatch(id As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, requestPurpose As Global.System.Int32, concurrencyID As Global.System.Byte(), productID As Global.System.Int32) As Batch
             Dim batch as Batch = New Batch
             batch.ID = id
             batch.QRANumber = qRANumber
@@ -3972,7 +3971,6 @@ Namespace REMI.Entities
             batch.JobName = jobName
             batch.RequestPurpose = requestPurpose
             batch.ConcurrencyID = concurrencyID
-            batch.C_ProductID = c_ProductID
             batch.ProductID = productID
             Return batch
         End Function
@@ -4636,9 +4634,9 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
         <DataMemberAttribute()>
-        Public Property C_ProductID() As Global.System.Int32
+        Public Property C_ProductID() As Nullable(Of Global.System.Int32)
             Get
                 Return _C_ProductID
             End Get
@@ -4651,8 +4649,8 @@ Namespace REMI.Entities
             End Set
         End Property
     
-        Private _C_ProductID As Global.System.Int32
-        Private Partial Sub OnC_ProductIDChanging(value As Global.System.Int32)
+        Private _C_ProductID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnC_ProductIDChanging(value As Nullable(Of Global.System.Int32))
         End Sub
     
         Private Partial Sub OnC_ProductIDChanged()
@@ -5581,8 +5579,7 @@ Namespace REMI.Entities
         ''' <param name="insertTime">Initial value of the InsertTime property.</param>
         ''' <param name="action">Initial value of the Action property.</param>
         ''' <param name="requestPurpose">Initial value of the RequestPurpose property.</param>
-        ''' <param name="c_ProductID">Initial value of the C_ProductID property.</param>
-        Public Shared Function CreateBatchesAudit(id As Global.System.Int32, batchID As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, userName As Global.System.String, insertTime As Global.System.DateTime, action As Global.System.String, requestPurpose As Global.System.Int32, c_ProductID As Global.System.Int32) As BatchesAudit
+        Public Shared Function CreateBatchesAudit(id As Global.System.Int32, batchID As Global.System.Int32, qRANumber As Global.System.String, priority As Global.System.Int32, batchStatus As Global.System.Int32, jobName As Global.System.String, userName As Global.System.String, insertTime As Global.System.DateTime, action As Global.System.String, requestPurpose As Global.System.Int32) As BatchesAudit
             Dim batchesAudit as BatchesAudit = New BatchesAudit
             batchesAudit.ID = id
             batchesAudit.BatchID = batchID
@@ -5594,7 +5591,6 @@ Namespace REMI.Entities
             batchesAudit.InsertTime = insertTime
             batchesAudit.Action = action
             batchesAudit.RequestPurpose = requestPurpose
-            batchesAudit.C_ProductID = c_ProductID
             Return batchesAudit
         End Function
 
@@ -6182,9 +6178,9 @@ Namespace REMI.Entities
         ''' <summary>
         ''' No Metadata Documentation available.
         ''' </summary>
-        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
         <DataMemberAttribute()>
-        Public Property C_ProductID() As Global.System.Int32
+        Public Property C_ProductID() As Nullable(Of Global.System.Int32)
             Get
                 Return _C_ProductID
             End Get
@@ -6197,8 +6193,8 @@ Namespace REMI.Entities
             End Set
         End Property
     
-        Private _C_ProductID As Global.System.Int32
-        Private Partial Sub OnC_ProductIDChanging(value As Global.System.Int32)
+        Private _C_ProductID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnC_ProductIDChanging(value As Nullable(Of Global.System.Int32))
         End Sub
     
         Private Partial Sub OnC_ProductIDChanged()

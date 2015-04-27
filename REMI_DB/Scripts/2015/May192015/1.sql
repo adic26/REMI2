@@ -359,4 +359,6 @@ alter table batchesaudit alter column _ProductID INT NULL
 GO
 drop procedure remispGetProducts
 GO
+ALTER TABLE Batches ALTER COLUMN _ProductID INT NULL
+GO
 rollback tran

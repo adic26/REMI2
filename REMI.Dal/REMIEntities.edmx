@@ -815,7 +815,7 @@
           <Property Name="CPRNumber" Type="nvarchar" MaxLength="500" />
           <Property Name="HWRevision" Type="nvarchar" MaxLength="500" />
           <Property Name="PMNotes" Type="nvarchar(max)" />
-          <Property Name="_ProductID" Type="int" Nullable="false" />
+          <Property Name="_ProductID" Type="int" />
           <Property Name="ProductTypeID" Type="int" />
           <Property Name="AccessoryGroupID" Type="int" />
           <Property Name="TestCenterLocationID" Type="int" />
@@ -846,7 +846,7 @@
           <Property Name="RequestPurpose" Type="int" Nullable="false" />
           <Property Name="RFBands" Type="nvarchar" MaxLength="400" />
           <Property Name="TestStageCompletionStatus" Type="int" />
-          <Property Name="_ProductID" Type="int" Nullable="false" />
+          <Property Name="_ProductID" Type="int" />
           <Property Name="ProductTypeID" Type="int" />
           <Property Name="AccessoryGroupID" Type="int" />
           <Property Name="TestCenterLocationID" Type="int" />
@@ -4191,7 +4191,7 @@
           <Property Type="String" Name="MechanicalTools" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Order" />
           <Property Type="Int32" Name="DepartmentID" />
-          <Property Type="Int32" Name="C_ProductID" Nullable="false" />
+          <Property Type="Int32" Name="C_ProductID" />
         </EntityType>
         <EntityType Name="BatchSpecificTestDuration">
           <Key>
@@ -6067,7 +6067,7 @@
           <Property Type="String" Name="CPRNumber" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="HWRevision" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="PMNotes" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="C_ProductID" Nullable="false" />
+          <Property Type="Int32" Name="C_ProductID" />
           <Property Type="Int32" Name="ProductTypeID" />
           <Property Type="Int32" Name="AccessoryGroupID" />
           <Property Type="Int32" Name="TestCenterLocationID" />
