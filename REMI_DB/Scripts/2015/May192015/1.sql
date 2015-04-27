@@ -357,4 +357,6 @@ EXEC sp_rename 'dbo.Products', '_Products'
 GO
 alter table batchesaudit alter column _ProductID INT NULL
 GO
+drop procedure remispGetProducts
+GO
 rollback tran

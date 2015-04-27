@@ -1239,9 +1239,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\ProductConfigValuesAudit.table.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProducts.proc.sql">
-      <SubType>Code</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveLookup.proc.sql">
@@ -2893,5 +2890,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\2015\April242015\migrationDTATTA2015.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispGetProducts.proc.sql">
+      <SubType>Code</SubType>
+    </None>
   </ItemGroup>
 </Project>

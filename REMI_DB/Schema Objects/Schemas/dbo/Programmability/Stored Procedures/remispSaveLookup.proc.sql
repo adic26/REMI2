@@ -15,12 +15,7 @@ BEGIN
 	BEGIN
 		INSERT INTO Lookups (LookupID, LookupTypeID, [Values], IsActive, Description, ParentID) 
 		VALUES (@LookupID, @LookupTypeID, LTRIM(RTRIM(@Value)), @IsActive, @Description, @ParentID)
-	
-		IF (@LookupType = 'Products')
-		BEGIN
-			INSERT INTO Products (LookupID) Values (@LookupID)
-		END
-		
+			
 		SET @Success = 1
 	END
 	ELSE
@@ -28,11 +23,6 @@ BEGIN
 		UPDATE Lookups
 		SET IsActive=@IsActive, Description=@Description, ParentID=@ParentID
 		WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value))
-		
-		IF NOT EXISTS (SELECT 1 FROM Products p INNER JOIN Lookups l ON l.LookupID=p.LookupID WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value)))
-		BEGIN
-			INSERT INTO Products (LookupID) Values (@LookupID)
-		END
 		
 		SET @Success = 1
 	END
