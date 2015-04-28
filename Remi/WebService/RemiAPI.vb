@@ -1488,7 +1488,7 @@ Public Class RemiAPI
                                 ByVal userIdentification As String, ByVal locationIdenitifcation As String, ByVal trackingLocationName As String, ByVal jobName As String, ByVal productGroup As String) As ScanReturnData
         Try
             If UserManager.SetUserToSession(userIdentification) Then
-                Dim sd As ScanReturnData = ScanManager.Scan(Helpers.CleanInputText(qraNumber, 21), Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
+                Dim sd As ScanReturnData = ScanManager.Scan(Helpers.CleanInputText(qraNumber, 21), TestResultSource.WebService, Helpers.CleanInputText(testStageName, 400), Helpers.CleanInputText(testName, 400), locationIdentification:=locationIdenitifcation, ResultString:=overallTestResult, trackingLocationname:=trackingLocationName, jobName:=jobName, productGroup:=productGroup)
 
                 Return sd
             End If

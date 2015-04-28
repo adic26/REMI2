@@ -361,4 +361,6 @@ drop procedure remispGetProducts
 GO
 ALTER TABLE Batches ALTER COLUMN _ProductID INT NULL
 GO
+DROP PROCEDURE remispSaveFastScanData
+GO
 rollback tran

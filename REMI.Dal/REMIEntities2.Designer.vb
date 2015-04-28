@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("63f3f4c5-5309-4445-8f61-18017eb89dfe")>
+<Assembly: EdmSchemaAttribute("1c0f1eb5-4421-4073-b5db-35262c4722fd")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -226,20 +226,6 @@ Namespace REMI.Entities
         End Property
     
         Private _vw_GetTaskInfoCompleted As ObjectSet(Of vw_GetTaskInfoCompleted)
-    
-        ''' <summary>
-        ''' No Metadata Documentation available.
-        ''' </summary>
-        Public ReadOnly Property vw_TestRecordAudit() As ObjectSet(Of vw_TestRecordAudit)
-            Get
-                If (_vw_TestRecordAudit Is Nothing) Then
-                    _vw_TestRecordAudit = MyBase.CreateObjectSet(Of vw_TestRecordAudit)("vw_TestRecordAudit")
-                End If
-                Return _vw_TestRecordAudit
-            End Get
-        End Property
-    
-        Private _vw_TestRecordAudit As ObjectSet(Of vw_TestRecordAudit)
     
         ''' <summary>
         ''' No Metadata Documentation available.
@@ -1388,6 +1374,20 @@ Namespace REMI.Entities
         End Property
     
         Private _ProductConfigurationUploads As ObjectSet(Of ProductConfigurationUpload)
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        Public ReadOnly Property vw_TestRecordAudit() As ObjectSet(Of vw_TestRecordAudit)
+            Get
+                If (_vw_TestRecordAudit Is Nothing) Then
+                    _vw_TestRecordAudit = MyBase.CreateObjectSet(Of vw_TestRecordAudit)("vw_TestRecordAudit")
+                End If
+                Return _vw_TestRecordAudit
+            End Get
+        End Property
+    
+        Private _vw_TestRecordAudit As ObjectSet(Of vw_TestRecordAudit)
 
         #End Region
 
@@ -1412,13 +1412,6 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddTovw_GetTaskInfoCompleted(ByVal vw_GetTaskInfoCompleted As vw_GetTaskInfoCompleted)
             MyBase.AddObject("vw_GetTaskInfoCompleted", vw_GetTaskInfoCompleted)
-        End Sub
-    
-        ''' <summary>
-        ''' Deprecated Method for adding a new object to the vw_TestRecordAudit EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
-        ''' </summary>
-        Public Sub AddTovw_TestRecordAudit(ByVal vw_TestRecordAudit As vw_TestRecordAudit)
-            MyBase.AddObject("vw_TestRecordAudit", vw_TestRecordAudit)
         End Sub
     
         ''' <summary>
@@ -1993,6 +1986,13 @@ Namespace REMI.Entities
         ''' </summary>
         Public Sub AddToProductConfigurationUploads(ByVal productConfigurationUpload As ProductConfigurationUpload)
             MyBase.AddObject("ProductConfigurationUploads", productConfigurationUpload)
+        End Sub
+    
+        ''' <summary>
+        ''' Deprecated Method for adding a new object to the vw_TestRecordAudit EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead.
+        ''' </summary>
+        Public Sub AddTovw_TestRecordAudit(ByVal vw_TestRecordAudit As vw_TestRecordAudit)
+            MyBase.AddObject("vw_TestRecordAudit", vw_TestRecordAudit)
         End Sub
 
         #End Region
@@ -27030,6 +27030,7 @@ Namespace REMI.Entities
         ''' <summary>
         ''' Create a new vw_TestRecordAudit object.
         ''' </summary>
+        ''' <param name="id">Initial value of the ID property.</param>
         ''' <param name="testRecordID">Initial value of the TestRecordID property.</param>
         ''' <param name="testName">Initial value of the TestName property.</param>
         ''' <param name="testStageName">Initial value of the TestStageName property.</param>
@@ -27037,8 +27038,9 @@ Namespace REMI.Entities
         ''' <param name="status">Initial value of the Status property.</param>
         ''' <param name="userName">Initial value of the UserName property.</param>
         ''' <param name="action">Initial value of the Action property.</param>
-        Public Shared Function Createvw_TestRecordAudit(testRecordID As Global.System.Int32, testName As Global.System.String, testStageName As Global.System.String, jobName As Global.System.String, status As Global.System.Int32, userName As Global.System.String, action As Global.System.String) As vw_TestRecordAudit
+        Public Shared Function Createvw_TestRecordAudit(id As Global.System.Int32, testRecordID As Global.System.Int32, testName As Global.System.String, testStageName As Global.System.String, jobName As Global.System.String, status As Global.System.Int32, userName As Global.System.String, action As Global.System.String) As vw_TestRecordAudit
             Dim vw_TestRecordAudit as vw_TestRecordAudit = New vw_TestRecordAudit
+            vw_TestRecordAudit.ID = id
             vw_TestRecordAudit.TestRecordID = testRecordID
             vw_TestRecordAudit.TestName = testName
             vw_TestRecordAudit.TestStageName = testStageName
@@ -27052,6 +27054,33 @@ Namespace REMI.Entities
         #End Region
 
         #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=true, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ID() As Global.System.Int32
+            Get
+                Return _ID
+            End Get
+            Set
+                If (_ID <> Value) Then
+                    OnIDChanging(value)
+                    ReportPropertyChanging("ID")
+                    _ID = StructuralObject.SetValidValue(value)
+                    ReportPropertyChanged("ID")
+                    OnIDChanged()
+                End If
+            End Set
+        End Property
+    
+        Private _ID As Global.System.Int32
+        Private Partial Sub OnIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnIDChanged()
+        End Sub
     
         ''' <summary>
         ''' No Metadata Documentation available.

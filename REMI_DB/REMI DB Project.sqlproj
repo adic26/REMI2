@@ -757,9 +757,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsSelectForBatch.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveFastScanData.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsGetByQRANumber.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -2893,6 +2890,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispGetProducts.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispSaveFastScanData.proc.sql">
       <SubType>Code</SubType>
     </None>
   </ItemGroup>
