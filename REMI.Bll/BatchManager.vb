@@ -671,7 +671,7 @@ Namespace REMI.Bll
                         row("Status") = "Completed"
                     Else
                         row("Unit") = unitNum
-                        row("Stage") = tbl.Rows(0).Field(Of Int32)("TestStageName")
+                        row("Stage") = tbl.Rows(0).Field(Of String)("TestStageName")
                         row("Status") = "In Progress"
                     End If
 
