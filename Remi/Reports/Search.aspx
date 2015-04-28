@@ -66,7 +66,11 @@
         Product: <asp:DropDownList ID="ddlProductFilterUser" runat="server" Width="189px" AppendDataBoundItems="True"  AutoPostBack="False" DataTextField="lookupType" DataValueField="LookupID">
         </asp:DropDownList>
         <br />
-        Has ByPass Product Limitation: <asp:CheckBox ID="chkByPass" runat="server" />
+        Is Product Manager: <asp:RadioButton runat="server" ID="rdoProductManagerYes" Text="Yes" GroupName="ProductManager" /><asp:RadioButton runat="server" ID="rdoProductManagerNo" Text="No" GroupName="ProductManager" /><asp:RadioButton runat="server" ID="rdoProductManagerNA" Text="N/A" GroupName="ProductManager" Checked="true" />
+        <br />
+        Is TSD Contact: <asp:RadioButton runat="server" ID="rdoTSDContacYes" Text="Yes" GroupName="TSDContact" /><asp:RadioButton runat="server" ID="rdoTSDContacNo" Text="No" GroupName="TSDContact" /><asp:RadioButton runat="server" ID="rdoTSDContactNA" Text="N/A" GroupName="TSDContact" Checked="true" />
+        <br />
+        Has ByPass Product Limitation: <asp:RadioButton runat="server" ID="rdoByPassYes" Text="Yes" GroupName="ByPass" /><asp:RadioButton runat="server" ID="rdoByPassNo" Text="No" GroupName="ByPass" /><asp:RadioButton runat="server" ID="rdoByPassNA" Text="N/A" GroupName="ByPass" Checked="true" />
         <br /><br />
     </asp:Panel>
 

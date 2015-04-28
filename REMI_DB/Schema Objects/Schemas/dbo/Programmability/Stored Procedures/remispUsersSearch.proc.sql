@@ -1,4 +1,5 @@
-﻿ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @ByPass INT = 0, @showAllGrid BIT = 0, @UserID INT = 0, @DepartmentID INT = 0, @DetermineDelete INT = 1,  @IncludeInActive INT = 1
+﻿ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @showAllGrid BIT = 0, 
+	@UserID INT = 0, @DepartmentID INT = 0, @DetermineDelete INT = 1,  @IncludeInActive INT = 1, @IsProductManager BIT = 0, @IsTSDContact BIT = 0, @ByPass INT = 0
 AS
 BEGIN	
 	IF (@showAllGrid = 0)
@@ -39,12 +40,6 @@ BEGIN
 				  )
 				  AND
 				  (
-					(u.ByPassProduct=@ByPass) 
-					OR
-					(@ByPass = 0)
-				  )
-				  AND
-				  (
 					(p.LookupID=@ProductID) 
 					OR
 					(@ProductID = 0)
@@ -54,6 +49,24 @@ BEGIN
 					(udd.LookupID=@DepartmentID) 
 					OR
 					(@DepartmentID = 0)
+				  )
+				  AND
+				  (
+					(@ByPass = 0)
+					OR
+					(@ByPass > 0 AND u.ByPassProduct = CASE @ByPass WHEN 1 THEN 1 WHEN 2 THEN 0 ELSE 0 END) 
+				  )
+				  AND
+				  (
+					(@IsProductManager = 0)
+					OR
+					(@IsProductManager > 0 AND udp.IsProductManager = CASE @IsProductManager WHEN 1 THEN 1 WHEN 2 THEN 0 ELSE 0 END)
+				  )
+				  AND
+				  (
+					(@IsTSDContact = 0)
+					OR
+					(@IsTSDContact > 0 AND udp.IsTSDContact = CASE @IsTSDContact WHEN 1 THEN 1 WHEN 2 THEN 0 ELSE 0 END)
 				  )
 			) AS UsersRows
 			ORDER BY LDAPLogin

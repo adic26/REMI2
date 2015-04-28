@@ -209,6 +209,8 @@ Partial Class Search
                     Dim trainingID As Int32
                     Dim trainingLevelID As Int32
                     Dim byPass As Int32
+                    Dim isProductManager As Int32
+                    Dim isTSDContact As Int32
                     Dim departmentID As Int32
 
                     Int32.TryParse(ddlProductFilterUser.SelectedValue, productID)
@@ -217,20 +219,40 @@ Partial Class Search
                     Int32.TryParse(ddlTrainingLevel.SelectedValue, trainingLevelID)
                     Int32.TryParse(ddlDepartmentUser.SelectedValue, departmentID)
 
-                    If (chkByPass.Checked) Then
+                    If (rdoByPassYes.Checked) Then
                         byPass = 1
+                    ElseIf (rdoByPassNo.Checked) Then
+                        byPass = 2
                     Else
                         byPass = 0
-                        us.ProductID = productID
                     End If
 
+                    If (rdoProductManagerYes.Checked) Then
+                        isProductManager = 1
+                    ElseIf (rdoProductManagerNo.Checked) Then
+                        isProductManager = 2
+                    Else
+                        isProductManager = 0
+                    End If
+
+                    If (rdoTSDContacYes.Checked) Then
+                        isTSDContact = 1
+                    ElseIf (rdoTSDContacNo.Checked) Then
+                        isTSDContact = 2
+                    Else
+                        isTSDContact = 0
+                    End If
+
+                    us.IsProductManager = isProductManager
+                    us.IsTSDContact = isTSDContact
+                    us.ProductID = productID
                     us.TrainingID = trainingID
                     us.TrainingLevelID = trainingLevelID
                     us.TestCenterID = testCenterID
                     us.ByPass = byPass
                     us.DepartmentID = departmentID
 
-                    gvwUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False, False, False)
+                    gvwUsers.DataSource = Remi.Dal.UserDB.UserSearch(us, False, False, False)
                     gvwUsers.DataBind()
 
                     Helpers.MakeAccessable(gvwUsers)
@@ -283,7 +305,7 @@ Partial Class Search
                             es.JobName = jobName
                         End If
 
-                        gvwTestExceptions.DataSource = REMI.Dal.TestExceptionDB.ExceptionSearch(es)
+                        gvwTestExceptions.DataSource = Remi.Dal.TestExceptionDB.ExceptionSearch(es)
                         gvwTestExceptions.DataBind()
 
                         Helpers.MakeAccessable(gvwTestExceptions)
@@ -419,7 +441,7 @@ Partial Class Search
                     us.TrainingID = trainingID
                     us.UserID = userID
 
-                    gvwTraining.DataSource = REMI.Dal.UserDB.UserSearch(us, True, False, False)
+                    gvwTraining.DataSource = Remi.Dal.UserDB.UserSearch(us, True, False, False)
                     gvwTraining.DataBind()
 
                     Helpers.MakeAccessable(gvwTraining)
@@ -444,6 +466,8 @@ Partial Class Search
             Dim trainingLevelID As Int32
             Dim departmentID As Int32
             Dim byPass As Int32
+            Dim isProductManager As Int32
+            Dim isTSDContact As Int32
 
             Int32.TryParse(ddlProductFilterUser.SelectedValue, productID)
             Int32.TryParse(ddlTestCentersUser.SelectedValue, testCenterID)
@@ -451,13 +475,34 @@ Partial Class Search
             Int32.TryParse(ddlTrainingLevel.SelectedValue, trainingLevelID)
             Int32.TryParse(ddlDepartmentUser.SelectedValue, departmentID)
 
-            If (chkByPass.Checked) Then
+            If (rdoByPassYes.Checked) Then
                 byPass = 1
+            ElseIf (rdoByPassNo.Checked) Then
+                byPass = 2
             Else
                 byPass = 0
-                us.ProductID = productID
             End If
 
+            If (rdoProductManagerYes.Checked) Then
+                isProductManager = 1
+            ElseIf (rdoProductManagerNo.Checked) Then
+                isProductManager = 2
+            Else
+                isProductManager = 0
+            End If
+
+            If (rdoTSDContacYes.Checked) Then
+                isTSDContact = 1
+            ElseIf (rdoTSDContacNo.Checked) Then
+                isTSDContact = 2
+            Else
+                isTSDContact = 0
+            End If
+
+            us.IsProductManager = isProductManager
+            us.IsTSDContact = isTSDContact
+
+            us.ProductID = productID
             us.TrainingID = trainingID
             us.TrainingLevelID = trainingLevelID
             us.TestCenterID = testCenterID

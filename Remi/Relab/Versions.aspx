@@ -107,7 +107,7 @@
         <AlternatingRowStyle CssClass="oddrow" />
         <Columns>
             <asp:BoundField DataField="BatchUnitNumber" HeaderText="Unit" SortExpression="BatchUnitNumber" />
-            <asp:TemplateField HeaderText="Measurement" SortExpression="">
+            <asp:TemplateField HeaderText="Stage" SortExpression="">
                 <ItemTemplate>
                     <asp:HyperLink ID="hplDetail" runat="server" Text='<%# Eval("TestStageName") %>' Target="_self"></asp:HyperLink>
                 </ItemTemplate>

@@ -7,6 +7,8 @@
         Private _testCenterID As Int32
         Private _departmentID As Int32
         Private _userID As Int32
+        Private _isProductManager As Int32
+        Private _isTSDContact As Int32
 
         Public Property ByPass() As Int32
             Get
@@ -68,6 +70,24 @@
             End Get
             Set(value As Int32)
                 _departmentID = value
+            End Set
+        End Property
+
+        Public Property IsProductManager() As Int32
+            Get
+                Return _isProductManager
+            End Get
+            Set(value As Int32)
+                _isProductManager = value
+            End Set
+        End Property
+
+        Public Property IsTSDContact() As Int32
+            Get
+                Return _isTSDContact
+            End Get
+            Set(value As Int32)
+                _isTSDContact = value
             End Set
         End Property
     End Class

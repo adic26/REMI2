@@ -815,6 +815,14 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
+    <WebMethod(EnableSession:=True, Description:="Performs A User Search Based On The Criteria You Select.", MessageName:="UserSearch")> _
+    Public Function UserSearch(ByVal us As UserSearch, ByVal userIdentification As String) As DataTable
+        If UserManager.SetUserToSession(userIdentification) Then
+            Return UserManager.UserSearch(us, False, False, False)
+        End If
+        Return New DataTable("UserSearch")
+    End Function
+
     <WebMethod(EnableSession:=True, Description:="Creates A New REMI User.", MessageName:="CreateUser")> _
     Public Function CreateUser(ByVal userIdentification As String, ByVal testCenterID As Int32, ByVal departmentID As Int32, ByVal badgeNumber As Int32) As Boolean
         Try
