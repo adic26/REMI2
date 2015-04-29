@@ -14,42 +14,6 @@ Option Explicit On
 Partial Public Class Search
 
     '''<summary>
-    '''btnTestingComplete control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnTestingComplete As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnHeld control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnHeld As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnReporting control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnReporting As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnIncoming control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnIncoming As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
     '''ddlRequestType control.
     '''</summary>
     '''<remarks>

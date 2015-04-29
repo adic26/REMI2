@@ -19,18 +19,6 @@
     <h3>Quick Search</h3>
     <ul>
         <li>
-            <asp:Button runat="server" Text="Testing Complete" ID="btnTestingComplete" CausesValidation="true" CssClass="buttonSmall" OnClick="btn_OnClick" />
-        </li>
-        <li>
-            <asp:Button runat="server" Text="Held" ID="btnHeld" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
-        </li>
-        <li>
-            <asp:Button runat="server" Text="Reporting" ID="btnReporting" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
-        </li>
-        <li>
-            <asp:Button runat="server" Text="Incoming" ID="btnIncoming" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
-        </li>
-        <li>
             <asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
         </li>
     </ul>
