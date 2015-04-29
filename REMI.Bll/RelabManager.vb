@@ -325,7 +325,9 @@ Namespace REMI.Bll
 
         Public Shared Function GetObservations(ByVal batchID As Int32) As DataTable
             Try
-                Return RelabDB.GetObservations(batchID)
+                If (batchID > 0) Then
+                    Return RelabDB.GetObservations(batchID)
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -334,7 +336,9 @@ Namespace REMI.Bll
 
         Public Shared Function GetObservationSummary(ByVal batchID As Int32) As DataTable
             Try
-                Return RelabDB.GetObservationSummary(batchID)
+                If (batchID > 0) Then
+                    Return RelabDB.GetObservationSummary(batchID)
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

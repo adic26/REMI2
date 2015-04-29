@@ -412,6 +412,19 @@ Namespace REMI.Bll
                     u.ID = Save(u, False, False, True)
 
                     If u.ID > 0 Then 'if the user was saved then
+                        Dim us As New UserSearch
+                        us.IsAdmin = 1
+                        us.IsTestCenterAdmin = 1
+                        us.TestCenterID = u.TestCentreID
+
+                        Dim users As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False)
+
+                        Dim emails As List(Of String) = (From usr As User In users Select usr.LDAPName).Distinct.ToList
+
+                        If (emails.Count > 0) Then
+                            REMI.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("New User Added To REMI"), String.Format("User {0} has created themselves an account. Please modify their access for products. <a href=""http://go/remi/Admin/Users.aspx?userid={1}"">{0}</a>", u.LDAPName, u.ID), True, String.Empty)
+                        End If
+
                         HttpContext.Current.Session.Add(_userSessionVariableName, u) 'save it to the session
                     Else
                         returnNotifications.AddWithMessage("User verified ok but there was a database error. Unable to save.", NotificationType.Information)

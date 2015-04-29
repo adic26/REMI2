@@ -14,11 +14,11 @@ Partial Class ES_Default
                 Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("/Design/scripts/jQuery/jquery-1.10.2.js"))
             End If
 
-            lblPrinted.Text = String.Format("<b>Printed:</b> {0}", DateTime.Now.ToLongDateString())
-
             Dim tmpStr As String = Request.QueryString.Get("RN")
 
-            If (tmpStr IsNot Nothing) Then
+            If (Not String.IsNullOrEmpty(tmpStr)) Then
+                pnlPopup.Visible = True
+                lblPrinted.Text = String.Format("<b>Printed:</b> {0}", DateTime.Now.ToLongDateString())
                 Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 
                 If bc.Validate Then
@@ -48,7 +48,7 @@ Partial Class ES_Default
                     grdUnits.DataSource = BatchManager.GetUnitInStages(b.QRANumber)
                     grdUnits.DataBind()
 
-                    Dim bs As New REMI.BusinessEntities.BatchSearch
+                    Dim bs As New Remi.BusinessEntities.BatchSearch
                     bs.ProductID = b.ProductID
                     bs.JobID = b.JobID
                     bs.ProductTypeID = b.ProductTypeID
@@ -133,6 +133,18 @@ Partial Class ES_Default
                         ESMenu.Items(0).ChildItems(ESMenu.Items(0).ChildItems.Count - 1).ChildItems.Add(mi)
                     Next
                 End If
+            Else
+                pnlApprovalHeader.Enabled = False
+                pnlObservations.Enabled = False
+                pnlObservationSummary.Enabled = False
+                pnlQRASlider.Enabled = False
+                pnlResultSummaryHeader.Enabled = False
+                pnlResultBreakdownHeader.Enabled = False
+                pnlRequestInfoHeader.Enabled = False
+                pnlES.Enabled = False
+                pnlFA.Enabled = False
+                pnlUnitHeader.Enabled = False
+                pnlRequestSummaryHeader.Enabled = False
             End If
         End If
     End Sub
@@ -379,5 +391,9 @@ Partial Class ES_Default
         Else
             pnlObservations.Enabled = False
         End If
+    End Sub
+
+    Protected Sub btnSubmit_Click(sender As Object, e As EventArgs)
+        Response.Redirect(String.Format("{0}?RN={1}", Helpers.GetCurrentPageName, Helpers.CleanInputText(txtRequestNumber.Text, 30)), True)
     End Sub
 End Class

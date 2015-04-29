@@ -1,73 +1,90 @@
 ﻿ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @showAllGrid BIT = 0, 
-	@UserID INT = 0, @DepartmentID INT = 0, @DetermineDelete INT = 1,  @IncludeInActive INT = 1, @IsProductManager BIT = 0, @IsTSDContact BIT = 0, @ByPass INT = 0
+	@UserID INT = 0, @DepartmentID INT = 0, @DetermineDelete INT = 1,  @IncludeInActive INT = 1, @IsProductManager BIT = 0, @IsTSDContact BIT = 0, @ByPass INT = 0,
+	@IsAdmin INT = 0, @IsTestCenterAdmin INT = 0
 AS
 BEGIN	
 	IF (@showAllGrid = 0)
 	BEGIN
+		DECLARE @AdminRoleID UNIQUEIDENTIFIER
+		DECLARE @TestCenterAdminRoleID UNIQUEIDENTIFIER
+		
+		SELECT @AdminRoleID = RoleID FROM aspnet_Roles WHERE RoleName='Administrator'
+		SELECT @TestCenterAdminRoleID = RoleID FROM aspnet_Roles WHERE RoleName='TestCenterAdmin'
+		
 		SELECT ID, LDAPLogin, BadgeNumber, ByPassProduct, DefaultPage, ISNULL(IsActive, 1) AS IsActive, LastUser, 
 				ConcurrencyID, CASE WHEN @DetermineDelete = 1 THEN dbo.remifnUserCanDelete(LDAPLogin) ELSE 0 END AS CanDelete
 		FROM 
 			(SELECT DISTINCT u.ID, u.LDAPLogin, u.BadgeNumber, u.ByPassProduct, u.DefaultPage, ISNULL(u.IsActive, 1) AS IsActive, u.LastUser, 
 				u.ConcurrencyID
 			 FROM Users u
-				LEFT OUTER JOIN UserTraining ut ON ut.UserID = u.ID
-				INNER JOIN UserDetails udtc ON udtc.UserID=u.ID
-				INNER JOIN UserDetails udd ON udd.UserID=u.ID
-				LEFT OUTER JOIN UserDetails udp ON udp.UserID=u.ID
-				LEFT OUTER JOIN Lookups p ON p.LookupID=udp.LookupID
-			WHERE (
+				LEFT OUTER JOIN UserTraining ut WITH(NOLOCK) ON ut.UserID = u.ID
+				INNER JOIN UserDetails udtc WITH(NOLOCK) ON udtc.UserID=u.ID
+				INNER JOIN UserDetails udd WITH(NOLOCK) ON udd.UserID=u.ID
+				LEFT OUTER JOIN UserDetails udp WITH(NOLOCK) ON udp.UserID=u.ID
+				LEFT OUTER JOIN Lookups p WITH(NOLOCK) ON p.LookupID=udp.LookupID
+				LEFT OUTER JOIN aspnet_Users au WITH(NOLOCK) ON au.UserName=u.LDAPLogin
+			WHERE
+				(
 					(@IncludeInActive = 0 AND ISNULL(u.IsActive, 1)=1)
 					OR
 					@IncludeInActive = 1
-				  )
-				  AND 
-				  (
-					(udtc.LookupID=@TestCenterID) 
+				)
+				AND 
+				(
+					(@TestCenterID > 0 AND @IsTestCenterAdmin = 0 AND udtc.LookupID=@TestCenterID) 
+					OR
+					(@IsTestCenterAdmin = 1)
 					OR
 					(@TestCenterID = 0)
-				  )
-				  AND
-				  (
+				)
+				AND
+				(
 					(ut.LookupID=@TrainingID) 
 					OR
 					(@TrainingID = 0)
-				  )
-				  AND
-				  (
+				)
+				AND
+				(
 					(ut.LevelLookupID=@TrainingLevelID) 
 					OR
 					(@TrainingLevelID = 0)
-				  )
-				  AND
-				  (
+				)
+				AND
+				(
 					(p.LookupID=@ProductID) 
 					OR
 					(@ProductID = 0)
-				  )
-				  AND 
-				  (
+				)
+				AND 
+				(
 					(udd.LookupID=@DepartmentID) 
 					OR
 					(@DepartmentID = 0)
-				  )
-				  AND
-				  (
+				)
+				AND
+				(
 					(@ByPass = 0)
 					OR
 					(@ByPass > 0 AND u.ByPassProduct = CASE @ByPass WHEN 1 THEN 1 WHEN 2 THEN 0 ELSE 0 END) 
-				  )
-				  AND
-				  (
+				)
+				AND
+				(
 					(@IsProductManager = 0)
 					OR
 					(@IsProductManager > 0 AND udp.IsProductManager = CASE @IsProductManager WHEN 1 THEN 1 WHEN 2 THEN 0 ELSE 0 END)
-				  )
-				  AND
-				  (
+				)
+				AND
+				(
 					(@IsTSDContact = 0)
 					OR
 					(@IsTSDContact > 0 AND udp.IsTSDContact = CASE @IsTSDContact WHEN 1 THEN 1 WHEN 2 THEN 0 ELSE 0 END)
-				  )
+				)
+				AND
+				(
+					(@IsAdmin > 0 AND au.UserId IN (SELECT UserId FROM aspnet_UsersInRoles WHERE RoleId=@AdminRoleID))
+					OR
+					(@IsTestCenterAdmin > 0 AND udtc.LookupID=@TestCenterID AND au.UserId IN (SELECT UserId FROM aspnet_UsersInRoles WHERE RoleId=@TestCenterAdminRoleID))
+				)
 			) AS UsersRows
 			ORDER BY LDAPLogin
 	END

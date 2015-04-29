@@ -29,6 +29,12 @@ Namespace REMI.Core
             End Get
         End Property
 
+        Public Shared ReadOnly Property RequestGoLink() As String
+            Get
+                Return ConfigurationManager.AppSettings("RequestGoLink")
+            End Get
+        End Property
+
         Public Shared ReadOnly Property REMIAccountPassword() As String
             Get
                 Return ConfigurationManager.AppSettings("REMIAccountPassword")
@@ -44,12 +50,6 @@ Namespace REMI.Core
         Public Shared ReadOnly Property ADConnectionString() As String
             Get
                 Return ConfigurationManager.AppSettings("ADConnectionString")
-            End Get
-        End Property
-
-        Public Shared ReadOnly Property DefaultRedirectPage() As String
-            Get
-                Return ConfigurationManager.AppSettings("DefaultRedirectPage")
             End Get
         End Property
 

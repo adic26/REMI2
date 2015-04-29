@@ -467,10 +467,15 @@ Namespace REMI.Bll
                     Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
                     saved = RequestDB.SaveRequest(requestName, request, userIdentification)
 
+                    REMIAppCache.ClearAllBatchData(requestNumber)
                     Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
 
                     If (saved And requestType.HasIntegration) Then
-                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, False, True, False)
+                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, False, True, True)
+
+                        If (b.OutOfDate) Then
+                            BatchManager.Save(b)
+                        End If
 
                         If (req.BatchID Is Nothing) Then
                             req.BatchID = b.ID
@@ -495,7 +500,7 @@ Namespace REMI.Bll
 
                         If (saved And distribution.Count > 0) Then
                             Dim sb As New StringBuilder
-                            sb.AppendLine(String.Format("<a href='http://go/requests/{0}' target='_blank'>To Edit Or View This Item Click Here</a>", requestNumber))
+                            sb.AppendLine(String.Format("<a href='{0}{1}' target='_blank'>To Edit Or View This Item Click Here</a>", REMIConfiguration.RequestGoLink, requestNumber))
                             sb.AppendLine(String.Format("<br/>Submitted: {0}", (From rd In request Where rd.IntField = "DateCreated" Select rd.Value).FirstOrDefault()))
                             sb.AppendLine(String.Format("<br/>Requestor: {0}", (From rd In request Where rd.IntField = "Requestor" Select rd.Value).FirstOrDefault()))
                             sb.AppendLine(String.Format("<br/>Test Center: {0}", (From rd In request Where rd.IntField = "TestCenterLocation" Select rd.Value).FirstOrDefault()))

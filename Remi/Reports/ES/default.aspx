@@ -29,9 +29,6 @@
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="content" ContentPlaceHolderID="Content" runat="Server">
-    <a class="test-popup-link" visible="false">popup</a> 
-    <div id="my-popup" class="mfp-hide white-popup">Inline popup</div>    
-
     <asp:HiddenField ID="hdnBatchID" runat="server" />
     <asp:HiddenField ID="hdnRequestNumber" Value="" runat="server" />
          
@@ -43,8 +40,13 @@
 
     <a name="top"></a>
     <asp:Label runat="server" ID="lblRequestNumber" CssClass="RequestNumber" ></asp:Label><br /><br />
-    <asp:Label runat="server" ID="lblPrinted"></asp:Label>
-    <br /><br /><br />
+    <asp:Label runat="server" ID="lblPrinted"></asp:Label><br /><br />
+    
+    <asp:TextBox runat="server" ID="txtRequestNumber" CssClass="ScanDeviceTextEntryHint"
+                value="Enter Request Number..." onfocus="if (this.className=='ScanDeviceTextEntryHint') { this.className = 'ScanDeviceTextEntry'; this.value = ''; }"
+                onblur="if (this.value == '') { this.className = 'ScanDeviceTextEntryHint'; this.value = 'Enter Request Number...'; }"></asp:TextBox>
+    <asp:Button ID="btnSubmit" runat="server" CssClass="buttonSmall" Text="Get Request" OnClick="btnSubmit_Click" />
+    <br /><br />
     <asp:Panel runat="server" ID="pnlES" CssClass="CollapseHeader" style="cursor:none;">
         <table class="TableNoBorders" width="100%">
             <tr>
@@ -342,6 +344,10 @@
             <RowStyle CssClass="evenrow" />
             <AlternatingRowStyle CssClass="oddrow" />
         </asp:GridView>
+    </asp:Panel>
+    <asp:Panel runat="server" ID="pnlPopup" Visible="false">
+        <a class="test-popup-link" visible="false">popup</a> 
+        <div id="my-popup" class="mfp-hide white-popup">Inline popup</div>    
     </asp:Panel>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="rightSidebarContent" runat="Server">

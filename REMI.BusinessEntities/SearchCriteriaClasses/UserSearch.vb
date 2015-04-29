@@ -9,6 +9,26 @@
         Private _userID As Int32
         Private _isProductManager As Int32
         Private _isTSDContact As Int32
+        Private _isAdmin As Int32
+        Private _isTestCenterAdmin As Int32
+
+        Public Property IsTestCenterAdmin() As Int32
+            Get
+                Return _isTestCenterAdmin
+            End Get
+            Set(value As Int32)
+                _isTestCenterAdmin = value
+            End Set
+        End Property
+
+        Public Property IsAdmin() As Int32
+            Get
+                Return _isAdmin
+            End Get
+            Set(value As Int32)
+                _isAdmin = value
+            End Set
+        End Property
 
         Public Property ByPass() As Int32
             Get

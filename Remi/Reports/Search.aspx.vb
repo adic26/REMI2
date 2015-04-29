@@ -87,15 +87,26 @@ Partial Class Search
     End Sub
 
     Protected Sub ClearBatchValues()
-        ddlProductFilter.SelectedValue = Nothing
         txtRevision.Text = String.Empty
+        txtTestStage.Text = String.Empty
+        txtStart.Text = String.Empty
+        txtEnd.Text = String.Empty
+        ddlProductFilter.SelectedValue = Nothing
         ddlProductType.SelectedValue = Nothing
         ddlAccessoryGroup.SelectedValue = Nothing
         ddlRequestReason.SelectedValue = Nothing
         ddlJobs.SelectedValue = Nothing
         ddlTestStages.SelectedValue = Nothing
-        txtTestStage.Text = String.Empty
         ddlTestStageType.SelectedValue = Nothing
+        ddlDepartment.SelectedValue = Nothing
+        ddlTests.SelectedValue = Nothing
+        ddlBatchStatus.SelectedValue = Nothing
+        ddlPriority.SelectedValue = Nothing
+        ddlUsers.SelectedValue = Nothing
+        ddlTrackingLocationType.SelectedValue = Nothing
+        ddlLocationFunction.SelectedValue = Nothing
+        ddlNotInLocationFunction.SelectedValue = Nothing
+        ddlTestCenters.SelectedValue = Nothing
 
         For i As Integer = 0 To chkTestStageType.Items.Count - 1
             chkTestStageType.Items(i).Selected = False
@@ -104,14 +115,6 @@ Partial Class Search
         For i As Integer = 0 To chkBatchStatus.Items.Count - 1
             chkBatchStatus.Items(i).Selected = False
         Next
-
-        ddlTests.SelectedValue = Nothing
-        ddlBatchStatus.SelectedValue = Nothing
-        ddlPriority.SelectedValue = Nothing
-        ddlUsers.SelectedValue = Nothing
-        ddlTrackingLocationType.SelectedValue = Nothing
-        ddlLocationFunction.SelectedValue = Nothing
-        ddlNotInLocationFunction.SelectedValue = Nothing
     End Sub
 
     Protected Sub btn_OnClick(ByVal sender As Object, ByVal e As System.EventArgs)
@@ -123,10 +126,12 @@ Partial Class Search
                 bs.Status = BatchStatus.TestingComplete
                 bs.ExcludedTestStageType = BatchSearchTestStageType.NonTestingTask + BatchSearchTestStageType.FailureAnalysis
                 bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.DepartmentID = ddlDepartment.SelectedValue
 
                 ClearBatchValues()
 
                 ddlTestCenters.SelectedValue = bs.GeoLocationID.ToString()
+                ddlDepartment.SelectedValue = bs.DepartmentID.ToString()
                 ddlBatchStatus.SelectedValue = bs.Status.ToString()
                 chkTestStageType.Items.FindByValue(TestStageType.FailureAnalysis.ToString()).Selected = True
                 chkTestStageType.Items.FindByValue(TestStageType.NonTestingTask.ToString()).Selected = True
@@ -143,9 +148,11 @@ Partial Class Search
                 Dim bs As New BatchSearch()
                 bs.Status = BatchStatus.Held
                 bs.GeoLocationID = ddlTestCenters.SelectedValue
+                bs.DepartmentID = ddlDepartment.SelectedValue
 
                 ClearBatchValues()
 
+                ddlDepartment.SelectedValue = bs.DepartmentID.ToString()
                 ddlTestCenters.SelectedValue = bs.GeoLocationID.ToString()
                 ddlBatchStatus.SelectedValue = bs.Status.ToString()
 
@@ -160,14 +167,16 @@ Partial Class Search
             Case "btnIncoming"
                 Dim bs As New BatchSearch()
                 bs.GeoLocationID = ddlTestCenters.SelectedValue
-                bs.Status = BatchStatus.InProgress
+                bs.Status = BatchStatus.Received
                 bs.TestStageType = TestStageType.IncomingEvaluation
+                bs.DepartmentID = ddlDepartment.SelectedValue
 
                 ClearBatchValues()
 
                 ddlTestCenters.SelectedValue = bs.GeoLocationID.ToString()
                 ddlTestStageType.SelectedValue = bs.TestStageType.ToString()
                 ddlBatchStatus.SelectedValue = bs.Status.ToString()
+                ddlDepartment.SelectedValue = bs.DepartmentID.ToString()
 
                 pnlSearchUser.Visible = False
                 pnlSearchExceptions.Visible = False

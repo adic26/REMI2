@@ -122,6 +122,24 @@ Partial Public Class ES_Default
     Protected WithEvents lblPrinted As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''txtRequestNumber control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtRequestNumber As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''btnSubmit control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnSubmit As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
     '''pnlES control.
     '''</summary>
     '''<remarks>
@@ -705,4 +723,13 @@ Partial Public Class ES_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents grdApproval As Global.System.Web.UI.WebControls.GridView
+
+    '''<summary>
+    '''pnlPopup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pnlPopup As Global.System.Web.UI.WebControls.Panel
 End Class

@@ -508,8 +508,12 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
-            REMIAppCache.ClearAllBatchData(requestNumber)
             Dim b As Batch = BatchManager.GetItem(requestNumber, False, True, True)
+
+            If (b.OutOfDate) Then
+                BatchManager.Save(b)
+            End If
+
             TestRecordManager.CheckBatchForResultUpdates(b, False)
 
             Return BatchDB.MoveBatchForward(requestNumber, userIdentification)

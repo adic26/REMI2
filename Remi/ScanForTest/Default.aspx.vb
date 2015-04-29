@@ -49,7 +49,10 @@ Partial Class Scanning_Default
     Protected Sub BindJobs()
         Dim jc As New JobCollection
         jc.Add(New Job("Not Applicable"))
-        jc.AddRange(JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0))
+
+        If (ddlRequestType.SelectedValue IsNot Nothing) Then
+            jc.AddRange(JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0))
+        End If
 
         ddlJobs.DataSource = jc
         ddlJobs.DataBind()
