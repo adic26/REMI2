@@ -363,4 +363,12 @@ ALTER TABLE Batches ALTER COLUMN _ProductID INT NULL
 GO
 DROP PROCEDURE remispSaveFastScanData
 GO
+INSERT INTO Menu (Name, Url) VALUES ('Summary', '/Reports/es/default.aspx')
+DECLARE @MenuID INT
+SELECT @MenuID=MenuID from Menu WHERE Name='Summary'
+INSERT INTO MenuDepartment (DepartmentID, MenuID)
+SELECT LookupID as DepartmentID, @MenuID
+FROM Lookups 
+where LookupTypeID IN (select LookupTypeID from LookupType where Name='Department') and IsActive=1
+GO
 rollback tran
