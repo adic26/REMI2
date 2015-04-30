@@ -42,8 +42,7 @@
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/refresh.png" ID="imgShowArchived"
                 runat="server" />
-            <asp:CheckBox runat="server" Text=" Show Archived" ID="chkShowArchived" ToolTip="Show Archived"
-                TextAlign="Right" AutoPostBack="true" CausesValidation="true" />
+            <asp:CheckBox runat="server" Text=" Show Archived" ID="chkShowArchived" AutoPostBack="true" ToolTip="Show Archived" TextAlign="Right" CausesValidation="true" OnCheckedChanged="chkShowArchived_CheckedChanged" />
         </li>
         <li id="liEditSettings" runat="server" visible="false">
             <asp:Image ImageUrl="../Design/Icons/png/24x24/tools.png" ID="imgeditSettings" runat="server" />

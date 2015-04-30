@@ -198,8 +198,37 @@ Partial Class ScanForInfo_ProductGroup
         grdTargetDates.DataSource = mSettings.ToList()
         grdTargetDates.DataBind()
     End Sub
+
+    Protected Sub SetgvwContactsHeaders() Handles gvwContacts.PreRender
+        Helpers.MakeAccessable(gvwContacts)
+    End Sub
+
+    Protected Sub SetGvwHeaders() Handles grdTrackingLog.PreRender
+        Helpers.MakeAccessable(grdTrackingLog)
+    End Sub
+
+    Protected Sub SetgrdTargetDatesHeaders() Handles grdTargetDates.PreRender
+        Helpers.MakeAccessable(grdTargetDates)
+    End Sub
+
+    Protected Sub SetgrdgrdReadyHeaders() Handles grdReady.PreRender
+        Helpers.MakeAccessable(grdReady)
+    End Sub
+
+    Protected Sub chkShowArchived_CheckedChanged(sender As Object, e As EventArgs)
+        Dim id As String = ddlProductGroup.SelectedItem.Value
+        Dim name As String = ddlProductGroup.SelectedItem.Text
+        ddlProductGroup.DataSource = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
+        ddlProductGroup.DataBind()
+
+        Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, id.ToString())
+        If (ddlProductGroup.Items.Contains(l)) Then
+            ddlProductGroup.SelectedValue = l.Value
+        End If
+    End Sub
 #End Region
 
+#Region "Load"
     Protected Sub ProcessName(ByVal id As Int32)
         Try
             Dim litTitle As Literal = Master.FindControl("litPageTitle")
@@ -235,6 +264,29 @@ Partial Class ScanForInfo_ProductGroup
         End Try
     End Sub
 
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            Dim litTitle As Literal = Master.FindControl("litPageTitle")
+            If litTitle IsNot Nothing Then
+                litTitle.Text = "REMI - Product Information"
+            End If
+
+            hdnUserID.Value = UserManager.GetCurrentUser.ID
+            ddlProductGroup.DataSource = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
+            ddlProductGroup.DataBind()
+
+            Dim id As Int32
+            Int32.TryParse(Request.QueryString("id"), id)
+
+            If (id > 0) Then
+                ddlProductGroup.SelectedValue = id
+                btnSubmit_Click(sender, e)
+            End If
+        End If
+    End Sub
+#End Region
+
+#Region "Methods"
     Protected Sub SetupMenuItems(ByVal productGroup As String, ByVal id As Int32)
         Dim myMenu As WebControls.Menu
         Dim mi As MenuItem
@@ -273,41 +325,5 @@ Partial Class ScanForInfo_ProductGroup
             End If
         End If
     End Sub
-
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not Page.IsPostBack Then
-            Dim litTitle As Literal = Master.FindControl("litPageTitle")
-            If litTitle IsNot Nothing Then
-                litTitle.Text = "REMI - Product Information"
-            End If
-
-            hdnUserID.Value = UserManager.GetCurrentUser.ID
-            ddlProductGroup.DataSource = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
-            ddlProductGroup.DataBind()
-
-            Dim id As Int32
-            Int32.TryParse(Request.QueryString("id"), id)
-
-            If (id > 0) Then
-                ddlProductGroup.SelectedValue = id
-                btnSubmit_Click(sender, e)
-            End If
-        End If
-    End Sub
-
-    Protected Sub SetgvwContactsHeaders() Handles gvwContacts.PreRender
-        Helpers.MakeAccessable(gvwContacts)
-    End Sub
-
-    Protected Sub SetGvwHeaders() Handles grdTrackingLog.PreRender
-        Helpers.MakeAccessable(grdTrackingLog)
-    End Sub
-
-    Protected Sub SetgrdTargetDatesHeaders() Handles grdTargetDates.PreRender
-        Helpers.MakeAccessable(grdTargetDates)
-    End Sub
-
-    Protected Sub SetgrdgrdReadyHeaders() Handles grdReady.PreRender
-        Helpers.MakeAccessable(grdReady)
-    End Sub
+#End Region
 End Class

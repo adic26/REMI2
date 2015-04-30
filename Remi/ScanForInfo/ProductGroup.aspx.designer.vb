@@ -140,15 +140,6 @@ Partial Public Class ScanForInfo_ProductGroup
     Protected WithEvents ddlProductGroup As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''odsProducts control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsProducts As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
     '''btnSubmit control.
     '''</summary>
     '''<remarks>
@@ -158,22 +149,13 @@ Partial Public Class ScanForInfo_ProductGroup
     Protected WithEvents btnSubmit As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''hdnProductID control.
+    '''hdnLookupID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hdnLookupID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''chkByPass control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents chkByPass As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
     '''hdnUserID control.
