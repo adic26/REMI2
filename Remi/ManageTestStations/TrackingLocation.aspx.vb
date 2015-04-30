@@ -83,6 +83,7 @@ Partial Class ManageTestStations_TrackingLocation
         If (locationID = ddlTestCenters.SelectedValue) Then
             ProcessBarcode(tmpBarcodeSuffix)
             lblTrackingLocation.Text = ddlTrackingLocation.Items.FindByValue(tmpBarcodeSuffix).Text
+            ddlTrackingLocation.SelectedValue = tmpBarcodeSuffix
         ElseIf (locationID <> ddlTestCenters.SelectedValue) Then
             ddlTrackingLocation.DataBind()
 
@@ -104,7 +105,7 @@ Partial Class ManageTestStations_TrackingLocation
                 litTitle.Text = "REMI - Tracking Location Information"
                 lblTrackingLocation.Text = ""
             End If
-            End If
+        End If
     End Sub
 
 #Region "Click Events"
