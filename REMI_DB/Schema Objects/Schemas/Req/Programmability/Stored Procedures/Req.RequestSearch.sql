@@ -295,7 +295,7 @@ BEGIN
 		SET @SQL = 'ALTER TABLE dbo.#RR ADD ' + replace(@rows, ']', '] NVARCHAR(4000)')
 		EXEC sp_executesql @SQL
 
-		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
+		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), BatchTest NVARCHAR(400), BatchStage NVARCHAR(400), 
 			TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
 			MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
 			LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
@@ -461,10 +461,10 @@ BEGIN
 
 		IF (@ParameterColumnNames <> '[na]')
 		BEGIN
-			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
+			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + REPLACE(REPLACE(@ParameterColumnNames, 'Job]','JobParam]'), ']', '] NVARCHAR(250)')
 			EXEC sp_executesql @SQL
 			SET @whereStr = ''
-			
+
 			DELETE p 
 			FROM dbo.#Params p WITH(NOLOCK)
 			WHERE p.Name IN (SELECT Name
@@ -571,7 +571,7 @@ BEGIN
 					INNER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
 				) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt
 			 ' + @whereStr
-				
+
 			EXEC sp_executesql @SQL
 		END
 		ELSE
@@ -606,7 +606,7 @@ BEGIN
 
 		IF (@InformationColumnNames <> '[na]')
 		BEGIN
-			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
+			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + REPLACE(@InformationColumnNames, ']', '] NVARCHAR(250)')
 			EXEC sp_executesql @SQL
 			
 			SET @whereStr = ''
@@ -850,7 +850,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES --('Request', 51, '*Windermere'),
+VALUES --('Request', 211, '*classic')
 --('Request', 51, '-Windermere E R135'),
 --('Request', 51, '3G SIMs'),
 --('Request', 51, '*Lisbon'),
@@ -863,20 +863,20 @@ VALUES --('Request', 51, '*Windermere'),
 --('Test', 1103, 'Camera Front'),
 --('Stage', 3616, '1 Drop'),
 --('Job', 179, 'T004 DIRT RASS Drop'),
---('Job', 215, 'T013 Mechanical Suite'),
+('Job', 258, 'T077 Other')
 --('Stage', 2246, 'Analysis'),
 --('Stage', 3220, 'Post 720hrs'),
 --('BSN', 0, '1132205311'),
 --('BSN', 0, '1151200936'),
---('ReqNum', 0, 'QRA-14-0038'),
-('ReqNum', 0, 'LCD-15-0031'),
+--('ReqNum', 0, 'QRA-14-0038')
+,('ReqNum', 0, 'TSD-15-0004')
 --('Unit', 0, '5'),
 --('Unit', 0, '1'),
 --('IMEI', 0, '004402242039794'),
 --('IMEI', 0, '351852062969380'),
 --('ResultArchived', 0, ''),
-('Param:Category', 0, '*col'),
-('Param:Category', 0, '-Gamma')
+--('Param:Category', 0, '*col'),
+--('Param:Category', 0, '-Gamma')
 --('Param:Band', 0, 'GPRS1800'),
 --('Param:Band', 0, 'LTE17'),
 --('Param:Channel', 0, '*700'),
@@ -899,4 +899,4 @@ VALUES --('Request', 51, '*Windermere'),
 --('BatchStatus',0,'5')
 --('BatchStartDate', 0, '2015-01-19'),
 --('BatchEndDate', 0, '2015-04-19')
-EXEC [Req].[RequestSearch] 24, @table, 251
+EXEC [Req].[RequestSearch] 15, @table, 251
