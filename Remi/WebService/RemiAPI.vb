@@ -146,33 +146,10 @@ Public Class RemiAPI
                 Return ExceptionManager.AddException(Helpers.CleanInputText(qraNumber, 21), testName, userIdentification)
             End If
         Catch ex As Exception
-            TestUnitManager.LogIssue("REMI API AddUnitException", "e7", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} TestName: {2}", userIdentification, qraNumber, testName))
+            ExceptionManager.LogIssue("REMI API AddUnitException", "e7", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} TestName: {2}", userIdentification, qraNumber, testName))
         End Try
         Return Nothing
     End Function
-
-    '<WebMethod(EnableSession:=True, Description:="Sets the IMEI for a unit. The given user badge number will override the windows login if available.")> _
-    'Public Function UpdateUnitIMEI(ByVal requestNumber As String, ByVal iMEI As String, ByVal userIdentification As String) As Boolean
-    '    Try
-    '        If UserManager.SetUserToSession(userIdentification) Then
-    '            Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(RequestNumber), 30))
-
-    '            If bc.Validate Then
-    '                If bc.HasTestUnitNumber Then
-    '                    Dim tu As TestUnit = TestUnitManager.GetUnit(bc.BatchNumber, bc.UnitNumber)
-    '                    tu.IMEI = iMEI
-    '                    tu.LastUser = userIdentification
-    '                    Return TestUnitManager.Save(tu) > 0
-    '                End If
-    '            End If
-    '        End If
-
-    '        Return False
-    '    Catch ex As Exception
-    '        TestUnitManager.LogIssue("REMI API UpdateUnitIMEI", "e1", NotificationType.Errors, ex, String.Format("User: {0} Request: {1} IMEI: {2}", userIdentification, RequestNumber, iMEI))
-    '    End Try
-    '    Return False
-    'End Function
 
     <Obsolete("Don't use this routine any more. Use UpdateUnitBSNIMEI instead"), _
     WebMethod(EnableSession:=True, Description:="Sets the IMEI for a unit. The given user badge number will override the windows login if available.")> _
@@ -275,30 +252,6 @@ Public Class RemiAPI
         Return New List(Of String)
     End Function
 
-    '<WebMethod(Description:="Get IMEI for unit.")> _
-    'Public Function GetUnitIMEI(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As Int32
-    '    Try
-    '        Dim unit As Remi.Entities.TestUnit = TestUnitManager.GetRAWUnitInformation(requestNumber, batchUnitNumber)
-
-    '        If unit IsNot Nothing And unit.IMEI IsNot Nothing Then
-    '            Return unit.IMEI
-    '        End If
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API GetUnitIMEI", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
-    '    End Try
-    '    Return String.Empty
-    'End Function
-
-    '<WebMethod(EnableSession:=True, Description:="Gets Unit BSN.")> _
-    'Public Function GetUnitBSN(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As Int32
-    '    Try
-    '        Return TestUnitManager.GetUnitBSN(QRANumber, batchUnitNumber)
-    '    Catch ex As Exception
-    '        TestUnitManager.LogIssue("REMI API GetUnitBSN", "e13", NotificationType.Errors, ex, String.Format("Request: {0}", QRANumber))
-    '    End Try
-    '    Return Nothing
-    'End Function
-
     <Obsolete("Don't Use This Method Anymore."), _
     WebMethod(EnableSession:=True, Description:="Gets # Of Units Assigned To This Batch.")> _
     Public Function GetNumOfUnits(ByVal QRANumber As String) As Int32
@@ -313,16 +266,6 @@ Public Class RemiAPI
         End Try
         Return 0
     End Function
-
-    '<WebMethod(EnableSession:=True, Description:="Gets Unit Assigned To.")> _
-    'Public Function GetUnitAssignedTo(ByVal QRANumber As String, ByVal batchUnitNumber As Int32) As String
-    '    Try
-    '        Return TestUnitManager.GetUnitAssignedTo(QRANumber, batchUnitNumber)
-    '    Catch ex As Exception
-    '        TestUnitManager.LogIssue("REMI API GetUnitAssignedTo", "e13", NotificationType.Errors, ex, String.Format("Request: {0} Unit: {1} " + QRANumber, batchUnitNumber))
-    '    End Try
-    '    Return Nothing
-    'End Function
 
     <WebMethod(EnableSession:=True, Description:="Gets Unit.")> _
     Public Function GetUnit(ByVal requestNumber As String, ByVal batchUnitNumber As Int32) As TestUnit
@@ -385,24 +328,6 @@ Public Class RemiAPI
         Return 0
     End Function
 
-    '<WebMethod(Description:="Returns a set of test station(s) this computer represents.")> _
-    'Public Function ReturnMultipleStationNames(ByVal computerName As String) As List(Of String)
-    '    Try
-    '        Dim tlCol As TrackingLocationCollection = TrackingLocationManager.GetMultipleTrackingLocationByHostName(computerName)
-    '        Dim lst As List(Of String) = New List(Of String)
-    '        If tlCol IsNot Nothing Then
-    '            For Each rw As TrackingLocation In tlCol
-    '                lst.Add(rw.Name)
-    '            Next
-
-    '            Return lst
-    '        End If
-    '    Catch ex As Exception
-    '        TrackingLocationManager.LogIssue("REMI API ReturnMultipleStationNames", "e3", NotificationType.Errors, ex, String.Format("WorkStationName: {0}", computerName))
-    '    End Try
-    '    Return Nothing
-    'End Function
-
     <WebMethod(Description:="Returns a set of test station(s) this computer represents by the type of station.")> _
     Public Function ReturnMultipleStationNamesByType(ByVal computerName As String, ByVal trackingLocationType As String) As TrackingLocationCollection
         Try
@@ -432,18 +357,6 @@ Public Class RemiAPI
         End Try
         Return Nothing
     End Function
-
-    '<WebMethod(EnableSession:=True, Description:="Returns the specific test station id for a given user, e.g. there are two labs - Lab - Cambridge & Lab - Bochum. If you want a specific location id for a given user use ""Lab"" and their username with this method.")> _
-    'Public Function GetSpecificLocationForCurrentUsersTestCenter(ByVal stationName As String, ByVal userIdentification As String) As Integer
-    '    Try
-    '        If UserManager.SetUserToSession(userIdentification) Then
-    '            Return TrackingLocationManager.GetSpecificLocationForCurrentUsersTestCenter(stationName, UserManager.GetCurrentValidUserLDAPName)
-    '        End If
-    '    Catch ex As Exception
-    '        TrackingLocationManager.LogIssue("REMI API GetSpecificLocationForCurrentUsersTestCenter", "e3", NotificationType.Errors, ex, String.Format("User: {0} StationName: {1}", userIdentification, stationName))
-    '    End Try
-    '    Return 0
-    'End Function
 
     <WebMethod(EnableSession:=True, Description:="Adds A New Trackign Location.")> _
     Public Function AddHostToTrackingLocation(ByVal hostName As String, ByVal trackingLocationID As Int32, ByVal userIdentification As String, ByVal testCenterID As Int32) As Boolean
@@ -584,7 +497,7 @@ Public Class RemiAPI
         Try
             Return TestStageManager.GetList(TestStageType.NotSet, jobName, False, 0)
         Catch ex As Exception
-            JobManager.LogIssue("REMI API GetJobStages", "e3", NotificationType.Errors, ex, String.Format("JobName: {0}", jobName))
+            TestStageManager.LogIssue("REMI API GetJobStages", "e3", NotificationType.Errors, ex, String.Format("JobName: {0}", jobName))
         End Try
         Return Nothing
     End Function
@@ -773,19 +686,13 @@ Public Class RemiAPI
                 Return JobManager.SaveJob(job)
             End If
         Catch ex As Exception
-            LookupsManager.LogIssue("REMI API SaveJob", "e1", NotificationType.Errors, ex, String.Format("User: {0}", userIdentification))
+            JobManager.LogIssue("REMI API SaveJob", "e1", NotificationType.Errors, ex, String.Format("User: {0}", userIdentification))
         End Try
         Return False
     End Function
 #End Region
 
 #Region "User"
-    '<Obsolete("Don't use this routine any more. Use GetUserDetails2 instead."), _
-    'WebMethod(EnableSession:=True, Description:="Returns the user's login name and their permissions for accessing the test station at the hostname given.", MessageName:="GetUserDetails")> _
-    'Public Function GetUserDetails(ByVal userIdentification As String, ByVal trackingLocationHostName As String) As UserDetails
-    '    Return GetUserDetails2(userIdentification, trackingLocationHostName, String.Empty)
-    'End Function
-
     <WebMethod(EnableSession:=True, Description:="Returns the user's login name and their permissions for accessing the test station at the hostname given.", MessageName:="GetUserDetails2")> _
     Public Function GetUserDetails2(ByVal userIdentification As String, ByVal trackingLocationHostName As String, ByVal trackingLocationName As String) As UserDetails
         Dim userDetails As New UserDetails
@@ -817,9 +724,13 @@ Public Class RemiAPI
 
     <WebMethod(EnableSession:=True, Description:="Performs A User Search Based On The Criteria You Select.", MessageName:="UserSearch")> _
     Public Function UserSearch(ByVal us As UserSearch, ByVal userIdentification As String) As DataTable
-        If UserManager.SetUserToSession(userIdentification) Then
-            Return UserManager.UserSearch(us, False, False, False)
-        End If
+        Try
+            If UserManager.SetUserToSession(userIdentification) Then
+                Return UserManager.UserSearch(us, False, False, False)
+            End If
+        Catch ex As Exception
+            UserManager.LogIssue("REMI API UserSearch", "e3", NotificationType.Errors, ex, Nothing)
+        End Try
         Return New DataTable("UserSearch")
     End Function
 
@@ -888,7 +799,7 @@ Public Class RemiAPI
                 Return ProductGroupManager.ChangeAccess(lookupID, lookupProductID, hasAccess)
             End If
         Catch ex As Exception
-            LookupsManager.LogIssue("REMI API AssignLookupToProduct", "e1", NotificationType.Errors, ex, String.Format("User: {0} lookupID: {1} lookupProductID: {2} hasAccess: {3}", userIdentification, lookupID, lookupProductID, hasAccess.ToString()))
+            ProductGroupManager.LogIssue("REMI API AssignLookupToProduct", "e1", NotificationType.Errors, ex, String.Format("User: {0} lookupID: {1} lookupProductID: {2} hasAccess: {3}", userIdentification, lookupID, lookupProductID, hasAccess.ToString()))
         End Try
         Return False
     End Function
@@ -902,7 +813,7 @@ Public Class RemiAPI
             productList = (From row In dt Select row.Field(Of String)("LookuPType")).ToArray
             Return productList
         Catch ex As Exception
-            ProductGroupManager.LogIssue("REMI API GetProductGroups", "e3", NotificationType.Errors, ex)
+            LookupsManager.LogIssue("REMI API GetProductGroups", "e3", NotificationType.Errors, ex)
         End Try
         Return Nothing
     End Function
@@ -921,7 +832,7 @@ Public Class RemiAPI
 
             Return dtProductList
         Catch ex As Exception
-            ProductGroupManager.LogIssue("REMI API GetProductGroupsDataTable", "e3", NotificationType.Errors, ex)
+            LookupsManager.LogIssue("REMI API GetProductGroupsDataTable", "e3", NotificationType.Errors, ex)
         End Try
 
         Return New DataTable("Products")
@@ -1163,48 +1074,6 @@ Public Class RemiAPI
         Return String.Empty
     End Function
 
-    '<WebMethod(Description:="Gets product type Information.")> _
-    'Public Function GetProductTypeID(ByVal requestNumber As String) As Int32
-    '    Try
-    '        Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-
-    '        If batch IsNot Nothing And batch.ProductType IsNot Nothing Then
-    '            Return batch.ProductType.LookupID
-    '        End If
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API GetProductTypeID", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
-    '    End Try
-    '    Return Nothing
-    'End Function
-
-    '<WebMethod(Description:="Gets Test Center Information.")> _
-    'Public Function GetTestCenterID(ByVal requestNumber As String) As Int32
-    '    Try
-    '        Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-
-    '        If batch IsNot Nothing And batch.TestCenter IsNot Nothing Then
-    '            Return batch.TestCenter.LookupID
-    '        End If
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API GetTestCenterID", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
-    '    End Try
-    '    Return Nothing
-    'End Function
-
-    '<WebMethod(Description:="Gets accessory Information.")> _
-    'Public Function GetAccessoryTypeID(ByVal requestNumber As String) As Int32
-    '    Try
-    '        Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-
-    '        If batch IsNot Nothing And batch.AccessoryGroup IsNot Nothing Then
-    '            Return batch.AccessoryGroup.LookupID
-    '        End If
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API GetAccessoryTypeID", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
-    '    End Try
-    '    Return Nothing
-    'End Function
-
     <WebMethod(Description:="Given a qra number this method will return the batch information.")> _
     Public Function GetBatch(ByVal requestNumber As String) As BatchView
         Try
@@ -1251,43 +1120,6 @@ Public Class RemiAPI
 
         Return New DataTable("Comments")
     End Function
-
-    '<Obsolete("Don't use this routine any more.Hardware Is Not Longer Filled."), _
-    'WebMethod(Description:="Given a qra number this method will return the Hardware Revision of a batch.")> _
-    'Public Function GetHardwareRevision(ByVal requestNumber As String) As String
-    '    Try
-    '        Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-
-    '        If batch IsNot Nothing Then
-    '            If batch.HWRevision IsNot Nothing Then
-    '                Return batch.HWRevision
-    '            Else
-    '                Return String.Empty
-    '            End If
-    '        End If
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API GetHardwareRevision", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
-    '    End Try
-    '    Return String.Empty
-    'End Function
-
-    '<WebMethod(Description:="Given a QRA Number this method returns the CPR Number.")> _
-    'Public Function GetCPRNumber(ByVal requestNumber As String) As String
-    '    Try
-    '        Dim batch As Remi.Entities.Batch = BatchManager.GetRAWBatchInformation(requestNumber)
-
-    '        If batch IsNot Nothing Then
-    '            If batch.CPRNumber IsNot Nothing Then
-    '                Return batch.CPRNumber
-    '            Else
-    '                Return String.Empty
-    '            End If
-    '        End If
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API GetCPRNumber", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
-    '    End Try
-    '    Return String.Empty
-    'End Function
 
     <WebMethod(Description:="Get Next Stage By Batch.")> _
     Public Function GetBatchNextStage(ByVal requestNumber As String) As TestStage
@@ -1403,16 +1235,6 @@ Public Class RemiAPI
         Return Nothing
     End Function
 
-    '<WebMethod(EnableSession:=True, Description:="Returns a list of the Request's of active batches.")> _
-    'Public Function GetActiveBatchList() As String()
-    '    Try
-    '        Return BatchManager.GetActiveBatchList()
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API GetActiveBatchList", "e3", NotificationType.Errors, ex)
-    '    End Try
-    '    Return Nothing
-    'End Function
-
     <WebMethod(EnableSession:=True, Description:="Returns a list of the Request's not in remi")> _
     Public Function GetRequestsNotInREMI(ByVal searchStr As String) As DataTable
         Try
@@ -1449,22 +1271,6 @@ Public Class RemiAPI
 
         Return False
     End Function
-
-    '<Obsolete("Don't use this routine any more. Use MoveBatchForward instead."), _
-    'WebMethod(EnableSession:=True, Description:="Checks if batch is ready to be moved to a different status.")> _
-    'Public Function CheckBatchForStatusUpdates(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
-    '    Try
-    '        If (HasAccess("RemiTimedServiceAvailable")) Then
-    '            If UserManager.SetUserToSession(userIdentification) Then
-    '                Return BatchManager.CheckSingleBatchForStatusUpdate(Helpers.CleanInputText(requestNumber, 21))
-    '            End If
-    '        End If
-    '    Catch ex As Exception
-    '        BatchManager.LogIssue("REMI API CheckBatchForStatusUpdates", "e1", NotificationType.Errors, ex, String.Format("RequestNumber: {0} User: {1}", requestNumber, userIdentification))
-    '    End Try
-
-    '    Return False
-    'End Function
 
     <Obsolete("Don't use this routine any more. Use ScanAdvanced instead."), _
     WebMethod(EnableSession:=True, Description:="Used to scan a device in to a test in the REMI system. Input Values are: Request [(*REQUIRED*): ""QRA-yy-bbbb-uuu-lllll""],SelectedTestID [Optional (0 treated as null):""TestID""],OverallTestResult [ ** OBSOLETE ** - REMI only uses relab for results],UserIdentification [Optional (Empty String Treated as Null): ""BadgeScan Number""] ,locationIdentification [optional (Empty String is treated as null): the hostname of the pc]")> _
