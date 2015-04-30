@@ -221,7 +221,7 @@ Partial Class ScanForInfo_ProductGroup
         ddlProductGroup.DataSource = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
         ddlProductGroup.DataBind()
 
-        Dim l As ListItem = New ListItem(UserManager.GetCurrentUser.TestCentre, id.ToString())
+        Dim l As ListItem = New ListItem(name, id.ToString())
         If (ddlProductGroup.Items.Contains(l)) Then
             ddlProductGroup.SelectedValue = l.Value
         End If
