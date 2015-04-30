@@ -70,349 +70,353 @@ Public Class REMITasks
             Return
         End If
 
-        _createDocs = DBControl.DAL.Remi.HasAccess("RemiTimedServiceCreateDocs")
-        _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
+        Try
+            _createDocs = DBControl.DAL.Remi.HasAccess("RemiTimedServiceCreateDocs")
+            _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
 
-        If (_createDocs) Then
-            Dim errorEncountered As Boolean = False
-            Dim sb As New System.Text.StringBuilder
-            Dim succeeded As Boolean = True
-            Dim counter As Integer = 0
-            Dim dtServices As DataTable = DBControl.DAL.Remi.GetServicesAccess(Nothing)
-            Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received, DBControl.remiAPI.BatchSearchBatchStatus.Rejected}
-            sb.AppendLine(String.Format("{0} - Service Running On: {1}", DateTime.Now, System.Environment.MachineName))
-            sb.AppendLine(String.Format("{0} - WebService URL: {1}", DateTime.Now, DBControl.DAL.Remi.WSUrl))
-            sb.AppendLine(String.Format("{0} - Create Doc Creation Starting...", DateTime.Now))
+            If (_createDocs) Then
+                Dim errorEncountered As Boolean = False
+                Dim sb As New System.Text.StringBuilder
+                Dim succeeded As Boolean = True
+                Dim counter As Integer = 0
+                Dim dtServices As DataTable = DBControl.DAL.Remi.GetServicesAccess(Nothing)
+                Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received, DBControl.remiAPI.BatchSearchBatchStatus.Rejected}
+                sb.AppendLine(String.Format("{0} - Service Running On: {1}", DateTime.Now, System.Environment.MachineName))
+                sb.AppendLine(String.Format("{0} - WebService URL: {1}", DateTime.Now, DBControl.DAL.Remi.WSUrl))
+                sb.AppendLine(String.Format("{0} - Create Doc Creation Starting...", DateTime.Now))
 
-            For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "ExecutiveDoc" Select s).ToList
-                Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, "Report", String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NonTestingTask)
+                For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "ExecutiveDoc" Select s).ToList
+                    Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, "Report", String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NonTestingTask)
 
-                For Each bw In bv
-                    sb.AppendLine(String.Format("{0} - Create Doc For {1}", DateTime.Now, bw.QRANumber))
-                    Dim req() As DBControl.remiAPI.RequestFields = DBControl.DAL.Remi.GetRequest(bw.QRANumber)
-                    Dim dtFiles As DataTable = DBControl.DAL.Results.GetFiles(bw.QRANumber, True)
-                    dtFiles.DefaultView.Sort = String.Format("BatchUnitNumber, TestStageName ASC")
-                    dtFiles = dtFiles.DefaultView.ToTable()
+                    For Each bw In bv
+                        sb.AppendLine(String.Format("{0} - Create Doc For {1}", DateTime.Now, bw.QRANumber))
+                        Dim req() As DBControl.remiAPI.RequestFields = DBControl.DAL.Remi.GetRequest(bw.QRANumber)
+                        Dim dtFiles As DataTable = DBControl.DAL.Results.GetFiles(bw.QRANumber, True)
+                        dtFiles.DefaultView.Sort = String.Format("BatchUnitNumber, TestStageName ASC")
+                        dtFiles = dtFiles.DefaultView.ToTable()
 
-                    Dim es As String = (From r In req Where r.IntField = "ExecutiveSummary" Select r.Value).FirstOrDefault()
+                        Dim es As String = (From r In req Where r.IntField = "ExecutiveSummary" Select r.Value).FirstOrDefault()
 
-                    File.Copy(ConfigurationManager.AppSettings("TemplateFile").ToString(), String.Concat(Path.GetTempPath(), ConfigurationManager.AppSettings("TemplateFileName").ToString()), True)
-                    Dim tempFile As String = String.Concat(Path.GetTempPath(), ConfigurationManager.AppSettings("TemplateFileName").ToString())
-                    Dim fileToOpen As Object = DirectCast(tempFile, Object)
+                        File.Copy(ConfigurationManager.AppSettings("TemplateFile").ToString(), String.Concat(Path.GetTempPath(), ConfigurationManager.AppSettings("TemplateFileName").ToString()), True)
+                        Dim tempFile As String = String.Concat(Path.GetTempPath(), ConfigurationManager.AppSettings("TemplateFileName").ToString())
+                        Dim fileToOpen As Object = DirectCast(tempFile, Object)
 
-                    If Not Directory.Exists(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType)) Then
-                        sb.AppendLine(String.Format("Creating Folder {0}", req(0).RequestType))
+                        If Not Directory.Exists(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType)) Then
+                            sb.AppendLine(String.Format("Creating Folder {0}", req(0).RequestType))
 
-                        Directory.CreateDirectory(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType))
-                        sb.AppendLine(String.Format("Creating Folder {0} Finished", req(0).RequestType))
-                    End If
+                            Directory.CreateDirectory(String.Concat(ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType))
+                            sb.AppendLine(String.Format("Creating Folder {0} Finished", req(0).RequestType))
+                        End If
 
-                    Dim fileToSave As Object = DirectCast(String.Format("{0}{1}\{2}.docx", ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType, bw.QRANumber), Object)
+                        Dim fileToSave As Object = DirectCast(String.Format("{0}{1}\{2}.docx", ConfigurationManager.AppSettings("DocCreationFolder").ToString(), req(0).RequestType, bw.QRANumber), Object)
 
-                    If (Not String.IsNullOrEmpty(es) And Not File.Exists(fileToSave)) Then
-                        Dim PassFail As String = DBControl.DAL.Results.GetOverAllPassFail(bw.QRANumber)
+                        If (Not String.IsNullOrEmpty(es) And Not File.Exists(fileToSave)) Then
+                            Dim PassFail As String = DBControl.DAL.Results.GetOverAllPassFail(bw.QRANumber)
 
-                        Dim wordApp As New Word.Application()
-                        Dim sourceDoc As New Word.Document
-                        Dim missing As Object = System.Reflection.Missing.Value
-                        sourceDoc = wordApp.Documents.Open(fileToOpen, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing)
+                            Dim wordApp As New Word.Application()
+                            Dim sourceDoc As New Word.Document
+                            Dim missing As Object = System.Reflection.Missing.Value
+                            sourceDoc = wordApp.Documents.Open(fileToOpen, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing)
 
-                        Try
-                            If (sourceDoc IsNot Nothing) Then
-                                Dim rng As Word.Range
+                            Try
+                                If (sourceDoc IsNot Nothing) Then
+                                    Dim rng As Word.Range
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("Department", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("Department", Object)).Range
-                                    rng.Text = bw.Department
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("Department", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("Department", Object)).Range
+                                        rng.Text = bw.Department
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("ExecutiveSummary", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("ExecutiveSummary", Object)).Range
-                                    rng.Text = es
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("ExecutiveSummary", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("ExecutiveSummary", Object)).Range
+                                        rng.Text = es
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("JobName", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("JobName", Object)).Range
-                                    rng.Text = bw.JobName
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("JobName", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("JobName", Object)).Range
+                                        rng.Text = bw.JobName
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("UserName", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("UserName", Object)).Range
-                                    rng.Text = "remi"
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("UserName", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("UserName", Object)).Range
+                                        rng.Text = "remi"
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("JobNameHeader", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("JobNameHeader", Object)).Range
-                                    rng.Text = bw.JobName
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("JobNameHeader", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("JobNameHeader", Object)).Range
+                                        rng.Text = bw.JobName
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("RequestNumber", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("RequestNumber", Object)).Range
-                                    rng.Text = bw.QRANumber
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("RequestNumber", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("RequestNumber", Object)).Range
+                                        rng.Text = bw.QRANumber
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("PartNameUnderTest", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("PartNameUnderTest", Object)).Range
-                                    rng.Text = (From r In req Where r.Name = "Part Name Under Test" Select r.Value).FirstOrDefault()
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("PartNameUnderTest", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("PartNameUnderTest", Object)).Range
+                                        rng.Text = (From r In req Where r.Name = "Part Name Under Test" Select r.Value).FirstOrDefault()
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("RequestDetails", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("RequestDetails", Object)).Range
-                                    rng.Text = String.Empty
-                                    Dim oTemplate As Word.ListTemplate = wordApp.ListGalleries.Item(Word.WdListGalleryType.wdBulletGallery).ListTemplates.Item(1)
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("RequestDetails", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("RequestDetails", Object)).Range
+                                        rng.Text = String.Empty
+                                        Dim oTemplate As Word.ListTemplate = wordApp.ListGalleries.Item(Word.WdListGalleryType.wdBulletGallery).ListTemplates.Item(1)
 
-                                    Dim dontAddFields = New List(Of String)()
-                                    dontAddFields.Add("Request Status")
-                                    dontAddFields.Add("Department")
-                                    dontAddFields.Add("Is Report Required")
-                                    dontAddFields.Add("FA Required")
-                                    dontAddFields.Add("Return Material?")
-                                    dontAddFields.Add("Product Type")
-                                    dontAddFields.Add("Drop/Tumble Link")
-                                    dontAddFields.Add("Executive Summary")
+                                        Dim dontAddFields = New List(Of String)()
+                                        dontAddFields.Add("Request Status")
+                                        dontAddFields.Add("Department")
+                                        dontAddFields.Add("Is Report Required")
+                                        dontAddFields.Add("FA Required")
+                                        dontAddFields.Add("Return Material?")
+                                        dontAddFields.Add("Product Type")
+                                        dontAddFields.Add("Drop/Tumble Link")
+                                        dontAddFields.Add("Executive Summary")
 
-                                    For Each r In req
-                                        If (Not String.IsNullOrEmpty(r.Value) And Not dontAddFields.Contains(r.Name)) Then
-                                            With rng
-                                                .ListFormat.ApplyListTemplateWithLevel(ListTemplate:=oTemplate, ContinuePreviousList:=False, ApplyTo:=Word.WdListApplyTo.wdListApplyToWholeList, DefaultListBehavior:=Word.WdDefaultListBehavior.wdWord10ListBehavior)
-                                                .Collapse(Word.WdCollapseDirection.wdCollapseStart)
-                                                .Text = String.Format("{0}: {1}", r.Name, r.Value.Replace(vbCr, " ").Replace(vbLf, " "))
-                                                .Font.Size = 10
-                                                .Font.Name = "Arial"
-                                                .ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft
-                                                .Bold = False
-                                                .InsertParagraphAfter()
-                                                .Collapse(Word.WdCollapseDirection.wdCollapseEnd)
-                                            End With
-                                        End If
-                                    Next
+                                        For Each r In req
+                                            If (Not String.IsNullOrEmpty(r.Value) And Not dontAddFields.Contains(r.Name)) Then
+                                                With rng
+                                                    .ListFormat.ApplyListTemplateWithLevel(ListTemplate:=oTemplate, ContinuePreviousList:=False, ApplyTo:=Word.WdListApplyTo.wdListApplyToWholeList, DefaultListBehavior:=Word.WdDefaultListBehavior.wdWord10ListBehavior)
+                                                    .Collapse(Word.WdCollapseDirection.wdCollapseStart)
+                                                    .Text = String.Format("{0}: {1}", r.Name, r.Value.Replace(vbCr, " ").Replace(vbLf, " "))
+                                                    .Font.Size = 10
+                                                    .Font.Name = "Arial"
+                                                    .ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft
+                                                    .Bold = False
+                                                    .InsertParagraphAfter()
+                                                    .Collapse(Word.WdCollapseDirection.wdCollapseEnd)
+                                                End With
+                                            End If
+                                        Next
 
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
 
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("Observations", Object).ToString())) Then
-                                    Dim dtObservations As DataTable = DBControl.DAL.Results.GetObservationSummary(bw.ID, Environment.UserName)
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("Observations", Object).ToString())) Then
+                                        Dim dtObservations As DataTable = DBControl.DAL.Results.GetObservationSummary(bw.ID, Environment.UserName)
 
-                                    rng = sourceDoc.Bookmarks.Item("Observations").Range
-                                    rng.Text = String.Empty
+                                        rng = sourceDoc.Bookmarks.Item("Observations").Range
+                                        rng.Text = String.Empty
 
-                                    Dim tblob As Word.Table = rng.Tables.Add(rng, dtObservations.Rows.Count + 1, dtObservations.Columns.Count, Word.WdDefaultTableBehavior.wdWord9TableBehavior, Word.WdAutoFitBehavior.wdAutoFitContent)
-                                    tblob.Borders(Word.WdBorderType.wdBorderBottom).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                    tblob.Borders(Word.WdBorderType.wdBorderLeft).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                    tblob.Borders(Word.WdBorderType.wdBorderRight).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                    tblob.Borders(Word.WdBorderType.wdBorderTop).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                    tblob.Borders(Word.WdBorderType.wdBorderVertical).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                    tblob.Borders(Word.WdBorderType.wdBorderHorizontal).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                        Dim tblob As Word.Table = rng.Tables.Add(rng, dtObservations.Rows.Count + 1, dtObservations.Columns.Count, Word.WdDefaultTableBehavior.wdWord9TableBehavior, Word.WdAutoFitBehavior.wdAutoFitContent)
+                                        tblob.Borders(Word.WdBorderType.wdBorderBottom).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                        tblob.Borders(Word.WdBorderType.wdBorderLeft).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                        tblob.Borders(Word.WdBorderType.wdBorderRight).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                        tblob.Borders(Word.WdBorderType.wdBorderTop).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                        tblob.Borders(Word.WdBorderType.wdBorderVertical).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                        tblob.Borders(Word.WdBorderType.wdBorderHorizontal).LineStyle = Word.WdLineStyle.wdLineStyleSingle
 
-                                    Dim rowNum As Int32 = 0
-                                    Dim colNum As Int32 = 0
+                                        Dim rowNum As Int32 = 0
+                                        Dim colNum As Int32 = 0
 
 
-                                    For Each row As Word.Row In tblob.Rows
-                                        For Each cell As Word.Cell In row.Cells
-                                            If (rowNum = 0) Then
-                                                cell.Range.Text = dtObservations.Columns(colNum).ColumnName
-                                                cell.Range.Font.Bold = 1
-                                                cell.Range.Font.Size = 12
-                                                cell.Range.Font.Name = "Arial"
-                                                cell.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter
+                                        For Each row As Word.Row In tblob.Rows
+                                            For Each cell As Word.Cell In row.Cells
+                                                If (rowNum = 0) Then
+                                                    cell.Range.Text = dtObservations.Columns(colNum).ColumnName
+                                                    cell.Range.Font.Bold = 1
+                                                    cell.Range.Font.Size = 12
+                                                    cell.Range.Font.Name = "Arial"
+                                                    cell.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter
+                                                    colNum = colNum + 1
+                                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
+                                                End If
+                                            Next
+                                            colNum = 0
+                                            rowNum = rowNum + 1
+                                        Next
+
+                                        rowNum = 0
+                                        colNum = 0
+
+                                        For Each row As Word.Row In tblob.Rows
+                                            For Each cell As Word.Cell In row.Cells
+                                                If (rowNum > 0 And rowNum <= dtObservations.Rows.Count) Then
+                                                    cell.Range.Text = dtObservations.Rows(rowNum)(colNum).ToString()
+                                                    cell.Range.Font.Bold = 0
+                                                    cell.Range.Font.Size = 8
+                                                    cell.Range.Font.Name = "Arial"
+                                                    cell.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft
+                                                End If
+
                                                 colNum = colNum + 1
                                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
-                                            End If
+                                            Next
+
+                                            colNum = 0
+                                            rowNum = rowNum + 1
                                         Next
-                                        colNum = 0
-                                        rowNum = rowNum + 1
+
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(tblob)
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+
+                                    End If
+
+                                    If (sourceDoc.Bookmarks.Exists(DirectCast("Result", Object).ToString())) Then
+                                        rng = sourceDoc.Bookmarks.Item(DirectCast("Result", Object)).Range
+                                        rng.Text = PassFail
+                                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    End If
+
+                                    Dim tempPath As String = String.Concat(Path.GetTempPath(), bw.QRANumber)
+
+                                    If (Directory.Exists(tempPath)) Then
+                                        Directory.Delete(tempPath, True)
+                                    End If
+
+                                    Directory.CreateDirectory(tempPath)
+
+                                    For Each row As DataRow In dtFiles.Rows
+                                        Dim stagePath As String = String.Concat(tempPath, "\", row.Field(Of String)("TestStageName").ToString())
+                                        Dim testPath As String = String.Concat(stagePath, "\", row.Field(Of String)("TestName").ToString())
+                                        Dim unit As String = String.Concat(testPath, "\", row.Field(Of Int32)("BatchUnitNumber").ToString())
+                                        Dim contentType As String = row.Field(Of String)("ContentType").ToString().Replace(".", String.Empty)
+                                        Dim fileName As String = row.Field(Of String)("FileName").ToString()
+                                        fileName = fileName.Substring(fileName.LastIndexOf("\") + 1)
+
+                                        If Not Directory.Exists(stagePath) Then
+                                            Directory.CreateDirectory(stagePath)
+                                        End If
+
+                                        If Not Directory.Exists(testPath) Then
+                                            Directory.CreateDirectory(testPath)
+                                        End If
+
+                                        If Not Directory.Exists(unit) Then
+                                            Directory.CreateDirectory(unit)
+                                        End If
+
+                                        Dim fs As IO.FileStream = New IO.FileStream(String.Concat(unit, "\", fileName), IO.FileMode.OpenOrCreate, IO.FileAccess.Write)
+                                        Dim binwrite As IO.BinaryWriter = New IO.BinaryWriter(fs)
+                                        binwrite.Write(row.Field(Of Byte())("File"))
+                                        binwrite.Flush()
+                                        binwrite.Close()
+                                        fs.Close()
+                                        binwrite = Nothing
+                                        fs.Dispose()
                                     Next
 
-                                    rowNum = 0
-                                    colNum = 0
+                                    rng = sourceDoc.Bookmarks.Item(DirectCast("Images", Object)).Range
+                                    Dim rowCount As Int32 = Math.Ceiling(dtFiles.Rows.Count() / 2)
+                                    Dim tbl As Word.Table = rng.Tables.Add(rng, rowCount, 2, missing, missing)
+                                    Dim pictureCounter As Int32 = 0
+                                    tbl.Borders(Word.WdBorderType.wdBorderBottom).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tbl.Borders(Word.WdBorderType.wdBorderLeft).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tbl.Borders(Word.WdBorderType.wdBorderRight).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tbl.Borders(Word.WdBorderType.wdBorderTop).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tbl.Borders(Word.WdBorderType.wdBorderVertical).LineStyle = Word.WdLineStyle.wdLineStyleSingle
+                                    tbl.Borders(Word.WdBorderType.wdBorderHorizontal).LineStyle = Word.WdLineStyle.wdLineStyleSingle
 
-                                    For Each row As Word.Row In tblob.Rows
+                                    For Each row As Word.Row In tbl.Rows
                                         For Each cell As Word.Cell In row.Cells
-                                            If (rowNum > 0 And rowNum <= dtObservations.Rows.Count) Then
-                                                cell.Range.Text = dtObservations.Rows(rowNum)(colNum).ToString()
-                                                cell.Range.Font.Bold = 0
-                                                cell.Range.Font.Size = 8
-                                                cell.Range.Font.Name = "Arial"
-                                                cell.Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft
-                                            End If
+                                            If (pictureCounter < dtFiles.Rows.Count) Then
+                                                Dim innerTable As Word.Table = cell.Range.Tables.Add(cell.Range, 1, 1, missing, missing)
 
-                                            colNum = colNum + 1
+                                                innerTable.Rows(1).Cells(1).Range.Text = dtFiles.Rows(pictureCounter).Field(Of String)("Values")
+                                                innerTable.Rows(1).Cells(1).Range.Bold = 0
+                                                innerTable.Rows(1).Cells(1).Range.Font.Size = 9
+                                                Dim row2 As Word.Row = innerTable.Rows.Add(missing)
+
+                                                Dim ms As MemoryStream = New MemoryStream(dtFiles.Rows(pictureCounter).Field(Of Byte())("File"))
+                                                Dim image As Bitmap = DirectCast(Drawing.Image.FromStream(ms), Bitmap)
+
+                                                Dim origHPix As Int32 = image.Height
+                                                Dim origWPix As Int32 = image.Width
+                                                Dim newWInches As Decimal = 3.5
+                                                Dim newWPoints As Decimal = wordApp.InchesToPoints(newWInches)
+                                                Dim newWPixels As Decimal = wordApp.PointsToPixels(newWPoints, missing)
+                                                Dim newHPixels As Decimal = newWPixels * origHPix / origWPix
+                                                Dim newImage As Bitmap = New Bitmap(image, New Size(newWPixels, newHPixels))
+
+                                                System.Windows.Forms.Clipboard.SetDataObject(newImage)
+                                                row2.Cells(1).Range.PasteAndFormat(Word.WdRecoveryType.wdFormatOriginalFormatting)
+                                                image.Dispose()
+                                                image = Nothing
+                                                newImage.Dispose()
+                                                newImage = Nothing
+
+                                                Dim row3 As Word.Row = innerTable.Rows.Add(missing)
+
+                                                If (dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName").ToString() = dtFiles.Rows(pictureCounter).Field(Of String)("TestName").ToString()) Then
+                                                    row3.Cells(1).Range.Text = String.Format("Unit {0} - {1}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"))
+                                                Else
+                                                    row3.Cells(1).Range.Text = String.Format("Unit {0} - {1} {2}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"))
+                                                End If
+
+                                                row3.Range.Font.Bold = 0
+                                                row3.Range.Font.Size = 8
+                                                System.Runtime.InteropServices.Marshal.ReleaseComObject(row3)
+                                                System.Runtime.InteropServices.Marshal.ReleaseComObject(row2)
+                                                System.Runtime.InteropServices.Marshal.ReleaseComObject(innerTable)
+
+                                                pictureCounter += 1
+                                            End If
                                             System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
                                         Next
+                                    Next
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
+                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(tbl)
 
-                                        colNum = 0
-                                        rowNum = rowNum + 1
+                                    Dim subDirs As String() = IO.Directory.GetDirectories(tempPath)
+                                    rng = sourceDoc.Bookmarks.Item(DirectCast("ZipImages", Object)).Range
+                                    rng.Text = String.Empty
+
+                                    For Each dir As String In subDirs
+                                        Dim file As String = String.Concat(tempPath, "\", dir.Substring(dir.LastIndexOf("\") + 1) + ".zip")
+                                        ZipFile.CreateFromDirectory(dir, file, CompressionLevel.Optimal, True)
+
+                                        rng.InlineShapes.AddOLEObject(missing, file, missing, missing, missing, missing, missing, missing)
                                     Next
 
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(tblob)
                                     System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
 
-                                End If
-
-                                If (sourceDoc.Bookmarks.Exists(DirectCast("Result", Object).ToString())) Then
-                                    rng = sourceDoc.Bookmarks.Item(DirectCast("Result", Object)).Range
-                                    rng.Text = PassFail
-                                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                End If
-
-                                Dim tempPath As String = String.Concat(Path.GetTempPath(), bw.QRANumber)
-
-                                If (Directory.Exists(tempPath)) Then
                                     Directory.Delete(tempPath, True)
                                 End If
-
-                                Directory.CreateDirectory(tempPath)
-
-                                For Each row As DataRow In dtFiles.Rows
-                                    Dim stagePath As String = String.Concat(tempPath, "\", row.Field(Of String)("TestStageName").ToString())
-                                    Dim testPath As String = String.Concat(stagePath, "\", row.Field(Of String)("TestName").ToString())
-                                    Dim unit As String = String.Concat(testPath, "\", row.Field(Of Int32)("BatchUnitNumber").ToString())
-                                    Dim contentType As String = row.Field(Of String)("ContentType").ToString().Replace(".", String.Empty)
-                                    Dim fileName As String = row.Field(Of String)("FileName").ToString()
-                                    fileName = fileName.Substring(fileName.LastIndexOf("\") + 1)
-
-                                    If Not Directory.Exists(stagePath) Then
-                                        Directory.CreateDirectory(stagePath)
+                            Catch ex As Exception
+                                errorEncountered = True
+                                sb.AppendLine(String.Format("{0} - Error Creating Doc For {1}...", DateTime.Now, bw.QRANumber))
+                                sb.AppendLine(String.Format("{0} - {1} - {2}", DateTime.Now, ex.Message, ex.StackTrace.ToString()))
+                            Finally
+                                If (errorEncountered) Then
+                                    sourceDoc.Close()
+                                    sourceDoc = Nothing
+                                    wordApp = Nothing
+                                Else
+                                    If (sourceDoc IsNot Nothing) Then
+                                        sourceDoc.SaveAs(fileToSave, missing, missing, missing, missing, missing, missing, missing, missing,
+                                                 missing, missing, missing, missing, missing, missing, missing)
+                                        Dim saveChanges As Object = DirectCast(Word.WdSaveOptions.wdDoNotSaveChanges, Object)
+                                        sourceDoc.Close(saveChanges, missing, missing)
                                     End If
 
-                                    If Not Directory.Exists(testPath) Then
-                                        Directory.CreateDirectory(testPath)
+                                    If (wordApp IsNot Nothing) Then
+                                        wordApp.Quit(missing, missing, missing)
                                     End If
-
-                                    If Not Directory.Exists(unit) Then
-                                        Directory.CreateDirectory(unit)
-                                    End If
-
-                                    Dim fs As IO.FileStream = New IO.FileStream(String.Concat(unit, "\", fileName), IO.FileMode.OpenOrCreate, IO.FileAccess.Write)
-                                    Dim binwrite As IO.BinaryWriter = New IO.BinaryWriter(fs)
-                                    binwrite.Write(row.Field(Of Byte())("File"))
-                                    binwrite.Flush()
-                                    binwrite.Close()
-                                    fs.Close()
-                                    binwrite = Nothing
-                                    fs.Dispose()
-                                Next
-
-                                rng = sourceDoc.Bookmarks.Item(DirectCast("Images", Object)).Range
-                                Dim rowCount As Int32 = Math.Ceiling(dtFiles.Rows.Count() / 2)
-                                Dim tbl As Word.Table = rng.Tables.Add(rng, rowCount, 2, missing, missing)
-                                Dim pictureCounter As Int32 = 0
-                                tbl.Borders(Word.WdBorderType.wdBorderBottom).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                tbl.Borders(Word.WdBorderType.wdBorderLeft).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                tbl.Borders(Word.WdBorderType.wdBorderRight).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                tbl.Borders(Word.WdBorderType.wdBorderTop).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                tbl.Borders(Word.WdBorderType.wdBorderVertical).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-                                tbl.Borders(Word.WdBorderType.wdBorderHorizontal).LineStyle = Word.WdLineStyle.wdLineStyleSingle
-
-                                For Each row As Word.Row In tbl.Rows
-                                    For Each cell As Word.Cell In row.Cells
-                                        If (pictureCounter < dtFiles.Rows.Count) Then
-                                            Dim innerTable As Word.Table = cell.Range.Tables.Add(cell.Range, 1, 1, missing, missing)
-
-                                            innerTable.Rows(1).Cells(1).Range.Text = dtFiles.Rows(pictureCounter).Field(Of String)("Values")
-                                            innerTable.Rows(1).Cells(1).Range.Bold = 0
-                                            innerTable.Rows(1).Cells(1).Range.Font.Size = 9
-                                            Dim row2 As Word.Row = innerTable.Rows.Add(missing)
-
-                                            Dim ms As MemoryStream = New MemoryStream(dtFiles.Rows(pictureCounter).Field(Of Byte())("File"))
-                                            Dim image As Bitmap = DirectCast(Drawing.Image.FromStream(ms), Bitmap)
-
-                                            Dim origHPix As Int32 = image.Height
-                                            Dim origWPix As Int32 = image.Width
-                                            Dim newWInches As Decimal = 3.5
-                                            Dim newWPoints As Decimal = wordApp.InchesToPoints(newWInches)
-                                            Dim newWPixels As Decimal = wordApp.PointsToPixels(newWPoints, missing)
-                                            Dim newHPixels As Decimal = newWPixels * origHPix / origWPix
-                                            Dim newImage As Bitmap = New Bitmap(image, New Size(newWPixels, newHPixels))
-
-                                            System.Windows.Forms.Clipboard.SetDataObject(newImage)
-                                            row2.Cells(1).Range.PasteAndFormat(Word.WdRecoveryType.wdFormatOriginalFormatting)
-                                            image.Dispose()
-                                            image = Nothing
-                                            newImage.Dispose()
-                                            newImage = Nothing
-
-                                            Dim row3 As Word.Row = innerTable.Rows.Add(missing)
-
-                                            If (dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName").ToString() = dtFiles.Rows(pictureCounter).Field(Of String)("TestName").ToString()) Then
-                                                row3.Cells(1).Range.Text = String.Format("Unit {0} - {1}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"))
-                                            Else
-                                                row3.Cells(1).Range.Text = String.Format("Unit {0} - {1} {2}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"))
-                                            End If
-
-                                            row3.Range.Font.Bold = 0
-                                            row3.Range.Font.Size = 8
-                                            System.Runtime.InteropServices.Marshal.ReleaseComObject(row3)
-                                            System.Runtime.InteropServices.Marshal.ReleaseComObject(row2)
-                                            System.Runtime.InteropServices.Marshal.ReleaseComObject(innerTable)
-
-                                            pictureCounter += 1
-                                        End If
-                                            System.Runtime.InteropServices.Marshal.ReleaseComObject(cell)
-                                    Next
-                                Next
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(tbl)
-
-                                Dim subDirs As String() = IO.Directory.GetDirectories(tempPath)
-                                rng = sourceDoc.Bookmarks.Item(DirectCast("ZipImages", Object)).Range
-                                rng.Text = String.Empty
-
-                                For Each dir As String In subDirs
-                                    Dim file As String = String.Concat(tempPath, "\", dir.Substring(dir.LastIndexOf("\") + 1) + ".zip")
-                                    ZipFile.CreateFromDirectory(dir, file, CompressionLevel.Optimal, True)
-
-                                    rng.InlineShapes.AddOLEObject(missing, file, missing, missing, missing, missing, missing, missing)
-                                Next
-
-                                System.Runtime.InteropServices.Marshal.ReleaseComObject(rng)
-
-                                Directory.Delete(tempPath, True)
-                            End If
-                        Catch ex As Exception
-                            errorEncountered = True
-                            sb.AppendLine(String.Format("{0} - Error Creating Doc For {1}...", DateTime.Now, bw.QRANumber))
-                            sb.AppendLine(String.Format("{0} - {1} - {2}", DateTime.Now, ex.Message, ex.StackTrace.ToString()))
-                        Finally
-                            If (errorEncountered) Then
-                                sourceDoc.Close()
-                                sourceDoc = Nothing
-                                wordApp = Nothing
-                            Else
-                                If (sourceDoc IsNot Nothing) Then
-                                    sourceDoc.SaveAs(fileToSave, missing, missing, missing, missing, missing, missing, missing, missing,
-                                             missing, missing, missing, missing, missing, missing, missing)
-                                    Dim saveChanges As Object = DirectCast(Word.WdSaveOptions.wdDoNotSaveChanges, Object)
-                                    sourceDoc.Close(saveChanges, missing, missing)
                                 End If
 
-                                If (wordApp IsNot Nothing) Then
-                                    wordApp.Quit(missing, missing, missing)
-                                End If
-                            End If
+                                GC.Collect()
+                                GC.WaitForPendingFinalizers()
+                            End Try
 
-                            GC.Collect()
-                            GC.WaitForPendingFinalizers()
-                        End Try
-
-                        Thread.Sleep(60000)
-                    End If
+                            Thread.Sleep(60000)
+                        End If
+                    Next
                 Next
-            Next
 
-            If (Not (succeeded) Or _sendSuccessEmails) Then
-                sb.AppendLine(String.Format("{0} - Finished Creating {1} Word Doc's", DateTime.Now, counter))
-                Helpers.SendMail(String.Format("Word Doc Creation Complete{0}...", IIf(Not (succeeded), " - Failed", String.Empty)), sb.ToString)
+                If (Not (succeeded) Or _sendSuccessEmails) Then
+                    sb.AppendLine(String.Format("{0} - Finished Creating {1} Word Doc's", DateTime.Now, counter))
+                    Helpers.SendMail(String.Format("Word Doc Creation Complete{0}...", IIf(Not (succeeded), " - Failed", String.Empty)), sb.ToString)
+                End If
             End If
-        End If
+        Catch ex As Exception
+            Helpers.SendMail(String.Format("Word Doc Creation Fatal Error"), String.Format("{0}\n\n{1}", ex.Message.ToString(), ex.StackTrace.ToString()))
+        End Try
     End Sub
 
     Private Sub CheckBatchForStatusUpdates()
@@ -426,9 +430,9 @@ Public Class REMITasks
         Dim counter As Integer = 0
         Dim succeeded As Boolean = True
         Dim retry As Int32 = 1
-        _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
 
         Try
+            _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
             sb.AppendLine(String.Format("{0} - Service Running On: {1}", DateTime.Now, System.Environment.MachineName))
             sb.AppendLine(String.Format("{0} - Check Interval: {1}", DateTime.Now, My.MySettings.Default.IntervalMinutes))
             sb.AppendLine(String.Format("{0} - WebService URL: {1}", DateTime.Now, DBControl.DAL.Remi.WSUrl))
@@ -489,7 +493,7 @@ Public Class REMITasks
                 Helpers.SendMail(String.Format("Batch Check Complete{0}...", IIf(Not (succeeded), " - Failed", String.Empty)), sb.ToString)
             End If
         Catch ex As Exception
-            Helpers.SendMail("Batch Check Failed.", ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine + "Work Done: " + sb.ToString)
+            Helpers.SendMail(String.Format("Batch Check Fatal Error"), String.Format("{0}\n\n{1}", ex.Message.ToString(), ex.StackTrace.ToString()))
         End Try
     End Sub
 
@@ -500,78 +504,82 @@ Public Class REMITasks
             Return
         End If
 
-        _checkJIRA = DBControl.DAL.Remi.HasAccess("RemiTimedServiceCheckJIRA")
+        Try
+            _checkJIRA = DBControl.DAL.Remi.HasAccess("RemiTimedServiceCheckJIRA")
 
-        If (_checkJIRA) Then
-            Dim sb As New StringBuilder
-            Dim succeeded As Boolean = True
-            Dim counter As Integer = 0
-            Dim requests As New List(Of String)
+            If (_checkJIRA) Then
+                Dim sb As New StringBuilder
+                Dim succeeded As Boolean = True
+                Dim counter As Integer = 0
+                Dim requests As New List(Of String)
 
-            Try
-                _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
-                Dim dtServices As DataTable = DBControl.DAL.Remi.GetServicesAccess(Nothing)
-                Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
+                Try
+                    _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
+                    Dim dtServices As DataTable = DBControl.DAL.Remi.GetServicesAccess(Nothing)
+                    Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
 
-                For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "JIRASync" Select s).ToList
-                    Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
-                    requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
-                    sb.AppendLine(String.Format("{0} - Adding Requests For Department {1}", DateTime.Now, department.Field(Of String)("Values").ToString()))
-                Next
-
-                Dim strRequests As String = String.Join("','", requests.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray())
-                Dim dtJiraQuery As New DataTable("JiraQuery")
-
-                Using myConnection As New SqlConnection(ConfigurationManager.ConnectionStrings("JiraDBConnectionString").ConnectionString)
-                    Using myCommand As New SqlCommand("SELECT d.IssueKey, d.Summary, l.Label FROM FCT.vDefects d INNER JOIN DIM.vLabels l ON l.IssueID=d.IssueID WHERE l.Label IN ('" + strRequests + "')", myConnection)
-                        myCommand.CommandType = CommandType.Text
-                        myConnection.Open()
-
-                        Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                        da.Fill(dtJiraQuery)
-                        dtJiraQuery.TableName = "JiraQuery"
-                    End Using
-                End Using
-
-                If (succeeded) Then
-                    For Each dr As DataRow In dtJiraQuery.Rows
-                        Dim key As String = dr.Field(Of String)("IssueKey")
-                        Dim title As String = dr.Field(Of String)("Summary")
-                        Dim requestNumber As String = String.Empty
-
-                        If Regex.IsMatch(dr.Field(Of String)("Label"), "^([a-zA-Z]){3}[-]([0-9]){2}[-]([0-9]){4}$") Then
-                            requestNumber = dr.Field(Of String)("Label")
-                            sb.AppendLine(String.Format("{0} - Found Request {1}", DateTime.Now, requestNumber))
-                        End If
-
-                        If (Not String.IsNullOrEmpty(requestNumber)) Then
-                            Dim dtJIRA As DataTable = DBControl.DAL.Remi.GetBatchJIRA(requestNumber)
-                            Dim jira As DataRow = (From j As DataRow In dtJIRA Where j.Field(Of String)("DisplayName") = key Select j).FirstOrDefault()
-                            counter += 1
-
-                            If (jira Is Nothing) Then
-                                sb.AppendLine(String.Format("{0} - Inserting {1} To REMI", DateTime.Now, requestNumber))
-                                DBControl.DAL.Remi.AddEditJira(requestNumber, 0, key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
-                            Else
-                                sb.AppendLine(String.Format("{0} - Editing {1} In REMI", DateTime.Now, requestNumber))
-                                DBControl.DAL.Remi.AddEditJira(requestNumber, jira.Field(Of Int32)("JIRAID"), key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
-                            End If
-                        End If
+                    For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "JIRASync" Select s).ToList
+                        Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
+                        requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
+                        sb.AppendLine(String.Format("{0} - Adding Requests For Department {1}", DateTime.Now, department.Field(Of String)("Values").ToString()))
                     Next
-                End If
-            Catch sqlex As SqlException
-                sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, sqlex.Message, Environment.NewLine, sqlex.StackTrace.ToString()))
-                succeeded = False
-            Catch ex As Exception
-                sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, ex.Message, Environment.NewLine, ex.StackTrace.ToString()))
-                succeeded = False
-            End Try
 
-            If (Not (succeeded) Or _sendSuccessEmails) Then
-                sb.AppendLine(String.Format("{0} - Finished Executing {1} JIRA's", DateTime.Now, counter))
-                Helpers.SendMail(String.Format("JIRA Check Complete{0}...", IIf(Not (succeeded), " - Failed", String.Empty)), sb.ToString)
+                    Dim strRequests As String = String.Join("','", requests.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray())
+                    Dim dtJiraQuery As New DataTable("JiraQuery")
+
+                    Using myConnection As New SqlConnection(ConfigurationManager.ConnectionStrings("JiraDBConnectionString").ConnectionString)
+                        Using myCommand As New SqlCommand("SELECT d.IssueKey, d.Summary, l.Label FROM FCT.vDefects d INNER JOIN DIM.vLabels l ON l.IssueID=d.IssueID WHERE l.Label IN ('" + strRequests + "')", myConnection)
+                            myCommand.CommandType = CommandType.Text
+                            myConnection.Open()
+
+                            Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                            da.Fill(dtJiraQuery)
+                            dtJiraQuery.TableName = "JiraQuery"
+                        End Using
+                    End Using
+
+                    If (succeeded) Then
+                        For Each dr As DataRow In dtJiraQuery.Rows
+                            Dim key As String = dr.Field(Of String)("IssueKey")
+                            Dim title As String = dr.Field(Of String)("Summary")
+                            Dim requestNumber As String = String.Empty
+
+                            If Regex.IsMatch(dr.Field(Of String)("Label"), "^([a-zA-Z]){3}[-]([0-9]){2}[-]([0-9]){4}$") Then
+                                requestNumber = dr.Field(Of String)("Label")
+                                sb.AppendLine(String.Format("{0} - Found Request {1}", DateTime.Now, requestNumber))
+                            End If
+
+                            If (Not String.IsNullOrEmpty(requestNumber)) Then
+                                Dim dtJIRA As DataTable = DBControl.DAL.Remi.GetBatchJIRA(requestNumber)
+                                Dim jira As DataRow = (From j As DataRow In dtJIRA Where j.Field(Of String)("DisplayName") = key Select j).FirstOrDefault()
+                                counter += 1
+
+                                If (jira Is Nothing) Then
+                                    sb.AppendLine(String.Format("{0} - Inserting {1} To REMI", DateTime.Now, requestNumber))
+                                    DBControl.DAL.Remi.AddEditJira(requestNumber, 0, key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
+                                Else
+                                    sb.AppendLine(String.Format("{0} - Editing {1} In REMI", DateTime.Now, requestNumber))
+                                    DBControl.DAL.Remi.AddEditJira(requestNumber, jira.Field(Of Int32)("JIRAID"), key, String.Format("{0}browse/{1}", ConfigurationManager.AppSettings("JIRALink").ToString(), key), title)
+                                End If
+                            End If
+                        Next
+                    End If
+                Catch sqlex As SqlException
+                    sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, sqlex.Message, Environment.NewLine, sqlex.StackTrace.ToString()))
+                    succeeded = False
+                Catch ex As Exception
+                    sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, ex.Message, Environment.NewLine, ex.StackTrace.ToString()))
+                    succeeded = False
+                End Try
+
+                If (Not (succeeded) Or _sendSuccessEmails) Then
+                    sb.AppendLine(String.Format("{0} - Finished Executing {1} JIRA's", DateTime.Now, counter))
+                    Helpers.SendMail(String.Format("JIRA Check Complete{0}...", IIf(Not (succeeded), " - Failed", String.Empty)), sb.ToString)
+                End If
             End If
-        End If
+        Catch ex As Exception
+            Helpers.SendMail(String.Format("JIRA Sync Fatal Error"), String.Format("{0}\n\n{1}", ex.Message.ToString(), ex.StackTrace.ToString()))
+        End Try
     End Sub
 
     <Obsolete("Use JIRASyncByDB Instead")> _
@@ -681,44 +689,48 @@ Public Class REMITasks
             Return
         End If
 
-        _sendNotAssignedEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendNotAssignedEmails")
+        Try
+            _sendNotAssignedEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendNotAssignedEmails")
 
-        If (_sendNotAssignedEmails) Then
-            _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
-            Dim sb As New StringBuilder
-            Dim countStarted As Int32 = 0
-            Dim succeeded As Boolean = True
+            If (_sendNotAssignedEmails) Then
+                _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
+                Dim sb As New StringBuilder
+                Dim countStarted As Int32 = 0
+                Dim succeeded As Boolean = True
 
-            sb.AppendLine(String.Format("{0} - Service Running On: {1}", DateTime.Now, System.Environment.MachineName))
-            sb.AppendLine(String.Format("{0} - WebService URL: {1}", DateTime.Now, DBControl.DAL.Remi.WSUrl))
-            sb.AppendLine(String.Format("{0} - JIRA Check Starting...", DateTime.Now))
+                sb.AppendLine(String.Format("{0} - Service Running On: {1}", DateTime.Now, System.Environment.MachineName))
+                sb.AppendLine(String.Format("{0} - WebService URL: {1}", DateTime.Now, DBControl.DAL.Remi.WSUrl))
+                sb.AppendLine(String.Format("{0} - JIRA Check Starting...", DateTime.Now))
 
-            Try
-                Dim requests As New List(Of String)
-                Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
-                Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
-                requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
+                Try
+                    Dim requests As New List(Of String)
+                    Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
+                    Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
+                    requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
 
-                For Each req In requests
-                    If (DBControl.DAL.Remi.BatchStartedBeforeAssigned(req)) Then
-                        countStarted += 1
-                        sb.AppendLine(String.Format("{0} - BatchStarted Before Assigned For {1}", DateTime.Now, req))
-                        Helpers.SendMail(String.Format("BatchStarted Before Assigned For {0}...", req), req)
-                    End If
-                Next
-            Catch wex As WebException
-                succeeded = False
-                sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, wex.Message, Environment.NewLine, wex.StackTrace.ToString()))
-            Catch err As Exception
-                succeeded = False
-                sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, err.Message, Environment.NewLine, err.StackTrace.ToString()))
-            End Try
+                    For Each req In requests
+                        If (DBControl.DAL.Remi.BatchStartedBeforeAssigned(req)) Then
+                            countStarted += 1
+                            sb.AppendLine(String.Format("{0} - BatchStarted Before Assigned For {1}", DateTime.Now, req))
+                            Helpers.SendMail(String.Format("BatchStarted Before Assigned For {0}...", req), req)
+                        End If
+                    Next
+                Catch wex As WebException
+                    succeeded = False
+                    sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, wex.Message, Environment.NewLine, wex.StackTrace.ToString()))
+                Catch err As Exception
+                    succeeded = False
+                    sb.AppendLine(String.Format("{0} - Message: {1}{2}StackTrace: {3}", DateTime.Now, err.Message, Environment.NewLine, err.StackTrace.ToString()))
+                End Try
 
-            If (Not (succeeded) Or _sendSuccessEmails) Then
-                sb.AppendLine(String.Format("{0} - Finished Executing {1} Requests Started", DateTime.Now, countStarted))
-                Helpers.SendMail(String.Format("BatchStarted Before Assigned Complete{0}...", IIf(Not (succeeded), " - Failed", String.Empty)), sb.ToString)
+                If (Not (succeeded) Or _sendSuccessEmails) Then
+                    sb.AppendLine(String.Format("{0} - Finished Executing {1} Requests Started", DateTime.Now, countStarted))
+                    Helpers.SendMail(String.Format("BatchStarted Before Assigned Complete{0}...", IIf(Not (succeeded), " - Failed", String.Empty)), sb.ToString)
+                End If
             End If
-        End If
+        Catch ex As Exception
+            Helpers.SendMail(String.Format("Batch Started Fatal Error"), String.Format("{0}\n\n{1}", ex.Message.ToString(), ex.StackTrace.ToString()))
+        End Try
     End Sub
 #End Region
 End Class
