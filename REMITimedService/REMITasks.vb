@@ -343,12 +343,11 @@ Public Class REMITasks
                                             Dim row3 As Word.Row = innerTable.Rows.Add(missing)
 
                                             If (dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName").ToString() = dtFiles.Rows(pictureCounter).Field(Of String)("TestName").ToString()) Then
-                                                row3.Cells(1).Range.Text = String.Format("{0} - {1}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"))
+                                                row3.Cells(1).Range.Text = String.Format("Unit {0} - {1}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"))
                                             Else
-                                                row3.Cells(1).Range.Text = String.Format("{0} - {1} {2}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"))
+                                                row3.Cells(1).Range.Text = String.Format("Unit {0} - {1} {2}", dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"), dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"))
                                             End If
 
-                                            row3.Cells(1).Range.Text = String.Format("{0} {1} {2}", dtFiles.Rows(pictureCounter).Field(Of String)("TestStageName"), dtFiles.Rows(pictureCounter).Field(Of String)("TestName"), dtFiles.Rows(pictureCounter).Field(Of Int32)("BatchUnitNumber"))
                                             row3.Range.Font.Bold = 0
                                             row3.Range.Font.Size = 8
                                             System.Runtime.InteropServices.Marshal.ReleaseComObject(row3)
