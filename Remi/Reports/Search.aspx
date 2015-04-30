@@ -26,7 +26,6 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
     <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="4" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
         <asp:ListItem Text="Batchs" Selected="True" Value="1"></asp:ListItem>
-        <%--<asp:ListItem Text="Units" Value="2"></asp:ListItem>--%>
         <asp:ListItem Text="Exceptions" Value="3" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="4" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Training" Value="5"></asp:ListItem>
@@ -59,6 +58,10 @@
         Is TSD Contact: <asp:RadioButton runat="server" ID="rdoTSDContacYes" Text="Yes" GroupName="TSDContact" /><asp:RadioButton runat="server" ID="rdoTSDContacNo" Text="No" GroupName="TSDContact" /><asp:RadioButton runat="server" ID="rdoTSDContactNA" Text="N/A" GroupName="TSDContact" Checked="true" />
         <br />
         Has ByPass Product Limitation: <asp:RadioButton runat="server" ID="rdoByPassYes" Text="Yes" GroupName="ByPass" /><asp:RadioButton runat="server" ID="rdoByPassNo" Text="No" GroupName="ByPass" /><asp:RadioButton runat="server" ID="rdoByPassNA" Text="N/A" GroupName="ByPass" Checked="true" />
+        <br />
+        Is Admin: <asp:RadioButton runat="server" ID="rdoIsAdminYes" Text="Yes" GroupName="Admin" /><asp:RadioButton runat="server" ID="rdoIsAdminNo" Text="No" GroupName="Admin" /><asp:RadioButton runat="server" ID="rdoIsAdminNA" Text="N/A" GroupName="Admin" Checked="true" />
+        <br />
+        Is Test Center Admin: <asp:RadioButton runat="server" ID="rdoIsTestCenterAdminYes" Text="Yes" GroupName="TestAdmin" /><asp:RadioButton runat="server" ID="rdoIsTestCenterAdminNo" Text="No" GroupName="TestAdmin" /><asp:RadioButton runat="server" ID="rdoIsTestCenterAdminNA" Text="N/A" GroupName="TestAdmin" Checked="true" />
         <br /><br />
     </asp:Panel>
 

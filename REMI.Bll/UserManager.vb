@@ -422,7 +422,7 @@ Namespace REMI.Bll
                         Dim emails As List(Of String) = (From usr As User In users Select usr.LDAPName).Distinct.ToList
 
                         If (emails.Count > 0) Then
-                            REMI.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("New User Added To REMI"), String.Format("User {0} has created themselves an account. Please modify their access for products. <a href=""http://go/remi/Admin/Users.aspx?userid={1}"">{0}</a>", u.LDAPName, u.ID), True, String.Empty)
+                            REMI.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("New User Added To REMI"), String.Format("User '{0}' account created.<br/>Please review/modify their access for products/role/department/test center and ensure all settings are correct.<br/>You can use the following link <a href=""http://go/remi/Admin/Users.aspx?userid={1}"">{0}</a> to edit in them in remi.", u.LDAPName, u.ID), True, String.Empty)
                         End If
 
                         HttpContext.Current.Session.Add(_userSessionVariableName, u) 'save it to the session

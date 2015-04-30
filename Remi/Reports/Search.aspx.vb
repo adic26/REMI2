@@ -130,6 +130,8 @@ Partial Class Search
                     Dim trainingLevelID As Int32
                     Dim byPass As Int32
                     Dim isProductManager As Int32
+                    Dim isAdmin As Int32
+                    Dim isTestCenterAdmin As Int32
                     Dim isTSDContact As Int32
                     Dim departmentID As Int32
 
@@ -163,6 +165,24 @@ Partial Class Search
                         isTSDContact = 0
                     End If
 
+                    If (rdoIsAdminYes.Checked) Then
+                        isAdmin = 1
+                    ElseIf (rdoIsAdminNo.Checked) Then
+                        isAdmin = 2
+                    Else
+                        isAdmin = 0
+                    End If
+
+                    If (rdoIsTestCenterAdminYes.Checked) Then
+                        isTestCenterAdmin = 1
+                    ElseIf (rdoIsTestCenterAdminNo.Checked) Then
+                        isTestCenterAdmin = 2
+                    Else
+                        isTestCenterAdmin = 0
+                    End If
+
+                    us.IsTestCenterAdmin = isTestCenterAdmin
+                    us.IsAdmin = isAdmin
                     us.IsProductManager = isProductManager
                     us.IsTSDContact = isTSDContact
                     us.ProductID = productID
@@ -388,6 +408,8 @@ Partial Class Search
             Dim byPass As Int32
             Dim isProductManager As Int32
             Dim isTSDContact As Int32
+            Dim isAdmin As Int32
+            Dim isTestCenterAdmin As Int32
 
             Int32.TryParse(ddlProductFilterUser.SelectedValue, productID)
             Int32.TryParse(ddlTestCentersUser.SelectedValue, testCenterID)
@@ -419,6 +441,24 @@ Partial Class Search
                 isTSDContact = 0
             End If
 
+            If (rdoIsAdminYes.Checked) Then
+                isAdmin = 1
+            ElseIf (rdoIsAdminNo.Checked) Then
+                isAdmin = 2
+            Else
+                isAdmin = 0
+            End If
+
+            If (rdoIsTestCenterAdminYes.Checked) Then
+                isTestCenterAdmin = 1
+            ElseIf (rdoIsTestCenterAdminNo.Checked) Then
+                isTestCenterAdmin = 2
+            Else
+                isTestCenterAdmin = 0
+            End If
+
+            us.IsTestCenterAdmin = isTestCenterAdmin
+            us.IsAdmin = isAdmin
             us.IsProductManager = isProductManager
             us.IsTSDContact = isTSDContact
 

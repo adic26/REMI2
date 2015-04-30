@@ -1,4 +1,5 @@
-﻿ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @showAllGrid BIT = 0, 
+﻿
+ALTER procedure [dbo].[remispUsersSearch] @ProductID INT = 0, @TestCenterID INT = 0, @TrainingID INT = 0, @TrainingLevelID INT = 0, @showAllGrid BIT = 0, 
 	@UserID INT = 0, @DepartmentID INT = 0, @DetermineDelete INT = 1,  @IncludeInActive INT = 1, @IsProductManager BIT = 0, @IsTSDContact BIT = 0, @ByPass INT = 0,
 	@IsAdmin INT = 0, @IsTestCenterAdmin INT = 0
 AS
@@ -10,7 +11,7 @@ BEGIN
 		
 		SELECT @AdminRoleID = RoleID FROM aspnet_Roles WHERE RoleName='Administrator'
 		SELECT @TestCenterAdminRoleID = RoleID FROM aspnet_Roles WHERE RoleName='TestCenterAdmin'
-		
+
 		SELECT ID, LDAPLogin, BadgeNumber, ByPassProduct, DefaultPage, ISNULL(IsActive, 1) AS IsActive, LastUser, 
 				ConcurrencyID, CASE WHEN @DetermineDelete = 1 THEN dbo.remifnUserCanDelete(LDAPLogin) ELSE 0 END AS CanDelete
 		FROM 
@@ -31,9 +32,9 @@ BEGIN
 				)
 				AND 
 				(
-					(@TestCenterID > 0 AND @IsTestCenterAdmin = 0 AND udtc.LookupID=@TestCenterID) 
+					(@TestCenterID > 0 AND @IsTestCenterAdmin = 1 AND udtc.LookupID=@TestCenterID AND au.UserId IN (SELECT UserId FROM aspnet_UsersInRoles WHERE RoleId=@TestCenterAdminRoleID))
 					OR
-					(@IsTestCenterAdmin = 1)
+					(@TestCenterID > 0 AND udtc.LookupID=@TestCenterID AND @IsTestCenterAdmin IN (0,2))
 					OR
 					(@TestCenterID = 0)
 				)
@@ -81,9 +82,9 @@ BEGIN
 				)
 				AND
 				(
-					(@IsAdmin > 0 AND au.UserId IN (SELECT UserId FROM aspnet_UsersInRoles WHERE RoleId=@AdminRoleID))
+					(@IsAdmin = 1 AND au.UserId IN (SELECT UserId FROM aspnet_UsersInRoles WHERE RoleId=@AdminRoleID))
 					OR
-					(@IsTestCenterAdmin > 0 AND udtc.LookupID=@TestCenterID AND au.UserId IN (SELECT UserId FROM aspnet_UsersInRoles WHERE RoleId=@TestCenterAdminRoleID))
+					(@IsAdmin IN (0,2))
 				)
 			) AS UsersRows
 			ORDER BY LDAPLogin

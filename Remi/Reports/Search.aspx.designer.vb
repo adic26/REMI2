@@ -203,6 +203,60 @@ Partial Public Class Search
     Protected WithEvents rdoByPassNA As Global.System.Web.UI.WebControls.RadioButton
 
     '''<summary>
+    '''rdoIsAdminYes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsAdminYes As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsAdminNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsAdminNo As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsAdminNA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsAdminNA As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsTestCenterAdminYes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsTestCenterAdminYes As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsTestCenterAdminNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsTestCenterAdminNo As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsTestCenterAdminNA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsTestCenterAdminNA As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
     '''pnlSearchUnits control.
     '''</summary>
     '''<remarks>
