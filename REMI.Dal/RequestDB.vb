@@ -360,6 +360,7 @@ Namespace REMI.Dal
                                 da.Fill(dt2)
 
                                 If (dt2.Rows.Count > 0) Then
+                                    Array.ForEach(dt2.AsEnumerable().ToArray(), Sub(row) row("RequestID") = String.Format("{0}{1}", Core.REMIConfiguration.RequestGoLink, row("RequestID")))
                                     dtReq.Merge(dt2, True)
                                 End If
                             End Using
@@ -664,7 +665,11 @@ Namespace REMI.Dal
             myFields.Category = myDataRecord.Field(Of String)("Category")
 
             If myDataRecord.Item("Value") IsNot DBNull.Value Then
-                myFields.Value = myDataRecord.Field(Of String)("Value")
+                If (Not myDataRecord.Field(Of String)("Value").Contains(Core.REMIConfiguration.RequestGoLink) And myFields.IntField = "RequestLink") Then
+                    myFields.Value = String.Format("{0}{1}", Core.REMIConfiguration.RequestGoLink, myFields.RequestNumber)
+                Else
+                    myFields.Value = myDataRecord.Field(Of String)("Value")
+                End If
             Else
                 myFields.Value = String.Empty
             End If
