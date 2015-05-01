@@ -1491,8 +1491,8 @@ Public Class RemiAPI
                         Dim b As BatchView = Me.GetBatch(requestNumber)
 
                         If (b IsNot Nothing) Then
-                            If (b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, unitNumber).Count() > 0) Then
-                                tr = b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, unitNumber)(0)
+                            If (b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, testUnitID).Count() > 0) Then
+                                tr = b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, testUnitID)(0)
                             End If
                         End If
 

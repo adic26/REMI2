@@ -446,7 +446,7 @@ Public Class REMITasks
             For Each department As DataRow In dtDepartments.Rows.Cast(Of DataRow)()
                 If (department.Field(Of String)("LookupType").ToString() <> "All Test Centers") Then
                     Try
-                        sb.AppendLine(String.Format("{0} - Retrieving TRS Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
+                        sb.AppendLine(String.Format("{0} - Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
                         requests.AddRange((From r As DataRow In DBControl.DAL.Remi.GetRequestsNotInREMI(department.Field(Of String)("LookupType").ToString()) Select r.Field(Of String)("RequestNumber")).Distinct.ToList())
                     Catch ex As Exception
                         sb.AppendLine(String.Format("{0} - Error Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
