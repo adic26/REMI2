@@ -26,7 +26,6 @@ BEGIN
 
 	BEGIN TRY
 		SELECT @RequestID=RequestID FROM Req.Request WHERE RequestNumber=@RequestNumber
-		SELECT @UnitCount = COUNT(ID) FROM TestUnits WHERE BatchID=@BatchID
 		SELECT @JobID = j.ID, @BatchID=b.ID, @ProductID=b.ProductID, @BatchStatus = CASE b.BatchStatus WHEN 1 THEN 'Held' WHEN 2 THEN 'InProgress' WHEN 3 THEN 'Quarantined'
 			WHEN 4 THEN 'Received' WHEN 5 THEN 'Complete' WHEN 7 THEN 'Rejected' WHEN 8 THEN 'TestingComplete' ELSE 'NotSet' END, @NewBatchStatus = b.BatchStatus,
 			@ProductType = l.[Values]
@@ -34,6 +33,7 @@ BEGIN
 			INNER JOIN Jobs j ON j.JobName = b.JobName
 			INNER JOIN Lookups l ON l.LookupID=b.ProductTypeID
 		WHERE b.QRANumber=@RequestNumber
+		SELECT @UnitCount = COUNT(ID) FROM TestUnits WHERE BatchID=@BatchID
 		
 		IF ((SELECT BatchID FROM Req.Request WHERE RequestNumber=@RequestNumber) IS NULL)
 		BEGIN
@@ -79,9 +79,16 @@ BEGIN
 		SELECT @TestStageID=ID FROM TestStages ts WHERE ts.JobID=@JobID AND ISNULL(IsArchived, 0)=0 AND TestStageName='Sample Evaluation'
 		SELECT @TestID=ID FROM Tests ts WHERE ISNULL(IsArchived, 0)=0 AND TestName='Sample Evaluation'
 		
-		SELECT @IncomingCount = COUNT(DISTINCT TestUnitID) 
-		FROM TestRecords tr 
-		WHERE tr.TestUnitID IN (SELECT ID FROM TestUnits tu WHERE tu.BatchID=@BatchID) AND TestID=@TestID AND TestStageID=@TestStageID
+		IF (@TestStageID > 0 AND @TestID > 0)
+		BEGIN
+			SELECT @IncomingCount = COUNT(DISTINCT TestUnitID) 
+			FROM TestRecords tr 
+			WHERE tr.TestUnitID IN (SELECT ID FROM TestUnits tu WHERE tu.BatchID=@BatchID) AND TestID=@TestID AND TestStageID=@TestStageID
+		END
+		ELSE
+		BEGIN
+			SET @IncomingCount = @UnitCount
+		END
 		
 		IF (@UnitCount <> @IncomingCount AND LOWER(@ProductType)='handheld')
 		BEGIN
@@ -100,7 +107,7 @@ BEGIN
 			FROM #TempSetup s
 				INNER JOIN TestStages ts ON ts.ID = s.TestStageID
 			ORDER BY ts.ProcessOrder ASC
-			
+		
 			INSERT INTO #exceptions (row,ID,RequestNumber, BatchUnitNumber, ReasonForRequestID, ProductGroupName, JobName, TestStageName, TestName, TestStageID, TestUnitID,LastUser, ProductTypeID, AccessoryGroupID, ProductID, ProductType, AccessoryGroupName, IsMQual, TestCenter, TestCenterID, ReasonForRequest, TestID)
 			EXEC [dbo].[remispExceptionSearch] @IncludeBatches=1,@QRANumber=@RequestNumber
 

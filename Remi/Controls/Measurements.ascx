@@ -57,9 +57,9 @@
     <asp:GridView ID="grdResultMeasurements" runat="server" EmptyDataText="There were no measurements found for this result." DataKeyNames="MeasurementTypeID,ID" CssClass="FilterableTable" Width="298px">
         <RowStyle CssClass="evenrow" />
         <Columns>
-            <asp:TemplateField HeaderText="Image"  ControlStyle-CssClass="removeStyle" >
+            <asp:TemplateField HeaderText="Files"  ControlStyle-CssClass="removeStyle" >
                 <ItemTemplate>                    
-                    <input type="image" src="../Design/Icons/png/24x24/png_file.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("ID") %>' pageID='<%# Me.ClientID %>' role="button" />
+                    <input type="image" src="../Design/Icons/png/24x24/download.png" class="img-responsive" runat="server" visible="false" id='viewImages' mID='<%# Eval("ID") %>' pageID='<%# Me.ClientID %>' role="button" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Measurement" SortExpression="Measurement"   ItemStyle-Wrap="true">

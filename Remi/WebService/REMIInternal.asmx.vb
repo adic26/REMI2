@@ -1,15 +1,17 @@
 ﻿Imports System.Web.Services
 Imports System.Web.Services.Protocols
 Imports System.ComponentModel
-Imports REMI.Validation
-Imports REMI.BusinessEntities
-Imports REMI.Bll
+Imports Remi.Validation
+Imports Remi.BusinessEntities
+Imports Remi.Bll
 Imports log4net
-Imports REMI.Contracts
+Imports Remi.Contracts
 Imports System.Data
 Imports System.Drawing
 Imports System.IO
 Imports System.Web.Script.Services
+Imports Remi.Core
+Imports AjaxControlToolkit
 
 <System.Web.Services.WebService(Name:="REMIInternal", Namespace:="http://go/remi/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
@@ -135,7 +137,7 @@ Public Class REMIInternal
                 For Each d In dr.ItemArray
 
                     If (d.ToString = dr.ItemArray(0).ToString()) Then
-                        tableTags.Append(String.Format("<td> <a href='http://go/requests/{0}' target='_blank'>{0}</a></td>", d.ToString()))
+                        tableTags.Append(String.Format("<td> <a href='{0}{1}' target='_blank'>{1}</a></td>", REMIConfiguration.RequestGoLink, d.ToString()))
                     Else
                         If (d.ToString().StartsWith("http") Or d.ToString().StartsWith("www")) Then
                             tableTags.Append(String.Format("<td> <a href='{0}' target='_blank'>Link</a></td>", d.ToString()))
@@ -207,6 +209,24 @@ Public Class REMIInternal
     <System.Web.Services.WebMethod()> _
     Public Function UpdateComment(ByVal value As String, ByVal ID As Int32, ByVal passFailOverride As Boolean, ByVal currentPassFail As Boolean, ByVal passFailText As String) As Boolean
         Return RelabManager.ModifyResult(value, ID, passFailOverride, currentPassFail, passFailText, UserManager.GetCurrentUser.UserName)
+    End Function
+
+    <WebMethod()> _
+    Public Function GetMenuAccessByDepartment(ByVal knownCategoryValues As String, ByVal category As String) As CascadingDropDownNameValue()
+        Dim list As New List(Of CascadingDropDownNameValue)
+
+        Try
+            Dim departmentID As Int32 = CascadingDropDown.ParseKnownCategoryValuesString(knownCategoryValues).Values()(0)
+            Dim dt As DataTable = SecurityManager.GetMenuAccessByDepartment(String.Empty, departmentID, True)
+
+            For Each row As DataRow In dt.Rows
+                list.Add(New CascadingDropDownNameValue() With {.name = row.Field(Of String)("Name"), .value = row.Field(Of String)("Url")})
+            Next
+        Catch ex As Exception
+            SecurityManager.LogIssue("REMI Internal GetMenuAccessByDepartment", "e3", NotificationType.Errors, ex, String.Format("departmentID: {0}", knownCategoryValues.ToString()))
+        End Try
+
+        Return list.ToArray()
     End Function
 
     <System.Web.Services.WebMethod()> _

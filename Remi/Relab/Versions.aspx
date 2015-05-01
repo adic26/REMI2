@@ -52,7 +52,7 @@
         <AlternatingRowStyle CssClass="oddrow" />
         <Columns>
             <asp:BoundField DataField="BatchUnitNumber" HeaderText="Unit" SortExpression="BatchUnitNumber" />
-            <asp:BoundField DataField="TestStage" HeaderText="Test Stage" SortExpression="TestStage" />
+            <asp:BoundField DataField="TestStage" HeaderText="Stage" SortExpression="TestStage" />
             <asp:BoundField DataField="StationName" HeaderText="Station Name" SortExpression="StationName" />
             <asp:BoundField DataField="StartDate" HeaderText="Start Date" SortExpression="StartDate" />
             <asp:BoundField DataField="EndDate" HeaderText="End Date" SortExpression="EndDate" />
@@ -107,7 +107,7 @@
         <AlternatingRowStyle CssClass="oddrow" />
         <Columns>
             <asp:BoundField DataField="BatchUnitNumber" HeaderText="Unit" SortExpression="BatchUnitNumber" />
-            <asp:TemplateField HeaderText="Measurement" SortExpression="">
+            <asp:TemplateField HeaderText="Stage" SortExpression="">
                 <ItemTemplate>
                     <asp:HyperLink ID="hplDetail" runat="server" Text='<%# Eval("TestStageName") %>' Target="_self"></asp:HyperLink>
                 </ItemTemplate>

@@ -19,18 +19,6 @@
     <h3>Quick Search</h3>
     <ul>
         <li>
-            <asp:Button runat="server" Text="Testing Complete" ID="btnTestingComplete" CausesValidation="true" CssClass="buttonSmall" OnClick="btn_OnClick" />
-        </li>
-        <li>
-            <asp:Button runat="server" Text="Held" ID="btnHeld" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
-        </li>
-        <li>
-            <asp:Button runat="server" Text="Reporting" ID="btnReporting" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
-        </li>
-        <li>
-            <asp:Button runat="server" Text="Incoming" ID="btnIncoming" CausesValidation="true" OnClick="btn_OnClick" CssClass="buttonSmall" />
-        </li>
-        <li>
             <asp:DropDownList runat="server" ID="ddlRequestType" AppendDataBoundItems="false" AutoPostBack="true" DataTextField="RequestType" DataValueField="RequestTypeID" OnSelectedIndexChanged="ddlRequestType_SelectedIndexChanged"></asp:DropDownList>
         </li>
     </ul>
@@ -38,7 +26,6 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="Content" runat="Server">
     <asp:RadioButtonList runat="server" ID="rblSearchBy" TextAlign="right" RepeatDirection="Horizontal" CellPadding="10" RepeatLayout="Flow" RepeatColumns="4" OnSelectedIndexChanged="rblSearchBy_OnSelectedIndexChanged" CausesValidation="true" AutoPostBack="true" EnableViewState="true">
         <asp:ListItem Text="Batchs" Selected="True" Value="1"></asp:ListItem>
-        <%--<asp:ListItem Text="Units" Value="2"></asp:ListItem>--%>
         <asp:ListItem Text="Exceptions" Value="3" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Users" Value="4" Enabled="false"></asp:ListItem>
         <asp:ListItem Text="Training" Value="5"></asp:ListItem>
@@ -63,10 +50,18 @@
         Training Level: <asp:DropDownList ID="ddlTrainingLevel" runat="server" AutoPostBack="False" DataSourceID="odsTrainingLevel" DataTextField="LookupType" DataValueField="LookupID" Width="238px" AppendDataBoundItems="True" CausesValidation="true">
         </asp:DropDownList>
         <br />
-        Product: <asp:DropDownList ID="ddlProductFilterUser" runat="server" Width="189px" AppendDataBoundItems="True"  AutoPostBack="False" DataTextField="ProductGroupName" DataValueField="ID">
+        Product: <asp:DropDownList ID="ddlProductFilterUser" runat="server" Width="189px" AppendDataBoundItems="True"  AutoPostBack="False" DataTextField="lookupType" DataValueField="LookupID">
         </asp:DropDownList>
         <br />
-        Has ByPass Product Limitation: <asp:CheckBox ID="chkByPass" runat="server" />
+        Is Product Manager: <asp:RadioButton runat="server" ID="rdoProductManagerYes" Text="Yes" GroupName="ProductManager" /><asp:RadioButton runat="server" ID="rdoProductManagerNo" Text="No" GroupName="ProductManager" /><asp:RadioButton runat="server" ID="rdoProductManagerNA" Text="N/A" GroupName="ProductManager" Checked="true" />
+        <br />
+        Is TSD Contact: <asp:RadioButton runat="server" ID="rdoTSDContacYes" Text="Yes" GroupName="TSDContact" /><asp:RadioButton runat="server" ID="rdoTSDContacNo" Text="No" GroupName="TSDContact" /><asp:RadioButton runat="server" ID="rdoTSDContactNA" Text="N/A" GroupName="TSDContact" Checked="true" />
+        <br />
+        Has ByPass Product Limitation: <asp:RadioButton runat="server" ID="rdoByPassYes" Text="Yes" GroupName="ByPass" /><asp:RadioButton runat="server" ID="rdoByPassNo" Text="No" GroupName="ByPass" /><asp:RadioButton runat="server" ID="rdoByPassNA" Text="N/A" GroupName="ByPass" Checked="true" />
+        <br />
+        Is Admin: <asp:RadioButton runat="server" ID="rdoIsAdminYes" Text="Yes" GroupName="Admin" /><asp:RadioButton runat="server" ID="rdoIsAdminNo" Text="No" GroupName="Admin" /><asp:RadioButton runat="server" ID="rdoIsAdminNA" Text="N/A" GroupName="Admin" Checked="true" />
+        <br />
+        Is Test Center Admin: <asp:RadioButton runat="server" ID="rdoIsTestCenterAdminYes" Text="Yes" GroupName="TestAdmin" /><asp:RadioButton runat="server" ID="rdoIsTestCenterAdminNo" Text="No" GroupName="TestAdmin" /><asp:RadioButton runat="server" ID="rdoIsTestCenterAdminNA" Text="N/A" GroupName="TestAdmin" Checked="true" />
         <br /><br />
     </asp:Panel>
 
@@ -82,7 +77,7 @@
         <br />
         Department: <asp:DropDownList ID="ddlDepartment" runat="server" AppendDataBoundItems="true" AutoPostBack="false" Width="140px" ForeColor="#0033CC" DataTextField="LookupType" DataValueField="LookupID"></asp:DropDownList>
         <br /> 
-        Product: <asp:DropDownList ID="ddlProductFilter" runat="server" Width="189px" AppendDataBoundItems="True"  AutoPostBack="False" DataTextField="ProductGroupName" DataValueField="ID">
+        Product: <asp:DropDownList ID="ddlProductFilter" runat="server" Width="189px" AppendDataBoundItems="True"  AutoPostBack="False" DataTextField="LookupType" DataValueField="LookupID">
         </asp:DropDownList>&nbsp;<asp:CheckBox runat="server" ID="chkShowArchived" TextAlign="Right" Text="Show Archived" AutoPostBack="true" CausesValidation="true" />
         &nbsp; Revision: <asp:TextBox runat="server" ID="txtRevision" MaxLength="10"></asp:TextBox>
         <br />
@@ -134,9 +129,6 @@
 
     <asp:Panel Visible="false" runat="server" ID="pnlSearchExceptions">
         Test Center: <asp:DropDownList ID="ddlTestCentersException" runat="server" AppendDataBoundItems="True" AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsTestCenters" DataTextField="LookupType" DataValueField="LookupID">
-        </asp:DropDownList>
-        <br />
-        Product: <asp:DropDownList ID="ddlProductFilter2" runat="server" Width="189px" AppendDataBoundItems="True"  AutoPostBack="False" DataTextField="ProductGroupName" DataValueField="ID">
         </asp:DropDownList>
         <br />
         Product Type:

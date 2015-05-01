@@ -17,12 +17,10 @@ Partial Class Search
 
             If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin) Then
                 rblSearchBy.Items.FindByValue("4").Enabled = True 'Users
-                'rblSearchBy.Items(3).Enabled = True 'Users
             End If
 
             If (testCenterAdmin Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.HasBatchSetupAuthority(0)) Then
                 rblSearchBy.Items.FindByValue("3").Enabled = True 'Exceptions
-                'rblSearchBy.Items(2).Enabled = True 'Exceptions
             End If
 
             If (Not (IsPostBack)) Then
@@ -89,15 +87,26 @@ Partial Class Search
     End Sub
 
     Protected Sub ClearBatchValues()
-        ddlProductFilter.SelectedValue = Nothing
         txtRevision.Text = String.Empty
+        txtTestStage.Text = String.Empty
+        txtStart.Text = String.Empty
+        txtEnd.Text = String.Empty
+        ddlProductFilter.SelectedValue = Nothing
         ddlProductType.SelectedValue = Nothing
         ddlAccessoryGroup.SelectedValue = Nothing
         ddlRequestReason.SelectedValue = Nothing
         ddlJobs.SelectedValue = Nothing
         ddlTestStages.SelectedValue = Nothing
-        txtTestStage.Text = String.Empty
         ddlTestStageType.SelectedValue = Nothing
+        ddlDepartment.SelectedValue = Nothing
+        ddlTests.SelectedValue = Nothing
+        ddlBatchStatus.SelectedValue = Nothing
+        ddlPriority.SelectedValue = Nothing
+        ddlUsers.SelectedValue = Nothing
+        ddlTrackingLocationType.SelectedValue = Nothing
+        ddlLocationFunction.SelectedValue = Nothing
+        ddlNotInLocationFunction.SelectedValue = Nothing
+        ddlTestCenters.SelectedValue = Nothing
 
         For i As Integer = 0 To chkTestStageType.Items.Count - 1
             chkTestStageType.Items(i).Selected = False
@@ -106,103 +115,12 @@ Partial Class Search
         For i As Integer = 0 To chkBatchStatus.Items.Count - 1
             chkBatchStatus.Items(i).Selected = False
         Next
-
-        ddlTests.SelectedValue = Nothing
-        ddlBatchStatus.SelectedValue = Nothing
-        ddlPriority.SelectedValue = Nothing
-        ddlUsers.SelectedValue = Nothing
-        ddlTrackingLocationType.SelectedValue = Nothing
-        ddlLocationFunction.SelectedValue = Nothing
-        ddlNotInLocationFunction.SelectedValue = Nothing
     End Sub
 
     Protected Sub btn_OnClick(ByVal sender As Object, ByVal e As System.EventArgs)
         lblTopInfo.Visible = False
 
         Select Case sender.ID
-            Case "btnTestingComplete"
-                Dim bs As New BatchSearch()
-                bs.Status = BatchStatus.TestingComplete
-                bs.ExcludedTestStageType = BatchSearchTestStageType.NonTestingTask + BatchSearchTestStageType.FailureAnalysis
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
-
-                ClearBatchValues()
-
-                ddlTestCenters.SelectedValue = bs.GeoLocationID.ToString()
-                ddlBatchStatus.SelectedValue = bs.Status.ToString()
-                chkTestStageType.Items.FindByValue(TestStageType.FailureAnalysis.ToString()).Selected = True
-                chkTestStageType.Items.FindByValue(TestStageType.NonTestingTask.ToString()).Selected = True
-
-                pnlSearchUser.Visible = False
-                pnlSearchExceptions.Visible = False
-                pnlSearchUnits.Visible = False
-                pnlTraining.Visible = False
-                pnlSearchBatch.Visible = True
-                rblSearchBy.SelectedValue = 1
-                bscMain.DisplayMode = Controls_BatchSelectControl.BatchSelectControlMode.TestingCompleteDisplay
-                bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
-            Case "btnHeld"
-                Dim bs As New BatchSearch()
-                bs.Status = BatchStatus.Held
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
-
-                ClearBatchValues()
-
-                ddlTestCenters.SelectedValue = bs.GeoLocationID.ToString()
-                ddlBatchStatus.SelectedValue = bs.Status.ToString()
-
-                pnlSearchUser.Visible = False
-                pnlSearchExceptions.Visible = False
-                pnlSearchUnits.Visible = False
-                pnlTraining.Visible = False
-                pnlSearchBatch.Visible = True
-                rblSearchBy.SelectedValue = 1
-                bscMain.DisplayMode = Controls_BatchSelectControl.BatchSelectControlMode.HeldInfoDisplay
-                bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
-            Case "btnIncoming"
-                Dim bs As New BatchSearch()
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
-                bs.Status = BatchStatus.InProgress
-                bs.TestStageType = TestStageType.IncomingEvaluation
-
-                ClearBatchValues()
-
-                ddlTestCenters.SelectedValue = bs.GeoLocationID.ToString()
-                ddlTestStageType.SelectedValue = bs.TestStageType.ToString()
-                ddlBatchStatus.SelectedValue = bs.Status.ToString()
-
-                pnlSearchUser.Visible = False
-                pnlSearchExceptions.Visible = False
-                pnlSearchUnits.Visible = False
-                pnlTraining.Visible = False
-                pnlSearchBatch.Visible = True
-                rblSearchBy.SelectedValue = 1
-                bscMain.DisplayMode = Controls_BatchSelectControl.BatchSelectControlMode.HeldInfoDisplay
-                bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
-            Case "btnReporting"
-                Dim bs As New BatchSearch()
-                bs.GeoLocationID = ddlTestCenters.SelectedValue
-                bs.ExcludedStatus = BatchSearchBatchStatus.Complete + BatchSearchBatchStatus.Held + BatchSearchBatchStatus.NotSavedToREMI + BatchSearchBatchStatus.Quarantined + BatchSearchBatchStatus.Received + BatchSearchBatchStatus.Rejected
-                bs.TestStageType = TestStageType.NonTestingTask
-
-                ClearBatchValues()
-
-                ddlTestCenters.SelectedValue = bs.GeoLocationID.ToString()
-                ddlTestStageType.SelectedValue = bs.TestStageType.ToString()
-                chkBatchStatus.Items.FindByValue(BatchStatus.Complete.ToString()).Selected = True
-                chkBatchStatus.Items.FindByValue(BatchStatus.Held.ToString()).Selected = True
-                chkBatchStatus.Items.FindByValue(BatchStatus.Quarantined.ToString()).Selected = True
-                chkBatchStatus.Items.FindByValue(BatchStatus.Received.ToString()).Selected = True
-                chkBatchStatus.Items.FindByValue(BatchStatus.Rejected.ToString()).Selected = True
-
-                pnlSearchUser.Visible = False
-                pnlSearchExceptions.Visible = False
-                pnlSearchUnits.Visible = False
-                pnlTraining.Visible = False
-                pnlSearchBatch.Visible = True
-                rblSearchBy.SelectedValue = 1
-                bscMain.DisplayMode = Controls_BatchSelectControl.BatchSelectControlMode.HeldInfoDisplay
-                bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
             Case "btnSearching"
                 If (pnlSearchUser.Visible) Then
                     Dim us As New UserSearch()
@@ -211,6 +129,10 @@ Partial Class Search
                     Dim trainingID As Int32
                     Dim trainingLevelID As Int32
                     Dim byPass As Int32
+                    Dim isProductManager As Int32
+                    Dim isAdmin As Int32
+                    Dim isTestCenterAdmin As Int32
+                    Dim isTSDContact As Int32
                     Dim departmentID As Int32
 
                     Int32.TryParse(ddlProductFilterUser.SelectedValue, productID)
@@ -219,27 +141,64 @@ Partial Class Search
                     Int32.TryParse(ddlTrainingLevel.SelectedValue, trainingLevelID)
                     Int32.TryParse(ddlDepartmentUser.SelectedValue, departmentID)
 
-                    If (chkByPass.Checked) Then
+                    If (rdoByPassYes.Checked) Then
                         byPass = 1
+                    ElseIf (rdoByPassNo.Checked) Then
+                        byPass = 2
                     Else
                         byPass = 0
-                        us.ProductID = productID
                     End If
 
+                    If (rdoProductManagerYes.Checked) Then
+                        isProductManager = 1
+                    ElseIf (rdoProductManagerNo.Checked) Then
+                        isProductManager = 2
+                    Else
+                        isProductManager = 0
+                    End If
+
+                    If (rdoTSDContacYes.Checked) Then
+                        isTSDContact = 1
+                    ElseIf (rdoTSDContacNo.Checked) Then
+                        isTSDContact = 2
+                    Else
+                        isTSDContact = 0
+                    End If
+
+                    If (rdoIsAdminYes.Checked) Then
+                        isAdmin = 1
+                    ElseIf (rdoIsAdminNo.Checked) Then
+                        isAdmin = 2
+                    Else
+                        isAdmin = 0
+                    End If
+
+                    If (rdoIsTestCenterAdminYes.Checked) Then
+                        isTestCenterAdmin = 1
+                    ElseIf (rdoIsTestCenterAdminNo.Checked) Then
+                        isTestCenterAdmin = 2
+                    Else
+                        isTestCenterAdmin = 0
+                    End If
+
+                    us.IsTestCenterAdmin = isTestCenterAdmin
+                    us.IsAdmin = isAdmin
+                    us.IsProductManager = isProductManager
+                    us.IsTSDContact = isTSDContact
+                    us.ProductID = productID
                     us.TrainingID = trainingID
                     us.TrainingLevelID = trainingLevelID
                     us.TestCenterID = testCenterID
                     us.ByPass = byPass
                     us.DepartmentID = departmentID
 
-                    gvwUsers.DataSource = REMI.Dal.UserDB.UserSearch(us, False, False, False)
+                    gvwUsers.DataSource = Remi.Dal.UserDB.UserSearch(us, False, False, False)
                     gvwUsers.DataBind()
 
                     Helpers.MakeAccessable(gvwUsers)
                 ElseIf (pnlSearchExceptions.Visible) Then
                     Dim es As New ExceptionSearch()
                     Dim accessory As Int32
-                    Dim productID As Int32
                     Dim productTypeID As Int32
                     Dim testID As Int32
                     Dim testStageID As Int32
@@ -251,7 +210,6 @@ Partial Class Search
                     If (Page.IsValid) Then
                         jobName = ddlJobs2.SelectedValue
                         Int32.TryParse(ddlAccesssoryGroup2.SelectedValue, accessory)
-                        Int32.TryParse(ddlProductFilter2.SelectedValue, productID)
                         Int32.TryParse(ddlProductType2.SelectedValue, productTypeID)
                         Int32.TryParse(ddlTests2.SelectedValue, testID)
                         Int32.TryParse(ddlTestStages2.SelectedValue, testStageID)
@@ -270,7 +228,6 @@ Partial Class Search
                         End If
 
                         es.AccessoryGroupID = accessory
-                        es.ProductID = productID
                         es.ProductTypeID = productTypeID
                         es.TestID = testID
                         es.TestStageID = testStageID
@@ -288,7 +245,7 @@ Partial Class Search
                             es.JobName = jobName
                         End If
 
-                        gvwTestExceptions.DataSource = REMI.Dal.TestExceptionDB.ExceptionSearch(es)
+                        gvwTestExceptions.DataSource = Remi.Dal.TestExceptionDB.ExceptionSearch(es)
                         gvwTestExceptions.DataBind()
 
                         Helpers.MakeAccessable(gvwTestExceptions)
@@ -424,7 +381,7 @@ Partial Class Search
                     us.TrainingID = trainingID
                     us.UserID = userID
 
-                    gvwTraining.DataSource = REMI.Dal.UserDB.UserSearch(us, True, False, False)
+                    gvwTraining.DataSource = Remi.Dal.UserDB.UserSearch(us, True, False, False)
                     gvwTraining.DataBind()
 
                     Helpers.MakeAccessable(gvwTraining)
@@ -449,6 +406,10 @@ Partial Class Search
             Dim trainingLevelID As Int32
             Dim departmentID As Int32
             Dim byPass As Int32
+            Dim isProductManager As Int32
+            Dim isTSDContact As Int32
+            Dim isAdmin As Int32
+            Dim isTestCenterAdmin As Int32
 
             Int32.TryParse(ddlProductFilterUser.SelectedValue, productID)
             Int32.TryParse(ddlTestCentersUser.SelectedValue, testCenterID)
@@ -456,13 +417,52 @@ Partial Class Search
             Int32.TryParse(ddlTrainingLevel.SelectedValue, trainingLevelID)
             Int32.TryParse(ddlDepartmentUser.SelectedValue, departmentID)
 
-            If (chkByPass.Checked) Then
+            If (rdoByPassYes.Checked) Then
                 byPass = 1
+            ElseIf (rdoByPassNo.Checked) Then
+                byPass = 2
             Else
                 byPass = 0
-                us.ProductID = productID
             End If
 
+            If (rdoProductManagerYes.Checked) Then
+                isProductManager = 1
+            ElseIf (rdoProductManagerNo.Checked) Then
+                isProductManager = 2
+            Else
+                isProductManager = 0
+            End If
+
+            If (rdoTSDContacYes.Checked) Then
+                isTSDContact = 1
+            ElseIf (rdoTSDContacNo.Checked) Then
+                isTSDContact = 2
+            Else
+                isTSDContact = 0
+            End If
+
+            If (rdoIsAdminYes.Checked) Then
+                isAdmin = 1
+            ElseIf (rdoIsAdminNo.Checked) Then
+                isAdmin = 2
+            Else
+                isAdmin = 0
+            End If
+
+            If (rdoIsTestCenterAdminYes.Checked) Then
+                isTestCenterAdmin = 1
+            ElseIf (rdoIsTestCenterAdminNo.Checked) Then
+                isTestCenterAdmin = 2
+            Else
+                isTestCenterAdmin = 0
+            End If
+
+            us.IsTestCenterAdmin = isTestCenterAdmin
+            us.IsAdmin = isAdmin
+            us.IsProductManager = isProductManager
+            us.IsTSDContact = isTSDContact
+
+            us.ProductID = productID
             us.TrainingID = trainingID
             us.TrainingLevelID = trainingLevelID
             us.TestCenterID = testCenterID
@@ -473,7 +473,6 @@ Partial Class Search
         ElseIf (pnlSearchExceptions.Visible) Then
             Dim es As New ExceptionSearch()
             Dim accessory As Int32
-            Dim productID As Int32
             Dim productTypeID As Int32
             Dim testID As Int32
             Dim testStageID As Int32
@@ -484,7 +483,6 @@ Partial Class Search
 
             jobName = ddlJobs2.SelectedValue
             Int32.TryParse(ddlAccesssoryGroup2.SelectedValue, accessory)
-            Int32.TryParse(ddlProductFilter2.SelectedValue, productID)
             Int32.TryParse(ddlProductType2.SelectedValue, productTypeID)
             Int32.TryParse(ddlTests2.SelectedValue, testID)
             Int32.TryParse(ddlTestStages2.SelectedValue, testStageID)
@@ -503,7 +501,6 @@ Partial Class Search
             End If
 
             es.AccessoryGroupID = accessory
-            es.ProductID = productID
             es.ProductTypeID = productTypeID
             es.TestID = testID
             es.TestStageID = testStageID
@@ -718,10 +715,10 @@ Partial Class Search
     End Sub
 
     Protected Sub chkShowArchived_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkShowArchived.CheckedChanged
-        Dim prodList As DataTable = ProductGroupManager.GetProductList(UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, chkShowArchived.Checked)
+        Dim prodList As DataTable = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
         Dim newRow As DataRow = prodList.NewRow
-        newRow("ID") = 0
-        newRow("ProductGroupName") = "All Products"
+        newRow("LookupID") = 0
+        newRow("LookupType") = "All Products"
         prodList.Rows.InsertAt(newRow, 0)
 
         ddlProductFilter.Items.Clear()
@@ -755,10 +752,10 @@ Partial Class Search
         Dim drAccessoryType() As DataRow = dtAccessoryType.Select("LookupType = ''")
         drAccessoryType.ElementAt(0).Item("LookupType") = "ALL"
 
-        Dim prodList As DataTable = ProductGroupManager.GetProductList(UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False)
+        Dim prodList As DataTable = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
         Dim newRow As DataRow = prodList.NewRow
-        newRow("ID") = 0
-        newRow("ProductGroupName") = "All Products"
+        newRow("LookupID") = 0
+        newRow("LookupType") = "All Products"
         prodList.Rows.InsertAt(newRow, 0)
 
         Select Case val
@@ -873,10 +870,6 @@ Partial Class Search
                 ddlAccesssoryGroup2.Items.Clear()
                 ddlAccesssoryGroup2.DataSource = dtAccessoryType
                 ddlAccesssoryGroup2.DataBind()
-
-                ddlProductFilter2.Items.Clear()
-                ddlProductFilter2.DataSource = prodList
-                ddlProductFilter2.DataBind()
 
                 ddlRequestReasonException.Items.Clear()
                 ddlRequestReasonException.Items.Add("ALL")

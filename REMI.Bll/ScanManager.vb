@@ -9,7 +9,7 @@ Namespace REMI.Bll
     Public Class ScanManager
         Inherits REMIManagerBase
 
-        Public Shared Function Scan(ByVal QRANumber As String, Optional ByVal testStageName As String = "", Optional ByVal testName As String = "", Optional ByVal ResultString As String = "", Optional ByVal locationIdentification As String = "", Optional ByVal trackingLocationname As String = "", Optional ByVal binType As String = "SMALL-REM2", Optional ByVal jobName As String = "", Optional ByVal productGroup As String = "") As ScanReturnData
+        Public Shared Function Scan(ByVal QRANumber As String, ByVal resultSource As TestResultSource, Optional ByVal testStageName As String = "", Optional ByVal testName As String = "", Optional ByVal ResultString As String = "", Optional ByVal locationIdentification As String = "", Optional ByVal trackingLocationname As String = "", Optional ByVal binType As String = "SMALL-REM2", Optional ByVal jobName As String = "", Optional ByVal productGroup As String = "") As ScanReturnData
             Dim ReturnData As New ScanReturnData(QRANumber)
             Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
             Dim scanData As FastScanData
@@ -27,7 +27,7 @@ Namespace REMI.Bll
                 scanData.ProductGroupName = productGroup
 
                 If Not String.IsNullOrEmpty(productGroup) Then
-                    scanData.ProductID = (From p In instance.Products Where p.Lookup.Values = productGroup Select p.ID).FirstOrDefault()
+                    scanData.ProductID = (From l In instance.Lookups Where l.Values = productGroup Select l.LookupID).FirstOrDefault()
                 End If
 
                 scanData.SelectedTrackingLocationName = trackingLocationname
@@ -54,6 +54,7 @@ Namespace REMI.Bll
                     Else
                         scanData = TestUnitDB.GetFastScanData(barcode, locationIdentification, testStageName, testName, trackingLocationname)
                     End If
+
                     If scanData IsNot Nothing Then
                         scanData.SetCurrentTestRecordStatus()
                         scanData.SetSelectedTestRecordStatus()
@@ -63,7 +64,8 @@ Namespace REMI.Bll
                         'Check that we were able to get all of the objects we require and that they are all valid
                         If scanData.Validate() Then
                             'if they are then go ahead and process the scan
-                            scanData.ScanSuccess = (TestUnitDB.SaveFastScanData(scanData) = 0)
+                            scanData.ScanSuccess = (TestUnitDB.SaveFastScanData(scanData, resultSource) = 0)
+
                             If scanData.ScanSuccess AndAlso scanData.SelectedTrackingLocationFunction = TrackingLocationFunction.REMSTAR Then
                                 scanData.Notifications.Add(ScanUnitForRemstarThroughREMI(scanData.Barcode.BatchNumber, scanData.Barcode.UnitNumber, scanData.BatchStatus = BatchStatus.Complete, scanData.CurrentUserName, binType))
                             End If

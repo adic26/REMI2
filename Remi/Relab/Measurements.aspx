@@ -38,7 +38,7 @@
         <h3>Filter</h3>
         <ul>
             <li>
-                <asp:DropDownList runat="server" ID="ddlTestStage" Width="150px" DataTextField="TestStageName" DataValueField="ID"></asp:DropDownList>
+                <asp:DropDownList runat="server" ID="ddlTestStage" Width="150px" DataTextField="TestStageName" DataValueField="ID" AutoPostBack="true"></asp:DropDownList>
             </li>
             <li>
                 <asp:DropDownList runat="server" ID="ddlTests" Width="150px" DataTextField="TestName" DataValueField="ID"></asp:DropDownList>

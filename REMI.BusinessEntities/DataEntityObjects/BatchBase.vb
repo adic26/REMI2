@@ -533,6 +533,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_jobName <> val) Then
+                    _jobName = val
                     OutOfDate = True
                 End If
             End Set
@@ -565,6 +566,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_productGroup <> val) Then
+                    _productGroup = val
                     OutOfDate = True
                 End If
             End Set
@@ -593,6 +595,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_cprNumber <> val) Then
+                    _cprNumber = val
                     OutOfDate = True
                 End If
             End Set
@@ -622,6 +625,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_executiveSummary <> val) Then
+                    _executiveSummary = val
                     OutOfDate = True
                 End If
             End Set
@@ -653,6 +657,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_productType <> val) Then
+                    _productType = val
                     OutOfDate = True
                 End If
             End Set
@@ -684,6 +689,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_accessoryGroup <> val) Then
+                    _accessoryGroup = val
                     OutOfDate = True
                 End If
             End Set
@@ -717,6 +723,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_purpose <> val) Then
+                    _purpose = val
                     OutOfDate = True
                 End If
             End Set
@@ -748,6 +755,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_testCenterLocation <> val) Then
+                    _testCenterLocation = val
                     OutOfDate = True
                 End If
             End Set
@@ -776,6 +784,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_Priority <> val) Then
+                    _Priority = val
                     OutOfDate = True
                 End If
             End Set
@@ -810,6 +819,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_mechanicalTools <> val) Then
+                    _mechanicalTools = val
                     OutOfDate = True
                 End If
             End Set
@@ -838,6 +848,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_department <> val) Then
+                    _department = val
                     OutOfDate = True
                 End If
             End Set
@@ -866,6 +877,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_requestLink <> val) Then
+                    _requestLink = val
                     OutOfDate = True
                 End If
             End Set
@@ -897,6 +909,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_sampleSize.ToString() <> val) Then
+                    Int32.TryParse(val, _sampleSize)
                     OutOfDate = True
                 End If
             End Set
@@ -925,6 +938,7 @@ Namespace REMI.BusinessEntities
                 End If
 
                 If (_requestor <> val) Then
+                    _requestor = val
                     OutOfDate = True
                 End If
             End Set
@@ -960,6 +974,7 @@ Namespace REMI.BusinessEntities
                 DateTime.TryParse(val, createdDate)
 
                 If (_dateCreated <> createdDate) Then
+                    _dateCreated = createdDate
                     OutOfDate = True
                 End If
             End Set
@@ -995,6 +1010,7 @@ Namespace REMI.BusinessEntities
                 DateTime.TryParse(val, reportDate)
 
                 If (_reportingRequiredBy <> reportDate) Then
+                    _reportingRequiredBy = reportDate
                     OutOfDate = True
                 End If
             End Set
@@ -1030,6 +1046,7 @@ Namespace REMI.BusinessEntities
                 DateTime.TryParse(val, approveDate)
 
                 If (_dateReportApproved <> approveDate) Then
+                    _dateReportApproved = approveDate
                     OutOfDate = True
                 End If
             End Set

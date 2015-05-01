@@ -1,17 +1,5 @@
 ﻿ALTER PROCEDURE [dbo].[remispProductSettingsInsertUpdateSingleItem]
-/*	'===============================================================
-	'   NAME:                	remispProductSettingsInsertUpdateSingleItem
-	'   DATE CREATED:       	4 Nov 2011
-	'   CREATED BY:          	Darragh O'Riordan
-	'   FUNCTION:            	Creates or updates an item in a table: Jobs
-	'							Deletes the item if the value text is null
-    '   VERSION: 1                   
-	'   COMMENTS:            
-	'   MODIFIED ON:         
-	'   MODIFIED BY:         
-	'   REASON FOR MODIFICATION: 
-	'===============================================================*/
-	@ProductID INT,
+	@lookupid INT,
 	@KeyName nvarchar(MAX),
 	@ValueText nvarchar(MAX) = null,
 	@DefaultValue nvarchar(MAX),
@@ -20,13 +8,13 @@ AS
 	DECLARE @ReturnValue int
 	declare @ID int
 	
-	set @ID = (select ID from ProductSettings as ps  where ps.KeyName = @KeyName and productid=@ProductID)
+	set @ID = (select ID from ProductSettings as ps  where ps.KeyName = @KeyName and lookupid=@lookupid)
 
 	IF (@ID IS NULL) -- New Item
 	BEGIN
 		INSERT INTO ProductSettings
 		(
-			Productid, 
+			lookupid, 
 			KeyName,
 			ValueText,
 			LastUser,
@@ -34,7 +22,7 @@ AS
 		)
 		VALUES
 		(
-			@ProductID, 
+			@lookupid, 
 			@KeyName,
 			@ValueText,
 			@LastUser,
@@ -54,7 +42,7 @@ AS
 		
 		--and update everything else
 		UPDATE ProductSettings SET
-			productid = @ProductID, 
+			lookupid = @lookupid, 
 			LastUser = @LastUser,
 			KeyName = @KeyName,
 			ValueText = ISNULL(@ValueText, '')

@@ -443,25 +443,32 @@ BEGIN
 					SELECT @ResultMeasurementID AS ResultMeasurementID, T.c.value('@ParameterName','nvarchar(max)') AS ParameterName, T.c.query('.').value('.', 'nvarchar(max)') AS Value
 					FROM @xmlPart.nodes('/Measurement/Parameters/Parameter') T(c)
 
-					SELECT @FileName = LTRIM(RTRIM([FileName]))
-					FROM #measurement
-					
-					IF (@FileName IS NOT NULL AND @FileName <> '')
-						BEGIN
-							UPDATE Relab.ResultsMeasurementsFiles 
-							SET ResultMeasurementID=@ResultMeasurementID 
-							WHERE LOWER(LTRIM(RTRIM([FileName])))=LOWER(LTRIM(RTRIM(@FileName))) AND ResultMeasurementID IS NULL
-						END
+					PRINT 'Build #Files Table'
+					SELECT @FileName = LTRIM(RTRIM(ISNULL([FileName],''))) FROM #measurement
 					
 					INSERT INTO #files ([FileName])
 					SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 					FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
-				
+					
+					IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+					BEGIN
+						INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
+					END
+
+					PRINT 'INSERT Files'
 					UPDATE Relab.ResultsMeasurementsFiles 
 					SET ResultMeasurementID=@ResultMeasurementID
 					FROM Relab.ResultsMeasurementsFiles 
 						INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 					WHERE ResultMeasurementID IS NULL
+					
+					IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
+									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+								WHERE ResultMeasurementID = @ResultMeasurementID)) AND (SELECT COUNT(*) FROM #files) > 0
+					BEGIN
+						PRINT 'Files Didnt Insert Correctly Rolling Back'
+						GOTO HANDLE_ERROR
+					END
 				END
 				ELSE
 				BEGIN
@@ -494,27 +501,34 @@ BEGIN
 						DECLARE @ResultMeasurementID2 INT
 						SET @ResultMeasurementID2 = @@IDENTITY
 						
-						SELECT @FileName = LTRIM(RTRIM([FileName]))
-						FROM #measurement
-					
-						IF (@FileName IS NOT NULL AND @FileName <> '')
-							BEGIN
-								UPDATE Relab.ResultsMeasurementsFiles 
-								SET ResultMeasurementID=@ResultMeasurementID2 
-								WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(LTRIM(RTRIM(@FileName))) AND ResultMeasurementID IS NULL
-							END
-					
+						PRINT 'Build #Files Table'
+						SELECT @FileName = LTRIM(RTRIM(ISNULL([FileName], ''))) FROM #measurement
+
 						INSERT INTO #files ([FileName])
 						SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 						FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+						
+						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+						BEGIN
+							INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
+						END					
 
+						PRINT 'INSERT Files'
 						UPDATE Relab.ResultsMeasurementsFiles 
 						SET ResultMeasurementID=@ResultMeasurementID2
 						FROM Relab.ResultsMeasurementsFiles 
 							INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 						WHERE ResultMeasurementID IS NULL
 						
-						IF (@Parameters <> '')
+						IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
+									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+								WHERE ResultMeasurementID = @ResultMeasurementID2)) AND (SELECT COUNT(*) FROM #files) > 0
+						BEGIN
+							PRINT 'Files Didnt Insert Correctly Rolling Back'
+							GOTO HANDLE_ERROR
+						END
+						
+						IF (LTRIM(RTRIM(@Parameters)) <> '')
 						BEGIN
 							PRINT 'INSERT ReTest Parameters'
 							INSERT INTO Relab.ResultsParameters (ResultMeasurementID, ParameterName, Value)
@@ -537,27 +551,34 @@ BEGIN
 						DECLARE @ResultMeasurementID3 INT
 						SET @ResultMeasurementID3 = @@IDENTITY
 						
-						SELECT @FileName = LTRIM(RTRIM([FileName]))
-						FROM #measurement
-					
-						IF (@FileName IS NOT NULL AND @FileName <> '')
-							BEGIN
-								UPDATE Relab.ResultsMeasurementsFiles 
-								SET ResultMeasurementID=@ResultMeasurementID3 
-								WHERE LOWER(LTRIM(RTRIM(FileName)))=LOWER(@FileName) AND ResultMeasurementID IS NULL
-							END
+						PRINT 'Build #Files Table'
+						SELECT @FileName = LTRIM(RTRIM([FileName])) FROM #measurement
 						
 						INSERT INTO #files ([FileName])
 						SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 						FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
-					
+						
+						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+						BEGIN
+							INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
+						END
+
+						PRINT 'INSERT Files'
 						UPDATE Relab.ResultsMeasurementsFiles 
-						SET ResultMeasurementID=@ResultMeasurementID2
+						SET ResultMeasurementID=@ResultMeasurementID3
 						FROM Relab.ResultsMeasurementsFiles 
-							INNER JOIN #files f ON f.[FileName] = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+							INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 						WHERE ResultMeasurementID IS NULL
+										
+						IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
+									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+								WHERE ResultMeasurementID = @ResultMeasurementID3)) AND (SELECT COUNT(*) FROM #files) > 0
+						BEGIN
+							PRINT 'Files Didnt Insert Correctly Rolling Back'
+							GOTO HANDLE_ERROR
+						END
 					
-						IF (@Parameters <> '')
+						IF (LTRIM(RTRIM(@Parameters)) <> '')
 						BEGIN								
 							PRINT 'INSERT New Parameters'
 							INSERT INTO Relab.ResultsParameters (ResultMeasurementID, ParameterName, Value)

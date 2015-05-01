@@ -358,9 +358,9 @@ Namespace REMI.Bll
                     If (chk = 1) Then 'Batch
                         currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Batch.ID = batchID And rs.TestStage.TestStageType = TestStageType Select rs).ToList()
                     ElseIf (chk = 2) Then 'Product
-                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Product.ID = productID And rs.TestStage.TestStageType = TestStageType Select rs).ToList()
+                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.LookupID = productID And rs.TestStage.TestStageType = TestStageType Select rs).ToList()
                     ElseIf (chk = 3) Then 'Job
-                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.TestStage.TestStageType = TestStageType And rs.Product Is Nothing And rs.Batch Is Nothing Select rs).ToList()
+                        currentSetupList = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.TestStage.TestStageType = TestStageType And rs.Lookup Is Nothing And rs.Batch Is Nothing Select rs).ToList()
                     End If
 
                     For Each node As Web.UI.WebControls.TreeNode In tnc
@@ -374,9 +374,9 @@ Namespace REMI.Bll
                         If (chk = 1) Then 'Batch
                             saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Batch.ID = batchID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType).FirstOrDefault()
                         ElseIf (chk = 2) Then 'Product
-                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Product.ID = productID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType).FirstOrDefault()
+                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.LookupID = productID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType).FirstOrDefault()
                         ElseIf (chk = 3) Then 'Job
-                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType And rs.Product Is Nothing And rs.Batch Is Nothing).FirstOrDefault()
+                            saveSetup = (From rs In instance.RequestSetups.Include("Batch").Include("Test").Include("TestStage").Include("Job") Where rs.Job.ID = jobID And rs.Test.ID = testID And rs.TestStage.ID = testStageID And rs.TestStage.TestStageType = TestStageType And rs.Lookup Is Nothing And rs.Batch Is Nothing).FirstOrDefault()
                         End If
 
                         If (saveSetup Is Nothing) Then
@@ -385,7 +385,7 @@ Namespace REMI.Bll
                             If (chk = 1) Then
                                 saveSetup.Batch = (From b In instance.Batches Where b.ID = batchID Select b).FirstOrDefault()
                             ElseIf (chk = 2) Then
-                                saveSetup.Product = (From p In instance.Products Where p.ID = productID Select p).FirstOrDefault()
+                                saveSetup.Lookup = (From l In instance.Lookups Where l.LookupID = productID Select l).FirstOrDefault()
                                 saveSetup.Job = (From j In instance.Jobs Where j.ID = jobID Select j).FirstOrDefault()
                             ElseIf (chk = 3) Then
                                 saveSetup.Job = (From j In instance.Jobs Where j.ID = jobID Select j).FirstOrDefault()
@@ -467,10 +467,15 @@ Namespace REMI.Bll
                     Dim requestType As REMI.Entities.RequestType = (From rt In instance.RequestTypes Where rt.RequestTypeID = requestTypeID Select rt).FirstOrDefault()
                     saved = RequestDB.SaveRequest(requestName, request, userIdentification)
 
+                    REMIAppCache.ClearAllBatchData(requestNumber)
                     Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
 
                     If (saved And requestType.HasIntegration) Then
-                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, False, True, False)
+                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, False, True, True)
+
+                        If (b.OutOfDate) Then
+                            BatchManager.Save(b)
+                        End If
 
                         If (req.BatchID Is Nothing) Then
                             req.BatchID = b.ID
@@ -495,7 +500,7 @@ Namespace REMI.Bll
 
                         If (saved And distribution.Count > 0) Then
                             Dim sb As New StringBuilder
-                            sb.AppendLine(String.Format("<a href='http://go/requests/{0}' target='_blank'>To Edit Or View This Item Click Here</a>", requestNumber))
+                            sb.AppendLine(String.Format("<a href='{0}{1}' target='_blank'>To Edit Or View This Item Click Here</a>", REMIConfiguration.RequestGoLink, requestNumber))
                             sb.AppendLine(String.Format("<br/>Submitted: {0}", (From rd In request Where rd.IntField = "DateCreated" Select rd.Value).FirstOrDefault()))
                             sb.AppendLine(String.Format("<br/>Requestor: {0}", (From rd In request Where rd.IntField = "Requestor" Select rd.Value).FirstOrDefault()))
                             sb.AppendLine(String.Format("<br/>Test Center: {0}", (From rd In request Where rd.IntField = "TestCenterLocation" Select rd.Value).FirstOrDefault()))

@@ -295,7 +295,7 @@ BEGIN
 		SET @SQL = 'ALTER TABLE dbo.#RR ADD ' + replace(@rows, ']', '] NVARCHAR(4000)')
 		EXEC sp_executesql @SQL
 
-		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), TestName NVARCHAR(400), TestStageName NVARCHAR(400), 
+		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), BatchTest NVARCHAR(400), BatchStage NVARCHAR(400), 
 			TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
 			MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
 			LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
@@ -461,10 +461,10 @@ BEGIN
 
 		IF (@ParameterColumnNames <> '[na]')
 		BEGIN
-			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + replace(@ParameterColumnNames, ']', '] NVARCHAR(250)')
+			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + REPLACE(REPLACE(@ParameterColumnNames, 'Job]','JobParam]'), ']', '] NVARCHAR(250)')
 			EXEC sp_executesql @SQL
 			SET @whereStr = ''
-			
+
 			DELETE p 
 			FROM dbo.#Params p WITH(NOLOCK)
 			WHERE p.Name IN (SELECT Name
@@ -485,7 +485,7 @@ BEGIN
 				INTO #buildparamtable
 				FROM #Params WITH(NOLOCK)
 				GROUP BY name
-				
+
 				SELECT Name, COUNT(*) as counting, convert(nvarchar(max),'') AS params
 				INTO #buildparamtable2
 				FROM #Params WITH(NOLOCK)
@@ -513,47 +513,51 @@ BEGIN
 						FOR XML PATH('')), '<Val>', ''), '</Val>','')
 				FROM #buildparamtable2 bt WITH(NOLOCK)
 				WHERE Params = '' OR Params IS NULL
-				
+
 				UPDATE bt
 				SET bt.params = REPLACE(REPLACE((
-						SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(p.Val, '-','%') + '%'' OR ') As Val
+						SELECT ('LTRIM(RTRIM([' + Name + '])) NOT LIKE ''' + REPLACE(p.Val, '-','%') + '%'' AND ') As Val
 						FROM #Params p WITH(NOLOCK)
 						WHERE p.Name = bt.Name AND Val LIKE '-%'
 						FOR XML PATH('')), '<Val>', ''), '</Val>','')
 				FROM #buildparamtable3 bt WITH(NOLOCK)
 				WHERE Params = '' OR Params IS NULL
-				
+
 				SELECT @whereStr = COALESCE(@whereStr + '' ,'') + 'LTRIM(RTRIM([' + Name + '])) IN (' + SUBSTRING(params, 0, LEN(params)) + ') AND ' 
 				FROM dbo.#buildparamtable WITH(NOLOCK) 
 				WHERE Params IS NOT NULL
-				
-				IF (@whereStr <> ' WHERE ')
-					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
 
+				IF (LTRIM(RTRIM(@whereStr)) <> 'WHERE')
+				BEGIN
+					SET @whereStr = SUBSTRING(@whereStr, 0, LEN(@whereStr)-2)
+				END
+				
 				SELECT @whereStr2 += COALESCE(@whereStr2 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
 				FROM dbo.#buildparamtable2 WITH(NOLOCK)
 				WHERE Params IS NOT NULL
-				
+
 				IF @whereStr2 IS NOT NULL AND LTRIM(RTRIM(@whereStr2)) <> ''
-				BEGIN						
-					IF (@whereStr <> ' WHERE ')
+				BEGIN
+					IF (LTRIM(RTRIM(@whereStr)) <> 'WHERE')
+					BEGIN
 						SET @whereStr2 = ' AND ' + @whereStr2
+					END
 					ELSE
 						SET @whereStr2 = @whereStr2
 				END
-				
-				SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-1) + ' ) '
+
+				SELECT @whereStr3 += COALESCE(@whereStr3 + '' ,'') + ' ( ' + SUBSTRING(params, 0, LEN(params)-2) + ' ) '
 				FROM dbo.#buildparamtable3 WITH(NOLOCK)
 				WHERE Params IS NOT NULL
 				
 				IF @whereStr3 IS NOT NULL AND LTRIM(RTRIM(@whereStr3)) <> ''
-				BEGIN						
-					IF (@whereStr <> ' WHERE ')
+				BEGIN
+					IF (LTRIM(RTRIM(@whereStr)) <> 'WHERE' OR LTRIM(RTRIM(ISNULL(@whereStr2, ''))) <> '')
 						SET @whereStr3 = ' AND ' + @whereStr3
 					ELSE
 						SET @whereStr3 = @whereStr3
 				END
-											
+
 				SET @whereStr = REPLACE(@whereStr + @whereStr2 + @whereStr3,'&amp;','&')				
 
 				DROP TABLE #buildparamtable
@@ -567,7 +571,7 @@ BEGIN
 					INNER JOIN Relab.ResultsParameters rp WITH(NOLOCK) ON rr.ID=rp.ResultMeasurementID
 				) te PIVOT (MAX(Value) FOR ParameterName IN (' + @ParameterColumnNames + ')) AS pvt
 			 ' + @whereStr
-				
+
 			EXEC sp_executesql @SQL
 		END
 		ELSE
@@ -602,7 +606,7 @@ BEGIN
 
 		IF (@InformationColumnNames <> '[na]')
 		BEGIN
-			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + replace(@InformationColumnNames, ']', '] NVARCHAR(250)')
+			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + REPLACE(@InformationColumnNames, ']', '] NVARCHAR(250)')
 			EXEC sp_executesql @SQL
 			
 			SET @whereStr = ''
@@ -846,7 +850,7 @@ GRANT EXECUTE ON [Req].[RequestSearch] TO REMI
 GO
 DECLARE @table AS dbo.SearchFields
 INSERT INTO @table(TableType, ID, SearchTerm)
-VALUES ('Request', 51, '*Windermere'),
+VALUES --('Request', 211, '*classic')
 --('Request', 51, '-Windermere E R135'),
 --('Request', 51, '3G SIMs'),
 --('Request', 51, '*Lisbon'),
@@ -859,18 +863,20 @@ VALUES ('Request', 51, '*Windermere'),
 --('Test', 1103, 'Camera Front'),
 --('Stage', 3616, '1 Drop'),
 --('Job', 179, 'T004 DIRT RASS Drop'),
---('Job', 215, 'T013 Mechanical Suite'),
+('Job', 258, 'T077 Other')
 --('Stage', 2246, 'Analysis'),
 --('Stage', 3220, 'Post 720hrs'),
 --('BSN', 0, '1132205311'),
 --('BSN', 0, '1151200936'),
---('ReqNum', 0, 'QRA-14-0038'),
---('ReqNum', 0, 'QRA-14-0597'),
+--('ReqNum', 0, 'QRA-14-0038')
+,('ReqNum', 0, 'TSD-15-0004')
 --('Unit', 0, '5'),
 --('Unit', 0, '1'),
 --('IMEI', 0, '004402242039794'),
 --('IMEI', 0, '351852062969380'),
 --('ResultArchived', 0, ''),
+--('Param:Category', 0, '*col'),
+--('Param:Category', 0, '-Gamma')
 --('Param:Band', 0, 'GPRS1800'),
 --('Param:Band', 0, 'LTE17'),
 --('Param:Channel', 0, '*700'),
@@ -890,7 +896,7 @@ VALUES ('Request', 51, '*Windermere'),
 --('BatchAssignedUser',0,'ogaudreault'),
 --('BatchAssignedUser',0,'vpriala')
 --('BatchStatus',0,'2')
-('BatchStatus',0,'5')
+--('BatchStatus',0,'5')
 --('BatchStartDate', 0, '2015-01-19'),
 --('BatchEndDate', 0, '2015-04-19')
-EXEC [Req].[RequestSearch] 1, @table, 251
+EXEC [Req].[RequestSearch] 15, @table, 251

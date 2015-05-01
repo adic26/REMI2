@@ -85,13 +85,20 @@ Namespace REMI.Bll
                 If (fromReportGenerator) Then
                     dt = BusinessEntities.Helpers.EQToDataTable((From f In instance.ResultsMeasurementsFiles
                                                                 Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber And (Not f.ResultsMeasurement.Result.TestStage.TestStageName.ToLower.Contains("analysis")) And f.ResultsMeasurement.Archived = False And (f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("drop") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("tumble") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("visual") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("functional") Or f.ResultsMeasurement.Result.Test.TestName.ToLower.Contains("camera"))
-                                                                Select f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
+                                                                Order By f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Result.TestStage.ProcessOrder
+                                                                Select f.ResultMeasurementID, f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
                 Else
                     dt = BusinessEntities.Helpers.EQToDataTable((From f In instance.ResultsMeasurementsFiles
                                                                 Where f.ResultsMeasurement.Result.TestUnit.Batch.QRANumber = requestNumber And (Not f.ResultsMeasurement.Result.TestStage.TestStageName.ToLower.Contains("analysis")) And f.ResultsMeasurement.Archived = False
-                                                                Select f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
+                                                                Order By f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Result.TestStage.ProcessOrder
+                                                                Select f.ResultMeasurementID, f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
                 End If
-                
+
+                Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Values") = If(row("Values").ToString() = "Observation", instance.remispGetObservationParameters(DirectCast(row("ResultMeasurementID"), Int32)).FirstOrDefault(), row("Values")))
+
+                dt.Columns.Remove("ResultMeasurementID")
+                dt.AcceptChanges()
+
                 Return dt
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
@@ -318,7 +325,9 @@ Namespace REMI.Bll
 
         Public Shared Function GetObservations(ByVal batchID As Int32) As DataTable
             Try
-                Return RelabDB.GetObservations(batchID)
+                If (batchID > 0) Then
+                    Return RelabDB.GetObservations(batchID)
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -327,7 +336,9 @@ Namespace REMI.Bll
 
         Public Shared Function GetObservationSummary(ByVal batchID As Int32) As DataTable
             Try
-                Return RelabDB.GetObservationSummary(batchID)
+                If (batchID > 0) Then
+                    Return RelabDB.GetObservationSummary(batchID)
+                End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try

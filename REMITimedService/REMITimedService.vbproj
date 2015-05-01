@@ -83,11 +83,11 @@
   <ItemGroup>
     <Reference Include="DBControl, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\DBControl.4.5.346\lib\net45\DBControl.dll</HintPath>
+      <HintPath>packages\DBControl.4.5.371\lib\net45\DBControl.dll</HintPath>
     </Reference>
     <Reference Include="DBControl.XmlSerializers, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\DBControl.4.5.346\lib\net45\DBControl.XmlSerializers.dll</HintPath>
+      <HintPath>packages\DBControl.4.5.371\lib\net45\DBControl.XmlSerializers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

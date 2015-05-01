@@ -1,32 +1,31 @@
-﻿ALTER PROCEDURE [dbo].[remispSaveProduct] @ProductID int , @isActive int, @ProductGroupName NVARCHAR(150), @QAP NVARCHAR(255), @TSDContact NVARCHAR(255), @Success AS BIT = NULL OUTPUT
+﻿ALTER PROCEDURE [dbo].[remispSaveProduct] @LookupID int , @isActive int, @ProductGroupName NVARCHAR(150), @QAP NVARCHAR(255), @Success AS BIT = NULL OUTPUT
 AS
 BEGIN
-	IF (@ProductID = 0)--ensure we don't have it
+	IF (@LookupID = 0)--ensure we don't have it
 	BEGIN
-		SELECT @ProductID = ID
+		SELECT @LookupID = ID
 		FROM Products p
 			INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 		WHERE LTRIM(RTRIM(lp.[values]))=LTRIM(RTRIM(@ProductGroupName))
 	END
 
-	IF (@ProductID = 0)--if we still dont have it insert it
+	IF (@LookupID = 0)--if we still dont have it insert it
 	BEGIN
 		DECLARE @LookupTypeID INT
-		DECLARE @LookupID INT
 		SELECT @LookupID = MAX(LookupID)+1 FROM Lookups
 		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Products'		
 				
 		INSERT INTO Lookups ([Values], LookupID, IsActive) VALUES (LTRIM(RTRIM(@ProductGroupName)), @LookupID, 1)
-		INSERT INTO Products (LookupID, QAPLocation, TSDContact) 
-		VALUES (@LookupID, @QAP, @TSDContact)
+		INSERT INTO Products (LookupID, QAPLocation) 
+		VALUES (@LookupID, @QAP)
 
 		SET @Success = 1
 	END
 	ELSE
 	BEGIN
 		UPDATE Products
-		SET QAPLocation = @QAP, TSDContact = @TSDContact
-		WHERE ID=@ProductID
+		SET QAPLocation = @QAP
+		WHERE LookupID=@LookupID
 
 		SET @Success = 1
 	END

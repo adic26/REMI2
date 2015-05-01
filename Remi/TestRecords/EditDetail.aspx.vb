@@ -31,8 +31,8 @@ Partial Class TestRecords_EditDetail
 
     Protected Sub grdAuditLog_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles grdAuditLog.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
-            e.Row.Cells(4).Text = System.Enum.Parse(GetType(TestRecordStatus), e.Row.Cells(4).Text).ToString()
-            e.Row.Cells(10).Text = System.Enum.Parse(GetType(TestResultSource), e.Row.Cells(10).Text).ToString()
+            e.Row.Cells(5).Text = System.Enum.Parse(GetType(TestRecordStatus), e.Row.Cells(5).Text).ToString()
+            e.Row.Cells(11).Text = System.Enum.Parse(GetType(TestResultSource), e.Row.Cells(11).Text).ToString()
         End If
     End Sub
 

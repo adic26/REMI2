@@ -74,6 +74,7 @@
         </table>
     </asp:Panel>
     <br />
+    <p>Use the area below to scan unit(s) out to your name. Once the unit is in your name the device will be considered with you until you scan back into the system.</p>
     <uc2:ScanIndicator ID="sciTracking" runat="server" />
     <p>
         <asp:CheckBox runat="server" Visible="true" ID="chkPick" Text="REMSTAR PICK" /><br />

@@ -42,15 +42,12 @@
 		SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name='Products'
 		SELECT @maxid = MAX(LookupID)+1 FROM Lookups
 		INSERT INTO Lookups (LookupID, LookupTypeID, [Values]) Values (@maxid, @LookupTypeID, LTRIM(RTRIM(@ProductGroupName)))
-		
-		INSERT INTO Products (LookupID) Values (@maxid)
-		
-		SELECT @ProductID = ID FROM Products WITH(NOLOCK) WHERE LookupID=@maxid
+				
+		SET @ProductID = @maxid
 	END
 	ELSE
 	BEGIN
-		SELECT @maxid = l.LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Products' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@ProductGroupName))
-		SELECT @ProductID = ID FROM Products WITH(NOLOCK) WHERE LookupID=@maxid
+		SELECT @ProductID = l.LookupID FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='Products' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@ProductGroupName))
 	END
 	
 	IF NOT EXISTS (SELECT 1 FROM Lookups l INNER JOIN LookupType lt ON l.LookupTypeID=lt.LookupTypeID WHERE lt.Name='ProductType' AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@ProductType)))

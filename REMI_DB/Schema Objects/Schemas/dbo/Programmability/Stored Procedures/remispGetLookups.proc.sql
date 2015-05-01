@@ -1,12 +1,17 @@
-﻿ALTER PROCEDURE remispGetLookups @Type NVARCHAR(150), @ProductID INT = NULL, @ParentID INT = NULL, @ParentLookupType NVARCHAR(150) = NULL, @ParentLookup NVARCHAR(150) = NULL, @RequestTypeID INT = NULL,
-	@ShowAdminSelected BIT = 0, @ShowArchived BIT = 0
+﻿ALTER PROCEDURE remispGetLookups @Type NVARCHAR(150), @ProductID INT = NULL, @ParentID INT = NULL, @ParentLookupType NVARCHAR(150) = NULL, 
+	@ParentLookup NVARCHAR(150) = NULL, @RequestTypeID INT = NULL, @ShowAdminSelected BIT = 0, @ShowArchived BIT = 0,
+	@UserID INT = 0
 AS
 BEGIN
+	DECLARE @ByPassSecureCheck BIT
 	DECLARE @LookupTypeID INT
+	DECLARE @IsSecureType BIT
 	DECLARE @ParentLookupTypeID INT
 	DECLARE @HierarchyExists BIT
 	DECLARE @ParentLookupID INT
-	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@Type
+	
+	SELECT @ByPassSecureCheck = ByPassProduct FROM Users u WHERE u.ID=@UserID
+	SELECT @LookupTypeID = LookupTypeID, @IsSecureType = IsSecureType FROM LookupType WHERE Name=@Type
 	SELECT @ParentLookupTypeID = LookupTypeID FROM LookupType WHERE Name=@ParentLookupType
 	SELECT @ParentLookupID = LookupID FROM Lookups WHERE LookupTypeID=@ParentLookupTypeID AND Lookups.[Values]=@ParentLookup
 	SET @HierarchyExists = CONVERT(BIT, 0)
@@ -30,7 +35,7 @@ BEGIN
 		LEFT OUTER JOIN Lookups p ON p.LookupID=l.ParentID
 		LEFT OUTER JOIN LookupsHierarchy lh ON lh.ParentLookupTypeID=@ParentLookupTypeID AND lh.ChildLookupTypeID=@LookupTypeID
 			AND lh.ParentLookupID=@ParentLookupID AND lh.RequestTypeID=@RequestTypeID AND lh.ChildLookupID=l.LookupID
-	WHERE l.LookupTypeID=@LookupTypeID 
+	WHERE l.LookupTypeID=@LookupTypeID
 		AND 
 			(
 				@ShowArchived = 1
@@ -58,7 +63,12 @@ BEGIN
 				@HierarchyExists = CONVERT(BIT, 0)
 			)
 		)
-		
+	
+	IF (@IsSecureType = 1 AND @ByPassSecureCheck=0)
+	BEGIN
+		DELETE FROM #type WHERE LookupID NOT IN (SELECT LookupID FROM UserDetails ud WHERE ud.UserID=@UserID)
+	END
+	
 	; WITH cte AS
 	(
 		SELECT LookupID, [Type], LookupType, HasAccess, Description, ISNULL(ParentID, 0) AS ParentID, Parent, RequestAssigned, IsActive,

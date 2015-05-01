@@ -7,16 +7,16 @@ Namespace REMI.Bll
     Public Class LookupsManager
         Inherits REMIManagerBase
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean, ByVal RemoveFirst As Int32, ByVal showArchived As Boolean) As DataTable
-            Try
-                Return GetLookups(type.ToString(), productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected, RemoveFirst, showArchived)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
+        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
+        'Public Shared Function GetLookups(ByVal type As REMI.Contracts.LookupType, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean, ByVal RemoveFirst As Int32, ByVal showArchived As Boolean) As DataTable
+        '    Try
+        '        Return GetLookups(type.ToString(), productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected, RemoveFirst, showArchived)
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+        '    End Try
 
-            Return New DataTable("Lookups")
-        End Function
+        '    Return New DataTable("Lookups")
+        'End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetLookupTypes(ByVal showSystemTypes As Boolean) As DataTable
@@ -33,7 +33,7 @@ Namespace REMI.Bll
         Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal ParentLookupType As String, ByVal ParentLookupValue As String, ByVal RequestTypeID As Int32, ByVal ShowAdminSelected As Boolean, ByVal RemoveFirst As Int32, ByVal showArchived As Boolean) As DataTable
             Try
                 'All Test Centers
-                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected, showArchived)
+                Dim dt As DataTable = LookupsDB.GetLookups(type, productID, parentID, ParentLookupType, ParentLookupValue, RequestTypeID, ShowAdminSelected, showArchived, UserManager.GetCurrentUser.ID)
 
                 If (type = "TestCenter") Then
                     dt.Rows(0).Item("LookupType") = "All Test Centers"
@@ -138,6 +138,19 @@ Namespace REMI.Bll
             End Try
 
             Return -1
+        End Function
+
+        <DataObjectMethod(DataObjectMethodType.[Select], True)> _
+        Public Shared Function GetLookupByID(ByVal lookupid As Int32) As DataTable
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+
+                Return REMI.BusinessEntities.Helpers.EQToDataTable((From l In instance.Lookups Where l.LookupID = lookupid Select l).ToList(), "Lookup")
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("Lookup")
         End Function
     End Class
 End Namespace

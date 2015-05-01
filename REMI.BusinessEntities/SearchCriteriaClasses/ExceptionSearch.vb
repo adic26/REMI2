@@ -4,7 +4,6 @@
         Private _testStageID As Int32
         Private _accessoryID As Int32
         Private _productTypeID As Int32
-        Private _productID As Int32
         Private _jobName As String
         Private _includeBatches As Int32
         Private _requestReason As Int32
@@ -90,15 +89,6 @@
             End Get
             Set(value As Int32)
                 _productTypeID = value
-            End Set
-        End Property
-
-        Public Property ProductID() As Int32
-            Get
-                Return _productID
-            End Get
-            Set(value As Int32)
-                _productID = value
             End Set
         End Property
 

@@ -14,11 +14,11 @@ Partial Class ES_Default
                 Page.ClientScript.RegisterClientScriptInclude(Me.Page.GetType(), "1.10.2", ResolveClientUrl("/Design/scripts/jQuery/jquery-1.10.2.js"))
             End If
 
-            lblPrinted.Text = String.Format("<b>Printed:</b> {0}", DateTime.Now.ToLongDateString())
-
             Dim tmpStr As String = Request.QueryString.Get("RN")
 
-            If (tmpStr IsNot Nothing) Then
+            If (Not String.IsNullOrEmpty(tmpStr)) Then
+                pnlPopup.Visible = True
+                lblPrinted.Text = String.Format("<b>Printed:</b> {0}", DateTime.Now.ToLongDateString())
                 Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr, True))
 
                 If bc.Validate Then
@@ -45,7 +45,10 @@ Partial Class ES_Default
                     grdJIRAS.DataSource = BatchManager.GetBatchJIRA(b.ID, False)
                     grdJIRAS.DataBind()
 
-                    Dim bs As New REMI.BusinessEntities.BatchSearch
+                    grdUnits.DataSource = BatchManager.GetUnitInStages(b.QRANumber)
+                    grdUnits.DataBind()
+
+                    Dim bs As New Remi.BusinessEntities.BatchSearch
                     bs.ProductID = b.ProductID
                     bs.JobID = b.JobID
                     bs.ProductTypeID = b.ProductTypeID
@@ -80,6 +83,14 @@ Partial Class ES_Default
 
                     SetStatus(ds.Tables(2).Rows(0)(0).ToString())
                     SetBatchStatus(b.Status.ToString())
+
+                    Dim isProjectManager As Boolean = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = b.ProductGroup Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
+
+                    If (isProjectManager Or UserManager.GetCurrentUser.IsAdmin Or UserManager.GetCurrentUser.IsTestCenterAdmin Or UserManager.GetCurrentUser.IsLabTestCoordinator Or UserManager.GetCurrentUser.IsLabTechOpsManager) Then
+                        ddlStatus.Enabled = True
+                    Else
+                        ddlStatus.Enabled = False
+                    End If
 
                     For Each fa In (From tr In b.TestRecords Where tr.FailDocs.Count > 0 Distinct Select New With {tr.FailDocDS})
                         pnlFA.Style.Add("Display", "block")
@@ -122,6 +133,18 @@ Partial Class ES_Default
                         ESMenu.Items(0).ChildItems(ESMenu.Items(0).ChildItems.Count - 1).ChildItems.Add(mi)
                     Next
                 End If
+            Else
+                pnlApprovalHeader.Enabled = False
+                pnlObservations.Enabled = False
+                pnlObservationSummary.Enabled = False
+                pnlQRASlider.Enabled = False
+                pnlResultSummaryHeader.Enabled = False
+                pnlResultBreakdownHeader.Enabled = False
+                pnlRequestInfoHeader.Enabled = False
+                pnlES.Enabled = False
+                pnlFA.Enabled = False
+                pnlUnitHeader.Enabled = False
+                pnlRequestSummaryHeader.Enabled = False
             End If
         End If
     End Sub
@@ -145,10 +168,10 @@ Partial Class ES_Default
 
         Select Case lblResult.Text.ToLower
             Case "pass"
-            Case "preliminary pass"
+            Case "un-verified pass"
                 lblResult.CssClass = "ESPass"
             Case "fail"
-            Case "preliminary fail"
+            Case "un-verified fail"
                 lblResult.CssClass = "ESFail"
             Case "no result"
                 lblResult.CssClass = "ESNoResult"
@@ -179,10 +202,6 @@ Partial Class ES_Default
         Helpers.MakeAccessable(gvwObservations)
     End Sub
 
-    Protected Sub gvwObservationSummaryGVWHeaders(ByVal sender As Object, ByVal e As System.EventArgs) Handles gvwObservationSummary.PreRender
-        Helpers.MakeAccessable(gvwObservationSummary)
-    End Sub
-
     Public ReadOnly Property PartName
         Get
             Return hdnPartName.Value
@@ -201,6 +220,10 @@ Partial Class ES_Default
 
     Protected Sub gvwResultSummary_RowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvwResultSummary.RowDataBound
         If e.Row.RowType = DataControlRowType.DataRow Then
+            If (e.Row.Cells(0).Text.ToString() = e.Row.Cells(1).Text.ToString()) Then
+                e.Row.Cells(1).Text = String.Empty
+            End If
+
             For Each dc As DataControlFieldCell In e.Row.Cells
                 If (dc.Text.ToLower().Contains("pass")) Then
                     dc.ForeColor = Drawing.Color.Green
@@ -221,10 +244,10 @@ Partial Class ES_Default
             Dim hylValue As HyperLink = DirectCast(e.Row.FindControl("hylValue"), HyperLink)
             Dim hdnType As HiddenField = DirectCast(e.Row.FindControl("hdnType"), HiddenField)
 
-            If (DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling.Count > 0) Then
+            If (DirectCast(e.Row.DataItem, Remi.BusinessEntities.RequestFields).Sibling.Count > 0) Then
                 hylValue.Visible = False
 
-                For Each s As Sibling In DirectCast(e.Row.DataItem, REMI.BusinessEntities.RequestFields).Sibling
+                For Each s As Sibling In DirectCast(e.Row.DataItem, Remi.BusinessEntities.RequestFields).Sibling
                     If (Not String.IsNullOrEmpty(s.Value)) Then
                         If (hdnType.Value = "Link") Then
                             Dim hyp As New HyperLink
@@ -262,8 +285,8 @@ Partial Class ES_Default
             Dim resultID As Int32 = gvwResultBreakDown.DataKeys(e.Row.RowIndex).Values(0)
             Dim imgadd As HtmlImage = DirectCast(e.Row.FindControl("imgadd"), HtmlImage)
             Dim pnlmeasureBreakdown As Panel = DirectCast(e.Row.FindControl("pnlmeasureBreakdown"), Panel)
-            Dim instance = New REMI.Dal.Entities().Instance()
-            'And m.PassFail = False
+            Dim instance = New Remi.Dal.Entities().Instance()
+
             If ((From m In instance.ResultsMeasurements Where m.ResultID = resultID).FirstOrDefault() IsNot Nothing) Then
                 Dim msm As Remi.Measurements = DirectCast(e.Row.FindControl("msmMeasuerments"), Remi.Measurements)
 
@@ -274,6 +297,10 @@ Partial Class ES_Default
                 msm.DataBind()
             Else
                 imgadd.Visible = False
+            End If
+
+            If (e.Row.Cells(3).Text.ToString() = e.Row.Cells(4).Text.ToString()) Then
+                e.Row.Cells(4).Text = String.Empty
             End If
 
             For Each dc As DataControlFieldCell In e.Row.Cells
@@ -298,6 +325,30 @@ Partial Class ES_Default
                 Dim img As HtmlInputImage = DirectCast(e.Row.FindControl("viewImages"), HtmlInputImage)
                 img.Visible = True
             End If
+        End If
+    End Sub
+
+    Protected Sub gvwObservationSummary_RowCreated(sender As Object, e As GridViewRowEventArgs) Handles gvwObservationSummary.RowCreated
+        If (e.Row.RowType = DataControlRowType.Header) Then
+            Dim headerGridRow As GridViewRow = New GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Insert)
+            Dim headerCell As TableCell = New TableCell()
+            headerCell.Text = ""
+            headerCell.ColumnSpan = 1
+            headerGridRow.Cells.Add(headerCell)
+
+            headerCell = New TableCell()
+            headerCell.Text = "Units"
+            headerCell.ColumnSpan = e.Row.Cells.Count - 3
+            headerGridRow.Cells.Add(headerCell)
+
+            headerCell = New TableCell()
+            headerCell.Text = "Number Of"
+            headerCell.ColumnSpan = 1
+            headerGridRow.Cells.Add(headerCell)
+            headerGridRow.TableSection = TableRowSection.TableHeader
+
+            headerGridRow.CssClass = "newHeader"
+            gvwObservationSummary.Controls(0).Controls.AddAt(0, headerGridRow)
         End If
     End Sub
 
@@ -340,5 +391,9 @@ Partial Class ES_Default
         Else
             pnlObservations.Enabled = False
         End If
+    End Sub
+
+    Protected Sub btnSubmit_Click(sender As Object, e As EventArgs)
+        Response.Redirect(String.Format("{0}?RN={1}", Helpers.GetCurrentPageName, Helpers.CleanInputText(txtRequestNumber.Text, 30)), True)
     End Sub
 End Class

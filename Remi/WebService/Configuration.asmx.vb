@@ -22,7 +22,7 @@ Public Class ProductConfiguration
     Public Function GetProductConfigurationXML(ByVal productID As Int32, ByVal testID As Int32) As String
         Dim xml As String = String.Empty
         Try
-            Dim record As Int32 = (From x In New Remi.Dal.Entities().Instance().ProductConfigurationUploads Where x.Test.ID = testID And x.Product.ID = productID Select x.ID).FirstOrDefault()
+            Dim record As Int32 = (From x In New Remi.Dal.Entities().Instance().ProductConfigurationUploads Where x.Test.ID = testID And x.LookupID = productID Select x.ID).FirstOrDefault()
 
             If (record > 0) Then
                 xml = ProductGroupManager.GetProductConfigurationXML(record).ToString()
@@ -52,7 +52,7 @@ Public Class ProductConfiguration
     Public Function GetProductConfigurationXMLByName(ByVal productID As Int32, ByVal testID As Int32, ByVal name As String) As String
         Dim xml As String = String.Empty
         Try
-            Dim record As Int32 = (From x In New Remi.Dal.Entities().Instance().ProductConfigurationUploads Where x.Test.ID = testID And x.Product.ID = productID And x.PCName = name Select x.ID).FirstOrDefault()
+            Dim record As Int32 = (From x In New Remi.Dal.Entities().Instance().ProductConfigurationUploads Where x.Test.ID = testID And x.LookupID = productID And x.PCName = name Select x.ID).FirstOrDefault()
 
             If (record > 0) Then
                 xml = ProductGroupManager.GetProductConfigurationXML(record).ToString()

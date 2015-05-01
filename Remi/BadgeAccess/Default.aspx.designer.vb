@@ -221,6 +221,15 @@ Partial Public Class BadgeAccess_Default
     Protected WithEvents odsDepartments As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
+    '''cddPage control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cddPage As Global.AjaxControlToolkit.CascadingDropDown
+
+    '''<summary>
     '''ddlDefaultPage control.
     '''</summary>
     '''<remarks>
@@ -228,15 +237,6 @@ Partial Public Class BadgeAccess_Default
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlDefaultPage As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
-    '''odsDefaultPage control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsDefaultPage As Global.System.Web.UI.WebControls.ObjectDataSource
 
     '''<summary>
     '''btnNewUser control.

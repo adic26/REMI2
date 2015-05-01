@@ -2,9 +2,12 @@
 AS
 BEGIN
 	DECLARE @JobName NVARCHAR(400)
-	DECLARE @ProductID INT
+	DECLARE @LookupID INT
 	DECLARE @ID INT
-	SELECT @JobName = JobName, @ProductID = ProductID, @ID = ID FROM Batches WITH(NOLOCK) WHERE QRANumber=@QRANumber
+	SELECT @JobName = JobName, @LookupID = p.LookupID, @ID = b.ID 
+	FROM Batches b WITH(NOLOCK)
+		INNER JOIN Lookups p WITH(NOLOCK) ON p.LookupID=b.ProductID
+	WHERE QRANumber=@QRANumber
 
 	CREATE TABLE #view (QRANumber NVARCHAR(11), expectedDuration REAL, processorder INT, resultbasedontime INT, TestName NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, testtype INT, teststagetype INT, TestStageName NVARCHAR(400), testunitsfortest NVARCHAR(MAX), TestID INT, TestStageID INT, IsArchived BIT, TestIsArchived BIT, TestWI NVARCHAR(400) COLLATE SQL_Latin1_General_CP1_CI_AS, TestCounts NVARCHAR(MAX))
 
@@ -25,9 +28,9 @@ BEGIN
 	UNION
 	SELECT 'Specification' AS WIType, 'http://hwqaweb.rim.net/pls/trs/data_entry.main?req=QRA-ENG-SP-11-0001' AS Location
 	UNION
-	SELECT 'QAP' As WIType, p.QAPLocation AS Location
-	FROM Products p WITH(NOLOCK)
-	WHERE p.ID=@ProductID AND LTRIM(RTRIM(ISNULL(QAPLocation, ''))) <> ''
+	SELECT 'QAP' As WIType, l.Description AS Location
+	FROM Lookups l WITH(NOLOCK)
+	WHERE l.LookupID=@LookupID AND LTRIM(RTRIM(ISNULL(l.Description, ''))) <> ''
 
 	DROP TABLE #view
 END

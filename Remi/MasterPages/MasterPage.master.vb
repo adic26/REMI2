@@ -8,7 +8,7 @@ Partial Class MasterPages_MasterPage
 
     Protected Sub lnkLogout_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkLogout.Click
         UserManager.LogUserOut()
-        Response.Redirect(REMIConfiguration.DefaultRedirectPage)
+        Response.Redirect("~/BadgeAccess")
     End Sub
 
     Protected Sub page_prerender() Handles Me.PreRender

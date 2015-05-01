@@ -14,9 +14,10 @@ Imports REMI.Core
 ''' <remarks></remarks>
 Partial Class ManageProducts_EditProductSettings
     Inherits System.Web.UI.Page
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            Dim productName As String = Request.QueryString.Get("Product")
+            Dim productName As String = Request.QueryString.Get("id")
             If Not String.IsNullOrEmpty(productName) Then
                 Dim id As Int32
                 Int32.TryParse(productName, id)
@@ -30,34 +31,23 @@ Partial Class ManageProducts_EditProductSettings
     End Sub
 
     Protected Sub DatabindGridView()
-        grdSettings.DataSource = ProductGroupManager.GetProductSettings(hdnProductID.Value)
+        grdSettings.DataSource = ProductGroupManager.GetProductSettings(hdnLookupID.Value)
         grdSettings.DataBind()
     End Sub
 
-    Protected Sub ProcessProduct(ByVal productID As Int32)
-        hdnProductID.Value = productID
-        Dim productName As String = ProductGroupManager.GetProductNameByID(productID)
-        hdnProductName.Value = productName
+    Protected Sub ProcessProduct(ByVal lookupid As Int32)
+        Dim instance = New Remi.Dal.Entities().Instance()
+        Dim productName As String = (From l In instance.Lookups Where l.LookupID = lookupid Select l.Values).FirstOrDefault()
+        hdnLookupID.Value = lookupid
         lblProductName.Text = "Edit " + productName + " Settings"
-        hypCancel.NavigateUrl = REMIWebLinks.GetProductInfoLink(productID)
-        hypRefresh.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(productID)
+        hypCancel.NavigateUrl = REMIWebLinks.GetProductInfoLink(hdnLookupID.Value)
+        hypRefresh.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(hdnLookupID.Value)
         DatabindGridView()
         pnlLeftMenuActions.Visible = True
 
-        If (Not UserManager.GetCurrentUser.IsAdmin) Then
-            txtQAPLocation.Enabled = False
-        End If
-
-        Dim instance = New REMI.Dal.Entities().Instance()
-
-        Dim product = (From p In instance.Products Where p.ID = productID Select p.QAPLocation, p.TSDContact, p.Lookup.IsActive).FirstOrDefault()
-        txtQAPLocation.Text = product.QAPLocation
-        txtTSDContact.Text = product.TSDContact
-        hdnIsActive.Value = product.IsActive
-
         Dim pl = (From l In instance.Lookups Where l.LookupType.Name = "MFIFunctionalMatrix" Or l.LookupType.Name = "SFIFunctionalMatrix" Or l.LookupType.Name = "AccFunctionalMatrix" Order By l.LookupType.Name, l.Values _
                   Select New With {.LookupID = l.LookupID, .Type = l.LookupType.Name, .Values = l.Values, _
-                                   .HasAccess = If((From p In instance.ProductLookups Where p.Lookup.LookupID = l.LookupID And p.Product.ID = productID Select p.ID).FirstOrDefault() > 0, True, False) _
+                                   .HasAccess = If((From p In instance.ProductLookups Where p.Lookup.LookupID = l.LookupID And p.Product.LookupID = lookupid Select p.ID).FirstOrDefault() > 0, True, False) _
                                   })
 
         gdvFunctional.DataSource = pl
@@ -69,11 +59,11 @@ Partial Class ManageProducts_EditProductSettings
         Dim selRowIndex As Int32 = DirectCast(chk.Parent.Parent, GridViewRow).RowIndex
         Dim LookupID As Int32 = gdvFunctional.DataKeys(selRowIndex).Values(0)
 
-        ProductGroupManager.ChangeAccess(LookupID, hdnProductID.Value, chk.Checked)
+        ProductGroupManager.ChangeAccess(LookupID, hdnLookupID.Value, chk.Checked)
         Dim instance = New REMI.Dal.Entities().Instance()
         gdvFunctional.DataSource = (From l In instance.Lookups Where l.LookupType.Name = "MFIFunctionalMatrix" Or l.LookupType.Name = "SFIFunctionalMatrix" Or l.LookupType.Name = "AccFunctionalMatrix" Order By l.LookupType.Name, l.Values _
                   Select New With {.LookupID = l.LookupID, .Type = l.LookupType.Name, .Values = l.Values, _
-                                   .HasAccess = If((From p In instance.ProductLookups Where p.Lookup.LookupID = l.LookupID And p.Product.ID = hdnProductID.Value Select p.ID).FirstOrDefault() > 0, True, False) _
+                                   .HasAccess = If((From p In instance.ProductLookups Where p.Lookup.LookupID = l.LookupID And p.Product.LookupID = hdnLookupID.Value Select p.ID).FirstOrDefault() > 0, True, False) _
                                   })
         gdvFunctional.DataBind()
     End Sub
@@ -83,7 +73,7 @@ Partial Class ManageProducts_EditProductSettings
     End Sub
 
     Protected Function ValidateProductGroup() As Boolean
-        If Not String.IsNullOrEmpty(hdnProductID.Value) Then
+        If Not String.IsNullOrEmpty(hdnLookupID.Value) Then
             Return True
         End If
 
@@ -107,7 +97,7 @@ Partial Class ManageProducts_EditProductSettings
         End If
         'add the setting
 
-        If Not ProductGroupManager.SaveSetting(hdnProductID.Value, System.Web.HttpUtility.HtmlEncode(txtNewSettingName.Text), System.Web.HttpUtility.HtmlEncode(txtNewSettingValue.Text), System.Web.HttpUtility.HtmlEncode(txtNewSettingDefaultValue.Text)) Then
+        If Not ProductGroupManager.SaveSetting(hdnLookupID.Value, System.Web.HttpUtility.HtmlEncode(txtNewSettingName.Text), System.Web.HttpUtility.HtmlEncode(txtNewSettingValue.Text), System.Web.HttpUtility.HtmlEncode(txtNewSettingDefaultValue.Text)) Then
             notMain.Add("Could not save this setting.", NotificationType.Errors)
         End If
 
@@ -131,7 +121,7 @@ Partial Class ManageProducts_EditProductSettings
                 chkUse = (DirectCast(r.FindControl("chkUse"), CheckBox))
 
                 If txtValueText IsNot Nothing And txtValueText.Text.Trim().Length > 0 And chkUse.Checked Then
-                    If Not ProductGroupManager.SaveSetting(hdnProductID.Value, grdSettings.DataKeys(r.RowIndex).Value, txtValueText.Text, txtDefaultValueText.Text) Then
+                    If Not ProductGroupManager.SaveSetting(hdnLookupID.Value, grdSettings.DataKeys(r.RowIndex).Value, txtValueText.Text, txtDefaultValueText.Text) Then
                         notMain.Add("Could not save " + grdSettings.DataKeys(r.RowIndex).Value + " with Value:" + txtValueText.Text + " and Default: " + txtDefaultValueText.Text + ".", NotificationType.Errors)
                     End If
                 End If
@@ -139,12 +129,6 @@ Partial Class ManageProducts_EditProductSettings
         Next
         DatabindGridView()
 
-        If (UserManager.GetCurrentUser.IsAdmin) Then
-            Dim isActive As Boolean
-            Boolean.TryParse(hdnIsActive.Value, isActive)
-            ProductGroupManager.UpdateProduct(hdnProductName.Value, isActive, hdnProductID.Value, txtQAPLocation.Text, txtTSDContact.Text)
-        End If
-
-        Response.Redirect(REMIWebLinks.GetProductInfoLink(hdnProductID.Value), True)
+        Response.Redirect(REMIWebLinks.GetProductInfoLink(hdnLookupID.Value), True)
     End Sub
 End Class

@@ -6,22 +6,15 @@
 @jobname nvarchar(500),
 @selectedTestName nvarchar(400)=null,
 @userName nvarchar(255),
-
 @currentTestRecordStatus int = null,
 @currentTestRecordID int = null,
 @currentTestRecordStatusModified bit = 0,
-
 @selectedTestRecordStatus int=null,
 @selectedTestRecordID int=null,
-@selectedTestRecordStatusModified bit = 0
-
-as
-
-	----------------------
-	--    setup vars    --
-	----------------------
+@selectedTestRecordStatusModified bit = 0,
+@ResultSource INT = 0
+AS
 declare @testunitid int = (select testunits.id from TestUnits, Batches where Batches.QRANumber = @qranumber and TestUnits.BatchID = batches.id and TestUnits.BatchUnitNumber = @unitnumber)
-
 declare @scandirection int = 0
 declare @LogID int = 0
 declare @batchModified bit = 0
@@ -41,7 +34,8 @@ begin
 	-- update the tr if there were changes
 	if @currentTestRecordStatusModified =1 
 	begin
-		update TestRecords set LastUser = @userName, Status = @currentTestRecordStatus, ResultSource=3 where ID = @currentTestRecordID;
+	print @ResultSource
+		update TestRecords set LastUser = @userName, Status = @currentTestRecordStatus, ResultSource=@ResultSource where ID = @currentTestRecordID;
 	end
 	--do the inward scan too
 	set @scandirection = 2;
@@ -113,14 +107,6 @@ begin
 end
 else
 	GOTO complete_process_noupdate;
---eventually i want to send back the test record id and
---the batch id etc if we are updating the batch so we can
---update the application cache to prevent concurrency errors.
-
---select @batchModified, 
---@selectedTestRecordStatus,
---@selectedTestRecordID,
---@selectedTestRecordStatusModified
 
 end_process_foundUnit:
 	IF (@@ERROR != 0)

@@ -507,94 +507,17 @@ Namespace REMI.Bll
             Return New BatchCollection
         End Function
 
-        '<DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        'Public Shared Function GetActiveBatchList() As String()
-        '    Try
-        '        Dim bc As BatchCollection = BatchDB.GetActiveBatches(-1, -1, True, UserManager.GetCurrentUser)
-        '        Dim qras As String() = (From s In bc Select s.RequestNumber).ToArray
-        '        Dim requests As New List(Of String)
-        '        requests.AddRange(qras)
-
-        '        Return requests.ToArray
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-        '    End Try
-        '    Return Nothing
-        'End Function
-
-
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
-            REMIAppCache.ClearAllBatchData(requestNumber)
             Dim b As Batch = BatchManager.GetItem(requestNumber, False, True, True)
+
+            If (b.OutOfDate) Then
+                BatchManager.Save(b)
+            End If
+
             TestRecordManager.CheckBatchForResultUpdates(b, False)
 
             Return BatchDB.MoveBatchForward(requestNumber, userIdentification)
-
         End Function
-
-        'Public Shared Function CheckSingleBatchForStatusUpdate(ByVal qraNumber As String) As Boolean
-        '    Dim isSuccess As Boolean
-
-        '    Try
-        '        REMIAppCache.ClearAllBatchData(qraNumber)
-
-        '        Dim b As Batch = BatchManager.GetItem(qraNumber, cacheRetrievedData:=True)
-        '        Dim batchChanged As Boolean = b.OutOfDate
-
-        '        'check batches for trs completion
-        '        If b.Status <> BatchStatus.Complete AndAlso b.IsCompleteInRequest Then
-        '            b.Status = BatchStatus.Complete
-        '            batchChanged = True
-        '        End If
-
-        '        'check received batches for assignement
-        '        If b.Status <> BatchStatus.InProgress AndAlso b.Status = BatchStatus.Received AndAlso b.RequestStatus.ToLower = TRSStatus.Assigned.ToString().ToLower() Then
-        '            b.Status = BatchStatus.InProgress
-        '            batchChanged = True
-        '        End If
-
-        '        'check for rejected batches
-        '        If b.Status <> BatchStatus.Rejected AndAlso b.RequestStatus.ToLower = TRSStatus.Rejected.ToString().ToLower() AndAlso b.Status <> BatchStatus.Rejected Then
-        '            b.Status = BatchStatus.Rejected
-        '            batchChanged = True
-        '        End If
-
-        '        'move batches still stuck at an incoming eval type stage but are in fact assigned in trs to the next (non incoming type) stage in their job process.
-        '        Dim nextTeststage As TestStage = Nothing
-
-        '        If b.TestStage Is Nothing Then
-        '            nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Select ts).FirstOrDefault
-        '        Else
-        '            If (b.TestStage.ToString().ToLower().Trim().Equals("analysis") AndAlso b.Status = BatchStatus.InProgress) Then
-        '                nextTeststage = (From ts As TestStage In b.Job.TestStages Where ts.IsArchived = False And ts.ProcessOrder > -1 Order By ts.ProcessOrder Ascending Where ts.ProcessOrder > b.TestStage.ProcessOrder Select ts).FirstOrDefault
-        '            End If
-        '        End If
-
-        '        If nextTeststage IsNot Nothing AndAlso b.TestStageName <> nextTeststage.Name Then
-        '            b.TestStageName = nextTeststage.Name
-        '            batchChanged = True
-        '        End If
-
-        '        TestRecordManager.CheckBatchForResultUpdates(b, False)
-
-        '        'check for test record based updates to the batches
-        '        If b.TestStage IsNot Nothing AndAlso (b.CheckBatchTestStageStatus Or b.AdvanceToNextStageIfApplicable Or b.AdvanceBatchToTestingCompleteIfApplicable) Then
-        '            'if it changed, save the batch
-        '            batchChanged = True
-        '        End If
-
-        '        If batchChanged Then
-        '            Boolean.TryParse((Save(b) > 0).ToString(), isSuccess)
-        '        Else
-        '            isSuccess = True
-        '        End If
-        '    Catch ex As Exception
-        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, "Current Request: " + qraNumber)
-        '        isSuccess = False
-        '    End Try
-
-        '    Return isSuccess
-        'End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True, Optional OnlyHasResults As Int32 = 0) As BatchCollection
@@ -731,6 +654,41 @@ Namespace REMI.Bll
             End If
 
             Return n
+        End Function
+
+        Public Shared Function GetUnitInStages(ByVal requestNumber As String) As DataTable
+            Try
+                Dim instance = New REMI.Dal.Entities().Instance()
+                Dim ds As DataSet = BatchDB.GetStagesNeedingCompletionByUnit(requestNumber, 0)
+                Dim unitNum As Int32 = 1
+                Dim dt As New DataTable("UnitsInStage")
+                dt.Columns.Add("Unit", Type.GetType("System.Int32"))
+                dt.Columns.Add("Stage", Type.GetType("System.String"))
+                dt.Columns.Add("Status", Type.GetType("System.String"))
+
+                For Each tbl As DataTable In ds.Tables
+                    Dim row As DataRow = dt.NewRow
+
+                    If (tbl.Rows.Count = 0) Then
+                        row("Unit") = unitNum
+                        row("Stage") = (From s In instance.Results Where s.TestUnit.Batch.QRANumber = requestNumber And s.TestUnit.BatchUnitNumber = unitNum Order By s.TestStage.ProcessOrder Descending Select s.TestStage.TestStageName).FirstOrDefault()
+                        row("Status") = "Completed"
+                    Else
+                        row("Unit") = unitNum
+                        row("Stage") = tbl.Rows(0).Field(Of String)("TestStageName")
+                        row("Status") = "In Progress"
+                    End If
+
+                    dt.Rows.Add(row)
+                    unitNum = unitNum + 1
+                Next
+
+                Return dt
+            Catch ex As Exception
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e22", NotificationType.Errors, ex)
+            End Try
+
+            Return New DataTable("UnitsInStage")
         End Function
 
         Public Shared Function GetStagesNeedingCompletionByUnit(ByVal requestNumber As String, ByVal unitNumber As Int32) As DataSet

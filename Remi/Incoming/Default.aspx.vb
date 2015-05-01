@@ -17,7 +17,7 @@ Partial Class Incoming_Default
 
                 If bc.Validate Then
                     If bc.HasTestUnitNumber Then
-                        Dim batch = (From b In New Remi.Dal.Entities().Instance().Batches Where b.QRANumber = bc.BatchNumber Select b.DepartmentID, b.Product.Lookup.Values).FirstOrDefault()
+                        Dim batch = (From b In New Remi.Dal.Entities().Instance().Batches Where b.QRANumber = bc.BatchNumber Select b.DepartmentID, b.Product.Values).FirstOrDefault()
 
                         If (UserManager.GetCurrentUser.HasEditItemAuthority(batch.Values, batch.DepartmentID)) Then
                             Dim bsn As Long

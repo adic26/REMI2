@@ -28,33 +28,11 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetProductList()
-        {
-            Assert.That(ProductGroupManager.GetProductList(true, -1, false).Rows.Count > 0);
-        }
-
-        [Test]
         public void GetProductTestReady()
         {
-            Assert.That(ProductGroupManager.GetProductTestReady(526, "M3").Rows.Count > 0);
-        }
-
-        //[Test]
-        //public void GetProductOracleList()
-        //{
-        //    Assert.That(ProductGroupManager.GetProductOracleList().Count> 0);
-        //}
-
-        [Test]
-        public void GetProductNameByID()
-        {
-            Assert.IsNotEmpty(ProductGroupManager.GetProductNameByID( (from p in instance.Products select p.ID).FirstOrDefault()));
-        }
-
-        [Test]
-        public void GetProductIDByName()
-        {
-            Assert.That(ProductGroupManager.GetProductIDByName((from p in instance.Products orderby p.ID descending select p.Lookup.Values).FirstOrDefault()) > 0);
+            var product = new REMI.Entities.Lookup();
+            product = (from p in instance.Lookups where p.LookupID == 6588 orderby p.LookupID descending select p).FirstOrDefault();
+            Assert.That(ProductGroupManager.GetProductTestReady(product.LookupID, "M3").Rows.Count > 0);
         }
 
         [Test]
@@ -64,19 +42,12 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetProductSettingsDictionary()
-        {
-            Assert.That(ProductGroupManager.GetProductSettingsDictionary((from p in instance.Products where p.ID != 0 orderby p.ID descending select p.ID).FirstOrDefault()).Count > 0);
-            Assert.That(ProductGroupManager.GetProductSettings((from p in instance.Products orderby p.ID descending select p.ID).FirstOrDefault()).Count > 0);
-        }
-
-        [Test]
         public void HasProductConfigurationXML()
         {
             var pc = new REMI.Entities.ProductConfigurationUpload();
             pc = (from c in instance.ProductConfigurationUploads.Include("Product").Include("Test") orderby c.ID descending select c).FirstOrDefault();
 
-            Assert.True(ProductGroupManager.HasProductConfigurationXML(pc.Product.ID, pc.Test.ID, pc.PCName));
+            Assert.True(ProductGroupManager.HasProductConfigurationXML(pc.LookupID, pc.Test.ID, pc.PCName));
         }
 
         [Test]
@@ -103,7 +74,7 @@ namespace REMI.Bll.Tests
             var pc = new REMI.Entities.ProductConfigurationUpload();
             pc = (from c in instance.ProductConfigurationUploads.Include("Product").Include("Test") orderby c.ID descending select c).FirstOrDefault();
 
-            Assert.IsNotEmpty(ProductGroupManager.GetProductConfigurationXMLCombined(pc.Product.ID, pc.Test.ID).ToString());
+            Assert.IsNotEmpty(ProductGroupManager.GetProductConfigurationXMLCombined(pc.LookupID, pc.Test.ID).ToString());
         }
 
         [Test]
@@ -139,25 +110,16 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void UpdateProduct()
-        {
-            var product = new REMI.Entities.Product();
-            product = (from p in instance.Products orderby p.ID descending select p).FirstOrDefault();
-
-            Assert.True(ProductGroupManager.UpdateProduct(product.Lookup.Values, (product.Lookup.IsActive == 1 ? 1 : 0), product.ID, product.QAPLocation, product.TSDContact));
-        }
-
-        [Test]
         public void SaveDeleteSetting()
         {
-            var product = new REMI.Entities.Product();
-            product = (from p in instance.Products orderby p.ID descending select p).FirstOrDefault();
+            var product = new REMI.Entities.Lookup();
+            product = (from p in instance.Lookups orderby p.LookupID descending select p).FirstOrDefault();
 
-            Assert.True(ProductGroupManager.SaveSetting(product.ID, "ProductTest", "test", "test"));
-            Assert.True(ProductGroupManager.DeleteSetting(product.ID, "ProductTest"));
-            
-            Assert.True(ProductGroupManager.CreateSetting(product.ID, "ProductTest", "test", "test"));
-            Assert.True(ProductGroupManager.DeleteSetting(product.ID, "ProductTest"));
+            Assert.True(ProductGroupManager.SaveSetting(product.LookupID, "ProductTest", "test", "test"));
+            Assert.True(ProductGroupManager.DeleteSetting(product.LookupID, "ProductTest"));
+
+            Assert.True(ProductGroupManager.CreateSetting(product.LookupID, "ProductTest", "test", "test"));
+            Assert.True(ProductGroupManager.DeleteSetting(product.LookupID, "ProductTest"));
         }
     }
 }

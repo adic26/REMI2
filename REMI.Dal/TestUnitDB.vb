@@ -245,7 +245,7 @@ Namespace REMI.Dal
             Return results
         End Function
 
-        Public Shared Function SaveFastScanData(ByVal scanData As FastScanData) As Integer
+        Public Shared Function SaveFastScanData(ByVal scanData As FastScanData, ByVal resultSource As TestResultSource) As Integer
             Dim result As Integer = -1
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -284,6 +284,8 @@ Namespace REMI.Dal
                     If scanData.SelectedTestRecordID > 0 Then
                         myCommand.Parameters.AddWithValue("@selectedTestRecordID", scanData.SelectedTestRecordID)
                     End If
+
+                    myCommand.Parameters.AddWithValue("@ResultSource", resultSource)
 
                     Dim returnValue As New SqlParameter("ReturnValue", SqlDbType.Int)
                     returnValue.Direction = ParameterDirection.ReturnValue

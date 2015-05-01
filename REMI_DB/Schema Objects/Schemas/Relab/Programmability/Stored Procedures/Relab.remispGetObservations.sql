@@ -4,14 +4,14 @@ BEGIN
 	DECLARE @ObservationLookupID INT
 	SELECT @ObservationLookupID = LookupID FROM Lookups WITH(NOLOCK) WHERE LookupTypeID=7 AND [values] = 'Observation'
 
-	SELECT b.QRANumber, tu.BatchUnitNumber, (SELECT TOP 1 ts2.TestStageName
+	SELECT b.QRANumber, tu.BatchUnitNumber AS Unit, (SELECT TOP 1 ts2.TestStageName
 								FROM Relab.Results r2 WITH(NOLOCK)
 									INNER JOIN TestStages ts2 WITH(NOLOCK) ON ts2.ID=r2.TestStageID AND ts2.TestStageType=2
 								WHERE r2.TestUnitID=r.TestUnitID
 								ORDER BY ts2.ProcessOrder DESC
 								) AS MaxStage, 
-			ts.TestStageName, [Relab].[ResultsObservation] (m.ID) AS Observation, 
-			(SELECT T.c.value('@Description', 'varchar(MAX)')
+			ts.TestStageName AS Stage, [Relab].[ResultsObservation] (m.ID) AS Observation, 
+			(SELECT TOP 1 T.c.value('@Description', 'varchar(MAX)')
 			FROM jo.Definition.nodes('/Orientations/Orientation') T(c)
 			WHERE T.c.value('@Unit', 'varchar(MAX)') = tu.BatchUnitNumber AND ts.TestStageName LIKE T.c.value('@Drop', 'varchar(MAX)') + ' %') AS Orientation, 
 			m.Comment, (CASE WHEN (SELECT COUNT(*) FROM Relab.ResultsMeasurementsFiles rmf WITH(NOLOCK) WHERE rmf.ResultMeasurementID=m.ID) > 0 THEN 1 ELSE 0 END) AS HasFiles, m.ID AS MeasurementID

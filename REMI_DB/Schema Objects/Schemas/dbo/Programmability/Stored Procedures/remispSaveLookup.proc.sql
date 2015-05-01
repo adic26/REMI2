@@ -3,36 +3,26 @@ AS
 BEGIN
 	DECLARE @LookupID INT
 	DECLARE @LookupTypeID INT
-	SELECT @LookupID = MAX(LookupID) + 1 FROM Lookups
-	SELECT @LookupTypeID = LookupTypeID FROM LookupType WHERE Name=@LookupType
+	SELECT @LookupID = MAX(LookupID) + 1 FROM Lookups WITH(NOLOCK)
+	SELECT @LookupTypeID = LookupTypeID FROM LookupType WITH(NOLOCK) WHERE Name=@LookupType
 
 	IF (@ParentID = 0)
 	BEGIN
 		SET @ParentID = NULL
 	END
 	
-	IF LTRIM(RTRIM(@Value)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WHERE LookupTypeID=@LookupTypeID AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Value)))
+	IF LTRIM(RTRIM(@Value)) <> '' AND NOT EXISTS (SELECT 1 FROM Lookups WITH(NOLOCK) WHERE LookupTypeID=@LookupTypeID AND ISNULL(ParentID, 0) = ISNULL(@ParentID,0) AND LTRIM(RTRIM([Values])) = LTRIM(RTRIM(@Value)))
 	BEGIN
 		INSERT INTO Lookups (LookupID, LookupTypeID, [Values], IsActive, Description, ParentID) 
 		VALUES (@LookupID, @LookupTypeID, LTRIM(RTRIM(@Value)), @IsActive, @Description, @ParentID)
-	
-		IF (@LookupType = 'Products')
-		BEGIN
-			INSERT INTO Products (LookupID) Values (@LookupID)
-		END
-		
+			
 		SET @Success = 1
 	END
 	ELSE
 	BEGIN
 		UPDATE Lookups
 		SET IsActive=@IsActive, Description=@Description, ParentID=@ParentID
-		WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value))
-		
-		IF NOT EXISTS (SELECT 1 FROM Products p INNER JOIN Lookups l ON l.LookupID=p.LookupID WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value)))
-		BEGIN
-			INSERT INTO Products (LookupID) Values (@LookupID)
-		END
+		WHERE LookupTypeID=@LookupTypeID AND [values]=LTRIM(RTRIM(@Value)) AND ISNULL(ParentID, 0) = ISNULL(@ParentID,0)
 		
 		SET @Success = 1
 	END

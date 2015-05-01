@@ -262,12 +262,12 @@ Namespace REMI.Dal
         ''' <returns> 
         ''' A DeviceTrackingLogCollection. 
         ''' </returns> 
-        Public Shared Function GetListByProductDate(ByVal productID As Int32, ByVal OldestDate As DateTime) As DeviceTrackingLogCollection
+        Public Shared Function GetListByProductDate(ByVal lookupid As Int32, ByVal OldestDate As DateTime) As DeviceTrackingLogCollection
             Dim tempList As DeviceTrackingLogCollection = Nothing
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispDeviceTrackingLogSelectListByProductDate", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ProductID", productID)
+                    myCommand.Parameters.AddWithValue("@Lookupid", lookupid)
                     myCommand.Parameters.AddWithValue("@Date", OldestDate)
                     myConnection.Open()
                     Using myReader As SqlDataReader = myCommand.ExecuteReader()

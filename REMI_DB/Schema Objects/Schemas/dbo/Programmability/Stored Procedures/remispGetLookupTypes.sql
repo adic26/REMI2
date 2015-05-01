@@ -11,6 +11,7 @@ BEGIN
 			OR
 			lt.IsSystem=@ShowSystemTypes
 		)
+	ORDER BY Name
 END
 GO
 GRANT EXECUTE ON remispGetLookupTypes TO REMI

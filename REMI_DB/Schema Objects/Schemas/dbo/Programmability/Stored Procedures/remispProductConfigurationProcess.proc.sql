@@ -10,7 +10,7 @@ BEGIN
 	DECLARE @xml XML
 	DECLARE @LastUser NVARCHAR(255)
 
-	IF ((SELECT COUNT(*) FROM ProductConfigurationUpload WHERE ISNULL(IsProcessed,0)=0 AND ProductID IN (SELECT ID FROM Products))=0)
+	IF ((SELECT COUNT(*) FROM ProductConfigurationUpload WHERE ISNULL(IsProcessed,0)=0 AND LookupID IN (SELECT LookupID FROM Lookups))=0)
 		RETURN
 	
 	SELECT @LookupTypeID=LookupTypeID FROM LookupType WHERE Name='Configuration'
@@ -20,7 +20,7 @@ BEGIN
 		SELECT TOP 1 @ID=pcu.ID, @xml =pcv.PCXML, @LastUser=pcu.LastUser
 		FROM ProductConfigurationUpload pcu
 			INNER JOIN ProductConfigurationVersion pcv ON pcu.ID=pcv.UploadID AND pcv.VersionNum=1
-		WHERE ISNULL(IsProcessed,0)=0 AND ProductID IN (SELECT ID FROM Products)
+		WHERE ISNULL(IsProcessed,0)=0 AND LookupID IN (SELECT LookupID FROM Lookups)
 		
 		exec sp_xml_preparedocument @idoc OUTPUT, @xml
 		

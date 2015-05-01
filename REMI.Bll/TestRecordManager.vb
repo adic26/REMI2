@@ -74,13 +74,14 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetTestRecordAuditLogs(ByVal TestRecordID As Int32) As Object
+        Public Shared Function GetTestRecordAuditLogs(ByVal TestRecordID As Int32) As DataTable
             Try
-                Return (From tra In New REMI.Dal.Entities().Instance().vw_TestRecordAudit Where tra.TestRecordID = TestRecordID Select tra).ToList
+                Dim dtTRA As DataTable = BusinessEntities.Helpers.EQToDataTable((From tra In New REMI.Dal.Entities().Instance().vw_TestRecordAudit Where tra.TestRecordID = TestRecordID Select tra).ToList, "TestRecordAudit")
+                Return dtTRA
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, TestRecordID.ToString())
             End Try
-            Return New DataTable
+            Return New DataTable("TestRecordAudit")
         End Function
 
         <DataObjectMethod(DataObjectMethodType.Select, False)> _

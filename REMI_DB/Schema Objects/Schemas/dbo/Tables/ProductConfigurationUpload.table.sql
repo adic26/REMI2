@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[ProductConfigurationUpload](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[IsProcessed] [bit] NOT NULL,
-	[ProductID] [int] NOT NULL,
+	[LookupID] [int] NOT NULL,
 	[TestID] [int] NOT NULL,
 	[LastUser] [nvarchar](255) NOT NULL,
 	[PCName] [nvarchar](200) NULL,
@@ -13,8 +13,8 @@
 
 GO
 
-ALTER TABLE [dbo].[ProductConfigurationUpload]  WITH CHECK ADD  CONSTRAINT [FK_ProductConfigurationUpload_Products] FOREIGN KEY([ProductID])
-REFERENCES [dbo].[Products] ([ID])
+ALTER TABLE [dbo].[ProductConfigurationUpload]  WITH CHECK ADD  CONSTRAINT [FK_ProductConfigurationUpload_Products] FOREIGN KEY([LookupID])
+REFERENCES [dbo].[Lookups] ([LookupID])
 GO
 
 ALTER TABLE [dbo].[ProductConfigurationUpload] CHECK CONSTRAINT [FK_ProductConfigurationUpload_Products]

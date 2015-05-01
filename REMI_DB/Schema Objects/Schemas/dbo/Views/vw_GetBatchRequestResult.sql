@@ -10,8 +10,7 @@ SELECT b.QRANumber, b.BatchStatus, b.DateCreated, b.ExecutiveSummary, b.Expected
 FROM Batches b
 	INNER JOIN TestUnits tu WITH(NOLOCK) ON b.ID = tu.BatchID
 	INNER JOIN Req.Request rq WITH(NOLOCK) ON rq.RequestNumber=b.QRANumber
-	INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
-	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=b.ProductID
 	INNER JOIN Req.ReqFieldData rfd WITH(NOLOCK) ON rfd.RequestID=rq.RequestID
 	INNER JOIN Req.ReqFieldSetup rfs WITH(NOLOCK) ON rfs.ReqFieldSetupID=rfd.ReqFieldSetupID
 	INNER JOIN Req.RequestType rt ON rt.RequestTypeID=rfs.RequestTypeID

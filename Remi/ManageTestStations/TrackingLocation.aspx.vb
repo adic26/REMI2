@@ -7,6 +7,7 @@ Partial Class ManageTestStations_TrackingLocation
     Inherits System.Web.UI.Page
 
     Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        Response.Redirect(String.Format("{0}?BarcodeSuffix={1}", Helpers.GetCurrentPageName, ddlTrackingLocation.SelectedValue), True)
     End Sub
 
     Protected Sub SetgrdTrackingLogHeaders() Handles grdTrackingLog.PreRender
@@ -82,6 +83,7 @@ Partial Class ManageTestStations_TrackingLocation
         If (locationID = ddlTestCenters.SelectedValue) Then
             ProcessBarcode(tmpBarcodeSuffix)
             lblTrackingLocation.Text = ddlTrackingLocation.Items.FindByValue(tmpBarcodeSuffix).Text
+            ddlTrackingLocation.SelectedValue = tmpBarcodeSuffix
         ElseIf (locationID <> ddlTestCenters.SelectedValue) Then
             ddlTrackingLocation.DataBind()
 
@@ -103,7 +105,7 @@ Partial Class ManageTestStations_TrackingLocation
                 litTitle.Text = "REMI - Tracking Location Information"
                 lblTrackingLocation.Text = ""
             End If
-            End If
+        End If
     End Sub
 
 #Region "Click Events"

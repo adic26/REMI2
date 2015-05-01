@@ -904,6 +904,63 @@ table tr td input
     border: none;
 }
 
+.ESGridView
+{
+    border-collapse: collapse;
+    color: #000;
+    text-align: center;
+    font-size: 12pt;
+}
+
+.ESGridView td  {
+    padding-left:15px;
+    padding-right:15px;
+}
+
+.ESGridView th {
+    padding-left:15px;
+    padding-right:15px;
+    white-space: nowrap;
+    background: #000000;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px #362d2d solid;
+}
+
+.newHeader
+{
+    padding-left:15px;
+    padding-right:15px;
+    white-space: nowrap;
+    background: #000000;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px #362d2d solid;
+}
+
+.ESGridView th a
+{
+    color: #FFF;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ESGridView th a:hover
+{
+    text-decoration: none;
+    border-bottom: dashed 1px;
+}
+
+.wordwrap
+{
+    word-wrap: break-word;
+    white-space: pre;
+}
+
 .selectedrow
 {
     background-color: #362d2d;

@@ -21,17 +21,17 @@ Public Class Relab_Measurements
                 lblNoResults.Visible = False
                 pnlMeasurements.Visible = True
 
-                ddlTestStage.DataSource = (From r In New REMI.Dal.Entities().Instance().Results.Include("Results.TestStages").Include("Results.TestUnits").Include("TestUnits.Batches") _
+                ddlTestStage.DataSource = (From r In New Remi.Dal.Entities().Instance().Results.Include("Results.TestStages").Include("Results.TestUnits").Include("TestUnits.Batches") _
                            Where r.TestUnit.Batch.ID = batchID _
-                           Select New With {r.TestStage.ID, r.TestStage.TestStageName}).Distinct()
+                           Select New With {r.TestStage.ID, r.TestStage.TestStageName, r.TestStage.ProcessOrder}).Distinct().OrderBy(Function(o) o.ProcessOrder)
                 ddlTestStage.DataBind()
 
-                ddlTests.DataSource = (From r In New REMI.Dal.Entities().Instance().Results.Include("Results.Tests").Include("Results.TestUnits").Include("TestUnits.Batches") _
+                ddlTests.DataSource = (From r In New Remi.Dal.Entities().Instance().Results.Include("Results.Tests").Include("Results.TestUnits").Include("TestUnits.Batches") _
                            Where r.TestUnit.Batch.ID = batchID _
-                           Select New With {r.Test.ID, r.Test.TestName}).Distinct()
+                           Select New With {r.Test.ID, r.Test.TestName}).Distinct().OrderBy(Function(o) o.TestName)
                 ddlTests.DataBind()
 
-                ddlUnits.DataSource = (From r In New REMI.Dal.Entities().Instance().Results Where r.TestUnit.Batch.ID = batchID Select New With {.BatchUnitNumber = r.TestUnit.BatchUnitNumber, .ID = r.TestUnit.ID}).Distinct().ToList()
+                ddlUnits.DataSource = (From r In New Remi.Dal.Entities().Instance().Results Where r.TestUnit.Batch.ID = batchID Select New With {.BatchUnitNumber = r.TestUnit.BatchUnitNumber, .ID = r.TestUnit.ID}).Distinct().OrderBy(Function(o) o.BatchUnitNumber).ToList()
                 ddlUnits.DataBind()
 
                 Dim resultInfo = (From r In New REMI.Dal.Entities().Instance().Results.Include("Results.TestUnits").Include("TestUnits.Batches") _
@@ -58,6 +58,18 @@ Public Class Relab_Measurements
                 msmMeasuerments.ResultID = resultID
                 msmMeasuerments.TestID = ddlTests.SelectedValue
                 msmMeasuerments.DataBind()
+            End If
+        Else
+            Dim ctrl As Control = Helpers.GetPostBackControl(Page)
+
+            If ctrl IsNot Nothing Then
+                If ctrl.ID = "ddlTestStage" Then
+                    If (ddlTests.Items.FindByText(ddlTestStage.SelectedItem.Text) IsNot Nothing) Then
+                        ddlTests.SelectedValue = ddlTests.Items.FindByText(ddlTestStage.SelectedItem.Text).Value
+                    Else
+                        ddlTests.ClearSelection()
+                    End If
+                End If
             End If
         End If
     End Sub

@@ -257,6 +257,12 @@
     <Folder Include="Scripts\2014\February062014" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Obsolete" />
     <Folder Include="Scripts\2015\April162015" />
+    <Folder Include="Scripts\2015\May192015" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Constraints\Obsolete" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Indexes\Obsolete" />
+    <Folder Include="Scripts\2015\April242015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -299,9 +305,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_TestRecordsAudit_InsertTime.defconst.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_ProductManagersAudit_InsertTime.defconst.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchComments_Batches.fkey.sql">
@@ -460,12 +463,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestStationTypes.pkey.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_RFBandsAudit.pkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_RFBands.pkey.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_Users.pkey.sql">
       <SubType>Code</SubType>
     </None>
@@ -520,16 +517,10 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestRecordsXTrackingLogs.pkey.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductManagers.pkey.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TrackingLocations.pkey.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_TestStages.pkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ProductManagersAudit.pkey.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypesDeleteSingleItem.proc.sql">
@@ -766,12 +757,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsSelectForBatch.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetFastScanData.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveFastScanData.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsGetByQRANumber.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -782,9 +767,6 @@
     <Build Include="Schema Objects\Database1.rolememberships.sql">
       <SubType>Code</SubType>
     </Build>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductManagersAuditInsertUpdate.trigger.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\TestExceptionsAuditDelete.trigger.sql">
       <SubType>Code</SubType>
     </None>
@@ -809,13 +791,7 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\TrackingLocationTypesAuditInsertUpdate.trigger.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\RFBandsAuditDelete.trigger.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersAuditDelete.trigger.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\RFBandsAuditInsertUpdate.trigger.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersAuditInsertUpdate.trigger.sql">
@@ -861,9 +837,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\testStagesAuditInsertUpdate.trigger.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\ProductManagersAuditDelete.trigger.sql">
       <SubType>Code</SubType>
     </None>
     <Build Include="Schema Objects\Database Level Objects\Security\Users\RIMNET_doriordan.user.sql">
@@ -937,12 +910,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\TrackingLocationTypes.table.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\RFBandsAudit.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\RFBands.table.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Users.table.sql">
       <SubType>Code</SubType>
     </None>
@@ -1003,9 +970,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\TestRecordsXTrackingLogs.table.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\ProductManagers.table.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\TrackingLocations.table.sql">
       <SubType>Code</SubType>
     </None>
@@ -1013,9 +977,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\TestStages.table.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\ProductManagersAudit.table.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\aspnet_SchemaVersions.table.sql">
@@ -1115,6 +1076,8 @@
       <SubType>NotInBuild</SubType>
     </None>
     <None Include="Scripts\2015\March172015\2.sql" />
+    <None Include="Scripts\2015\May192015\1.sql" />
+    <None Include="Scripts\2015\May192015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -1260,9 +1223,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Batches.FK_Batches_Products.fkey.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductManagers.FK_ProductManagers_Products.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductSettings.FK_ProductSettings_Products.fkey.sql">
@@ -1276,30 +1236,9 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\ProductConfigValuesAudit.table.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProducts.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Products.table.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProductNameByID.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispGetProductIDByName.proc.sql">
-      <SubType>Code</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveLookup.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispSaveProduct.proc.sql">
       <SubType>Code</SubType>
     </None>
   </ItemGroup>
@@ -1310,11 +1249,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\Product_Table_Release\9_Exception_SP.sql">
-      <SubType>Code</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Products.IX_Products_PG_IsActive.index.sql">
       <SubType>Code</SubType>
     </None>
   </ItemGroup>
@@ -1468,9 +1402,6 @@
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\UserTraining.FK_UserTraining_Lookups.fkey.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\ProductManagers.FK_ProductManagers_Users.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Tables\Keys\UserTraining.FK_UserTraining_Users.fkey.sql">
       <SubType>Code</SubType>
     </None>
@@ -1481,18 +1412,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchDNPParametric.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\UsersProducts.FK_UsersProducts_Products.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\UsersProducts.FK_UsersProducts_Users.fkey.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersProducts.UsersProductsAuditDelete.trigger.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\UsersProducts.UsersProductsAuditInsertUpdate.trigger.sql">
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispYourBatchesGetActiveBatches.proc.sql">
@@ -2832,6 +2751,150 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispTestRecordsSelectByStatus.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\Relab\Programmability\Stored Procedures\Relab.remispGetObservationParameters.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispSaveProduct.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispGetProductIDByName.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispGetProductNameByID.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Obsolete\ProductManagers.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Obsolete\ProductManagersAudit.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Obsolete\RFBands.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Obsolete\RFBandsAudit.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\UsersProducts.FK_UsersProducts_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\UsersProducts.FK_UsersProducts_Users.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\ProductManagers.FK_ProductManagers_Products.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\ProductManagers.FK_ProductManagers_Users.fkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\PK_RFBands.pkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\PK_RFBandsAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispGetFastScanData.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Obsolete\Products.table.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete\ProductManagersAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete\ProductManagersAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete\RFBandsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete\RFBandsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete\UsersProducts.UsersProductsAuditDelete.trigger.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete\UsersProducts.UsersProductsAuditInsertUpdate.trigger.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\PK_ProductManagers.pkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete\PK_ProductManagersAudit.pkey.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Constraints\Obsolete\DF_ProductManagersAudit_InsertTime.defconst.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Tables\Indexes\Obsolete\Products.IX_Products_PG_IsActive.index.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\April242015\migrationDTATTA2014.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\April242015\migrationDTATTA2015.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispGetProducts.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispSaveFastScanData.proc.sql">
       <SubType>Code</SubType>
     </None>
   </ItemGroup>

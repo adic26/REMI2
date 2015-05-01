@@ -123,15 +123,14 @@ AS
 	FROM     
 		(
 			SELECT DISTINCT b.BatchStatus,b.Comment, b.teststagecompletionstatus,b.ConcurrencyID,b.ID,b.JobName,b.LastUser,b.Priority AS PriorityID,b.ProductTypeID,
-				b.AccessoryGroupID,p.ID As ProductID,lp.[Values] As ProductGroup,b.QRANumber,b.RequestPurpose As RequestPurposeID,b.TestCenterLocationID,b.TestStageName,
+				b.AccessoryGroupID,b.ProductID As ProductID,p.[Values] As ProductGroup,b.QRANumber,b.RequestPurpose As RequestPurposeID,b.TestCenterLocationID,b.TestStageName,
 				j.WILocation,(select count(*) from testunits where testunits.batchid = b.id) as testUnitCount,
 				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, l3.[Values] As TestCenterLocation,
 				b.CPRNumber,b.RelabJobID, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
 				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, 
 				ISNULL(b.[Order], 100) As PriorityOrder, b.DepartmentID, l6.[Values] AS Department, b.Requestor
 			FROM Batches as b WITH(NOLOCK)
-				INNER JOIN Products p WITH(NOLOCK) on b.ProductID=p.id 
-				INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+				INNER JOIN Lookups p WITH(NOLOCK) ON p.LookupID=b.ProductID
 				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
 				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
 				LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID  
@@ -141,7 +140,7 @@ AS
 				LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON b.Priority=l5.LookupID
 				LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON b.DepartmentID=l6.LookupID
 			WHERE ((BatchStatus NOT IN (SELECT ID FROM #ExBatchStatus) OR @ExcludedStatus IS NULL) AND (BatchStatus = @Status OR @Status IS NULL))
-				AND (p.ID = @ProductID OR @ProductID IS NULL)
+				AND (p.LookupID = @ProductID OR @ProductID IS NULL)
 				AND (b.Priority = @Priority OR @Priority IS NULL)
 				AND (b.ProductTypeID = @ProductTypeID OR @ProductTypeID IS NULL)
 				AND (b.AccessoryGroupID = @AccessoryGroupID OR @AccessoryGroupID IS NULL)

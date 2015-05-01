@@ -37,7 +37,7 @@ Partial Class ScanForInfo_ProductGroup
             getAllBatches = CInt(ddlFilterBatches.SelectedValue)
         End If
 
-        bs.ProductID = Me.hdnProductID.Value
+        bs.ProductID = Me.hdnLookupID.Value
 
         If (getAllBatches = 0) Then
             bs.ExcludedStatus = Contracts.BatchSearchBatchStatus.Complete
@@ -86,13 +86,13 @@ Partial Class ScanForInfo_ProductGroup
 
         Dim jira As Int32
         Dim ptrID As Int32
-        Dim productID As Int32
+        Dim lookupID As Int32
         Dim testID As Int32
         Dim isReady As Int32
         Dim isNestReady As Int32
         Dim psID As Int32
         Int32.TryParse(grdReady.DataKeys(e.RowIndex).Values(0), testID)
-        Int32.TryParse(Me.hdnProductID.Value, productID)
+        Int32.TryParse(Me.hdnLookupID.Value, lookupID)
         Int32.TryParse(grdReady.DataKeys(e.RowIndex).Values(1).ToString(), ptrID)
         Int32.TryParse(grdReady.DataKeys(e.RowIndex).Values(2).ToString(), psID)
         Int32.TryParse(rblIsReady.SelectedValue, isReady)
@@ -104,7 +104,7 @@ Partial Class ScanForInfo_ProductGroup
             Int32.TryParse(txtJIRA.Text.Substring(txtJIRA.Text.LastIndexOf("-") + 1), jira)
         End If
 
-        ProductGroupManager.SaveProductReady(productID, testID, psID, ptrID, isReady, txtComment.Text, isNestReady, jira)
+        ProductGroupManager.SaveProductReady(lookupID, testID, psID, ptrID, isReady, txtComment.Text, isNestReady, jira)
 
         grdReady.EditIndex = -1
         BindReady(ddlMRevision.SelectedValue)
@@ -162,12 +162,12 @@ Partial Class ScanForInfo_ProductGroup
     Protected Sub grdTargetDates_RowUpdating(ByVal sender As Object, ByVal e As GridViewUpdateEventArgs)
         Dim txtValueText As TextBox = grdTargetDates.Rows(e.RowIndex).FindControl("txtValueText")
         Dim psID As Int32
-        Dim productID As Int32
+        Dim lookupID As Int32
         Dim keyName As String = grdTargetDates.DataKeys(e.RowIndex).Values(1)
-        Int32.TryParse(Me.hdnProductID.Value, productID)
+        Int32.TryParse(Me.hdnLookupID.Value, lookupID)
         Int32.TryParse(grdTargetDates.DataKeys(e.RowIndex).Values(0), psID)
 
-        ProductGroupManager.SaveSetting(productID, keyName, txtValueText.Text, String.Empty)
+        ProductGroupManager.SaveSetting(lookupID, keyName, txtValueText.Text, String.Empty)
 
         grdTargetDates.EditIndex = -1
         BindTargetData()
@@ -178,28 +178,57 @@ Partial Class ScanForInfo_ProductGroup
     End Sub
 
     Sub BindReady(ByVal revision As String)
-        grdReady.DataSource = ProductGroupManager.GetProductTestReady(Me.hdnProductID.Value, revision)
+        grdReady.DataSource = ProductGroupManager.GetProductTestReady(Me.hdnLookupID.Value, revision)
         grdReady.DataBind()
     End Sub
 
     Sub BindTargetData()
         Dim instance = New Remi.Dal.Entities().Instance()
-        Dim mSettings = (From ps In instance.ProductSettings Where ps.KeyName.StartsWith("M") And ps.Product.ID = Me.hdnProductID.Value Select ps.ID, ps.KeyName, ps.ValueText)
+        Dim mSettings = (From ps In instance.ProductSettings Where ps.KeyName.StartsWith("M") And ps.LookupID = Me.hdnLookupID.Value Select ps.ID, ps.KeyName, ps.ValueText)
 
         If (mSettings.FirstOrDefault() Is Nothing) Then
-            ProductGroupManager.CreateSetting(Me.hdnProductID.Value, "M1", String.Empty, String.Empty)
-            ProductGroupManager.CreateSetting(Me.hdnProductID.Value, "M2", String.Empty, String.Empty)
-            ProductGroupManager.CreateSetting(Me.hdnProductID.Value, "M3", String.Empty, String.Empty)
-            ProductGroupManager.CreateSetting(Me.hdnProductID.Value, "M4", String.Empty, String.Empty)
+            ProductGroupManager.CreateSetting(Me.hdnLookupID.Value, "M1", String.Empty, String.Empty)
+            ProductGroupManager.CreateSetting(Me.hdnLookupID.Value, "M2", String.Empty, String.Empty)
+            ProductGroupManager.CreateSetting(Me.hdnLookupID.Value, "M3", String.Empty, String.Empty)
+            ProductGroupManager.CreateSetting(Me.hdnLookupID.Value, "M4", String.Empty, String.Empty)
 
-            mSettings = (From setting In instance.ProductSettings Where setting.KeyName.StartsWith("M") And setting.Product.ID = Me.hdnProductID.Value Select setting.ID, setting.KeyName, setting.ValueText)
+            mSettings = (From setting In instance.ProductSettings Where setting.KeyName.StartsWith("M") And setting.LookupID = Me.hdnLookupID.Value Select setting.ID, setting.KeyName, setting.ValueText)
         End If
 
         grdTargetDates.DataSource = mSettings.ToList()
         grdTargetDates.DataBind()
     End Sub
+
+    Protected Sub SetgvwContactsHeaders() Handles gvwContacts.PreRender
+        Helpers.MakeAccessable(gvwContacts)
+    End Sub
+
+    Protected Sub SetGvwHeaders() Handles grdTrackingLog.PreRender
+        Helpers.MakeAccessable(grdTrackingLog)
+    End Sub
+
+    Protected Sub SetgrdTargetDatesHeaders() Handles grdTargetDates.PreRender
+        Helpers.MakeAccessable(grdTargetDates)
+    End Sub
+
+    Protected Sub SetgrdgrdReadyHeaders() Handles grdReady.PreRender
+        Helpers.MakeAccessable(grdReady)
+    End Sub
+
+    Protected Sub chkShowArchived_CheckedChanged(sender As Object, e As EventArgs)
+        Dim id As String = ddlProductGroup.SelectedItem.Value
+        Dim name As String = ddlProductGroup.SelectedItem.Text
+        ddlProductGroup.DataSource = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
+        ddlProductGroup.DataBind()
+
+        Dim l As ListItem = New ListItem(name, id.ToString())
+        If (ddlProductGroup.Items.Contains(l)) Then
+            ddlProductGroup.SelectedValue = l.Value
+        End If
+    End Sub
 #End Region
 
+#Region "Load"
     Protected Sub ProcessName(ByVal id As Int32)
         Try
             Dim litTitle As Literal = Master.FindControl("litPageTitle")
@@ -211,17 +240,14 @@ Partial Class ScanForInfo_ProductGroup
             If ddlProductGroup.Items.FindByValue(id.ToString()) IsNot Nothing Then
                 ddlProductGroup.SelectedValue = id
                 lblProductGroupName.Text = ddlProductGroup.Items.FindByValue(id.ToString()).Text
-                Me.hdnProductID.Value = id
+                Me.hdnLookupID.Value = id
             End If
-
-            hypEditSettings.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(id)
-            HypEditTestConfiguration.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
 
             SetupMenuItems(ddlProductGroup.Items.FindByValue(id.ToString()).Text, id)
             accMain.SelectedIndex = 1
             BindTargetData()
 
-            Dim targets = (From ps In New Remi.Dal.Entities().Instance().ProductSettings Where ps.KeyName.StartsWith("M") And ps.Product.ID = Me.hdnProductID.Value Select ps.KeyName, ps.ValueText).ToList()
+            Dim targets = (From ps In New REMI.Dal.Entities().Instance().ProductSettings Where ps.KeyName.StartsWith("M") And ps.LookupID = Me.hdnLookupID.Value Select ps.KeyName, ps.ValueText).ToList()
             ddlMRevision.DataSource = targets
             ddlMRevision.DataBind()
 
@@ -231,17 +257,43 @@ Partial Class ScanForInfo_ProductGroup
 
             BindReady(ddlMRevision.SelectedValue)
 
-            gvwContacts.DataSource = ProductGroupManager.GetProductContacts(Me.hdnProductID.Value)
+            gvwContacts.DataSource = ProductGroupManager.GetProductContacts(Me.hdnLookupID.Value)
             gvwContacts.DataBind()
         Catch ex As Exception
             notMain.Notifications = Helpers.GetExceptionMessages(ex)
         End Try
     End Sub
 
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            Dim litTitle As Literal = Master.FindControl("litPageTitle")
+            If litTitle IsNot Nothing Then
+                litTitle.Text = "REMI - Product Information"
+            End If
+
+            hdnUserID.Value = UserManager.GetCurrentUser.ID
+            ddlProductGroup.DataSource = LookupsManager.GetLookups("Products", 0, 0, String.Empty, String.Empty, 0, False, 1, chkShowArchived.Checked)
+            ddlProductGroup.DataBind()
+
+            Dim id As Int32
+            Int32.TryParse(Request.QueryString("id"), id)
+
+            If (id > 0) Then
+                ddlProductGroup.SelectedValue = id
+                btnSubmit_Click(sender, e)
+            End If
+        End If
+    End Sub
+#End Region
+
+#Region "Methods"
     Protected Sub SetupMenuItems(ByVal productGroup As String, ByVal id As Int32)
         Dim myMenu As WebControls.Menu
         Dim mi As MenuItem
         myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+        hypEditSettings.NavigateUrl = REMIWebLinks.GetSetProductSettingsLink(id)
+        HypEditTestConfiguration.NavigateUrl = REMIWebLinks.GetSetProductConfigurationLink(id)
 
         If UserManager.GetCurrentUser.HasEditItemAuthority(productGroup, 0) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
             liEditSettings.Visible = True
@@ -273,42 +325,5 @@ Partial Class ScanForInfo_ProductGroup
             End If
         End If
     End Sub
-
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not Page.IsPostBack Then
-            Dim litTitle As Literal = Master.FindControl("litPageTitle")
-            If litTitle IsNot Nothing Then
-                litTitle.Text = "REMI - Product Information"
-            End If
-
-            chkByPass.Checked = UserManager.GetCurrentUser.ByPassProduct.ToString()
-            hdnUserID.Value = UserManager.GetCurrentUser.ID
-            ddlProductGroup.DataSourceID = "odsProducts"
-            ddlProductGroup.DataBind()
-
-            Dim id As Int32
-            Int32.TryParse(Request.QueryString("Name"), id)
-
-            If (id > 0) Then
-                ddlProductGroup.SelectedValue = id
-                btnSubmit_Click(sender, e)
-            End If
-        End If
-    End Sub
-
-    Protected Sub SetgvwContactsHeaders() Handles gvwContacts.PreRender
-        Helpers.MakeAccessable(gvwContacts)
-    End Sub
-
-    Protected Sub SetGvwHeaders() Handles grdTrackingLog.PreRender
-        Helpers.MakeAccessable(grdTrackingLog)
-    End Sub
-
-    Protected Sub SetgrdTargetDatesHeaders() Handles grdTargetDates.PreRender
-        Helpers.MakeAccessable(grdTargetDates)
-    End Sub
-
-    Protected Sub SetgrdgrdReadyHeaders() Handles grdReady.PreRender
-        Helpers.MakeAccessable(grdReady)
-    End Sub
+#End Region
 End Class

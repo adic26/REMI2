@@ -5,11 +5,11 @@ Imports REMI.BusinessEntities
 Namespace REMI.Dal
     Public Class CalibrationDB
 
-        Public Shared Function SaveCalibrationConfigurationXML(ByVal productID As Int32, ByVal hostID As Int32, ByVal testID As Int32, ByVal name As String, ByVal xml As XDocument, ByVal lastUser As String) As Boolean
+        Public Shared Function SaveCalibrationConfigurationXML(ByVal lookupid As Int32, ByVal hostID As Int32, ByVal testID As Int32, ByVal name As String, ByVal xml As XDocument, ByVal lastUser As String) As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispSaveCalibrationConfiguration", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupid)
                     myCommand.Parameters.AddWithValue("@TestID", testID)
                     myCommand.Parameters.AddWithValue("@HostID", hostID)
                     myCommand.Parameters.AddWithValue("@Name", name)
@@ -22,13 +22,13 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetAllCalibrationConfigurationXML(ByVal productID As Int32, ByVal hostID As Int32, ByVal testID As Int32) As CalibrationCollection
+        Public Shared Function GetAllCalibrationConfigurationXML(ByVal lookupid As Int32, ByVal hostID As Int32, ByVal testID As Int32) As CalibrationCollection
             Dim tempList As New CalibrationCollection
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetAllCalibrationXML", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@productID", productID)
+                    myCommand.Parameters.AddWithValue("@LookupID", lookupid)
                     myCommand.Parameters.AddWithValue("@HostID", hostID)
                     myCommand.Parameters.AddWithValue("@TestID", testID)
                     myConnection.Open()

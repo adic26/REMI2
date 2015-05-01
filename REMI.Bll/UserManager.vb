@@ -133,7 +133,7 @@ Namespace REMI.Bll
                                 Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isDefault = DirectCast(ud.Item("isDefault"), Boolean)}).ToList()
 
                         Dim userDetailsNewProducts = (From ud In u.UserDetails Where DirectCast(ud.Item("Name"), String) = "Products" _
-                                Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isProductManager = DirectCast(ud.Item("IsProductManager"), Boolean)}).ToList()
+                                Select New With {.LookupID = DirectCast(ud.Item("LookupID"), Int32), .isProductManager = DirectCast(ud.Item("IsProductManager"), Boolean), .isTSDContact = DirectCast(ud.Item("IsTSDContact"), Boolean)}).ToList()
 
                         For Each udd In userDetailsNewDepartment
                             Dim ud As REMI.Entities.UserDetail = (From d In instance.UserDetails Where d.User.ID = u.ID And d.LookupID = udd.LookupID Select d).FirstOrDefault()
@@ -179,12 +179,14 @@ Namespace REMI.Bll
                                 ud.IsDefault = False
                                 ud.IsAdmin = False
                                 ud.IsProductManager = udtc.isProductManager
+                                ud.IsTSDContact = udtc.isTSDContact
 
                                 instance.AddToUserDetails(ud)
                             Else
                                 ud.IsDefault = False
                                 ud.IsAdmin = False
                                 ud.IsProductManager = udtc.isProductManager
+                                ud.IsTSDContact = udtc.isTSDContact
                             End If
                         Next
 
@@ -410,6 +412,19 @@ Namespace REMI.Bll
                     u.ID = Save(u, False, False, True)
 
                     If u.ID > 0 Then 'if the user was saved then
+                        Dim us As New UserSearch
+                        us.IsAdmin = 1
+                        us.IsTestCenterAdmin = 1
+                        us.TestCenterID = u.TestCentreID
+
+                        Dim users As UserCollection = UserManager.UserSearchList(us, False, False, False, False, False)
+
+                        Dim emails As List(Of String) = (From usr As User In users Select usr.LDAPName).Distinct.ToList
+
+                        If (emails.Count > 0) Then
+                            REMI.Core.Emailer.SendMail(String.Join(",", emails.ConvertAll(Of String)(Function(i As String) i.ToString()).ToArray()), "tsdinfrastructure@blackberry.com", String.Format("New User Added To REMI"), String.Format("User '{0}' account created.<br/>Please review/modify their access for products/role/department/test center and ensure all settings are correct.<br/>You can use the following link <a href=""http://go/remi/Admin/Users.aspx?userid={1}"">{0}</a> to edit in them in remi.", u.LDAPName, u.ID), True, String.Empty)
+                        End If
+
                         HttpContext.Current.Session.Add(_userSessionVariableName, u) 'save it to the session
                     Else
                         returnNotifications.AddWithMessage("User verified ok but there was a database error. Unable to save.", NotificationType.Information)

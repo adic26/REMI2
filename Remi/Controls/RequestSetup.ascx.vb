@@ -240,6 +240,10 @@ Partial Class RequestSetup
             Dim orientationID As Int32
             Int32.TryParse(hdnOrientationID.Value, orientationID)
 
+            If (ddlOrientations.Items.FindByValue(orientationID) Is Nothing And orientationID > 0) Then
+                ddlOrientations.Items.Add(New ListItem((From o In New REMI.Dal.Entities().Instance().JobOrientations Where o.ID = orientationID Select o.Name).FirstOrDefault(), orientationID))
+            End If
+
             ddlOrientations.SelectedValue = orientationID
         Else
             Orientation.Visible = False

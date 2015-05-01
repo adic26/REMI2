@@ -49,7 +49,10 @@ Partial Class Scanning_Default
     Protected Sub BindJobs()
         Dim jc As New JobCollection
         jc.Add(New Job("Not Applicable"))
-        jc.AddRange(JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0))
+
+        If (ddlRequestType.SelectedValue IsNot Nothing) Then
+            jc.AddRange(JobManager.GetJobListDT(ddlRequestType.SelectedValue, UserManager.GetCurrentUser.ID, 0))
+        End If
 
         ddlJobs.DataSource = jc
         ddlJobs.DataBind()
@@ -237,7 +240,7 @@ Partial Class Scanning_Default
                                         If Not String.IsNullOrEmpty(ddlPossibleLocations.SelectedValue) Then
                                             bc.SetTrackingLocationPart(ddlPossibleLocations.SelectedValue, False)
                                         End If
-                                        HandleScan(ScanManager.Scan(bc.Number, selectedTestStage, selectedTestStage, binType:=Request.Form(ddlBinType.UniqueID), jobName:=selectedJobName, productGroup:=String.Empty))
+                                        HandleScan(ScanManager.Scan(bc.Number, TestResultSource.Manual, selectedTestStage, selectedTestStage, binType:=Request.Form(ddlBinType.UniqueID), jobName:=selectedJobName, productGroup:=String.Empty))
                                     Else
                                         notMain.Notifications.AddWithMessage(String.Format("Unit {0} Was Not In Remstar. Scanning Cancelled", unit), NotificationType.Warning)
                                     End If

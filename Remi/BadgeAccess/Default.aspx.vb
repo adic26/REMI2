@@ -12,16 +12,6 @@ Partial Class BadgeAccess_Default
     End Sub
 #End Region
 
-#Region "Methods"
-    Private Function GetRedirectPage() As String
-        If Request.QueryString.Item("RedirectPage") IsNot Nothing Then
-            Return Request.QueryString.Get("RedirectPage")
-        Else
-            Return REMIConfiguration.DefaultRedirectPage
-        End If
-    End Function
-#End Region
-
 #Region "Button Events"
     Protected Sub btnCreate_Click(sender As Object, e As EventArgs)
         mvLogin.ActiveViewIndex = 1
@@ -42,9 +32,9 @@ Partial Class BadgeAccess_Default
 
             If (Not UserManager.UserExists(txtNewUserName.Text, 0)) Then
                 Dim u As User = New User
-                u.IsActive = True
+                u.IsActive = 1
                 u.ByPassProduct = 0
-                u.LDAPName = txtNewUserName.Text.ToLower
+                u.LDAPName = String.Format("RIMNET\{0}", txtNewUserName.Text.ToLower)
                 u.DefaultPage = ddlDefaultPage.SelectedValue
                 u.BadgeNumber = badge
                 u.LastUser = txtNewUserName.Text
@@ -75,7 +65,7 @@ Partial Class BadgeAccess_Default
 
                 If (Not notMain.Notifications.HasErrors) Then
                     If UserManager.SetUserToSession(txtNewUserName.Text) Then
-                        Response.Redirect(GetRedirectPage)
+                        Response.Redirect(UserManager.GetCurrentUser.DefaultPage)
                     End If
                 End If
             End If
@@ -90,7 +80,7 @@ Partial Class BadgeAccess_Default
         If (Not String.IsNullOrEmpty(txtBadge.Text)) Then
             If (UserManager.UserExists(String.Empty, txtBadge.Text)) Then
                 If UserManager.SetUserToSession(txtBadge.Text) Then
-                    Response.Redirect(GetRedirectPage)
+                    Response.Redirect(UserManager.GetCurrentUser.DefaultPage)
                 End If
             Else
                 mvLogin.ActiveViewIndex = 1
@@ -98,7 +88,7 @@ Partial Class BadgeAccess_Default
         ElseIf Not String.IsNullOrEmpty(txtUserName.Text) Then
             If (UserManager.UserExists(txtUserName.Text, 0)) Then
                 If UserManager.SetUserToSession(txtUserName.Text) Then
-                    Response.Redirect(GetRedirectPage)
+                    Response.Redirect(UserManager.GetCurrentUser.DefaultPage)
                 End If
             Else
                 mvLogin.ActiveViewIndex = 1

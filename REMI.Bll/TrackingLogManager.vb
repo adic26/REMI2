@@ -61,7 +61,7 @@ Namespace REMI.Bll
             Return New DeviceTrackingLog
         End Function
 
-        Public Shared Function Get24HourLogsForProduct(ByVal productID As Int32, ByVal TimeInHours As Integer) As DeviceTrackingLogCollection
+        Public Shared Function Get24HourLogsForProduct(ByVal lookupid As Int32, ByVal TimeInHours As Integer) As DeviceTrackingLogCollection
             Try
                 Dim dt As DateTime = DateTime.UtcNow.Subtract(TimeSpan.FromHours(TimeInHours))
                 'sql server cannot handle dates less than 1750ish so we must check the date here
@@ -69,10 +69,10 @@ Namespace REMI.Bll
                 If dt.Year <= 2000 Then
                     dt = dt.AddYears(2000 - dt.Year)
                 End If
-                Return DeviceTrackingLogDB.GetListByProductDate(productID, dt)
+                Return DeviceTrackingLogDB.GetListByProductDate(lookupid, dt)
 
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("ProductGroup: {0}", productID))
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("ProductGroup: {0}", lookupid))
             End Try
             Return New DeviceTrackingLogCollection
         End Function

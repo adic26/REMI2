@@ -10,6 +10,7 @@ AS
 declare @jobName nvarchar(400)
 declare @jobID int
 declare @testUnitID int
+declare @lookupID int
 declare @BSN bigint
 declare @selectedTLCapacityRemaining int
 declare @currentTest nvarchar(300)
@@ -53,7 +54,6 @@ declare @exceptionsTable table(name nvarchar(300), TestUnitException nvarchar(50
 declare @currentDtlID int, @currentDtlInTime datetime, @currentDtlOutTime datetime, @currentDtlInUser nvarchar(255),
  @currentDtlOutUser nvarchar(255), @currentDtlTrackingLocationName nvarchar(400), @currentDtlTrackingLocationID int
 declare @isBBX nvarchar(200)
-declare @productID INT
 declare @accessoryTypeID INT
 declare @productTypeID INT
 declare @accessoryType NVARCHAR(150)
@@ -64,11 +64,11 @@ DECLARE @BatchID INT
 
 --jobname, product group, job WI, jobID
 select @BatchID=b.ID,@jobName=b.jobname,@cprNumber =b.CPRNumber,@hwrevision = b.HWRevision, @productGroup=lp.[Values],@jobWILocation=j.WILocation,@jobid=j.ID, @batchStatus = b.BatchStatus ,
-@productID=p.ID, @NoBSN=j.NoBSN, @productTypeID=b.ProductTypeID, @accessoryTypeID=b.AccessoryGroupID, @DepartmentID = DepartmentID
+@NoBSN=j.NoBSN, @productTypeID=b.ProductTypeID, @accessoryTypeID=b.AccessoryGroupID, @DepartmentID = DepartmentID,
+@lookupID = b.ProductID
 from Batches as b
 	INNER JOIN jobs as j ON j.JobName = b.JobName
-	INNER JOIN Products p ON p.ID=b.ProductID
-	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=b.ProductID
 where b.QRANumber = @qranumber
 
 SELECT @productType=[values] FROM Lookups WHERE LookupID=@productTypeID
@@ -76,7 +76,7 @@ SELECT @accessoryType=[values] FROM Lookups WHERE LookupID=@accessoryTypeID
 
 --*******************
 ---This section gets the IsBBX value as a bit
-declare @IsBBXvaluetext nvarchar(200) = (select ValueText FROM ProductSettings as ps where ps.ProductID = @ProductID and KeyName = 'IsBBX')
+declare @IsBBXvaluetext nvarchar(200) = (select ValueText FROM ProductSettings as ps where ps.LookupID = @lookupID and KeyName = 'IsBBX')
 declare @IsBBXDefaultvaluetext nvarchar(200) =(select top (1) DefaultValue FROM ProductSettings as ps where KeyName = 'IsBBX' and DefaultValue is not null)
 set @isBBX = case when @IsBBXvaluetext is not null then @IsBBXvaluetext else @IsBBXDefaultvaluetext end;
 
@@ -195,9 +195,9 @@ IF EXISTS (SELECT 1 FROM Req.RequestSetup WHERE BatchID=@BatchID)
 BEGIN
 	CREATE TABLE #Setup (TestStageID INT, TestStageName NVARCHAR(255), TestID INT, TestName NVARCHAR(255), Selected BIT)
 	INSERT INTO #Setup
-	EXEC Req.GetRequestSetupInfo @productID, @jobID, @BatchID, 1, 0, '', 0
+	EXEC Req.GetRequestSetupInfo @lookupID, @jobID, @BatchID, 1, 0, '', 0
 	INSERT INTO #Setup
-	EXEC Req.GetRequestSetupInfo @productID, @jobID, @BatchID, 2, 0, '', 0
+	EXEC Req.GetRequestSetupInfo @lookupID, @jobID, @BatchID, 2, 0, '', 0
 	
 	SELECT @ApplicableTestStages = @ApplicableTestStages + ',' + a.TestStageName
 	FROM (
@@ -307,7 +307,7 @@ select @currentDtlID as currentDtlID,
 	@ApplicableTestStages as ApplicableTestStages, 
 	@ApplicableTests as ApplicableTests,
 	@selectedTestID as selectedTestID,
-	@productID As ProductID,
+	@lookupID As ProductID,
 	@selectedTestWI AS selectedTestWILocation, @NoBSN AS NoBSN, @productType AS ProductType, @productTypeID AS ProductTypeID, @accessoryType AS AccessoryType, @accessoryTypeID AS AccessoryTypeID
 	
 	exec remispTrackingLocationsSelectForTest @selectedTestID, @selectedTrackingLocationID

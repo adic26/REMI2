@@ -42,7 +42,7 @@ BEGIN
 			lvt.[Values] AS ValidationType, rfs.FieldValidationID, ISNULL(rfs.IsRequired, 0) AS IsRequired, ISNULL(rfs.DisplayOrder, 0) AS DisplayOrder,
 			rfs.ColumnOrder, ISNULL(rfs.Archived, 0) AS Archived, rfs.Description, rfs.OptionsTypeID, @RequestTypeID AS RequestTypeID,
 			@RequestNumber AS RequestNumber, @RequestID AS RequestID, 
-			CASE WHEN rfm.IntField = 'RequestLink' AND Value IS NULL THEN 'http://go/requests/' + @RequestNumber ELSE CASE WHEN ISNULL(rfss.DefaultDisplayNum, 1) = 1 THEN rfd.Value ELSE '' END END AS Value, 
+			CASE WHEN rfm.IntField = 'RequestLink' AND Value IS NULL THEN @RequestNumber ELSE CASE WHEN ISNULL(rfss.DefaultDisplayNum, 1) = 1 THEN rfd.Value ELSE '' END END AS Value, 
 			rfm.IntField, rfm.ExtField,
 			CASE WHEN rfm.ID IS NOT NULL THEN 1 ELSE 0 END AS InternalField,
 			CASE WHEN @RequestID = 0 THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS NewRequest, rt.IsExternal AS IsFromExternalSystem, rfs.Category,

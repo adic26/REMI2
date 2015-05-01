@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[ProductTestReady](
-	[ProductID] [int] NOT NULL,
+	[LookupID] [int] NOT NULL,
 	[TestID] [int] NOT NULL,
 	[PSID] [int] NOT NULL,
 	[Comment] [ntext] NULL,

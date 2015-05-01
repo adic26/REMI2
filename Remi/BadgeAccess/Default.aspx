@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" AutoEventWireup="false" Inherits="Remi.BadgeAccess_Default" CodeBehind="default.aspx.vb" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPages/MasterPage.master" MaintainScrollPositionOnPostback="true" EnableEventValidation="false" EnableViewState="true" AutoEventWireup="false" Inherits="Remi.BadgeAccess_Default" CodeBehind="default.aspx.vb" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Src="../Controls/Notifications.ascx" TagName="Notifications" TagPrefix="uc1" %>
 
@@ -11,7 +11,6 @@
         $(document).ready(function () {
             $("[id*=txtUserName], [id*=txtPassword], [id*=txtNewUserName], [id*=txtNewBadge], [id*=txtNewPassword]").WaterMark();
         });
-
     </script>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="leftSidebarContent" runat="Server">
@@ -31,12 +30,12 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:TextBox runat="server" ID="txtUserName" Width="200px" CssClass="loginTextBox" ToolTip="User"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtUserName" Width="200px" CssClass="loginTextBox" ToolTip="User" title="User"></asp:TextBox>
                             </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:TextBox runat="server" ID="txtPassword" TextMode="Password" CausesValidation="true" Width="200px" CssClass="loginTextBox" ToolTip="Password"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtPassword" TextMode="Password" CausesValidation="true" title="Password" Width="200px" CssClass="loginTextBox" ToolTip="Password"></asp:TextBox>
                             </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
@@ -46,7 +45,7 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:TextBox runat="server" ID="txtBadge" Width="200px" CssClass="loginTextBox" ToolTip="Badge"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtBadge" TextMode="Password" title="Badge" Width="200px" CssClass="loginTextBox" ToolTip="Badge"></asp:TextBox>
                                 <br /><asp:CompareValidator runat="server" ID="cvBadge" ValidationGroup="Return" ControlToValidate="txtBadge" Display="Static" ErrorMessage="Must Be Numeric" Operator="DataTypeCheck" Type="Integer"></asp:CompareValidator>
                             </asp:TableCell>
                         </asp:TableRow>
@@ -69,17 +68,17 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:TextBox runat="server" ID="txtNewUserName" Width="200px" CssClass="loginTextBox" ToolTip="User"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtNewUserName" Width="200px" CssClass="loginTextBox" ToolTip="User" title="User"></asp:TextBox>
                             </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:TextBox runat="server" ID="txtNewPassword" TextMode="Password" CausesValidation="true" Width="200px" CssClass="loginTextBox" ToolTip="Password"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtNewPassword" TextMode="Password" CausesValidation="true" title="Password" Width="200px" CssClass="loginTextBox" ToolTip="Password"></asp:TextBox>
                             </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:TextBox runat="server" ID="txtNewBadge" Width="200px" CssClass="loginTextBox" ToolTip="Badge"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtNewBadge" Width="200px" CssClass="loginTextBox" ToolTip="Badge" title="Badge"></asp:TextBox>
                             </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
@@ -105,7 +104,7 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:DropDownList ID="ddlDepartments" runat="server" AutoPostBack="true" DataSourceID="odsDepartments" DataTextField="LookupType" DataValueField="LookupID" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
+                                <asp:DropDownList ID="ddlDepartments" runat="server" AutoPostBack="false" DataSourceID="odsDepartments" DataTextField="LookupType" DataValueField="LookupID" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
                                 <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                                     <SelectParameters>
                                         <asp:Parameter Type="String" Name="Type" DefaultValue="Department" />
@@ -123,14 +122,8 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
-                                <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" DataSourceID="odsDefaultPage" runat="server" DataTextField="Name" DataValueField="Url" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
-                                <asp:ObjectDataSource ID="odsDefaultPage" runat="server" SelectMethod="GetMenuAccessByDepartment" TypeName="Remi.Bll.SecurityManager">
-                                    <SelectParameters>
-                                        <asp:Parameter Type="String" Name="pageName" DefaultValue="" />
-                                        <asp:ControlParameter ControlID="ddlDepartments" Name="departmentID" PropertyName="SelectedValue" Type="String" />
-                                        <asp:Parameter Type="Boolean" Name="RemoveFirst" DefaultValue="true" />
-                                    </SelectParameters>
-                                </asp:ObjectDataSource>
+                                <asp:CascadingDropDown runat="server" ID="cddPage" Category="departmentID" TargetControlID="ddlDefaultPage" ParentControlID="ddlDepartments" LoadingText="Loading..." ServiceMethod="GetMenuAccessByDepartment" ServicePath="~/webservice/REMIInternal.asmx"></asp:CascadingDropDown>
+                                <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
                             </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>

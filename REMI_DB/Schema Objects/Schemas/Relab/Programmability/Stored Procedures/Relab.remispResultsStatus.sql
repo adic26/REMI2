@@ -10,7 +10,12 @@ BEGIN
 	WHERE tu.BatchID=@BatchID
 	GROUP BY r.PassFail
 	
-	SELECT CASE WHEN rs.PassFail = 1 THEN 'Pass' WHEN rs.PassFail=2 THEN 'Fail' ELSE 'No Result' END AS Result, 
+	SELECT CASE 
+			WHEN rs.PassFail = 1 THEN 'Pass' 
+			WHEN rs.PassFail=2 THEN 'Fail' 
+			WHEN rs.PassFail=4 THEN 'Un-Verified Pass' 
+			WHEN rs.PassFail=5 THEN 'Un-Verified Fail' 
+			ELSE 'No Result' END AS Result, 
 		rs.ApprovedBy, rs.ApprovedDate
 	INTO #ResultOverride
 	FROM Relab.ResultsStatus rs WITH(NOLOCK)
@@ -24,9 +29,9 @@ BEGIN
 	ELSE
 		BEGIN
 			IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Fail'))
-				SET @Status = 'Preliminary Fail'
+				SET @Status = 'Un-Verified Fail'
 			ELSE IF EXISTS ((SELECT 1 FROM #ResultCount WHERE Result='Pass'))
-				SET @Status = 'Preliminary Pass'
+				SET @Status = 'Un-Verified Pass'
 			ELSE
 				SET @Status = 'No Result'
 		END

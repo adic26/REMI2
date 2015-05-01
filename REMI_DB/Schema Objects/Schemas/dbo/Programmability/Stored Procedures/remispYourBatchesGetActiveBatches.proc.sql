@@ -2,7 +2,7 @@
 AS	
 SELECT b.ID, lp.[Values] AS ProductGroupName,b.QRANumber, (b.QRANumber + ' ' + lp.[Values]) AS Name
 	FROM Batches as b WITH(NOLOCK)
-	INNER JOIN Products p WITH(NOLOCK) ON p.ID=b.ProductID
+	INNER JOIN Lookups p WITH(NOLOCK) ON p.LookupID=b.ProductID
 	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
 WHERE ( 
 		(@Year = 0 AND BatchStatus NOT IN(5,7))

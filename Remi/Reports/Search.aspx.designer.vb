@@ -14,42 +14,6 @@ Option Explicit On
 Partial Public Class Search
 
     '''<summary>
-    '''btnTestingComplete control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnTestingComplete As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnHeld control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnHeld As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnReporting control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnReporting As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''btnIncoming control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnIncoming As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
     '''ddlRequestType control.
     '''</summary>
     '''<remarks>
@@ -158,13 +122,139 @@ Partial Public Class Search
     Protected WithEvents ddlProductFilterUser As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''chkByPass control.
+    '''rdoProductManagerYes control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents chkByPass As Global.System.Web.UI.WebControls.CheckBox
+    Protected WithEvents rdoProductManagerYes As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoProductManagerNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoProductManagerNo As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoProductManagerNA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoProductManagerNA As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoTSDContacYes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoTSDContacYes As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoTSDContacNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoTSDContacNo As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoTSDContactNA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoTSDContactNA As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoByPassYes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoByPassYes As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoByPassNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoByPassNo As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoByPassNA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoByPassNA As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsAdminYes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsAdminYes As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsAdminNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsAdminNo As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsAdminNA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsAdminNA As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsTestCenterAdminYes control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsTestCenterAdminYes As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsTestCenterAdminNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsTestCenterAdminNo As Global.System.Web.UI.WebControls.RadioButton
+
+    '''<summary>
+    '''rdoIsTestCenterAdminNA control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents rdoIsTestCenterAdminNA As Global.System.Web.UI.WebControls.RadioButton
 
     '''<summary>
     '''pnlSearchUnits control.
@@ -444,15 +534,6 @@ Partial Public Class Search
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ddlTestCentersException As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
-    '''ddlProductFilter2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlProductFilter2 As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''ddlProductType2 control.

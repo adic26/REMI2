@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [dbo].remispProductConfigurationUpload @ProductID INT, @TestID INT, @XML AS NTEXT, @LastUser As NVARCHAR(255), @PCName NVARCHAR(200) = NULL
+﻿ALTER PROCEDURE [dbo].remispProductConfigurationUpload @LookupID INT, @TestID INT, @XML AS NTEXT, @LastUser As NVARCHAR(255), @PCName NVARCHAR(200) = NULL
 AS
 BEGIN
 	IF (@PCName IS NULL OR LTRIM(RTRIM(@PCName)) = '') --Get The Root Name Of the XML
@@ -13,14 +13,14 @@ BEGIN
 		END
 	END
 
-	IF EXISTS (SELECT 1 FROM ProductConfigurationUpload WHERE TestID=@TestID AND ProductID=@ProductID AND PCName=@PCName)
+	IF EXISTS (SELECT 1 FROM ProductConfigurationUpload WHERE TestID=@TestID AND LookupID=@LookupID AND PCName=@PCName)
 	BEGIN
 		DECLARE @increment INT
 		DECLARE @PCNameTemp NVARCHAR(200)
 		SET @PCNameTemp = @PCName
 		SET @increment = 1
 		
-		WHILE EXISTS (SELECT 1 FROM ProductConfigurationUpload WHERE TestID=@TestID AND ProductID=@ProductID AND PCName=@PCNameTemp)
+		WHILE EXISTS (SELECT 1 FROM ProductConfigurationUpload WHERE TestID=@TestID AND LookupID=@LookupID AND PCName=@PCNameTemp)
 		BEGIN
 			SET @PCNameTemp = @PCName + CONVERT(NVARCHAR, @increment)
 			SET @increment = @increment + 1
@@ -30,10 +30,10 @@ BEGIN
 		SET @PCName = @PCNameTemp
 	END
 	
-	IF NOT EXISTS (SELECT 1 FROM ProductConfigurationUpload WHERE TestID=@TestID AND ProductID=@ProductID AND PCName=@PCName)
+	IF NOT EXISTS (SELECT 1 FROM ProductConfigurationUpload WHERE TestID=@TestID AND LookupID=@LookupID AND PCName=@PCName)
 	BEGIN
-		INSERT INTO ProductConfigurationUpload (IsProcessed, ProductID, TestID, LastUser, PCName) 
-		Values (CONVERT(BIT, 0), @ProductID, @TestID, @LastUser, @PCName)
+		INSERT INTO ProductConfigurationUpload (IsProcessed, LookupID, TestID, LastUser, PCName) 
+		Values (CONVERT(BIT, 0), @LookupID, @TestID, @LastUser, @PCName)
 		
 		DECLARE @UploadID INT
 		SET @UploadID =  @@IDENTITY

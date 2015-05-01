@@ -6,7 +6,7 @@ Imports System.Data.Common
 
 Namespace REMI.Dal
     Public Class LookupsDB
-        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Int32, ByVal showAdminSelected As Boolean, ByVal showArchived As Boolean) As DataTable
+        Public Shared Function GetLookups(ByVal type As String, ByVal productID As Int32, ByVal parentID As Int32, ByVal parentLookupType As String, ByVal parentLookupValue As String, ByVal requestTypeID As Int32, ByVal showAdminSelected As Boolean, ByVal showArchived As Boolean, ByVal userID As Int32) As DataTable
             Dim dt As New DataTable
             Using MyConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispGetLookups", MyConnection)
@@ -21,7 +21,7 @@ Namespace REMI.Dal
                         myCommand.Parameters.AddWithValue("@ParentID", parentID)
                     End If
 
-                    If (ParentLookupType.Trim().Length > 0) Then
+                    If (parentLookupType.Trim().Length > 0) Then
                         myCommand.Parameters.AddWithValue("@ParentLookupType", parentLookupType)
                     End If
 
@@ -35,6 +35,7 @@ Namespace REMI.Dal
 
                     myCommand.Parameters.AddWithValue("@ShowAdminSelected", showAdminSelected)
                     myCommand.Parameters.AddWithValue("@ShowArchived", showArchived)
+                    myCommand.Parameters.AddWithValue("@UserID", userID)
 
                     MyConnection.Open()
                     Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)

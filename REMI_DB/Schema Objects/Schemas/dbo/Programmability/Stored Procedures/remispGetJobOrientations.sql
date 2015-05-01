@@ -6,7 +6,7 @@ BEGIN
 	FROM JobOrientation jo
 		INNER JOIN Lookups l ON l.LookupID=jo.ProductTypeID
 		INNER JOIN Jobs j ON j.ID=jo.JobID
-	WHERE ( 
+	WHERE jo.IsActive = 1 AND ( 
 			(jo.JobID=@JobID AND @JobID > 0)
 			OR
 			(j.JobName = @JobName AND @JobName IS NOT NULL)

@@ -71,7 +71,7 @@ Public Class Measurements
             grdResultMeasurements.EmptyDataText = EmptyDataTextMeasurement
 
             Dim instance = New REMI.Dal.Entities().Instance()
-            _isProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = (From b In instance.Batches Where b.ID = BatchID Select b.Product.Lookup.Values).FirstOrDefault() Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
+            _isProjectManager = (From p In UserManager.GetCurrentUser.UserDetails Where p.Field(Of String)("Name") = "Products" And p.Field(Of String)("Values") = (From b In instance.Batches Where b.ID = BatchID Select b.Product.Values).FirstOrDefault() Select p.Field(Of Boolean)("IsProductManager")).FirstOrDefault()
 
             If (dtMeasure.Rows.Count > 0) Then
                 grdResultMeasurements.DataSource = dtMeasure
@@ -88,8 +88,6 @@ Public Class Measurements
             If (dtMeasure.Select("[Pass/Fail]='Fail'").Count = 0) Then
                 chkOnlyFails.Enabled = False
             End If
-
-            imgExport.Visible = ShowExport
 
             SetVisible(dtMeasure)
 
@@ -112,6 +110,7 @@ Public Class Measurements
                 chkOnlyFails.Visible = False
                 lblInfo.Visible = False
                 chkIncludeArchived.Visible = False
+                imgExport.Visible = False
 
                 If (grdResultMeasurements.HeaderRow IsNot Nothing) Then
                     Dim index As Int32
@@ -150,6 +149,7 @@ Public Class Measurements
                 lblInfo.Visible = True
                 chkIncludeArchived.Visible = True
                 pnlLegend.Visible = True
+                imgExport.Visible = ShowExport
         End Select
     End Sub
 #End Region

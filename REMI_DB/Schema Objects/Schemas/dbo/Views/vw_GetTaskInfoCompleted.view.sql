@@ -39,6 +39,5 @@ FROM
 		INNER JOIN Jobs j WITH(NOLOCK) ON ts.JobID=j.ID
 		INNER JOIN Batches b WITH(NOLOCK) on j.jobname = b.jobname 
 		INNER JOIN Tests t WITH(NOLOCK) ON ( ( ts.teststagetype = 2 AND ts.testid = t.id ) OR ts.teststagetype != 2 AND ts.teststagetype = t.testtype )
-		INNER JOIN Products p WITH(NOLOCK) ON b.ProductID=p.ID
 	) AS unitData
 WHERE TestUnitsForTest IS NOT NULL AND ISNULL(TestRecordExists, 0) = 1 AND ISNULL(RecordExists,0) = 1

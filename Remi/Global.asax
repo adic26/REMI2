@@ -34,7 +34,7 @@
 
         If httpApp.Context.Request.Path.ToLower.Contains("/reports/es/default.aspx") Then
         ElseIf httpApp.Context.Request.Path.Contains(".aspx") Then
-            If Not UserManager.SessionUserIsSet Then
+            If Not UserManager.SessionUserIsSet Or UserManager.GetCurrentUser.ID = 0 Then
                 If httpApp.Context.Request.Path.ToLower <> "/badgeaccess/default.aspx" AndAlso httpApp.Context.Request.Path.ToLower <> "/badgeaccess/error.aspx" Then
                     'we need to see if the current windows user can be set to the session.
                     Dim currentUser As User = UserManager.GetCurrentUser()
@@ -62,7 +62,7 @@
                     End If
                 End If
             Else
-                If String.IsNullOrEmpty(UserManager.GetCurrentUser().TestCentre) AndAlso String.IsNullOrEmpty(UserManager.GetCurrentUser().Department) AndAlso Not httpApp.Context.Request.Path.EndsWith("badgeaccess/EditmyUser.aspx") Then
+                If String.IsNullOrEmpty(UserManager.GetCurrentUser().TestCentre) AndAlso UserManager.GetCurrentUser().ID > 0 AndAlso String.IsNullOrEmpty(UserManager.GetCurrentUser().Department) AndAlso Not httpApp.Context.Request.Path.EndsWith("badgeaccess/EditmyUser.aspx") Then
                     httpApp.Context.Response.Redirect("~/badgeaccess/EditmyUser.aspx?defaults=false", True)
                 End If
             End If

@@ -9,21 +9,22 @@ BEGIN
 	DECLARE @UnitCount INT
 	DECLARE @RowID INT
 	DECLARE @ID INT
-	CREATE TABLE #Results (TestID INT, TestName NVARCHAR(MAX), TestStageID INT, TestStageName NVARCHAR(MAX))
+	CREATE TABLE #Results (TestStageID INT, Stage NVARCHAR(MAX), TestID INT, Test NVARCHAR(MAX), ProcessOrder INT)
 
 	SELECT ROW_NUMBER() OVER (ORDER BY tu.ID) AS RowID, tu.BatchUnitNumber, tu.ID
 	INTO #units
 	FROM TestUnits tu WITH(NOLOCK)
 	WHERE BatchID=@BatchID
 
-	INSERT INTO #Results (TestID, TestName, TestStageID, TestStageName)
-	SELECT DISTINCT r.TestID, t.TestName, r.TestStageID, ts.TestStageName
+	INSERT INTO #Results (TestID, Test, TestStageID, Stage, ProcessOrder)
+	SELECT DISTINCT r.TestID, t.TestName, r.TestStageID, ts.TestStageName, ts.ProcessOrder
 	FROM Batches b 
 		INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.BatchID=b.ID
 		INNER JOIN Relab.Results r WITH(NOLOCK) ON r.TestUnitID=tu.ID
 		INNER JOIN Tests t WITH(NOLOCK) ON t.ID=r.TestID
 		INNER JOIN TestStages ts WITH(NOLOCK) ON ts.ID=r.TestStageID
 	WHERE b.ID=@BatchID AND ts.TestStageName NOT IN ('Analysis')
+	ORDER BY ts.ProcessOrder
 
 	SELECT @UnitCount = COUNT(RowID) FROM #units WITH(NOLOCK)
 
@@ -54,6 +55,8 @@ BEGIN
 	
 	ALTER TABLE #Results DROP COLUMN TestID
 	ALTER TABLE #Results DROP COLUMN TestStageID
+	
+	ALTER TABLE #Results DROP COLUMN ProcessOrder
 	
 	SELECT * 
 	FROM #Results WITH(NOLOCK)

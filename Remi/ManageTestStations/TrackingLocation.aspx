@@ -130,7 +130,7 @@
                         
                         <asp:ObjectDataSource ID="odsBatches" runat="server" DataObjectTypeName="REMI.BusinessEntities.Batch"
                             OldValuesParameterFormatString="{0}" EnablePaging="true" SortParameterName="sortExpression"
-                            SelectMethod="GetListAtLocation" TypeName="REMI.Bll.BatchManager" SelectCountMethod="CountListAtLocation">
+                            SelectMethod="GetListAtLocation" TypeName="REMI.Bll.BatchManager">
                             <SelectParameters>
                                 <asp:ControlParameter ControlID="hdnBarcodePrefix" Name="BarcodePrefix" PropertyName="Value" Type="int32" />
                             </SelectParameters>

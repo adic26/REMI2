@@ -417,7 +417,6 @@ Partial Public Class Admin_Users
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents grdDepartments As Global.System.Web.UI.WebControls.GridView
-    Protected WithEvents gvProducts As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''gvRequestTypes control.
@@ -429,22 +428,13 @@ Partial Public Class Admin_Users
     Protected WithEvents gvRequestTypes As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
-    '''dlstProductGroups control.
+    '''gvProducts control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dlstProductGroups As Global.System.Web.UI.WebControls.DataList
-
-    '''<summary>
-    '''odsProductGroups control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsProductGroups As Global.System.Web.UI.WebControls.ObjectDataSource
+    Protected WithEvents gvProducts As Global.System.Web.UI.WebControls.GridView
 
     '''<summary>
     '''dlstRoles control.
