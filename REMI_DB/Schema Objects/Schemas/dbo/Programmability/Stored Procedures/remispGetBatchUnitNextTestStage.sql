@@ -16,11 +16,15 @@ BEGIN
 	
 	IF (@TestStageName IS NULL OR LTRIM(RTRIM(@TestStageName)) = '')
 	BEGIN
-		SELECT TOP 1 @CurrentTestStageID = ID, @CurrentProcessOrder = ProcessOrder FROM TestStages WHERE JobID=@JobID
+		SELECT TOP 1 @CurrentTestStageID = ID, @CurrentProcessOrder = ProcessOrder 
+		FROM TestStages 
+		WHERE JobID=@JobID AND ISNULL(IsArchived, 0) = 0 AND ProcessOrder >= 0
 	END
 	ELSE
 	BEGIN
-		SELECT @CurrentTestStageID = ID, @CurrentProcessOrder = ProcessOrder FROM TestStages WHERE TestStageName=@TestStageName AND JobID=@JobID
+		SELECT @CurrentTestStageID = ID, @CurrentProcessOrder = ProcessOrder 
+		FROM TestStages 
+		WHERE TestStageName=@TestStageName AND JobID=@JobID AND ISNULL(IsArchived, 0) = 0 AND ProcessOrder >= 0
 	END
 	
 	SELECT TOP 1 @NextTestStageID = TestStageID

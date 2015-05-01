@@ -552,7 +552,7 @@ Public Class RemiAPI
     WebMethod(Description:="Returns a list of Lookups based on type/product.")> _
     Public Function GetLookupsByProduct(ByVal type As Remi.Contracts.LookupType, ByVal productID As Int32) As DataTable
         Try
-            Return LookupsManager.GetLookups(type, productID, 0, String.Empty, String.Empty, 0, False, 0, False)
+            Return LookupsManager.GetLookups(type.ToString(), productID, 0, String.Empty, String.Empty, 0, False, 0, False)
         Catch ex As Exception
             LookupsManager.LogIssue("REMI API GetLookupsByProduct", "e3", NotificationType.Errors, ex, String.Format("Type: {0} ProductID: {1}", type.ToString(), productID))
         End Try
@@ -1491,8 +1491,8 @@ Public Class RemiAPI
                         Dim b As BatchView = Me.GetBatch(requestNumber)
 
                         If (b IsNot Nothing) Then
-                            If (b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, unitNumber).Count() > 0) Then
-                                tr = b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, unitNumber)(0)
+                            If (b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, testUnitID).Count() > 0) Then
+                                tr = b.TestRecords.FindByTestStageTestUnit(b.JobName, testStageName, testName, testUnitID)(0)
                             End If
                         End If
 

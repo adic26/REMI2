@@ -7,6 +7,7 @@ BEGIN
 	FROM Tests t
 		INNER JOIN vw_GetTaskInfo v ON v.qranumber=@RequestNumber AND testunitsfortest LIKE '%' + CONVERT(NVARCHAR, @BatchUnitNumber) + ',%'
 			AND v.TestStageID=@TestStageID AND v.TestID=t.ID
+	WHERE ISNULL(t.IsArchived, 0) = 0
 	ORDER BY TestName;
 	
 	SELECT t.id, tlt.id, tlt.TrackingLocationTypeName    

@@ -295,7 +295,7 @@ BEGIN
 		SET @SQL = 'ALTER TABLE dbo.#RR ADD ' + replace(@rows, ']', '] NVARCHAR(4000)')
 		EXEC sp_executesql @SQL
 
-		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), BatchTest NVARCHAR(400), BatchStage NVARCHAR(400), 
+		ALTER TABLE dbo.#RR ADD ResultLink NVARCHAR(100), Test NVARCHAR(400), Stage NVARCHAR(400), 
 			TestRunStartDate DATETIME, TestRunEndDate DATETIME, 
 			MeasurementName NVARCHAR(150), MeasurementValue NVARCHAR(500), 
 			LowerLimit NVARCHAR(255), UpperLimit NVARCHAR(255), Archived BIT, Comment NVARCHAR(1000), 
@@ -461,7 +461,7 @@ BEGIN
 
 		IF (@ParameterColumnNames <> '[na]')
 		BEGIN
-			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + REPLACE(REPLACE(@ParameterColumnNames, 'Job]','JobParam]'), ']', '] NVARCHAR(250)')
+			SET @SQL = 'ALTER TABLE dbo.#RRParameters ADD ' + REPLACE(REPLACE(@ParameterColumnNames, '[', '[p'), ']', '] NVARCHAR(250)')
 			EXEC sp_executesql @SQL
 			SET @whereStr = ''
 
@@ -606,7 +606,7 @@ BEGIN
 
 		IF (@InformationColumnNames <> '[na]')
 		BEGIN
-			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + REPLACE(@InformationColumnNames, ']', '] NVARCHAR(250)')
+			SET @SQL = 'ALTER TABLE dbo.#RRInformation ADD ' + REPLACE(REPLACE(@InformationColumnNames, '[', '[i'), ']', '] NVARCHAR(250)')
 			EXEC sp_executesql @SQL
 			
 			SET @whereStr = ''
