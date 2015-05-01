@@ -33,68 +33,82 @@ AS
 	DECLARE @HasBatchSpecificExceptions BIT
 	SET @HasBatchSpecificExceptions = CONVERT(BIT, 0)
 	
-	SELECT @TestName = TestName FROM Tests WITH(NOLOCK) WHERE ID=@TestID 
-	SELECT @TestStageName = TestStageName FROM TestStages WITH(NOLOCK) WHERE ID=@TestStageID
+	IF (@TestID IS NOT NULL)
+	BEGIN
+		SELECT @TestName = TestName FROM Tests WITH(NOLOCK) WHERE ID=@TestID 
+	END
+	
+	IF (@TestStageID IS NOT NULL)
+	BEGIN
+		SELECT @TestStageName = TestStageName FROM TestStages WITH(NOLOCK) WHERE ID=@TestStageID
+	END
+	
 	CREATE TABLE #ExTestStageType (ID INT)
 	CREATE TABLE #ExBatchStatus (ID INT)
 	
 	IF (@TestStageName IS NOT NULL)
 		SET @TestStage = NULL
 	
-	IF convert(VARCHAR,(@excludedTestStageType & 1) / 1) = 1
+	IF (@excludedTestStageType IS NOT NULL)
 	BEGIN
-		INSERT INTO #ExTestStageType VALUES (1)
-	END
-	IF convert(VARCHAR,(@excludedTestStageType & 2) / 2) = 1
-	BEGIN
-		INSERT INTO #ExTestStageType VALUES (2)
-	END
-	IF convert(VARCHAR,(@excludedTestStageType & 4) / 4) = 1
-	BEGIN
-		INSERT INTO #ExTestStageType VALUES (3)
-	END
-	IF convert(VARCHAR,(@excludedTestStageType & 8) / 8) = 1
-	BEGIN
-		INSERT INTO #ExTestStageType VALUES (4)
-	END
-	IF convert(VARCHAR,(@excludedTestStageType & 16) / 16) = 1
-	BEGIN
-		INSERT INTO #ExTestStageType VALUES (5)
-	END
-		
-	IF convert(VARCHAR,(@ExcludedStatus & 1) / 1) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (1)
-	END
-	IF convert(VARCHAR,(@ExcludedStatus & 2) / 2) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (2)
-	END
-	IF convert(VARCHAR,(@ExcludedStatus & 4) / 4) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (3)
-	END
-	IF convert(VARCHAR,(@ExcludedStatus & 8) / 8) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (4)
-	END
-	IF convert(VARCHAR,(@ExcludedStatus & 16) / 16) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (5)
-	END
-	IF convert(VARCHAR,(@ExcludedStatus & 32) / 32) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (6)
-	END
-	IF convert(VARCHAR,(@ExcludedStatus & 64) / 64) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (7)
-	END
-	IF convert(VARCHAR,(@ExcludedStatus & 128) / 128) = 1
-	BEGIN
-		INSERT INTO #ExBatchStatus VALUES (8)
+		IF convert(VARCHAR,(@excludedTestStageType & 1) / 1) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (1)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 2) / 2) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (2)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 4) / 4) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (3)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 8) / 8) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (4)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 16) / 16) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (5)
+		END
 	END
 		
+	IF (@ExcludedStatus IS NOT NULL)
+	BEGIN
+		IF convert(VARCHAR,(@ExcludedStatus & 1) / 1) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (1)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 2) / 2) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (2)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 4) / 4) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (3)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 8) / 8) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (4)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 16) / 16) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (5)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 32) / 32) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (6)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 64) / 64) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (7)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 128) / 128) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (8)
+		END
+	END
+	
 	SELECT TOP 100 BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.ConcurrencyID,BatchesRows.ID,BatchesRows.JobName,
 		BatchesRows.LastUser,BatchesRows.Priority,BatchesRows.ProductGroup As ProductGroupName,batchesrows.ProductType,batchesrows.AccessoryGroupName,batchesrows.ProductID, 
 		BatchesRows.QRANumber,BatchesRows.RequestPurposeID, BatchesRows.TestCenterLocationID,BatchesRows.TestStageName, BatchesRows.TestStageCompletionStatus, testUnitCount, 
@@ -124,7 +138,7 @@ AS
 		(
 			SELECT DISTINCT b.BatchStatus,b.Comment, b.teststagecompletionstatus,b.ConcurrencyID,b.ID,b.JobName,b.LastUser,b.Priority AS PriorityID,b.ProductTypeID,
 				b.AccessoryGroupID,b.ProductID As ProductID,p.[Values] As ProductGroup,b.QRANumber,b.RequestPurpose As RequestPurposeID,b.TestCenterLocationID,b.TestStageName,
-				j.WILocation,(select count(*) from testunits where testunits.batchid = b.id) as testUnitCount,
+				j.WILocation,(select count(*) from testunits WITH(NOLOCK) where testunits.batchid = b.id) as testUnitCount,
 				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, l3.[Values] As TestCenterLocation,
 				b.CPRNumber,b.RelabJobID, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
 				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, 
@@ -139,103 +153,167 @@ AS
 				LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON b.RequestPurpose=l4.LookupID
 				LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON b.Priority=l5.LookupID
 				LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON b.DepartmentID=l6.LookupID
-			WHERE ((BatchStatus NOT IN (SELECT ID FROM #ExBatchStatus) OR @ExcludedStatus IS NULL) AND (BatchStatus = @Status OR @Status IS NULL))
-				AND (p.LookupID = @ProductID OR @ProductID IS NULL)
-				AND (b.Priority = @Priority OR @Priority IS NULL)
-				AND (b.ProductTypeID = @ProductTypeID OR @ProductTypeID IS NULL)
-				AND (b.AccessoryGroupID = @AccessoryGroupID OR @AccessoryGroupID IS NULL)
-				AND (b.TestCenterLocationID = @GeoLocationID OR @GeoLocationID IS NULL)
-				AND (b.DepartmentID = @DepartmentID OR @DepartmentID IS NULL)
+			WHERE
+				(
+					(@ExcludedStatus IS NOT NULL AND BatchStatus NOT IN (SELECT ID FROM #ExBatchStatus WITH(NOLOCK)))
+					OR
+					(@ExcludedStatus IS NULL)
+				)
+				AND
+				(
+					(@Status IS NOT NULL AND BatchStatus = @Status)
+					OR
+					(@Status IS NULL)
+				)
+				AND 
+				(
+					(@ProductID IS NOT NULL AND p.LookupID = @ProductID)
+					OR 
+					@ProductID IS NULL
+				)
+				AND 
+				(
+					(@Priority IS NOT NULL AND b.Priority = @Priority)
+					OR 
+					@Priority IS NULL
+				)
+				AND 
+				(
+					(@ProductTypeID IS NOT NULL AND b.ProductTypeID = @ProductTypeID)
+					OR 
+					@ProductTypeID IS NULL
+				)
+				AND 
+				(
+					(@AccessoryGroupID IS NOT NULL AND b.AccessoryGroupID = @AccessoryGroupID)
+					OR 
+					@AccessoryGroupID IS NULL
+				)
+				AND 
+				(
+					(@GeoLocationID IS NOT NULL AND b.TestCenterLocationID = @GeoLocationID)
+					OR 
+					@GeoLocationID IS NULL
+				)
+				AND 
+				(
+					(@DepartmentID IS NOT NULL AND b.DepartmentID = @DepartmentID)
+					OR 
+					@DepartmentID IS NULL
+				)
+				AND 
+				(
+					(@RequestReason IS NOT NULL AND b.RequestPurpose = @RequestReason)
+					OR 
+					@RequestReason IS NULL
+				)
+				AND 
+				(
+					(@Revision IS NOT NULL AND b.MechanicalTools = @Revision)
+					OR 
+					@Revision IS NULL
+				)
 				AND 
 				(
 					(@JobID > 0 AND j.ID=@JobID)
 					OR
-					(@JobName IS NOT NULL AND b.JobName = @JobName)
+					(ISNULL(@JobID, 0) = 0 AND @JobName IS NOT NULL AND b.JobName = @JobName)
 					OR
 					(@JobName IS NULL AND @JobID = 0)
 				)
-				AND (b.RequestPurpose = @RequestReason OR @RequestReason IS NULL)
-				AND (b.MechanicalTools = @Revision OR @Revision IS NULL)
 				AND 
 				(
-					(@TestStage IS NULL AND (b.TestStageName = @TestStageName OR @TestStageName IS NULL))
+					(@TestStageName IS NOT NULL AND @TestStage IS NULL AND b.TestStageName = @TestStageName)
 					OR
-					(b.TestStageName = @TestStage AND @TestStageName IS NULL)
-				)
-				AND ((ts.TestStageType NOT IN (SELECT ID FROM #ExTestStageType) OR @excludedTestStageType IS NULL) AND (ts.TestStageType = @TestStageType OR @TestStageType IS NULL))
-				AND
-				(
-					(
-						SELECT top(1) tu.CurrentTestName as CurrentTestName 
-						FROM TestUnits AS tu WITH(NOLOCK), DeviceTrackingLog AS dtl WITH(NOLOCK)
-						where tu.ID = dtl.TestUnitID 
-						and tu.CurrentTestName is not null
-						and (dtl.OutUser IS NULL) AND tu.BatchID=b.ID
-					) = @TestName 
-					OR 
-					@TestName IS NULL
+					(@TestStage IS NOT NULL AND b.TestStageName = @TestStage AND @TestStageName IS NULL)
+					OR
+					(@TestStageName IS NULL AND @TestStage IS NULL)
 				)
 				AND
 				(
-					(
-						SELECT top 1 u.id 
-						FROM TestUnits as tu WITH(NOLOCK), devicetrackinglog as dtl WITH(NOLOCK), TrackingLocations as tl WITH(NOLOCK), Users u WITH(NOLOCK)
-						WHERE tl.ID = dtl.TrackingLocationID and tu.id  = dtl.testunitid and tu.batchid = b.id and  inuser = u.LDAPLogin and outuser is null
-					) = @UserID
+					(@excludedTestStageType IS NOT NULL AND ts.TestStageType NOT IN (SELECT ID FROM #ExTestStageType))
 					OR
-					@UserID IS NULL
+					(@excludedTestStageType IS NULL)
 				)
 				AND
 				(
-					@TrackingLocationID IS NULL
+					(@TestStageType IS NOT NULL AND ts.TestStageType = @TestStageType)
 					OR
-					(
-						b.ID IN (SELECT DISTINCT tu.BatchID
-						FROM TrackingLocations tl WITH(NOLOCK)
-							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID --AND dtl.OutTime IS NULL
-								AND dtl.InTime BETWEEN @BatchStart AND @BatchEnd
-							INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
-						WHERE TrackingLocationTypeID=@TrackingLocationID)
-					)
+					(@TestStageType IS NULL)
 				)
-				AND
-				(
-					@TrackingLocationFunction IS NULL
-					OR
-					(
-						b.ID IN (select DISTINCT tu.BatchID
-						FROM TrackingLocations tl WITH(NOLOCK)
-							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
-							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
-							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
-						where tlt.TrackingLocationFunction=@TrackingLocationFunction)
-					)
-				)
-				AND
-				(
-					@NotInTrackingLocationFunction IS NULL
-					OR
-					(
-						b.ID IN (select DISTINCT tu.BatchID
-						FROM TrackingLocations tl WITH(NOLOCK)
-							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
-							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
-							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
-						where tlt.TrackingLocationFunction NOT IN (@NotInTrackingLocationFunction))
-					)
-				)
+				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.LookupID IN (SELECT ud.LookupID FROM UserDetails ud WITH(NOLOCK) WHERE UserID=@ExecutingUserID)))
 				AND 
 				(
 					(@BatchStart IS NULL AND @BatchEnd IS NULL)
 					OR
 					(@BatchStart IS NOT NULL AND @BatchEnd IS NOT NULL AND b.ID IN (Select distinct batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime BETWEEN @BatchStart AND @BatchEnd))
 				)
-				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.LookupID IN (SELECT ud.LookupID FROM UserDetails ud WITH(NOLOCK) WHERE UserID=@ExecutingUserID)))
 				AND
 				(
-					(@OnlyHasResults IS NULL OR @OnlyHasResults = 0)
+					(ISNULL(@OnlyHasResults, 0) = 0)
 					OR
-					(@OnlyHasResults = 1 AND EXISTS(SELECT 1 FROM TestUnits tu WITH(NOLOCK) INNER JOIN Relab.Results r ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
+					(@OnlyHasResults = 1 AND EXISTS(SELECT TOP 1 1 FROM TestUnits tu WITH(NOLOCK) INNER JOIN Relab.Results r WITH(NOLOCK) ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
+				)
+				AND
+				(
+					(@TestName IS NOT NULL AND (
+						SELECT top(1) tu.CurrentTestName as CurrentTestName 
+						FROM TestUnits AS tu WITH(NOLOCK), DeviceTrackingLog AS dtl WITH(NOLOCK)
+						where tu.ID = dtl.TestUnitID 
+						and tu.CurrentTestName is not null
+						and (dtl.OutUser IS NULL) AND tu.BatchID=b.ID
+					) = @TestName)
+					OR 
+					(@TestName IS NULL)
+				)
+				AND
+				(
+					(@UserID IS NOT NULL AND (
+						SELECT top 1 u.id 
+						FROM TestUnits as tu WITH(NOLOCK), devicetrackinglog as dtl WITH(NOLOCK), TrackingLocations as tl WITH(NOLOCK), Users u WITH(NOLOCK)
+						WHERE tl.ID = dtl.TrackingLocationID and tu.id  = dtl.testunitid and tu.batchid = b.id and  inuser = u.LDAPLogin and outuser is null
+					) = @UserID)
+					OR
+					(@UserID IS NULL)
+				)
+				AND
+				(
+					(@TrackingLocationFunction IS NULL)
+					OR
+					(@TrackingLocationFunction IS NOT NULL AND (
+						b.ID IN (select DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
+							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
+						where tlt.TrackingLocationFunction=@TrackingLocationFunction)
+					))
+				)
+				AND
+				(
+					(@TrackingLocationID IS NULL)
+					OR
+					(@TrackingLocationID IS NOT NULL AND (
+						b.ID IN (SELECT DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID --AND dtl.OutTime IS NULL
+								AND dtl.InTime BETWEEN @BatchStart AND @BatchEnd
+							INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
+						WHERE TrackingLocationTypeID=@TrackingLocationID)
+					))
+				)
+				AND
+				(
+					(@NotInTrackingLocationFunction IS NULL)
+					OR
+					(@NotInTrackingLocationFunction IS NOT NULL AND (
+						b.ID IN (select DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
+							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
+						where tlt.TrackingLocationFunction NOT IN (@NotInTrackingLocationFunction))
+					))
 				)
 		)AS BatchesRows		
 	ORDER BY BatchesRows.PriorityOrder ASC, BatchesRows.QRANumber DESC
