@@ -92,8 +92,6 @@ Public Class REMITasks
                         sb.AppendLine(String.Format("{0} - Create Doc For {1}", DateTime.Now, bw.QRANumber))
                         Dim req() As DBControl.remiAPI.RequestFields = DBControl.DAL.Remi.GetRequest(bw.QRANumber)
                         Dim dtFiles As DataTable = DBControl.DAL.Results.GetFiles(bw.QRANumber, True)
-                        dtFiles.DefaultView.Sort = String.Format("BatchUnitNumber, TestStageName ASC")
-                        dtFiles = dtFiles.DefaultView.ToTable()
 
                         Dim es As String = (From r In req Where r.IntField = "ExecutiveSummary" Select r.Value).FirstOrDefault()
 
