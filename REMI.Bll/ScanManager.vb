@@ -44,7 +44,7 @@ Namespace REMI.Bll
                     Dim reqStatus As String = String.Empty
 
                     Try
-                        reqStatus = (From rf In RequestDB.GetRequest(barcode.BatchNumber, UserManager.GetCurrentUser) Where rf.IntField = "RequestStatus" Select rf.Value).FirstOrDefault()
+                        reqStatus = (From rf In RequestDB.GetRequest(barcode.BatchNumber, UserManager.GetCurrentUser, Nothing) Where rf.IntField = "RequestStatus" Select rf.Value).FirstOrDefault()
                     Catch
                     End Try
 
@@ -71,7 +71,7 @@ Namespace REMI.Bll
                             End If
                         End If
 
-                        ReturnData.BatchData = BatchManager.GetBatchView(QRANumber)
+                        ReturnData.BatchData = BatchManager.GetBatchView(QRANumber, True, False, True, False, True, False, True, True, False, False)
                         scanData.SetReturnDataValues(ReturnData)
                     Else
                         ReturnData.Notifications.AddWithMessage("This batch or unit could not be found.", NotificationType.Errors)

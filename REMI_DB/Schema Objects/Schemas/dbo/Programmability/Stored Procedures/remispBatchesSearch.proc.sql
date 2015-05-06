@@ -4,7 +4,7 @@
 	@Status int = null,
 	@Priority int = null,
 	@UserID int = null,
-	@TrackingLocationID int = null,
+	@TrackingLocationTypeID int = null,
 	@TestStageID int = null,
 	@TestID int = null,
 	@ProductTypeID int = null,
@@ -26,8 +26,11 @@
 	@Revision NVARCHAR(10) = NULL,
 	@DepartmentID INT = NULL,
 	@OnlyHasResults INT = NULL,
-	@JobID int = 0
+	@JobID INT = 0,
+	@TrackingLocationID INT = NULL,
+	@Requestor NVARCHAR(255) = NULL
 AS
+	--SET FMTONLY OFF --Used when importing into the entity framework
 	DECLARE @TestName NVARCHAR(400)
 	DECLARE @TestStageName NVARCHAR(400)
 	DECLARE @HasBatchSpecificExceptions BIT
@@ -133,7 +136,8 @@ AS
 		) as ActiveTaskAssignee,
 		@HasBatchSpecificExceptions AS HasBatchSpecificExceptions, batchesrows.ProductTypeID,batchesrows.AccessoryGroupID, BatchesRows.CPRNumber, BatchesRows.RelabJobID, 
 		BatchesRows.TestCenterLocation, AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate, IsMQual, JobID, DateCreated, ContinueOnFailures,
-		MechanicalTools, BatchesRows.RequestPurpose, BatchesRows.PriorityID, DepartmentID, Department, Requestor
+		MechanicalTools, BatchesRows.RequestPurpose, BatchesRows.PriorityID, DepartmentID, Department, Requestor, BatchesRows.TestStageID,
+		BatchesRows.OrientationID
 	FROM     
 		(
 			SELECT DISTINCT b.BatchStatus,b.Comment, b.teststagecompletionstatus,b.ConcurrencyID,b.ID,b.JobName,b.LastUser,b.Priority AS PriorityID,b.ProductTypeID,
@@ -142,70 +146,71 @@ AS
 				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, l3.[Values] As TestCenterLocation,
 				b.CPRNumber,b.RelabJobID, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
 				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, 
-				ISNULL(b.[Order], 100) As PriorityOrder, b.DepartmentID, l6.[Values] AS Department, b.Requestor
+				ISNULL(b.[Order], 100) As PriorityOrder, b.DepartmentID, l6.[Values] AS Department, b.Requestor, ts.ID AS TestStageID,
+				b.OrientationID
 			FROM Batches as b WITH(NOLOCK)
 				INNER JOIN Lookups p WITH(NOLOCK) ON p.LookupID=b.ProductID
 				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
 				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
 				LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID  
 				LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON b.TestCenterLocationID=l3.LookupID
-				INNER JOIN TestStages ts WITH(NOLOCK) ON ts.TestStageName=b.TestStageName
+				INNER JOIN TestStages ts WITH(NOLOCK) ON ts.TestStageName=b.TestStageName AND ts.JobID=j.ID
 				LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON b.RequestPurpose=l4.LookupID
 				LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON b.Priority=l5.LookupID
 				LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON b.DepartmentID=l6.LookupID
 			WHERE
 				(
-					(@ExcludedStatus IS NOT NULL AND BatchStatus NOT IN (SELECT ID FROM #ExBatchStatus WITH(NOLOCK)))
+					(ISNULL(@ExcludedStatus, 0) > 0 AND BatchStatus NOT IN (SELECT ID FROM #ExBatchStatus WITH(NOLOCK)))
 					OR
-					(@ExcludedStatus IS NULL)
+					(ISNULL(@ExcludedStatus, 0) = 0)
 				)
 				AND
 				(
-					(@Status IS NOT NULL AND BatchStatus = @Status)
+					(ISNULL(@Status, 0) > 0 AND BatchStatus = @Status)
 					OR
-					(@Status IS NULL)
+					(ISNULL(@Status, 0) = 0)
 				)
 				AND 
 				(
-					(@ProductID IS NOT NULL AND p.LookupID = @ProductID)
+					(ISNULL(@ProductID, 0) > 0 AND p.LookupID = @ProductID)
 					OR 
-					@ProductID IS NULL
+					ISNULL(@ProductID, 0) = 0
 				)
 				AND 
 				(
-					(@Priority IS NOT NULL AND b.Priority = @Priority)
+					(ISNULL(@Priority, 0) > 0 AND b.Priority = @Priority)
 					OR 
-					@Priority IS NULL
+					ISNULL(@Priority, 0) = 0
 				)
 				AND 
 				(
-					(@ProductTypeID IS NOT NULL AND b.ProductTypeID = @ProductTypeID)
+					(ISNULL(@ProductTypeID, 0) > 0 AND b.ProductTypeID = @ProductTypeID)
 					OR 
-					@ProductTypeID IS NULL
+					ISNULL(@ProductTypeID, 0) = 0
 				)
 				AND 
 				(
-					(@AccessoryGroupID IS NOT NULL AND b.AccessoryGroupID = @AccessoryGroupID)
+					(ISNULL(@AccessoryGroupID, 0) > 0 AND b.AccessoryGroupID = @AccessoryGroupID)
 					OR 
-					@AccessoryGroupID IS NULL
+					ISNULL(@AccessoryGroupID, 0) = 0
 				)
 				AND 
 				(
-					(@GeoLocationID IS NOT NULL AND b.TestCenterLocationID = @GeoLocationID)
+					(ISNULL(@GeoLocationID, 0) > 0 AND b.TestCenterLocationID = @GeoLocationID)
 					OR 
-					@GeoLocationID IS NULL
+					ISNULL(@GeoLocationID, 0) = 0
 				)
 				AND 
 				(
-					(@DepartmentID IS NOT NULL AND b.DepartmentID = @DepartmentID)
+					(ISNULL(@DepartmentID, 0) > 0 AND b.DepartmentID = @DepartmentID)
 					OR 
-					@DepartmentID IS NULL
+					ISNULL(@DepartmentID, 0) = 0
 				)
 				AND 
 				(
-					(@RequestReason IS NOT NULL AND b.RequestPurpose = @RequestReason)
+					(ISNULL(@RequestReason, 0) > 0 AND b.RequestPurpose = @RequestReason)
 					OR 
-					@RequestReason IS NULL
+					ISNULL(@RequestReason, 0) = 0
 				)
 				AND 
 				(
@@ -215,11 +220,17 @@ AS
 				)
 				AND 
 				(
-					(@JobID > 0 AND j.ID=@JobID)
+					(@Requestor IS NOT NULL AND b.Requestor = @Requestor)
+					OR 
+					@Requestor IS NULL
+				)
+				AND 
+				(
+					(ISNULL(@JobID, 0) > 0 AND j.ID=@JobID)
 					OR
 					(ISNULL(@JobID, 0) = 0 AND @JobName IS NOT NULL AND b.JobName = @JobName)
 					OR
-					(@JobName IS NULL AND @JobID = 0)
+					(@JobName IS NULL AND ISNULL(@JobID, 0) = 0)
 				)
 				AND 
 				(
@@ -231,15 +242,15 @@ AS
 				)
 				AND
 				(
-					(@excludedTestStageType IS NOT NULL AND ts.TestStageType NOT IN (SELECT ID FROM #ExTestStageType))
+					(ISNULL(@excludedTestStageType, 0) > 0 AND ts.TestStageType NOT IN (SELECT ID FROM #ExTestStageType))
 					OR
-					(@excludedTestStageType IS NULL)
+					(ISNULL(@excludedTestStageType, 0) = 0)
 				)
 				AND
 				(
-					(@TestStageType IS NOT NULL AND ts.TestStageType = @TestStageType)
+					(ISNULL(@TestStageType, 0) > 0 AND ts.TestStageType = @TestStageType)
 					OR
-					(@TestStageType IS NULL)
+					(ISNULL(@TestStageType, 0) = 0)
 				)
 				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.LookupID IN (SELECT ud.LookupID FROM UserDetails ud WITH(NOLOCK) WHERE UserID=@ExecutingUserID)))
 				AND 
@@ -278,9 +289,9 @@ AS
 				)
 				AND
 				(
-					(@TrackingLocationFunction IS NULL)
+					(ISNULL(@TrackingLocationFunction, 0) = 0)
 					OR
-					(@TrackingLocationFunction IS NOT NULL AND (
+					(ISNULL(@TrackingLocationFunction, 0) > 0 AND (
 						b.ID IN (select DISTINCT tu.BatchID
 						FROM TrackingLocations tl WITH(NOLOCK)
 							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
@@ -291,22 +302,34 @@ AS
 				)
 				AND
 				(
-					(@TrackingLocationID IS NULL)
+					(ISNULL(@TrackingLocationTypeID, 0) = 0)
 					OR
-					(@TrackingLocationID IS NOT NULL AND (
+					(ISNULL(@TrackingLocationTypeID, 0) > 0 AND (
 						b.ID IN (SELECT DISTINCT tu.BatchID
 						FROM TrackingLocations tl WITH(NOLOCK)
 							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID --AND dtl.OutTime IS NULL
 								AND dtl.InTime BETWEEN @BatchStart AND @BatchEnd
 							INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
-						WHERE TrackingLocationTypeID=@TrackingLocationID)
+						WHERE TrackingLocationTypeID=@TrackingLocationTypeID)
 					))
 				)
 				AND
 				(
-					(@NotInTrackingLocationFunction IS NULL)
+					(ISNULL(@TrackingLocationID, 0) = 0)
 					OR
-					(@NotInTrackingLocationFunction IS NOT NULL AND (
+					(ISNULL(@TrackingLocationID, 0) > 0 AND (
+						b.ID IN (SELECT DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
+						WHERE tl.ID=@TrackingLocationID)
+					))
+				)
+				AND
+				(
+					(ISNULL(@NotInTrackingLocationFunction, 0) = 0)
+					OR
+					(ISNULL(@NotInTrackingLocationFunction, 0) > 0 AND (
 						b.ID IN (select DISTINCT tu.BatchID
 						FROM TrackingLocations tl WITH(NOLOCK)
 							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL

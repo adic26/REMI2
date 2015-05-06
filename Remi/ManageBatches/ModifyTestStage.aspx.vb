@@ -18,10 +18,11 @@ Partial Class ManageBatches_ModifyTestStage
 
     Protected Sub ProcessQRA(ByVal QRANumber As String)
         Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
-        Dim b As Batch
+        Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetItem(bc.BatchNumber)
+            b = BatchManager.GetBatchView(bc.BatchNumber, False, False, True, False, False, False, False, False, False, False)
+
             hdnQRANumber.Value = b.QRANumber
             lblQRANumber.Text = b.QRANumber
             hypBatchInfo.NavigateUrl = b.BatchInfoLink
@@ -76,7 +77,7 @@ Partial Class ManageBatches_ModifyTestStage
 
     End Sub
 
-    Protected Sub SetupTestStageDropDownList(ByVal b As Batch)
+    Protected Sub SetupTestStageDropDownList(ByVal b As BatchView)
         ddlSelection.DataSource = TestStageManager.GetTestStagesNameByBatch(b.ID, b.JobName)
         ddlSelection.DataBind()
         lblCurrentTestStage.Text = b.TestStageName

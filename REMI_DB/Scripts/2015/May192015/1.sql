@@ -1,374 +1,421 @@
 ﻿begin tran
 go
-EXEC sp_rename 'dbo.Products.TSDContact', '_TSDContact', 'COLUMN'
-GO
-ALTER TABLE dbo.UserDetails ADD IsTSDContact BIT DEFAULT(0) NULL
-GO
-update UserDetails set IsTSDContact=0
-
-UPDATE ud
-SET ud.IsTSDContact=1
-FROM UserDetails ud
-inner join Users u on ud.UserID=u.ID
-inner join Products p on ud.LookupID=p.LookupID AND p._TSDContact=u.LDAPLogin
-WHERE ISNULL(_TSDContact,'') <> '' and p.LookupID in (select LookupID from UserDetails where UserID=u.id)
-
-INSERT INTO UserDetails (LookupID,LastUser,IsTSDContact,UserID)
-select p.LookupID, u.LDAPLogin, 1, u.ID
-from Products p
-inner join Users u on p._TSDContact=u.LDAPLogin
-where ISNULL(_TSDContact,'') <> ''
-and LookupID not in (select LookupID from UserDetails where UserID=u.id)
-GO
-ALTER PROCEDURE remispGetUserDetails @UserID INT
+ALTER PROCEDURE [dbo].[remispBatchesSearch]
+	@ByPassProductCheck INT = 0,
+	@ExecutingUserID int,
+	@Status int = null,
+	@Priority int = null,
+	@UserID int = null,
+	@TrackingLocationTypeID int = null,
+	@TestStageID int = null,
+	@TestID int = null,
+	@ProductTypeID int = null,
+	@ProductID int = null,
+	@AccessoryGroupID int = null,
+	@GeoLocationID INT = null,
+	@JobName nvarchar(400) = null,
+	@RequestReason int = null,
+	@StartRowIndex int = null,
+	@MaximumRows int = null,
+	@BatchStart DateTime = NULL,
+	@BatchEnd DateTime = NULL,
+	@TestStage NVARCHAR(400) = NULL,
+	@TestStageType INT = NULL,
+	@excludedTestStageType INT = NULL,
+	@ExcludedStatus INT = NULL,
+    @TrackingLocationFunction INT = NULL,
+	@NotInTrackingLocationFunction INT  = NULL,
+	@Revision NVARCHAR(10) = NULL,
+	@DepartmentID INT = NULL,
+	@OnlyHasResults INT = NULL,
+	@JobID INT = 0,
+	@TrackingLocationID INT = NULL,
+	@Requestor NVARCHAR(255) = NULL
 AS
-BEGIN
-	SELECT lt.Name, l.[Values], l.LookupID, ISNULL(ud.IsDefault, 0) AS IsDefault, ud.IsProductManager, ud.IsTSDContact
-	FROM UserDetails ud
-		INNER JOIN Lookups l ON l.LookupID=ud.LookupID
-		INNER JOIN LookupType lt ON lt.LookupTypeID=l.LookupTypeID
-	WHERE ud.UserID=@UserID
-	ORDER BY lt.Name, l.[Values]
-END
-GO
-GRANT EXECUTE ON remispGetUserDetails TO REMI
-GO
-DROP TABLE dbo._UsersProducts
-DROP TABLE dbo._UsersProductsAudit
-GO
-ALTER TABLE dbo.Products DROP COLUMN _ProductGroupName
-ALTER TABLE dbo.Products DROP COLUMN _IsActive
-GO
-CREATE PROCEDURE Relab.remispGetObservationParameters @MeasurementID INT
-AS
-BEGIN
-	select [Relab].[ResultsObservation] (@MeasurementID) AS Observation
-END
-GO
-GRANT EXECUTE ON Relab.remispGetObservationParameters TO REMI
-GO
-
-
-
-
-
-
-ALTER TABLE LookupType ADD IsSecureType BIT DEFAULT(0)
-GO
-UPDATE LookupType SET IsSecureType=1 WHERE Name='Products'
-GO
-ALTER TABLE ProductSettings ADD LookupID INT
-GO
-UPDATE ps
-SET ps.LookupID=p.LookupID
-FROM ProductSettings ps
-INNER JOIN Products p ON ps.ProductID=p.ID
-GO
-ALTER TABLE ProductSettings ALTER COLUMN LookupID INT NOT NULL
-GO
-ALTER TABLE [dbo].[ProductSettings]  WITH CHECK ADD  CONSTRAINT [FK_ProductSettings_Lookups] FOREIGN KEY([LookupID])
-REFERENCES [dbo].[Lookups] ([LookupID])
-GO
-ALTER TABLE [dbo].[ProductSettings] CHECK CONSTRAINT [FK_ProductSettings_Lookups]
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProductSettings_Products]') AND parent_object_id = OBJECT_ID(N'[dbo].[ProductSettings]'))
-ALTER TABLE [dbo].[ProductSettings] DROP CONSTRAINT [FK_ProductSettings_Products]
-GO
-ALTER TABLE ProductSettings DROP COLUMN ProductID
-GO
-ALTER TABLE ProductSettingsAudit ADD LookupID INT 
-GO
-UPDATE ps
-SET ps.LookupID=p.LookupID
-FROM ProductSettingsAudit ps
-INNER JOIN Products p ON ps.ProductID=p.ID
-GO
-ALTER TABLE ProductSettingsAudit DROP COLUMN ProductID
-GO
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-ALTER TRIGGER [dbo].[ProductSettingsAuditInsertUpdate]
-   ON  [dbo].[ProductSettings]
-    after insert, update
-AS 
-BEGIN
-SET NOCOUNT ON;
- 
-Declare @action char(1)
-DECLARE @count INT
-  
---check if this is an insert or an update
-
-If Exists(Select * From Inserted) and Exists(Select * From Deleted) --Update, both tables referenced
-begin
-	Set @action= 'U'
-end
-else
-begin
-	If Exists(Select * From Inserted) --insert, only one table referenced
-	Begin
-		Set @action= 'I'
-	end
-	if not Exists(Select * From Inserted) and not Exists(Select * From Deleted)--nothing changed, get out of here
-	Begin
-		RETURN
-	end
-end
-
---Only inserts records into the Audit table if the row was either updated or inserted and values actually changed.
-select @count= count(*) from
-(
-   select LookupID, KeyName, ValueText, DefaultValue from Inserted
-   except
-   select LookupID, KeyName, ValueText, DefaultValue from Deleted
-) a
-
-if ((@count) >0)
-begin
-	insert into ProductSettingsAudit (
-			ProductSettingsId, 
-		LookupID,
-		KeyName, 
-		ValueText,
-		DefaultValue,	
-		Action)
-		Select 
-		Id, 
-		LookupID,
-		KeyName, 
-		DefaultValue,
-		ValueText,	
-	@action from inserted
-END
-END
-GO
--- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-ALTER TRIGGER [dbo].[ProductSettingsAuditDelete]
-   ON  [dbo].[ProductSettings]
-    for  delete
-AS 
-BEGIN
- SET NOCOUNT ON;
- 
-  If not Exists(Select * From Deleted) 
-	return	 --No delete action, get out of here
+	--SET FMTONLY OFF --Used when importing into the entity framework
+	DECLARE @TestName NVARCHAR(400)
+	DECLARE @TestStageName NVARCHAR(400)
+	DECLARE @HasBatchSpecificExceptions BIT
+	SET @HasBatchSpecificExceptions = CONVERT(BIT, 0)
 	
-insert into ProductSettingsAudit (
-	ProductSettingsId, 
-	LookupID,
-	KeyName, 
-	ValueText,	
-	DefaultValue,
-	Action)
-	Select 
-	Id, 
-	LookupID,
-	KeyName, 
-	ValueText,
-	DefaultValue,
-'D' from deleted
+	IF (@TestID IS NOT NULL)
+	BEGIN
+		SELECT @TestName = TestName FROM Tests WITH(NOLOCK) WHERE ID=@TestID 
+	END
+	
+	IF (@TestStageID IS NOT NULL)
+	BEGIN
+		SELECT @TestStageName = TestStageName FROM TestStages WITH(NOLOCK) WHERE ID=@TestStageID
+	END
+	
+	CREATE TABLE #ExTestStageType (ID INT)
+	CREATE TABLE #ExBatchStatus (ID INT)
+	
+	IF (@TestStageName IS NOT NULL)
+		SET @TestStage = NULL
+	
+	IF (@excludedTestStageType IS NOT NULL)
+	BEGIN
+		IF convert(VARCHAR,(@excludedTestStageType & 1) / 1) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (1)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 2) / 2) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (2)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 4) / 4) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (3)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 8) / 8) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (4)
+		END
+		IF convert(VARCHAR,(@excludedTestStageType & 16) / 16) = 1
+		BEGIN
+			INSERT INTO #ExTestStageType VALUES (5)
+		END
+	END
+		
+	IF (@ExcludedStatus IS NOT NULL)
+	BEGIN
+		IF convert(VARCHAR,(@ExcludedStatus & 1) / 1) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (1)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 2) / 2) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (2)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 4) / 4) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (3)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 8) / 8) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (4)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 16) / 16) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (5)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 32) / 32) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (6)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 64) / 64) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (7)
+		END
+		IF convert(VARCHAR,(@ExcludedStatus & 128) / 128) = 1
+		BEGIN
+			INSERT INTO #ExBatchStatus VALUES (8)
+		END
+	END
+	
+	SELECT TOP 100 BatchesRows.BatchStatus,BatchesRows.Comment,BatchesRows.ConcurrencyID,BatchesRows.ID,BatchesRows.JobName,
+		BatchesRows.LastUser,BatchesRows.Priority,BatchesRows.ProductGroup As ProductGroupName,batchesrows.ProductType,batchesrows.AccessoryGroupName,batchesrows.ProductID, 
+		BatchesRows.QRANumber,BatchesRows.RequestPurposeID, BatchesRows.TestCenterLocationID,BatchesRows.TestStageName, BatchesRows.TestStageCompletionStatus, testUnitCount, 
+		(CASE WHEN BatchesRows.WILocation IS NULL THEN NULL ELSE BatchesRows.WILocation END) AS jobWILocation, batchesrows.RQID AS ReqID,
+		(testunitcount -
+			(select COUNT(*) 
+			from TestUnits as tu WITH(NOLOCK)
+			INNER JOIN DeviceTrackingLog as dtl WITH(NOLOCK) ON dtl.TestUnitID = tu.ID AND dtl.TrackingLocationID = 81
+			where dtl.OutTime IS null and tu.BatchID = batchesrows.ID)
+		) as HasUnitsToReturnToRequestor,
+		ISNULL(
+			(SELECT AssignedTo 
+			FROM TaskAssignments ta WITH(NOLOCK)
+				--We need to compare TestStageName because there can be multiple TestStages for 1 batch where the TestStageName can be different. See BatchID 10965 as an example
+				INNER JOIN TestStages ts WITH(NOLOCK) ON ta.TaskID = ts.ID AND ts.TestStageName=BatchesRows.TestStageName 
+				--To keep things consistent we are testing based on the JobName because it has the possibility to change but no records currently found in such a case.
+				INNER JOIN Jobs j WITH(NOLOCK) ON j.ID = ts.JobID AND j.JobName = BatchesRows.JobName
+			WHERE ta.BatchID = BatchesRows.ID and ta.Active=1), 
+			(SELECT AssignedTo 
+			FROM TaskAssignments ta WITH(NOLOCK)
+			WHERE ta.Active=1 AND ISNULL(ta.taskID,0) = 0 AND ta.BatchID = BatchesRows.ID)
+		) as ActiveTaskAssignee,
+		@HasBatchSpecificExceptions AS HasBatchSpecificExceptions, batchesrows.ProductTypeID,batchesrows.AccessoryGroupID, BatchesRows.CPRNumber, BatchesRows.RelabJobID, 
+		BatchesRows.TestCenterLocation, AssemblyNumber, AssemblyRevision, HWRevision, PartName, ReportRequiredBy, ReportApprovedDate, IsMQual, JobID, DateCreated, ContinueOnFailures,
+		MechanicalTools, BatchesRows.RequestPurpose, BatchesRows.PriorityID, DepartmentID, Department, Requestor, BatchesRows.TestStageID,
+		BatchesRows.OrientationID
+	FROM     
+		(
+			SELECT DISTINCT b.BatchStatus,b.Comment, b.teststagecompletionstatus,b.ConcurrencyID,b.ID,b.JobName,b.LastUser,b.Priority AS PriorityID,b.ProductTypeID,
+				b.AccessoryGroupID,b.ProductID As ProductID,p.[Values] As ProductGroup,b.QRANumber,b.RequestPurpose As RequestPurposeID,b.TestCenterLocationID,b.TestStageName,
+				j.WILocation,(select count(*) from testunits WITH(NOLOCK) where testunits.batchid = b.id) as testUnitCount,
+				l.[Values] As ProductType, l2.[Values] As AccessoryGroupName, l3.[Values] As TestCenterLocation,
+				b.CPRNumber,b.RelabJobID, b.RQID, b.AssemblyNumber, b.AssemblyRevision,b.HWRevision, b.PartName, b.ReportRequiredBy, 
+				b.ReportApprovedDate, b.IsMQual, j.ID AS JobID, b.DateCreated, j.ContinueOnFailures, MechanicalTools, l4.[Values] As RequestPurpose, l5.[Values] As Priority, 
+				ISNULL(b.[Order], 100) As PriorityOrder, b.DepartmentID, l6.[Values] AS Department, b.Requestor, ts.ID AS TestStageID,
+				b.OrientationID
+			FROM Batches as b WITH(NOLOCK)
+				INNER JOIN Lookups p WITH(NOLOCK) ON p.LookupID=b.ProductID
+				LEFT OUTER JOIN Jobs j WITH(NOLOCK) ON j.JobName = b.JobName -- BatchesRows.JobName can be missing record in Jobs table. This is why we use LEFT OUTER JOIN. This will return NULL if such a case occurs.
+				LEFT OUTER JOIN Lookups l WITH(NOLOCK) ON b.ProductTypeID=l.LookupID  
+				LEFT OUTER JOIN Lookups l2 WITH(NOLOCK) ON b.AccessoryGroupID=l2.LookupID  
+				LEFT OUTER JOIN Lookups l3 WITH(NOLOCK) ON b.TestCenterLocationID=l3.LookupID
+				INNER JOIN TestStages ts WITH(NOLOCK) ON ts.TestStageName=b.TestStageName AND ts.JobID=j.ID
+				LEFT OUTER JOIN Lookups l4 WITH(NOLOCK) ON b.RequestPurpose=l4.LookupID
+				LEFT OUTER JOIN Lookups l5 WITH(NOLOCK) ON b.Priority=l5.LookupID
+				LEFT OUTER JOIN Lookups l6 WITH(NOLOCK) ON b.DepartmentID=l6.LookupID
+			WHERE
+				(
+					(ISNULL(@ExcludedStatus, 0) > 0 AND BatchStatus NOT IN (SELECT ID FROM #ExBatchStatus WITH(NOLOCK)))
+					OR
+					(ISNULL(@ExcludedStatus, 0) = 0)
+				)
+				AND
+				(
+					(ISNULL(@Status, 0) > 0 AND BatchStatus = @Status)
+					OR
+					(ISNULL(@Status, 0) = 0)
+				)
+				AND 
+				(
+					(ISNULL(@ProductID, 0) > 0 AND p.LookupID = @ProductID)
+					OR 
+					ISNULL(@ProductID, 0) = 0
+				)
+				AND 
+				(
+					(ISNULL(@Priority, 0) > 0 AND b.Priority = @Priority)
+					OR 
+					ISNULL(@Priority, 0) = 0
+				)
+				AND 
+				(
+					(ISNULL(@ProductTypeID, 0) > 0 AND b.ProductTypeID = @ProductTypeID)
+					OR 
+					ISNULL(@ProductTypeID, 0) = 0
+				)
+				AND 
+				(
+					(ISNULL(@AccessoryGroupID, 0) > 0 AND b.AccessoryGroupID = @AccessoryGroupID)
+					OR 
+					ISNULL(@AccessoryGroupID, 0) = 0
+				)
+				AND 
+				(
+					(ISNULL(@GeoLocationID, 0) > 0 AND b.TestCenterLocationID = @GeoLocationID)
+					OR 
+					ISNULL(@GeoLocationID, 0) = 0
+				)
+				AND 
+				(
+					(ISNULL(@DepartmentID, 0) > 0 AND b.DepartmentID = @DepartmentID)
+					OR 
+					ISNULL(@DepartmentID, 0) = 0
+				)
+				AND 
+				(
+					(ISNULL(@RequestReason, 0) > 0 AND b.RequestPurpose = @RequestReason)
+					OR 
+					ISNULL(@RequestReason, 0) = 0
+				)
+				AND 
+				(
+					(@Revision IS NOT NULL AND b.MechanicalTools = @Revision)
+					OR 
+					@Revision IS NULL
+				)
+				AND 
+				(
+					(@Requestor IS NOT NULL AND b.Requestor = @Requestor)
+					OR 
+					@Requestor IS NULL
+				)
+				AND 
+				(
+					(ISNULL(@JobID, 0) > 0 AND j.ID=@JobID)
+					OR
+					(ISNULL(@JobID, 0) = 0 AND @JobName IS NOT NULL AND b.JobName = @JobName)
+					OR
+					(@JobName IS NULL AND ISNULL(@JobID, 0) = 0)
+				)
+				AND 
+				(
+					(@TestStageName IS NOT NULL AND @TestStage IS NULL AND b.TestStageName = @TestStageName)
+					OR
+					(@TestStage IS NOT NULL AND b.TestStageName = @TestStage AND @TestStageName IS NULL)
+					OR
+					(@TestStageName IS NULL AND @TestStage IS NULL)
+				)
+				AND
+				(
+					(ISNULL(@excludedTestStageType, 0) > 0 AND ts.TestStageType NOT IN (SELECT ID FROM #ExTestStageType))
+					OR
+					(ISNULL(@excludedTestStageType, 0) = 0)
+				)
+				AND
+				(
+					(ISNULL(@TestStageType, 0) > 0 AND ts.TestStageType = @TestStageType)
+					OR
+					(ISNULL(@TestStageType, 0) = 0)
+				)
+				AND (@ByPassProductCheck = 1 OR (@ByPassProductCheck = 0 AND p.LookupID IN (SELECT ud.LookupID FROM UserDetails ud WITH(NOLOCK) WHERE UserID=@ExecutingUserID)))
+				AND 
+				(
+					(@BatchStart IS NULL AND @BatchEnd IS NULL)
+					OR
+					(@BatchStart IS NOT NULL AND @BatchEnd IS NOT NULL AND b.ID IN (Select distinct batchid FROM BatchesAudit WITH(NOLOCK) WHERE InsertTime BETWEEN @BatchStart AND @BatchEnd))
+				)
+				AND
+				(
+					(ISNULL(@OnlyHasResults, 0) = 0)
+					OR
+					(@OnlyHasResults = 1 AND EXISTS(SELECT TOP 1 1 FROM TestUnits tu WITH(NOLOCK) INNER JOIN Relab.Results r WITH(NOLOCK) ON r.TestUnitID=tu.ID WHERE tu.BatchID=b.ID))
+				)
+				AND
+				(
+					(@TestName IS NOT NULL AND (
+						SELECT top(1) tu.CurrentTestName as CurrentTestName 
+						FROM TestUnits AS tu WITH(NOLOCK), DeviceTrackingLog AS dtl WITH(NOLOCK)
+						where tu.ID = dtl.TestUnitID 
+						and tu.CurrentTestName is not null
+						and (dtl.OutUser IS NULL) AND tu.BatchID=b.ID
+					) = @TestName)
+					OR 
+					(@TestName IS NULL)
+				)
+				AND
+				(
+					(@UserID IS NOT NULL AND (
+						SELECT top 1 u.id 
+						FROM TestUnits as tu WITH(NOLOCK), devicetrackinglog as dtl WITH(NOLOCK), TrackingLocations as tl WITH(NOLOCK), Users u WITH(NOLOCK)
+						WHERE tl.ID = dtl.TrackingLocationID and tu.id  = dtl.testunitid and tu.batchid = b.id and  inuser = u.LDAPLogin and outuser is null
+					) = @UserID)
+					OR
+					(@UserID IS NULL)
+				)
+				AND
+				(
+					(ISNULL(@TrackingLocationFunction, 0) = 0)
+					OR
+					(ISNULL(@TrackingLocationFunction, 0) > 0 AND (
+						b.ID IN (select DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
+							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
+						where tlt.TrackingLocationFunction=@TrackingLocationFunction)
+					))
+				)
+				AND
+				(
+					(ISNULL(@TrackingLocationTypeID, 0) = 0)
+					OR
+					(ISNULL(@TrackingLocationTypeID, 0) > 0 AND (
+						b.ID IN (SELECT DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID --AND dtl.OutTime IS NULL
+								AND dtl.InTime BETWEEN @BatchStart AND @BatchEnd
+							INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
+						WHERE TrackingLocationTypeID=@TrackingLocationTypeID)
+					))
+				)
+				AND
+				(
+					(ISNULL(@TrackingLocationID, 0) = 0)
+					OR
+					(ISNULL(@TrackingLocationID, 0) > 0 AND (
+						b.ID IN (SELECT DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) ON tu.ID=dtl.TestUnitID
+						WHERE tl.ID=@TrackingLocationID)
+					))
+				)
+				AND
+				(
+					(ISNULL(@NotInTrackingLocationFunction, 0) = 0)
+					OR
+					(ISNULL(@NotInTrackingLocationFunction, 0) > 0 AND (
+						b.ID IN (select DISTINCT tu.BatchID
+						FROM TrackingLocations tl WITH(NOLOCK)
+							INNER JOIN devicetrackinglog dtl WITH(NOLOCK) ON tl.ID=dtl.TrackingLocationID AND dtl.OutTime IS NULL
+							INNER JOIN TestUnits tu WITH(NOLOCK) on tu.ID=dtl.TestUnitID
+							INNER JOIN TrackingLocationTypes tlt WITH(NOLOCK) ON tlt.ID = tl.TrackingLocationTypeID
+						where tlt.TrackingLocationFunction NOT IN (@NotInTrackingLocationFunction))
+					))
+				)
+		)AS BatchesRows		
+	ORDER BY BatchesRows.PriorityOrder ASC, BatchesRows.QRANumber DESC
+	
+	DROP TABLE #ExTestStageType
+	DROP TABLE #ExBatchStatus
+	RETURN
+GO
+GRANT EXECUTE ON remispBatchesSearch TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispBatchGetViewBatch] @RequestNumber nvarchar(11)
+AS
+--DECLARE @BatchID INT
+--SELECT @BatchID=ID FROM Batches WITH(NOLOCK) WHERE QRANumber=@qranumber
 
-END
-GO
-drop procedure remispSaveProduct
-GO
-update l
-set l.description = p.QAPLocation
-from Products p
-inner join Lookups l on l.LookupID=p.LookupID
-where ISNULL(QAPLocation,'') <> ''
-GO
-alter table products drop column _TSDContact
-GO
-alter table products drop column QAPLocation
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProductTestReady_Products]') AND parent_object_id = OBJECT_ID(N'[dbo].[ProductTestReady]'))
-ALTER TABLE [dbo].[ProductTestReady] DROP CONSTRAINT [FK_ProductTestReady_Products]
-GO
-ALTER TABLE dbo.ProductTestReady ADD LookupID INT NULL
-GO
-ALTER TABLE [dbo].[ProductTestReady]  WITH CHECK ADD  CONSTRAINT [FK_ProductTestReady_Lookups] FOREIGN KEY([LookupID])
-REFERENCES [dbo].[Lookups] ([LookupID])
-GO
-ALTER TABLE [dbo].[ProductTestReady] CHECK CONSTRAINT [FK_ProductTestReady_Lookups]
-GO
-UPDATE ptr
-SET ptr.LookupID = p.LookupID
-FROM ProductTestReady ptr
-inner join Products p on ptr.ProductID=p.id
-GO
-IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ProductTestReady]') AND name = N'IX_ProductTestReady_PTS')
-DROP INDEX [IX_ProductTestReady_PTS] ON [dbo].[ProductTestReady] WITH ( ONLINE = OFF )
-GO
-CREATE NONCLUSTERED INDEX [IX_ProductTestReady_PTS] ON [dbo].[ProductTestReady] 
-(
-	[LookupID] ASC,
-	[TestID] ASC,
-	[PSID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
-alter table producttestready drop column ProductID
-GO
-drop procedure remispGetProductIDByName
-GO
-drop procedure remispGetProductNameByID
-GO
-EXEC sp_rename 'dbo.Batches.ProductID', '_ProductID', 'COLUMN'
-GO
-ALTER TABLE Batches ADD ProductID INT NULL
-GO
-UPDATE b
-SET b.ProductID=p.LookupID
-FROM Batches b
-INNER JOIN Products p ON p.ID=b._ProductID
-GO
-ALTER TABLE Batches ALTER COLUMN ProductID INT NOT NULL
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Batches_Products]') AND parent_object_id = OBJECT_ID(N'[dbo].[Batches]'))
-ALTER TABLE [dbo].[Batches] DROP CONSTRAINT [FK_Batches_Products]
-GO
-ALTER TABLE [dbo].[Batches]  WITH CHECK ADD  CONSTRAINT [FK_Batches_Products] FOREIGN KEY([ProductID])
-REFERENCES [dbo].[Lookups] ([LookupID])
-GO
-ALTER TABLE [dbo].[Batches] CHECK CONSTRAINT [FK_Batches_Products]
-GO
-drop procedure remispGetFastScanData
-GO
-EXEC sp_rename 'Req.RequestSetup.ProductID', '_ProductID', 'COLUMN'
-GO
-ALTER TABLE Req.RequestSetup ADD LookupID INT NULL
-GO
-update s
-set s.LookupID=p.LookupID
-FROM Req.RequestSetup s
-inner join Products p on s._ProductID=p.id
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[Req].[FK_RequestSetup_Products]') AND parent_object_id = OBJECT_ID(N'[Req].[RequestSetup]'))
-ALTER TABLE [Req].[RequestSetup] DROP CONSTRAINT [FK_RequestSetup_Products]
-GO
-ALTER TABLE [Req].[RequestSetup]  WITH CHECK ADD  CONSTRAINT [FK_RequestSetup_Products] FOREIGN KEY([LookupID])
-REFERENCES [dbo].[Lookups] ([LookupID])
-GO
-ALTER TABLE [Req].[RequestSetup] CHECK CONSTRAINT [FK_RequestSetup_Products]
-GO
-IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[Req].[RequestSetup]') AND name = N'IX_JobProductTestStageBatch')
-DROP INDEX [IX_JobProductTestStageBatch] ON [Req].[RequestSetup] WITH ( ONLINE = OFF )
-GO
-CREATE NONCLUSTERED INDEX [IX_JobProductTestStageBatch] ON [Req].[RequestSetup] 
-(
-	[JobID] ASC,
-	[LookupID] ASC,
-	[TestStageID] ASC,
-	[TestID] ASC,
-	[BatchID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
-EXEC sp_rename 'BatchesAudit.ProductID', '_ProductID', 'COLUMN'
-GO
-ALTER TABLE dbo.BatchesAudit ADD ProductID INT NULL
-GO
-UPDATE TOP (1000000) b
-SET b.ProductID=p.LookupID
-FROM BatchesAudit b
-INNER JOIN Products p ON p.ID=b._ProductID
-where b.ProductID is null
-GO
-EXEC sp_rename 'dbo.ProductLookups.ProductID', '_ProductID', 'COLUMN'
-GO
-ALTER TABLE dbo.ProductLookups ADD ProductID INT NULL
-GO
-UPDATE pl
-SET pl.ProductID=p.LookupID
-FROM ProductLookups pl
-INNER JOIN Products p ON p.ID=pl._ProductID
-GO
-alter table productlookups alter column ProductID int not null
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProductLookups_Products]') AND parent_object_id = OBJECT_ID(N'[dbo].[ProductLookups]'))
-ALTER TABLE [dbo].[ProductLookups] DROP CONSTRAINT [FK_ProductLookups_Products]
-GO
-ALTER TABLE [dbo].[ProductLookups]  WITH CHECK ADD  CONSTRAINT [FK_ProductLookups_Products] FOREIGN KEY([ProductID])
-REFERENCES [dbo].[Lookups] ([LookupID])
-GO
-ALTER TABLE [dbo].[ProductLookups] CHECK CONSTRAINT [FK_ProductLookups_Products]
-GO
-EXEC sp_rename 'dbo.Calibration.ProductID', '_ProductID', 'COLUMN'
-GO
-alter table calibration add LookupID INT NULL
-GO
-UPDATE c
-SET c.LookupID=p.LookupID
-FROM Calibration c
-INNER JOIN Products p ON p.ID=c._ProductID
-GO
-alter table calibration alter column LookupID INT NOT NULL
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Calibration_Products]') AND parent_object_id = OBJECT_ID(N'[dbo].[Calibration]'))
-ALTER TABLE [dbo].[Calibration] DROP CONSTRAINT [FK_Calibration_Products]
-GO
-ALTER TABLE [dbo].[Calibration]  WITH CHECK ADD  CONSTRAINT [FK_Calibration_Products] FOREIGN KEY([LookupID])
-REFERENCES [dbo].[Lookups] ([LookupID])
-GO
-ALTER TABLE [dbo].[Calibration] CHECK CONSTRAINT [FK_Calibration_Products]
-GO
-alter table calibration drop column _ProductID
-GO
-alter table Req.RequestSetup drop column _ProductID
-GO
-EXEC sp_rename 'dbo.ProductConfigurationUpload.ProductID', '_ProductID', 'COLUMN'
-GO
-alter table ProductConfigurationUpload add LookupID INT NULL
-GO
-UPDATE c
-SET c.LookupID=p.LookupID
-FROM ProductConfigurationUpload c
-INNER JOIN Products p ON p.ID=c._ProductID
-GO
-alter table ProductConfigurationUpload alter column LookupID INT NOT NULL
-GO
-IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ProductConfigurationUpload]') AND name = N'ProductConfigurationUpload_ProductID_TestID_PCName')
-ALTER TABLE [dbo].[ProductConfigurationUpload] DROP CONSTRAINT [ProductConfigurationUpload_ProductID_TestID_PCName]
-GO
-ALTER TABLE [dbo].[ProductConfigurationUpload] ADD  CONSTRAINT [ProductConfigurationUpload_ProductID_TestID_PCName] UNIQUE NONCLUSTERED 
-(
-	[LookupID] ASC,
-	[TestID] ASC,
-	[PCName] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ProductConfigurationUpload_Products]') AND parent_object_id = OBJECT_ID(N'[dbo].[ProductConfigurationUpload]'))
-ALTER TABLE [dbo].[ProductConfigurationUpload] DROP CONSTRAINT [FK_ProductConfigurationUpload_Products]
-GO
-ALTER TABLE [dbo].[ProductConfigurationUpload]  WITH CHECK ADD  CONSTRAINT [FK_ProductConfigurationUpload_Products] FOREIGN KEY([LookupID])
-REFERENCES [dbo].[Lookups] ([LookupID])
-GO
-ALTER TABLE [dbo].[ProductConfigurationUpload] CHECK CONSTRAINT [FK_ProductConfigurationUpload_Products]
-GO
-alter table ProductConfigurationUpload drop column _ProductID
-GO
-EXEC sp_rename 'dbo.Products', '_Products'
-GO
-alter table batchesaudit alter column _ProductID INT NULL
-GO
-drop procedure remispGetProducts
-GO
-ALTER TABLE Batches ALTER COLUMN _ProductID INT NULL
-GO
-DROP PROCEDURE remispSaveFastScanData
-GO
-INSERT INTO Menu (Name, Url) VALUES ('Summary', '/Reports/es/default.aspx')
-DECLARE @MenuID INT
-SELECT @MenuID=MenuID from Menu WHERE Name='Summary'
-INSERT INTO MenuDepartment (DepartmentID, MenuID)
-SELECT LookupID as DepartmentID, @MenuID
-FROM Lookups 
-where LookupTypeID IN (select LookupTypeID from LookupType where Name='Department') and IsActive=1
+EXEC Remispbatchesselectbyqranumber @RequestNumber; 
+
+--EXEC remispBatchGetTaskInfo @BatchID; 
+
+--EXEC Remisptestrecordsselectforbatch @qranumber;
+
+--EXEC Remisptestunitssearchfor @qranumber;  
+
+GO
+GRANT EXECUTE ON remispBatchGetViewBatch TO Remi
+GO
+DROP PROCEDURE remispBatchesSelectListAtTrackingLocation
+GO
+ALTER procedure [dbo].[remispInventoryReport]
+	@StartDate datetime,
+	@EndDate datetime,
+	@FilterBasedOnQraNumber bit,
+	@geographicallocation INT = NULL
+AS
+
+IF @geographicallocation = 0
+	SET @geographicallocation = NULL
+
+declare @startYear int = Right(year( @StartDate), 2);
+declare @endYear int = Right(year( @EndDate), 2);
+declare @AverageTestUnitsPerBatch int = -1
+
+declare @TotalBatches int = (select COUNT(*) from BatchesAudit  where 
+ BatchesAudit.InsertTime >= @StartDate and BatchesAudit.InsertTime <= @EndDate and BatchesAudit.Action = 'I' 
+ and (@FilterBasedOnQraNumber = 0 or (Convert(int , SUBSTRING(BatchesAudit.QRANumber, 5, 2)) >= @startYear
+ and Convert(int , SUBSTRING(BatchesAudit.QRANumber, 5, 2)) <= @endYear))
+ and (@geographicallocation IS NULL or BatchesAudit.TestCenterLocationID = @geographicallocation)
+ );
+
+declare @TotalTestUnits int =(select COUNT(*) as TotalTestUnits from TestUnitsAudit, batchesaudit  where 
+ TestUnitsAudit.InsertTime >= @StartDate and TestUnitsAudit.InsertTime <= @EndDate and TestUnitsAudit.Action = 'I' 
+ and BatchesAudit.InsertTime >= @StartDate and BatchesAudit.InsertTime <= @EndDate and BatchesAudit.Action = 'I' 
+ and (@FilterBasedOnQraNumber = 0 or (Convert(int , SUBSTRING(batchesaudit.QRANumber, 5, 2)) >= @startYear
+ and Convert(int , SUBSTRING(batchesaudit.QRANumber, 5, 2)) <= @endYear))
+and TestUnitsAudit.BatchID = Batchesaudit.batchID 
+and (@geographicallocation IS NULL or batchesaudit.TestCenterLocationID = @geographicallocation)
+);
+
+if @TotalBatches != 0
+begin
+ set @AverageTestUnitsPerBatch = @totaltestunits / @totalbatches;
+end
+
+select @TotalBatches as TotalBatches, @TotalTestUnits as TotalTestUnits, @AverageTestUnitsPerBatch as AverageUnitsPerBatch;
+
+select lp.[Values] as ProductGroup, COUNT( distinct BatchesAudit.id) as TotalBatches,
+COUNT(tu.ID) as TotalTestUnits 
+from BatchesAudit
+	INNER JOIN TestUnits tu ON tu.BatchID=BatchesAudit.BatchID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=BatchesAudit.ProductID
+where BatchesAudit.InsertTime >= @StartDate and BatchesAudit.InsertTime <= @EndDate and BatchesAudit.Action = 'I' 
+and (@FilterBasedOnQraNumber = 0 or (Convert(int , SUBSTRING(BatchesAudit.QRANumber, 5, 2)) >= @startYear
+and Convert(int , SUBSTRING(BatchesAudit.QRANumber, 5, 2)) <= @endYear)) 
+and (BatchesAudit.TestCenterLocationID = @geographicallocation or @geographicallocation IS NULL)
+and BatchesAudit.BatchID = tu.BatchID 
+group by lp.[Values];
+GO
+GRANT EXECUTE ON remispInventoryReport TO Remi
 GO
 rollback tran

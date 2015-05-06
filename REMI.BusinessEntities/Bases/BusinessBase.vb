@@ -20,6 +20,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' The ID of the BusinessBase instance in the database. 
         ''' </summary> 
+        <DataTableColName("ID")> _
         Public Overridable Property ID() As Integer Implements IBusinessBase.ID
             Get
                 Return _id
@@ -33,6 +34,7 @@ Namespace REMI.BusinessEntities
         ''' Gets or sets a concurrency id that is used to keep track of changes made to the underlying data record in the database. 
         ''' </summary> 
         ''' <remarks>The concurrency id.</remarks> 
+        <DataTableColName("ConcurrencyID")> _
         Public Property ConcurrencyID() As Byte() Implements IBusinessBase.ConcurrencyID
             Get
                 Return _concurrencyID

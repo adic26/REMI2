@@ -19,10 +19,10 @@ Partial Class ManageBatches_ModifyStatus
 
     Protected Sub ProcessQRA(ByVal QRANumber As String)
         Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
-        Dim b As Batch
+        Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetItem(bc.BatchNumber)
+            b = BatchManager.GetBatchView(bc.BatchNumber, False, False, True, False, False, False, False, False, False, False)
             hdnQRANumber.Value = b.QRANumber
             lblQRANumber.Text = b.QRANumber
             hypBatchInfo.NavigateUrl = b.BatchInfoLink

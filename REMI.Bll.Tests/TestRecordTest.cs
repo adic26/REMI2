@@ -73,7 +73,7 @@ namespace REMI.Bll.Tests
             var batch = new REMI.Entities.Batch();
             batch = (from b in instance.Batches where b.BatchStatus == 2 orderby b.ID descending select b).FirstOrDefault();
 
-            Batch btc = BatchManager.GetItem(batch.QRANumber);
+            BatchView btc = BatchManager.GetBatchView(batch.QRANumber, false, true, false, false, false, false, false, false, false, false);
 
             Assert.That(TestRecordManager.CheckBatchForResultUpdates(btc, false) > -1);
         }

@@ -67,33 +67,21 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void GetActiveBatches()
-        {
-            Assert.IsNotNull(BatchManager.GetActiveBatches());
-        }
-
-        [Test]
-        public void GetActiveBatches2()
-        {
-            Assert.IsNotNull(BatchManager.GetActiveBatches("ogaudreault"));
-        }
-
-        [Test]
         public void BatchSearch()
         {
             BatchSearch bs = new BatchSearch();
             bs.Status = BatchStatus.TestingComplete;
 
-            Assert.IsNotNull(BatchManager.BatchSearch(bs, false, 0));
+            Assert.IsNotNull(BatchManager.BatchSearch(bs, false, 0,false,false,false,0,false,false,false,false,false));
         }
 
         [Test]
-        public void GetViewBatch()
+        public void GetBatchView()
         {
             var batch = new REMI.Entities.Batch();
             batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
 
-            Assert.That(BatchManager.GetViewBatch(batch.QRANumber).ID > 0);
+            Assert.That(BatchManager.GetBatchView(batch.QRANumber, true, true, true, true, true, true, true, true, true, true).ID > 0);
         }
 
         [Test]
@@ -128,7 +116,7 @@ namespace REMI.Bll.Tests
         {
             var batch = new REMI.Entities.Batch();
             batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
-            Batch bt = BatchManager.GetItem(batch.QRANumber);
+            BatchView bt = BatchManager.GetBatchView(batch.QRANumber, false, true, false, false, false, false, false, false, false, false);
             
             Assert.That(BatchManager.Save(bt) > 0);
         }

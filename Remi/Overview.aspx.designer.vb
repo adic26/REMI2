@@ -68,6 +68,24 @@ Partial Public Class Overview
     Protected WithEvents chkShowTRS As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
+    '''imgProcessTime control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgProcessTime As Global.System.Web.UI.WebControls.Image
+
+    '''<summary>
+    '''chkProcessTime control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chkProcessTime As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
     '''upLoad control.
     '''</summary>
     '''<remarks>

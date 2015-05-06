@@ -426,7 +426,7 @@ Namespace REMI.Bll
 
         Public Shared Function GetRequest(ByVal reqNumber As String) As RequestFieldsCollection
             Try
-                Return RequestDB.GetRequest(reqNumber, UserManager.GetCurrentUser)
+                Return RequestDB.GetRequest(reqNumber, UserManager.GetCurrentUser, Nothing)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -436,7 +436,7 @@ Namespace REMI.Bll
 
         Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String) As RequestFieldsCollection
             Try
-                Return RequestDB.GetRequestFieldSetup(requestName, includeArchived, requestNumber, UserManager.GetCurrentUser)
+                Return RequestDB.GetRequestFieldSetup(requestName, includeArchived, requestNumber, UserManager.GetCurrentUser, Nothing)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
             End Try
@@ -471,7 +471,7 @@ Namespace REMI.Bll
                     Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
 
                     If (saved And requestType.HasIntegration) Then
-                        Dim b As Batch = BatchManager.GetItem(request(0).RequestNumber, False, True, True)
+                        Dim b As BatchView = BatchManager.GetBatchView(request(0).RequestNumber, True, True, True, True, True, True, True, True, True, True)
 
                         If (b.OutOfDate) Then
                             BatchManager.Save(b)

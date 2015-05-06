@@ -257,12 +257,13 @@
     <Folder Include="Scripts\2014\February062014" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Obsolete" />
     <Folder Include="Scripts\2015\April162015" />
-    <Folder Include="Scripts\2015\May192015" />
+    <Folder Include="Scripts\2015\April302015" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Keys\Obsolete" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Triggers\Obsolete" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Constraints\Obsolete" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Indexes\Obsolete" />
     <Folder Include="Scripts\2015\April242015" />
+    <Folder Include="Scripts\2015\May192015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -598,9 +599,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypePermissionsSelectListForUser.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchesSelectListAtTrackingLocation.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTrackingLocationTypePermissionsGetForUserAtLocation.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -745,9 +743,6 @@
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchGetViewBatch.proc.sql">
       <SubType>Code</SubType>
     </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsInsertNew.proc.sql">
-      <SubType>Code</SubType>
-    </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsDeactivate.proc.sql">
       <SubType>Code</SubType>
     </None>
@@ -755,9 +750,6 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispTestRecordsSelectForBatch.proc.sql">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsGetByQRANumber.proc.sql">
       <SubType>Code</SubType>
     </None>
     <Build Include="Permissions_1.sql" />
@@ -1076,8 +1068,9 @@
       <SubType>NotInBuild</SubType>
     </None>
     <None Include="Scripts\2015\March172015\2.sql" />
+    <None Include="Scripts\2015\April302015\1.sql" />
+    <None Include="Scripts\2015\April302015\2.sql" />
     <None Include="Scripts\2015\May192015\1.sql" />
-    <None Include="Scripts\2015\May192015\2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
@@ -2895,6 +2888,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispSaveFastScanData.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\Obsolete\remispBatchesSelectListAtTrackingLocation.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsInsertNew.proc.sql">
+      <SubType>Code</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\remispBatchCommentsGetByQRANumber.proc.sql">
       <SubType>Code</SubType>
     </None>
   </ItemGroup>

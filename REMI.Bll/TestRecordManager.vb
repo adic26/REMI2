@@ -93,7 +93,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = TestRecordManager.GetItemByID(trID)
 
                 If Not String.IsNullOrEmpty(qranumber) Then
-                    Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser)
+                    Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser, Nothing)
                     docNumbers.AddRange(RequestDB.GetFANumberList(qranumber))
 
                     If docNumbers IsNot Nothing Then
@@ -125,7 +125,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = GetItemByID(trID)
 
                 If updateSimilarTestRecords Then
-                    Dim b As Batch = BatchManager.GetItem(tr.QRANumber)
+                    Dim b As BatchView = BatchManager.GetBatchView(tr.QRANumber, True, True, True, True, True, False, True, False, False, False)
                     trColl.Add((From testRec In b.TestRecords Where testRec.JobName.Equals(tr.JobName) AndAlso _
                                                          testRec.TestStageName.Equals(tr.TestStageName) AndAlso testRec.TestName.Equals(tr.TestName) AndAlso testRec.Status.Equals(tr.Status) Select testRec).ToList)
                 Else
@@ -150,7 +150,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = GetItemByID(trID)
 
                 If updateSimilarTestRecords Then
-                    Dim b As Batch = BatchManager.GetItem(tr.QRANumber)
+                    Dim b As BatchView = BatchManager.GetBatchView(tr.QRANumber, True, True, True, True, True, False, True, False, False, False)
                     trColl.Add((From testRec In b.TestRecords Where testRec.JobName.Equals(tr.JobName) AndAlso _
                                                          testRec.TestStageName.Equals(tr.TestStageName) AndAlso testRec.TestName.Equals(tr.TestName) AndAlso testRec.Status.Equals(tr.Status) Select testRec).ToList)
                 Else
@@ -215,7 +215,7 @@ Namespace REMI.Bll
             Try
                 'Only insert Relab record for non test systems (IE: MFI Functional, SFI Functional, Visual Inspection)
                 If ((tr.TestID = 1073 Or tr.FunctionalType <> 0) And tr.TestStageID > 0) Then
-                    If (tr.Status = TestRecordStatus.Complete Or tr.Status = TestRecordStatus.CompleteFail Or tr.Status = TestRecordStatus.CompleteKnownFailure Or tr.Status = TestRecordStatus.FARaised Or tr.Status = TestRecordStatus.FARequired) Then
+                    If (tr.Status = TestRecordStatus.WaitingForResult Or tr.Status = TestRecordStatus.Complete Or tr.Status = TestRecordStatus.CompleteFail Or tr.Status = TestRecordStatus.CompleteKnownFailure Or tr.Status = TestRecordStatus.FARaised Or tr.Status = TestRecordStatus.FARequired) Then
                         Dim instance = New REMI.Dal.Entities().Instance()
                         Dim result As IQueryable(Of REMI.Entities.Result)
                         result = (From r In instance.Results Where r.TestUnit.ID = tr.TestUnitID And r.Test.ID = tr.TestID And r.TestStage.ID = tr.TestStageID Select r)
@@ -274,7 +274,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = GetItemByID(trID)
 
                 If updateSimilarTestRecords Then
-                    Dim b As Batch = BatchManager.GetItem(tr.QRANumber)
+                    Dim b As BatchView = BatchManager.GetBatchView(tr.QRANumber, True, True, True, True, True, False, True, False, False, False)
                     trColl.Add((From testRec In b.TestRecords Where testRec.JobName.Equals(tr.JobName) AndAlso _
                                                          testRec.TestStageName.Equals(tr.TestStageName) AndAlso testRec.TestName.Equals(tr.TestName) AndAlso testRec.Status.Equals(tr.Status) Select testRec).ToList)
                 Else
@@ -298,7 +298,7 @@ Namespace REMI.Bll
                 Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qranumber))
 
                 If barcode.Validate() Then
-                    Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
+                    Dim b As BatchView = BatchManager.GetBatchView(barcode.BatchNumber, True, True, True, True, True, False, True, False, False, False)
                     Dim tu As TestUnit = b.TestUnits.FindByBatchUnitNumber(barcode.UnitNumber)
 
                     If b IsNot Nothing And tu IsNot Nothing Then
@@ -405,10 +405,10 @@ Namespace REMI.Bll
             Return tr.Notifications
         End Function
 
-        Public Shared Function CheckBatchForResultUpdates(ByVal b As Batch, ByVal ignoreCurrentBatchStatus As Boolean) As Integer
+        Public Shared Function CheckBatchForResultUpdates(ByVal b As BatchView, ByVal ignoreCurrentBatchStatus As Boolean) As Integer
             Try
                 If b IsNot Nothing Then
-                    If ((b.Status = BatchStatus.InProgress OrElse b.Status = BatchStatus.Received) Or ignoreCurrentBatchStatus) AndAlso (b.TestStage IsNot Nothing) AndAlso b.Job IsNot Nothing Then
+                    If ((b.Status = BatchStatus.InProgress OrElse b.Status = BatchStatus.Received) Or ignoreCurrentBatchStatus) AndAlso b.Job IsNot Nothing Then
                         Dim bcoll As New BatchCollection
                         bcoll.Add(b)
                         Return TestRecordDB.SetResultsForBatchCollection(bcoll, UserManager.GetCurrentValidUserLDAPName)

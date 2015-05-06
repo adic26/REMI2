@@ -17,11 +17,11 @@ Partial Class ScanUnit
 
     Protected Sub ProcessQRA(ByVal tmpStr As String)
         Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(tmpStr))
-        Dim b As Batch
+        Dim b As BatchView
 
         If bc.Validate Then
             If bc.HasTestUnitNumber Then
-                b = BatchManager.GetItem(bc.BatchNumber)
+                b = BatchManager.GetBatchView(bc.BatchNumber, True, False, True, False, True, False, True, False, False, False)
             Else
                 notMain.Notifications.AddWithMessage("The barcode must have a unit number to get the information.", NotificationType.Warning)
                 Exit Sub
@@ -31,44 +31,54 @@ Partial Class ScanUnit
             Exit Sub
         End If
 
-        If b IsNot Nothing AndAlso b.GetUnit(bc.UnitNumber) IsNot Nothing Then
-            Dim litTitle As Literal = Master.FindControl("litPageTitle")
-            If litTitle IsNot Nothing Then
-                litTitle.Text = "REMI - " + bc.ToString
+        If b IsNot Nothing Then
+            Dim tu As TestUnit = (From u As TestUnit In b.TestUnits Where u.BatchUnitNumber = bc.UnitNumber Select u).FirstOrDefault()
+
+            If (tu IsNot Nothing) Then
+                Dim litTitle As Literal = Master.FindControl("litPageTitle")
+                If litTitle IsNot Nothing Then
+                    litTitle.Text = "REMI - " + bc.ToString
+                End If
+
+                Dim tColl As New TestUnitCollection
+                tColl.Add(tu)
+
+                grdDetail.DataSource = tColl
+                grdDetail.DataBind()
+                hypTestRecords.NavigateUrl = REMIWebLinks.GetTestRecordsLink(bc.ToString, String.Empty, String.Empty, String.Empty, 0)
+                hypMFG.NavigateUrl = tu.MfgWebLink
+                lblQRANumber.Text = bc.ToString
+                notMain.Notifications.Add(b.GetAllTestUnitNotifications(bc.UnitNumber))
+                hypBatchInfo.NavigateUrl = b.BatchInfoLink
+                hypRefresh.NavigateUrl = tu.UnitInfoLink
+                hdnQRANumber.Value = bc.ToString
+                hdnTestUnitID.Value = tu.ID
+                grdTrackingLog.DataBind()
+
+                Dim myMenu As WebControls.Menu
+                Dim mi As New MenuItem
+                myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
+
+                mi = New MenuItem
+                mi.Text = "Batch Info"
+                mi.Target = "_blank"
+                mi.NavigateUrl = b.BatchInfoLink
+                myMenu.Items(0).ChildItems.Add(mi)
+
+                mi = New MenuItem
+                mi.Text = "Test Records"
+                mi.Target = "_blank"
+                mi.NavigateUrl = REMIWebLinks.GetTestRecordsLink(bc.ToString, String.Empty, String.Empty, String.Empty, 0)
+                myMenu.Items(0).ChildItems.Add(mi)
+
+                mi = New MenuItem
+                mi.Text = "MfgWeb History"
+                mi.Target = "_blank"
+                mi.NavigateUrl = tu.MfgWebLink
+                myMenu.Items(0).ChildItems.Add(mi)
+            Else
+                notMain.Notifications.AddWithMessage(String.Format("{0} could not be found in REMI.", bc.UnitNumber), NotificationType.Warning)
             End If
-
-            Dim tColl As New TestUnitCollection
-            tColl.Add(b.GetUnit(bc.UnitNumber))
-            grdDetail.DataSource = tColl
-            grdDetail.DataBind()
-            hypTestRecords.NavigateUrl = REMIWebLinks.GetTestRecordsLink(bc.ToString, String.Empty, String.Empty, String.Empty, 0)
-            hypMFG.NavigateUrl = b.GetUnit(bc.UnitNumber).MfgWebLink
-            lblQRANumber.Text = bc.ToString
-            notMain.Notifications.Add(b.GetAllTestUnitNotifications(bc.UnitNumber))
-            hypBatchInfo.NavigateUrl = b.BatchInfoLink
-            hypRefresh.NavigateUrl = b.GetUnit(bc.UnitNumber).UnitInfoLink
-            hdnQRANumber.Value = bc.ToString
-            hdnTestUnitID.Value = b.GetUnit(bc.UnitNumber).ID
-            grdTrackingLog.DataBind()
-
-            Dim myMenu As WebControls.Menu
-            Dim mi As New MenuItem
-            myMenu = CType(Master.FindControl("menuHeader"), WebControls.Menu)
-
-            mi = New MenuItem
-            mi.Text = "Batch Info"
-            mi.NavigateUrl = b.BatchInfoLink
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            mi = New MenuItem
-            mi.Text = "Test Records"
-            mi.NavigateUrl = REMIWebLinks.GetTestRecordsLink(bc.ToString, String.Empty, String.Empty, String.Empty, 0)
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            mi = New MenuItem
-            mi.Text = "MfgWeb History"
-            mi.NavigateUrl = b.GetUnit(bc.UnitNumber).MfgWebLink
-            myMenu.Items(0).ChildItems.Add(mi)
         Else
             notMain.Notifications.AddWithMessage(String.Format("{0} could not be found in REMI.", bc.ToString), NotificationType.Warning)
         End If

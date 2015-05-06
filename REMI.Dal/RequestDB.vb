@@ -78,7 +78,7 @@ Namespace REMI.Dal
             Return (From r In New REMI.Dal.Entities().Instance().RequestTypes Where r.Lookup.LookupType.Name = "RequestType" And r.Lookup.Values = requestType Select r.RequestConnectName).FirstOrDefault()
         End Function
 
-        Public Shared Function GetRequest(ByVal reqNumber As String, ByVal user As User) As RequestFieldsCollection
+        Public Shared Function GetRequest(ByVal reqNumber As String, ByVal user As User, ByVal sqlConnection As SqlConnection) As RequestFieldsCollection
             Dim reqNum As New RequestNumber(reqNumber)
 
             If (reqNum.Validate()) Then
@@ -87,7 +87,7 @@ Namespace REMI.Dal
                 Dim rf As RequestFieldsCollection = REMIAppCache.GetReqData(reqNum.Number)
 
                 If (rf Is Nothing) Then
-                    rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number, user)
+                    rf = GetRequestFieldSetup(requestType.Lookup.Values, False, reqNum.Number, user, sqlConnection)
 
                     If (requestType.IsExternal) Then
                         If (rf.Count > 0) Then
@@ -522,40 +522,45 @@ Namespace REMI.Dal
             Return True
         End Function
 
-        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String, ByVal user As User) As RequestFieldsCollection
+        Public Shared Function GetRequestFieldSetup(ByVal requestName As String, ByVal includeArchived As Boolean, ByVal requestNumber As String, ByVal user As User, ByVal myConnection As SqlConnection) As RequestFieldsCollection
             Dim rtID As Int32
             Dim fieldData As RequestFieldsCollection = Nothing
 
             rtID = (From fs In New REMI.Dal.Entities().Instance.ReqFieldSetups Where fs.RequestType.Lookup.Values = requestName Select fs.RequestTypeID).FirstOrDefault()
 
             If (rtID > 0) Then
-                Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                    Using myCommand As New SqlCommand("Req.RequestFieldSetup", myConnection)
-                        myCommand.CommandType = CommandType.StoredProcedure
-                        myCommand.Parameters.AddWithValue("@RequestTypeID", rtID)
+                If (myConnection Is Nothing) Then
+                    myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                End If
 
-                        If (includeArchived) Then
-                            myCommand.Parameters.AddWithValue("@IncludeArchived", True)
-                        Else
-                            myCommand.Parameters.AddWithValue("@IncludeArchived", False)
-                        End If
+                Using myCommand As New SqlCommand("Req.RequestFieldSetup", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@RequestTypeID", rtID)
 
-                        If (requestNumber.Trim().Length > 0) Then
-                            myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
-                        End If
+                    If (includeArchived) Then
+                        myCommand.Parameters.AddWithValue("@IncludeArchived", True)
+                    Else
+                        myCommand.Parameters.AddWithValue("@IncludeArchived", False)
+                    End If
 
+                    If (requestNumber.Trim().Length > 0) Then
+                        myCommand.Parameters.AddWithValue("@RequestNumber", requestNumber)
+                    End If
+
+                    If myConnection.State <> ConnectionState.Open Then
                         myConnection.Open()
-                        Dim ds As DataSet = New DataSet()
+                    End If
 
-                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                            fieldData = New RequestFieldsCollection()
+                    Dim ds As DataSet = New DataSet()
 
-                            ds.Load(myReader, LoadOption.OverwriteChanges, New String() {"Sibling", "Fields"})
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        fieldData = New RequestFieldsCollection()
 
-                            For Each dr As DataRow In ds.Tables("Fields").Rows
-                                fieldData.Add(FillFieldData(dr, user, ds.Tables("Sibling")))
-                            Next
-                        End Using
+                        ds.Load(myReader, LoadOption.OverwriteChanges, New String() {"Sibling", "Fields"})
+
+                        For Each dr As DataRow In ds.Tables("Fields").Rows
+                            fieldData.Add(FillFieldData(dr, user, ds.Tables("Sibling")))
+                        Next
                     End Using
                 End Using
             End If

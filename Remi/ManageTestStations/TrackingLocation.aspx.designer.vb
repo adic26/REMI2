@@ -203,15 +203,6 @@ Partial Public Class ManageTestStations_TrackingLocation
     Protected WithEvents bscBatches As Global.Remi.Controls_BatchSelectControl
 
     '''<summary>
-    '''odsBatches control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents odsBatches As Global.System.Web.UI.WebControls.ObjectDataSource
-
-    '''<summary>
     '''acpTrackingLogs control.
     '''</summary>
     '''<remarks>

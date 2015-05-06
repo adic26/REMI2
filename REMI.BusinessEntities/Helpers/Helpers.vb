@@ -21,7 +21,60 @@ Imports System.Drawing
 Imports System.Drawing.Imaging
 
 Namespace REMI.BusinessEntities
+    Public Class DataTableColName
+        Inherits Attribute
+
+        Dim _coulumnName As String = String.Empty
+
+        Public Property CoulumnName As String
+            Get
+                Return _coulumnName
+            End Get
+            Set(value As String)
+                _coulumnName = value
+            End Set
+        End Property
+
+        Public Sub New(ByVal columnName As String)
+            Me._coulumnName = columnName
+        End Sub
+    End Class
+
     Public Class Helpers
+        Public Shared Function GetList(Of T)(ByVal dt As DataTable) As List(Of T)
+            Dim lst As New List(Of T)
+
+            For Each dw As DataRow In dt.Rows
+                Dim tp As Type = GetType(T)
+                Dim obj As T = Activator.CreateInstance(Of T)()
+                Dim pf() As PropertyInfo = tp.GetProperties()
+
+                For Each pinfo As PropertyInfo In pf
+                    Dim colname() As Object = pinfo.GetCustomAttributes(GetType(DataTableColName), False)
+                    If (colname Is Nothing) Then
+                        Continue For
+                    End If
+
+                    If (colname.Length = 0) Then
+                        Continue For
+                    End If
+                    Dim col As String = DirectCast(colname(0), DataTableColName).CoulumnName
+                    If (Not dt.Columns.Contains(col)) Then
+                        Continue For
+                    End If
+                    If (dw(col) Is Nothing) Then
+                        Continue For
+                    End If
+                    If (dw(col) Is DBNull.Value) Then
+                        Continue For
+                    End If
+
+                    pinfo.SetValue(obj, dw(col), Nothing)
+                Next
+                lst.Add(obj)
+            Next
+            Return lst
+        End Function
 
         Public Shared Function GetDateTimeFileName(ByVal text As String, ByVal suffix As String) As String
             text = text.Trim

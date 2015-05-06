@@ -19,112 +19,61 @@ Namespace REMI.Dal
     ''' </summary>
     Public Class BatchDB
 
-#Region "Batch Comment Methods"
-        Public Shared Function AddBatchComment(ByVal batchID As Integer, ByVal text As String, ByVal lastuser As String) As Boolean
-            Dim returnVal As Integer
+#Region "GET"
+        Public Shared Sub GetBatchTaskInfo(ByVal batchdata As BatchView, ByVal getByBatchStage As Boolean, ByVal myConnection As SqlConnection)
+            If (myConnection Is Nothing) Then
+                myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            End If
 
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchCommentsInsertNew", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
+            Using myCommand As New SqlCommand("remispBatchGetTaskInfo", myConnection)
+                myCommand.CommandType = CommandType.StoredProcedure
+                myCommand.Parameters.AddWithValue("@BatchID", batchdata.ID)
 
-                    myCommand.Parameters.AddWithValue("@batchid", batchID)
-                    myCommand.Parameters.AddWithValue("@text", text)
-                    myCommand.Parameters.AddWithValue("@lastuser", lastuser)
+                If (getByBatchStage) Then
+                    myCommand.Parameters.AddWithValue("@TestStageID", batchdata.TestStageID)
+                End If
+
+                If myConnection.State <> ConnectionState.Open Then
                     myConnection.Open()
-                    returnVal = myCommand.ExecuteNonQuery()
-                End Using
+                End If
+
+                Dim dt As New DataTable
+                Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                da.Fill(dt)
+                dt.TableName = "TaskInfo"
+                GetBatchTask(dt, batchdata)
             End Using
+        End Sub
 
-            Return returnVal > 0
-        End Function
+        Public Shared Function GetBatchComments(ByVal requestNumber As String, ByVal myConnection As SqlConnection) As List(Of IBatchCommentView)
+            Dim b As BatchView = New BatchView()
 
-        Public Shared Function GetBatchComments(ByVal qraNumber As String) As List(Of IBatchCommentView)
-            Dim b As Batch = New Batch()
+            If (myConnection Is Nothing) Then
+                myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            End If
 
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchCommentsGetByQRANumber", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("qranumber", qraNumber)
+            Using myCommand As New SqlCommand("remispBatchCommentsGetByQRANumber", myConnection)
+                myCommand.CommandType = CommandType.StoredProcedure
+                myCommand.Parameters.AddWithValue("qranumber", requestNumber)
+
+                If myConnection.State <> ConnectionState.Open Then
                     myConnection.Open()
+                End If
 
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            b = New Batch()
-                            While myReader.Read()
-                                FillBatchComment(myReader, b)
-                            End While
-                        End If
-                    End Using
+                Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                    If myReader.HasRows Then
+                        b = New BatchView()
+                        While myReader.Read()
+                            FillBatchComment(myReader, b)
+                        End While
+                    End If
                 End Using
             End Using
 
             Return b.Comments
         End Function
 
-        Public Shared Function GetOrientation(ByVal orientationID As Int32) As IOrientation
-            Dim bo As IOrientation = New Orientation()
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispGetOrientation", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@ID", orientationID)
-                    myConnection.Open()
-
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            If myReader.Read() Then
-                                FillBatchOrientation(myReader, bo)
-                            End If
-                        End If
-                    End Using
-                End Using
-            End Using
-
-            Return bo
-        End Function
-
-        Public Shared Function DeactivateBatchComment(ByVal commentID As Integer) As Boolean
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchCommentsDeactivate", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@commentID", commentID)
-                    myConnection.Open()
-                    myCommand.ExecuteNonQuery()
-                End Using
-            End Using
-
-            Return True
-        End Function
-#End Region
-
-#Region "Public Hardcoded Methods"
-        ''' <summary>
-        ''' Sets the status for a batch
-        ''' </summary>
-        ''' <param name="qraNumber"></param>
-        ''' <param name="status"></param>
-        ''' <param name="lastuser"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function SetBatchStatus(ByVal qraNumber As String, ByVal status As BatchStatus, ByVal lastuser As String) As Boolean
-            Dim returnVal As Integer
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("update batches set batchstatus = @batchstatus , lastuser = @lastuser where qranumber = @qranumber", myConnection)
-                    myCommand.CommandType = CommandType.Text
-                    myCommand.Parameters.AddWithValue("@qranumber", qraNumber)
-                    myCommand.Parameters.AddWithValue("@batchstatus", status)
-                    myCommand.Parameters.AddWithValue("@lastuser", lastuser)
-                    myConnection.Open()
-                    returnVal = myCommand.ExecuteNonQuery()
-                End Using
-            End Using
-
-            Return returnVal > 0
-        End Function
-#End Region
-
-        Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, Optional ByVal cacheRetrievedData As Boolean = True) As BatchView
+        Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, ByVal cacheRetrievedData As Boolean, ByVal loadDurations As Boolean, ByVal loadJob As Boolean, ByVal loadExceptions As Boolean, ByVal loadTasks As Boolean, ByVal loadBatchStage As Boolean, ByVal loadTestRecords As Boolean, ByVal loadOrientation As Boolean, ByVal loadTSRemaining As Boolean, ByVal loadComments As Boolean) As BatchView
             Dim batch As BatchView = Nothing
 
             Using sqlConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -133,53 +82,24 @@ Namespace REMI.Dal
                 If (bc.Validate()) Then
                     Using myCommand As New SqlCommand("remispBatchGetViewBatch", sqlConnection)
                         myCommand.CommandType = CommandType.StoredProcedure
-                        myCommand.Parameters.AddWithValue("@QRANumber", bc.BatchNumber)
-                        'open the sql connection
+                        myCommand.Parameters.AddWithValue("@RequestNumber", bc.BatchNumber)
+
                         If sqlConnection.State <> ConnectionState.Open Then
                             sqlConnection.Open()
                         End If
-                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                            'This stored procedure returns more than one table or result set.
-                            'to read them all we must step through each result set.
-                            'as of 26 Sept 2011 it has the following result sets
-                            '1. Batch data
-                            '2. Batch Comments
-                            '3. Process Data
-                            '4. Test Results
-                            '5. Test Unit Data
-                            If myReader.HasRows Then
-                                batch = New BatchView(bc.BatchNumber)
-                                batch.ReqData = RequestDB.GetRequest(bc.BatchNumber, user)
 
-                                While myReader.Read()
-                                    FillBaseBatchFields(myReader, batch, False, False, True, user)
-                                End While
+                        Dim dt As New DataTable
+                        Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                        da.Fill(dt)
+                        dt.TableName = "ViewBatch"
+                        batch = New BatchView(bc.BatchNumber)
 
-                                myReader.NextResult()
+                        Dim lst As List(Of BatchView) = BusinessEntities.Helpers.GetList(Of BatchView)(dt)
 
-                                While myReader.Read()
-                                    FillBatchComment(myReader, batch)
-                                End While
-
-                                myReader.NextResult()
-
-                                While myReader.Read()
-                                    FillBatchTask(myReader, batch)
-                                End While
-
-                                myReader.NextResult()
-
-                                While myReader.Read()
-                                    batch.TestRecords.Add(TestRecordDB.FillDataRecord(myReader))
-                                End While
-
-                                myReader.NextResult()
-
-                                While myReader.Read()
-                                    batch.TestUnits.Add(TestUnitDB.FillDataRecord(myReader))
-                                End While
-                            End If
-                        End Using
+                        If (lst.Count > 0) Then
+                            batch = lst(0)
+                            FillFullBatchfields(batch, sqlConnection, cacheRetrievedData, loadDurations, loadJob, loadExceptions, loadTasks, loadBatchStage, loadTestRecords, loadOrientation, loadTSRemaining, loadComments, user)
+                        End If
                     End Using
                 End If
             End Using
@@ -187,21 +107,63 @@ Namespace REMI.Dal
             Return batch
         End Function
 
-#Region "Public Stored Proc Methods"
-        ''' <summary> 
-        ''' Returns a list of batches in environmental chambers
-        ''' </summary>
-        ''' <returns>
-        ''' A BatchCollection.
-        ''' </returns> 
-        Public Shared Function GetListInChambers(ByVal testCentreLocation As Int32, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String, ByVal byPass As Boolean, ByVal user As User) As BatchCollection
+        Public Shared Function GetOrientation(ByVal orientationID As Int32, ByVal myConnection As SqlConnection) As IOrientation
+            Dim bo As IOrientation = New Orientation()
+
+            If (myConnection Is Nothing) Then
+                myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            End If
+
+            Using myCommand As New SqlCommand("remispGetOrientation", myConnection)
+                myCommand.CommandType = CommandType.StoredProcedure
+                myCommand.Parameters.AddWithValue("@ID", orientationID)
+                If myConnection.State <> ConnectionState.Open Then
+                    myConnection.Open()
+                End If
+
+                Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                    If myReader.HasRows Then
+                        If myReader.Read() Then
+                            FillBatchOrientation(myReader, bo)
+                        End If
+                    End If
+                End Using
+            End Using
+
+            Return bo
+        End Function
+
+        Public Shared Function GetRandomCountQraNumbers() As List(Of String)
+            Dim tmpList As New List(Of String)
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispBatchesSelectRandomSampleQRANumbers", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myConnection.Open()
+                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                        If myReader.HasRows Then
+                            While myReader.Read()
+                                tmpList.Add(myReader.GetString(0))
+                            End While
+                        End If
+                    End Using
+                End Using
+            End Using
+
+            If tmpList IsNot Nothing Then
+                Return tmpList
+            Else
+                Return New List(Of String)
+            End If
+        End Function
+
+        Public Shared Function GetListInChambers(ByVal testCentreLocationID As Int32, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String, ByVal byPass As Boolean, ByVal user As User) As BatchCollection
             Dim tmpList As BatchCollection = Nothing
 
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispBatchesSelectChamberBatches", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    If testCentreLocation > 0 Then
-                        myCommand.Parameters.AddWithValue("@TestCentreLocation", testCentreLocation)
+                    If testCentreLocationID > 0 Then
+                        myCommand.Parameters.AddWithValue("@TestCentreLocation", testCentreLocationID)
                     End If
 
                     myCommand.Parameters.AddWithValue("@startRowIndex", startRowIndex)
@@ -231,96 +193,17 @@ Namespace REMI.Dal
                     myCommand.Parameters.AddWithValue("@UserID", user.ID)
 
                     myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    Dim dt As New DataTable
+                    da.Fill(dt)
+                    dt.TableName = "ChamberBatches"
 
-                        If myReader.HasRows Then
-                            tmpList = New BatchCollection()
+                    Dim lst As List(Of BatchView) = BusinessEntities.Helpers.GetList(Of BatchView)(dt)
+                    tmpList.AddRange(lst)
 
-                            While myReader.Read()
-                                Dim myBatch As Batch = New BusinessEntities.Batch()
-                                FillBaseBatchFields(myReader, myBatch, False, False, False, user)
-
-                                tmpList.Add(myBatch)
-                            End While
-                        End If
-                    End Using
-                End Using
-
-                FillFullBatchFields(tmpList, myConnection, False, True, True, False, False, False, False)
-            End Using
-
-            If tmpList IsNot Nothing Then
-                Return tmpList
-            Else
-                Return New BatchCollection
-            End If
-        End Function
-
-        Public Shared Function GetRandomCountQraNumbers() As List(Of String)
-            Dim tmpList As New List(Of String)
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchesSelectRandomSampleQRANumbers", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                tmpList.Add(myReader.GetString(0))
-                            End While
-                        End If
-                    End Using
-                End Using
-            End Using
-
-            If tmpList IsNot Nothing Then
-                Return tmpList
-            Else
-                Return New List(Of String)
-            End If
-        End Function
-
-        ''' <summary> 
-        ''' Returns a list with Batch objects at a specific location. 
-        ''' </summary> 
-        ''' <param name="TrackingLocationId">The id of the location to search for units. </param> 
-        ''' <returns> 
-        ''' A BatchCollection.
-        ''' </returns> 
-        Public Shared Function GetListAtLocation(ByVal trackingLocationID As Integer, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String, ByVal user As User) As BatchCollection
-            Dim tmpList As BatchCollection = Nothing
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchesSelectListAtTrackingLocation", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@TrackingLocationID", trackingLocationID)
-                    myCommand.Parameters.AddWithValue("@startRowIndex", startRowIndex)
-                    myCommand.Parameters.AddWithValue("@maximumRows", maximumRows)
-                    Dim orderByVals As String()
-                    If Not String.IsNullOrEmpty(sortExpression) Then
-                        If sortExpression.EndsWith("desc") Then
-                            orderByVals = sortExpression.Trim.Split(" "c)
-
-                            myCommand.Parameters.AddWithValue("@SortExpression", orderByVals(0))
-                            myCommand.Parameters.AddWithValue("@direction", "desc")
-
-                        Else
-                            myCommand.Parameters.AddWithValue("@SortExpression", sortExpression)
-                            myCommand.Parameters.AddWithValue("@direction", "asc")
-                        End If
-                    End If
-
-                    myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-
-                        If myReader.HasRows Then
-                            tmpList = New BatchCollection()
-                            While myReader.Read()
-                                Dim myBatch As Batch = New BusinessEntities.Batch()
-                                FillBaseBatchFields(myReader, myBatch, False, False, False, User)
-
-                                tmpList.Add(myBatch)
-                            End While
-                        End If
-                    End Using
+                    For Each b As BatchView In tmpList
+                        FillFullBatchfields(b, myConnection, False, True, True, True, False, False, False, False, False, False, user)
+                    Next
                 End Using
             End Using
 
@@ -328,132 +211,6 @@ Namespace REMI.Dal
                 Return tmpList
             Else
                 Return New BatchCollection
-            End If
-        End Function
-
-        Public Shared Function GetBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, Optional ByVal cacheRetrievedData As Boolean = True) As Batch
-            Dim batchData As Batch = Nothing
-
-            Using sqlConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                If batchData Is Nothing Then
-
-                    Using myCommand As New SqlCommand("remispBatchesSelectByQRANumber", sqlConnection)
-                        myCommand.CommandType = CommandType.StoredProcedure
-                        myCommand.Parameters.AddWithValue("@QRANumber", qraNumber)
-
-                        If sqlConnection.State <> ConnectionState.Open Then
-                            sqlConnection.Open()
-                        End If
-
-                        Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                            If myReader.HasRows Then
-                                batchData = New Batch(qraNumber)
-
-                                While myReader.Read()
-                                    FillBaseBatchFields(myReader, batchData, True, False, False, User)
-                                End While
-
-                                myReader.NextResult()
-
-                                While myReader.Read()
-                                    FillBatchComment(myReader, batchData)
-                                End While
-                            End If
-                        End Using
-                    End Using
-                End If
-
-                If (batchData IsNot Nothing) Then
-                    FillFullBatchFields(batchData, sqlConnection, cacheRetrievedData, True, True, True, True, False, True)
-                End If
-            End Using
-
-            Return batchData
-        End Function
-
-        Private Shared Function BatchSearch(ByVal conn As SqlConnection, ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32) As SqlDataReader
-            Using myCommand As New SqlCommand("remispBatchesSearch", conn)
-                myCommand.CommandType = CommandType.StoredProcedure
-                myCommand.CommandTimeout = 40
-
-                If (byPass) Then
-                    myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
-                Else
-                    myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
-                End If
-
-                myCommand.Parameters.AddWithValue("@ExecutingUserID", userID)
-
-                For Each p As System.Reflection.PropertyInfo In bs.GetType().GetProperties()
-                    If p.CanRead Then
-                        If (p.GetValue(bs, Nothing) IsNot Nothing) Then
-                            Dim d As DateTime
-                            DateTime.TryParse(p.GetValue(bs, Nothing).ToString(), d)
-
-                            If (p.GetValue(bs, Nothing).ToString().ToLower() <> "all" And p.GetValue(bs, Nothing).ToString().ToLower() <> "0" And p.GetValue(bs, Nothing).ToString().ToLower() <> "notset") Then
-                                If (p.PropertyType Is System.Type.GetType("System.DateTime") And d <> DateTime.MinValue) Then
-                                    myCommand.Parameters.AddWithValue("@" + p.Name, p.GetValue(bs, Nothing))
-                                ElseIf p.PropertyType IsNot System.Type.GetType("System.DateTime") Then
-                                    myCommand.Parameters.AddWithValue("@" + p.Name, p.GetValue(bs, Nothing))
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-                myCommand.Parameters.AddWithValue("@OnlyHasResults", OnlyHasResults)
-
-                conn.Open()
-
-                Return myCommand.ExecuteReader()
-            End Using
-        End Function
-
-        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32) As BatchCollection
-            Dim tmpList As New BatchCollection()
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myReader As SqlDataReader = BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user, OnlyHasResults)
-                    If myReader.HasRows Then
-                        tmpList = New BatchCollection()
-
-                        While myReader.Read()
-                            Dim myBatch As Batch = New BusinessEntities.Batch()
-                            FillBaseBatchFields(myReader, myBatch, loadTSRemaining, False, False, user)
-                            tmpList.Add(myBatch)
-                        End While
-                    End If
-                End Using
-
-                FillFullBatchFields(tmpList, myConnection, False, loadDurations, True, False, False, False, loadTestRecords)
-            End Using
-
-            If tmpList IsNot Nothing Then
-                Return tmpList
-            Else
-                Return New BatchCollection
-            End If
-        End Function
-
-        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32) As List(Of BatchView)
-            Dim tmpList As New List(Of BatchView)()
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myReader As SqlDataReader = BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user, OnlyHasResults)
-                    If myReader.HasRows Then
-                        tmpList = New List(Of BatchView)
-                        While myReader.Read()
-                            Dim myBatch As BatchView = New BusinessEntities.BatchView()
-                            FillBaseBatchFields(myReader, myBatch, loadTSRemaining, False, False, user)
-
-                            tmpList.Add(myBatch)
-                        End While
-                    End If
-                End Using
-            End Using
-
-            If tmpList IsNot Nothing Then
-                Return tmpList
-            Else
-                Return New List(Of BatchView)
             End If
         End Function
 
@@ -564,165 +321,38 @@ Namespace REMI.Dal
 
             Return ds
         End Function
+#End Region
 
-        ''' <summary> 
-        ''' This method returns a list of batches where the status is not complete or rejected.
-        ''' </summary> 
-        Public Shared Function GetActiveBatches(ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal isRemiTimedServiceCall As Boolean, ByVal user As User) As BatchCollection
-            Dim tmpList As New BatchCollection()
+#Region "Save"
+        Public Shared Function AddBatchComment(ByVal batchID As Integer, ByVal text As String, ByVal lastuser As String) As Boolean
+            Dim returnVal As Integer
+
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchesGetActiveBatches", myConnection)
+                Using myCommand As New SqlCommand("remispBatchCommentsInsertNew", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    If startRowIndex > 0 Then
-                        myCommand.Parameters.AddWithValue("@startrowindex", startRowIndex)
-                    End If
-                    If maximumRows > 0 Then
-                        myCommand.Parameters.AddWithValue("@maximumrows", maximumRows)
-                    End If
+
+                    myCommand.Parameters.AddWithValue("@batchid", batchID)
+                    myCommand.Parameters.AddWithValue("@text", text)
+                    myCommand.Parameters.AddWithValue("@lastuser", lastuser)
                     myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                Dim myBatch As Batch = New BusinessEntities.Batch()
-
-                                If (isRemiTimedServiceCall) Then
-                                    FillBaseBatchFields(myReader, myBatch, False, True, False, user)
-                                Else
-                                    FillBaseBatchFields(myReader, myBatch, True, False, False, user)
-                                End If
-
-                                tmpList.Add(myBatch)
-                            End While
-                        End If
-                    End Using
+                    returnVal = myCommand.ExecuteNonQuery()
                 End Using
-                If (Not (isRemiTimedServiceCall)) Then
-                    FillFullBatchFields(tmpList, myConnection, False)
-                End If
             End Using
 
-            Return tmpList
+            Return returnVal > 0
         End Function
 
-        Public Shared Function GetActiveBatches(ByVal requestor As String, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal user As User) As BatchCollection
-            Dim tmpList As New BatchCollection()
+        Public Shared Function DeactivateBatchComment(ByVal commentID As Integer) As Boolean
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchesGetActiveBatchesByRequestor", myConnection)
+                Using myCommand As New SqlCommand("remispBatchCommentsDeactivate", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    If startRowIndex > 0 Then
-                        myCommand.Parameters.AddWithValue("@startrowindex", startRowIndex)
-                    End If
-                    myCommand.Parameters.AddWithValue("@Requestor", requestor)
-                    If maximumRows > 0 Then
-                        myCommand.Parameters.AddWithValue("@maximumrows", maximumRows)
-                    End If
+                    myCommand.Parameters.AddWithValue("@commentID", commentID)
                     myConnection.Open()
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                Dim myBatch As Batch = New BusinessEntities.Batch()
-                                FillBaseBatchFields(myReader, myBatch, False, False, False, user)
-
-                                tmpList.Add(myBatch)
-                            End While
-                        End If
-                    End Using
-                End Using
-                FillFullBatchFields(tmpList, myConnection, False, False, True, False, False, False, False)
-            End Using
-
-            Return tmpList
-        End Function
-
-        ''' <summary>Reverts the duration for a batch for a test stage to the default.
-        ''' <returns>Returns true if reverted successfuly.</returns> 
-        ''' </summary>
-        Public Shared Function DeleteBatchSpecificTestDuration(ByVal qranumber As String, ByVal testStageID As Integer, ByVal comment As String, ByVal lastUser As String) As Boolean
-            Dim result As Integer
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchSpecificTestDurationsDeleteSingleItem", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@QRANumber", qranumber)
-                    myCommand.Parameters.AddWithValue("@TestStageID", testStageID)
-                    myCommand.Parameters.AddWithValue("@lastuser", lastUser)
-
-                    If String.IsNullOrEmpty(comment) Then
-                        myCommand.Parameters.AddWithValue("@comment", DBNull.Value)
-                    Else
-                        myCommand.Parameters.AddWithValue("@comment", comment)
-                    End If
-                    myConnection.Open()
-                    result = myCommand.ExecuteNonQuery()
+                    myCommand.ExecuteNonQuery()
                 End Using
             End Using
 
-            If result > 0 Then
-                REMIAppCache.RemoveSpecificTestDurations(qranumber)
-            End If
-
-            Return result > 0
-        End Function
-
-        Public Shared Function DetermineEstimatedTSTime(ByVal batchID As Int32, ByVal testStageName As String, ByVal jobName As String, ByVal testStageID As Int32, ByVal jobID As Int32, ByVal returnTestStageGrid As Int32, ByRef result2 As Dictionary(Of String, Int32)) As Dictionary(Of String, Double)
-            Dim result As New Dictionary(Of String, Double)
-
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispGetEstimatedTSTime", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@BatchID", batchID)
-                    myCommand.Parameters.AddWithValue("@TestStageName", testStageName)
-                    myCommand.Parameters.AddWithValue("@JobName", jobName)
-                    myCommand.Parameters.AddWithValue("@ReturnTestStageGrid", 1)
-
-                    Dim TSTimeLeft As Double
-                    Dim JobTimeLeft As Double
-
-                    Dim tsOutput As DbParameter = myCommand.CreateParameter()
-                    tsOutput.DbType = DbType.Double
-                    tsOutput.Direction = ParameterDirection.Output
-                    tsOutput.ParameterName = "@TSTimeLeft"
-                    tsOutput.Value = TSTimeLeft
-                    myCommand.Parameters.Add(tsOutput)
-
-                    Dim jobOutput As DbParameter = myCommand.CreateParameter()
-                    jobOutput.DbType = DbType.Double
-                    jobOutput.Direction = ParameterDirection.Output
-                    jobOutput.ParameterName = "@JobTimeLeft"
-                    jobOutput.Value = JobTimeLeft
-                    myCommand.Parameters.Add(jobOutput)
-
-                    myCommand.Parameters.AddWithValue("@TestStageID", testStageID)
-                    myCommand.Parameters.AddWithValue("@JobID", jobID)
-
-                    myConnection.Open()
-
-                    Dim dt As New DataTable
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(dt)
-                    dt.TableName = "TestStagesTimeLeft"
-
-                    If (returnTestStageGrid = 0) Then
-                        result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
-                        result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
-                    Else
-                        For Each dr As DataRow In dt.Rows
-                            Dim timeLeft As Double
-                            Dim stageID As Int32
-                            Double.TryParse(dr.Item("TimeLeft").ToString(), timeLeft)
-                            Int32.TryParse(dr.Item("TestStageID").ToString(), stageID)
-
-                            result2.Add(dr.Item("TestStageName").ToString(), stageID)
-                            result.Add(dr.Item("TestStageName").ToString(), timeLeft)
-                        Next
-
-                        result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
-                        result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
-                    End If
-                End Using
-            End Using
-
-            Return result
+            Return True
         End Function
 
         Public Shared Function DNPParametricForBatch(ByVal qraNumber As String, ByVal userIdentification As String, ByVal unitNumber As Int32) As Boolean
@@ -770,10 +400,104 @@ Namespace REMI.Dal
             Return Result > 0
         End Function
 
+        ''' <summary>Reverts the duration for a batch for a test stage to the default.
+        ''' <returns>Returns true if reverted successfuly.</returns> 
+        ''' </summary>
+        Public Shared Function DeleteBatchSpecificTestDuration(ByVal qranumber As String, ByVal testStageID As Integer, ByVal comment As String, ByVal lastUser As String) As Boolean
+            Dim result As Integer
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Using myCommand As New SqlCommand("remispBatchSpecificTestDurationsDeleteSingleItem", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@QRANumber", qranumber)
+                    myCommand.Parameters.AddWithValue("@TestStageID", testStageID)
+                    myCommand.Parameters.AddWithValue("@lastuser", lastUser)
+
+                    If String.IsNullOrEmpty(comment) Then
+                        myCommand.Parameters.AddWithValue("@comment", DBNull.Value)
+                    Else
+                        myCommand.Parameters.AddWithValue("@comment", comment)
+                    End If
+                    myConnection.Open()
+                    result = myCommand.ExecuteNonQuery()
+                End Using
+            End Using
+
+            If result > 0 Then
+                REMIAppCache.RemoveSpecificTestDurations(qranumber)
+            End If
+
+            Return result > 0
+        End Function
+
+        Public Shared Function DetermineEstimatedTSTime(ByVal batchID As Int32, ByVal testStageName As String, ByVal jobName As String, ByVal testStageID As Int32, ByVal jobID As Int32, ByVal returnTestStageGrid As Int32, ByRef result2 As Dictionary(Of String, Int32), ByVal myConnection As SqlConnection) As Dictionary(Of String, Double)
+            Dim result As New Dictionary(Of String, Double)
+
+            If (myConnection Is Nothing) Then
+                myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            End If
+
+            Using myCommand As New SqlCommand("remispGetEstimatedTSTime", myConnection)
+                myCommand.CommandType = CommandType.StoredProcedure
+                myCommand.Parameters.AddWithValue("@BatchID", batchID)
+                myCommand.Parameters.AddWithValue("@TestStageName", testStageName)
+                myCommand.Parameters.AddWithValue("@JobName", jobName)
+                myCommand.Parameters.AddWithValue("@ReturnTestStageGrid", 1)
+
+                Dim TSTimeLeft As Double
+                Dim JobTimeLeft As Double
+
+                Dim tsOutput As DbParameter = myCommand.CreateParameter()
+                tsOutput.DbType = DbType.Double
+                tsOutput.Direction = ParameterDirection.Output
+                tsOutput.ParameterName = "@TSTimeLeft"
+                tsOutput.Value = TSTimeLeft
+                myCommand.Parameters.Add(tsOutput)
+
+                Dim jobOutput As DbParameter = myCommand.CreateParameter()
+                jobOutput.DbType = DbType.Double
+                jobOutput.Direction = ParameterDirection.Output
+                jobOutput.ParameterName = "@JobTimeLeft"
+                jobOutput.Value = JobTimeLeft
+                myCommand.Parameters.Add(jobOutput)
+
+                myCommand.Parameters.AddWithValue("@TestStageID", testStageID)
+                myCommand.Parameters.AddWithValue("@JobID", jobID)
+
+                If myConnection.State <> ConnectionState.Open Then
+                    myConnection.Open()
+                End If
+
+                Dim dt As New DataTable
+                Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                da.Fill(dt)
+                dt.TableName = "TestStagesTimeLeft"
+
+                If (returnTestStageGrid = 0) Then
+                    result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
+                    result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
+                Else
+                    For Each dr As DataRow In dt.Rows
+                        Dim timeLeft As Double
+                        Dim stageID As Int32
+                        Double.TryParse(dr.Item("TimeLeft").ToString(), timeLeft)
+                        Int32.TryParse(dr.Item("TestStageID").ToString(), stageID)
+
+                        result2.Add(dr.Item("TestStageName").ToString(), stageID)
+                        result.Add(dr.Item("TestStageName").ToString(), timeLeft)
+                    Next
+
+                    result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
+                    result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
+                End If
+            End Using
+
+            Return result
+        End Function
+
         ''' <summary>Saves an instance of the <see cref="Batch" /> in the database.</summary> 
         ''' <param name="myBatch">The Batch instance to save.</param> 
         ''' <returns>Returns the id of the batch when the object was saved successfully, or 0 otherwise.</returns> 
-        Public Shared Function Save(ByVal MyBatch As Batch) As Integer
+        Public Shared Function Save(ByVal MyBatch As BatchView) As Integer
             If Not MyBatch.Validate() AndAlso MyBatch.Status <> BatchStatus.NotSavedToREMI Then
                 Throw New InvalidSaveOperationException("Can't save a Batch in an Invalid state. Make sure that IsValid() returns true before you call Save(): " + MyBatch.Notifications.ToString())
             End If
@@ -871,54 +595,6 @@ Namespace REMI.Dal
             Return Result
         End Function
 
-        ''' <summary>
-        ''' counts the number of batches in a tracking location
-        ''' </summary>
-        ''' <param name="trackingLocationId"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function CountBatchesInTrackingLocation(ByVal trackingLocationId As Integer) As Integer
-            Dim count As Integer
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchesSelectListAtTrackingLocation", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    Dim IDParam As DbParameter = myCommand.CreateParameter()
-                    IDParam.DbType = DbType.Int32
-                    IDParam.Direction = ParameterDirection.InputOutput
-                    IDParam.ParameterName = "@RecordCount"
-                    IDParam.Value = 0
-                    myCommand.Parameters.Add(IDParam)
-                    myCommand.Parameters.AddWithValue("@TrackingLocationId", trackingLocationId)
-                    myConnection.Open()
-                    myCommand.ExecuteNonQuery()
-                    count = CInt(myCommand.Parameters("@RecordCount").Value)
-                End Using
-            End Using
-            Return count
-        End Function
-
-        Public Shared Sub GetBatchTaskInfo(ByVal batchdata As Batch, ByVal getByBatchStage As Boolean)
-            'Dim tmpList As ITaskList = Nothing
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                Using myCommand As New SqlCommand("remispBatchGetTaskInfo", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@BatchID", batchdata.ID)
-
-                    If (getByBatchStage) Then
-                        myCommand.Parameters.AddWithValue("@TestStageID", batchdata.TestStageID)
-                    End If
-
-                    myConnection.Open()
-
-                    Dim dt As New DataTable
-                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                    da.Fill(dt)
-                    dt.TableName = "TaskInfo"
-                    GetBatchTask(dt, batchdata)
-                End Using
-            End Using
-        End Sub
-
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
             Dim result As Int32 = 0
 
@@ -942,8 +618,95 @@ Namespace REMI.Dal
         End Function
 #End Region
 
-#Region "Private Methods"
-        Private Shared Function GetBatchTask(ByVal myreader As DataTable, ByVal batchdata As Batch) As Boolean
+#Region "Search"
+        Private Shared Function BatchSearch(ByVal conn As SqlConnection, ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32) As SqlCommand
+            Using myCommand As New SqlCommand("remispBatchesSearch", conn)
+                myCommand.CommandType = CommandType.StoredProcedure
+                myCommand.CommandTimeout = 40
+
+                If (byPass) Then
+                    myCommand.Parameters.AddWithValue("@ByPassProductCheck", 1)
+                Else
+                    myCommand.Parameters.AddWithValue("@ByPassProductCheck", 0)
+                End If
+
+                myCommand.Parameters.AddWithValue("@ExecutingUserID", userID)
+
+                For Each p As System.Reflection.PropertyInfo In bs.GetType().GetProperties()
+                    If p.CanRead Then
+                        If (p.GetValue(bs, Nothing) IsNot Nothing) Then
+                            Dim d As DateTime
+                            DateTime.TryParse(p.GetValue(bs, Nothing).ToString(), d)
+
+                            If (p.GetValue(bs, Nothing).ToString().ToLower() <> "all" And p.GetValue(bs, Nothing).ToString().ToLower() <> "0" And p.GetValue(bs, Nothing).ToString().ToLower() <> "notset") Then
+                                If (p.PropertyType Is System.Type.GetType("System.DateTime") And d <> DateTime.MinValue) Then
+                                    myCommand.Parameters.AddWithValue("@" + p.Name, p.GetValue(bs, Nothing))
+                                ElseIf p.PropertyType IsNot System.Type.GetType("System.DateTime") Then
+                                    myCommand.Parameters.AddWithValue("@" + p.Name, p.GetValue(bs, Nothing))
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+                myCommand.Parameters.AddWithValue("@OnlyHasResults", OnlyHasResults)
+
+                conn.Open()
+
+                Return myCommand
+            End Using
+        End Function
+
+        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32, ByVal loadOrientation As Boolean, ByVal loadExcpetions As Boolean, ByVal loadTasks As Boolean, ByVal getByBatchStage As Boolean, ByVal loadComments As Boolean) As BatchCollection
+            Dim tmpList As New BatchCollection()
+            Dim dt As New DataTable
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Dim da As SqlDataAdapter = New SqlDataAdapter(BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user, OnlyHasResults))
+                da.Fill(dt)
+                dt.TableName = "BatchSearch"
+
+                Dim lst As List(Of BatchView) = BusinessEntities.Helpers.GetList(Of BatchView)(dt)
+                tmpList.AddRange(lst)
+
+                For Each b As BatchView In tmpList
+                    FillFullBatchfields(b, myConnection, False, loadDurations, True, loadExcpetions, loadTasks, getByBatchStage, loadTestRecords, loadOrientation, loadTSRemaining, loadComments, user)
+                Next
+            End Using
+
+            If tmpList IsNot Nothing Then
+                Return tmpList
+            Else
+                Return New BatchCollection
+            End If
+        End Function
+
+        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal user As User, ByVal OnlyHasResults As Int32, ByVal loadExcpetions As Boolean, ByVal loadTasks As Boolean, ByVal getByBatchStage As Boolean, ByVal loadOrientation As Boolean, ByVal loadComments As Boolean) As List(Of BatchView)
+            Dim tmpList As New List(Of BatchView)()
+            Dim dt As New DataTable
+
+            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                Dim da As SqlDataAdapter = New SqlDataAdapter(BatchSearch(myConnection, bs, byPass, userID, loadTestRecords, loadDurations, loadTestRecords, user, OnlyHasResults))
+                da.Fill(dt)
+                dt.TableName = "BatchSearch"
+
+                Dim lst As List(Of BatchView) = BusinessEntities.Helpers.GetList(Of BatchView)(dt)
+                tmpList.AddRange(lst)
+
+                For Each b As BatchView In tmpList
+                    FillFullBatchfields(b, myConnection, False, loadDurations, True, loadExcpetions, loadTasks, getByBatchStage, loadTestRecords, loadOrientation, loadTSRemaining, loadComments, user)
+                Next
+            End Using
+
+            If tmpList IsNot Nothing Then
+                Return tmpList
+            Else
+                Return New List(Of BatchView)
+            End If
+        End Function
+#End Region
+
+#Region "Fill Methods"
+        Private Shared Function GetBatchTask(ByVal myreader As DataTable, ByVal batchdata As BatchView) As Boolean
             For Each dr As DataRow In myreader.Rows
                 Dim currentBatchTask As ITaskModel = New REMI.BusinessEntities.ProcessTask
                 Dim ed As Double
@@ -1013,215 +776,40 @@ Namespace REMI.Dal
             End If
         End Sub
 
-        Private Shared Sub FillBaseBatchFields(ByVal dataRecord As IDataRecord, ByVal batchData As BatchView, ByVal getTSRemaining As Boolean, ByVal isRemiTimedServiceCall As Boolean, ByVal loadOrientation As Boolean, ByVal user As User)
-            batchData.QRANumber = dataRecord.GetString(dataRecord.GetOrdinal("QRANumber"))
+        Private Shared Sub FillFullBatchfields(ByVal batchData As BatchView, ByVal sqlConnection As SqlConnection, ByVal cacheData As Boolean, ByVal getSpecificTestDurations As Boolean, ByVal getJob As Boolean, ByVal getExceptions As Boolean, ByVal getTaskInfo As Boolean, ByVal getByBatchStage As Boolean, ByVal getTestRecords As Boolean, ByVal loadOrientation As Boolean, ByVal loadTSRemaining As Boolean, ByVal loadComments As Boolean, ByVal user As User)
+            batchData.ReqData = RequestDB.GetRequest(batchData.QRANumber, user, sqlConnection)
 
-            batchData.ReqData = RequestDB.GetRequest(batchData.QRANumber, user)
-
-            batchData.Status = DirectCast(dataRecord.GetInt32(dataRecord.GetOrdinal("BatchStatus")), BatchStatus)
-            batchData.PriorityID = dataRecord.GetInt32(dataRecord.GetOrdinal("PriorityID"))
-
-            If (batchData.PriorityID = 0) Then
-                batchData.Priority = "NotSet"
-            Else
-                batchData.Priority = dataRecord.GetString(dataRecord.GetOrdinal("Priority"))
-            End If
-
-            batchData.ProductGroup = dataRecord.GetString(dataRecord.GetOrdinal("ProductGroupName"))
-            batchData.ProductID = dataRecord.GetInt32(dataRecord.GetOrdinal("ProductID"))
-            batchData.ID = dataRecord.GetInt32(dataRecord.GetOrdinal("ID"))
-
-            If (batchData.Comments.Count = 0 And Not (isRemiTimedServiceCall)) Then
-                batchData.Comments = GetBatchComments(batchData.QRANumber)
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ProductType")) Then
-                batchData.ProductType = dataRecord.GetString(dataRecord.GetOrdinal("ProductType"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ProductTypeID")) Then
-                batchData.ProductTypeID = dataRecord.GetInt32(dataRecord.GetOrdinal("ProductTypeID"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("AccessoryGroupName")) Then
-                batchData.AccessoryGroup = dataRecord.GetString(dataRecord.GetOrdinal("AccessoryGroupName"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("AccessoryGroupID")) Then
-                batchData.AccessoryGroupID = dataRecord.GetInt32(dataRecord.GetOrdinal("AccessoryGroupID"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("testcenterlocation")) Then
-                batchData.TestCenterLocation = dataRecord.GetString(dataRecord.GetOrdinal("testcenterlocation"))
-                batchData.TestCenterLocationID = dataRecord.GetInt32(dataRecord.GetOrdinal("testcenterlocationID"))
-            End If
-
-            batchData.RequestPurposeID = dataRecord.GetInt32(dataRecord.GetOrdinal("requestpurposeid"))
-
-            If (batchData.RequestPurposeID = 0) Then
-                batchData.RequestPurpose = "NotSet"
-            Else
-                batchData.RequestPurpose = dataRecord.GetString(dataRecord.GetOrdinal("requestpurpose"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("JobName")) Then
-                batchData.JobName = dataRecord.GetString(dataRecord.GetOrdinal("JobName"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("testUnitCount")) Then
-                batchData.NumberOfUnits = dataRecord.GetInt32(dataRecord.GetOrdinal("testUnitCount"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("jobWILocation")) Then
-                batchData.JobWILocation = dataRecord.GetString(dataRecord.GetOrdinal("jobWILocation"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ActiveTaskAssignee")) Then
-                batchData.ActiveTaskAssignee = dataRecord.GetString(dataRecord.GetOrdinal("ActiveTaskAssignee"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("TestStageName")) Then
-                batchData.TestStageName = dataRecord.GetString(dataRecord.GetOrdinal("TestStageName"))
-            End If
-
-            If Helpers.HasColumn(dataRecord, "TestStageID") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("TestStageID")) Then
-                    batchData.TestStageID = dataRecord.GetInt32(dataRecord.GetOrdinal("TestStageID"))
-                End If
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("HasUnitstoReturnToRequestor")) Then
-                batchData.HasUnitsNotReturnedToRequestor = (dataRecord.GetInt32(dataRecord.GetOrdinal("HasUnitstoReturnToRequestor")) > 0)
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("TestStageCompletionStatus")) Then
-                batchData.TestStageCompletion = DirectCast(dataRecord.GetInt32(dataRecord.GetOrdinal("TestStageCompletionStatus")), TestStageCompletionStatus)
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("HasBatchSpecificExceptions")) Then
-                batchData.HasBatchSpecificExceptions = dataRecord.GetBoolean(dataRecord.GetOrdinal("HasBatchSpecificExceptions"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ReportApprovedDate")) Then
-                batchData.ReportApprovedDate = dataRecord.GetDateTime(dataRecord.GetOrdinal("ReportApprovedDate"))
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ReportRequiredBy")) Then
-                batchData.ReportRequiredBy = dataRecord.GetDateTime(dataRecord.GetOrdinal("ReportRequiredBy"))
-            End If
-
-            If Helpers.HasColumn(dataRecord, "MechanicalTools") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("MechanicalTools")) Then
-                    batchData.MechanicalTools = dataRecord.GetString(dataRecord.GetOrdinal("MechanicalTools"))
-                End If
-            End If
-
-            If Helpers.HasColumn(dataRecord, "Department") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("Department")) Then
-                    batchData.Department = dataRecord.GetString(dataRecord.GetOrdinal("Department"))
-                End If
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("DepartmentID")) Then
-                    batchData.DepartmentID = dataRecord.GetInt32(dataRecord.GetOrdinal("DepartmentID"))
-                End If
-            End If
-
-            If Helpers.HasColumn(dataRecord, "JobID") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("JobID")) Then
-                    batchData.JobID = dataRecord.GetInt32(dataRecord.GetOrdinal("JobID"))
-                End If
-            End If
-
-            If Helpers.HasColumn(dataRecord, "TestUnitCount") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("TestUnitCount")) Then
-                    batchData.NumberOfUnitsExpected = dataRecord.GetInt32(dataRecord.GetOrdinal("TestUnitCount"))
-                End If
-            End If
-
-            If Helpers.HasColumn(dataRecord, "ContinueOnFailures") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ContinueOnFailures")) Then
-                    batchData.ContinueOnFailures = dataRecord.GetBoolean(dataRecord.GetOrdinal("ContinueOnFailures"))
-                End If
-            End If
-
-            If Helpers.HasColumn(dataRecord, "EstTSCompletionTime") Then
-                batchData.EstTSCompletionTime = dataRecord.GetFloat(dataRecord.GetOrdinal("EstTSCompletionTime"))
-            End If
-
-            If Helpers.HasColumn(dataRecord, "ExecutiveSummary") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("ExecutiveSummary")) Then
-                    batchData.ExecutiveSummary = dataRecord.GetString(dataRecord.GetOrdinal("ExecutiveSummary"))
-                End If
-            End If
-
-            If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("Requestor")) Then
-                batchData.Requestor = dataRecord.GetString(dataRecord.GetOrdinal("Requestor"))
-            End If
-
-            If Helpers.HasColumn(dataRecord, "EstJobCompletionTime") Then
-                batchData.EstJobCompletionTime = dataRecord.GetFloat(dataRecord.GetOrdinal("EstJobCompletionTime"))
-            End If
-
-            If Not Helpers.HasColumn(dataRecord, "EstTSCompletionTime") Then
-                If (getTSRemaining) Then
-                    Dim result2 As New Dictionary(Of String, Int32)
-                    Dim result As Dictionary(Of String, Double) = DetermineEstimatedTSTime(batchData.ID, batchData.TestStageName, batchData.JobName, 0, 0, 1, result2)
-
-                    batchData.EstTSCompletionTime = result("TSTimeLeft")
-                    batchData.EstJobCompletionTime = result("JobTimeLeft")
-
-                    result.Remove("TSTimeLeft")
-                    result.Remove("JobTimeLeft")
-
-                    batchData.TestStageIDTimeLeftGrid = result2
-                    batchData.TestStageTimeLeftGrid = result
-                End If
-            End If
-
-            If Helpers.HasColumn(dataRecord, "DateCreated") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("DateCreated")) Then
-                    batchData.DateCreated = dataRecord.GetDateTime(dataRecord.GetOrdinal("DateCreated"))
-                End If
-            End If
-
-            If Helpers.HasColumn(dataRecord, "OrientationID") Then
-                If Not dataRecord.IsDBNull(dataRecord.GetOrdinal("OrientationID")) Then
-                    If (loadOrientation) Then
-                        batchData.Orientation = GetOrientation(dataRecord.GetInt32(dataRecord.GetOrdinal("OrientationID")))
-                        batchData.OrientationID = batchData.Orientation.ID
-                        batchData.OrientationXML = batchData.Orientation.Definition
-                    Else
-                        batchData.OrientationID = dataRecord.GetInt32(dataRecord.GetOrdinal("OrientationID"))
-                    End If
-                End If
-            End If
-
-            Helpers.FillObjectParameters(dataRecord, batchData)
-        End Sub
-
-        ''' <summary>
-        ''' Uses the given sql connection and retreives all the required data for a batch.
-        ''' </summary>
-        ''' <param name="mybatchList"></param>
-        ''' <param name="myconnection"></param>
-        ''' <remarks></remarks>
-        Private Shared Sub FillFullBatchFields(ByVal mybatchList As BatchCollection, ByVal myconnection As SqlConnection, Optional ByVal cacheData As Boolean = True, Optional ByVal getSpecificTestDurations As Boolean = True, Optional ByVal getJob As Boolean = True, Optional ByVal getExceptions As Boolean = True, Optional ByVal getTaskInfo As Boolean = True, Optional ByVal getByBatchStage As Boolean = False, Optional ByVal getTestRecords As Boolean = True)
-            'from here on these use overloaded methods with current connection
-            If mybatchList IsNot Nothing Then
-                For Each myBatch As Batch In mybatchList
-                    FillFullBatchFields(myBatch, myconnection, cacheData, getSpecificTestDurations, getJob, getExceptions, getTaskInfo, getByBatchStage, getTestRecords)
-                Next
-            End If
-        End Sub
-
-        Private Shared Sub FillFullBatchfields(ByVal batchData As Batch, ByVal sqlConnection As SqlConnection, ByVal cacheData As Boolean, ByVal getSpecificTestDurations As Boolean, ByVal getJob As Boolean, ByVal getExceptions As Boolean, ByVal getTaskInfo As Boolean, ByVal getByBatchStage As Boolean, ByVal getTestRecords As Boolean)
             If getJob Then
                 batchData.SetJob(REMIAppCache.GetJob(batchData.JobName))
-                If batchData.Job.ID <= 0 Then
+                If batchData.Job Is Nothing Then
                     batchData.SetJob(JobDB.GetItem(batchData.JobName, sqlConnection, 0))
                     If cacheData Then
                         REMIAppCache.SetJob(batchData.Job)
                     End If
                 End If
+            End If
+
+            If (loadComments) Then
+                batchData.Comments = GetBatchComments(batchData.QRANumber, sqlConnection)
+            End If
+
+            If (loadTSRemaining) Then
+                Dim result2 As New Dictionary(Of String, Int32)
+                Dim result As Dictionary(Of String, Double) = DetermineEstimatedTSTime(batchData.ID, batchData.TestStageName, batchData.JobName, 0, 0, 1, result2, sqlConnection)
+
+                batchData.EstTSCompletionTime = result("TSTimeLeft")
+                batchData.EstJobCompletionTime = result("JobTimeLeft")
+
+                result.Remove("TSTimeLeft")
+                result.Remove("JobTimeLeft")
+
+                batchData.TestStageIDTimeLeftGrid = result2
+                batchData.TestStageTimeLeftGrid = result
+            End If
+
+            If (loadOrientation) Then
+                batchData.Orientation = GetOrientation(batchData.OrientationID, sqlConnection)
+                batchData.OrientationXML = batchData.Orientation.Definition
             End If
 
             If getSpecificTestDurations Then
@@ -1237,7 +825,7 @@ Namespace REMI.Dal
             If getExceptions Then
                 batchData.TestExceptions = REMIAppCache.GetTestExceptions(batchData.QRANumber)
                 If batchData.TestExceptions Is Nothing Then
-                    batchData.TestExceptions = TestExceptionDB.GetExceptionsForBatch(batchData.QRANumber)
+                    batchData.TestExceptions = TestExceptionDB.GetExceptionsForBatch(batchData.QRANumber, sqlConnection)
                     If cacheData Then
                         REMIAppCache.SetTestExceptions(batchData.QRANumber, batchData.TestExceptions)
                     End If
@@ -1245,7 +833,7 @@ Namespace REMI.Dal
             End If
 
             If (getTaskInfo) Then
-                GetBatchTaskInfo(batchData, getByBatchStage)
+                GetBatchTaskInfo(batchData, getByBatchStage, sqlConnection)
             End If
 
             If (getTestRecords) Then
@@ -1259,8 +847,6 @@ Namespace REMI.Dal
                     End If
                 End If
             End If
-
-            'get the testunits each time in case the last log has changed.
 
             batchData.TestUnits = TestUnitDB.GetBatchUnits(batchData.QRANumber, sqlConnection)
 

@@ -65,10 +65,10 @@ Partial Class ManageBatches_EditExceptions
 
     Protected Sub ProcessQRA(ByVal QRANumber As String)
         Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
-        Dim b As Batch
+        Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetItem(bc.BatchNumber)
+            b = BatchManager.GetBatchView(bc.BatchNumber, True, False, True, True, True, False, False, False, False, False)
 
             If (Not UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) And Not UserManager.GetCurrentUser.IsTestCenterAdmin And Not UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID)) Then
                 Response.Redirect(b.BatchInfoLink, True)
@@ -138,7 +138,7 @@ Partial Class ManageBatches_EditExceptions
 
     Protected Sub ddlTestStageSelection_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTestStageSelection.SelectedIndexChanged
         Dim testStageId As Integer
-        Dim b As Batch = BatchManager.GetItem(hdnQRANumber.Value)
+        Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, False, True, True, True, False, False, False, False, False)
 
         If Integer.TryParse(ddlTestStageSelection.SelectedValue, testStageId) Then
             ddlTests.Items.Clear()

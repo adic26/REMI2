@@ -128,7 +128,7 @@ Public Class RemiAPI
 
                 bs.TestStageType = testStageType
 
-                Return BatchManager.BatchSearchBase(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False)
+                Return BatchManager.BatchSearchBase(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False)
             End If
         Catch ex As Exception
             BatchManager.LogIssue("REMI API SearchBatch", "e3", NotificationType.Errors, ex, "User: " + userIdentification)
@@ -988,7 +988,7 @@ Public Class RemiAPI
             Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
 
             If (barcode.Validate()) Then
-                Dim batch As Batch = BatchManager.GetItem(barcode.BatchNumber)
+                Dim batch As BatchView = BatchManager.GetBatchView(barcode.BatchNumber, True, False, True, False, False, False, False, False, False, False)
 
                 If ((From tr In batch.TestRecords Where tr.TestName <> "Sample Evaluation" Select tr).Count > 0) Then
                     If (batch.RequestStatus.ToLower = TRSStatus.Received.ToString().ToLower() Or batch.RequestStatus.ToLower = TRSStatus.Submitted.ToString().ToLower() Or batch.RequestStatus.ToLower = "pm review") Then
@@ -1077,7 +1077,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a qra number this method will return the batch information.")> _
     Public Function GetBatch(ByVal requestNumber As String) As BatchView
         Try
-            Return BatchManager.GetViewBatch(requestNumber)
+            Return BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, True, True)
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
         End Try
@@ -1087,7 +1087,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets The Request Notifications")> _
     Public Function GetBatchNotifications(ByVal requestNumber As String) As NotificationCollection
         Try
-            Dim b As BatchView = BatchManager.GetViewBatch(requestNumber)
+            Dim b As BatchView = BatchManager.GetBatchView(requestNumber, False, False, True, False, False, False, False, False, False, False)
 
             Return b.GetAllNotifications(False)
         Catch ex As Exception
@@ -1099,7 +1099,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Gets The Request Comments")> _
     Public Function GetBatchComments(ByVal requestNumber As String) As DataTable
         Try
-            Dim b As BatchView = BatchManager.GetViewBatch(requestNumber)
+            Dim b As BatchView = BatchManager.GetBatchView(requestNumber, False, False, True, False, True, False, False, False, False, True)
             Dim dtComments As New DataTable("Comments")
             dtComments.Columns.Add("Text", Type.GetType("System.String"))
             dtComments.Columns.Add("UserName", Type.GetType("System.String"))
@@ -1152,7 +1152,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Get's All Batch Stages.")> _
     Public Function GetTestStagesByBatch(ByVal requestNumber As String) As TestStageCollection
         Try
-            Dim b As Batch = BatchManager.GetItem(requestNumber)
+            Dim b As BatchView = BatchManager.GetBatchView(requestNumber, True, False, True, True, True, False, True, False, False, False)
 
             If b IsNot Nothing Then
                 Dim t As List(Of Int32) = (From stg In b.Tasks Select stg.TestStageID).ToList
@@ -1226,7 +1226,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns the percentage as an integer of test stages that are complete based on the current test stage that the batch is at.")> _
     Public Function GetPercentageCompleteForBatch(ByVal requestNumber As String) As Integer
         Try
-            Dim b As BatchView = BatchManager.GetViewBatch(requestNumber)
+            Dim b As BatchView = BatchManager.GetBatchView(requestNumber, False, False, True, False, True, False, False, False, False, False)
 
             Return b.PercentageComplete()
         Catch ex As Exception
@@ -1308,7 +1308,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Returns the data associated with a particular batch.")> _
     Public Function GetBatchResultsOverview(ByVal qraNumber As String) As List(Of TestStageResultOverview)
         Try
-            Dim b As BatchView = BatchManager.GetViewBatch(qraNumber)
+            Dim b As BatchView = BatchManager.GetBatchView(qraNumber, False, False, True, False, True, False, True, False, False, False)
 
             Return GetTestStageOverview(b)
         Catch ex As Exception
@@ -1370,7 +1370,7 @@ Public Class RemiAPI
             Dim bc As New DeviceBarcodeNumber(Helpers.CleanInputText(BatchManager.GetReqString(qraNumber), 21))
             Dim ib As New IncomingAppBatchData
             If bc.Validate Then
-                Dim b As Batch = BatchManager.GetItem(bc.BatchNumber)
+                Dim b As BatchView = BatchManager.GetBatchView(bc.BatchNumber, True, False, True, False, False, False, True, False, False, False)
 
                 If b IsNot Nothing Then
                     ib.JobName = b.Job.Name

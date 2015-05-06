@@ -42,42 +42,47 @@ Partial Class TestRecords_EditDetail
         If (rblMFISFIAcc.Enabled) Then
             Dim testID As Int32 = hdnTestID.Value
             Dim testStageID As Int32 = hdnTestStageID.Value
+            Dim tr As TestRecord = TestRecordManager.GetItemByID(hdnTRID.Value)
+            tr.FunctionalType = rblMFISFIAcc.SelectedItem.Value
 
-            Dim gv As GridView = DirectCast(Me.FindControl(gvwRelabMatrix.UniqueID), GridView)
-            For i As Int32 = 0 To gvwRelabMatrix.Rows.Count - 1
-                For j As Integer = 2 To gvwRelabMatrix.Rows(i).Cells.Count - 1
-                    Dim testUnitNum As Int32 = Me.gvwRelabMatrix.Rows(i).Cells(1).Text
-                    Dim lookup As String = Me.gvwRelabMatrix.HeaderRow().Cells(j).Text
-                    Dim passFail As Int32 = -1
-                    Dim idP As String = String.Format("{0}$Pass{1}{2}", gvwRelabMatrix.Rows(i).UniqueID, testUnitNum, lookup)
-                    Dim idF As String = String.Format("{0}$Fail{1}{2}", gvwRelabMatrix.Rows(i).UniqueID, testUnitNum, lookup)
+            If (TestRecordManager.InsertRelabRecord(tr)) Then
 
-                    If (Request.Form(idP) = "on") Then
-                        passFail = 1
-                    ElseIf (Request.Form(idF) = "on") Then
-                        passFail = 0
-                    Else
-                        passFail = -1
-                    End If
+                Dim gv As GridView = DirectCast(Me.FindControl(gvwRelabMatrix.UniqueID), GridView)
+                For i As Int32 = 0 To gvwRelabMatrix.Rows.Count - 1
+                    For j As Integer = 2 To gvwRelabMatrix.Rows(i).Cells.Count - 1
+                        Dim testUnitNum As Int32 = Me.gvwRelabMatrix.Rows(i).Cells(1).Text
+                        Dim lookup As String = Me.gvwRelabMatrix.HeaderRow().Cells(j).Text
+                        Dim passFail As Int32 = -1
+                        Dim idP As String = String.Format("{0}$Pass{1}{2}", gvwRelabMatrix.Rows(i).UniqueID, testUnitNum, lookup)
+                        Dim idF As String = String.Format("{0}$Fail{1}{2}", gvwRelabMatrix.Rows(i).UniqueID, testUnitNum, lookup)
 
-                    If (passFail > -1) Then
-                        Dim type As String
+                        If (Request.Form(idP) = "on") Then
+                            passFail = 1
+                        ElseIf (Request.Form(idF) = "on") Then
+                            passFail = 0
+                        Else
+                            passFail = -1
+                        End If
 
-                        Select Case rblMFISFIAcc.SelectedValue
-                            Case 1
-                                type = "SFIFunctionalMatrix"
-                            Case 2
-                                type = "MFIFunctionalMatrix"
-                            Case 3
-                                type = "AccFunctionalMatrix"
-                            Case Else
-                                type = "SFIFunctionalMatrix"
-                        End Select
+                        If (passFail > -1) Then
+                            Dim type As String
 
-                        TestRecordManager.InsertRelabRecordMeasurement(testID, testStageID, hdnUnitID.Value, LookupsManager.GetLookupID(type, lookup, 0), IIf(passFail = 0, False, True), rblMFISFIAcc.Enabled)
-                    End If
+                            Select Case rblMFISFIAcc.SelectedValue
+                                Case 1
+                                    type = "SFIFunctionalMatrix"
+                                Case 2
+                                    type = "MFIFunctionalMatrix"
+                                Case 3
+                                    type = "AccFunctionalMatrix"
+                                Case Else
+                                    type = "SFIFunctionalMatrix"
+                            End Select
+
+                            TestRecordManager.InsertRelabRecordMeasurement(testID, testStageID, hdnUnitID.Value, LookupsManager.GetLookupID(type, lookup, 0), IIf(passFail = 0, False, True), rblMFISFIAcc.Enabled)
+                        End If
+                    Next
                 Next
-            Next
+            End If
         End If
 
         If Not notMain.HasErrors Then
@@ -197,7 +202,7 @@ Partial Class TestRecords_EditDetail
             hdnTestStageID.Value = tr.TestStageID
             odsTrackingLogs.DataBind()
             hdnUnitID.Value = tr.TestUnitID
-            hdnBatchID.Value = BatchManager.GetItem(tr.QRANumber).ID
+            hdnBatchID.Value = BatchManager.GetRAWBatchInformation(tr.QRANumber).ID
             lblReTestCount.Text = tr.CurrentRelabResultVersion
 
             Dim myMenu As WebControls.Menu

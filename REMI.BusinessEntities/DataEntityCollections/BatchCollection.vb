@@ -15,12 +15,12 @@ Namespace REMI.BusinessEntities
             MyBase.New(initialList)
         End Sub
 
-        Public Function GetUnitsAtLocation(ByVal barCodePrefix As Integer) As TestUnitCollection
-            Dim tuColl As New TestUnitCollection
-            For Each B As Batch In Me
-                tuColl.Add(B.GetUnitsAtLocation(barCodePrefix))
-            Next
-            Return tuColl
-        End Function
+        'Public Function GetUnitsAtLocation(ByVal barCodePrefix As Integer) As TestUnitCollection
+        '    Dim tuColl As New TestUnitCollection
+        '    For Each B As Batch In Me
+        '        tuColl.Add(B.GetUnitsAtLocation(barCodePrefix))
+        '    Next
+        '    Return tuColl
+        'End Function
     End Class
 End Namespace

@@ -78,7 +78,7 @@ Partial Class Admin_TestStages
             bs.JobID = j.ID
             bs.ExcludedStatus = BatchSearchBatchStatus.Complete
 
-            bscJobs.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+            bscJobs.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False))
 
             hdnJobID.Value = j.ID
 

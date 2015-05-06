@@ -147,6 +147,9 @@ Namespace REMI.Dal
         Public Shared Function GetItem(ByVal JobName As String, ByVal myconnection As SqlConnection, ByVal JobID As Int32) As Job
             Dim myJob As Job = REMIAppCache.GetJob(JobName)
             If myJob Is Nothing Then
+                If (myconnection Is Nothing) Then
+                    myconnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                End If
                 Using jobCommand As New SqlCommand("remispJobsSelectSingleItem", myconnection)
                     jobCommand.CommandType = CommandType.StoredProcedure
 
