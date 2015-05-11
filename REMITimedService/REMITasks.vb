@@ -438,36 +438,39 @@ Public Class REMITasks
             sb.AppendLine(DateTime.Now + " - Retrieving Active Jobs...")
 
             Dim requests As New List(Of String)
-            Dim dtDepartments As DataTable = DBControl.DAL.Remi.GetLookups("Department")
-            Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
-            Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
-            requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
+            Dim dtDepartments As DataTable = DBControl.DAL.Remi.GetLookups("Department", 0, 0, String.Empty, String.Empty, 0, 1, "remi")
+            Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined}
 
             For Each department As DataRow In dtDepartments.Rows.Cast(Of DataRow)()
-                If (department.Field(Of String)("LookupType").ToString() <> "All Test Centers") Then
-                    Try
-                        sb.AppendLine(String.Format("{0} - Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
-                        requests.AddRange((From r As DataRow In DBControl.DAL.Remi.GetRequestsNotInREMI(department.Field(Of String)("LookupType").ToString()) Select r.Field(Of String)("RequestNumber")).Distinct.ToList())
-                    Catch ex As Exception
-                        sb.AppendLine(String.Format("{0} - Error Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
-                    End Try
-                End If
+                Try
+                    sb.AppendLine(String.Format("{0} - Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
+                    Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("LookupType").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
+                    requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
+                    sb.AppendLine(String.Format("{0} - Retrieving Request Batches Not In REMI For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
+                    requests.AddRange((From r As DataRow In DBControl.DAL.Remi.GetRequestsNotInREMI(department.Field(Of String)("LookupType").ToString()) Select r.Field(Of String)("RequestNumber")).Distinct.ToList())
+                Catch ex As Exception
+                    sb.AppendLine(String.Format("{0} - Error Retrieving Request Batches For {1}...", DateTime.Now, department.Field(Of String)("LookupType").ToString()))
+                End Try
             Next
 
             If requests IsNot Nothing Then
                 sb.AppendLine(DateTime.Now.ToString + " - Done. " + requests.Count.ToString + " batches retreived.")
-                sb.AppendLine(DateTime.Now + " - Starting checks...")
+                sb.AppendLine(DateTime.Now + " - Starting Checks...")
 
                 For Each req In requests
                     retry = 1
 
                     Do
                         Try
-                            DBControl.DAL.Remi.MoveBatchForward(req, "remi@blackberry.com")
+                            Dim updateSuccessful As Boolean = DBControl.DAL.Remi.MoveBatchForward(req, "remi@blackberry.com")
+
+                            If (Not updateSuccessful) Then
+                                sb.AppendLine(String.Format("{0} Failed To Move Forward", req))
+                            End If
 
                             counter += 1
                             If counter Mod 50 = 0 Then
-                                sb.AppendFormat("{0} - Last batch checked ({1}) : {2}", DateTime.Now, counter, req)
+                                sb.AppendFormat("{0} - Last Batch Checked ({1}) : {2}", DateTime.Now, counter, req)
                                 sb.Append(Environment.NewLine)
                             End If
                             retry = 5

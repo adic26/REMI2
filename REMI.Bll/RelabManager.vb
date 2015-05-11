@@ -94,10 +94,12 @@ Namespace REMI.Bll
                                                                 Select f.ResultMeasurementID, f.ResultsMeasurement.Result.TestStage.TestStageName, f.ResultsMeasurement.Result.Test.TestName, f.ResultsMeasurement.Result.TestUnit.BatchUnitNumber, f.ResultsMeasurement.Lookup.Values, f.File, f.FileName, f.ContentType).ToList(), "Files")
                 End If
 
-                Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Values") = If(row("Values").ToString() = "Observation", instance.remispGetObservationParameters(DirectCast(row("ResultMeasurementID"), Int32)).FirstOrDefault(), row("Values")))
+                If (dt.Rows.Count > 0) Then
+                    Array.ForEach(dt.AsEnumerable().ToArray(), Sub(row) row("Values") = If(row("Values").ToString() = "Observation", instance.remispGetObservationParameters(DirectCast(row("ResultMeasurementID"), Int32)).FirstOrDefault(), row("Values")))
 
-                dt.Columns.Remove("ResultMeasurementID")
-                dt.AcceptChanges()
+                    dt.Columns.Remove("ResultMeasurementID")
+                    dt.AcceptChanges()
+                End If
 
                 Return dt
             Catch ex As Exception

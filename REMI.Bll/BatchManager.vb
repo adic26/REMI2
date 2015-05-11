@@ -463,7 +463,13 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
+            Dim rq As RequestFieldsCollection = RequestManager.GetRequest(requestNumber)
             Dim b As BatchView = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, True, True)
+
+            If (rq(0).IsFromExternalSystem) Then
+                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
+                RequestManager.SaveRequest(barcode.Type, rq, userIdentification, Nothing)
+            End If
 
             If (b.OutOfDate) Then
                 BatchManager.Save(b)
