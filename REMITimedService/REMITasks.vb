@@ -695,6 +695,7 @@ Public Class REMITasks
 
             If (_sendNotAssignedEmails) Then
                 _sendSuccessEmails = DBControl.DAL.Remi.HasAccess("RemiTimedServiceSendSuccessEmails")
+                Dim dtServices As DataTable = DBControl.DAL.Remi.GetServicesAccess(Nothing)
                 Dim sb As New StringBuilder
                 Dim countStarted As Int32 = 0
                 Dim succeeded As Boolean = True
@@ -705,9 +706,13 @@ Public Class REMITasks
 
                 Try
                     Dim requests As New List(Of String)
-                    Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined, DBControl.remiAPI.BatchSearchBatchStatus.Received}
-                    Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
-                    requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
+                    Dim ebs As DBControl.remiAPI.BatchSearchBatchStatus() = New DBControl.remiAPI.BatchSearchBatchStatus() {DBControl.remiAPI.BatchSearchBatchStatus.Complete, DBControl.remiAPI.BatchSearchBatchStatus.Rejected, DBControl.remiAPI.BatchSearchBatchStatus.Held, DBControl.remiAPI.BatchSearchBatchStatus.NotSavedToREMI, DBControl.remiAPI.BatchSearchBatchStatus.Quarantined}
+
+                    For Each department As DataRow In (From s As DataRow In dtServices.Rows Where s.Field(Of String)("ServiceName") = "BatchCheck" Select s).ToList
+                        Dim bv As DBControl.remiAPI.BatchView() = DBControl.DAL.Remi.SearchBatch("remi", String.Empty, DateTime.MinValue, DateTime.MaxValue, department.Field(Of String)("Values").ToString(), String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DBControl.remiAPI.TrackingLocationFunction.NotSet, String.Empty, DBControl.remiAPI.BatchStatus.NotSet, DBControl.remiAPI.TrackingLocationFunction.NotSet, Nothing, ebs, DBControl.remiAPI.TestStageType.NotSet)
+                        requests.AddRange((From rs As DBControl.remiAPI.BatchView In bv Select rs.QRANumber).Distinct.ToList())
+                        sb.AppendLine(String.Format("{0} - Adding Requests For Department {1}", DateTime.Now, department.Field(Of String)("Values").ToString()))
+                    Next
 
                     For Each req In requests
                         If (DBControl.DAL.Remi.BatchStartedBeforeAssigned(req)) Then
