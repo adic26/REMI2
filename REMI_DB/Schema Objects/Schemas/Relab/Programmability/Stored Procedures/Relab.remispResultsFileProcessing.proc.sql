@@ -449,8 +449,9 @@ BEGIN
 					INSERT INTO #files ([FileName])
 					SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 					FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
-					
-					IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+					WHERE LOWER(T.c.query('.').value('.', 'nvarchar(max)')) <> 'n/a'
+
+					IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '' AND LOWER(@FileName) <> 'n/a')
 					BEGIN
 						INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
 					END
@@ -466,6 +467,7 @@ BEGIN
 									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 								WHERE ResultMeasurementID = @ResultMeasurementID)) AND (SELECT COUNT(*) FROM #files) > 0
 					BEGIN
+
 						PRINT 'Files Didnt Insert Correctly Rolling Back'
 						GOTO HANDLE_ERROR
 					END
@@ -507,8 +509,9 @@ BEGIN
 						INSERT INTO #files ([FileName])
 						SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 						FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+						WHERE LOWER(T.c.query('.').value('.', 'nvarchar(max)')) <> 'n/a'
 						
-						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '' AND LOWER(@FileName) <> 'n/a')
 						BEGIN
 							INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
 						END					
@@ -557,8 +560,9 @@ BEGIN
 						INSERT INTO #files ([FileName])
 						SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 						FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+						WHERE LOWER(T.c.query('.').value('.', 'nvarchar(max)')) <> 'n/a'
 						
-						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '' AND LOWER(@FileName) <> 'n/a')
 						BEGIN
 							INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
 						END
