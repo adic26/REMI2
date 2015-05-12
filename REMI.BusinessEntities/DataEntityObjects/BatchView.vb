@@ -258,6 +258,15 @@ Namespace REMI.BusinessEntities
             Return True
         End Function
 
+        Public Function UnitIsExempt(ByVal testStageID As Int32, ByVal testID As Int32, ByVal unitNumber As Integer) As Boolean
+            Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageID = testStageID AndAlso t.TestID = testID Select t).FirstOrDefault
+            If task IsNot Nothing Then
+                Return Not task.UnitsForTask.Contains(unitNumber)
+            End If
+            'default to exempt
+            Return True
+        End Function
+
         <XmlIgnore()> _
         <DataTableColName("PercentageComplete")> _
         Public Overridable ReadOnly Property PercentageComplete() As Integer
@@ -304,15 +313,15 @@ Namespace REMI.BusinessEntities
         End Property
 
 #Region "Public Table Views"
-        Public Function GetOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String) As String
-            If (From t In Tasks Where t.TestStageName = testStageName AndAlso t.TestName = TestName Select t).FirstOrDefault() Is Nothing Then
+        Public Function GetOverviewCellString(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32) As String
+            If (From t In Tasks Where t.TestStageName = TestStageName AndAlso t.TestID = testID Select t).FirstOrDefault() Is Nothing Then
                 If (Me.Status = BatchStatus.Complete) Then
                     Return "N/A"
                 Else
                     Return "DNP"
                 End If
             Else
-                Dim overallStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageName, TestName, NumberOfTestableUnits(testStageName, TestName))
+                Dim overallStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageID, testID, NumberOfTestableUnits(testStageID, testID))
 
                 If overallStatus <> TestRecordStatus.NotSet Then
                     Return overallStatus.ToString
@@ -322,8 +331,8 @@ Namespace REMI.BusinessEntities
             End If
         End Function
 
-        Public Function NumberOfTestableUnits(ByVal testStageName As String, ByVal testName As String) As Integer
-            Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testName Select t).FirstOrDefault
+        Public Function NumberOfTestableUnits(ByVal testStageID As Int32, ByVal testID As Int32) As Integer
+            Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageID = testStageID AndAlso t.TestID = testID Select t).FirstOrDefault
 
             If task IsNot Nothing Then
                 Return task.UnitsForTask.Count
@@ -339,7 +348,7 @@ Namespace REMI.BusinessEntities
         ''' <param name="testStageName"></param>
         ''' <returns></returns>
         ''' <remarks>The strings use html &quot; becuase they are sitting in javascript links.</remarks>
-        Public Function GetPopupStringForDailyListTableCell(ByVal testName As String, ByVal testStageName As String, ByVal rqResults As DataTable) As String
+        Public Function GetPopupStringForDailyListTableCell(ByVal testID As Int32, ByVal testStageID As Int32, ByVal rqResults As DataTable) As String
             Dim retStr As New System.Text.StringBuilder
             If TestUnits IsNot Nothing Then
                 retStr.Append("<a href=&quot;")
@@ -354,12 +363,12 @@ Namespace REMI.BusinessEntities
                     retStr.Append(tu.BatchUnitNumber)
                     retStr.Append("</a> - ")
 
-                    If UnitIsExempt(testStageName, testName, tu.BatchUnitNumber) Then
+                    If UnitIsExempt(testStageID, testID, tu.BatchUnitNumber) Then
                         retStr.Append("DNP") 'Unit should not be tested here
                         retStr.Append("<br />")
                     Else
-                        Dim tr As TestRecord = TestRecords.GetItem(Me.JobName, testStageName, testName, tu.BatchUnitNumber)
-                        Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testName Select t).FirstOrDefault
+                        Dim tr As TestRecord = TestRecords.GetItem(Me.JobName, testStageID, testID, tu.BatchUnitNumber)
+                        Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageID = testStageID AndAlso t.TestID = testID Select t).FirstOrDefault
 
                         If (tr IsNot Nothing) Then
                             retStr = retStr.Replace("###TESTID####", tr.TestID.ToString()).Replace("###TESTSTAGEID####", tr.TestStageID.ToString())
@@ -432,25 +441,26 @@ Namespace REMI.BusinessEntities
             Return retStr.ToString
         End Function
 
-        Public Overrides Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As String
+        Public Overrides Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As String
             If TestUnits.Count <= 0 Then
                 Return "0 Units"
             Else
-                If (From t In Tasks Where t.TestStageName = testStageName AndAlso t.TestName = TestName Select t).FirstOrDefault() Is Nothing Then
+                Dim names = (From t In Tasks Where t.TestStageID = testStageID AndAlso t.TestID = testID Select t.TestName, t.TestStageName).FirstOrDefault()
+                If (From t In Tasks Where t.TestStageID = testStageID AndAlso t.TestID = testID Select t).FirstOrDefault() Is Nothing Then
                     If (Me.Status = BatchStatus.Complete) Then
                         Return "N/A"
                     Else
                         Return "DNP"
                     End If
                 Else
-                    Dim numTestableUnits As Integer = NumberOfTestableUnits(testStageName, TestName)
-                    Dim overallTestRecordStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageName, TestName, numTestableUnits)
+                    Dim numTestableUnits As Integer = NumberOfTestableUnits(testStageID, testID)
+                    Dim overallTestRecordStatus As TestRecordStatus = TestRecords.GetOverallTestStatus(jobName, testStageID, testID, numTestableUnits)
                     Dim overallStatus As String = String.Empty
 
                     If overallTestRecordStatus <> TestRecordStatus.NotSet Then
-                        Dim popUpString As String = GetPopupStringForDailyListTableCell(TestName, testStageName, rqResults)
+                        Dim popUpString As String = GetPopupStringForDailyListTableCell(testID, testStageID, rqResults)
 
-                        Dim baseLinkAll As String = String.Format("<a href=""{0}"" onmouseover=""Tip('{1}',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'-600',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()"">{{0}}</a>", REMIWebLinks.GetTestRecordsLink(System.Web.HttpContext.Current.Server.UrlEncode(Me.QRANumber), TestName, testStageName, Me.JobName, 0), popUpString)
+                        Dim baseLinkAll As String = String.Format("<a href=""{0}"" onmouseover=""Tip('{1}',STICKY,'true',CLICKCLOSE,'true',CLOSEBTN,'true',WIDTH,'-600',TITLEBGCOLOR,'#6494C8')"" onmouseout=""UnTip()"">{{0}}</a>", REMIWebLinks.GetTestRecordsLink(System.Web.HttpContext.Current.Server.UrlEncode(Me.QRANumber), names.TestName, names.TestStageName, Me.JobName, 0), popUpString)
                         'finally get the actual text displayed in the cell and format it in.
 
                         If (popUpString.ToLower.Contains("pending")) Then
@@ -467,7 +477,7 @@ Namespace REMI.BusinessEntities
                     Else
                         Dim exceptionedUnits As Integer = Me.NumberOfUnits - numTestableUnits
                         If (hasEditAuthority Or isTestCenterAdmin Or hasBatchSetupAuthority) Then
-                            Return (String.Format("<label style""font-color:red"">{0}&nbsp;</Label><label id='label{1}' class=""DNP""></label><input title=""Add Exception"" type=""checkbox"" id=""{1}"" value="""" onClick=""this.disabled=true;JavaScript: AddException('{2}','{3}','{4}','{5}','{6}', '0');"" />", IIf(exceptionedUnits > 0, exceptionedUnits.ToString() + " Exc", String.Empty), jobName + testStageName + TestName + Me.QRANumber + "0", jobName, testStageName, TestName, Me.QRANumber, Me.NumberOfUnits))
+                            Return (String.Format("<label style""font-color:red"">{0}&nbsp;</Label><label id='label{1}' class=""DNP""></label><input title=""Add Exception"" type=""checkbox"" id=""{1}"" value="""" onClick=""this.disabled=true;JavaScript: AddException('{2}','{3}','{4}','{5}','{6}', '0');"" />", IIf(exceptionedUnits > 0, exceptionedUnits.ToString() + " Exc", String.Empty), jobName + names.TestStageName + names.TestName + Me.QRANumber + "0", jobName, names.TestStageName, names.TestName, Me.QRANumber, Me.NumberOfUnits))
                         Else
                             Return String.Empty
                         End If
@@ -525,17 +535,17 @@ Namespace REMI.BusinessEntities
             Dim dt As New DataTable("TestingSummary")
             dt.Columns.Add("Test Stage")
 
-            Dim applicableParamtericTests As String() = (From task In Tasks Where task.TestType = TestType.Parametric Order By task.TestName Ascending Select task.TestName).Distinct().ToArray()
-            For Each t As String In applicableParamtericTests
-                If Not dt.Columns.Contains(t) Then
-                    dt.Columns.Add(t)
+            Dim applicableParamtericTests = (From task In Tasks Where task.TestType = TestType.Parametric Order By task.TestName Ascending Select task.TestName, task.TestID).Distinct().ToArray()
+            For Each t In applicableParamtericTests
+                If Not dt.Columns.Contains(t.TestName) Then
+                    dt.Columns.Add(t.TestName)
                 End If
             Next
 
             Dim r As DataRow
             Dim num = (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder).Distinct.Count()
 
-            For Each ts In (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder).Distinct
+            For Each ts In (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder, task.TestID, task.TestStageID).Distinct
                 r = dt.NewRow
 
                 If (showHyperlinks) Then
@@ -544,25 +554,25 @@ Namespace REMI.BusinessEntities
                     r.Item("Test Stage") = ts.TestStageName
                 End If
 
-                For Each t As String In applicableParamtericTests
-                    Dim text As String = GetTestOverviewCellString(Me.JobName, ts.TestStageName, t, hasEditItemAuthority, isTestCenterAdmin, rqResults, hasBatchSetupAuthority, showHyperlinks)
-                    r.Item(t) = text
+                For Each t In applicableParamtericTests
+                    Dim text As String = GetTestOverviewCellString(Me.JobName, ts.TestStageID, t.TestID, hasEditItemAuthority, isTestCenterAdmin, rqResults, hasBatchSetupAuthority, showHyperlinks)
+                    r.Item(t.TestName) = text
                 Next
                 dt.Rows.Add(r)
             Next
 
-            For Each t As String In applicableParamtericTests
-                Dim paraTest As String = t
+            For Each t In applicableParamtericTests
+                Dim paraTest As String = t.TestName
                 Dim distinctRowCount() As DataRow = (From row As DataRow In dt.Rows.Cast(Of DataRow)() Where row.Field(Of String)(paraTest) = "DNP" Select row).ToArray
 
                 If (distinctRowCount.Count() = num And num > 0) Then
-                    dt.Columns.Remove(t)
+                    dt.Columns.Remove(t.TestName)
                 End If
 
                 Dim distinctRowNACount() As DataRow = (From row As DataRow In dt.Rows.Cast(Of DataRow)() Where row.Field(Of String)(paraTest) = "N/A" Select row).ToArray
 
                 If (distinctRowNACount.Count() = num And num > 0) Then
-                    dt.Columns.Remove(t)
+                    dt.Columns.Remove(t.TestName)
                 End If
             Next
             Return dt

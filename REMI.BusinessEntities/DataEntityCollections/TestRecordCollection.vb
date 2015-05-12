@@ -27,6 +27,10 @@ Namespace REMI.BusinessEntities
             Return (From tr In Me Where tr.BatchUnitNumber().Equals(unitNumber) AndAlso tr.JobName().Equals(jobName) AndAlso tr.TestName().Equals(testName) AndAlso tr.TestStageName().Equals(testStagename) Select tr).FirstOrDefault
         End Function
 
+        Public Function GetItem(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32, ByVal unitNumber As Integer) As TestRecord
+            Return (From tr In Me Where tr.BatchUnitNumber().Equals(unitNumber) AndAlso tr.JobName().Equals(jobName) AndAlso tr.TestID = testID AndAlso tr.TestStageID = testStageID Select tr).FirstOrDefault
+        End Function
+
         Public Function GetItem(ByVal jobName As String, ByVal testStagename As String, ByVal testName As String, ByVal unitNumber As Integer, ByVal testID As Int32, ByVal testStageID As Int32) As TestRecord
             Return (From tr In Me Where tr.BatchUnitNumber().Equals(unitNumber) AndAlso tr.JobName().Equals(jobName) AndAlso tr.TestName().Equals(testName) AndAlso tr.TestStageName().Equals(testStagename) AndAlso tr.TestID().Equals(testID) AndAlso tr.TestStageID().Equals(testStageID) Select tr).FirstOrDefault
         End Function
@@ -70,41 +74,40 @@ Namespace REMI.BusinessEntities
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function GetOverallTestStatus(ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal numberOfUnits As Integer) As TestRecordStatus
+        Public Function GetOverallTestStatus(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32, ByVal numberOfUnits As Integer) As TestRecordStatus
             'if we have a record for the test, but not a full set. return in progress
-            Dim numberOfRecords As Integer = FindByTestStageTest(jobName, testStageName, testName).Count()
+            Dim numberOfRecords As Integer = FindByTestStageTest(jobName, testStageID, testID).Count()
             If numberOfRecords > 0 AndAlso numberOfRecords < numberOfUnits Then
                 Return TestRecordStatus.InProgress
             End If
 
             'otherwise we have a full set, calculate which title should be displayed.
 
-            If CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.InProgress) > 0 Then
+            If CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.InProgress) > 0 Then
                 Return TestRecordStatus.InProgress
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.CompleteFail) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.CompleteFail) > 0 Then
                 Return TestRecordStatus.CompleteFail
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.NeedsRetest) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.NeedsRetest) > 0 Then
                 Return TestRecordStatus.NeedsRetest
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.WaitingForResult) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.WaitingForResult) > 0 Then
                 Return TestRecordStatus.WaitingForResult
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.FARequired) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.FARequired) > 0 Then
                 Return TestRecordStatus.FARequired
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.FARaised) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.FARaised) > 0 Then
                 Return TestRecordStatus.FARaised
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.CompleteKnownFailure) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.CompleteKnownFailure) > 0 Then
                 Return TestRecordStatus.CompleteKnownFailure
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.Complete) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.Complete) > 0 Then
                 Return TestRecordStatus.Complete
-            ElseIf CountRecordsByStatus(jobName, testStageName, testName, TestRecordStatus.Quarantined) > 0 Then
+            ElseIf CountRecordsByStatus(jobName, testStageID, testID, TestRecordStatus.Quarantined) > 0 Then
                 Return TestRecordStatus.Quarantined
             Else
                 Return TestRecordStatus.NotSet
             End If
         End Function
-        Public Function CountRecordsByStatus(ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal status As TestRecordStatus) As Integer
 
-            Return (From tr In Me Where tr.Status.Equals(status) AndAlso tr.TestName.Equals(testName) AndAlso tr.TestStageName.Equals(testStageName)).Count
-
+        Public Function CountRecordsByStatus(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32, ByVal status As TestRecordStatus) As Integer
+            Return (From tr In Me Where tr.Status.Equals(status) AndAlso tr.TestID = testID AndAlso tr.TestStageID = testStageID).Count
         End Function
         ''' <summary>
         ''' Returns a collection of test records for a test stage.
@@ -128,9 +131,9 @@ Namespace REMI.BusinessEntities
               Where tr.TestStageName().Equals(testStageName) And tr.TestName.Equals(testName) And tr.JobName.Equals(jobName) And tr.TestUnitID.Equals(unitID) _
               Select tr).ToList())
         End Function
-        Public Function FindByTestStageTest(ByVal jobName As String, ByVal testStageName As String, ByVal testName As String) As TestRecordCollection
+        Public Function FindByTestStageTest(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32) As TestRecordCollection
             Return New TestRecordCollection((From tr In Me _
-              Where tr.TestStageName().Equals(testStageName) And tr.TestName.Equals(testName) And tr.JobName.Equals(jobName) _
+              Where tr.TestStageID = testStageID And tr.TestID = testID And tr.JobName.Equals(jobName) _
               Select tr).ToList())
         End Function
         Public Function FindByTestUnit(ByVal unitNumber As Integer) As TestRecordCollection

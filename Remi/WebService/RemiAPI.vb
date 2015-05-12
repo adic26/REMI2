@@ -278,20 +278,20 @@ Public Class RemiAPI
     End Function
 #End Region
 
-#Region "DTATTA"
-    <Obsolete("Don't use this routine any more. This is OLD DTATTA. Use the new DTATTA"), _
-    WebMethod(EnableSession:=True, Description:="Attempts to mark a unit as fail for functional test or SFI Functional in remi for the given set of drops.")> _
-    Public Function DTATTAAddRemoveUnit(ByVal requestNumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As Remi.BusinessEntities.FinalTestResult) As Boolean
-        Try
-            If UserManager.SetUserToSession(userIdentification) Then
-                Return TestRecordManager.DTATTAUpdateUnitTestStatus(requestNumber, testStage, test, userIdentification, result)
-            End If
-        Catch ex As Exception
-            TestRecordManager.LogIssue("REMI API DTATTAAddRemoveUnit", "e3", NotificationType.Errors, ex, " user: " + UserManager.GetCurrentValidUserLDAPName() + " test stage: " + testStage + " Request: " + requestNumber)
-        End Try
-        Return False
-    End Function
-#End Region
+    '#Region "DTATTA"
+    '    <Obsolete("Don't use this routine any more. This is OLD DTATTA. Use the new DTATTA"), _
+    '    WebMethod(EnableSession:=True, Description:="Attempts to mark a unit as fail for functional test or SFI Functional in remi for the given set of drops.")> _
+    '    Public Function DTATTAAddRemoveUnit(ByVal requestNumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As Remi.BusinessEntities.FinalTestResult) As Boolean
+    '        Try
+    '            If UserManager.SetUserToSession(userIdentification) Then
+    '                Return TestRecordManager.DTATTAUpdateUnitTestStatus(requestNumber, testStage, test, userIdentification, result)
+    '            End If
+    '        Catch ex As Exception
+    '            TestRecordManager.LogIssue("REMI API DTATTAAddRemoveUnit", "e3", NotificationType.Errors, ex, " user: " + UserManager.GetCurrentValidUserLDAPName() + " test stage: " + testStage + " Request: " + requestNumber)
+    '        End Try
+    '        Return False
+    '    End Function
+    '#End Region
 
 #Region "Station/Hosts"
     <Obsolete("Don't use this routine any more. Use ReturnMultipleStationNames instead."), _
