@@ -72,10 +72,10 @@ Namespace REMI.BusinessEntities
             Dim testStage = (From t In Me.Tasks Where t.TestType = TestType.IncomingEvaluation Or t.TestType = TestType.Parametric Or t.TestName.ToLower.Contains("drop") Or t.TestName.ToLower.Contains("tumble") Select t.TestStageName, t.TestStageID).Distinct().ToList()
 
             For Each ts In testStage
-                For Each t In (From test In Me.Tasks Where test.TestStageID = ts.TestStageID And test.TestStageName = ts.TestStageName Select test).ToList()
+                For Each t In (From test In Me.Tasks Where test.TestStageID = ts.TestStageID Select test).ToList()
                     For Each tu As TestUnit In Me.TestUnits
-                        If Not Me.TestingIsCompleteAndReviewedOrNotRequired(ts.TestStageName, t.TestName, tu.BatchUnitNumber, t.TestType) Then
-                            tr = Me.TestRecords.GetItem(Me.JobName, ts.TestStageName, t.TestName, tu.BatchUnitNumber, t.TestID, ts.TestStageID)
+                        If Not Me.TestingIsCompleteAndReviewedOrNotRequired(ts.TestStageID, t.TestID, tu.BatchUnitNumber, t.TestType) Then
+                            tr = Me.TestRecords.GetItem(Me.JobName, ts.TestStageID, t.TestID, tu.BatchUnitNumber)
 
                             If tr Is Nothing Then  'new result
                                 tr = New TestRecord(Me.QRANumber, tu.BatchUnitNumber, Me.Job.Name, ts.TestStageName, t.TestName, tu.ID, String.Empty, t.TestID, ts.TestStageID)
@@ -88,11 +88,11 @@ Namespace REMI.BusinessEntities
             Return trColl
         End Function
 
-        Public Function TestingIsCompleteAndReviewedOrNotRequired(ByVal testStageName As String, ByVal testName As String, ByVal unitNumber As Integer, ByVal testType As TestType) As Boolean
-            Dim currentTR As TestRecord = TestRecords.GetItem(JobName, testStageName, testName, unitNumber)
+        Public Function TestingIsCompleteAndReviewedOrNotRequired(ByVal testStageID As Int32, ByVal testID As Int32, ByVal unitNumber As Integer, ByVal testType As TestType) As Boolean
+            Dim currentTR As TestRecord = TestRecords.GetItem(JobName, testStageID, testID, unitNumber)
 
             If (currentTR IsNot Nothing) Then
-                Dim tst As TestStageType = (From ts As TestStage In Me.Job.TestStages Where ts.Name = testStageName Select ts.TestStageType).FirstOrDefault()
+                Dim tst As TestStageType = (From ts As TestStage In Me.Job.TestStages Where ts.ID = testStageID Select ts.TestStageType).FirstOrDefault()
 
                 If (tst = TestStageType.IncomingEvaluation Or tst = TestStageType.NonTestingTask Or tst = TestStageType.FailureAnalysis) Then
                     Return True
@@ -101,7 +101,7 @@ Namespace REMI.BusinessEntities
 
             If (testType = Contracts.TestType.IncomingEvaluation And currentTR Is Nothing) Then
                 Return False
-            ElseIf TestExceptions.UnitIsExempt(unitNumber, testStageName, testName, Me.Tasks) Then
+            ElseIf TestExceptions.UnitIsExempt(unitNumber, testStageID, testID, Me.Tasks) Then
                 Return True
             Else
                 Return False
@@ -249,15 +249,6 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
-        Public Function UnitIsExempt(ByVal testStageName As String, ByVal testName As String, ByVal unitNumber As Integer) As Boolean
-            Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testName Select t).FirstOrDefault
-            If task IsNot Nothing Then
-                Return Not task.UnitsForTask.Contains(unitNumber)
-            End If
-            'default to exempt
-            Return True
-        End Function
-
         Public Function UnitIsExempt(ByVal testStageID As Int32, ByVal testID As Int32, ByVal unitNumber As Integer) As Boolean
             Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageID = testStageID AndAlso t.TestID = testID Select t).FirstOrDefault
             If task IsNot Nothing Then
@@ -314,7 +305,7 @@ Namespace REMI.BusinessEntities
 
 #Region "Public Table Views"
         Public Function GetOverviewCellString(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32) As String
-            If (From t In Tasks Where t.TestStageName = TestStageName AndAlso t.TestID = testID Select t).FirstOrDefault() Is Nothing Then
+            If (From t In Tasks Where t.TestStageID = testStageID AndAlso t.TestID = testID Select t).FirstOrDefault() Is Nothing Then
                 If (Me.Status = BatchStatus.Complete) Then
                     Return "N/A"
                 Else
@@ -344,8 +335,8 @@ Namespace REMI.BusinessEntities
         ''' This function returns a link which is placed in the daily list tables. 
         ''' It contains the overview of testing for each test unit in a batch for the particular test.
         ''' </summary>
-        ''' <param name="testName"></param>
-        ''' <param name="testStageName"></param>
+        ''' <param name="testID"></param>
+        ''' <param name="testStageID"></param>
         ''' <returns></returns>
         ''' <remarks>The strings use html &quot; becuase they are sitting in javascript links.</remarks>
         Public Function GetPopupStringForDailyListTableCell(ByVal testID As Int32, ByVal testStageID As Int32, ByVal rqResults As DataTable) As String
@@ -486,17 +477,17 @@ Namespace REMI.BusinessEntities
             End If
         End Function
 
-        Public Function GetEnvTestOverviewCellString(ByVal unitNumber As Integer, ByVal testStageName As String, ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal hasBatchSetupAuthority As Boolean) As String
-            Dim tr As TestRecord = TestRecords.GetItem(Me.JobName, testStageName, testStageName, unitNumber)
+        Public Function GetEnvTestOverviewCellString(ByVal unitNumber As Integer, ByVal testStageID As Int32, ByVal hasEditItemAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal hasBatchSetupAuthority As Boolean) As String
+            Dim tr As TestRecord = TestRecords.GetItem(Me.JobName, testStageID, unitNumber)
             Dim TestTimeRemaining As Double = 0
             Dim outDate As String = String.Empty
-            Dim units = (From task In Tasks Where task.TestStageName = testStageName And task.TestName = testStageName Select task.UnitsForTask).Distinct
+            Dim units = (From task In Tasks Where task.TestStageID = testStageID Select task.UnitsForTask).Distinct
 
             If (Array.IndexOf(units.ToArray(0), unitNumber) < 0) Then
                 Return "DNP"
             ElseIf tr IsNot Nothing AndAlso tr.Status <> TestRecordStatus.NotSet Then
                 Dim retString As String = String.Empty
-                Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageName = testStageName AndAlso t.TestName = testStageName Select t).FirstOrDefault
+                Dim task As ITaskModel = (From t In Me.Tasks Where t.TestStageID = testStageID Select t).FirstOrDefault
 
                 If (task.ResultCheck.Count > 0) Then
                     Dim resultComparison() As String = (From tsk In task.ResultCheck Where tsk.Split(New Char() {":"c}, System.StringSplitOptions.RemoveEmptyEntries)(0) = unitNumber.ToString() Select tsk.Split(New Char() {":"c}, System.StringSplitOptions.RemoveEmptyEntries)(1).Split(New Char() {"-"c}, System.StringSplitOptions.RemoveEmptyEntries)).FirstOrDefault()
@@ -522,7 +513,7 @@ Namespace REMI.BusinessEntities
                 Return retString
             Else
                 If (hasEditItemAuthority Or isTestCenterAdmin Or hasBatchSetupAuthority) Then
-                    Return (String.Format("<label style""font-color:red"">{0}&nbsp;</Label><label id='label{1}' class=""DNP""></label><input title=""Add Exception"" type=""checkbox"" id=""{1}"" value="""" onClick=""this.disabled=true;JavaScript: AddException('{2}','{3}','{4}','{5}','{6}', '{7}');"" />", String.Empty, JobName + testStageName + testStageName + Me.QRANumber + unitNumber.ToString(), JobName, testStageName, testStageName, Me.QRANumber, 0, unitNumber))
+                    Return (String.Format("<label style""font-color:red"">{0}&nbsp;</Label><label id='label{1}' class=""DNP""></label><input title=""Add Exception"" type=""checkbox"" id=""{1}"" value="""" onClick=""this.disabled=true;JavaScript: AddException('{2}','{3}','{4}','{5}','{6}', '{7}');"" />", String.Empty, JobName + TestStageName + TestStageName + Me.QRANumber + unitNumber.ToString(), JobName, TestStageName, TestStageName, Me.QRANumber, 0, unitNumber))
                 Else
                     Return String.Empty
                 End If
@@ -586,12 +577,12 @@ Namespace REMI.BusinessEntities
             Dim orientationXML As XDocument = XDocument.Parse(orientation)
             Dim dt As New DataTable("StressingSummary")
             dt.Columns.Add("Test Unit")
-            Dim applicableTestStages = (From task In Tasks Where task.TestStageType = TestType.EnvironmentalStress AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName).Distinct
+            Dim applicableTestStages = (From task In Tasks Where task.TestStageType = TestType.EnvironmentalStress AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.TestStageID).Distinct
 
             If (applicableTestStages.Count > 0) Then
                 'add all the columns
                 For Each ts In applicableTestStages
-                    dt.Columns.Add(ts)
+                    dt.Columns.Add(ts.TestStageName)
                 Next
 
                 'add the data
@@ -605,13 +596,13 @@ Namespace REMI.BusinessEntities
                     End If
 
                     For Each ts In applicableTestStages
-                        Dim drop As String = ts.ToLower.Replace("drops", String.Empty).Replace("drop", String.Empty).Replace("tumbles", String.Empty).Replace("tumble", String.Empty).Trim()
-                        r.Item(ts) = GetEnvTestOverviewCellString(tu.BatchUnitNumber, ts, hasEditItemAuthority, isTestCenterAdmin, hasBatchSetupAuthority)
+                        Dim drop As String = ts.TestStageName.ToLower.Replace("drops", String.Empty).Replace("drop", String.Empty).Replace("tumbles", String.Empty).Replace("tumble", String.Empty).Trim()
+                        r.Item(ts.TestStageName) = GetEnvTestOverviewCellString(tu.BatchUnitNumber, ts.TestStageID, hasEditItemAuthority, isTestCenterAdmin, hasBatchSetupAuthority)
 
                         Dim orientationDesc As String = GetOrientationSetting(drop, tu.BatchUnitNumber.ToString(), orientationXML)
 
                         If (Not String.IsNullOrEmpty(orientationDesc)) Then
-                            r.Item(ts) = String.Format("{0} {1}{2}{3}", r.Item(ts).ToString(), If(showHyperlinks, "<b>", String.Empty), orientationDesc, If(showHyperlinks, "</b>", String.Empty))
+                            r.Item(ts.TestStageName) = String.Format("{0} {1}{2}{3}", r.Item(ts.TestStageName).ToString(), If(showHyperlinks, "<b>", String.Empty), orientationDesc, If(showHyperlinks, "</b>", String.Empty))
                         End If
                     Next
                     dt.Rows.Add(r)
@@ -715,7 +706,7 @@ Namespace REMI.BusinessEntities
                 maxTestStageProcessOrder = (From ts In Me.Job.TestStages Where ts.IsArchived = False Select ts.ProcessOrder).Max
             End If
 
-            If Me.TestStage IsNot Nothing AndAlso TestStageCompleteByStatus(Me.TestStageName, TestStageCompletionStatus.ProcessComplete) AndAlso _
+            If Me.TestStage IsNot Nothing AndAlso TestStageCompleteByStatus(Me.TestStageID, TestStageCompletionStatus.ProcessComplete) AndAlso _
             Me.TestStage.ProcessOrder < maxTestStageProcessOrder Then
                 If Me.TestStageCompletion <> TestStageCompletionStatus.ReadyForNextStage Then
                     TestStageCompletion = TestStageCompletionStatus.ReadyForNextStage
@@ -725,7 +716,7 @@ Namespace REMI.BusinessEntities
                 End If
             End If
 
-            If TestStageCompleteByStatus(Me.TestStageName, TestStageCompletionStatus.TestingComplete) Then
+            If TestStageCompleteByStatus(Me.TestStageID, TestStageCompletionStatus.TestingComplete) Then
                 If TestStageCompletion <> TestStageCompletionStatus.TestingComplete Then
                     TestStageCompletion = TestStageCompletionStatus.TestingComplete
                     Return True
@@ -735,11 +726,11 @@ Namespace REMI.BusinessEntities
             End If
 
             If (Me.TestStage.ProcessOrder = maxTestStageProcessOrder) Then
-                Dim teststagename As String = (From ts In Me.Job.TestStages Where ts.TestStageType = TestStageType.FailureAnalysis Select ts.Name).FirstOrDefault()
+                Dim teststage = (From ts In Me.Job.TestStages Where ts.TestStageType = TestStageType.FailureAnalysis Select ts.Name, ts.ID).FirstOrDefault()
 
-                If (Me.TestRecords.FindByTestStage(Me.JobName, teststagename).Count() = 0 And Me.TestRecords.UnitIsInFA(Me.QRANumber)) Then
+                If (Me.TestRecords.FindByTestStage(Me.JobName, teststage.ID).Count() = 0 And Me.TestRecords.UnitIsInFA(Me.QRANumber)) Then
                     Me.Status = BatchStatus.InProgress
-                    Me.SetTestStage(teststagename)
+                    Me.SetTestStage(teststage.Name)
                     Return True
                 End If
             End If
@@ -752,14 +743,14 @@ Namespace REMI.BusinessEntities
             Return False
         End Function
 
-        Public Function TestStageCompleteByStatus(ByVal teststageName As String, ByVal completionStatus As TestStageCompletionStatus) As Boolean
+        Public Function TestStageCompleteByStatus(ByVal teststageID As Int32, ByVal completionStatus As TestStageCompletionStatus) As Boolean
             Dim allUnitsAreInFA As Boolean = True
-            Dim testStage As TestStage = (From ts In Me.Job.TestStages Where ts.Name = teststageName).FirstOrDefault()
+            Dim testStage As TestStage = (From ts In Me.Job.TestStages Where ts.ID = teststageID).FirstOrDefault()
 
             If TestUnits IsNot Nothing Then
                 For Each tu As TestUnit In TestUnits
                     If (testStage.TestStageType = TestStageType.FailureAnalysis) Then
-                        Dim FAAnalysisCount As Int32 = Me.TestRecords.FindByTestStageUnit(Me.JobName, Me.TestStageName, tu.BatchUnitNumber).Count()
+                        Dim FAAnalysisCount As Int32 = Me.TestRecords.FindByTestStageUnit(Me.JobName, teststageID, tu.BatchUnitNumber).Count()
 
                         If (Me.TestRecords.UnitIsInFA(tu.BatchUnitNumber) And FAAnalysisCount > 0) Then
                             allUnitsAreInFA = False
@@ -767,10 +758,10 @@ Namespace REMI.BusinessEntities
                             Return False
                         End If
                     Else
-                        If (Not Me.TestRecords.UnitIsInFA(tu.BatchUnitNumber, teststageName)) Then
+                        If (Not Me.TestRecords.UnitIsInFA(tu.BatchUnitNumber, teststageID)) Then
                             allUnitsAreInFA = False
 
-                            If CountUnTested(tu.BatchUnitNumber, teststageName, completionStatus) > 0 Then
+                            If CountUnTested(tu.BatchUnitNumber, teststageID, completionStatus) > 0 Then
                                 Return False
                             End If
                         End If
@@ -789,17 +780,17 @@ Namespace REMI.BusinessEntities
             End If
         End Function
 
-        Public Function CountUnTested(ByVal unitNumber As Integer, ByVal teststageName As String, ByVal completionStatus As TestStageCompletionStatus) As Integer
+        Public Function CountUnTested(ByVal unitNumber As Integer, ByVal testStageID As Int32, ByVal completionStatus As TestStageCompletionStatus) As Integer
             Dim count As Integer
-            If Job.TestStages.FindByName(teststageName) IsNot Nothing Then
-                For Each t As Test In Job.TestStages.FindByName(teststageName).Tests
+            If Job.TestStages.FindByID(testStageID) IsNot Nothing Then
+                For Each t As Test In Job.TestStages.FindByID(testStageID).Tests
                     Select Case completionStatus
                         Case TestStageCompletionStatus.ProcessComplete
-                            If Not TestingCompleteOrNotRequired(Me.JobName, teststageName, t.Name, unitNumber, t.TestType) Then
+                            If Not TestingCompleteOrNotRequired(Me.JobName, testStageID, t.ID, unitNumber, t.TestType) Then
                                 count += 1
                             End If
                         Case TestStageCompletionStatus.TestingComplete
-                            If Not TestingIsCompleteAndReviewedOrNotRequired(teststageName, t.Name, unitNumber, t.TestType) Then
+                            If Not TestingIsCompleteAndReviewedOrNotRequired(testStageID, t.ID, unitNumber, t.TestType) Then
                                 count += 1
                             End If
                         Case Else
@@ -809,12 +800,12 @@ Namespace REMI.BusinessEntities
             Return count
         End Function
 
-        Public Function TestingCompleteOrNotRequired(ByVal jobName As String, ByVal testStageName As String, ByVal testName As String, ByVal unitNumber As Integer, ByVal testType As TestType) As Boolean
-            Dim currentTR As TestRecord = TestRecords.GetItem(jobName, testStageName, testName, unitNumber)
+        Public Function TestingCompleteOrNotRequired(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32, ByVal unitNumber As Integer, ByVal testType As TestType) As Boolean
+            Dim currentTR As TestRecord = TestRecords.GetItem(jobName, testStageID, testID, unitNumber)
 
             If (testType = Contracts.TestType.IncomingEvaluation And (currentTR IsNot Nothing AndAlso (currentTR.Status <> TestRecordStatus.InProgress And currentTR.Status <> TestRecordStatus.NotSet And currentTR.Status <> TestRecordStatus.NeedsRetest))) Then
                 Return True
-            ElseIf testType <> Contracts.TestType.IncomingEvaluation And (TestExceptions.UnitIsExempt(unitNumber, testStageName, testName, Me.Tasks) OrElse _
+            ElseIf testType <> Contracts.TestType.IncomingEvaluation And (TestExceptions.UnitIsExempt(unitNumber, testStageID, testID, Me.Tasks) OrElse _
                   (currentTR IsNot Nothing AndAlso (currentTR.Status <> TestRecordStatus.InProgress And currentTR.Status <> TestRecordStatus.NotSet And currentTR.Status <> TestRecordStatus.NeedsRetest))) Then
                 Return True
             End If

@@ -59,7 +59,7 @@ Partial Class ManageTestStations_Default
             For Each b As BatchView In bc
                 Dim ctu As New ChamberTestUnit
                 ctu.BatchInfoLink = b.BatchInfoLink
-                ctu.TotalTestTime = b.TestRecords.GetTotalTestTime(b.JobName, b.TestUnits(0).CurrentTestStageName, b.TestUnits(0).CurrentTestName, b.TestUnits(0).BatchUnitNumber)
+                ctu.TotalTestTime = b.TestRecords.GetTotalTestTime(b.JobName, b.TestUnits(0).CurrentTestStage.ID, b.TestUnits(0).CurrentTest.ID, b.TestUnits(0).BatchUnitNumber)
                 ctu.QRAnumber = b.QRANumber
                 ctu.Assignedto = b.TestUnits(0).AssignedTo
                 ctu.Job = b.JobName

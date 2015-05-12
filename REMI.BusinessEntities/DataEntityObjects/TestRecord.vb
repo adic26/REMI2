@@ -509,22 +509,6 @@ Namespace REMI.BusinessEntities
             End If
             Return returnVal
         End Function
-
-        'Public Overrides Function Validate() As Boolean
-        '    Dim baseValid As Boolean = MyBase.Validate
-        '    Dim localValid As Boolean = True
-        '    If localValid AndAlso FailDocs.Count >= 1 Then
-        '        'check each fail doc for validity
-        '        For Each f As RequestBase In FailDocs
-        '            If Not f.Validate Then
-        '                localValid = False
-        '                Exit For
-        '            End If
-        '        Next
-
-        '    End If
-        '    Return baseValid AndAlso localValid
-        'End Function
 #End Region
     End Class
 End Namespace
