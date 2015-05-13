@@ -1,6 +1,7 @@
 ﻿ALTER PROCEDURE [dbo].[remispMoveBatchForward] @RequestNumber NVARCHAR(11), @UserName NVARCHAR(255)
 AS
 BEGIN
+	SET NOCOUNT ON
 	DECLARE @ReqStatus NVARCHAR(50)
 	DECLARE @BatchStatus NVARCHAR(50)
 	DECLARE @NewBatchStatus INT
@@ -11,6 +12,7 @@ BEGIN
 	DECLARE @RowID INT
 	DECLARE @TestStageID INT
 	DECLARE @TestStageName NVARCHAR(255)
+	DECLARE @TestName NVARCHAR(255)
 	DECLARE @ReturnVal INT
 	DECLARE @TestID INT
 	DECLARE @IncomingCount INT
@@ -97,6 +99,7 @@ BEGIN
 		END
 		ELSE
 		BEGIN
+			SET @TestName = NULL
 			SET @TestStageID = NULL
 			SET @TestID = NULL
 			SET @FailureCount = NULL
@@ -124,8 +127,9 @@ BEGIN
 				SET @TestID=NULL
 				SET @TestStageID=NULL
 				SET @TestStageName=NULL
+				SET @TestName=NULL
 				
-				SELECT @TestID=s.TestID, @TestStageID=s.TestStageID, @TestStageName=s.TestStageName, @TestStageType=ts.TestStageType, @ProcessOrder=ts.ProcessOrder
+				SELECT @TestID=s.TestID, @TestStageID=s.TestStageID, @TestStageName=s.TestStageName, @TestStageType=ts.TestStageType, @ProcessOrder=ts.ProcessOrder, @TestName=s.TestName
 				FROM #Setup s
 					INNER JOIN TestStages ts ON ts.ID=s.TestStageID
 				WHERE s.ID=@RowID
@@ -204,6 +208,8 @@ BEGIN
 		
 		IF (@TestStageID > 0)
 		BEGIN
+			PRINT @TestStageName
+			PRINT @NewBatchStatus
 			UPDATE Batches SET TestStageName=@TestStageName, LastUser=@UserName, BatchStatus=@NewBatchStatus WHERE ID=@BatchID
 		END
 		SET @ReturnVal = 1
@@ -217,6 +223,7 @@ BEGIN
 	DROP TABLE #TempSetup
 	DROP TABLE #Setup
 	DROP TABLE #exceptions
+	SET NOCOUNT OFF
 END
 GO
 GRANT EXECUTE ON remispMoveBatchForward TO Remi

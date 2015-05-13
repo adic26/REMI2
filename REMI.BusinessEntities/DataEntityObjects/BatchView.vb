@@ -539,7 +539,6 @@ Namespace REMI.BusinessEntities
             Dim num = (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder).Distinct.Count()
 
             For Each ts In (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder, task.TestStageID).Distinct
-
                 r = dt.NewRow
 
                 If (showHyperlinks) Then

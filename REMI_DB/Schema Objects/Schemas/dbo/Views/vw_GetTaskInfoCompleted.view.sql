@@ -24,6 +24,7 @@ FROM
 			(				
 				SELECT Cast(tu.batchunitnumber AS VARCHAR(MAX)) + ', ' 
 				FROM testunits AS tu WITH(NOLOCK)
+				INNER JOIN TestRecords tr WITH(NOLOCK) ON tr.TestID=t.ID AND tr.TestStageID=ts.ID and tu.ID=tr.TestUnitID
 				WHERE tu.batchid = b.id 
 				FOR xml path ('')
 			) AS TestUnitsForTest,
