@@ -31,7 +31,7 @@ Namespace REMI.Dal
                     If (jobID > 0) Then
                         myCommand.Parameters.AddWithValue("@JobID", jobID)
                     Else
-                        myCommand.Parameters.AddWithValue("@JobName", jobName)
+                        myCommand.Parameters.AddWithValue("@JobName", jobName.Trim())
                     End If
 
                     MyConnection.Open()
@@ -70,10 +70,10 @@ Namespace REMI.Dal
                 Using myCommand As New SqlCommand("remispJobOrientationSave", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@ID", id)
-                    myCommand.Parameters.AddWithValue("@Name", name)
+                    myCommand.Parameters.AddWithValue("@Name", name.Trim())
                     myCommand.Parameters.AddWithValue("@JobID", jobID)
                     myCommand.Parameters.AddWithValue("@ProductTypeID", productTypeID)
-                    myCommand.Parameters.AddWithValue("@Description", description)
+                    myCommand.Parameters.AddWithValue("@Description", description.Trim())
                     myCommand.Parameters.AddWithValue("@IsActive", isActive)
                     myCommand.Parameters.AddWithValue("@Definition", xml)
 
@@ -192,7 +192,7 @@ Namespace REMI.Dal
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispJobsInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@JobName", MyJob.Name)
+                    myCommand.Parameters.AddWithValue("@JobName", MyJob.Name.Trim())
 
                     If Not String.IsNullOrEmpty(MyJob.WILocation) Then
                         myCommand.Parameters.AddWithValue("@WILocation", MyJob.WILocation)

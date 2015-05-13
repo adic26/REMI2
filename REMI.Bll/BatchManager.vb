@@ -477,7 +477,13 @@ Namespace REMI.Bll
 
             TestRecordManager.CheckBatchForResultUpdates(b, False)
 
-            Return BatchDB.MoveBatchForward(requestNumber, userIdentification)
+            Dim success As Boolean = BatchDB.MoveBatchForward(requestNumber, userIdentification)
+
+            If (success) Then
+                b = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, True, True)
+            End If
+
+            Return success
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _

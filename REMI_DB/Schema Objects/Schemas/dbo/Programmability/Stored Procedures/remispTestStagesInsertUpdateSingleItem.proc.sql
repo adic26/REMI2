@@ -27,19 +27,19 @@ AS
 	IF (@ID IS NULL AND NOT EXISTS (SELECT 1 FROM TestStages WHERE JobID=@jobID AND TestStageName=@TestStageName)) -- New Item
 	BEGIN
 		INSERT INTO TestStages (TestStageName, TestStageType, JobID, TestID, LastUser, Comment, ProcessOrder, IsArchived)
-		VALUES (@TestStageName, @TestStageType, @JobID, @TestID, @LastUser, @Comment, @ProcessOrder, @IsArchived)
+		VALUES (LTRIM(RTRIM(@TestStageName)), @TestStageType, @JobID, @TestID, @LastUser, LTRIM(RTRIM(@Comment)), @ProcessOrder, @IsArchived)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
 	ELSE IF (@ConcurrencyID IS NOT NULL) -- Exisiting Item
 	BEGIN
 		UPDATE TestStages SET
-			TestStageName = @TestStageName, 
+			TestStageName = LTRIM(RTRIM(@TestStageName)), 
 			TestStageType = @TestStageType,
 			JobID = @JobID,
 			TestID=@TestID,
 			LastUser = @LastUser,
-			Comment = @Comment,
+			Comment = LTRIM(RTRIM(@Comment)),
 			ProcessOrder = @ProcessOrder,
 			IsArchived = @IsArchived
 		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID

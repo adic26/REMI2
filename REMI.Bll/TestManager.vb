@@ -82,7 +82,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], True)> _
         Public Shared Function GetTest(ByVal id As Int32, ByVal name As String, ByVal parametricOnly As Boolean) As Test
             Try
-                Return TestDB.GetItem(id, name, parametricOnly)
+                Return TestDB.GetItem(id, name.Trim(), parametricOnly)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Test: {0}", ID))
                 Return Nothing

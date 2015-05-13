@@ -255,10 +255,10 @@ Namespace REMI.Dal
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTestStagesInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@TestStageName", MyTestStage.Name)
+                    myCommand.Parameters.AddWithValue("@TestStageName", MyTestStage.Name.Trim())
                     myCommand.Parameters.AddWithValue("@ProcessOrder", MyTestStage.ProcessOrder)
                     myCommand.Parameters.AddWithValue("@TestStageType", MyTestStage.TestStageType)
-                    myCommand.Parameters.AddWithValue("@JobName", MyTestStage.JobName)
+                    myCommand.Parameters.AddWithValue("@JobName", MyTestStage.JobName.Trim())
 
                     If Not String.IsNullOrEmpty(MyTestStage.Comments) Then
                         myCommand.Parameters.AddWithValue("@Comment", MyTestStage.Comments)

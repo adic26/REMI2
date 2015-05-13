@@ -22,25 +22,25 @@ BEGIN
 	
 	IF (@ID is null or @ID <=0 ) --no dupes allowed here!
 	BEGIN
-		SET @ID = (SELECT ID FROM TestRecords WITH(NOLOCK) WHERE TestStageName = @TestStageName AND JobName = @JobName AND testname=@TestName AND testunitid=@TestUnitID)
+		SET @ID = (SELECT ID FROM TestRecords WITH(NOLOCK) WHERE TestStageName = LTRIM(RTRIM(@TestStageName)) AND JobName = LTRIM(RTRIM(@JobName)) AND testname=LTRIM(RTRIM(@TestName)) AND testunitid=@TestUnitID)
 	END
 	
 	if (@TestID is null and @TestName is not null)
 	begin
-		SELECT @TestID=ID FROM Tests WITH(NOLOCK) WHERE TestName=@TestName
+		SELECT @TestID=ID FROM Tests WITH(NOLOCK) WHERE TestName=LTRIM(RTRIM(@TestName))
 	END
 
 	if (@TestStageID is null and @TestStageName is not null)
 	begin
-		SELECT @JobID=ID FROM Jobs WITH(NOLOCK) WHERE JobName=@JobName
-		SELECT @TestStageID=ID FROM TestStages WITH(NOLOCK) WHERE JobID=@JobID AND TestStageName=@TestStageName
+		SELECT @JobID=ID FROM Jobs WITH(NOLOCK) WHERE JobName=LTRIM(RTRIM(@JobName))
+		SELECT @TestStageID=ID FROM TestStages WITH(NOLOCK) WHERE JobID=@JobID AND TestStageName=LTRIM(RTRIM(@TestStageName))
 	END
 
 	IF (@ID IS NULL) -- New Item
 	BEGIN
 		INSERT INTO TestRecords (TestUnitID, Status, FailDocNumber, TestStageName, JobName, TestName, RelabVersion, LastUser, Comment,
 			ResultSource, FailDocRQID, TestID, TestStageID, FunctionalType)
-		VALUES (@TestUnitID, @Status, @FailDocNumber, @TestStageName, @JobName, @TestName, @RelabVersion, @lastUser, @Comment,
+		VALUES (@TestUnitID, @Status, @FailDocNumber, LTRIM(RTRIM(@TestStageName)), LTRIM(RTRIM(@JobName)), LTRIM(RTRIM(@TestName)), @RelabVersion, @lastUser, LTRIM(RTRIM(@Comment)),
 			@ResultSource, @FailDocRQID, @TestID, @TestStageID, @FunctionalType)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
@@ -51,12 +51,12 @@ BEGIN
 		SET TestUnitID = @TestUnitID, 
 			Status = @Status, 
 			FailDocNumber = @FailDocNumber,
-			TestStageName = @TestStageName,
-			JobName = @JobName,
-			TestName = @TestName,
+			TestStageName = LTRIM(RTRIM(@TestStageName)),
+			JobName = LTRIM(RTRIM(@JobName)),
+			TestName = LTRIM(RTRIM(@TestName)),
 			RelabVersion = @RelabVersion,
 			lastuser = @LastUser,
-			Comment = @Comment,
+			Comment = LTRIM(RTRIM(@Comment)),
 			ResultSource = @ResultSource,
 			FailDocRQID = @FailDocRQID,
 			TestID=@TestID,

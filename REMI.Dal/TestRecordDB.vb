@@ -125,9 +125,9 @@ Namespace REMI.Dal
                 Using myCommand As New SqlCommand("remispTestRecordsInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@TestUnitID", MyTestRecord.TestUnitID)
-                    myCommand.Parameters.AddWithValue("@JobName", MyTestRecord.JobName)
-                    myCommand.Parameters.AddWithValue("@TestName", MyTestRecord.TestName)
-                    myCommand.Parameters.AddWithValue("@TestStageName", MyTestRecord.TestStageName)
+                    myCommand.Parameters.AddWithValue("@JobName", MyTestRecord.JobName.Trim())
+                    myCommand.Parameters.AddWithValue("@TestName", MyTestRecord.TestName.Trim())
+                    myCommand.Parameters.AddWithValue("@TestStageName", MyTestRecord.TestStageName.Trim())
                     myCommand.Parameters.AddWithValue("@Status", MyTestRecord.Status)
                     myCommand.Parameters.AddWithValue("@RelabVersion", MyTestRecord.CurrentRelabResultVersion)
 

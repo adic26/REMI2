@@ -129,7 +129,7 @@ Namespace REMI.Bll
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
         Public Shared Function GetList(ByVal type As TestStageType, ByVal jobName As String, ByVal ShowArchived As Boolean, ByVal jobID As Int32) As TestStageCollection
             Try
-                Return TestStageDB.GetList(type, jobName, ShowArchived, jobID)
+                Return TestStageDB.GetList(type, jobName.Trim(), ShowArchived, jobID)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("JobName: {0}", jobName))
                 Return New TestStageCollection

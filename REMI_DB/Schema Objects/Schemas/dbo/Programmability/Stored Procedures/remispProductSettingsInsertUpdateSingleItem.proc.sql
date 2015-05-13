@@ -12,22 +12,8 @@ AS
 
 	IF (@ID IS NULL) -- New Item
 	BEGIN
-		INSERT INTO ProductSettings
-		(
-			lookupid, 
-			KeyName,
-			ValueText,
-			LastUser,
-			DefaultValue
-		)
-		VALUES
-		(
-			@lookupid, 
-			@KeyName,
-			@ValueText,
-			@LastUser,
-			@DefaultValue
-		)
+		INSERT INTO ProductSettings (lookupid, KeyName, ValueText, LastUser, DefaultValue)
+		VALUES (@lookupid, LTRIM(RTRIM(@KeyName)), LTRIM(RTRIM(@ValueText)), @LastUser, LTRIM(RTRIM(@DefaultValue)))
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
@@ -36,16 +22,16 @@ AS
 		if (select defaultvalue from ProductSettings where ID = @ID) != @DefaultValue
 		begin
 			--update the defaultvalues for any entries
-			update ProductSettings set ValueText = @DefaultValue where ValueText = DefaultValue and KeyName = @KeyName;
-			update ProductSettings set DefaultValue = @DefaultValue where KeyName = @KeyName;
+			update ProductSettings set ValueText = LTRIM(RTRIM(@DefaultValue)) where ValueText = DefaultValue and KeyName = @KeyName;
+			update ProductSettings set DefaultValue = LTRIM(RTRIM(@DefaultValue)) where KeyName = @KeyName;
 		end
 		
 		--and update everything else
 		UPDATE ProductSettings SET
 			lookupid = @lookupid, 
 			LastUser = @LastUser,
-			KeyName = @KeyName,
-			ValueText = ISNULL(@ValueText, '')
+			KeyName = LTRIM(RTRIM(@KeyName)),
+			ValueText = LTRIM(RTRIM(ISNULL(@ValueText, '')))
 		WHERE ID = @ID
 		SELECT @ReturnValue = @ID
 	END

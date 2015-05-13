@@ -315,7 +315,7 @@ Namespace REMI.Dal
 
                 Using myCommand As New SqlCommand("remispTestsInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@TestName", MyTest.Name)
+                    myCommand.Parameters.AddWithValue("@TestName", MyTest.Name.Trim())
                     myCommand.Parameters.AddWithValue("@Duration", MyTest.TotalHours)
                     myCommand.Parameters.AddWithValue("@TestType", MyTest.TestType)
                     myCommand.Parameters.AddWithValue("@Comment", MyTest.Comments)

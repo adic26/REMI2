@@ -436,4 +436,443 @@ END
 GO
 GRANT EXECUTE ON [Relab].[remispResultVersions] TO Remi
 GO
+ALTER PROCEDURE [dbo].[remispTestStagesInsertUpdateSingleItem]
+	@ID int OUTPUT,
+	@TestStageName nvarchar(400), 
+	@TestStageType int,
+	@JobName  nvarchar(400),
+	@Comment  nvarchar(1000)=null,
+	@TestID int = null,
+	@LastUser  nvarchar(255),
+	@ConcurrencyID rowversion OUTPUT,
+	@ProcessOrder int = 0,
+	@IsArchived BIT = 0
+AS
+	BEGIN TRANSACTION AddTestStage
+	
+	DECLARE @jobID int
+	DECLARE @ReturnValue int
+	
+	SET @jobID = (SELECT ID FROM Jobs WHERE JobName = @jobname)
+	
+	if @jobID is null and @JobName is not null --the job was not added to the db yet so add it to get an id.
+	begin
+		execute remispJobsInsertUpdateSingleItem null, @jobname,null,null,@lastuser,null
+	end
+	
+	SET @jobID = (select ID from Jobs where JobName = @jobname)
+
+	IF (@ID IS NULL AND NOT EXISTS (SELECT 1 FROM TestStages WHERE JobID=@jobID AND TestStageName=@TestStageName)) -- New Item
+	BEGIN
+		INSERT INTO TestStages (TestStageName, TestStageType, JobID, TestID, LastUser, Comment, ProcessOrder, IsArchived)
+		VALUES (LTRIM(RTRIM(@TestStageName)), @TestStageType, @JobID, @TestID, @LastUser, LTRIM(RTRIM(@Comment)), @ProcessOrder, @IsArchived)
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE IF (@ConcurrencyID IS NOT NULL) -- Exisiting Item
+	BEGIN
+		UPDATE TestStages SET
+			TestStageName = LTRIM(RTRIM(@TestStageName)), 
+			TestStageType = @TestStageType,
+			JobID = @JobID,
+			TestID=@TestID,
+			LastUser = @LastUser,
+			Comment = LTRIM(RTRIM(@Comment)),
+			ProcessOrder = @ProcessOrder,
+			IsArchived = @IsArchived
+		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
+
+		SELECT @ReturnValue = @ID
+	END
+
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM TestStages WHERE ID = @ReturnValue)
+	SET @ID = @ReturnValue
+	
+	COMMIT TRANSACTION AddTestStage
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+GO
+GRANT EXECUTE On remispTestStagesInsertUpdateSingleItem TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispTestsInsertUpdateSingleItem]
+	@TestName nvarchar(400), 
+	@Duration real, 
+	@TestType int,
+	@WILocation nvarchar(800)=null,
+	@Comment nvarchar(1000)=null,	
+	@ID int OUTPUT,
+	@LastUser nvarchar(255),
+	@ResultBasedOnTime bit,
+	@ConcurrencyID rowversion OUTPUT,
+	@IsArchived BIT = 0,
+	@Owner NVARCHAR(255) = NULL,
+	@Trainee NVARCHAR(255) = NULL,
+	@DegradationVal DECIMAL(10,3)
+AS
+	DECLARE @ReturnValue int
+	
+	IF (@ID IS NULL) and (((select count (*) from Tests where TestName = @TestName)= 0) or @TestType != 1)-- New Item
+	BEGIN
+		INSERT INTO Tests (TestName, Duration, TestType, WILocation, Comment, lastUser, ResultBasedOntime, IsArchived, [Owner], Trainee, DegradationVal)
+		VALUES (LTRIM(RTRIM(@TestName)), @Duration, @TestType, @WILocation, LTRIM(RTRIM(@Comment)), @lastUser, @ResultBasedOnTime, @IsArchived, @Owner, @Trainee, @DegradationVal)
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE -- Exisiting Item
+	BEGIN
+		UPDATE Tests SET
+			TestName = LTRIM(RTRIM(@TestName)), 
+			Duration = @Duration, 
+			TestType = @TestType, 
+			WILocation = @WILocation,
+			Comment = LTRIM(RTRIM(@Comment)),
+			lastUser = @LastUser,
+			ResultBasedOntime = @ResultBasedOnTime,
+			IsArchived = @IsArchived,
+			[Owner]=@Owner, Trainee=@Trainee, DegradationVal = @DegradationVal
+		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
+
+		SELECT @ReturnValue = @ID
+	END
+
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM Tests WHERE ID = @ReturnValue)
+	SET @ID = @ReturnValue
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+GO
+GRANT EXECUTE ON remispTestsInsertUpdateSingleItem TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispProductSettingsInsertUpdateSingleItem]
+	@lookupid INT,
+	@KeyName nvarchar(MAX),
+	@ValueText nvarchar(MAX) = null,
+	@DefaultValue nvarchar(MAX),
+	@LastUser nvarchar(255)	
+AS
+	DECLARE @ReturnValue int
+	declare @ID int
+	
+	set @ID = (select ID from ProductSettings as ps  where ps.KeyName = @KeyName and lookupid=@lookupid)
+
+	IF (@ID IS NULL) -- New Item
+	BEGIN
+		INSERT INTO ProductSettings (lookupid, KeyName, ValueText, LastUser, DefaultValue)
+		VALUES (@lookupid, LTRIM(RTRIM(@KeyName)), LTRIM(RTRIM(@ValueText)), @LastUser, LTRIM(RTRIM(@DefaultValue)))
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE -- Exisiting Item
+	BEGIN	
+		if (select defaultvalue from ProductSettings where ID = @ID) != @DefaultValue
+		begin
+			--update the defaultvalues for any entries
+			update ProductSettings set ValueText = LTRIM(RTRIM(@DefaultValue)) where ValueText = DefaultValue and KeyName = @KeyName;
+			update ProductSettings set DefaultValue = LTRIM(RTRIM(@DefaultValue)) where KeyName = @KeyName;
+		end
+		
+		--and update everything else
+		UPDATE ProductSettings SET
+			lookupid = @lookupid, 
+			LastUser = @LastUser,
+			KeyName = LTRIM(RTRIM(@KeyName)),
+			ValueText = LTRIM(RTRIM(ISNULL(@ValueText, '')))
+		WHERE ID = @ID
+		SELECT @ReturnValue = @ID
+	END
+	SET @ID = @ReturnValue
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+GO
+GRANT EXECUTE ON remispProductSettingsInsertUpdateSingleItem TO Remi
+go
+ALTER PROCEDURE [dbo].[remispTestRecordsInsertUpdateSingleItem]
+	@ID int OUTPUT,	
+	@TestUnitID int,
+	@TestStageName nvarchar(400),
+	@JobName nvarchar(400),
+	@TestName nvarchar(400),
+	@FailDocRQID int = null,
+	@Status int,
+	@ResultSource int = null,
+	@FailDocNumber nvarchar(500) = null,
+	@RelabVersion int,	
+	@Comment nvarchar(1000)=null,
+	@ConcurrencyID rowversion OUTPUT,
+	@LastUser nvarchar(255),
+	@TestID INT = NULL,
+	@TestStageID INT = NULL,
+	@FunctionalType INT = NULL
+AS
+BEGIN
+	DECLARE @JobID INT
+	DECLARE @ReturnValue INT
+	
+	IF (@ID is null or @ID <=0 ) --no dupes allowed here!
+	BEGIN
+		SET @ID = (SELECT ID FROM TestRecords WITH(NOLOCK) WHERE TestStageName = LTRIM(RTRIM(@TestStageName)) AND JobName = LTRIM(RTRIM(@JobName)) AND testname=LTRIM(RTRIM(@TestName)) AND testunitid=@TestUnitID)
+	END
+	
+	if (@TestID is null and @TestName is not null)
+	begin
+		SELECT @TestID=ID FROM Tests WITH(NOLOCK) WHERE TestName=LTRIM(RTRIM(@TestName))
+	END
+
+	if (@TestStageID is null and @TestStageName is not null)
+	begin
+		SELECT @JobID=ID FROM Jobs WITH(NOLOCK) WHERE JobName=LTRIM(RTRIM(@JobName))
+		SELECT @TestStageID=ID FROM TestStages WITH(NOLOCK) WHERE JobID=@JobID AND TestStageName=LTRIM(RTRIM(@TestStageName))
+	END
+
+	IF (@ID IS NULL) -- New Item
+	BEGIN
+		INSERT INTO TestRecords (TestUnitID, Status, FailDocNumber, TestStageName, JobName, TestName, RelabVersion, LastUser, Comment,
+			ResultSource, FailDocRQID, TestID, TestStageID, FunctionalType)
+		VALUES (@TestUnitID, @Status, @FailDocNumber, LTRIM(RTRIM(@TestStageName)), LTRIM(RTRIM(@JobName)), LTRIM(RTRIM(@TestName)), @RelabVersion, @lastUser, LTRIM(RTRIM(@Comment)),
+			@ResultSource, @FailDocRQID, @TestID, @TestStageID, @FunctionalType)
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE -- Exisiting Item
+	BEGIN
+		UPDATE TestRecords 
+		SET TestUnitID = @TestUnitID, 
+			Status = @Status, 
+			FailDocNumber = @FailDocNumber,
+			TestStageName = LTRIM(RTRIM(@TestStageName)),
+			JobName = LTRIM(RTRIM(@JobName)),
+			TestName = LTRIM(RTRIM(@TestName)),
+			RelabVersion = @RelabVersion,
+			lastuser = @LastUser,
+			Comment = LTRIM(RTRIM(@Comment)),
+			ResultSource = @ResultSource,
+			FailDocRQID = @FailDocRQID,
+			TestID=@TestID,
+			TestStageID=@TestStageID, FunctionalType=@FunctionalType
+		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
+
+		SELECT @ReturnValue = @ID
+	END
+
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM TestRecords WHERE ID = @ReturnValue)
+	SET @ID = @ReturnValue
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+END
+GO
+GRANT EXECUTE ON remispTestRecordsInsertUpdateSingleItem TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispJobsInsertUpdateSingleItem]
+/*	'===============================================================
+	'   NAME:                	remispJobsInsertUpdateSingleItem
+	'   DATE CREATED:       	20 April 2009
+	'   CREATED BY:          	Darragh O'Riordan
+	'   FUNCTION:            	Creates or updates an item in a table: Jobs
+    '   VERSION: 1                   
+	'   COMMENTS:            
+	'   MODIFIED ON:         
+	'   MODIFIED BY:         
+	'   REASON FOR MODIFICATION: 
+	'===============================================================*/
+	@ID int OUTPUT,
+	@JobName nvarchar(400),
+	@WILocation nvarchar(400)=null,
+	@Comment nvarchar(1000)=null,
+	@LastUser nvarchar(255),
+	@ConcurrencyID rowversion OUTPUT,
+	@OperationsTest bit = 0,
+	@TechOperationsTest bit = 0,
+	@MechanicalTest bit = 0,
+	@ProcedureLocation nvarchar(400)=null,
+	@IsActive bit = 0, @NoBSN BIT = 0, @ContinueOnFailures BIT = 0
+	AS
+
+	DECLARE @ReturnValue int
+	
+	set @ID = (select ID from Jobs WITH(NOLOCK) where jobs.JobName=LTRIM(RTRIM(@JobName)))
+	
+	IF (@ID IS NULL) -- New Item
+	BEGIN
+		INSERT INTO Jobs(JobName, WILocation, Comment, LastUser, OperationsTest, TechnicalOperationsTest, MechanicalTest, ProcedureLocation, IsActive, NoBSN, ContinueOnFailures)
+		VALUES(LTRIM(RTRIM(@JobName)), @WILocation, LTRIM(RTRIM(@Comment)), @LastUser, @OperationsTest, @TechOperationsTest, @MechanicalTest, @ProcedureLocation, @IsActive, @NoBSN, @ContinueOnFailures)
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE -- Exisiting Item
+	BEGIN
+		UPDATE Jobs SET
+			JobName = LTRIM(RTRIM(@JobName)), 
+			LastUser = @LastUser,
+			Comment = LTRIM(RTRIM(@Comment)),
+			WILocation = @WILocation,
+			OperationsTest = @OperationsTest,
+			TechnicalOperationsTest = @TechOperationsTest,
+			MechanicalTest = @MechanicalTest,
+			ProcedureLocation = @ProcedureLocation,
+			IsActive = @IsActive,
+			NoBSN = @NoBSN,
+			ContinueOnFailures = @ContinueOnFailures
+		WHERE ID = @ID
+
+		SELECT @ReturnValue = @ID
+	END
+
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM Jobs WITH(NOLOCK) WHERE ID = @ReturnValue)
+	SET @ID = @ReturnValue
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+GO
+GRANT EXECUTE ON remispJobsInsertUpdateSingleItem TO REMI
+GO
+ALTER PROCEDURE [dbo].[remispTrackingLocationsInsertUpdateSingleItem]
+	@ID int OUTPUT,
+	@trackingLocationName nvarchar(400),
+	@TrackingLocationTypeID int, 
+	@GeoLocationID INT, 
+	@ConcurrencyID rowversion OUTPUT,
+	@Status int,
+	@LastUser nvarchar(255),
+	@Comment nvarchar(1000) = null,
+	@HostName nvarchar(255) = null,
+	@Decommissioned BIT = 0,
+	@IsMultiDeviceZone BIT = 0,
+	@LocationStatus INT
+AS
+	DECLARE @ReturnValue int
+	DECLARE @AlreadyExists as integer 
+
+	IF (@ID IS NULL) -- New Item
+	BEGIN
+		IF (@ID IS NULL) -- New Item
+		BEGIN
+			set @AlreadyExists = (select ID from TrackingLocations 
+			where TrackingLocationName = LTRIM(RTRIM(@trackingLocationName)) and TestCenterLocationID = @GeoLocationID)
+
+			if (@AlreadyExists is not null) 
+				return -1
+			end
+
+			PRINT 'INSERTING'
+
+			INSERT INTO TrackingLocations (TrackingLocationName, TestCenterLocationID, TrackingLocationTypeID, LastUser, Comment, Decommissioned, IsMultiDeviceZone, Status)
+			VALUES (LTRIM(RTRIM(@TrackingLocationname)), @GeoLocationID, @TrackingLocationtypeID, @LastUser, LTRIM(RTRIM(@Comment)), @Decommissioned, @IsMultiDeviceZone, @LocationStatus)
+			
+			SELECT @ReturnValue = SCOPE_IDENTITY()
+
+			INSERT INTO TrackingLocationsHosts (TrackingLocationID, HostName, LastUser, [Status]) 
+			VALUES (@ReturnValue, LTRIM(RTRIM(@HostName)), @LastUser, @Status)
+		END
+		ELSE -- Exisiting Item
+		BEGIN
+			PRINT 'UDPATING TrackingLocations'
+		
+			UPDATE TrackingLocations 
+			SET TrackingLocationName=LTRIM(RTRIM(@TrackingLocationName)) ,
+				TestCenterLocationID=@GeoLocationID, 
+				TrackingLocationTypeID=@TrackingLocationtypeID,
+				LastUser = @LastUser,
+				Comment = LTRIM(RTRIM(@Comment)),
+				Decommissioned = @Decommissioned,
+				IsMultiDeviceZone = @IsMultiDeviceZone,
+				Status = @LocationStatus
+			WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
+		
+			SELECT @ReturnValue = @ID
+		END
+
+		SET @ConcurrencyID = (SELECT ConcurrencyID FROM TrackingLocations WHERE ID = @ReturnValue)
+		SET @ID = @ReturnValue
+	
+		IF (@@ERROR != 0)
+		BEGIN
+			RETURN -1
+		END
+		ELSE
+		BEGIN
+			RETURN 0
+		END
+GO
+GRANT EXECUTE ON remispTrackingLocationsInsertUpdateSingleItem TO Remi
+GO
+ALTER PROCEDURE [dbo].[remispUsersInsertUpdateSingleItem]
+	@ID int OUTPUT,
+	@LDAPLogin nvarchar(255),
+	@BadgeNumber int=null,
+	@LastUser nvarchar(255),
+	@ConcurrencyID rowversion OUTPUT,
+	@IsActive INT = 1,
+	@ByPassProduct INT = 0,
+	@DefaultPage NVARCHAR(255)
+AS
+	DECLARE @ReturnValue int
+
+	IF (@ID IS NULL AND NOT EXISTS (SELECT 1 FROM Users WITH(NOLOCK) WHERE LDAPLogin=@LDAPLogin)) -- New Item
+	BEGIN
+		INSERT INTO Users (LDAPLogin, BadgeNumber, LastUser, IsActive, DefaultPage, ByPassProduct)
+		VALUES (LTRIM(RTRIM(@LDAPLogin)), @BadgeNumber, @LastUser, @IsActive, @DefaultPage, @ByPassProduct)
+
+		SELECT @ReturnValue = SCOPE_IDENTITY()
+	END
+	ELSE IF(@ConcurrencyID IS NOT NULL) -- Exisiting Item
+	BEGIN
+		UPDATE Users SET
+			LDAPLogin = LTRIM(RTRIM(@LDAPLogin)),
+			BadgeNumber=@BadgeNumber,
+			lastuser=@LastUser,
+			IsActive=@IsActive,
+			DefaultPage = @DefaultPage,
+			ByPassProduct = @ByPassProduct
+		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
+
+		SELECT @ReturnValue = @ID
+	END
+
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM Users WITH(NOLOCK) WHERE ID = @ReturnValue)
+	SET @ID = @ReturnValue
+	
+	IF (@@ERROR != 0)
+	BEGIN
+		RETURN -1
+	END
+	ELSE
+	BEGIN
+		RETURN 0
+	END
+GO
+GRANT EXECUTE ON remispUsersInsertUpdateSingleItem TO Remi
+GO
 rollback tran
