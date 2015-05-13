@@ -177,7 +177,7 @@ Partial Class ScanForInfo_Default
         Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetBatchView(bc.BatchNumber, True, True, True, True, True, True, True, True, True, True)
+            b = BatchManager.GetBatchView(bc.BatchNumber, True, True, True, True, True, False, True, True, True, True)
 
             If b IsNot Nothing And b.ID > 0 Then
                 lnkCheckForUpdates2.Enabled = True
