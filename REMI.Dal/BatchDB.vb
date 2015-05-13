@@ -73,7 +73,7 @@ Namespace REMI.Dal
             Return b.Comments
         End Function
 
-        Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, ByVal cacheRetrievedData As Boolean, ByVal loadDurations As Boolean, ByVal loadJob As Boolean, ByVal loadExceptions As Boolean, ByVal loadTasks As Boolean, ByVal loadBatchStage As Boolean, ByVal loadTestRecords As Boolean, ByVal loadOrientation As Boolean, ByVal loadTSRemaining As Boolean, ByVal loadComments As Boolean) As BatchView
+        Public Shared Function GetSlimBatchByQRANumber(ByVal qraNumber As String, ByVal user As User, ByVal cacheRetrievedData As Boolean, ByVal loadDurations As Boolean, ByVal loadJob As Boolean, ByVal loadExceptions As Boolean, ByVal loadTasks As Boolean, ByVal getByBatchStage As Boolean, ByVal loadTestRecords As Boolean, ByVal loadOrientation As Boolean, ByVal loadTSRemaining As Boolean, ByVal loadComments As Boolean) As BatchView
             Dim batch As BatchView = Nothing
 
             Using sqlConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
@@ -98,7 +98,7 @@ Namespace REMI.Dal
 
                         If (lst.Count > 0) Then
                             batch = lst(0)
-                            FillFullBatchfields(batch, sqlConnection, cacheRetrievedData, loadDurations, loadJob, loadExceptions, loadTasks, loadBatchStage, loadTestRecords, loadOrientation, loadTSRemaining, loadComments, user)
+                            FillFullBatchfields(batch, sqlConnection, cacheRetrievedData, loadDurations, loadJob, loadExceptions, loadTasks, getByBatchStage, loadTestRecords, loadOrientation, loadTSRemaining, loadComments, user)
                         End If
                     End Using
                 End If
@@ -788,6 +788,13 @@ Namespace REMI.Dal
                     If cacheData Then
                         REMIAppCache.SetJob(batchData.Job)
                     End If
+                End If
+            End If
+
+            If (Not batchData.TestStageID > 0) Then
+                Dim ts As TestStage = batchData.Job.GetTestStage(batchData.TestStageName)
+                If (ts IsNot Nothing) Then
+                    batchData.TestStageID = ts.ID
                 End If
             End If
 
