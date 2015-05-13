@@ -1077,7 +1077,7 @@ Public Class RemiAPI
     <WebMethod(Description:="Given a qra number this method will return the batch information.")> _
     Public Function GetBatch(ByVal requestNumber As String) As BatchView
         Try
-            Return BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, True, True)
+            Return BatchManager.GetBatchView(requestNumber, True, True, True, True, True, False, True, True, True, True)
         Catch ex As Exception
             BatchManager.LogIssue("REMI API GetBatch", "e3", NotificationType.Errors, ex, String.Format("RequestNumber: {0}", requestNumber))
         End Try
