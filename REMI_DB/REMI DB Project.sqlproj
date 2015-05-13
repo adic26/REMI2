@@ -263,7 +263,7 @@
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Constraints\Obsolete" />
     <Folder Include="Schema Objects\Schemas\dbo\Tables\Indexes\Obsolete" />
     <Folder Include="Scripts\2015\April242015" />
-    <Folder Include="Scripts\2015\May192015" />
+    <Folder Include="Scripts\2015\May132015" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -1070,7 +1070,7 @@
     <None Include="Scripts\2015\March172015\2.sql" />
     <None Include="Scripts\2015\April302015\1.sql" />
     <None Include="Scripts\2015\April302015\2.sql" />
-    <None Include="Scripts\2015\May192015\1.sql" />
+    <None Include="Scripts\2015\May132015\1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\5923699_DataMove.sql">
