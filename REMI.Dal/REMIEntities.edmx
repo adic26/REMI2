@@ -3254,6 +3254,7 @@
           <Parameter Name="OnlyHasResults" Type="int" Mode="In" />
           <Parameter Name="JobID" Type="int" Mode="In" />
           <Parameter Name="TrackingLocationID" Type="int" Mode="In" />
+          <Parameter Name="Requestor" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="remispGetObservationParameters" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="Relab">
           <Parameter Name="MeasurementID" Type="int" Mode="In" />
@@ -3842,6 +3843,7 @@
             <Parameter Name="OnlyHasResults" Mode="In" Type="Int32" />
             <Parameter Name="JobID" Mode="In" Type="Int32" />
             <Parameter Name="TrackingLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="Requestor" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="BatchSearch" ReturnType="Collection(REMI.Entities.BatchSearch_Result)">
             <Parameter Name="ByPassProductCheck" Mode="In" Type="Int32" />
@@ -3873,6 +3875,7 @@
             <Parameter Name="OnlyHasResults" Mode="In" Type="Int32" />
             <Parameter Name="JobID" Mode="In" Type="Int32" />
             <Parameter Name="TrackingLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="Requestor" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="vw_BatchAudit">
