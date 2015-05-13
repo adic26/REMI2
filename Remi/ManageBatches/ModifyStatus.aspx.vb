@@ -70,11 +70,10 @@ Partial Class ManageBatches_ModifyStatus
             notMain.Notifications = bc.Notifications
             Exit Sub
         End If
-
     End Sub
+
     Public Sub SaveStatus()
         notMain.Notifications.Add(BatchManager.SetStatus(hdnQRANumber.Value, DirectCast([Enum].Parse(GetType(BatchStatus), ddlSelection.SelectedItem.Text), BatchStatus)))
-
     End Sub
 
     Protected Sub SetupTestStageDropDownList(ByVal currentStatus As String)

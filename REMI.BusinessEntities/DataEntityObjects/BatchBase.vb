@@ -1178,16 +1178,6 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        ''' <summary>
-        ''' The REMI link for editing the status for this batch.
-        ''' </summary>
-        <XmlIgnore()> _
-        Public ReadOnly Property SetStatusManagerLink() As String
-            Get
-                Return REMIWebLinks.GetSetBatchStatusLink(QRANumber)
-            End Get
-        End Property
-
         <XmlIgnore()> _
         Public ReadOnly Property SetTestDurationsManagerLink() As String
             Get
@@ -1209,16 +1199,6 @@ Namespace REMI.BusinessEntities
         Public ReadOnly Property ExecutiveSummaryLink() As String
             Get
                 Return REMIWebLinks.GetExecutiveSummaryLink(QRANumber)
-            End Get
-        End Property
-
-        ''' <summary>
-        ''' The REMI link for editing the priority for this batch.
-        ''' </summary>
-        <XmlIgnore()> _
-        Public ReadOnly Property SetPriorityManagerLink() As String
-            Get
-                Return REMIWebLinks.GetSetBatchPriorityLink(QRANumber)
             End Get
         End Property
 

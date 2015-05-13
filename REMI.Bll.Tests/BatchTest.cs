@@ -122,26 +122,6 @@ namespace REMI.Bll.Tests
         }
 
         [Test]
-        public void SetPriority()
-        {
-            var batch = new REMI.Entities.Batch();
-            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
-            var p = new REMI.Entities.Lookup();
-            p = (from l in instance.Lookups where l.LookupType.Name == "Priority" && l.IsActive == 1 orderby l.LookupID descending select l).FirstOrDefault();
-
-            Assert.That(BatchManager.SetPriority(batch.QRANumber, p.LookupID, p.Values).Count > 0);
-        }
-
-        [Test]
-        public void SetStatus()
-        {
-            var batch = new REMI.Entities.Batch();
-            batch = (from b in instance.Batches orderby b.ID descending select b).FirstOrDefault();
-
-            Assert.That(BatchManager.SetStatus(batch.QRANumber, BatchStatus.InProgress).Count > 0);
-        }
-
-        [Test]
         public void ChangeTestStage()
         {
             var batch = new REMI.Entities.Batch();

@@ -305,12 +305,6 @@
     <Compile Include="ManageBatches\EditExceptions.aspx.designer.vb">
       <DependentUpon>EditExceptions.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ManageBatches\ModifyPriority.aspx.designer.vb">
-      <DependentUpon>ModifyPriority.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ManageBatches\ModifyStatus.aspx.designer.vb">
-      <DependentUpon>ModifyStatus.aspx</DependentUpon>
-    </Compile>
     <Compile Include="ManageBatches\ModifyTestDurations.aspx.designer.vb">
       <DependentUpon>ModifyTestDurations.aspx</DependentUpon>
     </Compile>
@@ -406,14 +400,6 @@
     </Compile>
     <Compile Include="ManageBatches\EditExceptions.aspx.vb">
       <DependentUpon>EditExceptions.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ManageBatches\ModifyPriority.aspx.vb">
-      <DependentUpon>ModifyPriority.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ManageBatches\ModifyStatus.aspx.vb">
-      <DependentUpon>ModifyStatus.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ManageBatches\ModifyTestDurations.aspx.vb">
@@ -715,8 +701,6 @@
     <Content Include="Inventory\Default.aspx" />
     <Content Include="Inventory\InventoryReport.aspx" />
     <Content Include="ManageBatches\EditExceptions.aspx" />
-    <Content Include="ManageBatches\ModifyPriority.aspx" />
-    <Content Include="ManageBatches\ModifyStatus.aspx" />
     <Content Include="ManageBatches\ModifyTestDurations.aspx" />
     <Content Include="ManageBatches\ModifyTestStage.aspx" />
     <Content Include="ManageProducts\EditProductConfig.aspx" />

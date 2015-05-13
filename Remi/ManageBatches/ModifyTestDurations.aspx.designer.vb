@@ -41,33 +41,6 @@ Partial Public Class ManageBatches_ModifyTestDurations
     Protected WithEvents hypBatchInfo As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
-    '''liModifyStatus control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents liModifyStatus As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''imgChangeStatus control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgChangeStatus As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypChangeStatus control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypChangeStatus As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
     '''liModifyStage control.
     '''</summary>
     '''<remarks>
@@ -93,33 +66,6 @@ Partial Public Class ManageBatches_ModifyTestDurations
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents hypChangeTestStage As Global.System.Web.UI.WebControls.HyperLink
-
-    '''<summary>
-    '''liModifyPriority control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents liModifyPriority As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-
-    '''<summary>
-    '''imgchangePriority control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents imgchangePriority As Global.System.Web.UI.WebControls.Image
-
-    '''<summary>
-    '''hypChangePriority control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents hypChangePriority As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
     '''pnlLeftMenuActions control.

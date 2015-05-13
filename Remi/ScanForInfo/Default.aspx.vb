@@ -472,8 +472,6 @@ Partial Class ScanForInfo_Default
         myMenu.Items(0).ChildItems.Add(mi)
 
         hypEditExceptions.NavigateUrl = b.ExceptionManagerLink
-        hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
-        hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
         hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
         hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
         hypTRSLink.NavigateUrl = b.RequestLink()
@@ -511,22 +509,8 @@ Partial Class ScanForInfo_Default
         End If
 
         If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-            liModifyPriority.Visible = True
             liModifyStage.Visible = True
-            liModifyStatus.Visible = True
             liModifyTestDurations.Visible = True
-
-            mi = New MenuItem
-            mi.Text = "Modify Status"
-            mi.Target = "_blank"
-            mi.NavigateUrl = b.SetStatusManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            mi = New MenuItem
-            mi.Text = "Modify Priority"
-            mi.Target = "_blank"
-            mi.NavigateUrl = b.SetPriorityManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
 
             mi = New MenuItem
             mi.Text = "Modify Durations"

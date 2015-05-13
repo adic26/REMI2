@@ -656,53 +656,53 @@ Namespace REMI.Bll
             Return New DataSet
         End Function
 
-        Public Shared Function SetPriority(ByVal requestNumber As String, ByVal priorityID As Int32, ByVal priority As String) As NotificationCollection
-            Dim b As BatchView
-            Try
-                b = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, False)
-                If b IsNot Nothing Then
-                    If b.Validate Then
-                        b.PriorityID = priorityID
-                        b.Priority = priority
+        'Public Shared Function SetPriority(ByVal requestNumber As String, ByVal priorityID As Int32, ByVal priority As String) As NotificationCollection
+        '    Dim b As BatchView
+        '    Try
+        '        b = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, False)
+        '        If b IsNot Nothing Then
+        '            If b.Validate Then
+        '                b.PriorityID = priorityID
+        '                b.Priority = priority
 
-                        BatchManager.Save(b)
-                        If (REMI.Core.REMIConfiguration.Debug) Then
-                            b.Notifications.Add(LogIssue("SetPriority", "i14", NotificationType.Information, String.Format("Request Number: {0} Priority: {1}", requestNumber, priority)))
-                        End If
-                    End If
-                Else
-                    b = New BatchView
-                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
-                End If
-            Catch ex As Exception
-                b = New BatchView
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", requestNumber, priority)))
-            End Try
-            Return b.Notifications
-        End Function
+        '                BatchManager.Save(b)
+        '                If (REMI.Core.REMIConfiguration.Debug) Then
+        '                    b.Notifications.Add(LogIssue("SetPriority", "i14", NotificationType.Information, String.Format("Request Number: {0} Priority: {1}", requestNumber, priority)))
+        '                End If
+        '            End If
+        '        Else
+        '            b = New BatchView
+        '            b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
+        '        End If
+        '    Catch ex As Exception
+        '        b = New BatchView
+        '        b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", requestNumber, priority)))
+        '    End Try
+        '    Return b.Notifications
+        'End Function
 
-        Public Shared Function SetStatus(ByVal requestNumber As String, ByVal status As BatchStatus) As NotificationCollection
-            Dim b As BatchView
-            Try
-                b = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, False)
-                If b IsNot Nothing Then
-                    If b.Validate Then
-                        b.SetNewBatchStatus(status)
-                        BatchManager.Save(b)
-                        If (REMI.Core.REMIConfiguration.Debug) Then
-                            b.Notifications.Add(LogIssue("SetBatchStatus", "e18", NotificationType.Information, String.Format("Request Number: {0} Status: {1}", status.ToString())))
-                        End If
-                    End If
-                Else
-                    b = New BatchView
-                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
-                End If
-            Catch ex As Exception
-                b = New BatchView
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Status: {1}", requestNumber, status.ToString())))
-            End Try
-            Return b.Notifications
-        End Function
+        'Public Shared Function SetStatus(ByVal requestNumber As String, ByVal status As BatchStatus) As NotificationCollection
+        '    Dim b As BatchView
+        '    Try
+        '        b = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, False)
+        '        If b IsNot Nothing Then
+        '            If b.Validate Then
+        '                b.SetNewBatchStatus(status)
+        '                BatchManager.Save(b)
+        '                If (REMI.Core.REMIConfiguration.Debug) Then
+        '                    b.Notifications.Add(LogIssue("SetBatchStatus", "e18", NotificationType.Information, String.Format("Request Number: {0} Status: {1}", status.ToString())))
+        '                End If
+        '            End If
+        '        Else
+        '            b = New BatchView
+        '            b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
+        '        End If
+        '    Catch ex As Exception
+        '        b = New BatchView
+        '        b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Status: {1}", requestNumber, status.ToString())))
+        '    End Try
+        '    Return b.Notifications
+        'End Function
 
 #Region "Batch Comments"
         Public Shared Function AddNewComment(ByVal requestNumber As String, ByVal comment As String) As NotificationCollection

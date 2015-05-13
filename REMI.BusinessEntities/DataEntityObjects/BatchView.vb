@@ -199,8 +199,10 @@ Namespace REMI.BusinessEntities
         End Sub
 
         Public Function SetTestStage(ByVal testStageName As String) As Boolean
-            If Me.Job.GetTestStage(testStageName) IsNot Nothing Then
-                Me.TestStageName = testStageName
+            Dim teststage As TestStage = Me.Job.GetTestStage(testStageName)
+            If teststage IsNot Nothing Then
+                Me.TestStageName = teststage.Name
+                Me.TestStageID = teststage.ID
                 CheckBatchTestStageStatus()
                 Return True
             End If
@@ -536,7 +538,8 @@ Namespace REMI.BusinessEntities
             Dim r As DataRow
             Dim num = (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder).Distinct.Count()
 
-            For Each ts In (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder, task.TestID, task.TestStageID).Distinct
+            For Each ts In (From task In Tasks Where task.TestStageType = TestType.Parametric AndAlso task.ProcessOrder >= 0 Order By task.ProcessOrder Ascending Select task.TestStageName, task.ProcessOrder, task.TestStageID).Distinct
+
                 r = dt.NewRow
 
                 If (showHyperlinks) Then
