@@ -432,64 +432,66 @@ Namespace REMI.Dal
         Public Shared Function DetermineEstimatedTSTime(ByVal batchID As Int32, ByVal testStageName As String, ByVal jobName As String, ByVal testStageID As Int32, ByVal jobID As Int32, ByVal returnTestStageGrid As Int32, ByRef result2 As Dictionary(Of String, Int32), ByVal myConnection As SqlConnection) As Dictionary(Of String, Double)
             Dim result As New Dictionary(Of String, Double)
 
-            If (myConnection Is Nothing) Then
-                myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            If (testStageID > 0) Then
+                If (myConnection Is Nothing) Then
+                    myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+                End If
+
+                Using myCommand As New SqlCommand("remispGetEstimatedTSTime", myConnection)
+                    myCommand.CommandType = CommandType.StoredProcedure
+                    myCommand.Parameters.AddWithValue("@BatchID", batchID)
+                    myCommand.Parameters.AddWithValue("@TestStageName", testStageName)
+                    myCommand.Parameters.AddWithValue("@JobName", jobName)
+                    myCommand.Parameters.AddWithValue("@ReturnTestStageGrid", 1)
+
+                    Dim TSTimeLeft As Double
+                    Dim JobTimeLeft As Double
+
+                    Dim tsOutput As DbParameter = myCommand.CreateParameter()
+                    tsOutput.DbType = DbType.Double
+                    tsOutput.Direction = ParameterDirection.Output
+                    tsOutput.ParameterName = "@TSTimeLeft"
+                    tsOutput.Value = TSTimeLeft
+                    myCommand.Parameters.Add(tsOutput)
+
+                    Dim jobOutput As DbParameter = myCommand.CreateParameter()
+                    jobOutput.DbType = DbType.Double
+                    jobOutput.Direction = ParameterDirection.Output
+                    jobOutput.ParameterName = "@JobTimeLeft"
+                    jobOutput.Value = JobTimeLeft
+                    myCommand.Parameters.Add(jobOutput)
+
+                    myCommand.Parameters.AddWithValue("@TestStageID", testStageID)
+                    myCommand.Parameters.AddWithValue("@JobID", jobID)
+
+                    If myConnection.State <> ConnectionState.Open Then
+                        myConnection.Open()
+                    End If
+
+                    Dim dt As New DataTable
+                    Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
+                    da.Fill(dt)
+                    dt.TableName = "TestStagesTimeLeft"
+
+                    If (returnTestStageGrid = 0) Then
+                        result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
+                        result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
+                    Else
+                        For Each dr As DataRow In dt.Rows
+                            Dim timeLeft As Double
+                            Dim stageID As Int32
+                            Double.TryParse(dr.Item("TimeLeft").ToString(), timeLeft)
+                            Int32.TryParse(dr.Item("TestStageID").ToString(), stageID)
+
+                            result2.Add(dr.Item("TestStageName").ToString(), stageID)
+                            result.Add(dr.Item("TestStageName").ToString(), timeLeft)
+                        Next
+
+                        result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
+                        result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
+                    End If
+                End Using
             End If
-
-            Using myCommand As New SqlCommand("remispGetEstimatedTSTime", myConnection)
-                myCommand.CommandType = CommandType.StoredProcedure
-                myCommand.Parameters.AddWithValue("@BatchID", batchID)
-                myCommand.Parameters.AddWithValue("@TestStageName", testStageName)
-                myCommand.Parameters.AddWithValue("@JobName", jobName)
-                myCommand.Parameters.AddWithValue("@ReturnTestStageGrid", 1)
-
-                Dim TSTimeLeft As Double
-                Dim JobTimeLeft As Double
-
-                Dim tsOutput As DbParameter = myCommand.CreateParameter()
-                tsOutput.DbType = DbType.Double
-                tsOutput.Direction = ParameterDirection.Output
-                tsOutput.ParameterName = "@TSTimeLeft"
-                tsOutput.Value = TSTimeLeft
-                myCommand.Parameters.Add(tsOutput)
-
-                Dim jobOutput As DbParameter = myCommand.CreateParameter()
-                jobOutput.DbType = DbType.Double
-                jobOutput.Direction = ParameterDirection.Output
-                jobOutput.ParameterName = "@JobTimeLeft"
-                jobOutput.Value = JobTimeLeft
-                myCommand.Parameters.Add(jobOutput)
-
-                myCommand.Parameters.AddWithValue("@TestStageID", testStageID)
-                myCommand.Parameters.AddWithValue("@JobID", jobID)
-
-                If myConnection.State <> ConnectionState.Open Then
-                    myConnection.Open()
-                End If
-
-                Dim dt As New DataTable
-                Dim da As SqlDataAdapter = New SqlDataAdapter(myCommand)
-                da.Fill(dt)
-                dt.TableName = "TestStagesTimeLeft"
-
-                If (returnTestStageGrid = 0) Then
-                    result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
-                    result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
-                Else
-                    For Each dr As DataRow In dt.Rows
-                        Dim timeLeft As Double
-                        Dim stageID As Int32
-                        Double.TryParse(dr.Item("TimeLeft").ToString(), timeLeft)
-                        Int32.TryParse(dr.Item("TestStageID").ToString(), stageID)
-
-                        result2.Add(dr.Item("TestStageName").ToString(), stageID)
-                        result.Add(dr.Item("TestStageName").ToString(), timeLeft)
-                    Next
-
-                    result.Add("TSTimeLeft", CDbl(myCommand.Parameters("@TSTimeLeft").Value))
-                    result.Add("JobTimeLeft", CDbl(myCommand.Parameters("@JobTimeLeft").Value))
-                End If
-            End Using
 
             Return result
         End Function

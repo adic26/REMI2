@@ -464,7 +464,7 @@ Namespace REMI.Bll
 
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
             Dim rq As RequestFieldsCollection = RequestManager.GetRequest(requestNumber)
-            Dim b As BatchView = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, True, True)
+            Dim b As BatchView = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, False, True)
 
             If (rq(0).IsFromExternalSystem) Then
                 Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
@@ -480,7 +480,7 @@ Namespace REMI.Bll
             Dim success As Boolean = BatchDB.MoveBatchForward(requestNumber, userIdentification)
 
             If (success) Then
-                b = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, True, True)
+                b = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, False, True)
             End If
 
             Return success

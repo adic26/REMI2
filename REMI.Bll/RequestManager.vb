@@ -471,7 +471,7 @@ Namespace REMI.Bll
                     Dim req As REMI.Entities.Request = (From r In instance.Requests Where r.RequestNumber = requestNumber Select r).FirstOrDefault()
 
                     If (saved And requestType.HasIntegration) Then
-                        Dim b As BatchView = BatchManager.GetBatchView(request(0).RequestNumber, True, True, True, True, True, True, True, True, True, True)
+                        Dim b As BatchView = BatchManager.GetBatchView(request(0).RequestNumber, True, True, True, True, True, True, True, True, False, True)
 
                         If (b.OutOfDate) Then
                             BatchManager.Save(b)
