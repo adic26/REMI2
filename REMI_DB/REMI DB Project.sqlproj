@@ -2906,4 +2906,7 @@
       <SubType>Code</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\2015\May132015\backup.sql" />
+  </ItemGroup>
 </Project>
