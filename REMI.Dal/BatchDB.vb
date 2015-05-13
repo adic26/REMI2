@@ -432,7 +432,7 @@ Namespace REMI.Dal
         Public Shared Function DetermineEstimatedTSTime(ByVal batchID As Int32, ByVal testStageName As String, ByVal jobName As String, ByVal testStageID As Int32, ByVal jobID As Int32, ByVal returnTestStageGrid As Int32, ByRef result2 As Dictionary(Of String, Int32), ByVal myConnection As SqlConnection) As Dictionary(Of String, Double)
             Dim result As New Dictionary(Of String, Double)
 
-            If (testStageID > 0) Then
+            If (Not String.IsNullOrEmpty(testStageName)) Then
                 If (myConnection Is Nothing) Then
                     myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 End If
@@ -795,9 +795,9 @@ Namespace REMI.Dal
                 batchData.Comments = GetBatchComments(batchData.QRANumber, sqlConnection)
             End If
 
-            If (loadTSRemaining) Then
+            If (loadTSRemaining And Not String.IsNullOrEmpty(batchData.TestStageName)) Then
                 Dim result2 As New Dictionary(Of String, Int32)
-                Dim result As Dictionary(Of String, Double) = DetermineEstimatedTSTime(batchData.ID, batchData.TestStageName, batchData.JobName, 0, 0, 1, result2, sqlConnection)
+                Dim result As Dictionary(Of String, Double) = DetermineEstimatedTSTime(batchData.ID, batchData.TestStageName, batchData.JobName, batchData.TestStageID, batchData.JobID, 1, result2, sqlConnection)
 
                 batchData.EstTSCompletionTime = result("TSTimeLeft")
                 batchData.EstJobCompletionTime = result("JobTimeLeft")
