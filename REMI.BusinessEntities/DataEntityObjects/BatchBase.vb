@@ -108,6 +108,7 @@ Namespace REMI.BusinessEntities
 
 #Region "Public Properties"
         <XmlIgnore()> _
+        <DataTableColName("ActiveTaskAssignee")> _
         Public Property ActiveTaskAssignee() As String Implements IBatch.ActiveTaskAssignee
             Get
                 Return _activeTaskAssignee
@@ -119,6 +120,7 @@ Namespace REMI.BusinessEntities
 
         <NotNullOrEmpty(Key:="w8")> _
         <ValidRequestString(Key:="w9")> _
+        <DataTableColName("QRANumber")> _
         Public Property QRANumber() As String Implements IBatch.RequestNumber
             Get
                 Return _requestNumber
@@ -131,6 +133,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         <XmlIgnore()> _
+        <DataTableColName("EstJobCompletionTime")> _
         Public Property EstJobCompletionTime() As Double Implements IBatch.EstJobCompletionTime
             Set(value As Double)
                 _estJobCompletionTime = value
@@ -156,6 +159,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <DataTableColName("OrientationID")> _
         Public Property OrientationID() As Int32 Implements IBatch.OrientationID
             Get
                 Return _orientationID
@@ -204,6 +208,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
+        <DataTableColName("TestStageID")> _
         Public Property TestStageID() As Int32 Implements IBatch.TestStageID
             Get
                 Return _testStageID
@@ -214,6 +219,7 @@ Namespace REMI.BusinessEntities
         End Property
 
         <XmlIgnore()> _
+        <DataTableColName("ContinueOnFailures")> _
         Public Property ContinueOnFailures() As Boolean Implements IBatch.ContinueOnFailures
             Get
                 Return _continueOnFailures
@@ -223,6 +229,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <DataTableColName("JobID")> _
         Public Property JobID() As Int32 Implements IBatch.JobID
             Get
                 Return _jobID
@@ -235,6 +242,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' Gets or sets the test stage the batch is at.
         ''' </summary>
+        <DataTableColName("TestStageName")> _
         Public Property TestStageName() As String Implements IBatch.TestStageName
             Get
                 Return _testStageName
@@ -248,6 +256,7 @@ Namespace REMI.BusinessEntities
         ''' Gets or sets whether the batch has exceptions
         ''' </summary>
         <XmlIgnore()> _
+        <DataTableColName("HasBatchSpecificExceptions")> _
         Public Property HasBatchSpecificExceptions() As Boolean Implements IBatch.hasBatchSpecificExceptions
             Get
                 Return _hasBatchSpecificExceptions
@@ -287,14 +296,17 @@ Namespace REMI.BusinessEntities
         ''' Gets or sets the current status of the batch. 
         ''' </summary> 
         <EnumerationSet(Key:="w13")> _
+        <DataTableColName("BatchStatus")> _
         Public Property Status() As BatchStatus Implements IBatch.Status
             Get
-                If (_status = BatchStatus.NotSet) Then
-                    _status = BatchStatus.NotSavedToREMI
-                ElseIf (_status = BatchStatus.Received And RequestStatus = "Assigned") Then
-                    _status = BatchStatus.InProgress
-                ElseIf (RequestStatus = "Assigned" And Not (_status = BatchStatus.NotSet Or _status = BatchStatus.NotSavedToREMI)) Then
-                    _status = BatchStatus.InProgress
+                If (Me.OutOfDate = False) Then
+                    If (_status = BatchStatus.NotSet) Then
+                        _status = BatchStatus.NotSavedToREMI
+                    ElseIf (_status = BatchStatus.Received And RequestStatus = "Assigned") Then
+                        _status = BatchStatus.InProgress
+                    ElseIf (RequestStatus = "Assigned" And Not (_status = BatchStatus.NotSet Or _status = BatchStatus.NotSavedToREMI Or _status = BatchStatus.Held Or _status = BatchStatus.Rejected)) Then
+                        _status = BatchStatus.InProgress
+                    End If
                 End If
 
                 Return _status
@@ -355,6 +367,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' Returns the number of test unit objects that are part of the batch.
         ''' </summary>
+        <DataTableColName("testUnitCount")> _
         Public Property NumberOfUnits() As Integer Implements IBatch.NumberofUnits
             Get
                 Return _numberOfUnits
@@ -379,6 +392,7 @@ Namespace REMI.BusinessEntities
         ''' the location of the work instruction on livelink or similar for the job this batch is currently doing.
         ''' </summary>
         <XmlIgnore()> _
+        <DataTableColName("jobWILocation")> _
         Public Property JobWILocation() As String Implements IBatch.JobWILocation
             Get
                 Return _jobWILocation
@@ -402,6 +416,7 @@ Namespace REMI.BusinessEntities
         ''' Gets or sets the associated product group of the batch. 
         ''' </summary> 
         <NotNullOrEmpty(Key:="w11")> _
+        <DataTableColName("ProductID")> _
         Public Property ProductID() As Int32 Implements IBatch.ProductID
             Get
                 Return _productID
@@ -414,6 +429,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' Gets or sets the associated product type of the batch. 
         ''' </summary> 
+        <DataTableColName("ProductTypeID")> _
         Public Property ProductTypeID() As Int32 Implements IBatch.ProductTypeID
             Get
                 Return _productTypeID
@@ -426,6 +442,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' Gets or sets the associated accessory group of the batch. 
         ''' </summary> 
+        <DataTableColName("AccessoryGroupID")> _
         Public Property AccessoryGroupID() As Int32 Implements IBatch.AccessoryGroupID
             Get
                 Return _accessoryGroupID
@@ -435,6 +452,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <DataTableColName("RequestPurposeID")> _
         Public Property RequestPurposeID() As Int32 Implements IBatch.RequestPurposeID
             Get
                 Return _purposeID
@@ -444,6 +462,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <DataTableColName("PriorityID")> _
         Public Property PriorityID() As Int32 Implements IBatch.PriorityID
             Get
                 Return _priorityID
@@ -453,6 +472,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <DataTableColName("TestCenterLocationID")> _
         Public Property TestCenterLocationID() As Int32 Implements IBatch.TestCenterLocationID
             Get
                 Return _testCenterLocationID
@@ -462,6 +482,7 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        <DataTableColName("DepartmentID")> _
         Public Property DepartmentID() As Int32 Implements IBatch.DepartmentID
             Get
                 Return _departmentID
@@ -493,13 +514,15 @@ Namespace REMI.BusinessEntities
         <XmlIgnore()> _
         Public ReadOnly Property IsCompleteInRequest() As Boolean Implements IBatch.IsCompleteInRequest
             Get
-                If (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault() IsNot Nothing Then
-                    Select Case (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault().ToLower
-                        Case "completed", "canceled", "closed - pass", "closed - fail", "closed - no result"
-                            Return True
-                        Case Else
-                            Return False
-                    End Select
+                If (ReqData IsNot Nothing) Then
+                    If (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault() IsNot Nothing Then
+                        Select Case (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault().ToLower
+                            Case "completed", "canceled", "closed - pass", "closed - fail", "closed - no result"
+                                Return True
+                            Case Else
+                                Return False
+                        End Select
+                    End If
                 End If
                 Return False
             End Get
@@ -510,6 +533,7 @@ Namespace REMI.BusinessEntities
         ''' The name of the Job that this batch is currently doing.
         ''' </summary>
         <NotNullOrEmpty(Key:="w10")> _
+        <DataTableColName("JobName")> _
         Public Property JobName() As String Implements IBatch.JobName
             Get
                 Dim val As String = String.Empty
@@ -526,15 +550,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _jobName = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_jobName <> val) Then
-                    _jobName = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "RequestedTest" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_jobName <> val) Then
+                        _jobName = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -543,6 +570,7 @@ Namespace REMI.BusinessEntities
         ''' Gets or sets the associated product group of the batch. 
         ''' </summary> 
         <NotNullOrEmpty(Key:="w11")> _
+        <DataTableColName("ProductGroupName")> _
         Public Property ProductGroup() As String Implements IBatch.ProductGroup
             Get
                 Dim val As String = String.Empty
@@ -559,15 +587,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _productGroup = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_productGroup <> val) Then
-                    _productGroup = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "ProductGroup" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_productGroup <> val) Then
+                        _productGroup = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -588,20 +619,24 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _cprNumber = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_cprNumber <> val) Then
-                    _cprNumber = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "CPRNumber" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_cprNumber <> val) Then
+                        _cprNumber = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
         <XmlIgnore()> _
+        <DataTableColName("ExecutiveSummary")> _
         Public Property ExecutiveSummary() As String Implements IBatch.ExecutiveSummary
             Get
                 Dim val As String = String.Empty
@@ -618,15 +653,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _executiveSummary = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_executiveSummary <> val) Then
-                    _executiveSummary = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "ExecutiveSummary" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_executiveSummary <> val) Then
+                        _executiveSummary = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -634,6 +672,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' Gets or sets the associated product type of the batch. 
         ''' </summary> 
+        <DataTableColName("ProductType")> _
         Public Property ProductType() As String Implements IBatch.ProductType
             Get
                 Dim val As String = String.Empty
@@ -650,15 +689,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _productType = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_productType <> val) Then
-                    _productType = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "ProductType" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_productType <> val) Then
+                        _productType = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -666,6 +708,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' Gets or sets the associated accessory group of the batch. 
         ''' </summary> 
+        <DataTableColName("AccessoryGroupName")> _
         Public Property AccessoryGroup() As String Implements IBatch.AccessoryGroup
             Get
                 Dim val As String = String.Empty
@@ -682,15 +725,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _accessoryGroup = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_accessoryGroup <> val) Then
-                    _accessoryGroup = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "AccessoryGroup" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_accessoryGroup <> val) Then
+                        _accessoryGroup = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -700,6 +746,7 @@ Namespace REMI.BusinessEntities
         ''' </summary>
         ''' <value>requestpurpose</value>
         ''' <returns>requestpurpose</returns>
+        <DataTableColName("RequestPurpose")> _
         Public Property RequestPurpose() As String Implements IBatch.RequestPurpose
             Get
                 Dim val As String = String.Empty
@@ -716,15 +763,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _purpose = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_purpose <> val) Then
-                    _purpose = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "RequestPurpose" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_purpose <> val) Then
+                        _purpose = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -732,6 +782,7 @@ Namespace REMI.BusinessEntities
         ''' <summary>
         ''' The location of the current test
         ''' </summary>
+        <DataTableColName("TestCenterLocation")> _
         Public Property TestCenterLocation() As String Implements IBatch.TestCenterLocation
             Get
                 Dim val As String = String.Empty
@@ -748,15 +799,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _testCenterLocation = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_testCenterLocation <> val) Then
-                    _testCenterLocation = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "TestCenterLocation" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_testCenterLocation <> val) Then
+                        _testCenterLocation = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -764,6 +818,7 @@ Namespace REMI.BusinessEntities
         ''' <summary> 
         ''' Gets or sets the priority of the batch as set by Ops Manager
         ''' </summary> 
+        <DataTableColName("Priority")> _
         Public Property Priority() As String Implements IBatch.Priority
             Get
                 Dim val As String = String.Empty
@@ -777,25 +832,32 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _Priority = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "Priority" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "Priority" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_Priority <> val) Then
-                    _Priority = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "Priority" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "Priority" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_Priority <> val) Then
+                        _Priority = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
         Public ReadOnly Property RequestStatus() As String
             Get
-                Return (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault()
+                If (ReqData IsNot Nothing) Then
+                    Return (From rd In ReqData Where rd.IntField = "RequestStatus" Select rd.Value).FirstOrDefault()
+                End If
+                Return Nothing
             End Get
         End Property
 
+        <DataTableColName("MechanicalTools")> _
         Public Property MechanicalTools() As String Implements IBatch.MechanicalTools
             Get
                 Dim val As String = String.Empty
@@ -812,19 +874,23 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _mechanicalTools = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_mechanicalTools <> val) Then
-                    _mechanicalTools = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "MechanicalTools" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_mechanicalTools <> val) Then
+                        _mechanicalTools = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
+        <DataTableColName("Department")> _
         Public Property Department() As String Implements IBatch.Department
             Get
                 Dim val As String = String.Empty
@@ -841,15 +907,18 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _department = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "Department" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "Department" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_department <> val) Then
-                    _department = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "Department" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "Department" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_department <> val) Then
+                        _department = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -870,19 +939,23 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _requestLink = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_requestLink <> val) Then
-                    _requestLink = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "RequestLink" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_requestLink <> val) Then
+                        _requestLink = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
+        <DataTableColName("TestUnitCount")> _
         Public Property NumberOfUnitsExpected() As Int32 Implements IBatch.NumberOfUnitsExpected
             Get
                 Dim val As String = String.Empty
@@ -902,19 +975,23 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As Int32)
                 _sampleSize = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_sampleSize.ToString() <> val) Then
-                    Int32.TryParse(val, _sampleSize)
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "SampleSize" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_sampleSize.ToString() <> val) Then
+                        Int32.TryParse(val, _sampleSize)
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
+        <DataTableColName("Requestor")> _
         Public Property Requestor() As String Implements IBatch.Requestor
             Get
                 Dim val As String = String.Empty
@@ -931,20 +1008,24 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As String)
                 _requestor = data
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim val As String = String.Empty
 
-                If (_requestor <> val) Then
-                    _requestor = val
-                    OutOfDate = True
+                    If ((From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "Requestor" Select rd.Value).FirstOrDefault()
+                    End If
+
+                    If (_requestor <> val) Then
+                        _requestor = val
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
         <XmlIgnore()> _
+        <DataTableColName("DateCreated")> _
         Public Property DateCreated() As DateTime Implements IBatch.DateCreated
             Get
                 Dim createdDate As DateTime
@@ -964,23 +1045,27 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As DateTime)
                 _dateCreated = data
-                Dim createdDate As DateTime
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim createdDate As DateTime
+                    Dim val As String = String.Empty
 
-                DateTime.TryParse(val, createdDate)
+                    If ((From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "DateCreated" Select rd.Value).FirstOrDefault()
+                    End If
 
-                If (_dateCreated <> createdDate) Then
-                    _dateCreated = createdDate
-                    OutOfDate = True
+                    DateTime.TryParse(val, createdDate)
+
+                    If (_dateCreated <> createdDate) Then
+                        _dateCreated = createdDate
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
         <XmlIgnore()> _
+        <DataTableColName("ReportRequiredBy")> _
         Public Property ReportRequiredBy() As DateTime Implements IBatch.ReportRequiredBy
             Get
                 Dim reportDate As DateTime
@@ -1000,23 +1085,27 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As DateTime)
                 _reportingRequiredBy = data
-                Dim reportDate As DateTime
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim reportDate As DateTime
+                    Dim val As String = String.Empty
 
-                DateTime.TryParse(val, reportDate)
+                    If ((From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "ReportRequiredBy" Select rd.Value).FirstOrDefault()
+                    End If
 
-                If (_reportingRequiredBy <> reportDate) Then
-                    _reportingRequiredBy = reportDate
-                    OutOfDate = True
+                    DateTime.TryParse(val, reportDate)
+
+                    If (_reportingRequiredBy <> reportDate) Then
+                        _reportingRequiredBy = reportDate
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
 
         <XmlIgnore()> _
+        <DataTableColName("ReportApprovedDate")> _
         Public Property ReportApprovedDate() As DateTime Implements IBatch.ReportApprovedDate
             Get
                 Dim approveDate As DateTime
@@ -1036,18 +1125,21 @@ Namespace REMI.BusinessEntities
             End Get
             Set(ByVal data As DateTime)
                 _dateReportApproved = data
-                Dim approveDate As DateTime
-                Dim val As String = String.Empty
 
-                If ((From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value) IsNot Nothing) Then
-                    val = (From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value).FirstOrDefault()
-                End If
+                If (ReqData IsNot Nothing) Then
+                    Dim approveDate As DateTime
+                    Dim val As String = String.Empty
 
-                DateTime.TryParse(val, approveDate)
+                    If ((From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value) IsNot Nothing) Then
+                        val = (From rd In ReqData Where rd.IntField = "DateReportApproved" Select rd.Value).FirstOrDefault()
+                    End If
 
-                If (_dateReportApproved <> approveDate) Then
-                    _dateReportApproved = approveDate
-                    OutOfDate = True
+                    DateTime.TryParse(val, approveDate)
+
+                    If (_dateReportApproved <> approveDate) Then
+                        _dateReportApproved = approveDate
+                        OutOfDate = True
+                    End If
                 End If
             End Set
         End Property
@@ -1086,16 +1178,6 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        ''' <summary>
-        ''' The REMI link for editing the status for this batch.
-        ''' </summary>
-        <XmlIgnore()> _
-        Public ReadOnly Property SetStatusManagerLink() As String
-            Get
-                Return REMIWebLinks.GetSetBatchStatusLink(QRANumber)
-            End Get
-        End Property
-
         <XmlIgnore()> _
         Public ReadOnly Property SetTestDurationsManagerLink() As String
             Get
@@ -1121,16 +1203,6 @@ Namespace REMI.BusinessEntities
         End Property
 
         ''' <summary>
-        ''' The REMI link for editing the priority for this batch.
-        ''' </summary>
-        <XmlIgnore()> _
-        Public ReadOnly Property SetPriorityManagerLink() As String
-            Get
-                Return REMIWebLinks.GetSetBatchPriorityLink(QRANumber)
-            End Get
-        End Property
-
-        ''' <summary>
         ''' The REMI product group information page for this batch.
         ''' </summary>
         <XmlIgnore()> _
@@ -1147,7 +1219,7 @@ Namespace REMI.BusinessEntities
             End Get
         End Property
 
-        Public Overridable Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageName As String, ByVal TestName As String, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As String Implements IBatch.GetTestOverviewCellString
+        Public Overridable Function GetTestOverviewCellString(ByVal jobName As String, ByVal testStageID As Int32, ByVal testID As Int32, ByVal hasEditAuthority As Boolean, ByVal isTestCenterAdmin As Boolean, ByVal rqResults As DataTable, ByVal hasBatchSetupAuthority As Boolean, ByVal showHyperlinks As Boolean) As String Implements IBatch.GetTestOverviewCellString
             Return String.Empty
         End Function
 #End Region

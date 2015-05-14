@@ -19,10 +19,10 @@ Partial Class ManageBatches_ModifyPriority
 
     Protected Sub ProcessQRA(ByVal QRANumber As String)
         Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
-        Dim b As Batch
+        Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetItem(bc.BatchNumber)
+            b = BatchManager.GetBatchView(bc.BatchNumber, False, False, True, False, False, False, False, False, False, False)
             hdnQRANumber.Value = b.QRANumber
             lblQRANumber.Text = b.QRANumber
             hypBatchInfo.NavigateUrl = b.BatchInfoLink
@@ -76,7 +76,7 @@ Partial Class ManageBatches_ModifyPriority
         notMain.Notifications.Add(BatchManager.SetPriority(hdnQRANumber.Value, ddlSelection.SelectedItem.Value, ddlSelection.SelectedItem.Text))
     End Sub
 
-    Protected Sub SetupTestStageDropDownList(ByVal b As Batch)
+    Protected Sub SetupTestStageDropDownList(ByVal b As BatchView)
         lblCurrentPriority.Text = b.Priority.ToString
         ddlSelection.DataSource = LookupsManager.GetLookups("Priority", Nothing, Nothing, String.Empty, String.Empty, 0, False, 0, False)
         ddlSelection.DataBind()

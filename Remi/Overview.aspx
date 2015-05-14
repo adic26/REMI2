@@ -26,6 +26,7 @@
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="ddlDepartment" />
             <asp:AsyncPostBackTrigger ControlID="chkShowTRS" />
+            <asp:AsyncPostBackTrigger ControlID="chkProcessTime" />
         </Triggers>
         <ContentTemplate>
             <asp:UpdateProgress runat="server" ID="UpdateProgress1" DynamicLayout="true" DisplayAfter="100" AssociatedUpdatePanelID="updOverview">
@@ -43,6 +44,10 @@
                 <li>
                     <asp:Image ImageUrl="../Design/Icons/png/24x24/process.png" ID="imgShowTRS" runat="server" />
                     <asp:CheckBox runat="server" ID="chkShowTRS" Text="Show Upcoming" AutoPostBack="true" CausesValidation="true" TextAlign="Right" EnableViewState="true" />
+                </li>
+                <li>
+                    <asp:Image ImageUrl="../Design/Icons/png/24x24/process.png" ID="imgProcessTime" runat="server" />
+                    <asp:CheckBox runat="server" ID="chkProcessTime" Text="Process Time" AutoPostBack="true" CausesValidation="true" TextAlign="Right" EnableViewState="true" />
                 </li>
             </ul>
         </ContentTemplate>

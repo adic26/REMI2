@@ -85,7 +85,11 @@ Namespace REMI.Core
 
         Public Shared ReadOnly Property ConnectionStringReq(ByVal connectName As String) As String
             Get
-                Return ConfigurationManager.ConnectionStrings(connectName).ConnectionString
+                If (connectName IsNot Nothing) Then
+                    Return ConfigurationManager.ConnectionStrings(connectName).ConnectionString
+                Else
+                    Return Nothing
+                End If
             End Get
         End Property
 

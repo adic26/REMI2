@@ -33,7 +33,7 @@ Public Class Request
             hypBatch.Visible = True
             hypBatch.NavigateUrl = String.Format("/ScanForInfo/Default.aspx?RN={0}", requestNumber)
 
-            Dim batch As BatchView = BatchManager.GetViewBatch(requestNumber)
+            Dim batch As BatchView = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, False)
             setup.Visible = True
             setupEnv.Visible = True
             pnlSetup.Visible = True

@@ -31,14 +31,17 @@ Partial Class Inventory_InventoryReport
         End If
 
         Dim ir As InventoryReportData = ProductGroupManager.InventoryReport(startDate, enddate, chkFilterByQRA.Checked, ddlTestCenter.SelectedValue)
-        lblAverageUnitsRecieved.Text = ir.AverageUnitsInBatch
-        lblTotalUnitsRecieved.Text = ir.TotalUnits
-        lblTotalBatchesRecieved.Text = ir.TotalBatches
 
-        grdProductLocationReport.DataSource = ir.ProductLocationReport
-        grdProductLocationReport.DataBind()
-        grdProductDistribution.DataSource = ir.ProductDistribution
-        grdProductDistribution.DataBind()
+        If (ir IsNot Nothing) Then
+            lblAverageUnitsRecieved.Text = ir.AverageUnitsInBatch
+            lblTotalUnitsRecieved.Text = ir.TotalUnits
+            lblTotalBatchesRecieved.Text = ir.TotalBatches
+
+            grdProductLocationReport.DataSource = ir.ProductLocationReport
+            grdProductLocationReport.DataBind()
+            grdProductDistribution.DataSource = ir.ProductDistribution
+            grdProductDistribution.DataBind()
+        End If
     End Sub
     Public Sub page_prerender() Handles Me.PreRender
         Helpers.MakeAccessable(grdProductLocationReport)

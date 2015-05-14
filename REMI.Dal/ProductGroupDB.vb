@@ -185,10 +185,10 @@ Namespace REMI.Dal
                 Using myCommand As New SqlCommand("remispProductSettingsInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@lookupid", lookupid)
-                    myCommand.Parameters.AddWithValue("@keyname", keyName)
-                    myCommand.Parameters.AddWithValue("@defaultValue", defaultValue)
+                    myCommand.Parameters.AddWithValue("@keyname", keyName.Trim())
+                    myCommand.Parameters.AddWithValue("@defaultValue", defaultValue.Trim())
                     If valueText IsNot Nothing AndAlso Not String.IsNullOrEmpty(valueText.Trim) Then
-                        myCommand.Parameters.AddWithValue("@Valuetext", valueText)
+                        myCommand.Parameters.AddWithValue("@Valuetext", valueText.Trim())
                     End If
                     myCommand.Parameters.AddWithValue("@LastUser", userName)
                     myConnection.Open()

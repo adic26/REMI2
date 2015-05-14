@@ -93,7 +93,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = TestRecordManager.GetItemByID(trID)
 
                 If Not String.IsNullOrEmpty(qranumber) Then
-                    Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser)
+                    Dim t As RequestFieldsCollection = RequestDB.GetRequest(qranumber, UserManager.GetCurrentUser, Nothing)
                     docNumbers.AddRange(RequestDB.GetFANumberList(qranumber))
 
                     If docNumbers IsNot Nothing Then
@@ -125,7 +125,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = GetItemByID(trID)
 
                 If updateSimilarTestRecords Then
-                    Dim b As Batch = BatchManager.GetItem(tr.QRANumber)
+                    Dim b As BatchView = BatchManager.GetBatchView(tr.QRANumber, True, True, True, True, True, False, True, False, False, False)
                     trColl.Add((From testRec In b.TestRecords Where testRec.JobName.Equals(tr.JobName) AndAlso _
                                                          testRec.TestStageName.Equals(tr.TestStageName) AndAlso testRec.TestName.Equals(tr.TestName) AndAlso testRec.Status.Equals(tr.Status) Select testRec).ToList)
                 Else
@@ -150,7 +150,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = GetItemByID(trID)
 
                 If updateSimilarTestRecords Then
-                    Dim b As Batch = BatchManager.GetItem(tr.QRANumber)
+                    Dim b As BatchView = BatchManager.GetBatchView(tr.QRANumber, True, True, True, True, True, False, True, False, False, False)
                     trColl.Add((From testRec In b.TestRecords Where testRec.JobName.Equals(tr.JobName) AndAlso _
                                                          testRec.TestStageName.Equals(tr.TestStageName) AndAlso testRec.TestName.Equals(tr.TestName) AndAlso testRec.Status.Equals(tr.Status) Select testRec).ToList)
                 Else
@@ -215,7 +215,7 @@ Namespace REMI.Bll
             Try
                 'Only insert Relab record for non test systems (IE: MFI Functional, SFI Functional, Visual Inspection)
                 If ((tr.TestID = 1073 Or tr.FunctionalType <> 0) And tr.TestStageID > 0) Then
-                    If (tr.Status = TestRecordStatus.Complete Or tr.Status = TestRecordStatus.CompleteFail Or tr.Status = TestRecordStatus.CompleteKnownFailure Or tr.Status = TestRecordStatus.FARaised Or tr.Status = TestRecordStatus.FARequired) Then
+                    If (tr.Status = TestRecordStatus.WaitingForResult Or tr.Status = TestRecordStatus.Complete Or tr.Status = TestRecordStatus.CompleteFail Or tr.Status = TestRecordStatus.CompleteKnownFailure Or tr.Status = TestRecordStatus.FARaised Or tr.Status = TestRecordStatus.FARequired) Then
                         Dim instance = New REMI.Dal.Entities().Instance()
                         Dim result As IQueryable(Of REMI.Entities.Result)
                         result = (From r In instance.Results Where r.TestUnit.ID = tr.TestUnitID And r.Test.ID = tr.TestID And r.TestStage.ID = tr.TestStageID Select r)
@@ -274,7 +274,7 @@ Namespace REMI.Bll
                 Dim tr As TestRecord = GetItemByID(trID)
 
                 If updateSimilarTestRecords Then
-                    Dim b As Batch = BatchManager.GetItem(tr.QRANumber)
+                    Dim b As BatchView = BatchManager.GetBatchView(tr.QRANumber, True, True, True, True, True, False, True, False, False, False)
                     trColl.Add((From testRec In b.TestRecords Where testRec.JobName.Equals(tr.JobName) AndAlso _
                                                          testRec.TestStageName.Equals(tr.TestStageName) AndAlso testRec.TestName.Equals(tr.TestName) AndAlso testRec.Status.Equals(tr.Status) Select testRec).ToList)
                 Else
@@ -291,63 +291,63 @@ Namespace REMI.Bll
             Return returnNotes
         End Function
 
-        Public Shared Function DTATTAUpdateUnitTestStatus(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult) As Boolean
-            Dim returnValue As Boolean
+        'Public Shared Function DTATTAUpdateUnitTestStatus(ByVal qranumber As String, ByVal testStage As String, ByVal test As String, ByVal userIdentification As String, ByVal result As FinalTestResult) As Boolean
+        '    Dim returnValue As Boolean
 
-            Try
-                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qranumber))
+        '    Try
+        '        Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(qranumber))
 
-                If barcode.Validate() Then
-                    Dim b As Batch = BatchManager.GetItem(barcode.BatchNumber)
-                    Dim tu As TestUnit = b.TestUnits.FindByBatchUnitNumber(barcode.UnitNumber)
+        '        If barcode.Validate() Then
+        '            Dim b As BatchView = BatchManager.GetBatchView(barcode.BatchNumber, True, True, True, True, True, False, True, False, False, False)
+        '            Dim tu As TestUnit = b.TestUnits.FindByBatchUnitNumber(barcode.UnitNumber)
 
-                    If b IsNot Nothing And tu IsNot Nothing Then
-                        Dim testStageRecord As TestStage = TestStageManager.GetTestStage(testStage, b.JobName)
+        '            If b IsNot Nothing And tu IsNot Nothing Then
+        '                Dim testStageRecord As TestStage = TestStageManager.GetTestStage(testStage, b.JobName)
 
-                        Dim processOrder As Int32 = 0
+        '                Dim processOrder As Int32 = 0
 
-                        If (testStageRecord IsNot Nothing) Then
-                            processOrder = testStageRecord.ProcessOrder
-                        Else
-                            For Each ts As TestStage In (From tsttsg In b.Job.TestStages Where tsttsg.IsArchived = False Select tsttsg Order By tsttsg.ProcessOrder)
-                                If (ts.Name.Contains("Post ")) Then
-                                    Dim tsNum As Int32 'Current test stage drop/tumble number
-                                    Dim num As Int32 = 0 'Loop test stage drop/tumble number
+        '                If (testStageRecord IsNot Nothing) Then
+        '                    processOrder = testStageRecord.ProcessOrder
+        '                Else
+        '                    For Each ts As TestStage In (From tsttsg In b.Job.TestStages Where tsttsg.IsArchived = False Select tsttsg Order By tsttsg.ProcessOrder)
+        '                        If (ts.Name.Contains("Post ")) Then
+        '                            Dim tsNum As Int32 'Current test stage drop/tumble number
+        '                            Dim num As Int32 = 0 'Loop test stage drop/tumble number
 
-                                    Int32.TryParse(testStage.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), tsNum)  'Gets the current test stage drop/tumble number
-                                    Int32.TryParse(ts.Name.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), num)      'Gets the loop test stage drop/tumble number
+        '                            Int32.TryParse(testStage.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), tsNum)  'Gets the current test stage drop/tumble number
+        '                            Int32.TryParse(ts.Name.Replace(" Drops", String.Empty).Replace(" Drop", String.Empty).Replace("Post ", String.Empty).ToString(), num)      'Gets the loop test stage drop/tumble number
 
-                                    If (num > tsNum) Then ' If current drop/tumble number is 5 and the first drop/tumble number is 10 then set the processorder equal to this test stages processorder
-                                        processOrder = ts.ProcessOrder
-                                        Exit For
-                                    End If
-                                End If
-                            Next
-                        End If
+        '                            If (num > tsNum) Then ' If current drop/tumble number is 5 and the first drop/tumble number is 10 then set the processorder equal to this test stages processorder
+        '                                processOrder = ts.ProcessOrder
+        '                                Exit For
+        '                            End If
+        '                        End If
+        '                    Next
+        '                End If
 
-                        Dim tr As TestRecord = b.TestRecords.FindByTestStageTest(b.JobName, testStage, test).FirstOrDefault()
+        '                Dim tr As TestRecord = b.TestRecords.FindByTestStageTest(b.JobName, testStage, test).FirstOrDefault()
 
-                        If tr Is Nothing Then
-                            If (testStageRecord Is Nothing) Then
-                                tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, Nothing)
-                            Else
-                                tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, testStageRecord.ID)
-                            End If
-                        End If
+        '                If tr Is Nothing Then
+        '                    If (testStageRecord Is Nothing) Then
+        '                        tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, Nothing)
+        '                    Else
+        '                        tr = New TestRecord(b.QRANumber, tu.BatchUnitNumber, b.JobName, testStage, test, tu.ID, userIdentification, Nothing, testStageRecord.ID)
+        '                    End If
+        '                End If
 
-                        If result = FinalTestResult.Fail Then
-                            returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.CompleteFail, "Unit was removed from test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
-                        Else
-                            returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.Complete, "Unit was added back to test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
-                        End If
-                    End If
-                End If
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
-            End Try
+        '                If result = FinalTestResult.Fail Then
+        '                    returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.CompleteFail, "Unit was removed from test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
+        '                Else
+        '                    returnValue = TestRecordManager.UpdateSingleTestRecordStatus(tr, TestRecordStatus.Complete, "Unit was added back to test at the DTATTA software").FirstOrDefault(Function(x) x.Type = NotificationType.Errors) Is Nothing
+        '                End If
+        '            End If
+        '        End If
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
+        '    End Try
 
-            Return returnValue
-        End Function
+        '    Return returnValue
+        'End Function
 
         Private Shared Function UpdateSingleTestRecordStatus(ByVal tr As TestRecord, ByVal status As TestRecordStatus, ByVal comments As String) As NotificationCollection
             Try
@@ -405,10 +405,10 @@ Namespace REMI.Bll
             Return tr.Notifications
         End Function
 
-        Public Shared Function CheckBatchForResultUpdates(ByVal b As Batch, ByVal ignoreCurrentBatchStatus As Boolean) As Integer
+        Public Shared Function CheckBatchForResultUpdates(ByVal b As BatchView, ByVal ignoreCurrentBatchStatus As Boolean) As Integer
             Try
                 If b IsNot Nothing Then
-                    If ((b.Status = BatchStatus.InProgress OrElse b.Status = BatchStatus.Received) Or ignoreCurrentBatchStatus) AndAlso (b.TestStage IsNot Nothing) AndAlso b.Job IsNot Nothing Then
+                    If ((b.Status = BatchStatus.InProgress OrElse b.Status = BatchStatus.Received) Or ignoreCurrentBatchStatus) AndAlso b.Job IsNot Nothing Then
                         Dim bcoll As New BatchCollection
                         bcoll.Add(b)
                         Return TestRecordDB.SetResultsForBatchCollection(bcoll, UserManager.GetCurrentValidUserLDAPName)

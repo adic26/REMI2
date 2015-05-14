@@ -50,16 +50,16 @@ Partial Class ManageTestStations_Default
             bs.DepartmentID = ddlDepartments.SelectedValue
         End If
 
-        Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, True, True)
+        Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, True, True, 0, False, False, False, False, False)
 
         If (chkShowGrid.Checked) Then
             pnlGrid.Visible = True
             pnlChamberLegend.Visible = True
 
-            For Each b As Batch In bc
+            For Each b As BatchView In bc
                 Dim ctu As New ChamberTestUnit
                 ctu.BatchInfoLink = b.BatchInfoLink
-                ctu.TotalTestTime = b.GetTotalTestTime(b.TestUnits(0).BatchUnitNumber, b.TestUnits(0).CurrentTestName, b.TestUnits(0).CurrentTestStageName)
+                ctu.TotalTestTime = b.TestRecords.GetTotalTestTime(b.JobName, b.TestUnits(0).CurrentTestStage.ID, b.TestUnits(0).CurrentTest.ID, b.TestUnits(0).BatchUnitNumber)
                 ctu.QRAnumber = b.QRANumber
                 ctu.Assignedto = b.TestUnits(0).AssignedTo
                 ctu.Job = b.JobName
@@ -69,7 +69,7 @@ Partial Class ManageTestStations_Default
                 ctu.InTime = b.TestUnits(0).CurrentLog.InTime
                 ctu.GetExpectedCompletionDateTime = b.GetExpectedCompletionDateTime 'When it should be completed
                 ctu.TestLength = b.GetExpectedTestStageDuration(b.TestUnits(0).CurrentTestStage.ID)
-                Dim locationStatus = (From tl In New REMI.Dal.Entities().Instance().TrackingLocations Where tl.TrackingLocationName = ctu.Location Select tl)
+                Dim locationStatus = (From tl In New Remi.Dal.Entities().Instance().TrackingLocations Where tl.TrackingLocationName = ctu.Location Select tl)
                 ctu.Status = IIf(locationStatus.FirstOrDefault().Status.HasValue(), locationStatus.FirstOrDefault().Status, 1)
                 ctuL.Add(ctu)
             Next
@@ -118,7 +118,7 @@ Partial Class ManageTestStations_Default
         Dim series As New Series
         Dim iii As Int32 = 0
 
-        For Each b As Batch In bc
+        For Each b As BatchView In bc
             If (ddlDisplayBy.SelectedValue = 1) Then
                 Dim getExpectedCompletionDateTime As DateTime
 

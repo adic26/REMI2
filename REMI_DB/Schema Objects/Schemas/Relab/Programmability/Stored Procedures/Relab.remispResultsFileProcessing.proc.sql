@@ -27,7 +27,9 @@ BEGIN
 	DECLARE @TestStageName NVARCHAR(400)
 	DECLARE @DegradationVal DECIMAL(10,3)
 	SET @ID = NULL
-	CREATE TABLE #files ([FileName] NVARCHAR(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS)
+	DECLARE @FileID INT
+	DECLARE @File NVARCHAR(200)
+	CREATE TABLE #files (ID INT IDENTITY(1,1), [FileName] NVARCHAR(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS)
 
 	BEGIN TRY
 		IF ((SELECT COUNT(*) FROM Relab.ResultsXML x WHERE ISNULL(ErrorOccured, 0) = 0 AND ISNULL(IsProcessed,0)=0)=0)
@@ -449,23 +451,35 @@ BEGIN
 					INSERT INTO #files ([FileName])
 					SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 					FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
-					
-					IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+					WHERE LOWER(T.c.query('.').value('.', 'nvarchar(max)')) <> 'n/a'
+
+					IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '' AND LOWER(@FileName) <> 'n/a')
 					BEGIN
 						INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
 					END
-
-					PRINT 'INSERT Files'
-					UPDATE Relab.ResultsMeasurementsFiles 
-					SET ResultMeasurementID=@ResultMeasurementID
-					FROM Relab.ResultsMeasurementsFiles 
-						INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
-					WHERE ResultMeasurementID IS NULL
 					
+					SET @FileID = NULL
+					SET @File = NULL
+					SELECT @FileID = MIN(ID) FROM #files
+					
+					WHILE (@FileID IS NOT NULL)
+					BEGIN
+						SELECT @File = [FileName] FROM #files where ID=@FileID
+						PRINT 'INSERT Files'
+						UPDATE TOP(1) Relab.ResultsMeasurementsFiles 
+						SET ResultMeasurementID=@ResultMeasurementID
+						FROM Relab.ResultsMeasurementsFiles 
+						WHERE ResultMeasurementID IS NULL AND
+							LOWER(LTRIM(RTRIM(@File))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+							
+						SELECT @FileID = MIN(ID) FROM #files WHERE ID > @FileID
+					END
+										
 					IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
 									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
 								WHERE ResultMeasurementID = @ResultMeasurementID)) AND (SELECT COUNT(*) FROM #files) > 0
 					BEGIN
+
 						PRINT 'Files Didnt Insert Correctly Rolling Back'
 						GOTO HANDLE_ERROR
 					END
@@ -507,21 +521,32 @@ BEGIN
 						INSERT INTO #files ([FileName])
 						SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 						FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+						WHERE LOWER(T.c.query('.').value('.', 'nvarchar(max)')) <> 'n/a'
 						
-						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '' AND LOWER(@FileName) <> 'n/a')
 						BEGIN
 							INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
-						END					
-
-						PRINT 'INSERT Files'
-						UPDATE Relab.ResultsMeasurementsFiles 
-						SET ResultMeasurementID=@ResultMeasurementID2
-						FROM Relab.ResultsMeasurementsFiles 
-							INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
-						WHERE ResultMeasurementID IS NULL
+						END
+						
+						SET @FileID = NULL
+						SET @File = NULL
+						SELECT @FileID = MIN(ID) FROM #files
+						
+						WHILE (@FileID IS NOT NULL)
+						BEGIN
+							SELECT @File = [FileName] FROM #files where ID=@FileID
+							PRINT 'INSERT Files'
+							UPDATE TOP(1) Relab.ResultsMeasurementsFiles 
+							SET ResultMeasurementID=@ResultMeasurementID2
+							FROM Relab.ResultsMeasurementsFiles 
+							WHERE ResultMeasurementID IS NULL AND
+								LOWER(LTRIM(RTRIM(@File))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.[FileName])))
+								
+							SELECT @FileID = MIN(ID) FROM #files WHERE ID > @FileID
+						END
 						
 						IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
-									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
+									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.[FileName])))
 								WHERE ResultMeasurementID = @ResultMeasurementID2)) AND (SELECT COUNT(*) FROM #files) > 0
 						BEGIN
 							PRINT 'Files Didnt Insert Correctly Rolling Back'
@@ -557,18 +582,29 @@ BEGIN
 						INSERT INTO #files ([FileName])
 						SELECT T.c.query('.').value('.', 'nvarchar(max)') AS [FileName]
 						FROM @xmlPart.nodes('/Measurement/Files/FileName') T(c)
+						WHERE LOWER(T.c.query('.').value('.', 'nvarchar(max)')) <> 'n/a'
 						
-						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '')
+						IF (LTRIM(RTRIM(ISNULL(@FileName, ''))) <> '' AND LOWER(@FileName) <> 'n/a')
 						BEGIN
 							INSERT INTO #files (FileName) VALUES (LTRIM(RTRIM(@FileName)))
 						END
-
-						PRINT 'INSERT Files'
-						UPDATE Relab.ResultsMeasurementsFiles 
-						SET ResultMeasurementID=@ResultMeasurementID3
-						FROM Relab.ResultsMeasurementsFiles 
-							INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))
-						WHERE ResultMeasurementID IS NULL
+						
+						SET @FileID = NULL
+						SET @File = NULL
+						SELECT @FileID = MIN(ID) FROM #files
+						
+						WHILE (@FileID IS NOT NULL)
+						BEGIN
+							SELECT @File = [FileName] FROM #files where ID=@FileID
+							PRINT 'INSERT Files'
+							UPDATE TOP(1) Relab.ResultsMeasurementsFiles 
+							SET ResultMeasurementID=@ResultMeasurementID3
+							FROM Relab.ResultsMeasurementsFiles 
+							WHERE ResultMeasurementID IS NULL AND
+								LOWER(LTRIM(RTRIM(@File))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.[FileName])))
+								
+							SELECT @FileID = MIN(ID) FROM #files WHERE ID > @FileID
+						END
 										
 						IF NOT EXISTS ((SELECT 1 FROM Relab.ResultsMeasurementsFiles 
 									INNER JOIN #files f ON LOWER(LTRIM(RTRIM(f.[FileName]))) = LOWER(LTRIM(RTRIM(Relab.ResultsMeasurementsFiles.FileName)))

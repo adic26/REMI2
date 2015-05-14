@@ -18,10 +18,11 @@ Partial Class ManageBatches_ModifyTestStage
 
     Protected Sub ProcessQRA(ByVal QRANumber As String)
         Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
-        Dim b As Batch
+        Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetItem(bc.BatchNumber)
+            b = BatchManager.GetBatchView(bc.BatchNumber, False, False, True, False, False, False, False, False, False, False)
+
             hdnQRANumber.Value = b.QRANumber
             lblQRANumber.Text = b.QRANumber
             hypBatchInfo.NavigateUrl = b.BatchInfoLink
@@ -29,12 +30,8 @@ Partial Class ManageBatches_ModifyTestStage
             hypRefresh.NavigateUrl = b.SetTestStageManagerLink
             SetupTestStageDropDownList(b)
             hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
-            hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
-            hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
 
             If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-                liModifyPriority.Visible = True
-                liModifyStatus.Visible = True
                 liModifyTestDurations.Visible = True
             End If
 
@@ -51,16 +48,6 @@ Partial Class ManageBatches_ModifyTestStage
             mi.NavigateUrl = b.SetTestDurationsManagerLink
             myMenu.Items(0).ChildItems.Add(mi)
 
-            mi = New MenuItem
-            mi.Text = "Modify Status"
-            mi.NavigateUrl = b.SetStatusManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            mi = New MenuItem
-            mi.Text = "Modify Priority"
-            mi.NavigateUrl = b.SetPriorityManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
-
             pnlEditExceptions.Visible = True
             pnlLeftMenuActions.Visible = True
         Else
@@ -69,14 +56,13 @@ Partial Class ManageBatches_ModifyTestStage
             notMain.Notifications = bc.Notifications
             Exit Sub
         End If
-
     End Sub
+
     Public Sub SaveStatus()
         notMain.Notifications.Add(BatchManager.ChangeTestStage(hdnQRANumber.Value, ddlSelection.SelectedItem.Text))
-
     End Sub
 
-    Protected Sub SetupTestStageDropDownList(ByVal b As Batch)
+    Protected Sub SetupTestStageDropDownList(ByVal b As BatchView)
         ddlSelection.DataSource = TestStageManager.GetTestStagesNameByBatch(b.ID, b.JobName)
         ddlSelection.DataBind()
         lblCurrentTestStage.Text = b.TestStageName

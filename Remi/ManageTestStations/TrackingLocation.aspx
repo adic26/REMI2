@@ -50,8 +50,8 @@
     <ul>
            <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/globe.png" ID="imgTestCenterView" runat="server" />
-            <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="True" DataTextField="LookupType" DataValueField="LookupID"
-                AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsTestCenters">
+            <asp:DropDownList ID="ddlTestCenters" runat="server" AppendDataBoundItems="False" DataTextField="LookupType" DataValueField="LookupID"
+                AutoPostBack="True" Width="120px" ForeColor="#0033CC" DataSourceID="odsTestCenters" OnSelectedIndexChanged="ddlTestCenters_SelectedIndexChanged">
             </asp:DropDownList>
             <asp:ObjectDataSource ID="odsTestCenters" runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                 <SelectParameters>
@@ -126,15 +126,7 @@
                             Batches</h2>
                     </Header>
                     <Content>
-                        <uc3:BatchSelectControl runat="server" ID="bscBatches" EmptyDataText="There were no batches found for this selection." DisplayMode="TrackingLocationDisplay" AllowPaging="true" AllowSorting="true" PageSize="50" DataSourceID="odsBatches" />
-                        
-                        <asp:ObjectDataSource ID="odsBatches" runat="server" DataObjectTypeName="REMI.BusinessEntities.Batch"
-                            OldValuesParameterFormatString="{0}" EnablePaging="true" SortParameterName="sortExpression"
-                            SelectMethod="GetListAtLocation" TypeName="REMI.Bll.BatchManager">
-                            <SelectParameters>
-                                <asp:ControlParameter ControlID="hdnBarcodePrefix" Name="BarcodePrefix" PropertyName="Value" Type="int32" />
-                            </SelectParameters>
-                        </asp:ObjectDataSource>
+                        <uc3:BatchSelectControl runat="server" ID="bscBatches" EmptyDataText="There were no batches found for this selection." DisplayMode="TrackingLocationDisplay" AllowPaging="true" AllowSorting="true" PageSize="50" />
                     </Content>
                 </asp:AccordionPane>
                 <asp:AccordionPane ID="acpTrackingLogs" runat="server">

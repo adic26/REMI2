@@ -124,7 +124,7 @@ Namespace REMI.Bll
 
         Public Shared Function SaveOrientation(ByVal jobID As Int32, ByVal id As Int32, ByVal name As String, ByVal productTypeID As Int32, ByVal description As String, ByVal isActive As Boolean, ByVal xml As String) As Boolean
             Try
-                Return JobDB.SaveOrientation(jobID, id, name, productTypeID, description, isActive, xml)
+                Return JobDB.SaveOrientation(jobID, id, name.Trim(), productTypeID, description.Trim(), isActive, xml)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex)
                 Return False
@@ -159,7 +159,7 @@ Namespace REMI.Bll
                         If (Job.TestStages.Count = 0) Then
                             Dim tmpTestStage As New TestStage
                             tmpTestStage.Name = "Analysis"
-                            tmpTestStage.JobName = Job.Name
+                            tmpTestStage.JobName = Job.Name.Trim()
                             tmpTestStage.TestStageType = Contracts.TestStageType.Parametric
                             tmpTestStage.ProcessOrder = -10
                             tmpTestStage.IsArchived = False
@@ -167,7 +167,7 @@ Namespace REMI.Bll
 
                             tmpTestStage = New TestStage
                             tmpTestStage.Name = "Sample Evaluation"
-                            tmpTestStage.JobName = Job.Name
+                            tmpTestStage.JobName = Job.Name.Trim()
                             tmpTestStage.TestStageType = Contracts.TestStageType.IncomingEvaluation
                             tmpTestStage.ProcessOrder = 0
                             tmpTestStage.IsArchived = False
@@ -175,7 +175,7 @@ Namespace REMI.Bll
 
                             tmpTestStage = New TestStage
                             tmpTestStage.Name = "Baseline"
-                            tmpTestStage.JobName = Job.Name
+                            tmpTestStage.JobName = Job.Name.Trim()
                             tmpTestStage.TestStageType = Contracts.TestStageType.Parametric
                             tmpTestStage.ProcessOrder = 1
                             tmpTestStage.IsArchived = False
@@ -183,7 +183,7 @@ Namespace REMI.Bll
 
                             tmpTestStage = New TestStage
                             tmpTestStage.Name = "Post"
-                            tmpTestStage.JobName = Job.Name
+                            tmpTestStage.JobName = Job.Name.Trim()
                             tmpTestStage.TestStageType = Contracts.TestStageType.Parametric
                             tmpTestStage.ProcessOrder = 10
                             tmpTestStage.IsArchived = False
@@ -191,7 +191,7 @@ Namespace REMI.Bll
 
                             tmpTestStage = New TestStage
                             tmpTestStage.Name = "Failure Analysis"
-                            tmpTestStage.JobName = Job.Name
+                            tmpTestStage.JobName = Job.Name.Trim()
                             tmpTestStage.TestStageType = Contracts.TestStageType.FailureAnalysis
                             tmpTestStage.ProcessOrder = 90
                             tmpTestStage.IsArchived = False
@@ -199,7 +199,7 @@ Namespace REMI.Bll
 
                             tmpTestStage = New TestStage
                             tmpTestStage.Name = "Report"
-                            tmpTestStage.JobName = Job.Name
+                            tmpTestStage.JobName = Job.Name.Trim()
                             tmpTestStage.TestStageType = Contracts.TestStageType.NonTestingTask
                             tmpTestStage.ProcessOrder = 100
                             tmpTestStage.IsArchived = False

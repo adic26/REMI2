@@ -98,7 +98,7 @@
         </asp:GridView>
         <asp:ObjectDataSource ID="odsExceptions" runat="server" 
          DeleteMethod="DeleteException" 
-         SelectMethod="GetExceptionsExcludingProductLevel" TypeName="REMI.Bll.ExceptionManager">
+         SelectMethod="GetExceptionsForBatch" TypeName="REMI.Bll.ExceptionManager">
             <DeleteParameters>
                 <asp:Parameter Name="ID" Type="Int32" />
             </DeleteParameters>

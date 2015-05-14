@@ -14,7 +14,7 @@ Public Class Overview
         Dim asm As AjaxControlToolkit.ToolkitScriptManager = Master.FindControl("AjaxScriptManager1")
 
         If (asm.IsInAsyncPostBack) Then
-            Dim asyncPostBackID As String = asm.AsyncPostBackSourceElementID ' Helpers.GetAsyncPostBackControlID(Me)
+            Dim asyncPostBackID As String = asm.AsyncPostBackSourceElementID
             Dim postBackID As String = String.Empty
             Dim Control As Control = Helpers.GetPostBackControl(Me)
 
@@ -26,27 +26,27 @@ Public Class Overview
                 End If
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.IncomingEvaluation
                 bs.Status = BatchStatus.Received
                 bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
                 bs.DepartmentID = ddlDepartment.SelectedValue
 
-                bscMainIncoming.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+                bscMainIncoming.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False))
                 ViewState("incoming") = bscMainIncoming.GetGridView.DataSource
             ElseIf asyncPostBackID.Contains("bscMainIncoming") Then
                 Dim a As List(Of IBatch) = DirectCast(ViewState("incoming"), List(Of IBatch))
                 bscMainIncoming.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.Status = BatchStatus.TestingComplete
                 bs.ExcludedTestStageType = BatchSearchTestStageType.NonTestingTask + BatchSearchTestStageType.FailureAnalysis
                 bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
                 bs.DepartmentID = ddlDepartment.SelectedValue
-                Dim bctc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
+                Dim bctc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False)
 
                 bscMainTestingComplete.SetBatches(bctc)
                 ViewState("testingcomplete") = bscMainTestingComplete.GetGridView.DataSource
@@ -55,18 +55,18 @@ Public Class Overview
                 bscMainTestingComplete.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.Status = BatchStatus.Held
                 bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
                 bs.DepartmentID = ddlDepartment.SelectedValue
 
-                Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID)
+                Dim bc As BatchCollection = BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False)
 
                 bs.Status = Nothing
                 bs.ExcludedStatus = BatchSearchBatchStatus.Complete + BatchSearchBatchStatus.Held + BatchSearchBatchStatus.NotSavedToREMI + BatchSearchBatchStatus.Quarantined + BatchSearchBatchStatus.Received + BatchSearchBatchStatus.Rejected
                 bs.TestStageType = TestStageType.NonTestingTask
-                bc.AddRange(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+                bc.AddRange(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False))
 
                 bscMainHR.SetBatches(bc)
                 ViewState("heldreport") = bscMainHR.GetGridView.DataSource
@@ -75,7 +75,7 @@ Public Class Overview
                 bscMainHR.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.Parametric
                 bs.ExcludedTestStageType = BatchSearchTestStageType.EnvironmentalStress
@@ -83,14 +83,14 @@ Public Class Overview
                 bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
                 bs.DepartmentID = ddlDepartment.SelectedValue
 
-                bscMainInProgress.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+                bscMainInProgress.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False))
                 ViewState("inprogress") = bscMainInProgress.GetGridView.DataSource
             ElseIf asyncPostBackID.Contains("bscMainInProgress") Then
                 Dim a As List(Of IBatch) = DirectCast(ViewState("inprogress"), List(Of IBatch))
                 bscMainInProgress.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.EnvironmentalStress
                 bs.ExcludedTestStageType = BatchSearchTestStageType.Parametric
@@ -99,28 +99,28 @@ Public Class Overview
                 bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
                 bs.DepartmentID = ddlDepartment.SelectedValue
 
-                bscChamber.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+                bscChamber.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False))
                 ViewState("chamber") = bscChamber.GetGridView.DataSource
             ElseIf asyncPostBackID.Contains("bscChamber") Then
                 Dim a As List(Of IBatch) = DirectCast(ViewState("chamber"), List(Of IBatch))
                 bscChamber.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.FailureAnalysis
                 bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
                 bs.DepartmentID = ddlDepartment.SelectedValue
                 bs.ExcludedStatus = BatchSearchBatchStatus.Complete + BatchSearchBatchStatus.Held + BatchSearchBatchStatus.Received + BatchSearchBatchStatus.Quarantined
 
-                bscMainFA.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+                bscMainFA.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False))
                 ViewState("fa") = bscMainFA.GetGridView.DataSource
             ElseIf asyncPostBackID.Contains("bscMainFA") Then
                 Dim a As List(Of IBatch) = DirectCast(ViewState("fa"), List(Of IBatch))
                 bscMainFA.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment")) And (Not postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime")) And (Not postBackID.Contains("chkShowTRS"))) Then
                 Dim bs As New BatchSearch()
                 bs.TestStageType = TestStageType.EnvironmentalStress
                 bs.ExcludedTestStageType = BatchSearchTestStageType.Parametric
@@ -129,14 +129,14 @@ Public Class Overview
                 bs.NotInTrackingLocationFunction = TrackingLocationFunction.EnvironmentalStressing
                 bs.GeoLocationID = UserManager.GetCurrentUser.TestCentreID
 
-                bscMainReadyForStressing.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+                bscMainReadyForStressing.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, chkProcessTime.Checked, 0, False, False, False, False, False))
                 ViewState("stress") = bscMainReadyForStressing.GetGridView.DataSource
             ElseIf asyncPostBackID.Contains("bscMainReadyForStressing") Then
                 Dim a As List(Of IBatch) = DirectCast(ViewState("stress"), List(Of IBatch))
                 bscMainReadyForStressing.SetBatches(a)
             End If
 
-            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("gvwTRS") Or postBackID.Contains("chkShowTRS"))) Then
+            If ((String.IsNullOrEmpty(asyncPostBackID) Or asyncPostBackID.Contains("ddlDepartment") Or asyncPostBackID.Contains("chkProcessTime") Or asyncPostBackID.Contains("gvwTRS") Or postBackID.Contains("chkShowTRS"))) Then
                 If (chkShowTRS.Checked) Then
                     pnlShowTRS.Visible = True
                     Dim dt As New DataTable("Requests")

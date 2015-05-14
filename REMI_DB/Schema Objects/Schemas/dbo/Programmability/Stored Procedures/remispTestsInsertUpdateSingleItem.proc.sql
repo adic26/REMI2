@@ -17,23 +17,23 @@ AS
 	
 	IF (@ID IS NULL) and (((select count (*) from Tests where TestName = @TestName)= 0) or @TestType != 1)-- New Item
 	BEGIN
-		INSERT INTO Tests (TestName, Duration, TestType, WILocation, Comment, lastUser, ResultBasedOntime, IsArchived, Owner, Trainee, DegradationVal)
-		VALUES (@TestName, @Duration, @TestType, @WILocation, @Comment, @lastUser, @ResultBasedOnTime, @IsArchived, @Owner, @Trainee, @DegradationVal)
+		INSERT INTO Tests (TestName, Duration, TestType, WILocation, Comment, lastUser, ResultBasedOntime, IsArchived, [Owner], Trainee, DegradationVal)
+		VALUES (LTRIM(RTRIM(@TestName)), @Duration, @TestType, @WILocation, LTRIM(RTRIM(@Comment)), @lastUser, @ResultBasedOnTime, @IsArchived, @Owner, @Trainee, @DegradationVal)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
 	ELSE -- Exisiting Item
 	BEGIN
 		UPDATE Tests SET
-			TestName = @TestName, 
+			TestName = LTRIM(RTRIM(@TestName)), 
 			Duration = @Duration, 
 			TestType = @TestType, 
 			WILocation = @WILocation,
-			Comment = @Comment,
+			Comment = LTRIM(RTRIM(@Comment)),
 			lastUser = @LastUser,
 			ResultBasedOntime = @ResultBasedOnTime,
 			IsArchived = @IsArchived,
-			Owner=@Owner, Trainee=@Trainee, DegradationVal = @DegradationVal
+			[Owner]=@Owner, Trainee=@Trainee, DegradationVal = @DegradationVal
 		WHERE ID = @ID AND ConcurrencyID = @ConcurrencyID
 
 		SELECT @ReturnValue = @ID

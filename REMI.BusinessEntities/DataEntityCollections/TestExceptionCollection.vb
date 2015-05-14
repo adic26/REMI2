@@ -12,9 +12,9 @@
         Public Sub New()
         End Sub
 
-        Public Function UnitIsExempt(ByVal unitNumber As Integer, ByVal testStageName As String, ByVal testName As String, ByRef tasks As System.Collections.Generic.List(Of Contracts.ITaskModel)) As Boolean
+        Public Function UnitIsExempt(ByVal unitNumber As Integer, ByVal testStageID As Int32, ByVal testID As Int32, ByRef tasks As System.Collections.Generic.List(Of Contracts.ITaskModel)) As Boolean
             Dim isExempt As Boolean
-            If (From t In tasks Where t.TestStageName = testStageName And t.TestName = testName And t.UnitsForTask.Contains(unitNumber) Select t).FirstOrDefault() Is Nothing Then
+            If (From t In tasks Where t.TestStageID = testStageID And t.TestID = testID And t.UnitsForTask.Contains(unitNumber) Select t).FirstOrDefault() Is Nothing Then
                 isExempt = True
             End If
 

@@ -25,7 +25,7 @@ Partial Class ES_Default
                     Dim mi As New MenuItem
                     Dim b As BatchView
                     Dim bcol As New BatchCollection
-                    b = BatchManager.GetViewBatch(bc.BatchNumber)
+                    b = BatchManager.GetBatchView(bc.BatchNumber, True, False, True, False, False, False, False, False, False, False)
                     bcol.Add(b)
 
                     hdnPartName.Value = (From rd In b.ReqData Where rd.Name.ToLower = "part name under test" Select rd.Value).FirstOrDefault()
@@ -53,9 +53,9 @@ Partial Class ES_Default
                     bs.JobID = b.JobID
                     bs.ProductTypeID = b.ProductTypeID
 
-                    Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1)
+                    Dim batchCol As BatchCollection = BatchManager.BatchSearch(bs, True, 0, False, False, False, 1, False, False, False, False, False)
 
-                    For Each batch As Batch In batchCol.Take(10)
+                    For Each batch As BatchView In batchCol.Take(10)
                         Dim l As New ListItem
 
                         If (b.ID = batch.ID) Then

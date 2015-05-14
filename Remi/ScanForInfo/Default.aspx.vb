@@ -79,7 +79,7 @@ Partial Class ScanForInfo_Default
                 End If
         End Select
 
-        Dim b As BatchView = BatchManager.GetViewBatch(Request.QueryString.Get("RN"))
+        Dim b As BatchView = BatchManager.GetBatchView(Request.QueryString.Get("RN"), True, False, True, False, False, False, False, False, False, False)
         grdDetail.DataSource = b.TestUnits
         grdDetail.DataBind()
     End Sub
@@ -177,7 +177,7 @@ Partial Class ScanForInfo_Default
         Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetViewBatch(bc.BatchNumber)
+            b = BatchManager.GetBatchView(bc.BatchNumber, True, True, True, True, True, False, True, True, True, True)
 
             If b IsNot Nothing And b.ID > 0 Then
                 lnkCheckForUpdates2.Enabled = True
@@ -472,8 +472,6 @@ Partial Class ScanForInfo_Default
         myMenu.Items(0).ChildItems.Add(mi)
 
         hypEditExceptions.NavigateUrl = b.ExceptionManagerLink
-        hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
-        hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
         hypModifyTestDurations.NavigateUrl = b.SetTestDurationsManagerLink
         hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
         hypTRSLink.NavigateUrl = b.RequestLink()
@@ -511,22 +509,8 @@ Partial Class ScanForInfo_Default
         End If
 
         If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-            liModifyPriority.Visible = True
             liModifyStage.Visible = True
-            liModifyStatus.Visible = True
             liModifyTestDurations.Visible = True
-
-            mi = New MenuItem
-            mi.Text = "Modify Status"
-            mi.Target = "_blank"
-            mi.NavigateUrl = b.SetStatusManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            mi = New MenuItem
-            mi.Text = "Modify Priority"
-            mi.Target = "_blank"
-            mi.NavigateUrl = b.SetPriorityManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
 
             mi = New MenuItem
             mi.Text = "Modify Durations"
@@ -554,7 +538,7 @@ Partial Class ScanForInfo_Default
             setup.Visible = False
             btnEdit.Text = "Edit Setup"
 
-            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, True, True, True, True, False, True, True, True, True)
             Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
                                       Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                       Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
@@ -595,7 +579,7 @@ Partial Class ScanForInfo_Default
             btnEditStressing.Text = "Edit Setup"
             lblNote.Visible = True
 
-            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, True, True, True, True, False, True, True, True, True)
             gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             gvwStressingSummary.DataBind()
 
@@ -607,7 +591,7 @@ Partial Class ScanForInfo_Default
 
             ScriptManager.RegisterStartupScript(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)
         Else
-            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
+            Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, True, True, True, True, False, True, True, True, True)
             setupStressing.OrientationID = If(b.Orientation Is Nothing, 0, b.Orientation.ID)
             btnEditStressing.Text = "View Summary"
             gvwStressingSummary.Visible = False
@@ -621,9 +605,9 @@ Partial Class ScanForInfo_Default
     Protected Sub lnkCheckForUpdates_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates.Click
         If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
             REMIAppCache.RemoveReqData(hdnQRANumber.Value)
-            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value, False, True, True), True)
+            Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, True, True, True, True, False, True, True, True, True)
+            TestRecordManager.CheckBatchForResultUpdates(b, True)
 
-            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
             Dim records = (From rm In New Remi.Dal.Entities().Instance().ResultsMeasurements _
                                       Where rm.Result.TestUnit.Batch.ID = b.ID And rm.Archived = False _
                                       Select New With {.RID = rm.Result.ID, .TestID = rm.Result.Test.ID, .TestStageID = rm.Result.TestStage.ID, .UN = rm.Result.TestUnit.BatchUnitNumber}).Distinct.ToArray
@@ -652,9 +636,9 @@ Partial Class ScanForInfo_Default
     Protected Sub lnkCheckForUpdates2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCheckForUpdates2.Click
         If Not String.IsNullOrEmpty(hdnQRANumber.Value) Then
             REMIAppCache.RemoveReqData(hdnQRANumber.Value)
-            TestRecordManager.CheckBatchForResultUpdates(BatchManager.GetItem(hdnQRANumber.Value, False, True, True), True)
+            Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, True, True, True, True, False, True, True, True, True)
+            TestRecordManager.CheckBatchForResultUpdates(b, True)
 
-            Dim b As BatchView = BatchManager.GetViewBatch(hdnQRANumber.Value)
             gvwStressingSummary.DataSource = b.GetStressingOverviewTable(UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID), UserManager.GetCurrentUser.IsTestCenterAdmin, UserManager.GetCurrentUser.HasBatchSetupAuthority(b.DepartmentID), True, If(b.Orientation IsNot Nothing, b.Orientation.Definition, String.Empty))
             gvwStressingSummary.DataBind()
             ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), Guid.NewGuid().ToString(), "gridviewScroll2();ApplyTableFormatting();", True)

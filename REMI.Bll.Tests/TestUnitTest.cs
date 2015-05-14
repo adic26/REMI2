@@ -98,7 +98,7 @@ namespace REMI.Bll.Tests
             unit = (from u in instance.TestUnits.Include("Batch") where u.BSN > 0 orderby u.Batch.ID descending select u).FirstOrDefault();
             DeviceBarcodeNumber bc = new DeviceBarcodeNumber(unit.Batch.QRANumber, unit.BatchUnitNumber.ToString());
 
-            Batch b = BatchManager.GetItem(unit.Batch.QRANumber);
+            BatchView b = BatchManager.GetBatchView(unit.Batch.QRANumber, false, true, false, false, false, false, false, false, false, false);
 
             TestUnit tu = b.TestUnits[0];
 

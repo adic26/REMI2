@@ -34,7 +34,7 @@ Partial Class TestRecords_Default
             Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRA))
 
             If bc.Validate Then
-                Dim b As Batch = BatchManager.GetItem(bc.BatchNumber, False, True, True)
+                Dim b As BatchView = BatchManager.GetBatchView(bc.BatchNumber, True, False, True, True, True, False, True, False, True, False)
                 If b IsNot Nothing Then
                     Dim litTitle As Literal = Master.FindControl("litPageTitle")
                     If litTitle IsNot Nothing Then
@@ -123,7 +123,7 @@ Partial Class TestRecords_Default
 
                 REMIAppCache.ClearAllBatchData(hdnQRANumber.Value)
 
-                Dim b As Batch = BatchManager.GetItem(hdnQRANumber.Value)
+                Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, True, True, False, True, False, True, False, False, False)
                 grdTestRecords.DataSource = b.TestRecords(hdnQRANumber.Value, hdnTestName.Value, hdnTestStageName.Value, hdnJobName.Value, hdnTestUnitID.Value)
                 grdTestRecords.DataBind()
         End Select

@@ -100,6 +100,10 @@ Namespace REMI.Dal
         Public Shared Function GetListOfBatchSpecificTestDurations(ByVal qraNumber As String, ByVal myconnection As SqlConnection) As Dictionary(Of Integer, Double)
             Dim tempList As New Dictionary(Of Integer, Double)
 
+            If (myconnection Is Nothing) Then
+                myconnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            End If
+
             Using myCommand As New SqlCommand("remispBatchSpecificTestDurationsGetList", myconnection)
                 myCommand.CommandType = CommandType.StoredProcedure
                 myCommand.Parameters.AddWithValue("@qranumber", qraNumber)
@@ -311,7 +315,7 @@ Namespace REMI.Dal
 
                 Using myCommand As New SqlCommand("remispTestsInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@TestName", MyTest.Name)
+                    myCommand.Parameters.AddWithValue("@TestName", MyTest.Name.Trim())
                     myCommand.Parameters.AddWithValue("@Duration", MyTest.TotalHours)
                     myCommand.Parameters.AddWithValue("@TestType", MyTest.TestType)
                     myCommand.Parameters.AddWithValue("@Comment", MyTest.Comments)

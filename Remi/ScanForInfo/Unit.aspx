@@ -31,7 +31,7 @@
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTRLink" runat="server" />
-            <asp:HyperLink ID="hypTestRecords" runat="server" ToolTip="Click to view all of the test records for this unit" NavigateUrl="">Test Records</asp:HyperLink>
+            <asp:HyperLink ID="hypTestRecords" runat="server" ToolTip="Click to view all of the test records for this unit" NavigateUrl="" Target="_blank">Test Records</asp:HyperLink>
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgMFG" runat="server" />
@@ -39,7 +39,7 @@
         </li>
         <li>
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgBatchInfo" runat="server" />
-            <asp:HyperLink ID="hypBatchInfo" runat="server" ToolTip="Click to view the information for this entire batch" NavigateUrl="~/ScanForInfo/Batch.aspx">Batch Info</asp:HyperLink>
+            <asp:HyperLink ID="hypBatchInfo" runat="server" ToolTip="Click to view the information for this entire batch" NavigateUrl="~/ScanForInfo/Batch.aspx" Target="_blank">Batch Info</asp:HyperLink>
         </li>
     </ul>
 </asp:Content>

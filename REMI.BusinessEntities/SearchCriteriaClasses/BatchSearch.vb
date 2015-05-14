@@ -3,10 +3,12 @@ Namespace REMI.BusinessEntities
 
     Public Class BatchSearch
         Private _job As String
-        Private _jobID As Int32
         Private _stage As String
         Private _revision As String
+        Private _requestor As String
+        Private _jobID As Int32
         Private _geoLocationID As Int32
+        Private _trackingLocationTypeID As Int32
         Private _requestReason As Int32
         Private _productID As Int32
         Private _productTypeID As Int32
@@ -197,6 +199,15 @@ Namespace REMI.BusinessEntities
             End Set
         End Property
 
+        Public Property Requestor() As String
+            Get
+                Return _requestor
+            End Get
+            Set(value As String)
+                _requestor = value
+            End Set
+        End Property
+
         Public Property TestStageID() As Int32
             Get
                 Return _testStageID
@@ -221,6 +232,15 @@ Namespace REMI.BusinessEntities
             End Get
             Set(value As Int32)
                 _userID = value
+            End Set
+        End Property
+
+        Public Property TrackingLocationTypeID() As Int32
+            Get
+                Return _trackingLocationTypeID
+            End Get
+            Set(value As Int32)
+                _trackingLocationTypeID = value
             End Set
         End Property
 

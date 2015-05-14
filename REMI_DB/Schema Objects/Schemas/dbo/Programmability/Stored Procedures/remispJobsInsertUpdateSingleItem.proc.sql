@@ -25,21 +25,21 @@
 
 	DECLARE @ReturnValue int
 	
-	set @ID = (select ID from Jobs where jobs.JobName=@JobName)
+	set @ID = (select ID from Jobs WITH(NOLOCK) where jobs.JobName=LTRIM(RTRIM(@JobName)))
 	
 	IF (@ID IS NULL) -- New Item
 	BEGIN
 		INSERT INTO Jobs(JobName, WILocation, Comment, LastUser, OperationsTest, TechnicalOperationsTest, MechanicalTest, ProcedureLocation, IsActive, NoBSN, ContinueOnFailures)
-		VALUES(@JobName, @WILocation, @Comment, @LastUser, @OperationsTest, @TechOperationsTest, @MechanicalTest, @ProcedureLocation, @IsActive, @NoBSN, @ContinueOnFailures)
+		VALUES(LTRIM(RTRIM(@JobName)), @WILocation, LTRIM(RTRIM(@Comment)), @LastUser, @OperationsTest, @TechOperationsTest, @MechanicalTest, @ProcedureLocation, @IsActive, @NoBSN, @ContinueOnFailures)
 
 		SELECT @ReturnValue = SCOPE_IDENTITY()
 	END
 	ELSE -- Exisiting Item
 	BEGIN
 		UPDATE Jobs SET
-			JobName = @JobName, 
+			JobName = LTRIM(RTRIM(@JobName)), 
 			LastUser = @LastUser,
-			Comment = @Comment,
+			Comment = LTRIM(RTRIM(@Comment)),
 			WILocation = @WILocation,
 			OperationsTest = @OperationsTest,
 			TechnicalOperationsTest = @TechOperationsTest,
@@ -53,7 +53,7 @@
 		SELECT @ReturnValue = @ID
 	END
 
-	SET @ConcurrencyID = (SELECT ConcurrencyID FROM Jobs WHERE ID = @ReturnValue)
+	SET @ConcurrencyID = (SELECT ConcurrencyID FROM Jobs WITH(NOLOCK) WHERE ID = @ReturnValue)
 	SET @ID = @ReturnValue
 	
 	IF (@@ERROR != 0)

@@ -391,7 +391,7 @@ Partial Class Controls_BatchSelectControl
                 grdBatches.Columns(GridviewColumNames.EstTSCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.EstJobCompleletion).Visible = False
                 grdBatches.Columns(GridviewColumNames.NumberOfUnitsExpected).Visible = False
-                grdBatches.Columns(GridviewColumNames.TestCenter).Visible = False
+                grdBatches.Columns(GridviewColumNames.TestCenter).Visible = True
                 grdBatches.Columns(GridviewColumNames.WILocation).Visible = False
                 grdBatches.Columns(GridviewColumNames.selectionColumn).Visible = False
                 grdBatches.Columns(GridviewColumNames.Id).Visible = False
@@ -503,7 +503,7 @@ Partial Class Controls_BatchSelectControl
                     If gr.RowType = DataControlRowType.DataRow Then
                         Dim chkRow As CheckBox = gr.FindControl("chkSelect")
                         If chkRow.Checked Then
-                            batchcoll.Add(BatchManager.GetItem(grdBatches.DataKeys.Item(gr.RowIndex).Value))
+                            batchcoll.Add(BatchManager.GetBatchView(grdBatches.DataKeys.Item(gr.RowIndex).Value, True, True, True, False, True, False, False, False, False, False))
                         End If
                     End If
                 Next
@@ -601,7 +601,7 @@ Partial Class Controls_BatchSelectControl
                 statusColumnID += 1
                 rtrColumnID += 1
 
-                e.Row.Cells(0).Enabled = UserManager.GetCurrentUser.HasEditItemAuthority(DirectCast(e.Row.DataItem, REMI.BusinessEntities.Batch).ProductGroup, DirectCast(e.Row.DataItem, REMI.BusinessEntities.Batch).DepartmentID)
+                e.Row.Cells(0).Enabled = UserManager.GetCurrentUser.HasEditItemAuthority(DirectCast(e.Row.DataItem, Remi.BusinessEntities.BatchView).ProductGroup, DirectCast(e.Row.DataItem, Remi.BusinessEntities.BatchView).DepartmentID)
 
                 Dim btnUp As LinkButton = DirectCast(e.Row.FindControl("btnUp"), LinkButton)
                 Dim btnDown As LinkButton = DirectCast(e.Row.FindControl("btnDown"), LinkButton)

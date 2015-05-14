@@ -419,6 +419,10 @@ Namespace REMI.Dal
         Public Shared Function GetBatchUnits(ByVal qraNumber As String, ByVal myconnection As SqlConnection) As TestUnitCollection
             Dim tempList As TestUnitCollection = Nothing
 
+            If (myconnection Is Nothing) Then
+                myconnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            End If
+
             Using myCommand As New SqlCommand("remispTestUnitsSearchFor", myconnection)
                 myCommand.CommandType = CommandType.StoredProcedure
 

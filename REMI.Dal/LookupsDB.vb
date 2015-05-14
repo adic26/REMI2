@@ -69,7 +69,7 @@ Namespace REMI.Dal
                 Using myCommand As New SqlCommand("remispSaveLookup", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@LookupType", lookupType)
-                    myCommand.Parameters.AddWithValue("@Value", value)
+                    myCommand.Parameters.AddWithValue("@Value", value.Trim())
                     myCommand.Parameters.AddWithValue("@IsActive", isActive)
                     myCommand.Parameters.AddWithValue("@Description", description)
                     myCommand.Parameters.AddWithValue("@ParentID", parentID)

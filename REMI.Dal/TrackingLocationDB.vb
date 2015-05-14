@@ -89,8 +89,8 @@ Namespace REMI.Dal
                 Using myCommand As New SqlCommand("remispTrackingLocationsInsertHost", MyConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
                     myCommand.Parameters.AddWithValue("@ID", ID)
-                    myCommand.Parameters.AddWithValue("@HostName", HostName)
-                    myCommand.Parameters.AddWithValue("@UserName", userName)
+                    myCommand.Parameters.AddWithValue("@HostName", HostName.Trim())
+                    myCommand.Parameters.AddWithValue("@UserName", userName.Trim())
                     myCommand.Parameters.AddWithValue("@Status", status)
                     MyConnection.Open()
                     Result = myCommand.ExecuteNonQuery()
@@ -113,17 +113,17 @@ Namespace REMI.Dal
             Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
                 Using myCommand As New SqlCommand("remispTrackingLocationsInsertUpdateSingleItem", myConnection)
                     myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@TrackingLocationName", MyTrackingLocation.Name)
+                    myCommand.Parameters.AddWithValue("@TrackingLocationName", MyTrackingLocation.Name.Trim())
                     myCommand.Parameters.AddWithValue("@TrackingLocationTypeID", MyTrackingLocation.TrackingLocationType.ID)
                     myCommand.Parameters.AddWithValue("@GeoLocationID", MyTrackingLocation.GeoLocationID)
                     myCommand.Parameters.AddWithValue("@Status", MyTrackingLocation.Status)
 
                     If Not String.IsNullOrEmpty(MyTrackingLocation.HostName) Then
-                        myCommand.Parameters.AddWithValue("@HostName", MyTrackingLocation.HostName)
+                        myCommand.Parameters.AddWithValue("@HostName", MyTrackingLocation.HostName.Trim())
                     End If
 
                     If Not String.IsNullOrEmpty(MyTrackingLocation.Comment) Then
-                        myCommand.Parameters.AddWithValue("@Comment", MyTrackingLocation.Comment)
+                        myCommand.Parameters.AddWithValue("@Comment", MyTrackingLocation.Comment.Trim())
                     End If
 
                     myCommand.Parameters.AddWithValue("@Decommissioned", MyTrackingLocation.Decommissioned)

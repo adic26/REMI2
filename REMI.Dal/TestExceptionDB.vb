@@ -153,27 +153,27 @@ Namespace REMI.Dal
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetExceptionsForBatch(ByVal qraNumber As String) As TestExceptionCollection
+        Public Shared Function GetExceptionsForBatch(ByVal qraNumber As String, ByVal myConnection As SqlConnection) As TestExceptionCollection
             Dim tempList As New TestExceptionCollection
 
-            Using myConnection As New SqlConnection(REMIConfiguration.ConnectionStringREMI)
-                myConnection.Open()
+            If (myConnection Is Nothing) Then
+                myConnection = New SqlConnection(REMIConfiguration.ConnectionStringREMI)
+            End If
 
-                Using myCommand As New SqlCommand("remispTestExceptionsGetBatchExceptions", myConnection)
-                    myCommand.CommandType = CommandType.StoredProcedure
-                    myCommand.Parameters.AddWithValue("@qranumber", qraNumber)
+            Using myCommand As New SqlCommand("remispTestExceptionsGetBatchExceptions", myConnection)
+                myCommand.CommandType = CommandType.StoredProcedure
+                myCommand.Parameters.AddWithValue("@qranumber", qraNumber)
 
-                    If myConnection.State <> ConnectionState.Open Then
-                        myConnection.Open()
+                If myConnection.State <> ConnectionState.Open Then
+                    myConnection.Open()
+                End If
+
+                Using myReader As SqlDataReader = myCommand.ExecuteReader()
+                    If myReader.HasRows Then
+                        While myReader.Read()
+                            tempList.Add(FillDataRecord(myReader, qraNumber))
+                        End While
                     End If
-
-                    Using myReader As SqlDataReader = myCommand.ExecuteReader()
-                        If myReader.HasRows Then
-                            While myReader.Read()
-                                tempList.Add(FillDataRecord(myReader, qraNumber))
-                            End While
-                        End If
-                    End Using
                 End Using
             End Using
 

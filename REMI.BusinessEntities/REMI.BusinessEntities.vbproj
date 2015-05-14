@@ -145,7 +145,6 @@
     <Compile Include="DataEntityObjects\TestException.vb" />
     <Compile Include="DataEntityObjects\TestRecord.vb" />
     <Compile Include="BusinessObjects\DeviceBarcodeNumber.vb" />
-    <Compile Include="DataEntityObjects\Batch.vb" />
     <Compile Include="DataEntityCollections\BatchCollection.vb" />
     <Compile Include="DataEntityCollections\DeviceTrackingLogCollection.vb" />
     <Compile Include="DataEntityCollections\JobCollection.vb" />

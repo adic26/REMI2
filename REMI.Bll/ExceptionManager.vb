@@ -33,18 +33,18 @@ Namespace REMI.Bll
             Return nc
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.Select, False)> _
-        Public Shared Function GetExceptions(ByVal qraNumber As String) As TestExceptionCollection
-            Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
-            Try
-                If bc.Validate Then
-                    Return TestExceptionDB.GetExceptionsForBatch(bc.BatchNumber)
-                End If
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", qraNumber))
-            End Try
-            Return New TestExceptionCollection
-        End Function
+        '<DataObjectMethod(DataObjectMethodType.Select, False)> _
+        'Public Shared Function GetExceptions(ByVal qraNumber As String) As TestExceptionCollection
+        '    Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
+        '    Try
+        '        If bc.Validate Then
+        '            Return TestExceptionDB.GetExceptionsForBatch(bc.BatchNumber)
+        '        End If
+        '    Catch ex As Exception
+        '        LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", qraNumber))
+        '    End Try
+        '    Return New TestExceptionCollection
+        'End Function
 
         Public Shared Function GetExceptionTable(ByVal qraNumber As String, ByVal testStageName As String, ByVal testStageID As Int32) As Dictionary(Of String, Boolean)
             Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
@@ -61,11 +61,11 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.Select, False)> _
-        Public Shared Function GetExceptionsExcludingProductLevel(ByVal qraNumber As String) As TestExceptionCollection
+        Public Shared Function GetExceptionsForBatch(ByVal qraNumber As String) As TestExceptionCollection
             Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(qraNumber))
             Try
                 If bc.Validate Then
-                    Return TestExceptionDB.GetExceptionsForBatch(bc.BatchNumber)
+                    Return TestExceptionDB.GetExceptionsForBatch(bc.BatchNumber, Nothing)
                 End If
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", qraNumber))

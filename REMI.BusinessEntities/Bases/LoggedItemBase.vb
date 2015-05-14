@@ -19,6 +19,7 @@ Namespace REMI.BusinessEntities
         ''' Gets or sets the name of the user who preformed the insert of the item.
         ''' </summary> 
         <NotNullOrEmpty(Key:="w4")> _
+        <DataTableColName("LastUser")> _
         Public Property LastUser() As String Implements ILoggedItem.LastUser
             Get
                 Return _lastUser

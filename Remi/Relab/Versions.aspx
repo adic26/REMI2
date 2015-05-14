@@ -88,6 +88,7 @@
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:BoundField DataField="Processed" HeaderText="Processed" SortExpression="Processed" />
+            <asp:BoundField DataField="ErrorOccured" HeaderText="ErrorOccured" SortExpression="ErrorOccured" />
         </Columns>
     </asp:GridView>
     <asp:ObjectDataSource ID="odsVersionSummary" runat="server" EnablePaging="False" SelectMethod="ResultVersions" TypeName="REMI.Bll.RelabManager">

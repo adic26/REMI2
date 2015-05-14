@@ -18,7 +18,7 @@ Imports System.Runtime.Serialization
 Imports System.Xml.Serialization
 
 
-<Assembly: EdmSchemaAttribute("1c0f1eb5-4421-4073-b5db-35262c4722fd")>
+<Assembly: EdmSchemaAttribute("f08d7790-c61a-4e5a-9a2e-beeff2f86451")>
 #Region "EDM Relationship Metadata"
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultsMeasurements_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsMeasurement", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsMeasurement), True)>
 <Assembly: EdmRelationshipAttribute("REMI.Entities", "FK_ResultXML_Results", "Result", System.Data.Metadata.Edm.RelationshipMultiplicity.One, GetType(REMI.Entities.Result), "ResultsXML", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, GetType(REMI.Entities.ResultsXML), True)>
@@ -2012,6 +2012,502 @@ Namespace REMI.Entities
             End If
     
             Return MyBase.ExecuteFunction(Of Global.System.String)("remispGetObservationParameters", measurementIDParameter)
+    
+        End Function
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        ''' <param name="byPassProductCheck">No Metadata Documentation available.</param>
+        ''' <param name="executingUserID">No Metadata Documentation available.</param>
+        ''' <param name="status">No Metadata Documentation available.</param>
+        ''' <param name="priority">No Metadata Documentation available.</param>
+        ''' <param name="userID">No Metadata Documentation available.</param>
+        ''' <param name="trackingLocationTypeID">No Metadata Documentation available.</param>
+        ''' <param name="testStageID">No Metadata Documentation available.</param>
+        ''' <param name="testID">No Metadata Documentation available.</param>
+        ''' <param name="productTypeID">No Metadata Documentation available.</param>
+        ''' <param name="productID">No Metadata Documentation available.</param>
+        ''' <param name="accessoryGroupID">No Metadata Documentation available.</param>
+        ''' <param name="geoLocationID">No Metadata Documentation available.</param>
+        ''' <param name="jobName">No Metadata Documentation available.</param>
+        ''' <param name="requestReason">No Metadata Documentation available.</param>
+        ''' <param name="startRowIndex">No Metadata Documentation available.</param>
+        ''' <param name="maximumRows">No Metadata Documentation available.</param>
+        ''' <param name="batchStart">No Metadata Documentation available.</param>
+        ''' <param name="batchEnd">No Metadata Documentation available.</param>
+        ''' <param name="testStage">No Metadata Documentation available.</param>
+        ''' <param name="testStageType">No Metadata Documentation available.</param>
+        ''' <param name="excludedTestStageType">No Metadata Documentation available.</param>
+        ''' <param name="excludedStatus">No Metadata Documentation available.</param>
+        ''' <param name="trackingLocationFunction">No Metadata Documentation available.</param>
+        ''' <param name="notInTrackingLocationFunction">No Metadata Documentation available.</param>
+        ''' <param name="revision">No Metadata Documentation available.</param>
+        ''' <param name="departmentID">No Metadata Documentation available.</param>
+        ''' <param name="onlyHasResults">No Metadata Documentation available.</param>
+        ''' <param name="jobID">No Metadata Documentation available.</param>
+        ''' <param name="trackingLocationID">No Metadata Documentation available.</param>
+        ''' <param name="requestor">No Metadata Documentation available.</param>
+        Public Function remispBatchesSearch(byPassProductCheck As Nullable(Of Global.System.Int32), executingUserID As Nullable(Of Global.System.Int32), status As Nullable(Of Global.System.Int32), priority As Nullable(Of Global.System.Int32), userID As Nullable(Of Global.System.Int32), trackingLocationTypeID As Nullable(Of Global.System.Int32), testStageID As Nullable(Of Global.System.Int32), testID As Nullable(Of Global.System.Int32), productTypeID As Nullable(Of Global.System.Int32), productID As Nullable(Of Global.System.Int32), accessoryGroupID As Nullable(Of Global.System.Int32), geoLocationID As Nullable(Of Global.System.Int32), jobName As Global.System.String, requestReason As Nullable(Of Global.System.Int32), startRowIndex As Nullable(Of Global.System.Int32), maximumRows As Nullable(Of Global.System.Int32), batchStart As Nullable(Of Global.System.DateTime), batchEnd As Nullable(Of Global.System.DateTime), testStage As Global.System.String, testStageType As Nullable(Of Global.System.Int32), excludedTestStageType As Nullable(Of Global.System.Int32), excludedStatus As Nullable(Of Global.System.Int32), trackingLocationFunction As Nullable(Of Global.System.Int32), notInTrackingLocationFunction As Nullable(Of Global.System.Int32), revision As Global.System.String, departmentID As Nullable(Of Global.System.Int32), onlyHasResults As Nullable(Of Global.System.Int32), jobID As Nullable(Of Global.System.Int32), trackingLocationID As Nullable(Of Global.System.Int32), requestor As Global.System.String) As Integer
+            Dim byPassProductCheckParameter As ObjectParameter
+            If (byPassProductCheck.HasValue)
+                byPassProductCheckParameter = New ObjectParameter("ByPassProductCheck", byPassProductCheck)
+            Else
+                byPassProductCheckParameter = New ObjectParameter("ByPassProductCheck", GetType(Global.System.Int32))
+            End If
+    
+            Dim executingUserIDParameter As ObjectParameter
+            If (executingUserID.HasValue)
+                executingUserIDParameter = New ObjectParameter("ExecutingUserID", executingUserID)
+            Else
+                executingUserIDParameter = New ObjectParameter("ExecutingUserID", GetType(Global.System.Int32))
+            End If
+    
+            Dim statusParameter As ObjectParameter
+            If (status.HasValue)
+                statusParameter = New ObjectParameter("Status", status)
+            Else
+                statusParameter = New ObjectParameter("Status", GetType(Global.System.Int32))
+            End If
+    
+            Dim priorityParameter As ObjectParameter
+            If (priority.HasValue)
+                priorityParameter = New ObjectParameter("Priority", priority)
+            Else
+                priorityParameter = New ObjectParameter("Priority", GetType(Global.System.Int32))
+            End If
+    
+            Dim userIDParameter As ObjectParameter
+            If (userID.HasValue)
+                userIDParameter = New ObjectParameter("UserID", userID)
+            Else
+                userIDParameter = New ObjectParameter("UserID", GetType(Global.System.Int32))
+            End If
+    
+            Dim trackingLocationTypeIDParameter As ObjectParameter
+            If (trackingLocationTypeID.HasValue)
+                trackingLocationTypeIDParameter = New ObjectParameter("TrackingLocationTypeID", trackingLocationTypeID)
+            Else
+                trackingLocationTypeIDParameter = New ObjectParameter("TrackingLocationTypeID", GetType(Global.System.Int32))
+            End If
+    
+            Dim testStageIDParameter As ObjectParameter
+            If (testStageID.HasValue)
+                testStageIDParameter = New ObjectParameter("TestStageID", testStageID)
+            Else
+                testStageIDParameter = New ObjectParameter("TestStageID", GetType(Global.System.Int32))
+            End If
+    
+            Dim testIDParameter As ObjectParameter
+            If (testID.HasValue)
+                testIDParameter = New ObjectParameter("TestID", testID)
+            Else
+                testIDParameter = New ObjectParameter("TestID", GetType(Global.System.Int32))
+            End If
+    
+            Dim productTypeIDParameter As ObjectParameter
+            If (productTypeID.HasValue)
+                productTypeIDParameter = New ObjectParameter("ProductTypeID", productTypeID)
+            Else
+                productTypeIDParameter = New ObjectParameter("ProductTypeID", GetType(Global.System.Int32))
+            End If
+    
+            Dim productIDParameter As ObjectParameter
+            If (productID.HasValue)
+                productIDParameter = New ObjectParameter("ProductID", productID)
+            Else
+                productIDParameter = New ObjectParameter("ProductID", GetType(Global.System.Int32))
+            End If
+    
+            Dim accessoryGroupIDParameter As ObjectParameter
+            If (accessoryGroupID.HasValue)
+                accessoryGroupIDParameter = New ObjectParameter("AccessoryGroupID", accessoryGroupID)
+            Else
+                accessoryGroupIDParameter = New ObjectParameter("AccessoryGroupID", GetType(Global.System.Int32))
+            End If
+    
+            Dim geoLocationIDParameter As ObjectParameter
+            If (geoLocationID.HasValue)
+                geoLocationIDParameter = New ObjectParameter("GeoLocationID", geoLocationID)
+            Else
+                geoLocationIDParameter = New ObjectParameter("GeoLocationID", GetType(Global.System.Int32))
+            End If
+    
+            Dim jobNameParameter As ObjectParameter
+            If (jobName IsNot Nothing)
+                jobNameParameter = New ObjectParameter("JobName", jobName)
+            Else
+                jobNameParameter = New ObjectParameter("JobName", GetType(Global.System.String))
+            End If
+    
+            Dim requestReasonParameter As ObjectParameter
+            If (requestReason.HasValue)
+                requestReasonParameter = New ObjectParameter("RequestReason", requestReason)
+            Else
+                requestReasonParameter = New ObjectParameter("RequestReason", GetType(Global.System.Int32))
+            End If
+    
+            Dim startRowIndexParameter As ObjectParameter
+            If (startRowIndex.HasValue)
+                startRowIndexParameter = New ObjectParameter("StartRowIndex", startRowIndex)
+            Else
+                startRowIndexParameter = New ObjectParameter("StartRowIndex", GetType(Global.System.Int32))
+            End If
+    
+            Dim maximumRowsParameter As ObjectParameter
+            If (maximumRows.HasValue)
+                maximumRowsParameter = New ObjectParameter("MaximumRows", maximumRows)
+            Else
+                maximumRowsParameter = New ObjectParameter("MaximumRows", GetType(Global.System.Int32))
+            End If
+    
+            Dim batchStartParameter As ObjectParameter
+            If (batchStart.HasValue)
+                batchStartParameter = New ObjectParameter("BatchStart", batchStart)
+            Else
+                batchStartParameter = New ObjectParameter("BatchStart", GetType(Global.System.DateTime))
+            End If
+    
+            Dim batchEndParameter As ObjectParameter
+            If (batchEnd.HasValue)
+                batchEndParameter = New ObjectParameter("BatchEnd", batchEnd)
+            Else
+                batchEndParameter = New ObjectParameter("BatchEnd", GetType(Global.System.DateTime))
+            End If
+    
+            Dim testStageParameter As ObjectParameter
+            If (testStage IsNot Nothing)
+                testStageParameter = New ObjectParameter("TestStage", testStage)
+            Else
+                testStageParameter = New ObjectParameter("TestStage", GetType(Global.System.String))
+            End If
+    
+            Dim testStageTypeParameter As ObjectParameter
+            If (testStageType.HasValue)
+                testStageTypeParameter = New ObjectParameter("TestStageType", testStageType)
+            Else
+                testStageTypeParameter = New ObjectParameter("TestStageType", GetType(Global.System.Int32))
+            End If
+    
+            Dim excludedTestStageTypeParameter As ObjectParameter
+            If (excludedTestStageType.HasValue)
+                excludedTestStageTypeParameter = New ObjectParameter("excludedTestStageType", excludedTestStageType)
+            Else
+                excludedTestStageTypeParameter = New ObjectParameter("excludedTestStageType", GetType(Global.System.Int32))
+            End If
+    
+            Dim excludedStatusParameter As ObjectParameter
+            If (excludedStatus.HasValue)
+                excludedStatusParameter = New ObjectParameter("ExcludedStatus", excludedStatus)
+            Else
+                excludedStatusParameter = New ObjectParameter("ExcludedStatus", GetType(Global.System.Int32))
+            End If
+    
+            Dim trackingLocationFunctionParameter As ObjectParameter
+            If (trackingLocationFunction.HasValue)
+                trackingLocationFunctionParameter = New ObjectParameter("TrackingLocationFunction", trackingLocationFunction)
+            Else
+                trackingLocationFunctionParameter = New ObjectParameter("TrackingLocationFunction", GetType(Global.System.Int32))
+            End If
+    
+            Dim notInTrackingLocationFunctionParameter As ObjectParameter
+            If (notInTrackingLocationFunction.HasValue)
+                notInTrackingLocationFunctionParameter = New ObjectParameter("NotInTrackingLocationFunction", notInTrackingLocationFunction)
+            Else
+                notInTrackingLocationFunctionParameter = New ObjectParameter("NotInTrackingLocationFunction", GetType(Global.System.Int32))
+            End If
+    
+            Dim revisionParameter As ObjectParameter
+            If (revision IsNot Nothing)
+                revisionParameter = New ObjectParameter("Revision", revision)
+            Else
+                revisionParameter = New ObjectParameter("Revision", GetType(Global.System.String))
+            End If
+    
+            Dim departmentIDParameter As ObjectParameter
+            If (departmentID.HasValue)
+                departmentIDParameter = New ObjectParameter("DepartmentID", departmentID)
+            Else
+                departmentIDParameter = New ObjectParameter("DepartmentID", GetType(Global.System.Int32))
+            End If
+    
+            Dim onlyHasResultsParameter As ObjectParameter
+            If (onlyHasResults.HasValue)
+                onlyHasResultsParameter = New ObjectParameter("OnlyHasResults", onlyHasResults)
+            Else
+                onlyHasResultsParameter = New ObjectParameter("OnlyHasResults", GetType(Global.System.Int32))
+            End If
+    
+            Dim jobIDParameter As ObjectParameter
+            If (jobID.HasValue)
+                jobIDParameter = New ObjectParameter("JobID", jobID)
+            Else
+                jobIDParameter = New ObjectParameter("JobID", GetType(Global.System.Int32))
+            End If
+    
+            Dim trackingLocationIDParameter As ObjectParameter
+            If (trackingLocationID.HasValue)
+                trackingLocationIDParameter = New ObjectParameter("TrackingLocationID", trackingLocationID)
+            Else
+                trackingLocationIDParameter = New ObjectParameter("TrackingLocationID", GetType(Global.System.Int32))
+            End If
+    
+            Dim requestorParameter As ObjectParameter
+            If (requestor IsNot Nothing)
+                requestorParameter = New ObjectParameter("Requestor", requestor)
+            Else
+                requestorParameter = New ObjectParameter("Requestor", GetType(Global.System.String))
+            End If
+    
+            Return MyBase.ExecuteFunction("remispBatchesSearch", byPassProductCheckParameter, executingUserIDParameter, statusParameter, priorityParameter, userIDParameter, trackingLocationTypeIDParameter, testStageIDParameter, testIDParameter, productTypeIDParameter, productIDParameter, accessoryGroupIDParameter, geoLocationIDParameter, jobNameParameter, requestReasonParameter, startRowIndexParameter, maximumRowsParameter, batchStartParameter, batchEndParameter, testStageParameter, testStageTypeParameter, excludedTestStageTypeParameter, excludedStatusParameter, trackingLocationFunctionParameter, notInTrackingLocationFunctionParameter, revisionParameter, departmentIDParameter, onlyHasResultsParameter, jobIDParameter, trackingLocationIDParameter, requestorParameter)
+    
+        End Function
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        ''' <param name="byPassProductCheck">No Metadata Documentation available.</param>
+        ''' <param name="executingUserID">No Metadata Documentation available.</param>
+        ''' <param name="status">No Metadata Documentation available.</param>
+        ''' <param name="priority">No Metadata Documentation available.</param>
+        ''' <param name="userID">No Metadata Documentation available.</param>
+        ''' <param name="trackingLocationTypeID">No Metadata Documentation available.</param>
+        ''' <param name="testStageID">No Metadata Documentation available.</param>
+        ''' <param name="testID">No Metadata Documentation available.</param>
+        ''' <param name="productTypeID">No Metadata Documentation available.</param>
+        ''' <param name="productID">No Metadata Documentation available.</param>
+        ''' <param name="accessoryGroupID">No Metadata Documentation available.</param>
+        ''' <param name="geoLocationID">No Metadata Documentation available.</param>
+        ''' <param name="jobName">No Metadata Documentation available.</param>
+        ''' <param name="requestReason">No Metadata Documentation available.</param>
+        ''' <param name="startRowIndex">No Metadata Documentation available.</param>
+        ''' <param name="maximumRows">No Metadata Documentation available.</param>
+        ''' <param name="batchStart">No Metadata Documentation available.</param>
+        ''' <param name="batchEnd">No Metadata Documentation available.</param>
+        ''' <param name="testStage">No Metadata Documentation available.</param>
+        ''' <param name="testStageType">No Metadata Documentation available.</param>
+        ''' <param name="excludedTestStageType">No Metadata Documentation available.</param>
+        ''' <param name="excludedStatus">No Metadata Documentation available.</param>
+        ''' <param name="trackingLocationFunction">No Metadata Documentation available.</param>
+        ''' <param name="notInTrackingLocationFunction">No Metadata Documentation available.</param>
+        ''' <param name="revision">No Metadata Documentation available.</param>
+        ''' <param name="departmentID">No Metadata Documentation available.</param>
+        ''' <param name="onlyHasResults">No Metadata Documentation available.</param>
+        ''' <param name="jobID">No Metadata Documentation available.</param>
+        ''' <param name="trackingLocationID">No Metadata Documentation available.</param>
+        ''' <param name="requestor">No Metadata Documentation available.</param>
+        Public Function BatchSearch(byPassProductCheck As Nullable(Of Global.System.Int32), executingUserID As Nullable(Of Global.System.Int32), status As Nullable(Of Global.System.Int32), priority As Nullable(Of Global.System.Int32), userID As Nullable(Of Global.System.Int32), trackingLocationTypeID As Nullable(Of Global.System.Int32), testStageID As Nullable(Of Global.System.Int32), testID As Nullable(Of Global.System.Int32), productTypeID As Nullable(Of Global.System.Int32), productID As Nullable(Of Global.System.Int32), accessoryGroupID As Nullable(Of Global.System.Int32), geoLocationID As Nullable(Of Global.System.Int32), jobName As Global.System.String, requestReason As Nullable(Of Global.System.Int32), startRowIndex As Nullable(Of Global.System.Int32), maximumRows As Nullable(Of Global.System.Int32), batchStart As Nullable(Of Global.System.DateTime), batchEnd As Nullable(Of Global.System.DateTime), testStage As Global.System.String, testStageType As Nullable(Of Global.System.Int32), excludedTestStageType As Nullable(Of Global.System.Int32), excludedStatus As Nullable(Of Global.System.Int32), trackingLocationFunction As Nullable(Of Global.System.Int32), notInTrackingLocationFunction As Nullable(Of Global.System.Int32), revision As Global.System.String, departmentID As Nullable(Of Global.System.Int32), onlyHasResults As Nullable(Of Global.System.Int32), jobID As Nullable(Of Global.System.Int32), trackingLocationID As Nullable(Of Global.System.Int32), requestor As Global.System.String) As ObjectResult(Of BatchSearch_Result)
+            Dim byPassProductCheckParameter As ObjectParameter
+            If (byPassProductCheck.HasValue)
+                byPassProductCheckParameter = New ObjectParameter("ByPassProductCheck", byPassProductCheck)
+            Else
+                byPassProductCheckParameter = New ObjectParameter("ByPassProductCheck", GetType(Global.System.Int32))
+            End If
+    
+            Dim executingUserIDParameter As ObjectParameter
+            If (executingUserID.HasValue)
+                executingUserIDParameter = New ObjectParameter("ExecutingUserID", executingUserID)
+            Else
+                executingUserIDParameter = New ObjectParameter("ExecutingUserID", GetType(Global.System.Int32))
+            End If
+    
+            Dim statusParameter As ObjectParameter
+            If (status.HasValue)
+                statusParameter = New ObjectParameter("Status", status)
+            Else
+                statusParameter = New ObjectParameter("Status", GetType(Global.System.Int32))
+            End If
+    
+            Dim priorityParameter As ObjectParameter
+            If (priority.HasValue)
+                priorityParameter = New ObjectParameter("Priority", priority)
+            Else
+                priorityParameter = New ObjectParameter("Priority", GetType(Global.System.Int32))
+            End If
+    
+            Dim userIDParameter As ObjectParameter
+            If (userID.HasValue)
+                userIDParameter = New ObjectParameter("UserID", userID)
+            Else
+                userIDParameter = New ObjectParameter("UserID", GetType(Global.System.Int32))
+            End If
+    
+            Dim trackingLocationTypeIDParameter As ObjectParameter
+            If (trackingLocationTypeID.HasValue)
+                trackingLocationTypeIDParameter = New ObjectParameter("TrackingLocationTypeID", trackingLocationTypeID)
+            Else
+                trackingLocationTypeIDParameter = New ObjectParameter("TrackingLocationTypeID", GetType(Global.System.Int32))
+            End If
+    
+            Dim testStageIDParameter As ObjectParameter
+            If (testStageID.HasValue)
+                testStageIDParameter = New ObjectParameter("TestStageID", testStageID)
+            Else
+                testStageIDParameter = New ObjectParameter("TestStageID", GetType(Global.System.Int32))
+            End If
+    
+            Dim testIDParameter As ObjectParameter
+            If (testID.HasValue)
+                testIDParameter = New ObjectParameter("TestID", testID)
+            Else
+                testIDParameter = New ObjectParameter("TestID", GetType(Global.System.Int32))
+            End If
+    
+            Dim productTypeIDParameter As ObjectParameter
+            If (productTypeID.HasValue)
+                productTypeIDParameter = New ObjectParameter("ProductTypeID", productTypeID)
+            Else
+                productTypeIDParameter = New ObjectParameter("ProductTypeID", GetType(Global.System.Int32))
+            End If
+    
+            Dim productIDParameter As ObjectParameter
+            If (productID.HasValue)
+                productIDParameter = New ObjectParameter("ProductID", productID)
+            Else
+                productIDParameter = New ObjectParameter("ProductID", GetType(Global.System.Int32))
+            End If
+    
+            Dim accessoryGroupIDParameter As ObjectParameter
+            If (accessoryGroupID.HasValue)
+                accessoryGroupIDParameter = New ObjectParameter("AccessoryGroupID", accessoryGroupID)
+            Else
+                accessoryGroupIDParameter = New ObjectParameter("AccessoryGroupID", GetType(Global.System.Int32))
+            End If
+    
+            Dim geoLocationIDParameter As ObjectParameter
+            If (geoLocationID.HasValue)
+                geoLocationIDParameter = New ObjectParameter("GeoLocationID", geoLocationID)
+            Else
+                geoLocationIDParameter = New ObjectParameter("GeoLocationID", GetType(Global.System.Int32))
+            End If
+    
+            Dim jobNameParameter As ObjectParameter
+            If (jobName IsNot Nothing)
+                jobNameParameter = New ObjectParameter("JobName", jobName)
+            Else
+                jobNameParameter = New ObjectParameter("JobName", GetType(Global.System.String))
+            End If
+    
+            Dim requestReasonParameter As ObjectParameter
+            If (requestReason.HasValue)
+                requestReasonParameter = New ObjectParameter("RequestReason", requestReason)
+            Else
+                requestReasonParameter = New ObjectParameter("RequestReason", GetType(Global.System.Int32))
+            End If
+    
+            Dim startRowIndexParameter As ObjectParameter
+            If (startRowIndex.HasValue)
+                startRowIndexParameter = New ObjectParameter("StartRowIndex", startRowIndex)
+            Else
+                startRowIndexParameter = New ObjectParameter("StartRowIndex", GetType(Global.System.Int32))
+            End If
+    
+            Dim maximumRowsParameter As ObjectParameter
+            If (maximumRows.HasValue)
+                maximumRowsParameter = New ObjectParameter("MaximumRows", maximumRows)
+            Else
+                maximumRowsParameter = New ObjectParameter("MaximumRows", GetType(Global.System.Int32))
+            End If
+    
+            Dim batchStartParameter As ObjectParameter
+            If (batchStart.HasValue)
+                batchStartParameter = New ObjectParameter("BatchStart", batchStart)
+            Else
+                batchStartParameter = New ObjectParameter("BatchStart", GetType(Global.System.DateTime))
+            End If
+    
+            Dim batchEndParameter As ObjectParameter
+            If (batchEnd.HasValue)
+                batchEndParameter = New ObjectParameter("BatchEnd", batchEnd)
+            Else
+                batchEndParameter = New ObjectParameter("BatchEnd", GetType(Global.System.DateTime))
+            End If
+    
+            Dim testStageParameter As ObjectParameter
+            If (testStage IsNot Nothing)
+                testStageParameter = New ObjectParameter("TestStage", testStage)
+            Else
+                testStageParameter = New ObjectParameter("TestStage", GetType(Global.System.String))
+            End If
+    
+            Dim testStageTypeParameter As ObjectParameter
+            If (testStageType.HasValue)
+                testStageTypeParameter = New ObjectParameter("TestStageType", testStageType)
+            Else
+                testStageTypeParameter = New ObjectParameter("TestStageType", GetType(Global.System.Int32))
+            End If
+    
+            Dim excludedTestStageTypeParameter As ObjectParameter
+            If (excludedTestStageType.HasValue)
+                excludedTestStageTypeParameter = New ObjectParameter("excludedTestStageType", excludedTestStageType)
+            Else
+                excludedTestStageTypeParameter = New ObjectParameter("excludedTestStageType", GetType(Global.System.Int32))
+            End If
+    
+            Dim excludedStatusParameter As ObjectParameter
+            If (excludedStatus.HasValue)
+                excludedStatusParameter = New ObjectParameter("ExcludedStatus", excludedStatus)
+            Else
+                excludedStatusParameter = New ObjectParameter("ExcludedStatus", GetType(Global.System.Int32))
+            End If
+    
+            Dim trackingLocationFunctionParameter As ObjectParameter
+            If (trackingLocationFunction.HasValue)
+                trackingLocationFunctionParameter = New ObjectParameter("TrackingLocationFunction", trackingLocationFunction)
+            Else
+                trackingLocationFunctionParameter = New ObjectParameter("TrackingLocationFunction", GetType(Global.System.Int32))
+            End If
+    
+            Dim notInTrackingLocationFunctionParameter As ObjectParameter
+            If (notInTrackingLocationFunction.HasValue)
+                notInTrackingLocationFunctionParameter = New ObjectParameter("NotInTrackingLocationFunction", notInTrackingLocationFunction)
+            Else
+                notInTrackingLocationFunctionParameter = New ObjectParameter("NotInTrackingLocationFunction", GetType(Global.System.Int32))
+            End If
+    
+            Dim revisionParameter As ObjectParameter
+            If (revision IsNot Nothing)
+                revisionParameter = New ObjectParameter("Revision", revision)
+            Else
+                revisionParameter = New ObjectParameter("Revision", GetType(Global.System.String))
+            End If
+    
+            Dim departmentIDParameter As ObjectParameter
+            If (departmentID.HasValue)
+                departmentIDParameter = New ObjectParameter("DepartmentID", departmentID)
+            Else
+                departmentIDParameter = New ObjectParameter("DepartmentID", GetType(Global.System.Int32))
+            End If
+    
+            Dim onlyHasResultsParameter As ObjectParameter
+            If (onlyHasResults.HasValue)
+                onlyHasResultsParameter = New ObjectParameter("OnlyHasResults", onlyHasResults)
+            Else
+                onlyHasResultsParameter = New ObjectParameter("OnlyHasResults", GetType(Global.System.Int32))
+            End If
+    
+            Dim jobIDParameter As ObjectParameter
+            If (jobID.HasValue)
+                jobIDParameter = New ObjectParameter("JobID", jobID)
+            Else
+                jobIDParameter = New ObjectParameter("JobID", GetType(Global.System.Int32))
+            End If
+    
+            Dim trackingLocationIDParameter As ObjectParameter
+            If (trackingLocationID.HasValue)
+                trackingLocationIDParameter = New ObjectParameter("TrackingLocationID", trackingLocationID)
+            Else
+                trackingLocationIDParameter = New ObjectParameter("TrackingLocationID", GetType(Global.System.Int32))
+            End If
+    
+            Dim requestorParameter As ObjectParameter
+            If (requestor IsNot Nothing)
+                requestorParameter = New ObjectParameter("Requestor", requestor)
+            Else
+                requestorParameter = New ObjectParameter("Requestor", GetType(Global.System.String))
+            End If
+    
+            Return MyBase.ExecuteFunction(Of BatchSearch_Result)("BatchSearch", byPassProductCheckParameter, executingUserIDParameter, statusParameter, priorityParameter, userIDParameter, trackingLocationTypeIDParameter, testStageIDParameter, testIDParameter, productTypeIDParameter, productIDParameter, accessoryGroupIDParameter, geoLocationIDParameter, jobNameParameter, requestReasonParameter, startRowIndexParameter, maximumRowsParameter, batchStartParameter, batchEndParameter, testStageParameter, testStageTypeParameter, excludedTestStageTypeParameter, excludedStatusParameter, trackingLocationFunctionParameter, notInTrackingLocationFunctionParameter, revisionParameter, departmentIDParameter, onlyHasResultsParameter, jobIDParameter, trackingLocationIDParameter, requestorParameter)
     
         End Function
 
@@ -27369,6 +27865,1181 @@ Namespace REMI.Entities
         End Sub
     
         Private Partial Sub OnResultSourceChanged()
+        End Sub
+
+        #End Region
+
+    End Class
+
+    #End Region
+
+    #Region "ComplexTypes"
+    
+    ''' <summary>
+    ''' No Metadata Documentation available.
+    ''' </summary>
+    <EdmComplexTypeAttribute(NamespaceName:="REMI.Entities", Name:="BatchSearch_Result")>
+    <DataContractAttribute(IsReference:=True)>
+    <Serializable()>
+    Public Partial Class BatchSearch_Result
+        Inherits ComplexObject
+        #Region "Factory Method"
+    
+        ''' <summary>
+        ''' Create a new BatchSearch_Result object.
+        ''' </summary>
+        ''' <param name="batchStatus">Initial value of the BatchStatus property.</param>
+        ''' <param name="concurrencyID">Initial value of the ConcurrencyID property.</param>
+        ''' <param name="id">Initial value of the ID property.</param>
+        ''' <param name="jobName">Initial value of the JobName property.</param>
+        ''' <param name="productGroupName">Initial value of the ProductGroupName property.</param>
+        ''' <param name="productID">Initial value of the ProductID property.</param>
+        ''' <param name="qRANumber">Initial value of the QRANumber property.</param>
+        ''' <param name="requestPurposeID">Initial value of the RequestPurposeID property.</param>
+        ''' <param name="priorityID">Initial value of the PriorityID property.</param>
+        ''' <param name="testStageID">Initial value of the TestStageID property.</param>
+        Public Shared Function CreateBatchSearch_Result(batchStatus As Global.System.Int32, concurrencyID As Global.System.Byte(), id As Global.System.Int32, jobName As Global.System.String, productGroupName As Global.System.String, productID As Global.System.Int32, qRANumber As Global.System.String, requestPurposeID As Global.System.Int32, priorityID As Global.System.Int32, testStageID As Global.System.Int32) As BatchSearch_Result
+            Dim batchSearch_Result as BatchSearch_Result = New BatchSearch_Result
+            batchSearch_Result.BatchStatus = batchStatus
+            batchSearch_Result.ConcurrencyID = concurrencyID
+            batchSearch_Result.ID = id
+            batchSearch_Result.JobName = jobName
+            batchSearch_Result.ProductGroupName = productGroupName
+            batchSearch_Result.ProductID = productID
+            batchSearch_Result.QRANumber = qRANumber
+            batchSearch_Result.RequestPurposeID = requestPurposeID
+            batchSearch_Result.PriorityID = priorityID
+            batchSearch_Result.TestStageID = testStageID
+            Return batchSearch_Result
+        End Function
+
+        #End Region
+
+        #Region "Primitive Properties"
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property BatchStatus() As Global.System.Int32
+            Get
+                Return _BatchStatus
+            End Get
+            Set
+                OnBatchStatusChanging(value)
+                ReportPropertyChanging("BatchStatus")
+                _BatchStatus = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("BatchStatus")
+                OnBatchStatusChanged()
+            End Set
+        End Property
+    
+        Private _BatchStatus As Global.System.Int32
+        Private Partial Sub OnBatchStatusChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnBatchStatusChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property Comment() As Global.System.String
+            Get
+                Return _Comment
+            End Get
+            Set
+                OnCommentChanging(value)
+                ReportPropertyChanging("Comment")
+                _Comment = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("Comment")
+                OnCommentChanged()
+            End Set
+        End Property
+    
+        Private _Comment As Global.System.String
+        Private Partial Sub OnCommentChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnCommentChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ConcurrencyID() As Global.System.Byte()
+            Get
+                    Return StructuralObject.GetValidValue(_ConcurrencyID)
+            End Get
+            Set
+                OnConcurrencyIDChanging(value)
+                ReportPropertyChanging("ConcurrencyID")
+                _ConcurrencyID = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("ConcurrencyID")
+                OnConcurrencyIDChanged()
+            End Set
+        End Property
+    
+        Private _ConcurrencyID As Global.System.Byte()
+        Private Partial Sub OnConcurrencyIDChanging(value As Global.System.Byte())
+        End Sub
+    
+        Private Partial Sub OnConcurrencyIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ID() As Global.System.Int32
+            Get
+                Return _ID
+            End Get
+            Set
+                OnIDChanging(value)
+                ReportPropertyChanging("ID")
+                _ID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ID")
+                OnIDChanged()
+            End Set
+        End Property
+    
+        Private _ID As Global.System.Int32
+        Private Partial Sub OnIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property JobName() As Global.System.String
+            Get
+                Return _JobName
+            End Get
+            Set
+                OnJobNameChanging(value)
+                ReportPropertyChanging("JobName")
+                _JobName = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("JobName")
+                OnJobNameChanged()
+            End Set
+        End Property
+    
+        Private _JobName As Global.System.String
+        Private Partial Sub OnJobNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnJobNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property LastUser() As Global.System.String
+            Get
+                Return _LastUser
+            End Get
+            Set
+                OnLastUserChanging(value)
+                ReportPropertyChanging("LastUser")
+                _LastUser = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("LastUser")
+                OnLastUserChanged()
+            End Set
+        End Property
+    
+        Private _LastUser As Global.System.String
+        Private Partial Sub OnLastUserChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnLastUserChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property Priority() As Global.System.String
+            Get
+                Return _Priority
+            End Get
+            Set
+                OnPriorityChanging(value)
+                ReportPropertyChanging("Priority")
+                _Priority = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("Priority")
+                OnPriorityChanged()
+            End Set
+        End Property
+    
+        Private _Priority As Global.System.String
+        Private Partial Sub OnPriorityChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnPriorityChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ProductGroupName() As Global.System.String
+            Get
+                Return _ProductGroupName
+            End Get
+            Set
+                OnProductGroupNameChanging(value)
+                ReportPropertyChanging("ProductGroupName")
+                _ProductGroupName = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("ProductGroupName")
+                OnProductGroupNameChanged()
+            End Set
+        End Property
+    
+        Private _ProductGroupName As Global.System.String
+        Private Partial Sub OnProductGroupNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnProductGroupNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ProductType() As Global.System.String
+            Get
+                Return _ProductType
+            End Get
+            Set
+                OnProductTypeChanging(value)
+                ReportPropertyChanging("ProductType")
+                _ProductType = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("ProductType")
+                OnProductTypeChanged()
+            End Set
+        End Property
+    
+        Private _ProductType As Global.System.String
+        Private Partial Sub OnProductTypeChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnProductTypeChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property AccessoryGroupName() As Global.System.String
+            Get
+                Return _AccessoryGroupName
+            End Get
+            Set
+                OnAccessoryGroupNameChanging(value)
+                ReportPropertyChanging("AccessoryGroupName")
+                _AccessoryGroupName = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("AccessoryGroupName")
+                OnAccessoryGroupNameChanged()
+            End Set
+        End Property
+    
+        Private _AccessoryGroupName As Global.System.String
+        Private Partial Sub OnAccessoryGroupNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnAccessoryGroupNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property ProductID() As Global.System.Int32
+            Get
+                Return _ProductID
+            End Get
+            Set
+                OnProductIDChanging(value)
+                ReportPropertyChanging("ProductID")
+                _ProductID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ProductID")
+                OnProductIDChanged()
+            End Set
+        End Property
+    
+        Private _ProductID As Global.System.Int32
+        Private Partial Sub OnProductIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnProductIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property QRANumber() As Global.System.String
+            Get
+                Return _QRANumber
+            End Get
+            Set
+                OnQRANumberChanging(value)
+                ReportPropertyChanging("QRANumber")
+                _QRANumber = StructuralObject.SetValidValue(value, false)
+                ReportPropertyChanged("QRANumber")
+                OnQRANumberChanged()
+            End Set
+        End Property
+    
+        Private _QRANumber As Global.System.String
+        Private Partial Sub OnQRANumberChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnQRANumberChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property RequestPurposeID() As Global.System.Int32
+            Get
+                Return _RequestPurposeID
+            End Get
+            Set
+                OnRequestPurposeIDChanging(value)
+                ReportPropertyChanging("RequestPurposeID")
+                _RequestPurposeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("RequestPurposeID")
+                OnRequestPurposeIDChanged()
+            End Set
+        End Property
+    
+        Private _RequestPurposeID As Global.System.Int32
+        Private Partial Sub OnRequestPurposeIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnRequestPurposeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property TestCenterLocationID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _TestCenterLocationID
+            End Get
+            Set
+                OnTestCenterLocationIDChanging(value)
+                ReportPropertyChanging("TestCenterLocationID")
+                _TestCenterLocationID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("TestCenterLocationID")
+                OnTestCenterLocationIDChanged()
+            End Set
+        End Property
+    
+        Private _TestCenterLocationID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnTestCenterLocationIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnTestCenterLocationIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property TestStageName() As Global.System.String
+            Get
+                Return _TestStageName
+            End Get
+            Set
+                OnTestStageNameChanging(value)
+                ReportPropertyChanging("TestStageName")
+                _TestStageName = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("TestStageName")
+                OnTestStageNameChanged()
+            End Set
+        End Property
+    
+        Private _TestStageName As Global.System.String
+        Private Partial Sub OnTestStageNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnTestStageNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property TestStageCompletionStatus() As Nullable(Of Global.System.Int32)
+            Get
+                Return _TestStageCompletionStatus
+            End Get
+            Set
+                OnTestStageCompletionStatusChanging(value)
+                ReportPropertyChanging("TestStageCompletionStatus")
+                _TestStageCompletionStatus = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("TestStageCompletionStatus")
+                OnTestStageCompletionStatusChanged()
+            End Set
+        End Property
+    
+        Private _TestStageCompletionStatus As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnTestStageCompletionStatusChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnTestStageCompletionStatusChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property testUnitCount() As Nullable(Of Global.System.Int32)
+            Get
+                Return _testUnitCount
+            End Get
+            Set
+                OntestUnitCountChanging(value)
+                ReportPropertyChanging("testUnitCount")
+                _testUnitCount = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("testUnitCount")
+                OntestUnitCountChanged()
+            End Set
+        End Property
+    
+        Private _testUnitCount As Nullable(Of Global.System.Int32)
+        Private Partial Sub OntestUnitCountChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OntestUnitCountChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property jobWILocation() As Global.System.String
+            Get
+                Return _jobWILocation
+            End Get
+            Set
+                OnjobWILocationChanging(value)
+                ReportPropertyChanging("jobWILocation")
+                _jobWILocation = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("jobWILocation")
+                OnjobWILocationChanged()
+            End Set
+        End Property
+    
+        Private _jobWILocation As Global.System.String
+        Private Partial Sub OnjobWILocationChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnjobWILocationChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ReqID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _ReqID
+            End Get
+            Set
+                OnReqIDChanging(value)
+                ReportPropertyChanging("ReqID")
+                _ReqID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ReqID")
+                OnReqIDChanged()
+            End Set
+        End Property
+    
+        Private _ReqID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnReqIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnReqIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property HasUnitsToReturnToRequestor() As Nullable(Of Global.System.Int32)
+            Get
+                Return _HasUnitsToReturnToRequestor
+            End Get
+            Set
+                OnHasUnitsToReturnToRequestorChanging(value)
+                ReportPropertyChanging("HasUnitsToReturnToRequestor")
+                _HasUnitsToReturnToRequestor = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("HasUnitsToReturnToRequestor")
+                OnHasUnitsToReturnToRequestorChanged()
+            End Set
+        End Property
+    
+        Private _HasUnitsToReturnToRequestor As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnHasUnitsToReturnToRequestorChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnHasUnitsToReturnToRequestorChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ActiveTaskAssignee() As Global.System.String
+            Get
+                Return _ActiveTaskAssignee
+            End Get
+            Set
+                OnActiveTaskAssigneeChanging(value)
+                ReportPropertyChanging("ActiveTaskAssignee")
+                _ActiveTaskAssignee = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("ActiveTaskAssignee")
+                OnActiveTaskAssigneeChanged()
+            End Set
+        End Property
+    
+        Private _ActiveTaskAssignee As Global.System.String
+        Private Partial Sub OnActiveTaskAssigneeChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnActiveTaskAssigneeChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property HasBatchSpecificExceptions() As Nullable(Of Global.System.Boolean)
+            Get
+                Return _HasBatchSpecificExceptions
+            End Get
+            Set
+                OnHasBatchSpecificExceptionsChanging(value)
+                ReportPropertyChanging("HasBatchSpecificExceptions")
+                _HasBatchSpecificExceptions = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("HasBatchSpecificExceptions")
+                OnHasBatchSpecificExceptionsChanged()
+            End Set
+        End Property
+    
+        Private _HasBatchSpecificExceptions As Nullable(Of Global.System.Boolean)
+        Private Partial Sub OnHasBatchSpecificExceptionsChanging(value As Nullable(Of Global.System.Boolean))
+        End Sub
+    
+        Private Partial Sub OnHasBatchSpecificExceptionsChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ProductTypeID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _ProductTypeID
+            End Get
+            Set
+                OnProductTypeIDChanging(value)
+                ReportPropertyChanging("ProductTypeID")
+                _ProductTypeID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ProductTypeID")
+                OnProductTypeIDChanged()
+            End Set
+        End Property
+    
+        Private _ProductTypeID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnProductTypeIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnProductTypeIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property AccessoryGroupID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _AccessoryGroupID
+            End Get
+            Set
+                OnAccessoryGroupIDChanging(value)
+                ReportPropertyChanging("AccessoryGroupID")
+                _AccessoryGroupID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("AccessoryGroupID")
+                OnAccessoryGroupIDChanged()
+            End Set
+        End Property
+    
+        Private _AccessoryGroupID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnAccessoryGroupIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnAccessoryGroupIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property CPRNumber() As Global.System.String
+            Get
+                Return _CPRNumber
+            End Get
+            Set
+                OnCPRNumberChanging(value)
+                ReportPropertyChanging("CPRNumber")
+                _CPRNumber = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("CPRNumber")
+                OnCPRNumberChanged()
+            End Set
+        End Property
+    
+        Private _CPRNumber As Global.System.String
+        Private Partial Sub OnCPRNumberChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnCPRNumberChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property RelabJobID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _RelabJobID
+            End Get
+            Set
+                OnRelabJobIDChanging(value)
+                ReportPropertyChanging("RelabJobID")
+                _RelabJobID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("RelabJobID")
+                OnRelabJobIDChanged()
+            End Set
+        End Property
+    
+        Private _RelabJobID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnRelabJobIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnRelabJobIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property TestCenterLocation() As Global.System.String
+            Get
+                Return _TestCenterLocation
+            End Get
+            Set
+                OnTestCenterLocationChanging(value)
+                ReportPropertyChanging("TestCenterLocation")
+                _TestCenterLocation = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("TestCenterLocation")
+                OnTestCenterLocationChanged()
+            End Set
+        End Property
+    
+        Private _TestCenterLocation As Global.System.String
+        Private Partial Sub OnTestCenterLocationChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnTestCenterLocationChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property AssemblyNumber() As Global.System.String
+            Get
+                Return _AssemblyNumber
+            End Get
+            Set
+                OnAssemblyNumberChanging(value)
+                ReportPropertyChanging("AssemblyNumber")
+                _AssemblyNumber = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("AssemblyNumber")
+                OnAssemblyNumberChanged()
+            End Set
+        End Property
+    
+        Private _AssemblyNumber As Global.System.String
+        Private Partial Sub OnAssemblyNumberChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnAssemblyNumberChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property AssemblyRevision() As Global.System.String
+            Get
+                Return _AssemblyRevision
+            End Get
+            Set
+                OnAssemblyRevisionChanging(value)
+                ReportPropertyChanging("AssemblyRevision")
+                _AssemblyRevision = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("AssemblyRevision")
+                OnAssemblyRevisionChanged()
+            End Set
+        End Property
+    
+        Private _AssemblyRevision As Global.System.String
+        Private Partial Sub OnAssemblyRevisionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnAssemblyRevisionChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property HWRevision() As Global.System.String
+            Get
+                Return _HWRevision
+            End Get
+            Set
+                OnHWRevisionChanging(value)
+                ReportPropertyChanging("HWRevision")
+                _HWRevision = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("HWRevision")
+                OnHWRevisionChanged()
+            End Set
+        End Property
+    
+        Private _HWRevision As Global.System.String
+        Private Partial Sub OnHWRevisionChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnHWRevisionChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property PartName() As Global.System.String
+            Get
+                Return _PartName
+            End Get
+            Set
+                OnPartNameChanging(value)
+                ReportPropertyChanging("PartName")
+                _PartName = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("PartName")
+                OnPartNameChanged()
+            End Set
+        End Property
+    
+        Private _PartName As Global.System.String
+        Private Partial Sub OnPartNameChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnPartNameChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ReportRequiredBy() As Nullable(Of Global.System.DateTime)
+            Get
+                Return _ReportRequiredBy
+            End Get
+            Set
+                OnReportRequiredByChanging(value)
+                ReportPropertyChanging("ReportRequiredBy")
+                _ReportRequiredBy = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ReportRequiredBy")
+                OnReportRequiredByChanged()
+            End Set
+        End Property
+    
+        Private _ReportRequiredBy As Nullable(Of Global.System.DateTime)
+        Private Partial Sub OnReportRequiredByChanging(value As Nullable(Of Global.System.DateTime))
+        End Sub
+    
+        Private Partial Sub OnReportRequiredByChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ReportApprovedDate() As Nullable(Of Global.System.DateTime)
+            Get
+                Return _ReportApprovedDate
+            End Get
+            Set
+                OnReportApprovedDateChanging(value)
+                ReportPropertyChanging("ReportApprovedDate")
+                _ReportApprovedDate = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ReportApprovedDate")
+                OnReportApprovedDateChanged()
+            End Set
+        End Property
+    
+        Private _ReportApprovedDate As Nullable(Of Global.System.DateTime)
+        Private Partial Sub OnReportApprovedDateChanging(value As Nullable(Of Global.System.DateTime))
+        End Sub
+    
+        Private Partial Sub OnReportApprovedDateChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property IsMQual() As Nullable(Of Global.System.Boolean)
+            Get
+                Return _IsMQual
+            End Get
+            Set
+                OnIsMQualChanging(value)
+                ReportPropertyChanging("IsMQual")
+                _IsMQual = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("IsMQual")
+                OnIsMQualChanged()
+            End Set
+        End Property
+    
+        Private _IsMQual As Nullable(Of Global.System.Boolean)
+        Private Partial Sub OnIsMQualChanging(value As Nullable(Of Global.System.Boolean))
+        End Sub
+    
+        Private Partial Sub OnIsMQualChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property JobID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _JobID
+            End Get
+            Set
+                OnJobIDChanging(value)
+                ReportPropertyChanging("JobID")
+                _JobID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("JobID")
+                OnJobIDChanged()
+            End Set
+        End Property
+    
+        Private _JobID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnJobIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnJobIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property DateCreated() As Nullable(Of Global.System.DateTime)
+            Get
+                Return _DateCreated
+            End Get
+            Set
+                OnDateCreatedChanging(value)
+                ReportPropertyChanging("DateCreated")
+                _DateCreated = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("DateCreated")
+                OnDateCreatedChanged()
+            End Set
+        End Property
+    
+        Private _DateCreated As Nullable(Of Global.System.DateTime)
+        Private Partial Sub OnDateCreatedChanging(value As Nullable(Of Global.System.DateTime))
+        End Sub
+    
+        Private Partial Sub OnDateCreatedChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property ContinueOnFailures() As Nullable(Of Global.System.Boolean)
+            Get
+                Return _ContinueOnFailures
+            End Get
+            Set
+                OnContinueOnFailuresChanging(value)
+                ReportPropertyChanging("ContinueOnFailures")
+                _ContinueOnFailures = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("ContinueOnFailures")
+                OnContinueOnFailuresChanged()
+            End Set
+        End Property
+    
+        Private _ContinueOnFailures As Nullable(Of Global.System.Boolean)
+        Private Partial Sub OnContinueOnFailuresChanging(value As Nullable(Of Global.System.Boolean))
+        End Sub
+    
+        Private Partial Sub OnContinueOnFailuresChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property MechanicalTools() As Global.System.String
+            Get
+                Return _MechanicalTools
+            End Get
+            Set
+                OnMechanicalToolsChanging(value)
+                ReportPropertyChanging("MechanicalTools")
+                _MechanicalTools = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("MechanicalTools")
+                OnMechanicalToolsChanged()
+            End Set
+        End Property
+    
+        Private _MechanicalTools As Global.System.String
+        Private Partial Sub OnMechanicalToolsChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnMechanicalToolsChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property RequestPurpose() As Global.System.String
+            Get
+                Return _RequestPurpose
+            End Get
+            Set
+                OnRequestPurposeChanging(value)
+                ReportPropertyChanging("RequestPurpose")
+                _RequestPurpose = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("RequestPurpose")
+                OnRequestPurposeChanged()
+            End Set
+        End Property
+    
+        Private _RequestPurpose As Global.System.String
+        Private Partial Sub OnRequestPurposeChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnRequestPurposeChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property PriorityID() As Global.System.Int32
+            Get
+                Return _PriorityID
+            End Get
+            Set
+                OnPriorityIDChanging(value)
+                ReportPropertyChanging("PriorityID")
+                _PriorityID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("PriorityID")
+                OnPriorityIDChanged()
+            End Set
+        End Property
+    
+        Private _PriorityID As Global.System.Int32
+        Private Partial Sub OnPriorityIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnPriorityIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property DepartmentID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _DepartmentID
+            End Get
+            Set
+                OnDepartmentIDChanging(value)
+                ReportPropertyChanging("DepartmentID")
+                _DepartmentID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("DepartmentID")
+                OnDepartmentIDChanged()
+            End Set
+        End Property
+    
+        Private _DepartmentID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnDepartmentIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnDepartmentIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property Department() As Global.System.String
+            Get
+                Return _Department
+            End Get
+            Set
+                OnDepartmentChanging(value)
+                ReportPropertyChanging("Department")
+                _Department = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("Department")
+                OnDepartmentChanged()
+            End Set
+        End Property
+    
+        Private _Department As Global.System.String
+        Private Partial Sub OnDepartmentChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnDepartmentChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property Requestor() As Global.System.String
+            Get
+                Return _Requestor
+            End Get
+            Set
+                OnRequestorChanging(value)
+                ReportPropertyChanging("Requestor")
+                _Requestor = StructuralObject.SetValidValue(value, true)
+                ReportPropertyChanged("Requestor")
+                OnRequestorChanged()
+            End Set
+        End Property
+    
+        Private _Requestor As Global.System.String
+        Private Partial Sub OnRequestorChanging(value As Global.System.String)
+        End Sub
+    
+        Private Partial Sub OnRequestorChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=false)>
+        <DataMemberAttribute()>
+        Public Property TestStageID() As Global.System.Int32
+            Get
+                Return _TestStageID
+            End Get
+            Set
+                OnTestStageIDChanging(value)
+                ReportPropertyChanging("TestStageID")
+                _TestStageID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("TestStageID")
+                OnTestStageIDChanged()
+            End Set
+        End Property
+    
+        Private _TestStageID As Global.System.Int32
+        Private Partial Sub OnTestStageIDChanging(value As Global.System.Int32)
+        End Sub
+    
+        Private Partial Sub OnTestStageIDChanged()
+        End Sub
+    
+        ''' <summary>
+        ''' No Metadata Documentation available.
+        ''' </summary>
+        <EdmScalarPropertyAttribute(EntityKeyProperty:=false, IsNullable:=true)>
+        <DataMemberAttribute()>
+        Public Property OrientationID() As Nullable(Of Global.System.Int32)
+            Get
+                Return _OrientationID
+            End Get
+            Set
+                OnOrientationIDChanging(value)
+                ReportPropertyChanging("OrientationID")
+                _OrientationID = StructuralObject.SetValidValue(value)
+                ReportPropertyChanged("OrientationID")
+                OnOrientationIDChanged()
+            End Set
+        End Property
+    
+        Private _OrientationID As Nullable(Of Global.System.Int32)
+        Private Partial Sub OnOrientationIDChanging(value As Nullable(Of Global.System.Int32))
+        End Sub
+    
+        Private Partial Sub OnOrientationIDChanged()
         End Sub
 
         #End Region

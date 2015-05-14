@@ -36,7 +36,10 @@ Partial Class ManageTestStations_TrackingLocation
                 End If
 
                 hdnBarcodePrefix.Value = tl.ID
-                bscBatches.DataBind()
+                Dim bs As New BatchSearch
+                bs.TrackingLocationID = tl.ID
+                bs.Status = Contracts.BatchStatus.InProgress
+                bscBatches.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False))
                 grdTrackingLog.DataBind()
 
                 Dim myMenu As WebControls.Menu
@@ -74,36 +77,42 @@ Partial Class ManageTestStations_TrackingLocation
             If (ddlTrackingLocation.Items.Count = 0) Then
                 ddlTrackingLocation.DataBind()
             End If
-        End If
 
-        notMain.Clear()
-        Dim tmpBarcodeSuffix As Int32 = If(Request(ddlTrackingLocation.UniqueID) = 0, If(Request("BarcodeSuffix") = 0, If(ddlTrackingLocation.Items.Count = 0, 0, ddlTrackingLocation.Items(0).Value), Request("BarcodeSuffix")), Request(ddlTrackingLocation.UniqueID))
-        Dim locationID As Int32 = (From tl In New REMI.Dal.Entities().Instance().TrackingLocations Where tl.ID = tmpBarcodeSuffix Select tl.Lookup.LookupID).FirstOrDefault()
+            notMain.Clear()
+            Dim tmpBarcodeSuffix As Int32 = If(Request(ddlTrackingLocation.UniqueID) = 0, If(Request("BarcodeSuffix") = 0, If(ddlTrackingLocation.Items.Count = 0, 0, ddlTrackingLocation.Items(0).Value), Request("BarcodeSuffix")), Request(ddlTrackingLocation.UniqueID))
+            Dim locationID As Int32 = (From tl In New REMI.Dal.Entities().Instance().TrackingLocations Where tl.ID = tmpBarcodeSuffix Select tl.Lookup.LookupID).FirstOrDefault()
 
-        If (locationID = ddlTestCenters.SelectedValue) Then
-            ProcessBarcode(tmpBarcodeSuffix)
-            lblTrackingLocation.Text = ddlTrackingLocation.Items.FindByValue(tmpBarcodeSuffix).Text
-            ddlTrackingLocation.SelectedValue = tmpBarcodeSuffix
-        ElseIf (locationID <> ddlTestCenters.SelectedValue) Then
-            ddlTrackingLocation.DataBind()
-
-            If (ddlTrackingLocation.Items.Count > 0) Then
-                tmpBarcodeSuffix = ddlTrackingLocation.Items(0).Value
+            If (locationID = ddlTestCenters.SelectedValue) Then
                 ProcessBarcode(tmpBarcodeSuffix)
-                ddlTrackingLocation.SelectedValue = tmpBarcodeSuffix
                 lblTrackingLocation.Text = ddlTrackingLocation.Items.FindByValue(tmpBarcodeSuffix).Text
+                ddlTrackingLocation.SelectedValue = tmpBarcodeSuffix
+            ElseIf (locationID <> ddlTestCenters.SelectedValue) Then
+                ddlTestCenters.SelectedValue = locationID
+                ddlTrackingLocation.DataBind()
+
+                If (ddlTrackingLocation.Items.Count > 0) Then
+                    If (tmpBarcodeSuffix > 0) Then
+                        ddlTrackingLocation.SelectedValue = tmpBarcodeSuffix
+                    Else
+                        tmpBarcodeSuffix = ddlTrackingLocation.Items(0).Value
+                    End If
+
+                    ProcessBarcode(tmpBarcodeSuffix)
+                    ddlTrackingLocation.SelectedValue = tmpBarcodeSuffix
+                    lblTrackingLocation.Text = ddlTrackingLocation.Items.FindByValue(tmpBarcodeSuffix).Text
+                Else
+                    hdnBarcodePrefix.Value = 0
+                    bscBatches.Datasource = Nothing
+                    bscBatches.DataBind()
+                    grdTrackingLog.DataSource = Nothing
+                    grdTrackingLog.DataBind()
+                End If
             Else
-                hdnBarcodePrefix.Value = 0
-                bscBatches.Datasource = Nothing
-                bscBatches.DataBind()
-                grdTrackingLog.DataSource = Nothing
-                grdTrackingLog.DataBind()
-            End If
-        Else
-            Dim litTitle As Literal = Master.FindControl("litPageTitle")
-            If litTitle IsNot Nothing Then
-                litTitle.Text = "REMI - Tracking Location Information"
-                lblTrackingLocation.Text = ""
+                Dim litTitle As Literal = Master.FindControl("litPageTitle")
+                If litTitle IsNot Nothing Then
+                    litTitle.Text = "REMI - Tracking Location Information"
+                    lblTrackingLocation.Text = ""
+                End If
             End If
         End If
     End Sub
@@ -117,6 +126,10 @@ Partial Class ManageTestStations_TrackingLocation
     Protected Sub ddlTime_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTime.SelectedIndexChanged
         odsTrackingLog.DataBind()
         grdTrackingLog.DataBind()
+    End Sub
+
+    Protected Sub ddlTestCenters_SelectedIndexChanged(sender As Object, e As EventArgs)
+        ddlTrackingLocation.DataBind()
     End Sub
 #End Region
 End Class

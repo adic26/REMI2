@@ -263,7 +263,7 @@ Partial Class Search
                     Dim testStageID As Int32
                     Dim userID As Int32
                     Dim departmentID As Int32
-                    Dim trackingLocationID As Int32
+                    Dim trackingLocationTypeID As Int32
                     Dim geoLocationID As Int32 = ddlTestCenters.SelectedValue
                     Dim _start As DateTime
                     Dim _end As DateTime
@@ -314,7 +314,7 @@ Partial Class Search
                     Int32.TryParse(ddlTests.SelectedValue, testID)
                     Int32.TryParse(ddlTestStages.SelectedValue, testStageID)
                     Int32.TryParse(ddlUsers.SelectedValue, userID)
-                    Int32.TryParse(ddlTrackingLocationType.SelectedValue, trackingLocationID)
+                    Int32.TryParse(ddlTrackingLocationType.SelectedValue, trackingLocationTypeID)
                     DateTime.TryParse(txtStart.Text, _start)
                     DateTime.TryParse(txtEnd.Text, _end)
 
@@ -345,14 +345,14 @@ Partial Class Search
                     bs.ProductTypeID = productTypeID
                     bs.TestID = testID
                     bs.TestStageID = testStageID
-                    bs.TrackingLocationID = trackingLocationID
+                    bs.TrackingLocationTypeID = trackingLocationTypeID
                     bs.UserID = userID
 
                     bs.BatchEnd = _end
                     bs.BatchStart = _start
 
                     bscMain.DisplayMode = Controls_BatchSelectControl.BatchSelectControlMode.SearchInfoDisplay
-                    bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False))
+                    bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False))
                     lblTopInfo.Visible = True
                 ElseIf (pnlSearchUnits.Visible) Then
                     Dim us As New TestUnitCriteria()
@@ -531,7 +531,7 @@ Partial Class Search
             Dim testStageID As Int32
             Dim jobID As Int32
             Dim userID As Int32
-            Dim trackingLocationID As Int32
+            Dim trackingLocationTypeID As Int32
             Dim geoLocationID As Int32 = ddlTestCenters.SelectedValue
             Dim _start As DateTime
             Dim _end As DateTime
@@ -582,7 +582,7 @@ Partial Class Search
             Int32.TryParse(ddlTests.SelectedValue, testID)
             Int32.TryParse(ddlTestStages.SelectedValue, testStageID)
             Int32.TryParse(ddlUsers.SelectedValue, userID)
-            Int32.TryParse(ddlTrackingLocationType.SelectedValue, trackingLocationID)
+            Int32.TryParse(ddlTrackingLocationType.SelectedValue, trackingLocationTypeID)
             DateTime.TryParse(txtStart.Text, _start)
             DateTime.TryParse(txtEnd.Text, _end)
 
@@ -613,14 +613,14 @@ Partial Class Search
             bs.ProductTypeID = productTypeID
             bs.TestID = testID
             bs.TestStageID = testStageID
-            bs.TrackingLocationID = trackingLocationID
+            bs.TrackingLocationTypeID = trackingLocationTypeID
             bs.UserID = userID
             bs.DepartmentID = departmentID
             bs.BatchEnd = _end
             bs.BatchStart = _start
 
             bscMain.DisplayMode = Controls_BatchSelectControl.BatchSelectControlMode.SearchInfoDisplay
-            bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+            bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False))
 
             Helpers.ExportToExcel(Helpers.GetDateTimeFileName("UnitSearch", "xls"), bscMain.GetGridView)
         ElseIf (pnlSearchUnits.Visible) Then

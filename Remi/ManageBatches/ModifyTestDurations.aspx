@@ -13,18 +13,10 @@
                     runat="server" />
                 <asp:HyperLink ID="hypBatchInfo" runat="server" ToolTip="Click to go back to the batch information page">Batch Info</asp:HyperLink>
             </li>
-            <li id="liModifyStatus" runat="server" visible="false">
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgChangeStatus" runat="server" />
-                <asp:HyperLink ID="hypChangeStatus" runat="server" Target="_blank" ToolTip="Click to change the status for this batch">Modify Status</asp:HyperLink>
-            </li>
             <li id="liModifyStage" runat="server" visible="false">
                 <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgChangeTestStage"
                     runat="server" />
                 <asp:HyperLink ID="hypChangeTestStage" runat="server" Target="_blank" ToolTip="Click to change the test stage for this batch">Modify Stage</asp:HyperLink>
-            </li>
-            <li id="liModifyPriority" runat="server" visible="false">
-                <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgchangePriority" runat="server" />
-                <asp:HyperLink ID="hypChangePriority" runat="server" Target="_blank" ToolTip="Click to change the priority for this batch">Modify Priority</asp:HyperLink>
             </li>
         </ul>
     </asp:Panel>

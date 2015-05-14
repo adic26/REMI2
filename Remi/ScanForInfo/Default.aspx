@@ -114,10 +114,6 @@
                 runat="server" />
             <asp:HyperLink ID="hypEditExceptions" runat="server" ToolTip="Click to edit the exceptions for this batch" Target="_blank">Edit Exceptions</asp:HyperLink>
         </li>
-        <li id="liModifyStatus" runat="server" visible="false">
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgChangeStatus" runat="server" />
-            <asp:HyperLink ID="hypChangeStatus" runat="server" ToolTip="Click to change the status for this batch">Modify Status</asp:HyperLink>
-        </li>
         <li id="liModifyStage" runat="server" visible="false">
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgChangeTestStage"
                 runat="server" />
@@ -127,10 +123,6 @@
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgModifyTestDurations"
                 runat="server" />
             <asp:HyperLink ID="hypModifyTestDurations" runat="server" ToolTip="Click to change the test durations for this batch">Modify Durations</asp:HyperLink>
-        </li>
-        <li id="liModifyPriority" runat="server" visible="false">
-            <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgchangePriority" runat="server" />
-            <asp:HyperLink ID="hypChangePriority" runat="server" ToolTip="Click to change the priority for this batch">Modify Priority</asp:HyperLink>
         </li>
         <li id="li" runat="server">
             <asp:Image ImageUrl="../Design/Icons/png/24x24/link.png" ID="imgTestRecords" runat="server" Visible="false" />

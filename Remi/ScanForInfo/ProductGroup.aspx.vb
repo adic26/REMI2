@@ -44,7 +44,7 @@ Partial Class ScanForInfo_ProductGroup
         End If
 
         If (getAllBatches > -1) Then
-            bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID))
+            bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False))
         End If
     End Sub
 

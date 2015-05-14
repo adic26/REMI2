@@ -8,7 +8,7 @@ Partial Class TestRecords_Add
 #Region "Methods"
     Protected Sub ProcessQRA(ByVal qraNumber As String)
         hdnQRANumber.Value = qraNumber
-        Dim b As Batch = BatchManager.GetItem(qraNumber)
+        Dim b As BatchView = BatchManager.GetBatchView(qraNumber, True, False, True, False, True, False, True, False, False, False)
         hdnBatchID.Value = b.ID
 
         If b IsNot Nothing Then
@@ -211,7 +211,7 @@ Partial Class TestRecords_Add
         End If
 
         If (units.Count > 0) Then
-            gvwRelabMatrix.DataSource = RelabManager.FunctionalMatrixByTestRecord(Nothing, testStageID, testID, BatchManager.GetItem(Request.QueryString.Get("RN")).ID, String.Join(",", units.ConvertAll(Of String)(Function(j As Integer) j.ToString()).ToArray()), rblMFISFIAcc.SelectedValue)
+            gvwRelabMatrix.DataSource = RelabManager.FunctionalMatrixByTestRecord(Nothing, testStageID, testID, BatchManager.GetBatchView(Request.QueryString.Get("RN"), True, False, True, False, True, False, True, False, False, False).ID, String.Join(",", units.ConvertAll(Of String)(Function(j As Integer) j.ToString()).ToArray()), rblMFISFIAcc.SelectedValue)
             gvwRelabMatrix.DataBind()
 
             If (gvwRelabMatrix.HeaderRow IsNot Nothing) Then
@@ -261,7 +261,7 @@ Partial Class TestRecords_Add
     Protected Sub btnDetailDone_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnDetailDone.Click
         'Adding test record here.
         Try
-            Dim b As Batch = BatchManager.GetItem(hdnQRANumber.Value)
+            Dim b As BatchView = BatchManager.GetBatchView(hdnQRANumber.Value, True, False, True, False, True, False, True, False, False, False)
             If b.TestUnits.Count > 0 Then
                 Dim units As List(Of Int32)
 

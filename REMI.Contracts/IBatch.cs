@@ -54,7 +54,7 @@ namespace REMI.Contracts
         string MechanicalTools { get; set; }
         string Department { get; set; }
         int DepartmentID { get; set; }
-        string GetTestOverviewCellString(string jobName, string testStageName, string TestName, bool hasEditAuthority, bool isTestCenterAdmin, System.Data.DataTable rqResults, bool hasBatchSetupAuthority, bool showHyperlinks);
+        string GetTestOverviewCellString(string jobName, Int32 testStageID, Int32 testID, bool hasEditAuthority, bool isTestCenterAdmin, System.Data.DataTable rqResults, bool hasBatchSetupAuthority, bool showHyperlinks);
         bool hasBatchSpecificExceptions { get; set; }
         IOrientation Orientation { get; set; }
         string OrientationXML { get; set; }

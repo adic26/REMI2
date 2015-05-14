@@ -38,7 +38,7 @@ Namespace REMI.Bll
 
             Try
                 If bc.Validate Then
-                    Dim b As BatchView = DirectCast(GetViewBatch(bc.BatchNumber), BatchView)
+                    Dim b As BatchView = DirectCast(GetBatchView(bc.BatchNumber, True, False, True, False, False, False, False, False, False, False), BatchView)
 
                     If b IsNot Nothing Then
                         If bc.HasTestUnitNumber Then
@@ -76,7 +76,7 @@ Namespace REMI.Bll
 
             Try
                 If bc.Validate Then
-                    Dim b As BatchView = DirectCast(GetViewBatch(bc.BatchNumber), BatchView)
+                    Dim b As BatchView = DirectCast(GetBatchView(bc.BatchNumber, True, False, True, False, False, False, False, False, False, False), BatchView)
 
                     If b IsNot Nothing Then
                         If b.IsCompleteInRequest Then
@@ -112,7 +112,7 @@ Namespace REMI.Bll
         ''' This function adds a batch to remi when a new batch is detected.
         ''' </summary>
         ''' <remarks></remarks>
-        Private Shared Sub AddNewBatchToREMI(ByVal bc As DeviceBarcodeNumber, ByRef b As Batch)
+        Private Shared Sub AddNewBatchToREMI(ByVal bc As DeviceBarcodeNumber, ByRef b As BatchView)
             Try
                 If b IsNot Nothing Then
                     If b.NeedsToBeSaved Then
@@ -124,7 +124,7 @@ Namespace REMI.Bll
                             b.TestStageName = (From ts In b.Job.TestStages Where ts.ProcessOrder >= 0 And ts.IsArchived = False Order By ts.ProcessOrder Ascending Select ts.Name).FirstOrDefault()
 
                             'check if this is a legacy batch, remstar inventory from pre remi days
-                            b.SetNewBatchStatus()
+                            b.SetNewBatchStatus(BatchStatus.Received)
 
                             'indicate if batch is really old
                             If b.IsForDisposal Then
@@ -301,17 +301,6 @@ Namespace REMI.Bll
             Return New DataTable
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetListAtLocation(ByVal barcodePrefix As Integer, ByVal startRowIndex As Integer, ByVal maximumRows As Integer, ByVal sortExpression As String) As BatchCollection
-            Try
-                Dim bc As BatchCollection = BatchDB.GetListAtLocation(barcodePrefix, startRowIndex, MaximumRows, sortExpression, UserManager.GetCurrentUser)
-                Return bc
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, barcodePrefix.ToString)
-            End Try
-            Return New BatchCollection
-        End Function
-
         ''' <summary> 
         ''' Gets the batches in environmental chambers
         ''' </summary> 
@@ -434,20 +423,6 @@ Namespace REMI.Bll
             End Try
         End Function
 
-        ''' <summary> 
-        ''' Gets the number of daily list batches in the database
-        ''' </summary> 
-        ''' <returns></returns>
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function CountListAtLocation(ByVal barcodePrefix As Integer) As Integer
-            Try
-                Return BatchDB.CountBatchesInTrackingLocation(barcodePrefix)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("TrackingLocationID: {0}", BarcodePrefix))
-                Return -1
-            End Try
-        End Function
-
         Public Shared Function GetRAWBatchInformation(ByVal requestNumber As String) As REMI.Entities.Batch
             Try
                 Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
@@ -487,28 +462,14 @@ Namespace REMI.Bll
             Return New DataTable
         End Function
 
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetActiveBatches() As BatchCollection
-            Try
-                Return BatchDB.GetActiveBatches(-1, -1, False, UserManager.GetCurrentUser)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
-            End Try
-            Return New BatchCollection
-        End Function
-
-        <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function GetActiveBatches(ByVal requestor As String) As BatchCollection
-            Try
-                Return BatchDB.GetActiveBatches(requestor, -1, -1, UserManager.GetCurrentUser)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("requestor: {0}", requestor))
-            End Try
-            Return New BatchCollection
-        End Function
-
         Public Shared Function MoveBatchForward(ByVal requestNumber As String, ByVal userIdentification As String) As Boolean
-            Dim b As Batch = BatchManager.GetItem(requestNumber, False, True, True)
+            Dim rq As RequestFieldsCollection = RequestManager.GetRequest(requestNumber)
+            Dim b As BatchView = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, False, True)
+
+            If (rq(0).IsFromExternalSystem) Then
+                Dim barcode As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
+                RequestManager.SaveRequest(barcode.Type, rq, userIdentification, Nothing)
+            End If
 
             If (b.OutOfDate) Then
                 BatchManager.Save(b)
@@ -516,13 +477,19 @@ Namespace REMI.Bll
 
             TestRecordManager.CheckBatchForResultUpdates(b, False)
 
-            Return BatchDB.MoveBatchForward(requestNumber, userIdentification)
+            Dim success As Boolean = BatchDB.MoveBatchForward(requestNumber, userIdentification)
+
+            If (success) Then
+                b = BatchManager.GetBatchView(requestNumber, True, True, True, True, True, True, True, True, False, True)
+            End If
+
+            Return success
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True, Optional OnlyHasResults As Int32 = 0) As BatchCollection
+        Public Shared Function BatchSearch(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal OnlyHasResults As Int32, ByVal loadOrientation As Boolean, ByVal loadExcpetions As Boolean, ByVal loadTasks As Boolean, ByVal getByBatchStage As Boolean, ByVal loadComments As Boolean) As BatchCollection
             Try
-                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser, OnlyHasResults)
+                Return BatchDB.BatchSearch(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser, OnlyHasResults, loadOrientation, loadExcpetions, loadTasks, getByBatchStage, loadComments)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Empty)
                 Return New BatchCollection
@@ -530,38 +497,26 @@ Namespace REMI.Bll
         End Function
 
         <DataObjectMethod(DataObjectMethodType.[Select], False)> _
-        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, Optional loadTestRecords As Boolean = False, Optional loadDurations As Boolean = False, Optional loadTSRemaining As Boolean = True, Optional OnlyHasResults As Int32 = 0) As List(Of BatchView)
+        Public Shared Function BatchSearchBase(ByVal bs As BatchSearch, ByVal byPass As Boolean, ByVal userID As Int32, ByVal loadTestRecords As Boolean, ByVal loadDurations As Boolean, ByVal loadTSRemaining As Boolean, ByVal OnlyHasResults As Int32, ByVal loadExcpetions As Boolean, ByVal loadTasks As Boolean, ByVal getByBatchStage As Boolean, ByVal loadOrientation As Boolean, ByVal loadComments As Boolean) As List(Of BatchView)
             Try
-                Return BatchDB.BatchSearchBase(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser, OnlyHasResults)
+                Return BatchDB.BatchSearchBase(bs, byPass, userID, loadTestRecords, loadDurations, loadTSRemaining, UserManager.GetCurrentUser, OnlyHasResults, loadExcpetions, loadTasks, getByBatchStage, loadOrientation, loadComments)
             Catch ex As Exception
                 LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Empty)
                 Return New List(Of BatchView)
             End Try
         End Function
 
-        Public Shared Function GetBatchView(ByVal batchQRANumber As String) As BatchView
+        Public Shared Function GetBatchView(ByVal RequestNumber As String, ByVal cacheData As Boolean, ByVal loadDurations As Boolean, ByVal loadJob As Boolean, ByVal loadExceptions As Boolean, ByVal loadTasks As Boolean, ByVal loadBatchStage As Boolean, ByVal loadTestRecords As Boolean, ByVal loadOrientation As Boolean, ByVal loadTSRemaining As Boolean, ByVal loadComments As Boolean) As BatchView
             Try
-                Return BatchDB.GetSlimBatchByQRANumber(batchQRANumber, UserManager.GetCurrentUser)
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", batchQRANumber))
-            End Try
+                Dim b As BatchView = BatchDB.GetSlimBatchByQRANumber(RequestNumber, UserManager.GetCurrentUser, cacheData, loadDurations, loadJob, loadExceptions, loadTasks, loadBatchStage, loadTestRecords, loadOrientation, loadTSRemaining, loadComments)
 
-            Return Nothing
-        End Function
-
-        Public Shared Function GetViewBatch(ByVal requestNumber As String) As IBatch
-            Try
-                'becuase we are running two batch models side by side
-                'If the batch is not already in remi, I must use the older type batch getitem method
-                'so as to got through the initial batch setup process.
-                Dim b As IBatch = BatchDB.GetSlimBatchByQRANumber(requestNumber, UserManager.GetCurrentUser)
-                If b IsNot Nothing Then
-                    Return b
+                If b Is Nothing Or b.ID = 0 Then
+                    b = GetItem(RequestNumber, True, False)
                 End If
-                'ok we don't have this in the database so get the 'full' older model.
-                Return GetItem(requestNumber)
+
+                Return b
             Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex)
+                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, String.Format("Request: {0}", RequestNumber))
             End Try
 
             Return Nothing
@@ -573,8 +528,8 @@ Namespace REMI.Bll
         ''' <param name="batchQRANumber">The QRA number of the batch.</param>
         ''' <returns>A batch</returns>
         ''' <remarks>This function always returns an object. Check the ID for a null batch!</remarks>
-        Public Shared Function GetItem(ByVal requestNumber As String, Optional ByVal getFailParams As Boolean = False, Optional ByVal cacheRetrievedData As Boolean = True, Optional ByVal refreshCache As Boolean = False) As Batch
-            Dim b As Batch
+        Private Shared Function GetItem(ByVal requestNumber As String, ByVal cacheRetrievedData As Boolean, ByVal refreshCache As Boolean) As BatchView
+            Dim b As BatchView
 
             If refreshCache Then
                 REMIAppCache.ClearAllBatchData(requestNumber)
@@ -583,10 +538,10 @@ Namespace REMI.Bll
             Try
                 Dim bc As New DeviceBarcodeNumber(BatchManager.GetReqString(requestNumber))
                 If bc.Validate Then
-                    b = BatchDB.GetBatchByQRANumber(requestNumber, UserManager.GetCurrentUser, cacheRetrievedData)
+                    b = DirectCast(BatchDB.GetSlimBatchByQRANumber(requestNumber, UserManager.GetCurrentUser, cacheRetrievedData, True, True, True, True, True, True, True, True, True), BatchView)
 
-                    If b Is Nothing Then
-                        b = New Batch(RequestDB.GetRequest(bc.BatchNumber, UserManager.GetCurrentUser))
+                    If b Is Nothing Or b.ID = 0 Then
+                        b = New BatchView(RequestDB.GetRequest(bc.BatchNumber, UserManager.GetCurrentUser, Nothing))
 
                         AddNewBatchToREMI(bc, b)
                     End If
@@ -596,11 +551,11 @@ Namespace REMI.Bll
                         AddNewBatchToREMI(bc, b)
                     End If
                 Else
-                    b = New Batch(requestNumber)
+                    b = New BatchView(requestNumber)
                     b.Notifications.Add(bc.Notifications)
                 End If
             Catch ex As Exception
-                b = New Batch(requestNumber)
+                b = New BatchView(requestNumber)
                 b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e3", NotificationType.Errors, ex, requestNumber))
             End Try
 
@@ -613,7 +568,7 @@ Namespace REMI.Bll
         ''' <param name="myBatch">The Batch instance to save.</param> 
         ''' <returns>The new ID if the Batch is new in the database or the existing ID when an item was updated.</returns> 
         <DataObjectMethod(DataObjectMethodType.Update, True)> _
-        Public Shared Function Save(ByVal myBatch As Batch) As Int32
+        Public Shared Function Save(ByVal myBatch As BatchView) As Int32
             Dim currentUser As String = UserManager.GetCurrentValidUserLDAPName
             Try
                 myBatch.LastUser = currentUser
@@ -701,54 +656,59 @@ Namespace REMI.Bll
             Return New DataSet
         End Function
 
-        Public Shared Function SetPriority(ByVal requestNumber As String, ByVal priorityID As Int32, ByVal priority As String) As NotificationCollection
-            Dim b As Batch
-            Try
-                b = BatchManager.GetItem(requestNumber)
-                If b IsNot Nothing Then
-                    If b.Validate Then
-                        b.PriorityID = priorityID
-                        b.Priority = priority
+        'Public Shared Function SetPriority(ByVal requestNumber As String, ByVal priorityID As Int32, ByVal priority As String) As NotificationCollection
+        '    Dim b As BatchView
+        '    Try
+        '        b = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, False)
+        '        If b IsNot Nothing Then
+        '            If b.Validate Then
+        '                b.PriorityID = priorityID
+        '                b.Priority = priority
 
-                        If b.Validate Then
-                            BatchManager.Save(b)
-                            If (REMI.Core.REMIConfiguration.Debug) Then
-                                b.Notifications.Add(LogIssue("SetPriority", "i14", NotificationType.Information, String.Format("Request Number: {0} Priority: {1}", requestNumber, priority)))
-                            End If
-                        End If
-                    End If
-                Else
-                    b = New Batch
-                    b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
-                End If
-            Catch ex As Exception
-                b = New Batch
-                b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", requestNumber, priority)))
-            End Try
-            Return b.Notifications
-        End Function
+        '                BatchManager.Save(b)
+        '                If (REMI.Core.REMIConfiguration.Debug) Then
+        '                    b.Notifications.Add(LogIssue("SetPriority", "i14", NotificationType.Information, String.Format("Request Number: {0} Priority: {1}", requestNumber, priority)))
+        '                End If
+        '            End If
+        '        Else
+        '            b = New BatchView
+        '            b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
+        '        End If
+        '    Catch ex As Exception
+        '        b = New BatchView
+        '        b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Priority: {1}", requestNumber, priority)))
+        '    End Try
+        '    Return b.Notifications
+        'End Function
 
-        Public Shared Function SetStatus(ByVal requestNumber As String, ByVal status As BatchStatus) As NotificationCollection
-            Dim nc As New NotificationCollection
-            Try
-                If BatchDB.SetBatchStatus(requestNumber, status, UserManager.GetCurrentValidUserLDAPName) Then
-                    If (REMI.Core.REMIConfiguration.Debug) Then
-                        nc.Add(LogIssue("SetBatchStatus", "i8", NotificationType.Information, String.Format("Request Number: {0} Status: {1}", requestNumber, status)))
-                    End If
-                Else
-                    nc.Add(LogIssue("SetBatchStatus", "e18", NotificationType.Errors, String.Format("Request Number: {0} Status: {1}", requestNumber, status)))
-                End If
-            Catch ex As Exception
-                LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} status: {1}", requestNumber, status.ToString))
-            End Try
-            Return nc
-        End Function
+        'Public Shared Function SetStatus(ByVal requestNumber As String, ByVal status As BatchStatus) As NotificationCollection
+        '    Dim b As BatchView
+        '    Try
+        '        b = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, False)
+        '        If b IsNot Nothing Then
+        '            If b.Validate Then
+        '                b.SetNewBatchStatus(status)
+        '                BatchManager.Save(b)
+        '                If (REMI.Core.REMIConfiguration.Debug) Then
+        '                    b.Notifications.Add(LogIssue("SetBatchStatus", "e18", NotificationType.Information, String.Format("Request Number: {0} Status: {1}", status.ToString())))
+        '                End If
+        '            End If
+        '        Else
+        '            b = New BatchView
+        '            b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
+        '        End If
+        '    Catch ex As Exception
+        '        b = New BatchView
+        '        b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e1", NotificationType.Errors, ex, String.Format("Request: {0} Status: {1}", requestNumber, status.ToString())))
+        '    End Try
+        '    Return b.Notifications
+        'End Function
 
 #Region "Batch Comments"
         Public Shared Function AddNewComment(ByVal requestNumber As String, ByVal comment As String) As NotificationCollection
             Dim nc As New NotificationCollection
             Try
-                Dim b As Batch = BatchManager.GetItem(requestNumber)
+                Dim b As BatchView = BatchManager.GetBatchView(requestNumber, True, False, True, False, False, False, False, False, False, True)
                 If b IsNot Nothing Then
                     If Not BatchDB.AddBatchComment(b.ID, comment, UserManager.GetCurrentValidUserLDAPName) Then
                         nc.Add(LogIssue("AddNewComment", "e27", NotificationType.Errors, String.Format("Request Number: {0} comment: {1}", requestNumber, comment)))
@@ -771,7 +731,7 @@ Namespace REMI.Bll
         End Function
 
         Public Shared Function GetBatchComments(ByVal requestNumber As String) As List(Of IBatchCommentView)
-            Return BatchDB.GetBatchComments(requestNumber)
+            Return BatchDB.GetBatchComments(requestNumber, Nothing)
         End Function
 #End Region
 
@@ -792,9 +752,9 @@ Namespace REMI.Bll
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function ChangeTestStage(ByVal requestNumber As String, ByVal testStageName As String) As NotificationCollection
-            Dim b As Batch
+            Dim b As BatchView
             Try
-                b = BatchManager.GetItem(requestNumber)
+                b = BatchManager.GetBatchView(requestNumber, True, False, True, True, False, False, False, False, False, False)
                 If b IsNot Nothing Then
                     If b.Validate Then
                         'validate that the teststageid is part of this job
@@ -810,11 +770,11 @@ Namespace REMI.Bll
                         End If
                     End If
                 Else
-                    b = New Batch
+                    b = New BatchView
                     b.Notifications.AddWithMessage(String.Format("The batch {0} could not be found.", requestNumber), NotificationType.Warning)
                 End If
             Catch ex As Exception
-                b = New Batch
+                b = New BatchView
                 b.Notifications.Add(LogIssue(System.Reflection.MethodBase.GetCurrentMethod().Name, "e4", NotificationType.Errors, ex, String.Format("Request: {0} TestStage: {1}", requestNumber, testStageName)))
             End Try
             Return b.Notifications

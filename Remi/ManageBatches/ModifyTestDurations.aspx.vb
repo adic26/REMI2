@@ -51,10 +51,10 @@ Partial Class ManageBatches_ModifyTestDurations
     End Class
     Protected Sub ProcessQRA(ByVal QRANumber As String)
         Dim bc As DeviceBarcodeNumber = New DeviceBarcodeNumber(BatchManager.GetReqString(QRANumber))
-        Dim b As Batch
+        Dim b As BatchView
 
         If bc.Validate Then
-            b = BatchManager.GetItem(bc.BatchNumber)
+            b = BatchManager.GetBatchView(bc.BatchNumber, False, True, True, False, False, False, False, False, False, False)
             hdnQRANumber.Value = b.QRANumber
             lblQRANumber.Text = b.QRANumber
             hypBatchInfo.NavigateUrl = b.BatchInfoLink
@@ -64,8 +64,6 @@ Partial Class ManageBatches_ModifyTestDurations
             Dim tsIList As New List(Of DurationItem)
 
             hypChangeTestStage.NavigateUrl = b.SetTestStageManagerLink
-            hypChangeStatus.NavigateUrl = b.SetStatusManagerLink
-            hypChangePriority.NavigateUrl = b.SetPriorityManagerLink
 
             Dim myMenu As WebControls.Menu
             Dim mi As New MenuItem
@@ -78,16 +76,6 @@ Partial Class ManageBatches_ModifyTestDurations
             mi = New MenuItem
             mi.Text = "Modify Stage"
             mi.NavigateUrl = b.SetTestStageManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            mi = New MenuItem
-            mi.Text = "Modify Status"
-            mi.NavigateUrl = b.SetStatusManagerLink
-            myMenu.Items(0).ChildItems.Add(mi)
-
-            mi = New MenuItem
-            mi.Text = "Modify Priority"
-            mi.NavigateUrl = b.SetPriorityManagerLink
             myMenu.Items(0).ChildItems.Add(mi)
 
             For Each ts As TestStage In b.Job.TestStages.FindByType(TestStageType.EnvironmentalStress)
@@ -112,9 +100,7 @@ Partial Class ManageBatches_ModifyTestDurations
             End If
 
             If UserManager.GetCurrentUser.HasEditItemAuthority(b.ProductGroup, b.DepartmentID) Or UserManager.GetCurrentUser.IsTestCenterAdmin Then
-                liModifyPriority.Visible = True
                 liModifyStage.Visible = True
-                liModifyStatus.Visible = True
             End If
 
             pnlEdit.Visible = True

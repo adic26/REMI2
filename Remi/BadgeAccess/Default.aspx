@@ -104,6 +104,7 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
+                                Select Department To Gain Access<br />
                                 <asp:DropDownList ID="ddlDepartments" runat="server" AutoPostBack="false" DataSourceID="odsDepartments" DataTextField="LookupType" DataValueField="LookupID" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
                                 <asp:ObjectDataSource ID="odsDepartments"  runat="server" SelectMethod="GetLookups" TypeName="Remi.Bll.LookupsManager" OldValuesParameterFormatString="original_{0}">
                                     <SelectParameters>
@@ -122,6 +123,7 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell CssClass="loginCell">
+                                Select Your Starter Page<br />
                                 <asp:CascadingDropDown runat="server" ID="cddPage" Category="departmentID" TargetControlID="ddlDefaultPage" ParentControlID="ddlDepartments" LoadingText="Loading..." ServiceMethod="GetMenuAccessByDepartment" ServicePath="~/webservice/REMIInternal.asmx"></asp:CascadingDropDown>
                                 <asp:DropDownList ID="ddlDefaultPage" CausesValidation="true" runat="server" Width="200px" CssClass="loginTextBox"></asp:DropDownList>
                             </asp:TableCell>

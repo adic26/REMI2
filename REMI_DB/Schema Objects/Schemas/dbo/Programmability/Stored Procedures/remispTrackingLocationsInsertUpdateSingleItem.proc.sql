@@ -20,7 +20,7 @@ AS
 		IF (@ID IS NULL) -- New Item
 		BEGIN
 			set @AlreadyExists = (select ID from TrackingLocations 
-			where TrackingLocationName = @trackingLocationName and TestCenterLocationID = @GeoLocationID)
+			where TrackingLocationName = LTRIM(RTRIM(@trackingLocationName)) and TestCenterLocationID = @GeoLocationID)
 
 			if (@AlreadyExists is not null) 
 				return -1
@@ -29,22 +29,23 @@ AS
 			PRINT 'INSERTING'
 
 			INSERT INTO TrackingLocations (TrackingLocationName, TestCenterLocationID, TrackingLocationTypeID, LastUser, Comment, Decommissioned, IsMultiDeviceZone, Status)
-			VALUES (@TrackingLocationname, @GeoLocationID, @TrackingLocationtypeID, @LastUser, @Comment, @Decommissioned, @IsMultiDeviceZone, @LocationStatus)
+			VALUES (LTRIM(RTRIM(@TrackingLocationname)), @GeoLocationID, @TrackingLocationtypeID, @LastUser, LTRIM(RTRIM(@Comment)), @Decommissioned, @IsMultiDeviceZone, @LocationStatus)
 			
 			SELECT @ReturnValue = SCOPE_IDENTITY()
 
-			INSERT INTO TrackingLocationsHosts (TrackingLocationID, HostName, LastUser, Status) VALUES (@ReturnValue, @HostName, @LastUser, @Status)
+			INSERT INTO TrackingLocationsHosts (TrackingLocationID, HostName, LastUser, [Status]) 
+			VALUES (@ReturnValue, LTRIM(RTRIM(@HostName)), @LastUser, @Status)
 		END
 		ELSE -- Exisiting Item
 		BEGIN
 			PRINT 'UDPATING TrackingLocations'
 		
 			UPDATE TrackingLocations 
-			SET TrackingLocationName=@TrackingLocationName, 
+			SET TrackingLocationName=LTRIM(RTRIM(@TrackingLocationName)) ,
 				TestCenterLocationID=@GeoLocationID, 
 				TrackingLocationTypeID=@TrackingLocationtypeID,
 				LastUser = @LastUser,
-				Comment = @Comment,
+				Comment = LTRIM(RTRIM(@Comment)),
 				Decommissioned = @Decommissioned,
 				IsMultiDeviceZone = @IsMultiDeviceZone,
 				Status = @LocationStatus

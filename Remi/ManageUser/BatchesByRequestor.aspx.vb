@@ -1,5 +1,6 @@
 ﻿Imports REMI.Bll
 Imports REMI.BusinessEntities
+Imports REMI.Contracts
 
 Partial Class ManageUser_BatchesByRequestor
     Inherits System.Web.UI.Page
@@ -7,7 +8,11 @@ Partial Class ManageUser_BatchesByRequestor
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             lblUserNameTitle.Text = UserManager.GetCurrentUser.FullName
-            bscMain.SetBatches(BatchManager.GetActiveBatches(UserManager.GetCurrentValidUserLDAPName))
+            Dim bs As New BatchSearch
+            bs.Requestor = UserManager.GetCurrentValidUserLDAPName
+            bs.ExcludedStatus = BatchStatus.Rejected + BatchStatus.Complete
+
+            bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False))
         End If
     End Sub
 
@@ -22,7 +27,11 @@ Partial Class ManageUser_BatchesByRequestor
 
         If u.UserName = txtUserName.Text Then
             lblUserNameTitle.Text = u.FullName
-            bscMain.SetBatches(BatchManager.GetActiveBatches(u.UserName))
+            Dim bs As New BatchSearch
+            bs.Requestor = u.UserName
+            bs.ExcludedStatus = BatchStatus.Rejected + BatchStatus.Complete
+
+            bscMain.SetBatches(BatchManager.BatchSearch(bs, UserManager.GetCurrentUser.ByPassProduct, UserManager.GetCurrentUser.ID, False, False, False, 0, False, False, False, False, False))
         End If
     End Sub
 End Class

@@ -36,15 +36,15 @@ end
 select @TotalBatches as TotalBatches, @TotalTestUnits as TotalTestUnits, @AverageTestUnitsPerBatch as AverageUnitsPerBatch;
 
 select lp.[Values] as ProductGroup, COUNT( distinct BatchesAudit.id) as TotalBatches,
-COUNT(TestUnits.ID) as TotalTestUnits 
-from BatchesAudit,testunits , Products p
-	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=p.LookupID
-where p.ID=BatchesAudit.ProductID and 
-BatchesAudit.InsertTime >= @StartDate and BatchesAudit.InsertTime <= @EndDate and BatchesAudit.Action = 'I' 
+COUNT(tu.ID) as TotalTestUnits 
+from BatchesAudit
+	INNER JOIN TestUnits tu ON tu.BatchID=BatchesAudit.BatchID
+	INNER JOIN Lookups lp WITH(NOLOCK) on lp.LookupID=BatchesAudit.ProductID
+where BatchesAudit.InsertTime >= @StartDate and BatchesAudit.InsertTime <= @EndDate and BatchesAudit.Action = 'I' 
 and (@FilterBasedOnQraNumber = 0 or (Convert(int , SUBSTRING(BatchesAudit.QRANumber, 5, 2)) >= @startYear
 and Convert(int , SUBSTRING(BatchesAudit.QRANumber, 5, 2)) <= @endYear)) 
 and (BatchesAudit.TestCenterLocationID = @geographicallocation or @geographicallocation IS NULL)
-and BatchesAudit.BatchID = TestUnits.BatchID 
+and BatchesAudit.BatchID = tu.BatchID 
 group by lp.[Values];
 GO
 GRANT EXECUTE ON remispInventoryReport TO Remi
