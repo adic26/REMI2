@@ -126,7 +126,7 @@
                     });
                 }
             </script>
-
+            
             <asp:Panel runat="server" ID="pnlShowTRS" Visible="false">
                 <h3>Upcoming Requests</h3>
                 <asp:GridView runat="server" ID="gvwTRS" AutoGenerateColumns="true" EnableViewState="true" EmptyDataText="There are no requests upcoming.">
@@ -141,25 +141,25 @@
             </asp:Panel>
             
             <h3>Incoming</h3>
-            <uc3:BatchSelectControl ID="bscMainIncoming" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'Incoming' batches ready." AutoGenerateEditButton="true" />
+            <uc3:BatchSelectControl ID="bscMainIncoming" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'Incoming' batches ready." AutoGenerateEditButton="true" AllowPaging="true" PageSize="15" />
                       
             <h3>In Progress Parametric</h3>
-            <uc3:BatchSelectControl ID="bscMainInProgress" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'In Progress' batches available." AutoGenerateEditButton="true" />
+            <uc3:BatchSelectControl ID="bscMainInProgress" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'In Progress' batches available." AutoGenerateEditButton="true" AllowPaging="true" PageSize="15" />
               
             <h3>In Progress Ready For Stressing</h3>
-            <uc3:BatchSelectControl ID="bscMainReadyForStressing" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'In Progress Ready For Stressing' batches available." AutoGenerateEditButton="true" />
+            <uc3:BatchSelectControl ID="bscMainReadyForStressing" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'In Progress Ready For Stressing' batches available." AutoGenerateEditButton="true" AllowPaging="true" PageSize="15" />
     
             <h3>In Progress Stressing</h3>
-            <uc3:BatchSelectControl ID="bscChamber"  runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'In Progress Stressing' batches available." AutoGenerateEditButton="true" />
+            <uc3:BatchSelectControl ID="bscChamber"  runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'In Progress Stressing' batches available." AutoGenerateEditButton="true" AllowPaging="true" PageSize="15" />
 
             <h3>Testing Complete/ Not Reporting Stages</h3>
-            <uc3:BatchSelectControl ID="bscMainTestingComplete" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'Testing Complete' batches available." AutoGenerateEditButton="true" />
+            <uc3:BatchSelectControl ID="bscMainTestingComplete" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'Testing Complete' batches available." AutoGenerateEditButton="true" AllowPaging="true" PageSize="15" />
             
             <h3>Failure Analysis</h3>
-            <uc3:BatchSelectControl ID="bscMainFA" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'FA' batches available." AutoGenerateEditButton="true" />
+            <uc3:BatchSelectControl ID="bscMainFA" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'FA' batches available." AutoGenerateEditButton="true" AllowPaging="true" PageSize="15" />
             
             <h3>Held/Reporting Stages</h3>
-            <uc3:BatchSelectControl ID="bscMainHR" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'Held/Report' batches available." AutoGenerateEditButton="true" />
+            <uc3:BatchSelectControl ID="bscMainHR" runat="server" DisplayMode="OverviewDisplay" EnableViewState="true" EmptyDataText="There are no 'Held/Report' batches available." AutoGenerateEditButton="true" AllowPaging="true" PageSize="15" />
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>

@@ -695,4 +695,9 @@ Partial Class Controls_BatchSelectControl
                 End If
         End Select
     End Sub
+
+    Protected Sub grdBatches_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
+        grdBatches.PageIndex = e.NewPageIndex
+        grdBatches.DataBind()
+    End Sub
 End Class

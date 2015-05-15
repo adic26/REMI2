@@ -2,7 +2,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:GridView ID="grdBatches" runat="server" EmptyDataText="There are no batches available." EnableViewState="true" OnRowCommand="grdBatches_RowDataCommand" 
-    AutoGenerateColumns="False" DataKeyNames="ID" OnRowUpdating="grdBatches_RowUpdating" OnRowCancelingEdit="grdBatches_RowCancelingEdit" OnRowEditing="grdBatches_RowEditing">
+    AutoGenerateColumns="False" DataKeyNames="ID" OnRowUpdating="grdBatches_RowUpdating" OnRowCancelingEdit="grdBatches_RowCancelingEdit" OnRowEditing="grdBatches_RowEditing" OnPageIndexChanging="grdBatches_PageIndexChanging">
     <RowStyle CssClass="evenrow" />
     <Columns>
         <asp:TemplateField>
